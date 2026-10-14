@@ -1,0 +1,490 @@
+.shell {
+  min-height: 100dvh;
+  --desktop-header-height: 76px;
+}
+.tripShell {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.flowShell {
+  min-height: 100dvh;
+}
+.skip {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  transform: translateY(-180%);
+  padding: 12px;
+  background: white;
+}
+.skip:focus {
+  transform: none;
+}
+.desktopHeader {
+  flex-shrink: 0;
+  height: var(--desktop-header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px 0 49px;
+  background: white;
+  border-bottom: 1px solid #dff0f7;
+  box-shadow: 0 2px 10px rgb(10 87 138 / 5%);
+  gap: 24px;
+}
+.logo {
+  width: 155px;
+  height: 51.667px;
+  flex-shrink: 0;
+}
+.logo img {
+  width: 155px;
+  height: 51.667px;
+  object-fit: contain;
+}
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  height: 100%;
+}
+.headerNav a,
+.headerNav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px;
+  height: 100%;
+  font-size: 14.5px;
+  line-height: 22px;
+  font-weight: 500;
+  border: 0;
+  background: white;
+  position: relative;
+  color: #0a55a1;
+  white-space: nowrap;
+}
+.headerNav img {
+  width: 20px;
+  height: 20px;
+}
+.headerNav a[aria-current='page'] {
+  color: #079fc5;
+}
+.headerNav a[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  bottom: 2px;
+  border-radius: 2px;
+  background: #079fc5;
+}
+.account,
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.account {
+  min-width: 260px;
+  justify-content: center;
+}
+.profile {
+  font-size: 13.5px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #075495;
+  white-space: nowrap;
+}
+.bell {
+  background: transparent;
+  padding: 0;
+  border: 0;
+}
+.bell img {
+  width: 22px;
+  height: 22px;
+}
+.avatar {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #41b5d2;
+  border-radius: 20px;
+  background: #fff6ef;
+  overflow: hidden;
+  position: relative;
+}
+.avatar img {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  left: -14px;
+  top: -9px;
+  object-fit: contain;
+}
+.outline,
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.outline {
+  width: 122px;
+  border: 1px solid var(--color-line);
+}
+.primary {
+  width: 132px;
+  gap: 8px;
+  background: linear-gradient(to right, #008ac4, #008eaa);
+  color: white;
+}
+.primary img {
+  width: 18px;
+  height: 18px;
+}
+.layout {
+  display: flex;
+  min-height: calc(100dvh - var(--desktop-header-height));
+}
+.tripShell .layout {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+.sidebar,
+.collapsed {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background: white;
+  border-right: 1px solid #d7eaf2;
+  width: 220px;
+  height: 100%;
+  min-height: 0;
+  padding: 12px 8px 16px;
+}
+.collapsed {
+  width: 72px;
+}
+.sidebar nav,
+.collapsed nav {
+  min-height: 0;
+  overflow-y: auto;
+  padding-block: 4px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sidebar nav button,
+.collapsed nav button {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  height: 42px;
+  border: 0;
+  border-radius: 7px;
+  background: white;
+  color: #0a55a1;
+  padding: 0 12px 0 16px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  position: relative;
+}
+.sidebar nav button,
+.collapsed nav button {
+  flex-shrink: 0;
+}
+.sidebar nav img,
+.collapsed nav img {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.collapsed nav button {
+  padding: 0;
+  justify-content: center;
+}
+.collapsed nav span {
+  display: none;
+}
+.sidebar nav .selectedSection,
+.collapsed nav .selectedSection {
+  background: #e8f7fa;
+  color: #079fc5;
+}
+.selectedSection::before {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  height: 42px;
+  width: 4px;
+  border-radius: 2px;
+  background: #079fc5;
+}
+.sidebarDecoration {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 88px;
+  min-height: 338px;
+  position: relative;
+}
+.sidebarDecoration p {
+  font-family: Caveat, cursive;
+  font-size: 18px;
+  line-height: 52px;
+  color: #079cc5;
+  margin: 0 26px;
+  height: 48px;
+  font-weight: 700;
+}
+.routeDecoration {
+  position: absolute;
+  top: 136px;
+  left: 34px;
+  width: 145px;
+  height: 40px;
+}
+.readingMascot {
+  display: block;
+  width: 166px;
+  height: 166px;
+  margin: 32px auto 0;
+  object-fit: contain;
+}
+.collapseButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: auto;
+  border: 0;
+  background: white;
+  color: #6c8bb2;
+  padding: 0;
+  min-height: 60px;
+  font-size: 13px;
+  line-height: 20px;
+}
+.collapsed {
+  padding-bottom: 22px;
+}
+.collapsed .collapseButton {
+  min-height: 28px;
+}
+.collapseButton strong {
+  font-size: 24px;
+  line-height: 32px;
+  color: #0089c7;
+}
+.collapseButton img {
+  width: 28px;
+  height: 28px;
+}
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px;
+}
+.tripMain {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.flowMain {
+  overflow: visible;
+}
+.mobileHeader {
+  display: none;
+}
+.mobileMenuButton {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgb(10 85 161 / 14%);
+  border-radius: 10px;
+  background: white;
+  color: var(--color-ink);
+  font-size: 22px;
+  line-height: 1;
+}
+.adminShell {
+  height: 100dvh;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  grid-template-rows: 72px minmax(0, 1fr);
+}
+.adminShell .layout {
+  display: contents;
+}
+.adminTopbar {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+.adminSidebar {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  min-height: 0;
+}
+.adminShell .main {
+  grid-column: 2;
+  grid-row: 2;
+  min-height: 0;
+}
+@media (max-width: 1100px) and (min-width: 769px) {
+  .desktopHeader {
+    padding: 0 20px;
+    gap: 16px;
+  }
+  .logo,
+  .logo img {
+    width: 112px;
+    height: 38px;
+  }
+  .headerNav a,
+  .headerNav button {
+    font-size: 13px;
+  }
+  .outline {
+    width: 96px;
+  }
+  .primary {
+    width: 104px;
+  }
+  .account {
+    gap: 8px;
+  }
+  .headerNav {
+    gap: 12px;
+  }
+  .account {
+    min-width: 0;
+  }
+  .profile > span:last-child {
+    display: none;
+  }
+}
+@media (max-height: 950px) and (min-width: 769px) {
+  .main {
+    padding-block: 20px;
+  }
+  .sidebarDecoration {
+    display: none;
+  }
+  .sidebar nav,
+  .collapsed nav {
+    gap: 6px;
+  }
+  .sidebar nav button,
+  .collapsed nav button {
+    height: 38px;
+  }
+  .selectedSection::before {
+    height: 38px;
+  }
+  .collapseButton {
+    min-height: 44px;
+  }
+}
+@media (max-width: 768px) {
+  .shell {
+    background: var(--ios-background);
+    color: var(--ios-ink);
+    min-height: 100dvh;
+    height: auto;
+    overflow: visible;
+  }
+  .tripShell {
+    height: auto;
+    overflow: visible;
+  }
+  .desktopHeader,
+  .sidebar,
+  .collapsed,
+  .adminTopbar,
+  .adminSidebar {
+    display: none;
+  }
+  .mobileHeader {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    gap: 12px;
+    height: 54px;
+    margin: env(safe-area-inset-top, 0px) 24px 0;
+    font-family: var(--font-ios);
+  }
+  .mobileMenuButton {
+    font-family: var(--font-body);
+  }
+  .mobileLogo,
+  .mobileLogo img {
+    width: 112px;
+    height: 38px;
+    object-fit: contain;
+  }
+  .mobileLogo {
+    justify-self: center;
+  }
+  .mobileAccount {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink);
+  }
+  .mobileAccount > img {
+    width: 22px;
+    height: 22px;
+  }
+  .adminShell {
+    display: block;
+    height: auto;
+    min-height: 100dvh;
+  }
+  .adminShell .layout {
+    display: block;
+  }
+  .tripShell .layout {
+    min-height: calc(100dvh - 54px);
+    height: auto;
+  }
+  .layout {
+    min-height: calc(100dvh - 54px);
+    height: auto;
+  }
+  .main {
+    padding: 12px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+    overflow: visible;
+  }
+}
+@media (max-width: 360px) {
+  .mobileHeader {
+    margin-inline: 16px;
+  }
+  .main {
+    padding-inline: 16px;
+  }
+}

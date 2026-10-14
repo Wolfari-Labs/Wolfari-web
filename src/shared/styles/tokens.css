@@ -1,0 +1,15 @@
+/* Figma: Desktop 135:483, 135:484; Mobile 325:2266 plus the responsive off-canvas drawer contract. */
+:root {
+  --color-white: #fff;
+  --color-ink: #06458b;
+  --color-muted: #6c8bb2;
+  --color-line: #cdebf7;
+  --color-selected: #e8f7fa;
+  --ios-ink: #21343b;
+  --ios-muted: #64747c;
+  --ios-teal: #317c89;
+  --ios-secondary: #edf2f3;
+  --ios-background: #f5f7f8;
+  --font-body: 'Be Vietnam Pro', sans-serif;
+  --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+}

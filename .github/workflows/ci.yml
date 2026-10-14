@@ -1,0 +1,34 @@
+name: Web checks
+
+on:
+  push:
+    branches: [main, develop, 'ui/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - name: Enable pinned pnpm
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm build:preview

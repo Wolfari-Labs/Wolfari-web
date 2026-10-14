@@ -1,0 +1,46 @@
+.state {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--color-muted);
+  max-width: 640px;
+  margin: 72px auto;
+}
+.state h1,
+.state h2 {
+  color: var(--color-ink);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+}
+.state p {
+  line-height: 24px;
+}
+.state small {
+  display: block;
+  margin: 16px;
+}
+.state button {
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  color: var(--color-ink);
+  padding: 12px 24px;
+}
+.skeleton {
+  height: 16px;
+  width: 180px;
+  margin: 0 auto 24px;
+  border-radius: 8px;
+  background: var(--color-selected);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
