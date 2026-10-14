@@ -30,6 +30,26 @@ Phase 0
 
 Không chạy Phase 3 trước khi Phase 0 có screen contract và state matrix. Không chạy Phase 4+ chỉ vì Figma đã có frame; phải có Gateway/runtime evidence.
 
+## Quy tắc tạo branch
+
+```text
+main
+  └─ develop
+      ├─ docs/phase-0-inventory       (tuỳ chọn, tài liệu)
+      ├─ ui/app-shell                  (Phase 1)
+      ├─ ui/design-system              (Phase 2)
+      ├─ ui/<flow>                     (Phase 3, mỗi flow một branch)
+      └─ <type>/<issue>-<flow>         (Phase 4+, có Issue/PR)
+```
+
+- Tạo branch mới khi bắt đầu một work unit/flow mới, sau khi work unit trước đã commit và nên được merge vào `develop`.
+- Phase 1-reconcile tiếp tục trên branch Phase 1 hiện tại; không tạo branch mới chỉ để sửa lệch của cùng một flow.
+- Phase 2 tạo `ui/design-system` từ `develop` sau khi Phase 1 đã vào `develop`.
+- Phase 3 tạo branch riêng cho từng flow như `ui/trip-list`, `ui/trip-overview`, `ui/plan-preview`.
+- Phase 4 trở đi tạo branch từ `develop` với số Issue, ví dụ `feat/42-auth-gateway`, và PR target `develop`.
+- Nếu work trước chưa merge nhưng work mới phụ thuộc code đó, không branch từ develop thiếu code; merge dependency trước hoặc ghi rõ stacked branch/dependency trong báo cáo.
+- Không tạo branch mới cho mỗi commit nhỏ, mỗi bug nhỏ trong cùng flow hoặc mỗi lần chỉnh CSS.
+
 Tài liệu nguồn chung:
 
 - [screen inventory](../screen-inventory.md)

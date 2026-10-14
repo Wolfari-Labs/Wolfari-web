@@ -13,6 +13,11 @@ Task:
 - Data mode: fixture
 - Figma: Desktop, Mobile, component showcase và shared components
 
+Git branch:
+- Phase 2 là một work unit mới, nên tạo branch mới `ui/design-system` từ `develop` sau khi Phase 1 đã được commit và merge vào `develop`.
+- Nếu Phase 1 chưa merge nhưng Phase 2 bắt buộc dùng code Phase 1, không tạo branch từ develop bị thiếu code; trước tiên merge Phase 1 vào develop hoặc tạo branch tạm từ branch Phase 1 và ghi rõ dependency.
+- Không commit trực tiếp main/develop, không tạo Issue/PR ở Phase 2.
+
 Nếu Phase 1 đã code theo prompt cũ, reconcile trước; giữ phần đúng, không reset/rebase/xóa.
 
 Implement hoặc hoàn thiện:
