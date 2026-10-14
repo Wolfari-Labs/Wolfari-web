@@ -2,7 +2,8 @@ import { Link } from 'react-router';
 import type { ReactNode } from 'react';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSnapshot } from '../model/shell';
-import { assets } from './assets';
+import { assets } from '../../../shared/assets/asset-map';
+import { NavigationButton } from '../../../shared/components/NavigationButton';
 import styles from './AdminChrome.module.css';
 import adminBell from '../../../shared/assets/figma/06423.svg';
 
@@ -26,10 +27,10 @@ export function AdminNavigation({
   return (
     <nav aria-label="Điều hướng Admin">
       {adminSections.map((item) => (
-        <button
+        <NavigationButton
           key={item.id}
           disabled={!allowed}
-          aria-pressed={section === item.id}
+          selected={section === item.id}
           onClick={() => onSectionChange(item.id)}
         >
           <span className={styles.marker} />
@@ -37,7 +38,7 @@ export function AdminNavigation({
             {item.letter}
           </span>
           {item.label}
-        </button>
+        </NavigationButton>
       ))}
     </nav>
   );

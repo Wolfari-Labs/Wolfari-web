@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSection, ShellSnapshot } from '../model/shell';
-import { assets } from './assets';
+import { assets } from '../../../shared/assets/asset-map';
 import styles from './AppShell.module.css';
 
 const sections: { id: ShellSection; label: string; icon: keyof typeof assets }[] = [
@@ -20,7 +20,9 @@ function Icon({ file, className }: { file: keyof typeof assets; className?: stri
   return <img className={className} src={assets[file]} alt="" />;
 }
 
-import { MobileDrawer } from './MobileDrawer';
+import { Drawer } from '../../../shared/components/Drawer';
+import { NavigationButton } from '../../../shared/components/NavigationButton';
+import { desktopMediaQuery } from '../../../shared/styles/breakpoints';
 import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
 
 export function AppShell({
@@ -67,7 +69,7 @@ export function AppShell({
       : 'Điều hướng chính';
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return;
-    const media = window.matchMedia('(min-width: 769px)');
+    const media = window.matchMedia(desktopMediaQuery);
     const close = () => {
       if (media.matches) setDrawerOpen(false);
     };
@@ -100,18 +102,18 @@ export function AppShell({
   const tripNavigation = (
     <nav aria-label="Điều hướng chuyến đi">
       {sections.map((item) => (
-        <button
+        <NavigationButton
           key={item.id}
           className={section === item.id ? styles.selectedSection : ''}
           disabled={!canReadTrip}
           aria-label={item.label}
-          aria-pressed={section === item.id}
+          selected={section === item.id}
           title={item.label}
           onClick={() => selectTrip(item.id)}
         >
           <Icon file={item.icon} />
           <span>{item.label}</span>
-        </button>
+        </NavigationButton>
       ))}
     </nav>
   );
@@ -318,9 +320,9 @@ export function AppShell({
           {children}
         </main>
       </div>
-      <MobileDrawer open={drawerOpen} label={drawerLabel} onDismiss={() => setDrawerOpen(false)}>
+      <Drawer open={drawerOpen} label={drawerLabel} onDismiss={() => setDrawerOpen(false)}>
         {adminLayout ? adminNavigation : tripLayout ? tripNavigation : publicNavigation}
-      </MobileDrawer>
+      </Drawer>
     </div>
   );
 }

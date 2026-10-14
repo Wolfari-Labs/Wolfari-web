@@ -36,6 +36,8 @@ Open `http://127.0.0.1:5173`. Development defaults to fixture; the UI preview co
 
 Browser verification: `corepack pnpm test:e2e` uses the installed Playwright Chromium binary. Install it with `corepack pnpm exec playwright install chromium` if needed.
 
+Phase 2 shared UI sandbox: open `http://127.0.0.1:5173/design-system.html` after `corepack pnpm dev`. It previews tokens, Button/Input/Select/Alert, shell states and the shared drawer without business features or API calls. `corepack pnpm build:preview` includes this sandbox; production `build` excludes it. See [Phase 2 design mapping and checks](docs/design-system-phase2.md).
+
 The bootstrap includes an unconnected, read-only Gateway HTTP client with envelope/error parsing, timeout/cancellation, and an in-memory access-token store. The fixture shell sends no HTTP requests. CI in `.github/workflows/ci.yml` runs lint, typecheck, tests and both builds on pushes to `ui/**`, `develop` and `main`.
 
 Screen and flow specifications are maintained separately from the visual Figma file: [screen inventory](docs/screen-inventory.md), [flow map](docs/flow-map.md), [screen contracts](docs/screen-contracts.md), [UI state matrix](docs/state-matrix.md), and [Figma implementation matrix](docs/figma-implementation-matrix.md). These documents are required input before implementing a feature screen or replacing a fixture with a Gateway adapter.

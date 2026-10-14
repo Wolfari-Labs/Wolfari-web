@@ -9,6 +9,7 @@ import {
 import { useShell } from '../features/shell/hooks/use-shell';
 import { AppShell } from '../features/shell/components/AppShell';
 import { ContentState } from '../shared/components/ContentState';
+import { Select } from '../shared/components/Select';
 import { adminSections } from '../features/shell/components/AdminChrome';
 import { paths } from './route-paths';
 
@@ -100,23 +101,22 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
             <Link to={paths.home}>Shell trang chủ</Link>
             <Link to={previewTripPath}>Shell chuyến đi</Link>
             <Link to={paths.admin}>Shell Admin</Link>
-            <label>
-              Trạng thái{' '}
-              <select
-                aria-label="Trạng thái preview"
-                value={scenario}
-                onChange={(event) => {
-                  const next = scenarios.find((item) => item === event.target.value);
-                  if (next) setScenario(next);
-                }}
-              >
-                {scenarios.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <a href="/design-system.html">Shared UI foundation</a>
+            <Select
+              label="Trạng thái"
+              aria-label="Trạng thái preview"
+              value={scenario}
+              onChange={(event) => {
+                const next = scenarios.find((item) => item === event.target.value);
+                if (next) setScenario(next);
+              }}
+            >
+              {scenarios.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </Select>
           </div>
         </details>
       )}

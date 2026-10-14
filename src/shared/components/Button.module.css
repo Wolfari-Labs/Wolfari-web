@@ -1,0 +1,103 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-width: var(--target-min);
+  min-height: var(--control-height);
+  max-width: 100%;
+  padding: 10px var(--space-20);
+  border: 1px solid transparent;
+  border-radius: var(--radius-button);
+  font-family: var(--font-body);
+  font-size: var(--font-size-label);
+  font-weight: var(--weight-medium);
+  line-height: var(--line-label);
+  overflow-wrap: anywhere;
+  transition:
+    box-shadow var(--motion-duration),
+    opacity var(--motion-duration);
+}
+.primary {
+  background: var(--action-gradient);
+  color: var(--color-white);
+}
+.outline {
+  background: var(--color-white);
+  color: var(--color-ink);
+  border-color: var(--color-line);
+}
+.plain {
+  background: transparent;
+  color: var(--color-ink);
+}
+.icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+.button:active:not(:disabled) {
+  opacity: 0.88;
+}
+.button:disabled {
+  background: var(--ios-line);
+  color: var(--ios-muted);
+  border-color: var(--ios-line);
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .button:hover:not(:disabled) {
+    box-shadow: var(--shadow-selection);
+  }
+  .outline:hover:not(:disabled),
+  .plain:hover:not(:disabled) {
+    background: var(--color-pale);
+  }
+}
+@media (max-width: 768px) {
+  .button {
+    min-height: var(--control-height-mobile);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ios);
+    font-size: var(--font-size-mobile-label);
+    font-weight: var(--weight-semibold);
+  }
+  .primary {
+    background: var(--ios-teal);
+  }
+  .primary:active:not(:disabled) {
+    background: var(--ios-pressed);
+  }
+  .outline {
+    background: var(--ios-secondary);
+    border-color: transparent;
+    color: var(--ios-teal);
+  }
+  .button:disabled {
+    background: var(--ios-line);
+    color: var(--ios-muted);
+    opacity: 0.65;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+  .spinner {
+    animation: none;
+  }
+}

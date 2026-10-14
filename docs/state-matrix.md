@@ -82,3 +82,14 @@ Profiles nối [full frame map](figma-screen-map-2026-10-15.md) với contract t
 - Permission/state theo actor hiện hành; public whitelist không chứa private forbidden payload. Provider/payment/job bất định không biến thành price/balance 0 hoặc saved.
 - Lifecycle default flag false → unavailable; accepted receipt recovery PROCESSING/PENDING_RECOVERY/NEEDS_REVIEW không SUCCEEDED. Packing Self completion/reassignment cần command riêng, không Activity completion.
 - Unwired/generic controls và detached frame có unknown capability phải disabled/unavailable đến khi có quyết định/evidence.
+
+## Phase 2 — Presentation state coverage
+
+- Button: default, hover ở pointer hỗ trợ, focus-visible, pressed, disabled, loading; loading giữ accessible label và chặn callback, không tự chuyển sang saved.
+- Input/Select: native default/focus/disabled/error, unique label, hint/error qua `aria-describedby`, `aria-invalid`; lỗi demo giữ input. Select native có keyboard behavior, không fake listbox.
+- Alert: static demo không live; dynamic error `alert`, info/success/warning `status`. Tone success chỉ là presentation prop, không bằng chứng mutation thành công.
+- ContentState: loading/placeholder/empty/error/forbidden/not-found/conflict/unavailable giữ nguyên; skeleton decorative, busy state semantic; retry dùng callback đúng read policy. Error không có details vẫn hiển thị lỗi service, không rơi vào placeholder.
+- Drawer/nav: closed không tab-order; modal focus trap, Escape/backdrop/close focus return, internal scroll/body lock; selected/disabled không cấp permission.
+- Component pending/loading không có server operation; unknown/conflict/forbidden của feature vẫn thuộc owning model/repository. Không tạo shared business state machine.
+
+Sandbox và acceptance theo [shared UI contract](screen-contracts.md#contract-shared-ui-foundation) / [Phase 2 handoff](design-system-phase2.md).

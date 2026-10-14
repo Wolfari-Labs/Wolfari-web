@@ -2,64 +2,64 @@
   position: fixed;
   inset: 0 auto 0 0;
   margin: 0;
-  width: min(280px, 86vw);
+  width: min(var(--drawer-width), 86vw);
   height: 100dvh;
   max-height: 100dvh;
   max-width: 86vw;
   border: 0;
-  padding: 16px 12px;
-  background: white;
+  padding: var(--space-16) var(--space-12);
+  background: var(--color-white);
   color: var(--color-ink);
-  box-shadow: 8px 0 24px rgb(10 85 161 / 16%);
+  box-shadow: var(--shadow-drawer);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-16);
 }
 .drawer:not([open]),
 .drawer[hidden] {
   display: none;
 }
 .drawer::backdrop {
-  background: rgb(5 34 61 / 32%);
+  background: var(--drawer-backdrop);
 }
 .heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
   font-weight: 600;
   flex-shrink: 0;
 }
 .heading button {
-  min-width: 48px;
-  min-height: 48px;
-  background: white;
+  min-width: var(--target-drawer);
+  min-height: var(--target-drawer);
+  background: var(--color-white);
   color: var(--color-ink);
   border: 1px solid var(--color-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .content {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 4px;
+  padding: var(--space-4);
 }
 .content nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 .content nav button,
 .content nav a {
   position: relative;
   width: 100%;
-  min-height: 48px;
+  min-height: var(--target-drawer);
   flex-shrink: 0;
   border: 0;
-  border-radius: 7px;
-  padding: 8px 12px;
-  background: white;
+  border-radius: var(--radius-nav);
+  padding: var(--space-8) var(--space-12);
+  background: var(--color-white);
   color: var(--color-ink);
   font-size: 14px;
   text-align: left;

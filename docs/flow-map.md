@@ -58,6 +58,8 @@ Admin navigation ở Phase 1 đổi section/breadcrumb local trên `/admin`; kh�
 
 Evidence: `src/main.tsx`, `src/app/App.tsx`, `src/app/router.tsx`, `src/features/shell/hooks/use-shell.ts`, `src/features/shell/repositories/shell.repository.ts`.
 
+Phase 2 dùng `shared/components/Drawer` và `NavigationButton` trong shell hiện có; điều hướng/guard/section selection không đổi. Sandbox `/design-system.html` đi trực tiếp từ development/preview → native input/select/local demo error/loading/drawer → `/`; không qua session/repository hoặc tạo server mutation. Field error giữ input; close drawer trả focus trigger. Không thêm product route trong router.
+
 ## Flow B — Authentication
 
 ```text

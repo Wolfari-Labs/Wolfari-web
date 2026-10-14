@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import styles from './MobileDrawer.module.css';
+import styles from './Drawer.module.css';
 
-export function MobileDrawer({
+export function Drawer({
   open,
   label,
   onDismiss,

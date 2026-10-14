@@ -94,3 +94,7 @@ Capability labels chuẩn: `runtime-ready`, `runtime-candidate`, `partial-runtim
 | Detached 328:3072                              | unknown/not-yet-routed                         | unknown                           | unknown owner/flow                                                 |
 
 41 capability groups: 18 runtime-candidate, 4 partial-runtime, 18 mock-only, 1 unknown; **không runtime-ready xác nhận trong inventory này**. Tất cả feature bodies/production adapters chưa triển khai. Các counts không phải số API; mapping không tự cấp phép thêm route/field/permission/behavior.
+
+## Shared UI sandbox · Phase 2
+
+`/design-system.html` là entry kiểm tra component trong development/explicit preview build, không React Router/product route và không thêm actor/permission hoặc API capability. Production build loại entry này. Mapping component Desktop/Mobile/showcase nằm trong [implementation matrix](figma-implementation-matrix.md#phase-2--shared-ui-foundation); các feature body vẫn placeholder/blocked như inventory bên trên.

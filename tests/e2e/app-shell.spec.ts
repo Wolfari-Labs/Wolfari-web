@@ -77,6 +77,18 @@ for (const size of sizes)
     const header = page.locator('header:visible');
     await expect(header).toHaveCount(1);
     expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 54);
+    const headerTargets = await header
+      .locator('button:visible, a:visible')
+      .evaluateAll((elements) =>
+        elements.map((element) => {
+          const box = element.getBoundingClientRect();
+          return { width: box.width, height: box.height };
+        }),
+      );
+    for (const target of headerTargets) {
+      expect(target.width).toBeGreaterThanOrEqual(44);
+      expect(target.height).toBeGreaterThanOrEqual(44);
+    }
     await loadedAssets(page);
     if (desktop) {
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(
@@ -89,6 +101,12 @@ for (const size of sizes)
       const bounds = (await toggle.boundingBox())!;
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(size.height);
       const nav = side.getByRole('navigation');
+      const navTargets = await nav
+        .getByRole('button')
+        .evaluateAll((elements) =>
+          elements.map((element) => element.getBoundingClientRect().height),
+        );
+      for (const height of navTargets) expect(height).toBeGreaterThanOrEqual(44);
       await nav.getByRole('button', { name: 'Cài đặt', exact: true }).scrollIntoViewIfNeeded();
       const navBox = (await nav.boundingBox())!,
         settings = (await nav.getByRole('button', { name: 'Cài đặt', exact: true }).boundingBox())!;

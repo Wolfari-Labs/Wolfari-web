@@ -3,7 +3,9 @@ import { createServer as createHttpServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { createServer as createViteServer } from 'vite';
 import { expect, it } from 'vitest';
-import config from '../vite.config';
+import defineConfig from '../vite.config';
+
+const config = defineConfig({ command: 'serve', mode: 'test' });
 
 it('forwards the same-origin API path and correlation through the configured Vite proxy', async () => {
   const configured = config.server?.proxy?.['/api/v1'];

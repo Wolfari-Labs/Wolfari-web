@@ -56,6 +56,25 @@ Route `/admin` được người dùng chốt ngày 15/10/2026 cho Phase 1, ch�
 | API / version  | API Admin chưa tích hợp; giữ profile version và system role từ model mục tiêu Identity. Không tạo field job/config version khi chưa đọc dữ liệu nghiệp vụ.              |
 | Acceptance     | Role guard, keyboard/drawer, header/sidebar geometry, short laptop, state matrix; không gọi API hoặc báo mutation thành công                                            |
 
+## Contract: Shared UI Foundation
+
+| Mục                     | Quy định                                                                                                                                                                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Screen / entry          | `shared-ui-foundation`; sandbox `/design-system.html` ở development hoặc explicit preview build. Không thêm product route, production build chỉ có `index.html`.                                                                          |
+| Actor / permission      | Presentation cho mọi actor; sandbox không đăng nhập hoặc cấp quyền. Khi compose feature, owning route/repository giữ guard.                                                                                                               |
+| Figma                   | Desktop `3:33`, `11:9`, `11:14`, `11:23`; Mobile `320:2144`, `320:2154`, showcase `405:3634`; note/dropdown mapping theo implementation matrix.                                                                                           |
+| Data / repository       | Data mode fixture presentation: props/native form/local state. Không query/mutation hoặc repository mới; shared không import feature, fixture, Gateway hoặc transport.                                                                    |
+| Entry / exit            | Mở sandbox trực tiếp; link về `/`. Drawer mở/đóng local và giữ selection; không gọi API hoặc báo saved.                                                                                                                                   |
+| Components / state      | Button primary/outline/plain, disabled/loading; Input/Select default/focus/error/disabled; Alert info/success/warning/error; ContentState giữ các shell states; Drawer/nav open/closed/selected/disabled.                                 |
+| Responsive              | Desktop Button/Input/Select ≥44px; Mobile ≤768px Button/fields 52px, pill/control radius. Header/nav/compact profile/collapse có vùng bấm ≥44px; Drawer ≥48px. Source Trip 42/38px và dropdown 40px được nâng theo yêu cầu accessibility. |
+| Scroll                  | Sandbox natural document flow, wrapping grid, nội dung cuối reachable; không che content. Shell giữ Desktop fixed main/nav boundaries và Mobile document/drawer.                                                                          |
+| Keyboard                | Native button/Select/input, labels + hint/error associations, focus-visible; Drawer trap/return/Escape/backdrop; disabled/loading không kích hoạt callback.                                                                               |
+| Validation / retry      | Demo chỉ hiển thị error, giữ input, không submit HTTP. ContentState retry chỉ dùng callback đọc được phép; no duplicate activation trong loading.                                                                                         |
+| Accessibility extension | Focus ring/hover/loading/error live semantics bổ sung cho Web; reduced motion tắt animation; font mobile dùng system SF Pro fallback, không tải font Apple.                                                                               |
+| Acceptance              | Browser ở 1440×800, 1366×520, 820×600, 768×1024, 402×874, 320×480; test native selection, input preservation, local assets, 44px targets, focus/scroll; shell regression suite giữ nguyên và mở rộng touch assertion.                     |
+
+Token/style source và test evidence: [Phase 2 handoff](design-system-phase2.md). Shell route/model/revision/permission và mutation behavior không đổi.
+
 ## Contract: Home
 
 | Mục           | Quy định                                                                  |

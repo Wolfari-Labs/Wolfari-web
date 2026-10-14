@@ -1,0 +1,120 @@
+.preview {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-32);
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-24);
+  align-items: center;
+  justify-content: space-between;
+}
+.header > div {
+  min-width: 0;
+}
+.header h1 {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  line-height: var(--line-heading);
+  font-weight: var(--weight-bold);
+  overflow-wrap: anywhere;
+}
+.header p {
+  color: var(--color-note-text);
+  line-height: var(--line-body);
+}
+.logo {
+  width: 155px;
+  height: 51.667px;
+  object-fit: contain;
+}
+.back {
+  display: inline-flex;
+  min-height: var(--target-min);
+  align-items: center;
+  text-decoration: underline;
+}
+.panel {
+  margin-top: var(--space-24);
+  padding: var(--space-24);
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-soft);
+}
+.panel h2 {
+  margin: 0 0 var(--space-20);
+  font-size: var(--font-size-card-title);
+  line-height: var(--line-card-title);
+  overflow-wrap: anywhere;
+}
+.row,
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+  align-items: center;
+}
+.row {
+  grid-column: 1 / -1;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--space-24);
+}
+.grid > section {
+  margin: var(--space-16) 0;
+  padding: var(--space-16);
+}
+.swatch {
+  display: block;
+  width: 72px;
+  height: var(--space-32);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-8);
+  margin-bottom: var(--space-8);
+}
+.ink {
+  background: var(--color-ink);
+}
+.blue {
+  background: var(--color-blue);
+}
+.pale {
+  background: var(--color-pale);
+}
+.selected {
+  background: var(--color-selected);
+}
+.line {
+  background: var(--color-line);
+}
+.bodySample {
+  font-size: var(--font-size-body);
+  line-height: var(--line-body);
+}
+.handwritten {
+  font-family: var(--font-handwritten);
+  font-weight: var(--weight-bold);
+  font-size: var(--font-size-heading);
+  color: var(--color-blue);
+}
+.preview footer {
+  margin-top: var(--space-32);
+  line-height: var(--line-body);
+}
+@media (max-width: 768px) {
+  .preview {
+    padding: var(--space-16);
+  }
+  .panel {
+    padding: var(--space-16);
+    box-shadow: var(--shadow-mobile-surface);
+  }
+  .header h1 {
+    font-size: var(--font-size-title);
+    line-height: var(--line-title);
+  }
+}
