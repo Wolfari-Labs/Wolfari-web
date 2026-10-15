@@ -18,6 +18,8 @@ import type { HomeRepository } from './features/home/model/home';
 import { selectHomeRepository } from './infrastructure/repositories/select-home-repository';
 import type { PlanRepository } from './features/plan/model/plan';
 import { selectPlanRepository } from './infrastructure/repositories/select-plan-repository';
+import type { MembershipRepository, InvitationRepository } from './features/members/model/members';
+import { selectMembersRepositories } from './infrastructure/repositories/select-members-repositories';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -33,6 +35,8 @@ async function start() {
     let identityFixtureFactory: (() => IdentityRepository) | undefined;
     let homeFixtureFactory: (() => HomeRepository) | undefined;
     let planFixtureFactory: (() => PlanRepository) | undefined;
+    let membersFixtureFactory:
+      (() => { membership: MembershipRepository; invitation: InvitationRepository }) | undefined;
     if (import.meta.env.DEV || import.meta.env.MODE === 'preview') {
       if (fixtureSelected) {
         const { previewTripId, createFixtureShellRepository } =
@@ -51,6 +55,15 @@ async function start() {
         const { createFixturePlanRepository } =
           await import('./infrastructure/fixtures/plan.fixture-repository');
         planFixtureFactory = createFixturePlanRepository;
+        const [{ createFixtureMembershipRepository }, { createFixtureInvitationRepository }] =
+          await Promise.all([
+            import('./infrastructure/fixtures/membership.fixture-repository'),
+            import('./infrastructure/fixtures/invitation.fixture-repository'),
+          ]);
+        membersFixtureFactory = () => ({
+          membership: createFixtureMembershipRepository(),
+          invitation: createFixtureInvitationRepository(),
+        });
       }
     }
     const repository = await selectShellRepository(
@@ -78,6 +91,11 @@ async function start() {
       previewAllowed,
       planFixtureFactory,
     );
+    const membersRepositories = selectMembersRepositories(
+      import.meta.env.VITE_DATA_MODE,
+      previewAllowed,
+      membersFixtureFactory,
+    );
     root.render(
       <StrictMode>
         <ErrorBoundary>
@@ -87,6 +105,7 @@ async function start() {
             identityRepository={identityRepository}
             homeRepository={homeRepository}
             planRepository={planRepository}
+            membersRepositories={membersRepositories}
           >
             <RouterProvider router={createRouter(previewTripPath)} />
           </Providers>

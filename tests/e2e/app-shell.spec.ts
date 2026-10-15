@@ -1,5 +1,29 @@
 import { expect, test, type Page } from '@playwright/test';
 const tripPath = '/trips/11111111-1111-4111-8111-111111111111';
+for (const width of [1440, 402])
+  test(`target-only sections keep unavailable preview ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(tripPath);
+    await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
+    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    await page
+      .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
+      .getByRole('button', { name: 'Packing list', exact: true })
+      .click();
+    await expect(
+      page.getByRole('heading', { name: 'Chức năng chưa khả dụng', exact: true }),
+    ).toBeVisible();
+    await expect(page.locator('[data-flow="trip-overview"]')).toHaveCount(0);
+    await expect(page).toHaveURL(tripPath);
+    await expect(page.locator('main')).toBeFocused();
+    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    await page
+      .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
+      .getByRole('button', { name: 'Tổng quan chuyến đi', exact: true })
+      .click();
+    await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
+    await expect(page.locator('main')).toBeFocused();
+  });
 async function expectRouteContent(page: Page, route: string) {
   if (route === '/')
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/Cho những|Đi đâu/);
@@ -13,6 +37,8 @@ async function expectRouteContent(page: Page, route: string) {
     await expect(page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' })).toBeVisible();
   else if (route.endsWith('/plan'))
     await expect(page.locator('[data-flow="plan-preview"]')).toBeVisible();
+  else if (route.endsWith('/members'))
+    await expect(page.locator('[data-flow="members-preview"]')).toBeVisible();
   else if (/^\/trips\/[^/]+$/.test(route))
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
   else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();

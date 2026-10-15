@@ -128,3 +128,7 @@ Metadata read: loading/ready/empty/error/forbidden/not-found/conflict/unavailabl
 ### Plan preview
 
 Plan read loading/ready/empty/error/forbidden/not-found/conflict/unavailable; null startsAt không bị gán ngày, nullable end/location rõ ràng; unknown trip → not-found. Cross-projection revision mismatch → conflict; read permissions trước summary/timeline. Pending/unknown presentation không đổi snapshot, write controls disabled. Day selection/expansion giữ qua read recovery; Guest không gọi Plan. [Evidence](plan-preview-phase3.md).
+
+### Members / Invitation preview
+
+Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; Invitation EXPIRED/REVOKED/ACCEPTED “đã dùng” là read scenarios/version2. Owner-only invitation query; Guest và denied metadata không đọc members/invitations; foreign-trip rows không hiển thị. Nullable name/avatar → neutral ID fallback, không role/Holder inference. Draft email giữ qua read recovery; pending/unknown không tăng revision hoặc báo sent/saved. Target-only selection unavailable thay vì sai body. [Evidence](members-preview-phase3.md).

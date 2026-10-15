@@ -224,3 +224,7 @@ Readable Trip List card → Overview metadata → existing Plan/Members route; B
 ### Plan preview
 
 Overview/sidebar → Plan → chọn ngày/activity disclosure/unscheduled panel → Overview hoặc Members bằng existing navigation. Day selection và expansion local, giữ qua read error/recovery; không route cho map/activity hoặc drag/drop mutation. Overview đọc cùng first-day Plan projection. [Contract/evidence](plan-preview-phase3.md).
+
+### Members / Invitation preview
+
+Overview/Plan/sidebar → Members active rows → Owner-only local invitation preview → Members, không URL mới. Member không đọc invitation projection. Email validation giữ draft/focus rồi unavailable, không sent/saved/token/link; terminal statuses là seeded reads. Target-only sidebar giữ selection/URL và unavailable, chọn Overview phục hồi body và focus main. [Contract/evidence](members-preview-phase3.md).

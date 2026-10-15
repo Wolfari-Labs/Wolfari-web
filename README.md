@@ -32,7 +32,9 @@ corepack pnpm test
 corepack pnpm build
 ```
 
-Open `http://127.0.0.1:5173/trips` for the Phase 3 Trip List. Development defaults to fixture: six readable trips with local status filters, name search and date sorting. Mobile search/sort expands from “Tìm kiếm và sắp xếp”. Card links open the existing Overview shell; other feature bodies and all server mutations remain deferred. Create/edit/archive/delete and unconfirmed filters are disabled.
+Open `http://127.0.0.1:5173/trips` for the Phase 3 Trip List. Development defaults to fixture: six readable trips with local status filters, name search and date sorting. Mobile search/sort expands from “Tìm kiếm và sắp xếp”. Card links open Trip Overview; its sidebar opens Plan and Members read previews. Create/edit/archive/delete and unconfirmed filters are disabled.
+
+Phase 3 also includes Home `/`, local validation at `/login` and `/register`, and Self profile `/profile`. Login/register never authenticate or create a session; use the shell preview selector for Guest/User presentation. Plan has day selection/activity disclosure/unscheduled locations; Members uses IDs and roles while name/avatar enrichment is unavailable. Invitation preview validates email without sending or creating a link. All writes remain disabled, preview-only or unavailable. See [Auth](docs/auth-fixture-phase3.md), [Overview](docs/trip-overview-phase3.md), [Plan](docs/plan-preview-phase3.md) and [Members](docs/members-preview-phase3.md) for mapping, checks and remaining gaps.
 
 The list preview controls at the end of the content select read states independently of the shell preview. Fixture lifecycles use the fixed reference `2026-09-23`; no API requests or token storage are involved. `corepack pnpm build:preview` creates an explicit fixture preview; production `build` excludes the fixture catalog and uses the unavailable Gateway boundary until integration is implemented. See [Trip List contract](docs/screen-contracts.md#contract-trip-list) and [Phase 1 shell mapping, reconcile and checks](docs/app-shell-reconcile-2026-10-15.md).
 

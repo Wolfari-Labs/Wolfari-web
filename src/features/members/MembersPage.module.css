@@ -1,0 +1,540 @@
+.page {
+  padding: 12px 18px 24px;
+  color: var(--color-ink);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.breadcrumb h1 {
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0;
+}
+.breadcrumb a {
+  color: var(--color-active);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.hero :global(section[data-compact='true']) {
+  min-height: 150px;
+}
+.hero :global(section[data-compact='true']) > div:first-child {
+  padding-block: 20px;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 16px 0 12px;
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+.tabs > button {
+  border: 0;
+  min-height: 44px;
+  min-width: 120px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--color-ink);
+  background: transparent;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.tabs > button[aria-pressed='true'] {
+  background: var(--color-selected);
+  box-shadow: inset 0 -3px var(--color-active);
+}
+.tabs > button:disabled {
+  cursor: not-allowed;
+  color: var(--color-muted);
+}
+.tabs small {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 24px;
+  border: 1px solid var(--color-line);
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+}
+.memberPanel,
+.responsibilities {
+  min-width: 0;
+}
+.memberPanel h2,
+.responsibilities > h2,
+.invitationForm h2,
+.invitationList h2 {
+  font-size: 22px;
+  line-height: 30px;
+  margin: 0 0 8px;
+}
+.help,
+.count {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 20px;
+  margin: 8px 0 14px;
+}
+.members {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.members > li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e8f6f8;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.avatar img {
+  display: block;
+}
+.avatarPhoto {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.identity {
+  flex: 1;
+  min-width: 120px;
+  font-size: 14px;
+  line-height: 22px;
+  overflow-wrap: anywhere;
+}
+.identity strong {
+  display: block;
+}
+.identity small {
+  display: block;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+.identity summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-active);
+}
+.identity dl {
+  font-size: 12px;
+  line-height: 20px;
+}
+.identity dd {
+  margin: 0 0 8px;
+}
+.role {
+  border-radius: 999px;
+  background: #e6f6ff;
+  color: #0070c8;
+  padding: 6px 16px;
+  font-size: 12px;
+}
+.role.owner {
+  background: #fff3d7;
+  color: #b67500;
+}
+.members > li > button {
+  font-size: 12px;
+  min-height: 44px;
+}
+.lifecycle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+.responsibilities {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+.responsibilities h2 {
+  margin: 0;
+}
+.responsibilities section {
+  padding: 16px;
+  border-radius: 8px;
+  background: #ecf9fd;
+  border-left: 3px solid #00a4d3;
+}
+.responsibilities section:nth-of-type(1) {
+  background: #fff6de;
+  border-color: #f19a19;
+}
+.responsibilities section:nth-of-type(2) {
+  background: #e5f7ef;
+  border-color: #15b784;
+}
+.responsibilities section:nth-of-type(3) {
+  background: #f1eaff;
+  border-color: #8b5aff;
+}
+.responsibilities h3 {
+  font-size: 14px;
+  line-height: 22px;
+  margin: 0 0 6px;
+  font-weight: 500;
+}
+.responsibilities p {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-muted);
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+.invitationWorkspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 28px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: white;
+  padding: 20px;
+}
+.invitationForm,
+.invitationList {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+}
+.invitationForm h2,
+.invitationList h2 {
+  margin: 0;
+}
+.invitationForm > p {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 20px;
+  margin: 0;
+}
+.invitationForm > button {
+  align-self: flex-end;
+}
+.invitationList ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.invitationList li {
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 0 14px;
+  overflow-wrap: anywhere;
+}
+.invitationHeading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.invitationHeading strong {
+  font-size: 14px;
+}
+.invitationStatus {
+  padding: 7px 14px;
+  border-radius: 24px;
+  background: #fff4df;
+  color: #a16a00;
+  font-size: 12px;
+}
+.invitationStatus[data-status='EXPIRED'],
+.invitationStatus[data-status='REVOKED'] {
+  color: #955c49;
+  background: #f7eeea;
+}
+.invitationList li p {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-muted);
+  margin: 12px 0;
+}
+.invitationList li .lifecycle {
+  justify-content: flex-end;
+}
+.revisions {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-muted);
+  margin: 16px 0;
+}
+.page > :global(.preview) {
+  margin-top: 20px;
+}
+.introduction {
+  display: none;
+}
+@media (max-height: 650px) and (min-width: 769px) {
+  .hero :global(section[data-compact='true']) {
+    min-height: 116px;
+  }
+  .hero :global(section[data-compact='true']) > div:first-child {
+    padding: 12px 20px;
+  }
+  .workspace {
+    gap: 16px;
+  }
+  .members > li {
+    padding: 10px 12px;
+  }
+  .responsibilities section {
+    padding: 12px;
+  }
+  .tabs {
+    margin-top: 10px;
+  }
+}
+@media (max-width: 1100px) and (min-width: 769px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .responsibilities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .responsibilities h2,
+  .responsibilities > button {
+    grid-column: 1/-1;
+  }
+  .invitationWorkspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tabs small {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding: 24px;
+    font-family: var(--font-ios);
+    color: var(--ios-ink);
+  }
+  .breadcrumb {
+    display: block;
+    margin-bottom: 14px;
+    min-height: 0;
+  }
+  .breadcrumb > a,
+  .breadcrumb > span {
+    display: none;
+  }
+  .breadcrumb h1 {
+    font-size: 17px;
+    line-height: 22px;
+    font-weight: 600;
+  }
+  .hero {
+    display: none;
+  }
+  .introduction {
+    display: block;
+  }
+  .introduction h2 {
+    font-size: 28px;
+    line-height: 34px;
+    margin: 0 0 8px;
+  }
+  .introduction p {
+    color: var(--ios-muted);
+    font-size: 15px;
+    line-height: 20px;
+    margin: 0 0 20px;
+  }
+  .tabs {
+    background: var(--ios-secondary);
+    border: 0;
+    border-radius: 24px;
+    padding: 4px;
+    margin: 0 0 20px;
+    gap: 4px;
+  }
+  .tabs > button {
+    min-width: 0;
+    flex: 1;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 22px;
+  }
+  .tabs > button[aria-pressed='true'] {
+    background: white;
+    box-shadow: 0 1px 5px #1f333d14;
+  }
+  .tabs > button:nth-child(3),
+  .tabs small {
+    display: none;
+  }
+  .workspace {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    gap: 24px;
+  }
+  .memberPanel h2 {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  .help {
+    color: var(--ios-muted);
+  }
+  .members {
+    background: white;
+    border-radius: 24px;
+    padding: 0 16px;
+    gap: 0;
+  }
+  .members > li {
+    padding: 16px 0;
+    border: 0;
+    border-bottom: 1px solid var(--ios-line);
+    border-radius: 0;
+    gap: 12px;
+  }
+  .members > li:last-child {
+    border-bottom: 0;
+  }
+  .identity {
+    min-width: 150px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .identity small {
+    color: var(--ios-muted);
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .identity summary {
+    color: var(--ios-teal);
+  }
+  .role {
+    background: var(--ios-secondary);
+    color: var(--ios-teal);
+  }
+  .role.owner {
+    color: #955c49;
+    background: #f7eeea;
+  }
+  .members > li > button {
+    margin-left: 56px;
+  }
+  .responsibilities {
+    background: white;
+    padding: 20px;
+    border-radius: 24px;
+  }
+  .responsibilities h2 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .responsibilities section {
+    border: 0;
+    border-radius: 18px;
+  }
+  .responsibilities p {
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ios-muted);
+  }
+  .invitationWorkspace {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    gap: 24px;
+  }
+  .invitationForm {
+    gap: 18px;
+  }
+  .invitationForm h2,
+  .invitationList h2 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .invitationForm > button {
+    align-self: stretch;
+  }
+  .invitationList li {
+    border: 0;
+    border-radius: 24px;
+    background: white;
+    padding: 20px;
+  }
+  .invitationHeading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .invitationStatus {
+    order: -1;
+  }
+  .invitationHeading strong {
+    font-size: 17px;
+    line-height: 22px;
+  }
+  .invitationList li p {
+    font-size: 13px;
+    color: var(--ios-muted);
+  }
+  .revisions {
+    color: var(--ios-muted);
+  }
+}
+@media (max-width: 360px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .members {
+    padding-inline: 14px;
+  }
+  .members > li {
+    gap: 10px;
+  }
+  .identity {
+    min-width: 140px;
+  }
+  .role {
+    margin-left: 54px;
+  }
+}

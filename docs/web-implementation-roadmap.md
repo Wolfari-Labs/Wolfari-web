@@ -217,6 +217,8 @@ Mỗi flow phải có domain view model, repository interface, fixture repositor
 
 **Hoàn tất khi:** các flow trong phạm vi có thể chạy độc lập, khớp Figma ở desktop/short laptop/tablet/mobile, có loading/empty/error/permission/conflict/pending/unavailable state, không có transport logic trong component và không còn màn hình đã được route mà chỉ là placeholder ngoài chủ ý.
 
+**Đối chiếu ngày 15/10/2026:** Auth/Home/Profile, Trip Overview và Plan Preview đã commit/test/merge tuần tự vào `develop`; Members/Invitations read preview hoàn thiện trên `ui/members-preview`. Không chuyển Phase 4 hoặc nối Gateway. [Auth evidence](auth-fixture-phase3.md), [Overview evidence](trip-overview-phase3.md), [Plan evidence](plan-preview-phase3.md), [Members evidence/gaps](members-preview-phase3.md). Tên/ảnh thành viên, Finance/Travel aggregates và mutation success không được giả lập; member hero decorative variant còn visual gap. Target-only sidebar hiển thị unavailable preview thay vì nội dung Overview dưới nhãn khác; không sinh route.
+
 ## Giai đoạn 4 — Guest và Identity tích hợp thật
 
 **Mục tiêu:** hoàn tất một lát cắt dùng được từ public entry đến session Web.
