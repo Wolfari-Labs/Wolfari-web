@@ -18,7 +18,9 @@ for (const size of [
     });
     for (const route of ['/', '/login', '/register', '/profile']) {
       await page.goto(route);
-      await expect(page.locator('main h1')).toBeVisible();
+      if (route === '/') await expect(page.getByRole('heading',{level:1,name:/Cho những|Đi đâu/})).toBeVisible();
+      else if (route === '/profile') await expect(page.getByRole('heading',{level:1,name:'Tài khoản của tôi'})).toBeVisible();
+      else await expect(page.getByRole('form',{name:route==='/login'?'Biểu mẫu đăng nhập':'Biểu mẫu đăng ký'})).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
         size.width,

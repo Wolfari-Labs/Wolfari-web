@@ -193,7 +193,7 @@ describe('Trip List route slice', () => {
     const read = vi
       .fn(fixture.listTrips)
       .mockRejectedValueOnce(new Error('internal transport detail'));
-    mount({ tripRepository: { listTrips: read } });
+    mount({ tripRepository: { ...createFixtureTripRepository(), listTrips: read } });
     await screen.findByText('Chưa thể tải nội dung', { exact: true });
     const search = screen.getByRole('searchbox', { name: 'Tìm chuyến đi theo tên' });
     const sort = screen.getByRole('combobox', { name: 'Sắp xếp chuyến đi' });

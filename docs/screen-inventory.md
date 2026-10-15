@@ -123,4 +123,8 @@ Ngày 15/10/2026, người dùng chốt dùng sáu trip Desktop làm catalog can
 
 ### Phase 3 Auth fixture implementation
 
-Home, Login, Register v? Self profile ?? c? fixture bodies tr?n c?c route inventory hi?n c?. Mobile edit profile inline, kh?ng th?m route; c?c frame native notification/verification/reset v?n target-only. Xem [mapping v? gaps](auth-fixture-phase3.md).
+Home, Login, Register và Self profile đã có fixture bodies trên các route inventory hiện có. Mobile edit profile inline, không thêm route; các frame native notification/verification/reset vẫn target-only. Xem [mapping và gaps](auth-fixture-phase3.md).
+
+### Phase 3 Trip Overview
+
+`3:31`/`3:32`/`317:2032` → `/trips/:tripId` đã có fixture metadata body, active Member/Owner. Aggregate projections unavailable; target-only routes giữ nguyên. [Mapping](trip-overview-phase3.md).

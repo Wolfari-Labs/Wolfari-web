@@ -29,7 +29,7 @@ describe('Trip repository boundary', () => {
         status: 'error',
         error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false },
       });
-      expect(Object.keys(repository)).toEqual(['listTrips']);
+      expect(Object.keys(repository).sort()).toEqual(['getTrip', 'listTrips']);
       expect(fetchSpy).not.toHaveBeenCalled();
     } finally {
       fetchSpy.mockRestore();
@@ -85,7 +85,10 @@ describe('Trip repository boundary', () => {
   });
 
   it('uses the supplied read-only adapter only when fixture preview is allowed', async () => {
-    const adapter: TripRepository = { listTrips: async () => ({ status: 'empty' }) };
+    const adapter: TripRepository = {
+      listTrips: async () => ({ status: 'empty' }),
+      getTrip: async () => ({ status: 'empty' }),
+    };
     const factory = vi.fn(() => adapter);
     expect(await selectTripRepository(undefined, true, factory)).toBe(adapter);
     expect(await selectTripRepository('fixture', true, factory)).toBe(adapter);
@@ -153,7 +156,7 @@ describe('Trip List fixture projection', () => {
         permissions: { canRead: true, canUpdate: false },
       });
     }
-    expect(Object.keys(repository)).toEqual(['listTrips']);
+    expect(Object.keys(repository).sort()).toEqual(['getTrip', 'listTrips']);
   });
 
   it('uses responsive source illustrations only for the two mapped cards', async () => {

@@ -226,7 +226,7 @@ function mount(path = '/profile', guest = false) {
       repository={{
         read: (input) => shell.read({ ...input, ...(guest ? { scenario: 'guest' as const } : {}) }),
       }}
-      tripRepository={{ listTrips }}
+      tripRepository={{ ...trip, listTrips }}
       identityRepository={{ ...identity, readSelf }}
       homeRepository={createFixtureHomeRepository()}
     >

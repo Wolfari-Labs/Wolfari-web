@@ -125,6 +125,12 @@ E2E chạy serial trên fixture preview với external server và Playwright CLI
 
 ### Phase 3 Auth fixture / Home / Self profile
 
-[Figma ? route ? actor/component, domain v? runtime gaps](auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header v? document scroll thay native bars/tabs; kh?ng th?m route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
+[Figma → route → actor/component, domain và runtime gaps](auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header và document scroll thay native bars/tabs; không thêm route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
 
-Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; 115 unit/component/proxy tests v? 57 Chromium E2E pass (serial external preview runner, exit 0). ?? review screenshot desktop, short laptop v? Mobile. Production marker scan kh?ng c? fixture records/IDs; build c? warning chunk >500kB, c?n t?ch route khi m? r?ng flow. Backend HEAD d8c02cb s?ch, ch? ??c.
+Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; 115 unit/component/proxy tests và 57 Chromium E2E pass (serial external preview runner, exit 0). Đã review screenshot desktop, short laptop và Mobile. Production marker scan không có fixture records/IDs; build có warning chunk >500kB, cần tách route khi mở rộng flow. Backend HEAD d8c02cb sạch, chỉ đọc.
+
+### Trip Overview fixture
+
+`3:31`/`3:32` → Desktop expanded/collapsed; `317:2032` → Mobile Web adaptation của cùng `/trips/:tripId`, Member/Owner. [Component/domain/scroll/runtime mapping](trip-overview-phase3.md). Trip List canonical dates/name giữ nguyên; cover theo Overview frame, unsupported dashboard numbers thay unavailable. Tablet là Web adaptation, không tuyên bố có Figma tablet frame. Router lazy-load feature bodies và shell loading boundary.
+
+Overview acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass, **124 unit/component/proxy và 65 Chromium E2E tests pass**. Full regression sau route splitting dùng hai browser workers, exit 0; route/body readiness assertions giữ nguyên scroll/asset checks. Đã review Desktop/Mobile screenshots; production lazy chunks hết warning >500kB và fixture marker scan pass.

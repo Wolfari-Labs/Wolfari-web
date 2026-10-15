@@ -353,7 +353,7 @@ test('Trip List preserves filter search and sort across viewport changes', async
   }
 });
 
-test('Trip List keyboard links open six existing Overview placeholders and Back returns to list', async ({
+test('Trip List keyboard links open six Overview routes and Back returns to list', async ({
   page,
 }) => {
   const apiCalls = watchApi(page);
@@ -366,7 +366,8 @@ test('Trip List keyboard links open six existing Overview placeholders and Back 
     await expect(link).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(`/trips/${trip.id}`);
-    await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
+    await expect(page.getByRole('heading', { name: trip.name, exact: true })).toBeVisible();
     await expect(
       page.getByRole('heading', { level: 1, name: 'Tổng quan chuyến đi' }),
     ).toBeVisible();

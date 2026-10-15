@@ -23,5 +23,6 @@ export default defineConfig(({ mode }) => ({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     clearMocks: true,
+    maxWorkers: 2,
   },
 }));

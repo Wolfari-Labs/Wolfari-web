@@ -215,4 +215,8 @@ Acceptance 15/10/2026: 95 unit/component/proxy và 47 browser tests đạt; alia
 
 ### Auth fixture / Home / Self profile
 
-Header/drawer/logo ? `/`; Guest CTA ? `/login` ? `/register`; User ? `/trips` ho?c `/profile`. Valid form ch? chuy?n unavailable, kh?ng authenticated transition. Mobile profile summary m? editor inline; draft gi? qua read error/retry. Guest kh?ng g?i Self/Trip queries, k? c? Home retry. Xem [contract v? evidence](auth-fixture-phase3.md).
+Header/drawer/logo → `/`; Guest CTA → `/login` ↔ `/register`; User → `/trips` hoặc `/profile`. Valid form chỉ chuyển unavailable, không authenticated transition. Mobile profile summary mở editor inline; draft giữ qua read error/retry. Guest không gọi Self/Trip queries, kể cả Home retry. Xem [contract và evidence](auth-fixture-phase3.md).
+
+### Trip Overview fixture
+
+Readable Trip List card → Overview metadata → existing Plan/Members route; Back trả về list, focus main/reset scroll theo shell. Edit/Share và aggregate actions unavailable. Không deep link mới, không server writes. [Contract/evidence](trip-overview-phase3.md).

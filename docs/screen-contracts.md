@@ -155,6 +155,8 @@ Phase 3 acceptance ngày 15/10/2026: 95 unit/component/proxy tests và 47 browse
 | Actions             | Chỉ hiển thị action khi capability từ server cho phép                                         |
 | Mobile              | Drawer điều hướng; title trong main content; content tự co giãn theo viewport                 |
 
+Phase 3 fixture slice: Desktop `3:31`/`3:32`, Mobile `317:2032` → existing route, Member/Owner. `TripRepository.getTrip({tripId,scenario,signal})` → `TripDetailViewModel`, dùng cùng sáu canonical Trip List records; không thay metadata theo viewport. Description/publicDescription nullable, planEditPolicy và ba revisions giữ nguyên; actor active membership/canRead, opaque unknown/denied ID → not-found. Không cấp quyền từ role hệ thống. Finance/weather/packing/fare/map aggregate chưa có repository projection → unavailable, không dùng số minh họa làm server data. Plan/Members links dùng route đã chốt; Edit/Share disabled, không idempotency hoặc mutation receipt giả. Read states loading/ready/empty/error/forbidden/not-found/conflict/unavailable; read retry giữ navigation state. Desktop main/nav cuộn trong viewport; Mobile document scroll, shared drawer/header, không native tabs. Short laptop giảm spacing; keyboard links/touch≥44px, route transitions và 1440/1366×520/1024/820/768/402/320 phải kiểm tra. Trip GET static runtime-candidate tại `d8c02cb`; Gateway mặc định unavailable.
+
 ## Contract: Plan / Activity
 
 | Mục         | Quy định                                                                                                     |

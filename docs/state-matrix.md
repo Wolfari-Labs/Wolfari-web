@@ -119,4 +119,8 @@ Browser acceptance đã bao phủ desktop 1440×800, short laptop 1366×520, tab
 
 ### Phase 3 Auth/Home/Self coverage
 
-Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable qua common repository result. Auth: validation gi? input/focus; pending/unknown/error/unavailable l? presentation, kh?ng mutation receipt. Self save ch? validate/unavailable, version kh?ng ??i; profile draft gi? qua error/recovery. Notification/push/avatar/logout/revoke disabled. [Evidence](auth-fixture-phase3.md).
+Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable qua common repository result. Auth: validation giữ input/focus; pending/unknown/error/unavailable là presentation, không mutation receipt. Self save chỉ validate/unavailable, version không đổi; profile draft giữ qua error/recovery. Notification/push/avatar/logout/revoke disabled. [Evidence](auth-fixture-phase3.md).
+
+### Trip Overview fixture
+
+Metadata read: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; unknown/denied opaque IDs → not-found. Snapshot canRead/active membership guard và Guest/Admin shell guard chặn private reads. Aggregate cards unavailable; writes disabled, pending/unknown không áp dụng cho read-only metadata. [Evidence](trip-overview-phase3.md).

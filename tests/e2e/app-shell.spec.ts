@@ -11,6 +11,8 @@ async function expectRouteContent(page: Page, route: string) {
     ).toBeVisible();
   else if (route === '/profile')
     await expect(page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' })).toBeVisible();
+  else if (/^\/trips\/[^/]+$/.test(route))
+    await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
   else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
 }
 async function choose(page: Page, scenario: string) {
@@ -83,7 +85,7 @@ for (const size of sizes)
       if (new URL(request.url()).pathname.startsWith('/api/')) calls.push(request.url());
     });
     await page.goto(tripPath);
-    await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+    await expectRouteContent(page, tripPath);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
@@ -198,7 +200,7 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
 }) => {
   await page.setViewportSize({ width: 402, height: 600 });
   await page.goto(tripPath);
-  await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+  await expectRouteContent(page, tripPath);
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Đến nội dung chính' })).toBeFocused();
   await page.keyboard.press('Enter');
