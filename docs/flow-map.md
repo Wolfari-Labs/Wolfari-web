@@ -176,3 +176,39 @@ Không có `success` giả cho các mutation chưa có Gateway handler. Với jo
 Desktop flow diagrams 299:2207 và 538:5696 là documentation, không product routes. Admin page có 8 action overlays 216:1337–1472, đều mock-only. Detached Mobile 328:3072 chưa rõ owner, giữ unknown.
 
 Prototype Register đi logged-in trái 202/no-session. Những màn “Đã hoàn tất” của share/export/Finance/transfer/archive/delete/packing không được đi thẳng bằng mock mutation. Xem runtime evidence trước mở flow.
+
+## Phase 3 — Trip List · read-only fixture
+
+Scope `/trips` theo [screen contract](screen-contracts.md#contract-trip-list), được chốt ngày 15/10/2026. Flow C phía trên mô tả cả target creation; work unit này chỉ triển khai read-only list, không mở create flow hoặc gọi Backend.
+
+```text
+Authenticated User → /trips
+  → TripRepository.listTrips (session-scoped, AbortSignal)
+  → loading/read pending
+  ├─ ready → sáu canonical Desktop fixtures dùng chung Desktop/Mobile
+  │   ├─ canRead=false / không có active viewer membership → không render item
+  │   ├─ status / name search / date sort → local presentation, không HTTP
+  │   ├─ không còn kết quả phù hợp → empty giữ controls để sửa filter
+  │   └─ open readable trip → /trips/:tripId (Overview placeholder hiện có)
+  ├─ empty → empty explanation; create chưa mở
+  ├─ error → retry read, giữ filter/search/sort
+  ├─ forbidden → permission state, không private list payload
+  ├─ conflict → reload/refetch read, không ghi đè revisions
+  └─ unavailable → capability explanation, không gọi API giả
+```
+
+| Interaction                | Behavior đã chốt                                                                                                                                                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Default / filter           | `all` và thứ tự catalog Figma trên mọi viewport. Năm status choices all/ONGOING/UPCOMING/COMPLETED/ARCHIVED dùng chung local state; resize không tự đổi selection hoặc dataset                                                              |
+| Name / sort                | Search chỉ theo tên trong fixture đã được phép đọc. Sort “Mặc định” giữ catalog; ngày bắt đầu tăng/giảm dùng `Date.parse(startAt)` và stable ID fallback, không dùng đồng hồ máy hoặc thuật toán “gần nhất” chưa chốt                       |
+| Desktop / tablet           | Header 76px cố định, main là scroll boundary. 1440px ba cột/gutter 64px; short 1366×520 compact hero 138px/gutter 32px; tablet 820px hai cột; list Desktop không có trip sidebar                                                            |
+| Mobile ≤768px              | Drawer trái/header logo giữa/avatar phải; title trong content; natural document scroll; hero đầu/compact phần còn lại. Status row cuộn ngang với targets ≥44px; search/sort trong disclosure “Tìm kiếm và sắp xếp”; không native bottom tab |
+| Drawer / keyboard          | Dùng shared modal Drawer; trigger/Escape/backdrop/close và focus-return theo shell contract. Open trip dùng semantic link; status button có selected state; controls có label và focus-visible                                              |
+| Create/edit/archive/delete | Disabled, không navigation hoặc mutation success. Bộ lọc vai trò/thời gian/nâng cao chưa có behavior được kiểm chứng cũng disabled                                                                                                          |
+| Gateway path               | Cùng `TripRepository`/view model; adapter chưa nối và trả unavailable. Không gửi HTTP, không tạo idempotency key hoặc tăng revision cho local presentation                                                                                  |
+
+Sáu fixture giữ lifecycle explicit với mốc `2026-09-23`, không `Date.now()`. Cover/member count/ảnh Mobile là nullable presentation enrichment; không suy ra từ Trip DTO hoặc số lượng `currentMembership`.
+
+GET list runtime hiện chỉ nhận `limit`/`cursor`/`lifecycle`, scope active membership, default loại archived và sort fixed `created_at DESC,id DESC` (`runtime-candidate`). Local name/date sort và `all` fixture không trở thành server query hoặc kết luận toàn bộ collection Gateway đã được tải. Destination vẫn là shell placeholder: Phase 3 này không thêm Overview business, write pending/unknown hoặc server persistence.
+
+Acceptance 15/10/2026: 95 unit/component/proxy và 47 browser tests đạt; alias `/trips/`/`/TRIPS` không bỏ qua authenticated guard hoặc thay layout. Xem [visual/test evidence](figma-implementation-matrix.md).

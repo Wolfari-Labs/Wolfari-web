@@ -1,4 +1,4 @@
-# Prompt copy-paste — Phase 3: Feature UI bằng fixture
+# Prompt copy-paste — Phase 3: Trip List bằng fixture
 
 ```text
 Bạn đang triển khai repository Wolfari-web.
@@ -9,12 +9,12 @@ Mục tiêu: triển khai một flow UI hoàn chỉnh theo Figma bằng fixture 
 
 Task:
 - Phase: 3
-- Flow: [Trip List / Trip Overview / Plan preview / Members preview / flow cụ thể]
-- Figma frame/node: [điền]
-- Route: [điền]
-- Actor: [điền]
+- Flow: Trip List — danh sách chuyến đi của người dùng
+- Figma frame/node: Desktop `03 · Chuyến đi của tôi` (`3:29`); Mobile `M05 · Chuyến đi của tôi` (`317:2029`); shared header `135:483`; trip sidebar reference `135:1357`
+- Route: `/trips`
+- Actor: Authenticated User; chỉ hiển thị các trip mà projection/fixture cho phép viewer đọc
 - Data mode: fixture
-- Screen contract: [điền heading]
+- Screen contract: `Contract: Trip List` trong `docs/screen-contracts.md`
 
 Git/branch bắt buộc:
 - Phase 3 là một work unit độc lập theo từng flow. Tạo branch mới từ `develop` mới nhất sau khi Phase 2 đã được commit và merge, ví dụ `ui/trip-list`, `ui/trip-overview` hoặc `ui/plan-preview`.
@@ -24,14 +24,14 @@ Git/branch bắt buộc:
 - Nếu chỉ sửa tiếp cùng flow đang làm dở, tiếp tục branch hiện tại; không tạo branch mới cho từng commit, bug nhỏ hoặc chỉnh CSS.
 
 Điều kiện trước khi triển khai:
-1. Phase 0 đã có screen contract, flow map, state matrix và Figma mapping cho flow này.
+1. Phase 0 đã có screen contract, flow map, state matrix và Figma mapping cho Trip List.
 2. Phase 1 đã có App Shell responsive; Phase 2 đã có token, typography, spacing, icon và shared component cần thiết hoặc đã ghi rõ phần còn thiếu.
 3. Route và behavior của flow có bằng chứng từ tài liệu/Figma/code hiện tại. Nếu thiếu bằng chứng, dừng và báo blocker thay vì tự bịa.
 
 Trước khi code:
 1. Đọc các tài liệu bắt buộc và kiểm tra `git status`, branch hiện tại; liệt kê file dự kiến sửa trước khi sửa.
 2. Xác nhận branch đúng dạng `ui/<flow>` và được tạo từ `develop` đúng dependency; không Issue/PR ở Phase 3.
-3. Kiểm tra route, actor, permission, view model, repository interface và acceptance criteria.
+3. Kiểm tra route `/trips`, actor `User`, permission đọc danh sách, view model `TripListViewModel`, repository interface `TripRepository.listTrips` và acceptance criteria của `Contract: Trip List`.
 4. Đối chiếu Figma prototype, variants, desktop/short laptop/tablet/mobile và scroll boundary.
 5. Đối chiếu Backend chỉ để ghi capability gap; không bịa API, field, permission hoặc behavior.
 

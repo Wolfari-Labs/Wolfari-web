@@ -91,3 +91,34 @@ Component-level mapping, không dựng lại toàn bộ showcase canvas hoặc f
 | Desktop/Mobile shells `135:483`, `325:2266`; Web drawer contract             | `Drawer`, asset map/local fonts                 | Drawer chuyển từ feature sang shared, giữ modal/focus/Escape/backdrop/scroll; không native tab/Glass chrome         |
 
 Breakpoint 768/360/1100px và height 950px là Web responsive policy có sẵn, không gọi là Figma-exported variable. `design-system.html` là sandbox development/explicit fixture preview, không route sản phẩm và không nằm trong production build.
+
+## Phase 3 — Trip List
+
+Scope được người dùng chốt ngày 15/10/2026; [Trip List contract](screen-contracts.md#contract-trip-list). Đây là mapping của implementation fixture đang được hoàn thiện, không phải kết luận visual/test đã đạt hoặc API runtime đã chạy.
+
+| Figma node / frame                                 | Route / actor / domain / data                  | Visual / interaction mapping                                                                                                                                                                  |
+| -------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Desktop `3:29`                                     | `/trips` / Authenticated User / Trip / fixture | Node canonical của danh sách; metadata hiện ghi `02 · Chuyến đi của tôi`, task gọi `03`. Hero + toolbar/status filters + sáu-card catalog; Desktop 1440px ba cột/gutter 64px                  |
+| Mobile `317:2029` (`M05 · Chuyến đi của tôi`)      | Cùng `/trips`, actor và repository             | Giữ hero đầu/compact các item còn lại, sáu canonical Desktop trips dùng chung. Ảnh Mobile riêng khi có `cover.mobileSrc`, còn lại fallback Desktop cover; không tự thay fixture theo viewport |
+| Header `135:483`                                   | Shared `AppShell` / cùng fixture session       | Header Desktop 76px cố định, main cuộn; Mobile logo giữa/hamburger trái/avatar phải, title trong content                                                                                      |
+| Trip sidebar `135:1357`                            | Reference của trip workspace                   | Chỉ tham khảo shared navigation/Drawer; list Desktop không có trip sidebar. Không mở thêm route hoặc feature của sidebar                                                                      |
+| Search / dropdown source, status filters trên list | Local controls, không HTTP                     | Name search, sort “Mặc định”/start date tăng/giảm; all/ONGOING/UPCOMING/COMPLETED/ARCHIVED. Role/time/advanced controls và writes chưa chốt behavior được disabled                            |
+| Local assets / typography                          | Shared asset map và fonts                      | Dùng local Figma SVG/PNG, Be Vietnam Pro và Kalam theo source; không runtime Figma asset URL hoặc secret                                                                                      |
+
+### Responsive / scroll adaptation đã chốt
+
+| Viewport                            | Layout / boundary / accessible controls                                                                                                                                                                                            |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Desktop 1440×800                    | Header 76px cố định; main cuộn trong viewport; ba cột/gutter 64px; không trip sidebar hoặc page scroll                                                                                                                             |
+| Short laptop 1366×520               | Hero compact 138px/gutter 32px; main vẫn cuộn truy cập đủ toolbar và cards, không overflow clip để che content                                                                                                                     |
+| Tablet 820px                        | Grid hai cột, giữ controls và main boundary; tablet là Web adaptation, không khẳng định Figma có source tablet riêng                                                                                                               |
+| Mobile ≤768px, representative 402px | Natural document scroll; title trong content; first hero card/compact rest; drawer trái, logo giữa, avatar phải; không native bottom tab                                                                                           |
+| Mobile filters                      | Năm status choices trong row cuộn ngang, targets ≥44px. Đây là Web adaptation của M05 ba pill source để all/archived vẫn truy cập được. Search/sort trong disclosure “Tìm kiếm và sắp xếp”; state và dataset giữ nguyên khi resize |
+
+`TripRepository.listTrips` trả `TripListViewModel` có current membership/permissions và ba revisions. Chỉ readable items được hiển thị; open link tới `/trips/:tripId` vẫn là Overview placeholder đã có. Sáu canonical fixtures giữ lifecycle explicit theo mốc `2026-09-23`; default `all`/catalog order, date comparator dùng start instant với stable ID fallback, không “nearest” theo đồng hồ máy. Cover/member count/mobile cover là nullable presentation targets, không DTO fields đã được Gateway cung cấp.
+
+Runtime static audit: GET list `runtime-candidate`, Figma enrichment `partial-runtime`; không Backend call hoặc readiness promotion. Server chưa có search/custom sort/enrichment; default server list loại archived khác `all` fixture. Create/edit/archive/delete disabled, không mutation success, write pending/unknown/idempotency không áp dụng. Gateway adapter cùng interface nhưng trả unavailable trong Phase 3.
+
+Acceptance ngày 15/10/2026: lint/typecheck/test/build/build:preview đạt; **95 unit/component/proxy tests và 47 Chromium E2E tests đạt**. Đã xem screenshot Desktop/Mobile/short laptop và kiểm tra geometry cả sáu viewport bằng browser. Artifacts ignored: `test-results/trip-list-Trip-List-layout-*/trip-list.png`.
+
+E2E chạy serial trên fixture preview với external server và Playwright CLI `test --workers=1` (exit 0). Managed dev-server teardown trong sandbox Windows bị treo sau assertions nên dùng preview server do runner sở hữu và đóng trong finally; giữ nguyên toàn bộ assertions. Production bundle không chứa catalog/UUID/error marker fixture; production browser `/trips` unavailable, không fixture controls/items/API request. Skip link được sửa từ 42px lên 44px; route aliases `/trips/`/`/TRIPS` giữ guard/layout; accessible status name bao gồm label Mobile.

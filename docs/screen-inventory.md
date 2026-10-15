@@ -15,18 +15,18 @@
 
 ## Route hiện có trong Web
 
-| Route                    | Màn hình             | Actor chính         | Code hiện tại                     | Trạng thái                                                     |
-| ------------------------ | -------------------- | ------------------- | --------------------------------- | -------------------------------------------------------------- |
-| `/`                      | Trang chủ / landing  | Guest, User         | `src/app/router.tsx`, `AppShell`  | `shell-ready`, placeholder                                     |
-| `/login`                 | Đăng nhập            | Guest               | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/register`              | Đăng ký              | Guest               | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/trips`                 | Danh sách chuyến đi  | User                | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/trips/:tripId`         | Tổng quan chuyến đi  | Member              | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/trips/:tripId/plan`    | Lịch trình           | Member, Plan Editor | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/trips/:tripId/members` | Thành viên           | Member, Owner       | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/profile`               | Hồ sơ cá nhân        | Authenticated user  | `src/app/router.tsx`              | `shell-ready`, placeholder                                     |
-| `/admin`                 | Admin shell          | System Admin        | `AppShell`, `AdminChrome`, router | `shell-ready`, fixture placeholder; API/features `target-only` |
-| `*`                      | Không tìm thấy trang | Any                 | `src/app/router.tsx`              | Đã có fallback                                                 |
+| Route                    | Màn hình             | Actor chính         | Code hiện tại                         | Trạng thái                                                       |
+| ------------------------ | -------------------- | ------------------- | ------------------------------------- | ---------------------------------------------------------------- |
+| `/`                      | Trang chủ / landing  | Guest, User         | `src/app/router.tsx`, `AppShell`      | `shell-ready`, placeholder                                       |
+| `/login`                 | Đăng nhập            | Guest               | `src/app/router.tsx`                  | `shell-ready`, placeholder                                       |
+| `/register`              | Đăng ký              | Guest               | `src/app/router.tsx`                  | `shell-ready`, placeholder                                       |
+| `/trips`                 | Danh sách chuyến đi  | Authenticated User  | `TripRepository.listTrips`, Trip List | Phase 3 `fixture-only`; contract bên dưới, chưa tích hợp Gateway |
+| `/trips/:tripId`         | Tổng quan chuyến đi  | Member              | `src/app/router.tsx`                  | `shell-ready`, placeholder                                       |
+| `/trips/:tripId/plan`    | Lịch trình           | Member, Plan Editor | `src/app/router.tsx`                  | `shell-ready`, placeholder                                       |
+| `/trips/:tripId/members` | Thành viên           | Member, Owner       | `src/app/router.tsx`                  | `shell-ready`, placeholder                                       |
+| `/profile`               | Hồ sơ cá nhân        | Authenticated user  | `src/app/router.tsx`                  | `shell-ready`, placeholder                                       |
+| `/admin`                 | Admin shell          | System Admin        | `AppShell`, `AdminChrome`, router     | `shell-ready`, fixture placeholder; API/features `target-only`   |
+| `*`                      | Không tìm thấy trang | Any                 | `src/app/router.tsx`                  | Đã có fallback                                                   |
 
 Các màn hình dưới đây xuất hiện trong Figma hoặc domain architecture nhưng chưa có route Web tương ứng: verify email, password reset, invitations, trip settings, locations/map, dress code, packing list, finance, price watch, export/share, travel intelligence, recommendations và các màn hình nghiệp vụ Admin. `/admin` chỉ là shell được chốt ngày 15/10/2026; route con Admin chưa mở.
 
@@ -93,8 +93,30 @@ Capability labels chuẩn: `runtime-ready`, `runtime-candidate`, `partial-runtim
 | Components/diagrams                            | no product route                               | Inherit feature                   | Presentation/documentation, không permission                       |
 | Detached 328:3072                              | unknown/not-yet-routed                         | unknown                           | unknown owner/flow                                                 |
 
-41 capability groups: 18 runtime-candidate, 4 partial-runtime, 18 mock-only, 1 unknown; **không runtime-ready xác nhận trong inventory này**. Tất cả feature bodies/production adapters chưa triển khai. Các counts không phải số API; mapping không tự cấp phép thêm route/field/permission/behavior.
+41 capability groups: 18 runtime-candidate, 4 partial-runtime, 18 mock-only, 1 unknown; **không runtime-ready xác nhận trong inventory này**. Tại thời điểm kiểm kê Phase 0, feature bodies/production adapters chưa triển khai; phạm vi Trip List Phase 3 được bổ sung bên dưới. Các counts không phải số API; mapping không tự cấp phép thêm route/field/permission/behavior.
 
 ## Shared UI sandbox · Phase 2
 
-`/design-system.html` là entry kiểm tra component trong development/explicit preview build, không React Router/product route và không thêm actor/permission hoặc API capability. Production build loại entry này. Mapping component Desktop/Mobile/showcase nằm trong [implementation matrix](figma-implementation-matrix.md#phase-2--shared-ui-foundation); các feature body vẫn placeholder/blocked như inventory bên trên.
+`/design-system.html` là entry kiểm tra component trong development/explicit preview build, không React Router/product route và không thêm actor/permission hoặc API capability. Production build loại entry này. Mapping component Desktop/Mobile/showcase nằm trong [implementation matrix](figma-implementation-matrix.md#phase-2--shared-ui-foundation); Trip List có scope fixture riêng ở Phase 3 bên dưới, các feature body khác vẫn placeholder/blocked.
+
+## Phase 3 — Trip List · phạm vi fixture đã chốt
+
+Ngày 15/10/2026, người dùng chốt dùng sáu trip Desktop làm catalog canonical cho cả Desktop và Mobile; cho phép lọc trạng thái, tìm tên và sắp xếp ngày ở local. Đây là phạm vi của work unit `/trips`, không mở các feature Trip khác. Acceptance Phase 3 đã xác minh: lint/typecheck/test/build/build:preview, 95 unit/component/proxy và 47 browser tests đạt; xem [evidence](figma-implementation-matrix.md).
+
+| Mục                    | Mapping / giới hạn                                                                                                                                                                                                                                                                |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Figma                  | Desktop `3:29` (metadata hiện ghi `02 · Chuyến đi của tôi`, task gọi `03`; node ID là nguồn canonical); Mobile `317:2029` (`M05 · Chuyến đi của tôi`); header `135:483`; sidebar `135:1357` chỉ tham khảo, không xuất hiện ở list Desktop                                         |
+| Route / actor / owner  | `/trips`; Authenticated User; Trip domain; entry từ header/drawer hoặc URL trực tiếp                                                                                                                                                                                              |
+| Model / repository     | `TripListViewModel` / `TripRepository.listTrips`; adapter session-scoped; chỉ trả item mà viewer được đọc, không chọn viewer khác qua URL                                                                                                                                         |
+| Data mode              | Deterministic fixture; sáu item canonical dùng chung ở mọi viewport, lifecycle explicit theo mốc cố định `2026-09-23`, không đổi theo đồng hồ máy                                                                                                                                 |
+| Permission / revisions | Giữ current membership, `canRead`/`canUpdate`, `planVersion`/`membershipRevision`/`exportRevision`; `canRead=false` không render nội dung trip; không suy `canCreate` từ authentication hoặc `canUpdate`                                                                          |
+| Local presentation     | Mặc định giữ thứ tự catalog Figma, filter `all` trên cả Desktop/Mobile; năm lựa chọn all/ONGOING/UPCOMING/COMPLETED/ARCHIVED. Tìm theo tên; sort start date tăng/giảm qua `Date.parse(startAt)` với ID fallback ổn định; không server search/sort                                 |
+| Exit                   | Open trip được phép → route `/trips/:tripId` đã có; destination vẫn Overview placeholder, không triển khai Overview business                                                                                                                                                      |
+| Action chưa mở         | Create/edit/archive/delete và bộ lọc vai trò/thời gian/nâng cao disabled; không mở form/route mới và không thông báo đã lưu                                                                                                                                                       |
+| States                 | Loading/read đang chờ, success, empty/no matching items, error/retry, forbidden, conflict/refetch, unavailable; không có mutation nên write pending/unknown/idempotency không áp dụng                                                                                             |
+| Desktop / tablet       | Header 76px giữ cố định; main cuộn đúng boundary, không page scroll. 1440px: grid ba cột/gutter 64px; short 1366×520: hero 138px/gutter 32px; tablet 820px: hai cột                                                                                                               |
+| Mobile ≤768px          | Natural document scroll; drawer trái, logo giữa, avatar phải, title trong content; item đầu dạng hero, phần còn lại compact. Không native bottom tab; năm status filter cuộn ngang trong row, targets ≥44px; tìm/sort trong disclosure “Tìm kiếm và sắp xếp”; resize giữ lựa chọn |
+| Assets                 | Local Figma assets/fonts, gồm Kalam. Cover/member count là presentation nullable, không field API Trip; `cover.mobileSrc` nullable để chọn ảnh Mobile khi có, còn lại dùng Desktop cover                                                                                          |
+| Runtime gate           | GET `/api/v1/trips` có static route/handler/OpenAPI evidence, giữ `runtime-candidate`; Figma enrichment `partial-runtime`. Gateway adapter Phase 3 trả unavailable, không gọi Backend; không có bằng chứng runtime-ready mới                                                      |
+
+**Gap trước Gateway:** runtime chỉ hỗ trợ `limit`/opaque `cursor`/`lifecycle`, sort cố định theo created time; không có server search/custom sort/cover/member-count projection. Fixture `all` bao gồm catalog được duyệt, trong khi default GET runtime loại archived; không đồng nhất hai semantics hoặc bịa query mới. Xem [Contract: Trip List](screen-contracts.md#contract-trip-list), [flow](flow-map.md#phase-3--trip-list--read-only-fixture) và [state coverage](state-matrix.md#phase-3--trip-list--fixture-state-contract).
