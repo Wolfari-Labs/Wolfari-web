@@ -213,7 +213,7 @@ Bộ tài liệu hiện tại được duy trì tại [screen inventory](screen-
 4. `members-preview`: Members và invitation preview tại `/trips/:tripId/members`.
 5. Các frame chưa có route được chốt chỉ đưa vào preview/sandbox hoặc documentation mapping; không tự sinh production route.
 
-Mỗi flow phải có domain view model, repository interface, fixture repository, state matrix, responsive contract và test riêng. Fixture được phép mô phỏng read/presentation state nhưng không được báo mutation thành công. Đây vẫn là giai đoạn UI, vì vậy dùng branch `ui/<flow>`, chưa cần Issue/PR.
+Mỗi flow phải có domain view model, repository interface, fixture repository, state matrix, responsive contract và test riêng. Fixture được phép mô phỏng read/presentation state nhưng không được báo mutation thành công. Đây vẫn là giai đoạn UI, vì vậy dùng branch `ui/<flow>`, chưa cần Issue/PR. Các flow phải triển khai tuần tự: hoàn tất branch hiện tại, commit/test, merge vào `develop`, cập nhật `develop`, rồi mới tạo branch flow kế tiếp.
 
 **Hoàn tất khi:** các flow trong phạm vi có thể chạy độc lập, khớp Figma ở desktop/short laptop/tablet/mobile, có loading/empty/error/permission/conflict/pending/unavailable state, không có transport logic trong component và không còn màn hình đã được route mà chỉ là placeholder ngoài chủ ý.
 

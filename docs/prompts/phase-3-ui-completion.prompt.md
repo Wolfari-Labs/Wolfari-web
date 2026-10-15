@@ -29,10 +29,12 @@ Mục tiêu hoàn thiện theo thứ tự, mỗi flow là một work unit và m�
 - Các frame Figma chưa có route Web được chốt: chỉ đưa vào preview/sandbox hoặc documentation mapping; không tự tạo production route.
 
 Git/branch:
-- Tạo branch từ `develop` mới nhất sau khi dependency trước đã được commit và merge.
-- Dùng tên `ui/auth-fixture`, `ui/trip-overview`, `ui/plan-preview`, `ui/members-preview`.
+- Chỉ tạo branch tiếp theo sau khi branch hiện tại đã hoàn tất, commit, chạy kiểm tra, merge vào `develop` và cập nhật `develop` local.
+- Quy trình bắt buộc: cập nhật `develop` → tạo một branch flow → code/commit/test → merge vào `develop` → cập nhật `develop` → tạo branch flow kế tiếp.
+- Triển khai tuần tự theo thứ tự: `ui/auth-fixture` → merge `develop` → `ui/trip-overview` → merge `develop` → `ui/plan-preview` → merge `develop` → `ui/members-preview`.
+- Không tạo cả bốn branch từ cùng một commit `develop` cũ.
 - Phase 3-UI-COMPLETE chưa cần Issue/PR; không commit trực tiếp `main` hoặc `develop`.
-- Nếu flow phụ thuộc code chưa merge, merge dependency trước hoặc ghi rõ stacked branch; không branch từ `develop` thiếu dependency.
+- Nếu flow phụ thuộc code chưa merge, phải hoàn tất và merge dependency trước; không branch từ `develop` thiếu dependency và không dùng stacked branch cho quy trình chuẩn này.
 - Không tạo branch mới cho mỗi commit, bug nhỏ hoặc chỉnh CSS trong cùng flow.
 
 Luật độc lập với Backend:
