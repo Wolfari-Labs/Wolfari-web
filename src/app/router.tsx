@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router';
 import { App } from './App';
 import { ContentState } from '../shared/components/ContentState';
 import { lazy, Suspense, type ReactNode } from 'react';
+import type { DemoAccess } from '../features/auth/model/demo-access';
 const TripListPage = lazy(async () => ({
   default: (await import('../features/trips/TripListPage')).TripListPage,
 }));
@@ -25,11 +26,11 @@ const feature = (element: ReactNode) => (
   <Suspense fallback={<ContentState state="loading" headingLevel={2} />}>{element}</Suspense>
 );
 
-export function createRouter(previewTripPath: string | null) {
+export function createRouter(previewTripPath: string | null, demoAccess?: DemoAccess) {
   const placeholder = <ContentState state="placeholder" headingLevel={2} />;
   return createBrowserRouter([
     {
-      element: <App previewTripPath={previewTripPath} />,
+      element: <App previewTripPath={previewTripPath} {...(demoAccess ? { demoAccess } : {})} />,
       errorElement: (
         <ContentState
           state="error"

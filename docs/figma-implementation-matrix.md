@@ -125,6 +125,8 @@ E2E chạy serial trên fixture preview với external server và Playwright CLI
 
 ### Phase 3 Auth fixture / Home / Self profile
 
+User-requested demo access extends existing Login `298:1893`/`317:2026` with a labelled sample-account panel, User Home demo banner and exit control. Đây là Web fixture preview extension, không Figma variant hoặc Backend mutation evidence; giữ route, form validation và responsive document flow. Xem [demo contract](screen-contracts.md#contract-auth-fixture--home--self-profile).
+
 [Figma → route → actor/component, domain và runtime gaps](auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header và document scroll thay native bars/tabs; không thêm route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
 
 Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; 115 unit/component/proxy tests và 57 Chromium E2E pass (serial external preview runner, exit 0). Đã review screenshot desktop, short laptop và Mobile. Production marker scan không có fixture records/IDs; build có warning chunk >500kB, cần tách route khi mở rộng flow. Backend HEAD d8c02cb sạch, chỉ đọc.

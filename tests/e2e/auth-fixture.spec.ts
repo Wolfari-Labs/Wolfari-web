@@ -1,5 +1,49 @@
 import { expect, test } from '@playwright/test';
 
+for (const width of [1440, 402])
+  test(`demo account opens User preview without API or persistent session ${width}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 800 });
+    const api: string[] = [];
+    page.on('request', (request) => {
+      if (new URL(request.url()).pathname.startsWith('/api/')) api.push(request.url());
+    });
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
+    await page.getByLabel('Mật khẩu', { exact: true }).fill('incorrect');
+    await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
+    await expect(page.getByText(/Email hoặc mật khẩu demo chưa đúng/)).toBeVisible();
+    await expect(page).toHaveURL(/\/login$/);
+    await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
+    await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
+    await expect(page).toHaveURL('/');
+    await expect(page.locator('[data-node-id="298:1642"]')).toBeVisible();
+    await expect(page.getByText(/Phiên demo · Chỉ dữ liệu fixture/)).toBeVisible();
+    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chính' }).click();
+    await page
+      .getByRole('navigation', { name: 'Điều hướng chính' })
+      .getByRole('link', { name: 'Chuyến đi của tôi', exact: true })
+      .click();
+    await expect(page).toHaveURL('/trips');
+    await expect(
+      page.getByRole('link', { name: 'Mở chuyến đi Đà Nẵng – Hội An', exact: true }),
+    ).toBeVisible();
+    await page.getByRole('button', { name: 'Thoát phiên demo' }).click();
+    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
+    await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
+    await expect(page.locator('[data-node-id="298:1642"]')).toBeVisible();
+    await page.reload();
+    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+    expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+    expect(api).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      width,
+    );
+  });
+
 for (const size of [
   { width: 1440, height: 800 },
   { width: 1366, height: 600 },
@@ -18,9 +62,28 @@ for (const size of [
     });
     for (const route of ['/', '/login', '/register', '/profile']) {
       await page.goto(route);
-      if (route === '/') await expect(page.getByRole('heading',{level:1,name:/Cho những|Đi đâu/})).toBeVisible();
-      else if (route === '/profile') await expect(page.getByRole('heading',{level:1,name:'Tài khoản của tôi'})).toBeVisible();
-      else await expect(page.getByRole('form',{name:route==='/login'?'Biểu mẫu đăng nhập':'Biểu mẫu đăng ký'})).toBeVisible();
+      if (route === '/') {
+        await expect(page.getByRole('heading', { level: 1, name: /Cho những/ })).toBeVisible();
+        await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+        const guestCta =
+          size.width <= 768
+            ? page
+                .getByRole('region', { name: 'Khám phá hành trình' })
+                .getByRole('link', { name: 'Bắt đầu hành trình', exact: true })
+            : page.getByRole('link', { name: 'Bắt đầu ngay', exact: true });
+        await expect(guestCta).toHaveAttribute('href', '/register');
+        await expect(page.getByLabel('Trạng thái preview')).toHaveValue('guest');
+        await expect(page.getByText('Phú Quốc – Hẹn với biển')).toHaveCount(0);
+      } else if (route === '/profile')
+        await expect(
+          page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' }),
+        ).toBeVisible();
+      else
+        await expect(
+          page.getByRole('form', {
+            name: route === '/login' ? 'Biểu mẫu đăng nhập' : 'Biểu mẫu đăng ký',
+          }),
+        ).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
         size.width,

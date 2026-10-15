@@ -12,8 +12,18 @@ import { ContentState } from '../shared/components/ContentState';
 import { Select } from '../shared/components/Select';
 import { adminSections } from '../features/shell/components/AdminChrome';
 import { paths } from './route-paths';
+import { Alert } from '../shared/components/Alert';
+import { Button } from '../shared/components/Button';
+import type { DemoAccess } from '../features/auth/model/demo-access';
+import type { RouteContext } from './route-context';
 
-export function App({ previewTripPath }: { previewTripPath: string | null }) {
+export function App({
+  previewTripPath,
+  demoAccess,
+}: {
+  previewTripPath: string | null;
+  demoAccess?: DemoAccess;
+}) {
   const { tripId } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -38,9 +48,10 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
     handle?.requiresViewer || [paths.trips, paths.profile].includes(policyPath);
   const [adminSection, setAdminSection] = useState<AdminSection>('overview');
   const [scenario, setScenario] = useState<ShellScenario>(() =>
-    [paths.login, paths.register].includes(policyPath) ? 'guest' : 'success',
+    [paths.home, paths.login, paths.register].includes(policyPath) ? 'guest' : 'success',
   );
   const [section, setSection] = useState<ShellSection>('overview');
+  const [demoActive, setDemoActive] = useState(false);
   const query = useShell(tripId ?? null, scenario);
   const result = query.data;
   const snapshot = result?.status === 'ready' ? result.data : null;
@@ -94,6 +105,24 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
       : tripId
         ? snapshot?.trip?.permissions.canRead !== true
         : requiresViewer && !snapshot?.viewer);
+  const routeContext: RouteContext = {
+    viewer: snapshot?.viewer ?? null,
+    previewEnabled: !!previewTripPath,
+    ...(previewTripPath && demoAccess
+      ? {
+          demoLogin: {
+            account: demoAccess.account,
+            activate: (credentials) => {
+              if (!demoAccess.accepts(credentials)) return false;
+              setDemoActive(true);
+              setScenario('success');
+              navigate(paths.home);
+              return true;
+            },
+          },
+        }
+      : {}),
+  };
   const previewControls = previewTripPath ? (
     <details className="preview" data-preview="shell">
       <summary>UI preview · Dữ liệu minh họa</summary>
@@ -108,7 +137,10 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
           value={scenario}
           onChange={(event) => {
             const next = scenarios.find((item) => item === event.target.value);
-            if (next) setScenario(next);
+            if (next) {
+              setDemoActive(false);
+              setScenario(next);
+            }
           }}
         >
           {scenarios.map((item) => (
@@ -144,12 +176,30 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
         }
       }}
     >
+      {demoActive && (
+        <Alert>
+          <p>
+            Phiên demo · Chỉ dữ liệu fixture, không phải phiên đăng nhập Backend. Tải lại trang sẽ
+            kết thúc phiên demo.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setDemoActive(false);
+              setScenario('guest');
+              navigate(paths.home);
+            }}
+          >
+            Thoát phiên demo
+          </Button>
+        </Alert>
+      )}
       {!handle?.notFound && (!ownContentTitle || targetSection || !snapshot || denied) && (
         <h1 className="screen-title">{title}</h1>
       )}
       {!ownContentTitle && previewControls}
       {handle?.notFound ? (
-        <Outlet context={{ viewer: snapshot?.viewer ?? null, previewEnabled: !!previewTripPath }} />
+        <Outlet context={routeContext} />
       ) : query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : query.isError ? (
@@ -185,7 +235,7 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
       ) : targetSection ? (
         <ContentState state="unavailable" headingLevel={2} />
       ) : (
-        <Outlet context={{ viewer: snapshot?.viewer ?? null, previewEnabled: !!previewTripPath }} />
+        <Outlet context={routeContext} />
       )}
       {ownContentTitle && previewControls}
     </AppShell>

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
-import { Link } from 'react-router';
+import { Link, useOutletContext } from 'react-router';
+import type { RouteContext } from '../../app/route-context';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
@@ -27,6 +28,9 @@ export function AuthPage({
   previewEnabled: boolean;
 }) {
   const register = mode === 'register';
+  const context = useOutletContext<RouteContext | null>();
+  const demoLogin = previewEnabled && !register ? context?.demoLogin : undefined;
+  const [demoError, setDemoError] = useState(false);
   const [values, setValues] = useState<AuthFormValues>({
     fullName: '',
     email: '',
@@ -37,6 +41,7 @@ export function AuthPage({
   const [errors, setErrors] = useState<AuthFormErrors>({});
   const [preview, setPreview] = useState<Preview>('idle');
   const field = (name: keyof AuthFormValues, value: string | boolean) => {
+    setDemoError(false);
     setValues((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: undefined }));
   };
@@ -47,7 +52,10 @@ export function AuthPage({
     setErrors(next);
     const first = Object.keys(next)[0];
     if (first) document.getElementById(`auth-${first}`)?.focus();
-    else setPreview('unavailable');
+    else if (demoLogin) {
+      setDemoError(!demoLogin.activate({ email: values.email, password: values.password }));
+      document.getElementById('auth-password')?.focus();
+    } else setPreview('unavailable');
   };
   return (
     <section
@@ -111,6 +119,28 @@ export function AuthPage({
           <p className={styles.cardSubtitle}>
             {register ? 'Tạo tài khoản Wolfari bằng email' : 'Tiếp tục hành trình cùng Wolfari'}
           </p>
+          {demoLogin && (
+            <Alert live={false}>
+              <p>Tài khoản demo · Chỉ dữ liệu fixture</p>
+              <p>
+                Email: <strong>{demoLogin.account.email}</strong>
+                <br />
+                Mật khẩu: <strong>{demoLogin.account.password}</strong>
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setValues((current) => ({ ...current, ...demoLogin.account }));
+                  setErrors({});
+                  setDemoError(false);
+                  setPreview('idle');
+                  document.getElementById('auth-email')?.focus();
+                }}
+              >
+                Điền tài khoản demo
+              </Button>
+            </Alert>
+          )}
           {register && (
             <Input
               id="auth-fullName"
@@ -185,6 +215,11 @@ export function AuthPage({
           <p className={styles.previewNote}>
             Bản xem trước giao diện · Không gửi thông tin đăng nhập hoặc tạo phiên thật.
           </p>
+          {demoError && (
+            <Alert tone="error">
+              Email hoặc mật khẩu demo chưa đúng. Dùng tài khoản minh họa phía trên.
+            </Alert>
+          )}
           <Button
             type="submit"
             loading={preview === 'pending'}
