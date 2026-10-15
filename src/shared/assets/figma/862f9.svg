@@ -1,0 +1,23 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="570.175" height="377.193" viewBox="0 0 570.175 377.193" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Refine/Hero collage watercolor" clip-path="url(#clip0_0_104)">
+<path id="Vector" d="M245.614 359.649C395.797 359.649 517.544 298.776 517.544 223.684C517.544 148.593 395.797 87.7193 245.614 87.7193C95.4313 87.7193 -26.3158 148.593 -26.3158 223.684C-26.3158 298.776 95.4313 359.649 245.614 359.649Z" fill="url(#paint0_radial_0_104)"/>
+<path id="Vector_2" opacity="0.65" d="M460.526 236.842C530.773 236.842 587.719 197.569 587.719 149.123C587.719 100.677 530.773 61.4035 460.526 61.4035C390.28 61.4035 333.333 100.677 333.333 149.123C333.333 197.569 390.28 236.842 460.526 236.842Z" fill="url(#paint1_radial_0_104)"/>
+<path id="Vector_3" opacity="0.55" d="M47.3684 308.772C124.561 292.982 191.228 316.667 264.035 305.263C352.632 291.228 418.421 313.158 520.175 300" stroke="#C5EEF7" stroke-width="19.2982" stroke-linecap="round"/>
+<path id="Vector_4" opacity="0.8" d="M347.368 15.7895C391.228 30.7018 428.07 64.0351 463.158 108.772" stroke="#159FD5" stroke-width="1.75439" stroke-dasharray="6.14 7.02"/>
+<path id="Vector_5" d="M464.912 105.263L489.474 101.754L475.439 122.807L471.93 113.158L464.912 105.263Z" fill="#F6C019"/>
+<path id="Vector_6" opacity="0.55" d="M463.158 36.8421C480.702 25.4386 501.754 30.7018 508.772 43.8596C521.93 30.7018 542.105 36.8421 546.491 52.6316C561.404 50.8772 571.93 59.6491 572.807 71.0526H474.561C473.684 59.6491 476.316 50 480.702 43.8596L463.158 36.8421Z" stroke="#4DB6D6" stroke-width="1.75439"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_104" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(245.614 223.684) scale(271.93 135.965)">
+<stop stop-color="#DDF5FC" stop-opacity="0.92"/>
+<stop offset="1" stop-color="#DDF5FC" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_0_104" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(460.526 149.123) scale(127.193 87.7193)">
+<stop stop-color="#DDF5FC" stop-opacity="0.92"/>
+<stop offset="1" stop-color="#DDF5FC" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_104">
+<rect width="570.175" height="377.193" fill="white"/>
+</clipPath>
+</defs>
+</svg>

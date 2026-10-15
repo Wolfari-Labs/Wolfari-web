@@ -212,3 +212,7 @@ Sáu fixture giữ lifecycle explicit với mốc `2026-09-23`, không `Date.now
 GET list runtime hiện chỉ nhận `limit`/`cursor`/`lifecycle`, scope active membership, default loại archived và sort fixed `created_at DESC,id DESC` (`runtime-candidate`). Local name/date sort và `all` fixture không trở thành server query hoặc kết luận toàn bộ collection Gateway đã được tải. Destination vẫn là shell placeholder: Phase 3 này không thêm Overview business, write pending/unknown hoặc server persistence.
 
 Acceptance 15/10/2026: 95 unit/component/proxy và 47 browser tests đạt; alias `/trips/`/`/TRIPS` không bỏ qua authenticated guard hoặc thay layout. Xem [visual/test evidence](figma-implementation-matrix.md).
+
+### Auth fixture / Home / Self profile
+
+Header/drawer/logo ? `/`; Guest CTA ? `/login` ? `/register`; User ? `/trips` ho?c `/profile`. Valid form ch? chuy?n unavailable, kh?ng authenticated transition. Mobile profile summary m? editor inline; draft gi? qua read error/retry. Guest kh?ng g?i Self/Trip queries, k? c? Home retry. Xem [contract v? evidence](auth-fixture-phase3.md).

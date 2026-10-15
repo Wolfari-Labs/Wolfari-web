@@ -1,0 +1,813 @@
+.page {
+  color: #0068aa;
+}
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-height: 548px;
+  padding: 58px 5vw 34px 6vw;
+  background:
+    url('../../shared/assets/figma/4bccc.png') center 60px / 1440px 490px no-repeat,
+    url('../../shared/assets/figma/82a69.svg') 60% bottom / 700px 170px no-repeat,
+    url('../../shared/assets/figma/e5c79.svg') right 70px top 64px / 180px 66px no-repeat,
+    url('../../shared/assets/figma/6f91e.svg') right top / 610px 230px no-repeat,
+    url('../../shared/assets/figma/51df8.svg') -140px bottom / 620px 235px no-repeat,
+    linear-gradient(#e8f9fe, #f6fcff 60%, white);
+}
+.heroCopy {
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.eyebrow {
+  margin: 0 0 8px;
+  color: #0088c4;
+  font:
+    400 27px/36px 'Kalam',
+    cursive;
+  background: url('../../shared/assets/figma/ba46c.svg') 0 bottom / 286px 12px no-repeat;
+}
+.hero h1 {
+  font:
+    700 clamp(44px, 4.95vw, 71px)/1.2 'Kalam',
+    cursive;
+  margin: 0;
+  color: #008f9d;
+  padding: 2px 0 28px 10px;
+  background: url('../../shared/assets/figma/8bfec.svg') left 28px bottom / min(100%, 500px) 28px
+    no-repeat;
+}
+.desktopTitle > span {
+  color: #0088c4;
+  font-size: 1.07em;
+}
+.heroDescription {
+  max-width: 536px;
+  margin: 24px 0 22px 28px;
+  color: #0068aa;
+  font-size: 15.5px;
+  line-height: 27px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-left: 28px;
+}
+.actions > * {
+  min-height: 52px;
+}
+.heroCollage {
+  min-width: 0;
+  margin-top: -24px;
+}
+.heroMascot {
+  position: absolute;
+  width: 175px;
+  height: 142px;
+  left: 37%;
+  top: 63px;
+  object-fit: contain;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 27%;
+  top: 35px;
+  width: 170px;
+  height: 85px;
+  background: url('../../shared/assets/figma/a91d9.svg') center / contain no-repeat;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.features {
+  display: grid;
+  grid-template-columns: minmax(0, 36%) minmax(0, 1fr);
+  gap: 40px;
+  padding: 50px 3vw 36px 6vw;
+  min-height: 442px;
+  background:
+    url('../../shared/assets/figma/4bccc.png') center bottom / 1440px 292px no-repeat,
+    url('../../shared/assets/figma/26d15.svg') right bottom / 520px 190px no-repeat,
+    url('../../shared/assets/figma/368cd.svg') left bottom / 620px 160px no-repeat,
+    url('../../shared/assets/figma/231d3.svg') right 70px bottom / 284px 142px no-repeat,
+    linear-gradient(90deg, white, #faffff 55%, #ebfaff);
+}
+.featureIntro {
+  position: relative;
+  background:
+    url('../../shared/assets/figma/344bd.svg') left top / 390px 120px no-repeat,
+    url('../../shared/assets/figma/5c213.svg') right top / 150px 55px no-repeat,
+    url('../../shared/assets/figma/9249a.svg') 70% 86px / 30px 38px no-repeat;
+}
+.featureIntro > p:first-child {
+  font:
+    400 25px/36px 'Kalam',
+    cursive;
+  margin: 0;
+}
+.featureIntro h2 {
+  font:
+    700 38px/46px 'Kalam',
+    cursive;
+  margin: 4px 0 24px 16px;
+  padding-bottom: 12px;
+  background: url('../../shared/assets/figma/827dd.svg') left bottom / 330px 18px no-repeat;
+}
+.featureIntro > p:not(:first-child) {
+  font-size: 14px;
+  line-height: 26px;
+  max-width: 400px;
+}
+.featureIntro > img {
+  position: absolute;
+  right: -9px;
+  top: 0;
+  width: 126px;
+  height: 126px;
+  object-fit: contain;
+}
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 22px;
+}
+.featureGrid article {
+  min-width: 0;
+}
+.featureGrid h3 {
+  font-size: 17px;
+  line-height: 23px;
+  margin: 10px 0 8px;
+  color: #0088c4;
+}
+.featureGrid p {
+  font-size: 13.5px;
+  line-height: 23px;
+  margin: 0;
+}
+.featureArt {
+  position: relative;
+  width: 98.8px;
+  height: 88.4px;
+}
+.featureArt > img {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.featureArt .rim {
+  left: -10.4px;
+  top: -6.5px;
+}
+.featureArt .featureGlyph {
+  left: 27.3px;
+  top: 20.8px;
+}
+.appPreview {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 35%) minmax(0, 1fr);
+  gap: 32px;
+  min-height: 432px;
+  padding: 42px 4vw 30px 6vw;
+  background:
+    url('../../shared/assets/figma/c7fe2.svg') left top / 800px 400px no-repeat,
+    url('../../shared/assets/figma/b52b6.svg') center top / 600px 160px no-repeat,
+    url('../../shared/assets/figma/28972.svg') left bottom / 700px 220px no-repeat,
+    url('../../shared/assets/figma/d42fe.svg') right center / 980px 400px no-repeat,
+    url('../../shared/assets/figma/4bccc.png') center bottom / 1440px 200px no-repeat,
+    #f4fcff;
+}
+.appPreview h2 {
+  font:
+    700 42px/50px 'Kalam',
+    cursive;
+  color: #008f9d;
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  background: url('../../shared/assets/figma/f8b2b.svg') 32px bottom / 280px 18px no-repeat;
+}
+.appPreview p {
+  font-size: 14px;
+  line-height: 24px;
+}
+.appPreview ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+.appPreview li {
+  min-height: 30px;
+  padding-left: 40px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 23px;
+  margin-bottom: 8px;
+  background: url('../../shared/assets/figma/eaabc.svg') left center / 22px 22px no-repeat;
+}
+.appPreview li::before {
+  content: '✓';
+  color: white;
+  position: absolute;
+  left: calc(6vw + 5px);
+}
+.devices {
+  width: 100%;
+  max-width: 790px;
+  height: auto;
+  align-self: start;
+  object-fit: contain;
+}
+.inspiration {
+  position: relative;
+  padding: 20px 4.4vw 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  column-gap: 30px;
+  background:
+    url('../../shared/assets/figma/4bccc.png') center bottom / 1440px 240px no-repeat,
+    url('../../shared/assets/figma/0f484.svg') 20px 22px / 360px 115px no-repeat,
+    url('../../shared/assets/figma/c93f4.svg') right bottom / 520px 180px no-repeat,
+    url('../../shared/assets/figma/bf193.svg') left bottom / 760px 190px no-repeat,
+    white;
+}
+.inspiration header {
+  grid-column: 1/-1;
+  position: relative;
+  min-height: 100px;
+}
+.inspiration header h2 {
+  font:
+    700 32px/38px 'Kalam',
+    cursive;
+  color: #0088c4;
+  margin: 0;
+}
+.inspiration header img {
+  position: absolute;
+  left: 390px;
+  top: -10px;
+  width: 90px;
+  height: 115px;
+  object-fit: contain;
+}
+.inspiration header p {
+  position: absolute;
+  right: 28%;
+  top: 10px;
+  font-size: 11px;
+}
+.stories {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.stories figure {
+  margin: 0;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #e8dec4;
+  border-radius: 3px;
+  background:
+    url('../../shared/assets/figma/8250d.svg') center / 100% 100% no-repeat,
+    white;
+  box-shadow: 0 5px 3px #4d5e591f;
+  position: relative;
+}
+.stories figure::before {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 42px;
+  left: 12px;
+  top: -14px;
+  background: url('../../shared/assets/figma/f5055.svg') center / contain no-repeat;
+}
+.stories figure:nth-child(2n)::before {
+  left: auto;
+  right: 12px;
+  background-image: url('../../shared/assets/figma/ccd26.svg');
+}
+.tiltRight {
+  transform: rotate(1.4deg);
+}
+.tiltLeft {
+  transform: rotate(-1.4deg);
+}
+.stories figure > img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.stories strong {
+  display: block;
+  font-size: 13.2px;
+  line-height: 19px;
+  min-height: 38px;
+  margin-top: 8px;
+}
+.stories p {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 19px;
+}
+.inspiration aside {
+  padding: 0 0 60px;
+  background:
+    url('../../shared/assets/figma/c446a.svg') center / 300px 160px no-repeat,
+    url('../../shared/assets/figma/76022.svg') right top / 45px 38px no-repeat,
+    url('../../shared/assets/figma/8b1b8.svg') right 30px top / 64px 60px no-repeat,
+    url('../../shared/assets/figma/88973.svg') right bottom / 110px 70px no-repeat;
+}
+.inspiration aside h3 {
+  font:
+    700 24px/34px 'Kalam',
+    cursive;
+  color: #008f9d;
+  margin: 0;
+}
+.inspiration blockquote {
+  font:
+    400 23px/35px 'Kalam',
+    cursive;
+  margin: 16px 0 0;
+}
+.footer {
+  min-height: 256px;
+  text-align: center;
+  padding: 24px 300px 42px;
+  position: relative;
+  background:
+    url('../../shared/assets/figma/aea7a.svg') center top / 160px 80px no-repeat,
+    url('../../shared/assets/figma/916ba.png') center / cover no-repeat;
+}
+.footer h2 {
+  font:
+    700 46px/54px 'Kalam',
+    cursive;
+  color: #0088c4;
+  margin: 0 0 8px;
+}
+.footer p {
+  font:
+    400 20px/28px 'Kalam',
+    cursive;
+  margin: 0 0 20px;
+}
+.footerCollage {
+  position: absolute;
+  width: 250px;
+  height: 190px;
+  right: 20px;
+  bottom: 0;
+}
+.footerCollage img {
+  position: absolute;
+  width: 112px;
+  height: 118px;
+  object-fit: cover;
+  border: 8px solid white;
+  top: 50px;
+  left: 20px;
+  transform: rotate(-14deg);
+}
+.footerCollage img + img {
+  left: 54px;
+  top: 65px;
+  transform: rotate(-5deg);
+}
+.signpost {
+  position: absolute;
+  width: 144px;
+  height: 190px;
+  right: 0;
+  bottom: 0;
+  background: url('../../shared/assets/figma/379f2.svg') center / contain no-repeat;
+}
+.greeting,
+.mobileTitle,
+.mobileWelcome,
+.mobileFeatures,
+.mobileGreetingMascot,
+.mobileInspiration {
+  display: none;
+}
+@media (max-width: 1200px) and (min-width: 769px) {
+  .hero {
+    padding-inline: 32px;
+  }
+  .heroDescription {
+    margin-left: 0;
+  }
+  .actions {
+    margin-left: 0;
+    gap: 12px;
+  }
+  .heroMascot {
+    left: 38%;
+    width: 130px;
+  }
+  .features {
+    padding-inline: 32px;
+    grid-template-columns: minmax(0, 32%) minmax(0, 1fr);
+    gap: 24px;
+  }
+  .featureGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .featureIntro h2 {
+    font-size: 34px;
+  }
+  .featureIntro > img {
+    position: static;
+    display: block;
+    margin-left: auto;
+  }
+  .appPreview {
+    padding-inline: 32px;
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+  }
+  .appPreview h2 {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .appPreview li::before {
+    left: 37px;
+  }
+  .stories {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .inspiration aside {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .footer {
+    padding-inline: 200px;
+  }
+  .footerCollage {
+    width: 200px;
+  }
+}
+@media (max-width: 900px) and (min-width: 769px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 32px;
+  }
+  .hero h1 {
+    font-size: 60px;
+  }
+  .heroCollage {
+    max-width: 500px;
+    justify-self: center;
+  }
+  .heroMascot {
+    left: auto;
+    right: 32px;
+  }
+  .features {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .featureIntro > img {
+    position: absolute;
+    right: 32px;
+  }
+  .featureGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .appPreview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .devices {
+    margin: 20px auto 0;
+    max-width: 700px;
+  }
+  .footer {
+    padding-inline: 80px;
+    padding-bottom: 200px;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    font-family: var(--font-ios);
+    color: var(--ios-ink);
+  }
+  .hero {
+    display: block;
+    min-height: 0;
+    background: none;
+    padding: 20px 24px 16px;
+  }
+  .hero h1 {
+    background: none;
+    color: #21343b;
+    font:
+      700 34px/41px 'Kalam',
+      cursive;
+    padding: 0;
+    margin: 0;
+  }
+  .hero h1:has(em) {
+    font-family: var(--font-ios);
+    letter-spacing: -0.6px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: #c65b3d;
+  }
+  .greeting {
+    display: block;
+    margin: 0 0 8px;
+    color: #64747c;
+    font-size: 13px;
+    line-height: 20px;
+  }
+  .mobileTitle {
+    display: inline;
+  }
+  .eyebrow,
+  .desktopTitle,
+  .heroDescription,
+  .actions,
+  .heroCollage,
+  .heroMascot,
+  .hero::after,
+  .features,
+  .appPreview,
+  .inspiration,
+  .footer {
+    display: none;
+  }
+  .mobileWelcome {
+    display: block;
+    padding: 0 24px 20px;
+  }
+  .destination {
+    position: relative;
+    min-height: 234px;
+    border-radius: 24px;
+    background:
+      linear-gradient(transparent 36%, #173b4b 100%),
+      url('../../shared/assets/figma/9ca6f.svg') center / cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: white;
+    padding: 18px 16px;
+  }
+  .destination strong {
+    font-size: 28px;
+    line-height: 34px;
+  }
+  .destination p {
+    font-size: 14px;
+    line-height: 20px;
+    margin: 4px 0 0;
+  }
+  .waveMascot {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    top: 20px;
+    right: 16px;
+  }
+  .mobileIntro {
+    color: #64747c;
+    font-size: 16px;
+    line-height: 24px;
+    margin-block: 16px;
+  }
+  .mobileWelcome > a {
+    display: flex;
+    width: 100%;
+  }
+  .loginLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    color: #64747c;
+    font-size: 15px;
+  }
+  .mobileFeatures {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 24px 32px;
+  }
+  .mobileFeatures h2 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .mobileFeatures article {
+    border-radius: 20px;
+    background: white;
+    min-height: 92px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mobileFeatures article > img {
+    flex-shrink: 0;
+  }
+  .mobileFeatures h3 {
+    margin: 0;
+    font-size: 17px;
+    line-height: 22px;
+  }
+  .mobileFeatures p {
+    margin: 4px 0 0;
+    color: #64747c;
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .mobileFeatures article > span {
+    margin-left: auto;
+    font-size: 11px;
+    color: #64747c;
+  }
+  .featured {
+    display: block;
+    background: white;
+    border-radius: 24px;
+    border: 1px solid #dce4e7;
+  }
+  .featuredCover {
+    position: relative;
+    height: 140px;
+    border-radius: 24px 24px 0 0;
+  }
+  .featuredCover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+  .featuredCover span {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #317c89;
+  }
+  .featured > div:last-child {
+    padding: 16px;
+  }
+  .featured h3 {
+    font-size: 20px;
+    line-height: 26px;
+    margin: 0;
+  }
+  .featured p {
+    margin: 4px 0 12px;
+    color: #64747c;
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .featured strong {
+    color: #317c89;
+    font-size: 15px;
+  }
+  .unavailableTiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .unavailableTiles > div {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    font-size: 15px;
+  }
+  .unavailableTiles strong {
+    display: block;
+    margin-top: 12px;
+    color: #64747c;
+    font-size: 14px;
+  }
+}
+@media (max-width: 360px) {
+  .hero,
+  .mobileWelcome,
+  .mobileFeatures {
+    padding-inline: 16px;
+  }
+  .hero h1 {
+    font-size: 29px;
+    line-height: 37px;
+  }
+  .destination strong {
+    font-size: 25px;
+    line-height: 31px;
+  }
+  .mobileFeatures article {
+    gap: 10px;
+    padding: 12px;
+  }
+}
+@media (max-width: 768px) {
+  .mobileFeatures article > button {
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    min-width: 44px;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+  }
+  .userHero .mobileGreetingMascot {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 18px;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+  .userHero h1 {
+    max-width: calc(100% - 58px);
+  }
+  .mobileInspiration {
+    display: block;
+    padding: 0 24px 24px;
+  }
+  .mobileInspiration header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .mobileInspiration header h2 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .mobileInspiration button {
+    min-height: 44px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #955c49;
+  }
+  .mobileInspiration figure {
+    margin: 12px 0 0;
+    position: relative;
+    min-height: 174px;
+    border-radius: 24px;
+    background: #fcf8f1;
+    isolation: isolate;
+  }
+  .mobileInspiration figure > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    border-radius: 24px;
+  }
+  .mobileInspiration figure::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    background: linear-gradient(transparent 35%, #fcf8f1e0 75%);
+  }
+  .mobileInspiration figcaption {
+    padding: 100px 16px 16px;
+  }
+  .mobileInspiration h3 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 34px;
+  }
+  .mobileInspiration p {
+    color: #64747c;
+    font-size: 13px;
+    line-height: 18px;
+    margin: 4px 0 0;
+  }
+}
+@media (max-width: 360px) {
+  .mobileInspiration {
+    padding-inline: 16px;
+  }
+  .mobileInspiration header h2 {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="700" height="170" viewBox="0 0 700 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Soft/Blue haze" opacity="0.58" clip-path="url(#clip0_0_324)">
+<path id="Vector" d="M350 170C543.3 170 700 131.944 700 85C700 38.0558 543.3 0 350 0C156.7 0 0 38.0558 0 85C0 131.944 156.7 170 350 170Z" fill="url(#paint0_radial_0_324)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_324" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(350 85) scale(350 85)">
+<stop stop-color="#D7F2FA" stop-opacity="0.7"/>
+<stop offset="0.72" stop-color="#D7F2FA" stop-opacity="0.24"/>
+<stop offset="1" stop-color="#D7F2FA" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_324">
+<rect width="700" height="170" fill="white"/>
+</clipPath>
+</defs>
+</svg>

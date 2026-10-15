@@ -120,3 +120,7 @@ Ngày 15/10/2026, người dùng chốt dùng sáu trip Desktop làm catalog can
 | Runtime gate           | GET `/api/v1/trips` có static route/handler/OpenAPI evidence, giữ `runtime-candidate`; Figma enrichment `partial-runtime`. Gateway adapter Phase 3 trả unavailable, không gọi Backend; không có bằng chứng runtime-ready mới                                                      |
 
 **Gap trước Gateway:** runtime chỉ hỗ trợ `limit`/opaque `cursor`/`lifecycle`, sort cố định theo created time; không có server search/custom sort/cover/member-count projection. Fixture `all` bao gồm catalog được duyệt, trong khi default GET runtime loại archived; không đồng nhất hai semantics hoặc bịa query mới. Xem [Contract: Trip List](screen-contracts.md#contract-trip-list), [flow](flow-map.md#phase-3--trip-list--read-only-fixture) và [state coverage](state-matrix.md#phase-3--trip-list--fixture-state-contract).
+
+### Phase 3 Auth fixture implementation
+
+Home, Login, Register v? Self profile ?? c? fixture bodies tr?n c?c route inventory hi?n c?. Mobile edit profile inline, kh?ng th?m route; c?c frame native notification/verification/reset v?n target-only. Xem [mapping v? gaps](auth-fixture-phase3.md).

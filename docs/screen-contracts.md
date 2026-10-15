@@ -99,6 +99,23 @@ Token/style source và test evidence: [Phase 2 handoff](design-system-phase2.md)
 | Security   | Access token memory-only; refresh cookie HttpOnly; token một lần không lưu bền vững |
 | Responsive | Form không bị hidden ở laptop thấp/mobile; document flow tự nhiên                   |
 
+## Contract: Auth fixture / Home / Self profile
+
+| Mục | Quy định Phase 3 UI completion |
+| --- | --- |
+| Routes / actor | `/` Guest/User; `/login` và `/register` Guest presentation; `/profile` authenticated Self. Không thêm verify/reset/notification/terms route |
+| Figma | Home Desktop `3:28`/`298:1642`, Mobile `317:2025`/`317:2028`; Login `298:1893`/`317:2026`; Register `298:2007`/`317:2027`; Profile `299:1847`/`317:2046` |
+| Data / repository | Fixture deterministic; `IdentityRepository.readSelf` → `SelfProfileViewModel`, `listSessions` → `IdentitySessionsViewModel`; `HomeRepository.readLanding` → public `HomeLandingViewModel` (mock-only stories/inspiration, chưa có Gateway projection); common fixture/Gateway interfaces. Private featured trip chỉ compose từ `TripRepository.listTrips` sau shell viewer guard, kể cả khi retry |
+| Identity projection | id/email/fullName/avatar nullable/systemRole/status/emailVerifiedAt/version; sessions chỉ id/createdAt/lastUsedAt/expiresAt/revokedAt + nextCursor. Không suy ra device, IP hoặc current session từ session ID |
+| Entry / exit | Header/drawer/logo → Home; Guest CTA → login/register; cross-link login ↔ register; User → `/trips` hoặc `/profile`. Submit không redirect như đã xác thực; session preview chỉ đổi qua shell controls, không từ credentials |
+| Validation | Email trim, format và ≤255; register name trim 1–150, password 15–128 Unicode code points, confirmation và checkbox presentation. Login yêu cầu email/password, không áp chính sách tạo password lên password đăng nhập. Full name có bằng chứng Mobile và Identity dù Desktop thiếu; sửa placeholder 8 →15 theo runtime |
+| Commands | Login/register/profile submit chỉ validation preview rồi unavailable, không gửi credentials, tạo account/session/token, saved toast hoặc tăng version. Avatar/logout/revoke/password change và notification/push controls disabled. Confirmation/checkbox là local-only, không thêm API fields |
+| States | Read loading/success/empty/error/forbidden/not-found/conflict/unavailable; form validation lỗi giữ input và focus field đầu; pending/unknown/error chỉ presentation scenario, không mutation receipt hoặc server success; retry read giữ input |
+| Responsive / scroll | Home/public/auth/profile natural document flow; Desktop Auth grid illustration + form, tablet co spacing/stack khi cần; Mobile 402/320 form/content natural, shared header drawer trái/logo giữa/avatar phải. Profile M22 summary mở local editor theo M32 `424:4048`, không thêm route hoặc saved success. Title trong content, không native bars/bottom tab; focus/touch ≥44px |
+| Source gaps | M04 budget/packing và profile notification/push devices không verified public projections → unavailable, không tạo số tiền/checklist/device sample. Animation source chỉ thuộc native bottom tab đã loại khỏi Web. Idempotency auth/profile chưa có key chung, không bịa key/retry |
+| Runtime evidence | Backend `d8c02cb`: identity-proxy.ts allowlist + IdentityController/IdentityService/identity-crypto.ts; Identity routes runtime-candidate, chưa gọi hoặc xác nhận runtime-ready. Gateway adapters mặc định unavailable/no HTTP |
+| Acceptance | Kiểm tra Home Guest/User, forms validation/no fake session, Self/version/nullable data, all read states, permission aliases, scroll/keyboard tại 1440×800, 1366×520, tablet1024/820/768, Mobile402/320; không API/storage hoặc fixture trong production bundle |
+
 ## Contract: Trip List
 
 | Mục                      | Quy định                                                                                                                                                                                                                                                                                                                                                        |

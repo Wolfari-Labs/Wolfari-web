@@ -1,0 +1,249 @@
+.page {
+  max-width: 1250px;
+  margin: auto;
+  padding: 44px 32px 48px;
+  color: #044791;
+}
+.page h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 44px;
+}
+.subtitle {
+  margin: 4px 0 36px;
+  color: #5980ae;
+  font-size: 15px;
+  line-height: 24px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+}
+.panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 22px;
+  background: white;
+  border: 1px solid #bae4f4;
+  border-radius: 14px;
+  padding: 26px;
+}
+.panel h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+}
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.avatar {
+  width: 78px;
+  height: 78px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.avatar img {
+  position: absolute;
+  display: block;
+}
+.avatar strong {
+  position: relative;
+  color: #009da9;
+  font-size: 22px;
+}
+.avatar:has(img[src$='.png']) img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+}
+.muted,
+.version {
+  color: #5980ae;
+  font-size: 13px;
+  line-height: 20px;
+  margin: 0;
+}
+.preference {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding-block: 6px;
+  font-size: 15px;
+  line-height: 22px;
+}
+.preference span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.preference small {
+  font-size: 12px;
+  color: #5980ae;
+}
+.preference button {
+  min-height: 44px;
+  min-width: 50px;
+  border: 1px solid var(--ios-line);
+  border-radius: 22px;
+  background: var(--ios-secondary);
+  color: var(--ios-muted);
+}
+.sessions {
+  border-top: 1px solid var(--color-line);
+  padding-top: 14px;
+}
+.sessions summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+.sessions ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.sessions li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.page > :global(.preview) {
+  margin-top: 24px;
+}
+.mobileSummary,
+.mobileLogout {
+  display: none;
+}
+@media (max-width: 900px) {
+  .page {
+    padding-inline: 24px;
+  }
+  .grid {
+    gap: 20px;
+  }
+  .panel {
+    padding: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding-top: 24px;
+    font-family: var(--font-ios);
+    color: var(--ios-ink);
+  }
+  .page h1 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+  .subtitle {
+    color: var(--ios-muted);
+    margin-bottom: 24px;
+  }
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .panel {
+    padding: 20px;
+    border: 0;
+    border-radius: 24px;
+  }
+  .panel h2 {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  .preference {
+    border-bottom: 1px solid var(--ios-line);
+    padding-bottom: 16px;
+  }
+}
+@media (max-width: 360px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .panel {
+    padding: 16px;
+  }
+  .panel h2 {
+    font-size: 19px;
+  }
+}
+@media (max-width: 768px) {
+  .subtitle {
+    display: none;
+  }
+  .page h1 {
+    margin-bottom: 24px;
+  }
+  .mobileSummary {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) 44px;
+    gap: 12px;
+    align-items: center;
+    padding: 16px;
+    border-radius: 24px;
+    background: white;
+  }
+  .mobileSummary strong {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  .mobileSummary p {
+    font-size: 13px;
+    line-height: 18px;
+    color: #64747c;
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+  }
+  .mobileSummary button {
+    padding: 0;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .mobileAvatar {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: url('../../shared/assets/figma/95b35.svg') center / contain no-repeat;
+    font-size: 18px;
+    color: #009da9;
+    font-weight: 700;
+  }
+  .mobileAvatar img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .personal {
+    display: none;
+  }
+  .personal.editorOpen {
+    display: flex;
+  }
+  .personal .desktopLogout {
+    display: none;
+  }
+  .mobileLogout {
+    display: flex;
+    background: #f7eeea !important;
+    color: #955c49 !important;
+  }
+}

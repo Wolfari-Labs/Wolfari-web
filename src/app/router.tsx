@@ -2,6 +2,9 @@ import { createBrowserRouter } from 'react-router';
 import { App } from './App';
 import { ContentState } from '../shared/components/ContentState';
 import { TripListPage } from '../features/trips/TripListPage';
+import { AuthPage } from '../features/auth/AuthPage';
+import { ProfilePage } from '../features/auth/ProfilePage';
+import { HomeRoute } from './HomeRoute';
 
 export function createRouter(previewTripPath: string | null) {
   const placeholder = <ContentState state="placeholder" headingLevel={2} />;
@@ -15,7 +18,11 @@ export function createRouter(previewTripPath: string | null) {
         />
       ),
       children: [
-        { path: '/', element: placeholder, handle: { title: 'Trang chủ' } },
+        {
+          path: '/',
+          element: <HomeRoute />,
+          handle: { title: 'Trang chủ', contentTitle: true, fullBleed: true },
+        },
         {
           path: '/trips',
           element: <TripListPage previewEnabled={!!previewTripPath} />,
@@ -26,11 +33,24 @@ export function createRouter(previewTripPath: string | null) {
         { path: '/trips/:tripId/members', element: placeholder },
         {
           path: '/profile',
-          element: placeholder,
-          handle: { title: 'Hồ sơ cá nhân', requiresViewer: true },
+          element: <ProfilePage previewEnabled={!!previewTripPath} />,
+          handle: {
+            title: 'Hồ sơ cá nhân',
+            requiresViewer: true,
+            contentTitle: true,
+            fullBleed: true,
+          },
         },
-        { path: '/login', element: placeholder, handle: { title: 'Đăng nhập' } },
-        { path: '/register', element: placeholder, handle: { title: 'Đăng ký' } },
+        {
+          path: '/login',
+          element: <AuthPage key="login" mode="login" previewEnabled={!!previewTripPath} />,
+          handle: { title: 'Đăng nhập', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/register',
+          element: <AuthPage key="register" mode="register" previewEnabled={!!previewTripPath} />,
+          handle: { title: 'Đăng ký', contentTitle: true, fullBleed: true },
+        },
         { path: '/admin', element: placeholder, handle: { layout: 'admin', requiresViewer: true } },
         { path: '*', element: <ContentState state="not-found" />, handle: { notFound: true } },
       ],

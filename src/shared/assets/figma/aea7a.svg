@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="160" height="80" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="flight path">
+<path id="Vector" d="M4.92308 64.6154C27.6923 72.6154 40 58.4615 32 44.3077C22.7692 28.3077 42.4615 18.4615 57.8462 30.1538C72.6154 41.8462 84.9231 33.2308 88 22.7692C91.0769 11.6923 104.615 9.23077 120.615 16" stroke="#11A8E0" stroke-width="1.53846" stroke-linecap="round" stroke-dasharray="4.92 4.92"/>
+<path id="Vector_2" d="M129.231 6.76923L153.846 3.07692L139.692 24L137.231 14.7692L129.231 6.76923Z" fill="#FFC21C" stroke="#FFC21C" stroke-width="0.615385" stroke-linejoin="round"/>
+</g>
+</svg>

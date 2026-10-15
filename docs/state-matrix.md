@@ -116,3 +116,7 @@ Chỉ áp dụng read-only `/trips`; [Contract: Trip List](screen-contracts.md#c
 Forbidden/conflict là fixture resilience cases. GET-list OpenAPI hiện chỉ mô tả HTTP 200/400/401/503; không khẳng định các state fixture là response runtime list đã được kiểm thử. GET list giữ nhãn `runtime-candidate`, enrichment `partial-runtime`; không có Backend call trong Phase 3. Actor/member guard phải được kiểm tra cả khi repository trả ready snapshot có item không đọc được.
 
 Browser acceptance đã bao phủ desktop 1440×800, short laptop 1366×520, tablet 820px và Mobile 768/402/320px: đúng scroll boundary, controls ≥44px, disclosure Mobile, drawer/focus/Escape, keyboard open trip, resize giữ filter và route tới Overview placeholder. Lint/typecheck/test/build/build:preview đạt; 95 unit/component/proxy và 47 Chromium E2E tests đạt. Alias route và label-in-name Mobile có regression; xem [visual/test evidence](figma-implementation-matrix.md).
+
+### Phase 3 Auth/Home/Self coverage
+
+Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable qua common repository result. Auth: validation gi? input/focus; pending/unknown/error/unavailable l? presentation, kh?ng mutation receipt. Self save ch? validate/unavailable, version kh?ng ??i; profile draft gi? qua error/recovery. Notification/push/avatar/logout/revoke disabled. [Evidence](auth-fixture-phase3.md).

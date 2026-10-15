@@ -122,3 +122,9 @@ Runtime static audit: GET list `runtime-candidate`, Figma enrichment `partial-ru
 Acceptance ngày 15/10/2026: lint/typecheck/test/build/build:preview đạt; **95 unit/component/proxy tests và 47 Chromium E2E tests đạt**. Đã xem screenshot Desktop/Mobile/short laptop và kiểm tra geometry cả sáu viewport bằng browser. Artifacts ignored: `test-results/trip-list-Trip-List-layout-*/trip-list.png`.
 
 E2E chạy serial trên fixture preview với external server và Playwright CLI `test --workers=1` (exit 0). Managed dev-server teardown trong sandbox Windows bị treo sau assertions nên dùng preview server do runner sở hữu và đóng trong finally; giữ nguyên toàn bộ assertions. Production bundle không chứa catalog/UUID/error marker fixture; production browser `/trips` unavailable, không fixture controls/items/API request. Skip link được sửa từ 42px lên 44px; route aliases `/trips/`/`/TRIPS` giữ guard/layout; accessible status name bao gồm label Mobile.
+
+### Phase 3 Auth fixture / Home / Self profile
+
+[Figma ? route ? actor/component, domain v? runtime gaps](auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header v? document scroll thay native bars/tabs; kh?ng th?m route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
+
+Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; 115 unit/component/proxy tests v? 57 Chromium E2E pass (serial external preview runner, exit 0). ?? review screenshot desktop, short laptop v? Mobile. Production marker scan kh?ng c? fixture records/IDs; build c? warning chunk >500kB, c?n t?ch route khi m? r?ng flow. Backend HEAD d8c02cb s?ch, ch? ??c.

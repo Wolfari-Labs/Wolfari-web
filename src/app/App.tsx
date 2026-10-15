@@ -24,6 +24,8 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
         notFound?: boolean;
         layout?: 'trip-list' | 'admin';
         requiresViewer?: boolean;
+        contentTitle?: boolean;
+        fullBleed?: boolean;
       }
     | undefined;
   // Router matching permits case/trailing-slash aliases. Policies must use the same identity.
@@ -31,10 +33,13 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
   const policyPath = pathname.replace(/\/+$/, '').toLowerCase() || '/';
   const adminLayout = handle?.layout === 'admin' || policyPath === paths.admin;
   const listLayout = handle?.layout === 'trip-list' || policyPath === paths.trips;
+  const ownContentTitle = listLayout || handle?.contentTitle;
   const requiresViewer =
     handle?.requiresViewer || [paths.trips, paths.profile].includes(policyPath);
   const [adminSection, setAdminSection] = useState<AdminSection>('overview');
-  const [scenario, setScenario] = useState<ShellScenario>('success');
+  const [scenario, setScenario] = useState<ShellScenario>(() =>
+    [paths.login, paths.register].includes(policyPath) ? 'guest' : 'success',
+  );
   const [section, setSection] = useState<ShellSection>('overview');
   const query = useShell(tripId ?? null, scenario);
   const result = query.data;
@@ -118,6 +123,7 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
       onAdminSectionChange={setAdminSection}
       tripLayout={!!tripId}
       listLayout={listLayout}
+      fullBleed={!!handle?.fullBleed}
       currentPath={policyPath}
       section={effectiveSection}
       onSectionChange={(next) => {
@@ -133,12 +139,12 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
         }
       }}
     >
-      {!handle?.notFound && (!listLayout || !snapshot || denied) && (
+      {!handle?.notFound && (!ownContentTitle || !snapshot || denied) && (
         <h1 className="screen-title">{title}</h1>
       )}
-      {!listLayout && previewControls}
+      {!ownContentTitle && previewControls}
       {handle?.notFound ? (
-        <Outlet />
+        <Outlet context={{ viewer: snapshot?.viewer ?? null, previewEnabled: !!previewTripPath }} />
       ) : query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : query.isError ? (
@@ -172,9 +178,9 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
           error={{ code: 'PERMISSION_DENIED', correlationId: null, retryable: false }}
         />
       ) : (
-        <Outlet />
+        <Outlet context={{ viewer: snapshot?.viewer ?? null, previewEnabled: !!previewTripPath }} />
       )}
-      {listLayout && previewControls}
+      {ownContentTitle && previewControls}
     </AppShell>
   );
 }

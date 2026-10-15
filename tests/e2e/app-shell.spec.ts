@@ -1,5 +1,18 @@
 import { expect, test, type Page } from '@playwright/test';
 const tripPath = '/trips/11111111-1111-4111-8111-111111111111';
+async function expectRouteContent(page: Page, route: string) {
+  if (route === '/')
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/Cho những|Đi đâu/);
+  else if (route === '/login' || route === '/register')
+    await expect(
+      page.getByRole('form', {
+        name: route === '/login' ? 'Biểu mẫu đăng nhập' : 'Biểu mẫu đăng ký',
+      }),
+    ).toBeVisible();
+  else if (route === '/profile')
+    await expect(page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' })).toBeVisible();
+  else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+}
 async function choose(page: Page, scenario: string) {
   const controls = page.locator('details[data-preview="shell"]');
   if (!(await controls.getAttribute('open'))) {
@@ -31,8 +44,9 @@ async function loadedAssets(page: Page) {
     expect(image.height).toBeGreaterThan(0);
     expect(image.source).not.toContain('figma.com');
     if (image.source?.includes('.svg') || image.source?.startsWith('data:image/svg+xml')) {
-      expect(image.width).toBeCloseTo(image.naturalWidth, 0);
-      expect(image.height).toBeCloseTo(image.naturalHeight, 0);
+      // HTMLImageElement rounds intrinsic fractional SVG dimensions to integer pixels.
+      expect(Math.round(image.width)).toBe(image.naturalWidth);
+      expect(Math.round(image.height)).toBe(image.naturalHeight);
     }
   }
 }
@@ -243,7 +257,7 @@ for (const route of routes)
         page.getByRole('heading', { level: 1, name: 'Chuyến đi của tôi' }),
       ).toBeVisible();
       await expect(page.locator('article[data-trip-id]')).toHaveCount(6);
-    } else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+    } else await expectRouteContent(page, route);
     if (
       route === '/trips' ||
       route === '/profile' ||
@@ -343,7 +357,7 @@ test('Guest public/auth pages have responsive header and natural scrolling', asy
     for (const route of ['/', '/login', '/register']) {
       await page.goto(route);
       await choose(page, 'guest');
-      await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+      await expectRouteContent(page, route);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
       );

@@ -12,6 +12,10 @@ import { ContentState } from './shared/components/ContentState';
 import type { ShellRepository } from './features/shell/repositories/shell.repository';
 import type { TripRepository } from './features/trips/repositories/trip.repository';
 import { selectTripRepository } from './infrastructure/repositories/select-trip-repository';
+import { selectIdentityRepository } from './infrastructure/repositories/select-identity-repository';
+import type { IdentityRepository } from './features/auth/model/identity';
+import type { HomeRepository } from './features/home/model/home';
+import { selectHomeRepository } from './infrastructure/repositories/select-home-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -24,6 +28,8 @@ async function start() {
     let previewTripPath: string | null = null;
     let fixtureFactory: (() => ShellRepository) | undefined;
     let tripFixtureFactory: (() => TripRepository) | undefined;
+    let identityFixtureFactory: (() => IdentityRepository) | undefined;
+    let homeFixtureFactory: (() => HomeRepository) | undefined;
     if (import.meta.env.DEV || import.meta.env.MODE === 'preview') {
       if (fixtureSelected) {
         const { previewTripId, createFixtureShellRepository } =
@@ -33,6 +39,12 @@ async function start() {
         const { createFixtureTripRepository } =
           await import('./infrastructure/fixtures/trip.fixture-repository');
         tripFixtureFactory = createFixtureTripRepository;
+        const { createFixtureIdentityRepository } =
+          await import('./infrastructure/fixtures/identity.fixture-repository');
+        identityFixtureFactory = createFixtureIdentityRepository;
+        const { createFixtureHomeRepository } =
+          await import('./infrastructure/fixtures/home.fixture-repository');
+        homeFixtureFactory = createFixtureHomeRepository;
       }
     }
     const repository = await selectShellRepository(
@@ -45,10 +57,25 @@ async function start() {
       previewAllowed,
       tripFixtureFactory,
     );
+    const identityRepository = selectIdentityRepository(
+      import.meta.env.VITE_DATA_MODE,
+      previewAllowed,
+      identityFixtureFactory,
+    );
+    const homeRepository = selectHomeRepository(
+      import.meta.env.VITE_DATA_MODE,
+      previewAllowed,
+      homeFixtureFactory,
+    );
     root.render(
       <StrictMode>
         <ErrorBoundary>
-          <Providers repository={repository} tripRepository={tripRepository}>
+          <Providers
+            repository={repository}
+            tripRepository={tripRepository}
+            identityRepository={identityRepository}
+            homeRepository={homeRepository}
+          >
             <RouterProvider router={createRouter(previewTripPath)} />
           </Providers>
         </ErrorBoundary>

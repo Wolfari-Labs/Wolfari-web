@@ -29,6 +29,7 @@ export function AppShell({
   snapshot,
   tripLayout,
   listLayout = false,
+  fullBleed = false,
   currentPath,
   section,
   onSectionChange,
@@ -40,6 +41,7 @@ export function AppShell({
   snapshot: ShellSnapshot | null;
   tripLayout: boolean;
   listLayout?: boolean;
+  fullBleed?: boolean;
   currentPath: string;
   section: ShellSection;
   onSectionChange: (section: ShellSection) => void;
@@ -317,7 +319,7 @@ export function AppShell({
         <main
           id="main-content"
           tabIndex={-1}
-          className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout ? styles.listMain : ''}`}
+          className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout || fullBleed ? styles.listMain : ''}`}
         >
           {children}
         </main>
