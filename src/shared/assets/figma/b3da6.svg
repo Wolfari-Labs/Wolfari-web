@@ -1,0 +1,29 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1440" height="1000" viewBox="0 0 1440 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Trips/Atmosphere / side clouds" opacity="0.52" clip-path="url(#clip0_0_294)">
+<path id="Vector" d="M-20 410C101.503 410 200 342.843 200 260C200 177.157 101.503 110 -20 110C-141.503 110 -240 177.157 -240 260C-240 342.843 -141.503 410 -20 410Z" fill="url(#paint0_radial_0_294)"/>
+<path id="Vector_2" d="M1460 500C1598.07 500 1710 423.888 1710 330C1710 236.112 1598.07 160 1460 160C1321.93 160 1210 236.112 1210 330C1210 423.888 1321.93 500 1460 500Z" fill="url(#paint1_radial_0_294)"/>
+<path id="Vector_3" d="M-30 925C108.071 925 220 844.411 220 745C220 645.589 108.071 565 -30 565C-168.071 565 -280 645.589 -280 745C-280 844.411 -168.071 925 -30 925Z" fill="url(#paint2_radial_0_294)"/>
+<path id="Vector_4" d="M1460 940C1595.31 940 1705 863.888 1705 770C1705 676.112 1595.31 600 1460 600C1324.69 600 1215 676.112 1215 770C1215 863.888 1324.69 940 1460 940Z" fill="url(#paint3_radial_0_294)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_294" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-20 260) scale(220 150)">
+<stop stop-color="#DDF4FB" stop-opacity="0.78"/>
+<stop offset="1" stop-color="#DDF4FB" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_0_294" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1460 330) scale(250 170)">
+<stop stop-color="#DDF4FB" stop-opacity="0.78"/>
+<stop offset="1" stop-color="#DDF4FB" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint2_radial_0_294" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-30 745) scale(250 180)">
+<stop stop-color="#DDF4FB" stop-opacity="0.78"/>
+<stop offset="1" stop-color="#DDF4FB" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint3_radial_0_294" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1460 770) scale(245 170)">
+<stop stop-color="#DDF4FB" stop-opacity="0.78"/>
+<stop offset="1" stop-color="#DDF4FB" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_294">
+<rect width="1440" height="1000" fill="white"/>
+</clipPath>
+</defs>
+</svg>

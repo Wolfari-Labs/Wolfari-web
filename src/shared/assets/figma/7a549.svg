@@ -1,0 +1,30 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1440" height="174" viewBox="0 0 1440 174" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Hero / cloud wash v3" clip-path="url(#clip0_0_194)">
+<path id="Vector" d="M1440 0H0V174H1440V0Z" fill="url(#paint0_linear_0_194)"/>
+<path id="Vector_2" opacity="0.55" d="M92 92C188.65 92 267 64.2417 267 30C267 -4.24165 188.65 -32 92 -32C-4.64983 -32 -83 -4.24165 -83 30C-83 64.2417 -4.64983 92 92 92Z" fill="url(#paint1_radial_0_194)"/>
+<path id="Vector_3" opacity="0.6" d="M1328 114C1438.46 114 1528 81.7645 1528 42C1528 2.2355 1438.46 -30 1328 -30C1217.54 -30 1128 2.2355 1128 42C1128 81.7645 1217.54 114 1328 114Z" fill="url(#paint2_radial_0_194)"/>
+<path id="Vector_4" opacity="0.22" d="M723 68C905.254 68 1053 46.5097 1053 20C1053 -6.50967 905.254 -28 723 -28C540.746 -28 393 -6.50967 393 20C393 46.5097 540.746 68 723 68Z" fill="url(#paint3_radial_0_194)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_194" x1="0" y1="0" x2="0" y2="174" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F5FCFF"/>
+<stop offset="0.62" stop-color="#EDF9FD"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<radialGradient id="paint1_radial_0_194" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(92 30) scale(175 62)">
+<stop stop-color="#C9EEF7" stop-opacity="0.7"/>
+<stop offset="1" stop-color="#C9EEF7" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint2_radial_0_194" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1328 42) scale(200 72)">
+<stop stop-color="#C9EEF7" stop-opacity="0.7"/>
+<stop offset="1" stop-color="#C9EEF7" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint3_radial_0_194" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(723 20) scale(330 48)">
+<stop stop-color="#C9EEF7" stop-opacity="0.7"/>
+<stop offset="1" stop-color="#C9EEF7" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_194">
+<rect width="1440" height="174" fill="white"/>
+</clipPath>
+</defs>
+</svg>

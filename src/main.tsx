@@ -10,6 +10,8 @@ import { paths } from './app/route-paths';
 import { selectShellRepository } from './infrastructure/repositories/select-shell-repository';
 import { ContentState } from './shared/components/ContentState';
 import type { ShellRepository } from './features/shell/repositories/shell.repository';
+import type { TripRepository } from './features/trips/repositories/trip.repository';
+import { selectTripRepository } from './infrastructure/repositories/select-trip-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -21,12 +23,16 @@ async function start() {
   try {
     let previewTripPath: string | null = null;
     let fixtureFactory: (() => ShellRepository) | undefined;
+    let tripFixtureFactory: (() => TripRepository) | undefined;
     if (import.meta.env.DEV || import.meta.env.MODE === 'preview') {
       if (fixtureSelected) {
         const { previewTripId, createFixtureShellRepository } =
           await import('./infrastructure/fixtures/shell.fixture-repository');
         previewTripPath = paths.trip(previewTripId);
         fixtureFactory = createFixtureShellRepository;
+        const { createFixtureTripRepository } =
+          await import('./infrastructure/fixtures/trip.fixture-repository');
+        tripFixtureFactory = createFixtureTripRepository;
       }
     }
     const repository = await selectShellRepository(
@@ -34,10 +40,15 @@ async function start() {
       previewAllowed,
       fixtureFactory,
     );
+    const tripRepository = await selectTripRepository(
+      import.meta.env.VITE_DATA_MODE,
+      previewAllowed,
+      tripFixtureFactory,
+    );
     root.render(
       <StrictMode>
         <ErrorBoundary>
-          <Providers repository={repository}>
+          <Providers repository={repository} tripRepository={tripRepository}>
             <RouterProvider router={createRouter(previewTripPath)} />
           </Providers>
         </ErrorBoundary>

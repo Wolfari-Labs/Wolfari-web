@@ -1,0 +1,19 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1440" height="174" viewBox="0 0 1440 174" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Hero / edge cloud wash" opacity="0.65" clip-path="url(#clip0_0_199)">
+<path id="Vector" d="M-5 170C64.0356 170 120 135.078 120 92C120 48.9218 64.0356 14 -5 14C-74.0356 14 -130 48.9218 -130 92C-130 135.078 -74.0356 170 -5 170Z" fill="url(#paint0_radial_0_199)"/>
+<path id="Vector_2" d="M1445 190C1527.84 190 1595 149.706 1595 100C1595 50.2944 1527.84 10 1445 10C1362.16 10 1295 50.2944 1295 100C1295 149.706 1362.16 190 1445 190Z" fill="url(#paint1_radial_0_199)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_199" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-5 92) scale(125 78)">
+<stop stop-color="#DDF4FB" stop-opacity="0.85"/>
+<stop offset="1" stop-color="#DDF4FB" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_0_199" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1445 100) scale(150 90)">
+<stop stop-color="#DDF4FB" stop-opacity="0.85"/>
+<stop offset="1" stop-color="#DDF4FB" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_199">
+<rect width="1440" height="174" fill="white"/>
+</clipPath>
+</defs>
+</svg>

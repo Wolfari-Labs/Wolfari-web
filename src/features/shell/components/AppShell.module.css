@@ -12,6 +12,8 @@
   min-height: 100dvh;
 }
 .skip {
+  min-height: var(--target-min);
+  min-width: var(--target-min);
   position: fixed;
   top: 8px;
   left: 8px;
@@ -498,4 +500,11 @@
   .main {
     padding-inline: 16px;
   }
+}
+.main.listMain {
+  padding: 0;
+}
+.listMain > :global(.preview),
+.listMain > h1 {
+  margin: 24px;
 }

@@ -18,17 +18,30 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const matches = useMatches();
-  const handle = matches.at(-1)?.handle as { title?: string; notFound?: boolean } | undefined;
-  const adminLayout = pathname === paths.admin;
+  const handle = matches.at(-1)?.handle as
+    | {
+        title?: string;
+        notFound?: boolean;
+        layout?: 'trip-list' | 'admin';
+        requiresViewer?: boolean;
+      }
+    | undefined;
+  // Router matching permits case/trailing-slash aliases. Policies must use the same identity.
+  // Keep opaque route params untouched; this canonical path is only for known route policy/chrome.
+  const policyPath = pathname.replace(/\/+$/, '').toLowerCase() || '/';
+  const adminLayout = handle?.layout === 'admin' || policyPath === paths.admin;
+  const listLayout = handle?.layout === 'trip-list' || policyPath === paths.trips;
+  const requiresViewer =
+    handle?.requiresViewer || [paths.trips, paths.profile].includes(policyPath);
   const [adminSection, setAdminSection] = useState<AdminSection>('overview');
   const [scenario, setScenario] = useState<ShellScenario>('success');
   const [section, setSection] = useState<ShellSection>('overview');
   const query = useShell(tripId ?? null, scenario);
   const result = query.data;
   const snapshot = result?.status === 'ready' ? result.data : null;
-  const effectiveSection = pathname.endsWith('/plan')
+  const effectiveSection = policyPath.endsWith('/plan')
     ? 'plan'
-    : pathname.endsWith('/members')
+    : policyPath.endsWith('/members')
       ? 'members'
       : section;
   const title = adminLayout
@@ -70,7 +83,33 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
       ? snapshot?.viewer?.systemRole !== 'ADMIN'
       : tripId
         ? snapshot?.trip?.permissions.canRead !== true
-        : [paths.trips, paths.profile].includes(pathname) && !snapshot?.viewer);
+        : requiresViewer && !snapshot?.viewer);
+  const previewControls = previewTripPath ? (
+    <details className="preview" data-preview="shell">
+      <summary>UI preview · Dữ liệu minh họa</summary>
+      <div className="preview-controls">
+        <Link to={paths.home}>Shell trang chủ</Link>
+        <Link to={previewTripPath}>Shell chuyến đi</Link>
+        <Link to={paths.admin}>Shell Admin</Link>
+        <a href="/design-system.html">Shared UI foundation</a>
+        <Select
+          label="Trạng thái"
+          aria-label="Trạng thái preview"
+          value={scenario}
+          onChange={(event) => {
+            const next = scenarios.find((item) => item === event.target.value);
+            if (next) setScenario(next);
+          }}
+        >
+          {scenarios.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </Select>
+      </div>
+    </details>
+  ) : null;
   return (
     <AppShell
       snapshot={snapshot}
@@ -78,7 +117,8 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
       adminSection={adminSection}
       onAdminSectionChange={setAdminSection}
       tripLayout={!!tripId}
-      currentPath={pathname}
+      listLayout={listLayout}
+      currentPath={policyPath}
       section={effectiveSection}
       onSectionChange={(next) => {
         setSection(next === 'plan' || next === 'members' ? 'overview' : next);
@@ -93,33 +133,10 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
         }
       }}
     >
-      {!handle?.notFound && <h1 className="screen-title">{title}</h1>}
-      {previewTripPath && (
-        <details className="preview">
-          <summary>UI preview · Dữ liệu minh họa</summary>
-          <div className="preview-controls">
-            <Link to={paths.home}>Shell trang chủ</Link>
-            <Link to={previewTripPath}>Shell chuyến đi</Link>
-            <Link to={paths.admin}>Shell Admin</Link>
-            <a href="/design-system.html">Shared UI foundation</a>
-            <Select
-              label="Trạng thái"
-              aria-label="Trạng thái preview"
-              value={scenario}
-              onChange={(event) => {
-                const next = scenarios.find((item) => item === event.target.value);
-                if (next) setScenario(next);
-              }}
-            >
-              {scenarios.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </details>
+      {!handle?.notFound && (!listLayout || !snapshot || denied) && (
+        <h1 className="screen-title">{title}</h1>
       )}
+      {!listLayout && previewControls}
       {handle?.notFound ? (
         <Outlet />
       ) : query.isPending ? (
@@ -157,6 +174,7 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
       ) : (
         <Outlet />
       )}
+      {listLayout && previewControls}
     </AppShell>
   );
 }

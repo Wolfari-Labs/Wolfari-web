@@ -1,13 +1,15 @@
 import type { ReadResult, ShellSnapshot } from '../../features/shell/model/shell';
 import type { ShellRepository } from '../../features/shell/repositories/shell.repository';
+import { readableFixtureTrips } from './trip-catalog';
 
-export const previewTripId = '11111111-1111-4111-8111-111111111111';
+export { previewTripId } from './trip-catalog';
 
 export function createFixtureShellRepository(): ShellRepository {
   return {
     async read({ tripId, scenario, signal }): Promise<ReadResult<ShellSnapshot>> {
       signal.throwIfAborted();
-      if (tripId && tripId !== previewTripId)
+      const trip = tripId ? readableFixtureTrips().find((item) => item.id === tripId) : null;
+      if (tripId && !trip)
         return {
           status: 'error',
           error: {
@@ -52,12 +54,12 @@ export function createFixtureShellRepository(): ShellRepository {
                   systemRole: scenario === 'admin' ? 'ADMIN' : 'USER',
                 },
           trip:
-            tripId && scenario !== 'guest'
+            trip && scenario !== 'guest'
               ? {
-                  id: previewTripId,
-                  planVersion: 1,
-                  membershipRevision: 1,
-                  exportRevision: 1,
+                  id: trip.id,
+                  planVersion: trip.planVersion,
+                  membershipRevision: trip.membershipRevision,
+                  exportRevision: trip.exportRevision,
                   permissions: {
                     canRead: !['forbidden-snapshot', 'admin'].includes(scenario),
                     canUpdate: false,

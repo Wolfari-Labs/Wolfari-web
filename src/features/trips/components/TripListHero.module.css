@@ -1,0 +1,230 @@
+.hero {
+  position: relative;
+  min-height: 174px;
+  background:
+    url('../../../shared/assets/figma/e0f62.svg') center / 1440px 174px no-repeat,
+    url('../../../shared/assets/figma/c0f8d.svg') center / 1440px 174px no-repeat,
+    url('../../../shared/assets/figma/b329f.svg') right / 940px 174px no-repeat,
+    url('../../../shared/assets/figma/5a593.svg') right / 940px 174px no-repeat,
+    url('../../../shared/assets/figma/7a549.svg') center / 1440px 174px no-repeat,
+    linear-gradient(#f4fbfe, #eef9fc 72%, #f1fafc);
+}
+.art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.mascot {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 50px;
+  top: 17px;
+}
+.pin {
+  position: absolute;
+  left: 166px;
+  top: 22px;
+  width: 38px;
+  height: 38px;
+  border: 1.4px solid #a9dff1;
+  border-radius: 50%;
+  background: #fffffff2;
+  box-shadow: 0 2px 7px #05578c1a;
+  display: grid;
+  place-items: center;
+}
+.pin img {
+  width: 20px;
+  height: 20px;
+}
+.accent {
+  position: absolute;
+  width: 34px;
+  height: 18px;
+  left: 610px;
+  top: 36px;
+}
+.note {
+  position: absolute;
+  top: 13px;
+  right: 331px;
+  margin: 0;
+  transform: rotate(3deg);
+  width: 250px;
+  color: #087cbc;
+  font:
+    700 16px/20px 'Kalam',
+    cursive;
+}
+.flightPath {
+  position: absolute;
+  right: 262px;
+  top: 31px;
+  width: 178px;
+  height: 70px;
+}
+.plane {
+  position: absolute;
+  right: 263px;
+  top: 12px;
+  width: 46px;
+  height: 34px;
+  transform: rotate(7deg);
+}
+.copy {
+  position: relative;
+  padding: 34px 0 27px;
+  margin-left: 238px;
+  width: 410px;
+}
+.copy h1 {
+  margin: 0;
+  font:
+    700 49px/58px 'Kalam',
+    cursive;
+  color: #008f9d;
+}
+.underline {
+  display: block;
+  width: 336px;
+  height: 17px;
+}
+.desktopSubtitle {
+  margin: 4px 0 0 32px;
+  font-size: 14.5px;
+  line-height: 22px;
+  color: #075495;
+}
+.mobileSubtitle,
+.mobileUnderline {
+  display: none;
+}
+.create {
+  position: absolute;
+  right: 80px;
+  top: 39px;
+  width: 178px;
+  min-height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(to right, #05a99f, #008bb5);
+  color: white;
+  box-shadow: 0 5px 12px #036b8029;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.create img {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 1250px) {
+  .note,
+  .flightPath,
+  .plane {
+    display: none;
+  }
+  .create {
+    right: 32px;
+  }
+}
+@media (max-width: 1000px) and (min-width: 769px) {
+  .mascot {
+    left: 20px;
+    width: 110px;
+    height: 110px;
+    top: 32px;
+  }
+  .pin {
+    left: 104px;
+  }
+  .copy {
+    margin-left: 150px;
+    width: 350px;
+  }
+  .copy h1 {
+    font-size: 41px;
+  }
+  .desktopSubtitle {
+    margin-left: 0;
+    font-size: 12px;
+  }
+  .accent {
+    display: none;
+  }
+  .create {
+    width: 160px;
+    right: 24px;
+  }
+}
+@media (max-height: 600px) and (min-width: 769px) {
+  .hero {
+    min-height: 138px;
+  }
+  .copy {
+    padding-block: 16px;
+  }
+  .mascot {
+    width: 116px;
+    height: 116px;
+  }
+}
+@media (max-width: 768px) {
+  .hero {
+    min-height: 0;
+    background: none;
+    padding: 0 24px;
+    font-family: var(--font-ios);
+  }
+  .art,
+  .underline,
+  .create,
+  .desktopSubtitle {
+    display: none;
+  }
+  .copy {
+    margin: 0;
+    padding: 12px 0 20px;
+    width: 100%;
+  }
+  .copy h1 {
+    max-width: 100%;
+    font: 700 34px/41px var(--font-ios);
+    letter-spacing: -0.6px;
+    color: #173b4b;
+  }
+  .copy h1 span {
+    color: #c65b3d;
+  }
+  .mobileSubtitle {
+    display: block;
+    margin: 12px 0 0;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--ios-muted);
+  }
+  .mobileUnderline {
+    display: block;
+    position: absolute;
+    width: 96px;
+    height: 10px;
+    left: 222px;
+    top: 48px;
+    max-width: calc(100% - 222px);
+  }
+}
+@media (max-width: 360px) {
+  .hero {
+    padding-inline: 16px;
+  }
+  .copy h1 {
+    font-size: 29px;
+  }
+  .mobileUnderline {
+    left: 190px;
+    max-width: calc(100% - 190px);
+  }
+}

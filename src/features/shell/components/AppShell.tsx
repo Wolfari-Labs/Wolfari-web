@@ -28,6 +28,7 @@ import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
 export function AppShell({
   snapshot,
   tripLayout,
+  listLayout = false,
   currentPath,
   section,
   onSectionChange,
@@ -38,6 +39,7 @@ export function AppShell({
 }: {
   snapshot: ShellSnapshot | null;
   tripLayout: boolean;
+  listLayout?: boolean;
   currentPath: string;
   section: ShellSection;
   onSectionChange: (section: ShellSection) => void;
@@ -153,7 +155,7 @@ export function AppShell({
   );
   return (
     <div
-      className={`${styles.shell} ${adminLayout ? styles.adminShell : tripLayout ? styles.tripShell : styles.flowShell}`}
+      className={`${styles.shell} ${adminLayout ? styles.adminShell : tripLayout || listLayout ? styles.tripShell : styles.flowShell}`}
     >
       <a className={styles.skip} href="#main-content">
         Đến nội dung chính
@@ -315,7 +317,7 @@ export function AppShell({
         <main
           id="main-content"
           tabIndex={-1}
-          className={`${styles.main} ${tripLayout || adminLayout ? styles.tripMain : styles.flowMain}`}
+          className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout ? styles.listMain : ''}`}
         >
           {children}
         </main>

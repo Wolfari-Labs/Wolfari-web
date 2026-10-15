@@ -14,6 +14,9 @@ importers:
       '@fontsource/caveat':
         specifier: ^5.2.0
         version: 5.3.0
+      '@fontsource/kalam':
+        specifier: 5.3.0
+        version: 5.3.0
       '@tanstack/react-query':
         specifier: ^5.90.0
         version: 5.104.2(react@19.3.0)
@@ -213,6 +216,9 @@ packages:
 
   '@fontsource/caveat@5.3.0':
     resolution: {integrity: sha512-eHTfzQxFSW9ABERRLNruHoNJmKed2J7pqTUc5lp4a4POMgXGKpxmWj3d9Hz10kmAg6iuTTLe6UagbA4bnsmfQw==}
+
+  '@fontsource/kalam@5.3.0':
+    resolution: {integrity: sha512-FDkVoDfPDCSN/eO81FOYtUI67eMgpVBJmjBtAqSL0PmEhJyeFY2biC+CR+yEttksgXR9+swpFdYmQTyjwBq80Q==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -1338,6 +1344,8 @@ snapshots:
   '@fontsource/be-vietnam-pro@5.3.0': {}
 
   '@fontsource/caveat@5.3.0': {}
+
+  '@fontsource/kalam@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

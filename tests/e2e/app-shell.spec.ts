@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 const tripPath = '/trips/11111111-1111-4111-8111-111111111111';
 async function choose(page: Page, scenario: string) {
-  const controls = page.locator('details.preview');
+  const controls = page.locator('details[data-preview="shell"]');
   if (!(await controls.getAttribute('open'))) {
     if (!(await controls.evaluate((element) => (element as HTMLDetailsElement).open)))
       await controls.locator('summary').click();
@@ -238,7 +238,12 @@ for (const route of routes)
       await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
       await choose(page, 'admin');
     } else await choose(page, 'success');
-    await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+    if (route === '/trips') {
+      await expect(
+        page.getByRole('heading', { level: 1, name: 'Chuyến đi của tôi' }),
+      ).toBeVisible();
+      await expect(page.locator('article[data-trip-id]')).toHaveCount(6);
+    } else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
     if (
       route === '/trips' ||
       route === '/profile' ||
@@ -248,6 +253,7 @@ for (const route of routes)
       await choose(page, 'guest');
       await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
       await expect(page.getByText('Không gian làm việc', { exact: true })).toHaveCount(0);
+      if (route === '/trips') await expect(page.locator('article[data-trip-id]')).toHaveCount(0);
       await choose(page, route === '/admin' ? 'admin' : 'success');
     }
     for (const [scenario, message] of [
