@@ -16,6 +16,8 @@ import { selectIdentityRepository } from './infrastructure/repositories/select-i
 import type { IdentityRepository } from './features/auth/model/identity';
 import type { HomeRepository } from './features/home/model/home';
 import { selectHomeRepository } from './infrastructure/repositories/select-home-repository';
+import type { PlanRepository } from './features/plan/model/plan';
+import { selectPlanRepository } from './infrastructure/repositories/select-plan-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -30,6 +32,7 @@ async function start() {
     let tripFixtureFactory: (() => TripRepository) | undefined;
     let identityFixtureFactory: (() => IdentityRepository) | undefined;
     let homeFixtureFactory: (() => HomeRepository) | undefined;
+    let planFixtureFactory: (() => PlanRepository) | undefined;
     if (import.meta.env.DEV || import.meta.env.MODE === 'preview') {
       if (fixtureSelected) {
         const { previewTripId, createFixtureShellRepository } =
@@ -45,6 +48,9 @@ async function start() {
         const { createFixtureHomeRepository } =
           await import('./infrastructure/fixtures/home.fixture-repository');
         homeFixtureFactory = createFixtureHomeRepository;
+        const { createFixturePlanRepository } =
+          await import('./infrastructure/fixtures/plan.fixture-repository');
+        planFixtureFactory = createFixturePlanRepository;
       }
     }
     const repository = await selectShellRepository(
@@ -67,6 +73,11 @@ async function start() {
       previewAllowed,
       homeFixtureFactory,
     );
+    const planRepository = selectPlanRepository(
+      import.meta.env.VITE_DATA_MODE,
+      previewAllowed,
+      planFixtureFactory,
+    );
     root.render(
       <StrictMode>
         <ErrorBoundary>
@@ -75,6 +86,7 @@ async function start() {
             tripRepository={tripRepository}
             identityRepository={identityRepository}
             homeRepository={homeRepository}
+            planRepository={planRepository}
           >
             <RouterProvider router={createRouter(previewTripPath)} />
           </Providers>

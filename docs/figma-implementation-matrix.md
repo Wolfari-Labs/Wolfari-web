@@ -134,3 +134,9 @@ Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass
 `3:31`/`3:32` → Desktop expanded/collapsed; `317:2032` → Mobile Web adaptation của cùng `/trips/:tripId`, Member/Owner. [Component/domain/scroll/runtime mapping](trip-overview-phase3.md). Trip List canonical dates/name giữ nguyên; cover theo Overview frame, unsupported dashboard numbers thay unavailable. Tablet là Web adaptation, không tuyên bố có Figma tablet frame. Router lazy-load feature bodies và shell loading boundary.
 
 Overview acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass, **124 unit/component/proxy và 65 Chromium E2E tests pass**. Full regression sau route splitting dùng hai browser workers, exit 0; route/body readiness assertions giữ nguyên scroll/asset checks. Đã review Desktop/Mobile screenshots; production lazy chunks hết warning >500kB và fixture marker scan pass.
+
+### Plan Preview fixture
+
+Desktop `20:236`, unscheduled `439:2028`, Mobile `317:2033` → `/trips/:tripId/plan`, Member/Owner/Plan Editor theo permissions, PlanPage/PlanView/Activity/TripHero. [Domain, canonical fixture, scroll và capability mapping](plan-preview-phase3.md). Overview now reads first-day PlanSummary. Không map/detail production route; no fake travel metrics/presence/write success. Timeline boundaries giữ source VERTICAL, Mobile natural scroll.
+
+Plan acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; **137 unit/component/proxy và 74 Chromium E2E pass** (two browser workers, stored `.last-run.json` passed/no failed tests). Đã xem screenshot 1440×800 và Mobile402, có kiểm tra 1366×600/520, tablet1024/820/768 và Mobile320. Keyboard timeline scroll assertion đợi browser hoàn tất scroll, không bỏ assertion; local assets giữ intrinsic SVG geometry. Production marker scan không chứa Plan/Trip/Identity fixture records.

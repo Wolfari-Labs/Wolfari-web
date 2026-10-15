@@ -128,3 +128,7 @@ Home, Login, Register và Self profile đã có fixture bodies trên các route 
 ### Phase 3 Trip Overview
 
 `3:31`/`3:32`/`317:2032` → `/trips/:tripId` đã có fixture metadata body, active Member/Owner. Aggregate projections unavailable; target-only routes giữ nguyên. [Mapping](trip-overview-phase3.md).
+
+### Phase 3 Plan preview
+
+`20:236`/`439:2028`/`317:2033` → existing Plan route đã có read preview; activity disclosure không tạo route. Overview composition ngày đầu dùng PlanRepository; các projection Finance/Travel khác vẫn unavailable. [Mapping](plan-preview-phase3.md).

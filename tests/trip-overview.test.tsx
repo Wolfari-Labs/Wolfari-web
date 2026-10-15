@@ -7,6 +7,7 @@ import { App } from '../src/app/App';
 import { TripOverviewPage } from '../src/features/trips/TripOverviewPage';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
 import { createFixtureShellRepository } from '../src/infrastructure/fixtures/shell.fixture-repository';
+import { createFixturePlanRepository } from '../src/infrastructure/fixtures/plan.fixture-repository';
 import { createGatewayTripRepository } from '../src/infrastructure/repositories/trip.gateway-repository';
 import { previewTripId, fixtureTripCatalog } from '../src/infrastructure/fixtures/trip-catalog';
 
@@ -91,7 +92,11 @@ it('guards Guest before detail reads and renders unavailable summaries with real
     { initialEntries: ['/trips/' + previewTripId] },
   );
   render(
-    <Providers repository={shell} tripRepository={{ ...repo, getTrip }}>
+    <Providers
+      repository={shell}
+      tripRepository={{ ...repo, getTrip }}
+      planRepository={createFixturePlanRepository()}
+    >
       <RouterProvider router={router} />
     </Providers>,
   );

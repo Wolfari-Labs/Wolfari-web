@@ -9,25 +9,34 @@ import { IdentityRepositoryProvider } from '../features/auth/repositories/identi
 import type { IdentityRepository } from '../features/auth/model/identity';
 import { HomeRepositoryProvider } from '../features/home/repositories/home-context';
 import type { HomeRepository } from '../features/home/model/home';
+import type { PlanRepository } from '../features/plan/model/plan';
+import { PlanRepositoryProvider } from '../features/plan/repositories/plan-context';
 
 export function Providers({
   repository,
   tripRepository,
   identityRepository,
   homeRepository,
+  planRepository,
   children,
 }: {
   repository: ShellRepository;
   tripRepository?: TripRepository;
   identityRepository?: IdentityRepository;
   homeRepository?: HomeRepository;
+  planRepository?: PlanRepository;
   children: ReactNode;
 }) {
   const [client] = useState(createQueryClient);
-  const homeContent = homeRepository ? (
-    <HomeRepositoryProvider repository={homeRepository}>{children}</HomeRepositoryProvider>
+  const planContent = planRepository ? (
+    <PlanRepositoryProvider repository={planRepository}>{children}</PlanRepositoryProvider>
   ) : (
     children
+  );
+  const homeContent = homeRepository ? (
+    <HomeRepositoryProvider repository={homeRepository}>{planContent}</HomeRepositoryProvider>
+  ) : (
+    planContent
   );
   const content = identityRepository ? (
     <IdentityRepositoryProvider repository={identityRepository}>

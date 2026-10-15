@@ -11,6 +11,8 @@ async function expectRouteContent(page: Page, route: string) {
     ).toBeVisible();
   else if (route === '/profile')
     await expect(page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' })).toBeVisible();
+  else if (route.endsWith('/plan'))
+    await expect(page.locator('[data-flow="plan-preview"]')).toBeVisible();
   else if (/^\/trips\/[^/]+$/.test(route))
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
   else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();

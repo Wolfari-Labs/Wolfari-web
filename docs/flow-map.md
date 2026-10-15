@@ -220,3 +220,7 @@ Header/drawer/logo → `/`; Guest CTA → `/login` ↔ `/register`; User → `/t
 ### Trip Overview fixture
 
 Readable Trip List card → Overview metadata → existing Plan/Members route; Back trả về list, focus main/reset scroll theo shell. Edit/Share và aggregate actions unavailable. Không deep link mới, không server writes. [Contract/evidence](trip-overview-phase3.md).
+
+### Plan preview
+
+Overview/sidebar → Plan → chọn ngày/activity disclosure/unscheduled panel → Overview hoặc Members bằng existing navigation. Day selection và expansion local, giữ qua read error/recovery; không route cho map/activity hoặc drag/drop mutation. Overview đọc cùng first-day Plan projection. [Contract/evidence](plan-preview-phase3.md).

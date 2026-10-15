@@ -124,3 +124,7 @@ Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/
 ### Trip Overview fixture
 
 Metadata read: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; unknown/denied opaque IDs → not-found. Snapshot canRead/active membership guard và Guest/Admin shell guard chặn private reads. Aggregate cards unavailable; writes disabled, pending/unknown không áp dụng cho read-only metadata. [Evidence](trip-overview-phase3.md).
+
+### Plan preview
+
+Plan read loading/ready/empty/error/forbidden/not-found/conflict/unavailable; null startsAt không bị gán ngày, nullable end/location rõ ràng; unknown trip → not-found. Cross-projection revision mismatch → conflict; read permissions trước summary/timeline. Pending/unknown presentation không đổi snapshot, write controls disabled. Day selection/expansion giữ qua read recovery; Guest không gọi Plan. [Evidence](plan-preview-phase3.md).

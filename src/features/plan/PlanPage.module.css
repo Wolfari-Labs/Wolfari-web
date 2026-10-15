@@ -1,0 +1,488 @@
+.page {
+  padding: 12px 18px 24px;
+  color: var(--color-ink);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.breadcrumb h1 {
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0;
+}
+.breadcrumb a {
+  color: var(--color-active);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.days {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  overflow-x: auto;
+  padding: 2px 0;
+}
+.days > button {
+  min-width: 106px;
+  min-height: 52px;
+  border-radius: 8px;
+  border: 1px solid var(--color-line);
+  background: white;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.days > button small {
+  display: block;
+  font-size: 12px;
+  margin-top: 3px;
+}
+.days > button[aria-pressed='true'] {
+  background: var(--color-active);
+  color: white;
+}
+.metrics {
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: white;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
+  gap: 18px;
+  align-items: center;
+  font-size: 13px;
+}
+.metrics strong {
+  font-size: 20px;
+  color: var(--color-active);
+  display: block;
+  margin-bottom: 4px;
+}
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.columns.withUnscheduled {
+  grid-template-columns: minmax(0, 1.65fr) minmax(260px, 1fr);
+}
+.timeline,
+.unscheduled {
+  min-width: 0;
+  background: white;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  flex-wrap: wrap;
+}
+.toolbar h2 {
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0 auto 0 0;
+}
+.timelineViewport {
+  margin: 0;
+  padding: 8px 18px 18px 24px;
+  list-style: none;
+  max-height: 414px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.activity {
+  position: relative;
+  padding: 0 0 26px 36px;
+  border-left: 2px solid var(--color-active);
+}
+.activity:last-child {
+  padding-bottom: 0;
+}
+.step {
+  position: absolute;
+  left: -20px;
+  top: 18px;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: #00a0ae;
+  color: white;
+  font-size: 14px;
+}
+.card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  min-height: 78px;
+  padding: 12px;
+}
+.time {
+  font-size: 14px;
+  line-height: 22px;
+  white-space: nowrap;
+  padding-top: 10px;
+}
+.icon {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.icon img {
+  display: block;
+}
+.activityPreview {
+  flex: 1;
+  min-width: 0;
+}
+.activityPreview summary {
+  list-style: none;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.activityPreview strong {
+  font-size: 15px;
+  line-height: 22px;
+}
+.activityPreview small {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.activityPreview dl {
+  font-size: 13px;
+  line-height: 22px;
+}
+.activityPreview dd {
+  margin: 0 0 10px;
+}
+.activityPreview p {
+  font-size: 12px;
+}
+.cover {
+  width: 140px;
+  height: 58px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.card > button {
+  padding-inline: 8px;
+  min-width: 44px;
+}
+.card:has(details[open]) {
+  flex-wrap: wrap;
+}
+.activityPreview[open] {
+  min-width: 200px;
+}
+.unscheduled {
+  padding: 0 16px 16px;
+}
+.unscheduledToggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 54px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  gap: 12px;
+  cursor: pointer;
+}
+.unscheduledToggle span {
+  background: #fff1dd;
+  color: #b86a00;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 13px;
+}
+.unscheduled ul {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+.unscheduled li {
+  padding: 20px 14px;
+  border: 1px solid #f4cf82;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+.unscheduled li small {
+  display: block;
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 8px;
+}
+.revisions {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+.page > :global(.preview) {
+  margin-top: 20px;
+}
+.mobileTrip {
+  display: none;
+}
+@media (min-width: 769px) {
+  .hero :global(section[data-compact='true']) {
+    min-height: 150px;
+  }
+  .hero :global(section[data-compact='true']) > div:first-child {
+    padding-block: 20px;
+  }
+}
+@media (max-height: 650px) and (min-width: 769px) {
+  .days {
+    margin: 10px 0;
+  }
+  .metrics {
+    padding: 10px 14px;
+  }
+  .toolbar {
+    padding: 10px 12px;
+  }
+  .toolbar h2 {
+    font-size: 20px;
+  }
+  .timelineViewport {
+    max-height: 280px;
+  }
+  .hero :global(section[data-compact='true']) {
+    min-height: 116px;
+  }
+  .hero :global(section[data-compact='true']) > div:first-child {
+    padding: 12px 20px;
+  }
+}
+@media (max-width: 1200px) and (min-width: 769px) {
+  .cover {
+    display: none;
+  }
+  .columns.withUnscheduled {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .time span {
+    display: none;
+  }
+  .card {
+    gap: 12px;
+  }
+  .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  .activityPreview strong {
+    font-size: 14px;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding: 24px;
+    font-family: var(--font-ios);
+    color: var(--ios-ink);
+  }
+  .breadcrumb {
+    display: block;
+    margin-bottom: 8px;
+    min-height: 0;
+  }
+  .breadcrumb > a,
+  .breadcrumb > span {
+    display: none;
+  }
+  .breadcrumb h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 34px;
+  }
+  .mobileTrip {
+    display: block;
+    color: var(--ios-muted);
+    margin: 8px 0 20px;
+  }
+  .hero {
+    display: none;
+  }
+  .days {
+    background: var(--ios-secondary);
+    border-radius: 24px;
+    padding: 4px;
+    margin: 0 0 18px;
+    gap: 4px;
+  }
+  .days > button {
+    border: 0;
+    border-radius: 24px;
+    background: transparent;
+    min-width: 112px;
+    color: var(--ios-muted);
+  }
+  .days > button[aria-pressed='true'] {
+    background: white;
+    color: var(--ios-ink);
+    box-shadow: 0 1px 5px #1f333d14;
+  }
+  .days > button:disabled {
+    display: none;
+  }
+  .metrics {
+    border: 0;
+    background: transparent;
+    padding: 0 0 8px;
+    font-size: 13px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    color: var(--ios-muted);
+  }
+  .metrics strong {
+    font-size: 15px;
+    display: inline;
+    margin-right: 4px;
+    color: inherit;
+  }
+  .metrics > span:nth-child(3) {
+    grid-column: 1/-1;
+  }
+  .timeline {
+    border: 0;
+    background: transparent;
+  }
+  .toolbar {
+    padding: 8px 0 16px;
+    gap: 8px;
+  }
+  .toolbar h2 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .toolbar > button {
+    display: none;
+  }
+  .timelineViewport {
+    overflow: visible;
+    max-height: none;
+    padding: 0 0 0 24px;
+  }
+  .activity {
+    padding: 0 0 32px 34px;
+    border-color: var(--ios-line);
+  }
+  .step {
+    display: none;
+  }
+  .card {
+    position: relative;
+    gap: 12px;
+    padding: 16px 12px;
+    border: 0;
+    border-radius: 24px;
+    min-height: 82px;
+    background: white;
+    box-shadow: 0 3px 8px #154d500b;
+  }
+  .time {
+    position: absolute;
+    left: -60px;
+    top: 22px;
+    background: white;
+    border: 1px solid var(--ios-line);
+    padding: 4px 6px;
+    border-radius: 20px;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ios-teal);
+  }
+  .time span {
+    display: none;
+  }
+  .icon {
+    width: 52px;
+    height: 58px;
+    border-radius: 18px;
+    background: var(--ios-mint);
+    display: grid;
+    place-items: center;
+    padding: 0;
+  }
+  .cover,
+  .card > button {
+    display: none;
+  }
+  .activityPreview strong {
+    font-size: 17px;
+    line-height: 22px;
+  }
+  .activityPreview small {
+    color: var(--ios-muted);
+    font-size: 13px;
+  }
+  .activityPreview[open] {
+    min-width: 0;
+  }
+  .card:has(details[open]) {
+    flex-wrap: nowrap;
+  }
+  .columns.withUnscheduled {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .unscheduled {
+    border: 0;
+    border-radius: 24px;
+    background: var(--ios-amber);
+    padding-inline: 20px;
+  }
+  .unscheduled li {
+    background: white;
+    border: 0;
+    border-radius: 20px;
+  }
+  .unscheduledToggle {
+    font-size: 20px;
+    line-height: 26px;
+    min-height: 70px;
+  }
+  .revisions {
+    color: var(--ios-muted);
+  }
+}
+@media (max-width: 360px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .card {
+    gap: 8px;
+    padding: 14px 10px;
+  }
+  .icon {
+    width: 40px;
+    flex-shrink: 0;
+  }
+  .activityPreview strong {
+    font-size: 16px;
+  }
+  .unscheduledToggle {
+    font-size: 18px;
+  }
+}

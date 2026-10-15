@@ -1,4 +1,9 @@
-import { useState, type CSSProperties, type ReactNode } from 'react';
+import { TripHero } from './components/TripHero';
+import { usePlanRepository } from '../plan/repositories/plan-context';
+import { PlanSummary } from '../plan/components/PlanSummary';
+import type { PlanViewModel } from '../plan/model/plan';
+import type { ReadResult } from '../../shared/types/result';
+import { useState, type ReactNode } from 'react';
 import { Link, useOutletContext, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useTripRepository } from './repositories/repository-context';
@@ -7,7 +12,6 @@ import {
   type TripDetailScenario,
   type TripDetailViewModel,
 } from './model/trip-detail';
-import { tripDateLabel } from './model/trip-list-query';
 import { Button } from '../../shared/components/Button';
 import { ContentState } from '../../shared/components/ContentState';
 import { Select } from '../../shared/components/Select';
@@ -15,12 +19,6 @@ import { paths } from '../../app/route-paths';
 import type { RouteContext } from '../../app/route-context';
 import styles from './TripOverviewPage.module.css';
 
-const status = {
-  UPCOMING: 'Sắp tới',
-  ONGOING: 'Đang diễn ra',
-  COMPLETED: 'Đã kết thúc',
-  ARCHIVED: 'Đã lưu trữ',
-};
 function Unavailable({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <section className={styles.panel}>
@@ -30,56 +28,33 @@ function Unavailable({ title, children }: { title: string; children?: ReactNode 
     </section>
   );
 }
-export function TripOverview({ trip }: { trip: TripDetailViewModel }) {
+export function TripOverview({
+  trip,
+  plan,
+  onRetry,
+}: {
+  trip: TripDetailViewModel;
+  plan: ReadResult<PlanViewModel> | { status: 'loading' };
+  onRetry: () => void;
+}) {
   return (
     <>
-      <section
-        className={styles.hero}
-        aria-label="Thông tin chuyến đi"
-        style={
-          trip.presentation.cover
-            ? ({
-                '--trip-cover': `url("${trip.presentation.cover.src}")`,
-                '--trip-mobile-cover': `url("${trip.presentation.cover.mobileSrc ?? trip.presentation.cover.src}")`,
-              } as CSSProperties)
-            : undefined
-        }
-      >
-        <div className={styles.paper}>
-          <h2>{trip.name}</h2>
-          <div className={styles.meta}>
-            <span>{tripDateLabel(trip)}</span>
-            <Link to={paths.members(trip.id)}>
-              {trip.presentation.memberCount === null
-                ? 'Thành viên'
-                : `${trip.presentation.memberCount} thành viên`}
-            </Link>
-            <span>{status[trip.lifecycle]}</span>
-          </div>
-        </div>
-        <div className={styles.actions}>
-          <Button variant="outline" disabled title="Chỉnh sửa chưa được kết nối">
-            Chỉnh sửa
-          </Button>
-          <Button disabled title="Chia sẻ chưa được kết nối">
-            Chia sẻ
-          </Button>
-        </div>
-      </section>
+      <TripHero trip={trip} />
       {trip.description && <p>{trip.description}</p>}
       <div className={styles.summaries}>
-        <Unavailable title="Lịch trình trong ngày">
-          <Link to={paths.plan(trip.id)}>Xem lịch trình →</Link>
-        </Unavailable>
+        <section className={styles.panel}>
+          <h2>Lịch trình ngày đầu</h2>
+          <PlanSummary trip={trip} result={plan} compact onRetry={onRetry} />
+        </section>
         <Unavailable title="Thời tiết" />
         <Unavailable title="Ngân sách / Quỹ nhóm" />
         <Unavailable title="Tiến độ Packing list" />
       </div>
       <div className={styles.workspace}>
-        <Unavailable title="Lịch trình">
-          <p>Chọn lịch trình để xem bản đọc và hoạt động.</p>
-          <Link to={paths.plan(trip.id)}>Xem chi tiết lịch trình →</Link>
-        </Unavailable>
+        <section className={styles.panel}>
+          <h2>Lịch trình</h2>
+          <PlanSummary trip={trip} result={plan} onRetry={onRetry} />
+        </section>
         <Unavailable title="Bản đồ hành trình">
           <p>Chưa có projection bản đồ khả dụng.</p>
           <Button variant="plain" disabled>
@@ -128,6 +103,7 @@ export function TripOverviewPage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
   const repository = useTripRepository();
+  const planRepository = usePlanRepository();
   const [scenario, setScenario] = useState<TripDetailScenario>('success');
   const query = useQuery({
     queryKey: ['trip', 'detail', tripId, scenario],
@@ -140,6 +116,19 @@ export function TripOverviewPage() {
     (!trip.permissions.canRead ||
       trip.currentMembership.leftAt !== null ||
       trip.currentMembership.tripId !== tripId);
+  const planQuery = useQuery({
+    queryKey: ['plan', tripId, 'success'],
+    queryFn: ({ signal }) => planRepository.getPlan({ tripId, scenario: 'success', signal }),
+    enabled: !!trip && !denied,
+  });
+  const plan: ReadResult<PlanViewModel> | { status: 'loading' } = planQuery.isPending
+    ? { status: 'loading' }
+    : planQuery.isError
+      ? {
+          status: 'error',
+          error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true },
+        }
+      : (planQuery.data ?? { status: 'empty' });
   const error = query.isError
     ? { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true }
     : result?.status === 'error'
@@ -166,7 +155,14 @@ export function TripOverviewPage() {
           }}
         />
       ) : trip ? (
-        <TripOverview trip={trip} />
+        <TripOverview
+          trip={trip}
+          plan={plan}
+          onRetry={() => {
+            void query.refetch();
+            if (!denied) void planQuery.refetch();
+          }}
+        />
       ) : (
         <ContentState state="empty" headingLevel={2} />
       )}
