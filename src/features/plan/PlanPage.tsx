@@ -66,6 +66,11 @@ function Activity({
             <small>{activity.description ?? 'Xem hoạt động'}</small>
           </summary>
           <dl>
+            <dt>Thời gian</dt>
+            <dd>
+              {activityTime(activity.startsAt, timezone)} –{' '}
+              {activityTime(activity.endsAt, timezone)}
+            </dd>
             <dt>Trạng thái</dt>
             <dd>{activity.status === 'TODO' ? 'Chưa hoàn tất' : 'Đã hoàn tất'}</dd>
             <dt>Phiên bản lịch trình</dt>

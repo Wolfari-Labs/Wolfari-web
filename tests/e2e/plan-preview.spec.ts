@@ -40,6 +40,9 @@ for (const size of [
     await page.getByRole('button', { name: /Đã chọn · Chưa xếp lịch/ }).click();
     await expect(page.getByText('Chùa Linh Ứng', { exact: true })).toBeVisible();
     await page.getByLabel('Xem hoạt động Bán đảo Sơn Trà').click();
+    await expect(
+      page.locator('details[open] dd').filter({ hasText: /08:00.*10:30/ }),
+    ).toBeVisible();
     await expect(page.getByRole('button', { name: 'Chỉnh sửa hoạt động' })).toBeDisabled();
     const images = await page.locator('img:visible').evaluateAll((elements) =>
       elements.map((element) => {

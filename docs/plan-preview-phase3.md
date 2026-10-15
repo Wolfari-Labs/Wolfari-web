@@ -15,6 +15,8 @@ Fixture Đà Nẵng dùng bốn activity source và sáu selected locations (hai
 
 Activity disclosure read preview giữ focus và natural flow, không mutation. Add/edit/delete/reorder/completion/map/add-day disabled dù canEdit. PlanWriteIntent giữ idempotencyKey/expectedPlanVersion cho integration sau; không tạo key hoặc operation receipt giả. Pending/unknown chỉ presentation, không đổi dữ liệu/revision hoặc báo saved. Chọn ngày/unscheduled expansion giữ qua read error/recovery.
 
+Review cuối Phase 3: thời gian bắt đầu/kết thúc đầy đủ luôn có trong activity disclosure; Mobile/tablet compact row không làm mất khả năng đọc end time. Null time vẫn hiển thị “Chưa xếp giờ”, không gán giờ giả.
+
 Overview cập nhật composition ngày đầu qua cùng PlanRepository/PlanSummary; metadata vẫn đọc riêng, errors/permissions/revisions được kiểm tra trước hiển thị summary. Finance/weather/fare/map/packing vẫn unavailable. TripHero dùng lại ở Overview và Plan, không thay shell behavior.
 
 Read coverage loading/ready/empty/error/forbidden/not-found/conflict/unavailable; metadata guard trước Plan query, cancellation và retry. Desktop main/nav trong viewport, timeline riêng; short/tablet co spacing/columns, Mobile 402/320 không clip. Screenshots ignored `test-results/plan-preview-Plan-preview-*/plan.png`.
