@@ -114,6 +114,7 @@ export function TripOverviewPage() {
   const denied =
     trip &&
     (!trip.permissions.canRead ||
+      trip.id !== tripId ||
       trip.currentMembership.leftAt !== null ||
       trip.currentMembership.tripId !== tripId);
   const planQuery = useQuery({

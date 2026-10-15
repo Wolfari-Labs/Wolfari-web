@@ -94,6 +94,7 @@ describe('Shell interactions', () => {
       'aria-pressed',
       'true',
     );
+    expect(screen.getByText('Chức năng chưa khả dụng')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Thu gọn thanh điều hướng' }));
     expect(screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toHaveAttribute(
       'aria-expanded',

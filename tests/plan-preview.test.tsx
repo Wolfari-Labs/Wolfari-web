@@ -115,9 +115,8 @@ describe('Plan projection and adapters', () => {
     expect(activityTime(null, 'Asia/Ho_Chi_Minh')).toBe('Chưa xếp giờ');
   });
 });
-function mount(guest = false) {
+function mount(guest = false, plan = createFixturePlanRepository()) {
   const shell = createFixtureShellRepository(),
-    plan = createFixturePlanRepository(),
     getPlan = vi.fn(plan.getPlan);
   const router = createMemoryRouter(
     [
@@ -174,4 +173,17 @@ it('does not read Plan for Guest', async () => {
   const getPlan = mount(true);
   await screen.findByText('Bạn không có quyền truy cập');
   expect(getPlan).not.toHaveBeenCalled();
+});
+it('blocks a stale Plan revision before rendering activities', async () => {
+  const fixture = createFixturePlanRepository();
+  mount(false, {
+    getPlan: async (request) => {
+      const result = await fixture.getPlan(request);
+      return result.status === 'ready'
+        ? { ...result, data: { ...result.data, planVersion: result.data.planVersion + 1 } }
+        : result;
+    },
+  });
+  await screen.findByText('Dữ liệu đã thay đổi');
+  expect(screen.queryByText('Bán đảo Sơn Trà')).not.toBeInTheDocument();
 });

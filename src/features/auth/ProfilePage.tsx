@@ -104,7 +104,11 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
             <div className={styles.avatarRow}>
               <span className={styles.avatar}>
                 {profile.avatar ? (
-                  <img src={profile.avatar.src} alt={profile.avatar.alt} />
+                  <img
+                    className={styles.avatarPhoto}
+                    src={profile.avatar.src}
+                    alt={profile.avatar.alt}
+                  />
                 ) : (
                   <>
                     <img src={art['95b35.svg']} alt="" />

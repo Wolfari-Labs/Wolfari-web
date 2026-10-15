@@ -58,10 +58,11 @@
   color: #009da9;
   font-size: 22px;
 }
-.avatar:has(img[src$='.png']) img {
+.avatar .avatarPhoto {
   width: 78px;
   height: 78px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .muted,
 .version {

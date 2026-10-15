@@ -49,6 +49,11 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
     : policyPath.endsWith('/members')
       ? 'members'
       : section;
+  const targetSection =
+    !!tripId &&
+    !policyPath.endsWith('/plan') &&
+    !policyPath.endsWith('/members') &&
+    effectiveSection !== 'overview';
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
     : tripId
@@ -139,7 +144,7 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
         }
       }}
     >
-      {!handle?.notFound && (!ownContentTitle || !snapshot || denied) && (
+      {!handle?.notFound && (!ownContentTitle || targetSection || !snapshot || denied) && (
         <h1 className="screen-title">{title}</h1>
       )}
       {!ownContentTitle && previewControls}
@@ -177,6 +182,8 @@ export function App({ previewTripPath }: { previewTripPath: string | null }) {
           headingLevel={2}
           error={{ code: 'PERMISSION_DENIED', correlationId: null, retryable: false }}
         />
+      ) : targetSection ? (
+        <ContentState state="unavailable" headingLevel={2} />
       ) : (
         <Outlet context={{ viewer: snapshot?.viewer ?? null, previewEnabled: !!previewTripPath }} />
       )}

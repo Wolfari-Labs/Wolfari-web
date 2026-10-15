@@ -242,6 +242,7 @@ export function PlanPage() {
   const trip = tripQuery.data?.status === 'ready' ? tripQuery.data.data : null;
   const allowed =
     !!trip?.permissions.canRead &&
+    trip.id === tripId &&
     trip.currentMembership.leftAt === null &&
     trip.currentMembership.tripId === tripId;
   const query = useQuery({
