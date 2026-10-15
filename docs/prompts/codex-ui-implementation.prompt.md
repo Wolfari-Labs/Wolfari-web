@@ -9,6 +9,7 @@ Mỗi file dưới đây là một prompt độc lập. Chỉ cần mở đúng 
 | 1-reconcile | Đồng bộ Phase 1 đã code bằng prompt cũ | [phase-1-reconcile.prompt.md](phase-1-reconcile.prompt.md) |
 | 2 | Design system và shared UI foundation | [phase-2-design-system.prompt.md](phase-2-design-system.prompt.md) |
 | 3 | Dựng màn hình bằng fixture | [phase-3-fixture-screen.prompt.md](phase-3-fixture-screen.prompt.md) |
+| 3-UI-COMPLETE | Hoàn thiện toàn bộ Web độc lập bằng fixture sau Phase 3 | [phase-3-ui-completion.prompt.md](phase-3-ui-completion.prompt.md) |
 | 4 | Tích hợp Identity/Gateway | [phase-4-identity-gateway.prompt.md](phase-4-identity-gateway.prompt.md) |
 | 5 | Tích hợp Trip và collaboration | [phase-5-trip-collaboration.prompt.md](phase-5-trip-collaboration.prompt.md) |
 | 6 | Tích hợp Plan và Activity | [phase-6-plan-activity.prompt.md](phase-6-plan-activity.prompt.md) |
@@ -22,13 +23,14 @@ Phase 0
   → Phase 1-reconcile nếu Phase 1 đã code theo prompt cũ
   → Phase 2
   → Phase 3 theo từng flow
+  → Phase 3-UI-COMPLETE: hoàn thiện các màn hình Web bằng fixture
   → Phase 4
   → Phase 5
   → Phase 6
   → Phase 7 theo runtime evidence
 ```
 
-Không chạy Phase 3 trước khi Phase 0 có screen contract và state matrix. Không chạy Phase 4+ chỉ vì Figma đã có frame; phải có Gateway/runtime evidence.
+Không chạy Phase 3 trước khi Phase 0 có screen contract và state matrix. Sau khi Phase 3 hoàn thành, có thể chạy Phase 3-UI-COMPLETE để hoàn thiện Web độc lập. Không chạy Phase 4+ chỉ vì Figma đã có frame; phải có Gateway/runtime evidence.
 
 ## Quy tắc tạo branch
 
@@ -39,6 +41,10 @@ main
       ├─ ui/app-shell                  (Phase 1)
       ├─ ui/design-system              (Phase 2)
       ├─ ui/<flow>                     (Phase 3, mỗi flow một branch)
+      ├─ ui/auth-fixture                (Phase 3-UI-COMPLETE)
+      ├─ ui/trip-overview               (Phase 3-UI-COMPLETE)
+      ├─ ui/plan-preview                (Phase 3-UI-COMPLETE)
+      └─ ui/members-preview             (Phase 3-UI-COMPLETE)
       └─ <type>/<issue>-<flow>         (Phase 4+, có Issue/PR)
 ```
 
@@ -46,6 +52,7 @@ main
 - Phase 1-reconcile tiếp tục trên branch Phase 1 hiện tại; không tạo branch mới chỉ để sửa lệch của cùng một flow.
 - Phase 2 tạo `ui/design-system` từ `develop` sau khi Phase 1 đã vào `develop`.
 - Phase 3 tạo branch riêng cho từng flow như `ui/trip-list`, `ui/trip-overview`, `ui/plan-preview`.
+- Phase 3-UI-COMPLETE tiếp tục tạo một branch riêng cho từng flow fixture còn thiếu; không chờ Backend để hoàn thiện visual/interaction/read-only states.
 - Phase 4 trở đi tạo branch từ `develop` với số Issue, ví dụ `feat/42-auth-gateway`, và PR target `develop`.
 - Nếu work trước chưa merge nhưng work mới phụ thuộc code đó, không branch từ develop thiếu code; merge dependency trước hoặc ghi rõ stacked branch/dependency trong báo cáo.
 - Không tạo branch mới cho mỗi commit nhỏ, mỗi bug nhỏ trong cùng flow hoặc mỗi lần chỉnh CSS.

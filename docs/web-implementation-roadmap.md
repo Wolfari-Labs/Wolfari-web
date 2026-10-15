@@ -201,6 +201,22 @@ Bộ tài liệu hiện tại được duy trì tại [screen inventory](screen-
 
 **Hoàn tất khi:** các frame thuộc scope UI prototype đã được đối chiếu và review; fixture dễ nhận biết, không bị import vào production API flow; lint/typecheck/test/build đạt. Review/merge bằng nhánh và commit, không cần Issue/PR.
 
+### Giai đoạn 3-UI-COMPLETE — Hoàn thiện Web độc lập sau Phase 3
+
+**Mục tiêu:** hoàn thành các màn hình Web còn lại theo Figma bằng fixture mà không chờ Backend, nhưng không phá vỡ khả năng thay fixture adapter bằng Gateway adapter về sau.
+
+**Thứ tự khuyến nghị:**
+
+1. `auth-fixture`: Home, Login, Register và Profile/session presentation.
+2. `trip-overview`: Trip Overview tại `/trips/:tripId`.
+3. `plan-preview`: Plan/Activity preview tại `/trips/:tripId/plan`.
+4. `members-preview`: Members và invitation preview tại `/trips/:tripId/members`.
+5. Các frame chưa có route được chốt chỉ đưa vào preview/sandbox hoặc documentation mapping; không tự sinh production route.
+
+Mỗi flow phải có domain view model, repository interface, fixture repository, state matrix, responsive contract và test riêng. Fixture được phép mô phỏng read/presentation state nhưng không được báo mutation thành công. Đây vẫn là giai đoạn UI, vì vậy dùng branch `ui/<flow>`, chưa cần Issue/PR.
+
+**Hoàn tất khi:** các flow trong phạm vi có thể chạy độc lập, khớp Figma ở desktop/short laptop/tablet/mobile, có loading/empty/error/permission/conflict/pending/unavailable state, không có transport logic trong component và không còn màn hình đã được route mà chỉ là placeholder ngoài chủ ý.
+
 ## Giai đoạn 4 — Guest và Identity tích hợp thật
 
 **Mục tiêu:** hoàn tất một lát cắt dùng được từ public entry đến session Web.
