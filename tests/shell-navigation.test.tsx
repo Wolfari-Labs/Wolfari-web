@@ -22,6 +22,7 @@ function mount() {
           { path: '/trips/:tripId', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/plan', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/members', element: <ContentState state="placeholder" /> },
+          { path: '/trips/:tripId/fund', element: <ContentState state="placeholder" /> },
           { path: '/trips', element: <ContentState state="placeholder" /> },
           { path: '/', element: <ContentState state="placeholder" /> },
           { path: '/admin', element: <ContentState state="placeholder" /> },
@@ -86,7 +87,7 @@ describe('Shell interactions', () => {
     );
   });
   it('toggles sidebar and changes section without claiming a mutation', async () => {
-    mount();
+    const router = mount();
     await screen.findByText('Trang Nguyễn ⌄');
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
     await userEvent.click(within(sidebar).getByRole('button', { name: 'Packing list' }));
@@ -95,6 +96,11 @@ describe('Shell interactions', () => {
       'true',
     );
     expect(screen.getByText('Chức năng chưa khả dụng')).toBeInTheDocument();
+    await userEvent.click(within(sidebar).getByRole('button', { name: 'Quỹ nhóm' }));
+    expect((screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' }) as HTMLElement).querySelector(
+      '[aria-pressed="true"]',
+    )).toHaveTextContent('Quỹ nhóm');
+    expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/fund`);
     await userEvent.click(screen.getByRole('button', { name: 'Thu gọn thanh điều hướng' }));
     expect(screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toHaveAttribute(
       'aria-expanded',

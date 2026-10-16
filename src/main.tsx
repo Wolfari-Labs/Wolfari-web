@@ -18,6 +18,8 @@ import type { HomeRepository } from './features/home/model/home';
 import { selectHomeRepository } from './infrastructure/repositories/select-home-repository';
 import type { PlanRepository } from './features/plan/model/plan';
 import { selectPlanRepository } from './infrastructure/repositories/select-plan-repository';
+import type { FundRepository } from './features/fund/model/fund';
+import { selectFundRepository } from './infrastructure/repositories/select-fund-repository';
 import type { MembershipRepository, InvitationRepository } from './features/members/model/members';
 import { selectMembersRepositories } from './infrastructure/repositories/select-members-repositories';
 import type { DemoAccess } from './features/auth/model/demo-access';
@@ -37,6 +39,7 @@ async function start() {
     let identityFixtureFactory: (() => IdentityRepository) | undefined;
     let homeFixtureFactory: (() => HomeRepository) | undefined;
     let planFixtureFactory: (() => PlanRepository) | undefined;
+    let fundFixtureFactory: (() => FundRepository) | undefined;
     let membersFixtureFactory:
       (() => { membership: MembershipRepository; invitation: InvitationRepository }) | undefined;
     if (import.meta.env.DEV || import.meta.env.MODE === 'preview') {
@@ -59,6 +62,9 @@ async function start() {
         const { createFixturePlanRepository } =
           await import('./infrastructure/fixtures/plan.fixture-repository');
         planFixtureFactory = createFixturePlanRepository;
+        const { createFixtureFundRepository } =
+          await import('./infrastructure/fixtures/fund.fixture-repository');
+        fundFixtureFactory = createFixtureFundRepository;
         const [{ createFixtureMembershipRepository }, { createFixtureInvitationRepository }] =
           await Promise.all([
             import('./infrastructure/fixtures/membership.fixture-repository'),
@@ -95,6 +101,11 @@ async function start() {
       previewAllowed,
       planFixtureFactory,
     );
+    const fundRepository = selectFundRepository(
+      import.meta.env.VITE_DATA_MODE,
+      previewAllowed,
+      fundFixtureFactory,
+    );
     const membersRepositories = selectMembersRepositories(
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
@@ -109,6 +120,7 @@ async function start() {
             identityRepository={identityRepository}
             homeRepository={homeRepository}
             planRepository={planRepository}
+            fundRepository={fundRepository}
             membersRepositories={membersRepositories}
           >
             <RouterProvider router={createRouter(previewTripPath, demoAccess)} />

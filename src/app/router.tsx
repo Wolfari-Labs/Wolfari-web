@@ -22,6 +22,9 @@ const PlanPage = lazy(async () => ({
 const MembersPage = lazy(async () => ({
   default: (await import('../features/members/MembersPage')).MembersPage,
 }));
+const FundPage = lazy(async () => ({
+  default: (await import('../features/fund/FundPage')).FundPage,
+}));
 const feature = (element: ReactNode) => (
   <Suspense fallback={<ContentState state="loading" headingLevel={2} />}>{element}</Suspense>
 );
@@ -61,6 +64,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         {
           path: '/trips/:tripId/members',
           element: feature(<MembersPage />),
+          handle: { contentTitle: true, fullBleed: true, requiresViewer: true },
+        },
+        {
+          path: '/trips/:tripId/fund',
+          element: feature(<FundPage />),
           handle: { contentTitle: true, fullBleed: true, requiresViewer: true },
         },
         {

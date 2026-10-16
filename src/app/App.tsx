@@ -59,11 +59,16 @@ export function App({
     ? 'plan'
     : policyPath.endsWith('/members')
       ? 'members'
+      : policyPath.endsWith('/fund')
+        ? 'fund'
       : section;
+  const routedTripSection =
+    policyPath.endsWith('/plan') ||
+    policyPath.endsWith('/members') ||
+    policyPath.endsWith('/fund');
   const targetSection =
     !!tripId &&
-    !policyPath.endsWith('/plan') &&
-    !policyPath.endsWith('/members') &&
+    !routedTripSection &&
     effectiveSection !== 'overview';
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
@@ -171,6 +176,8 @@ export function App({
               ? paths.plan(tripId)
               : next === 'members'
                 ? paths.members(tripId)
+                : next === 'fund'
+                  ? paths.fund(tripId)
                 : paths.trip(tripId),
           );
         }

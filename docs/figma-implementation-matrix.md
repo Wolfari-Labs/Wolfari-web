@@ -152,3 +152,7 @@ Desktop `25:360`/Mobile `317:2040` → `/trips/:tripId/members`, Member/Owner, M
 Members/final Phase 3 checks 15/10/2026: lint/typecheck/test/build/build:preview pass; **164 unit/component/proxy và 85 Chromium E2E pass** (full suite, two workers, exit0). Sau chỉnh CSS, **19 Auth/Members browser cases pass** ở output `test-results/review-final`; đã xem screenshot desktop/mobile. CSS slot avatar kiểm tra với blob PNG200×100 → render78×78, không tràn ngang. Browser production kiểm tra8 existing routes unavailable, route lạ404, không fixture UI/API request/token storage; bundle scan không có fixture records/chunks/IDs/emails. Backend HEAD `d8c02cb` sạch, chỉ đọc. Hero decorative Members vẫn là visual gap, không tuyên bố pixel match100% hoặc Backend runtime-ready.
 
 Plan follow-up: activity disclosure luôn hiện đủ start/end time khi compact row chỉ hiện start time; **9 Plan browser cases pass** với assertion end time trên mọi viewport, output `test-results/plan-final`. Không đổi repository/model/route hoặc mutation behavior.
+
+## Fund preview mapping
+
+Figma `768:7778` (Desktop) và `781:6554` (Mobile) map tới `/trips/:tripId/fund`. `TripHero` landscape, finance state, four summary cards, ledger tabs and the right-side draft form reuse shared Web tokens and controls. Desktop giữ form bên phải; Mobile chuyển sang document flow một cột. Fixture chỉ là read-only preview; Gateway chưa có Finance REST contract.

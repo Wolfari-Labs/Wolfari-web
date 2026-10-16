@@ -134,3 +134,7 @@ Plan read loading/ready/empty/error/forbidden/not-found/conflict/unavailable; nu
 ### Members / Invitation preview
 
 Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; Invitation EXPIRED/REVOKED/ACCEPTED “đã dùng” là read scenarios/version2. Owner-only invitation query; Guest và denied metadata không đọc members/invitations; foreign-trip rows không hiển thị. Nullable name/avatar → neutral ID fallback, không role/Holder inference. Draft email giữ qua read recovery; pending/unknown không tăng revision hoặc báo sent/saved. Target-only selection unavailable thay vì sai body. [Evidence](members-preview-phase3.md).
+
+### Fund preview
+
+Fund `/trips/:tripId/fund` dùng `FundRepository.getFund` với fixture projection và Gateway `SERVICE_UNAVAILABLE`. Fixture kiểm tra `OPEN`, `CLOSING`, `CLOSED`, loading, empty, error, forbidden, not-found, conflict và unavailable; mọi số tiền là chuỗi số nguyên VND. Form chỉ kiểm tra bản nháp và luôn giữ thông báo “Chưa gửi, chưa trừ số dư”. `currentBalance`, `reservedRefund` và `availableBalance` hiển thị tách biệt; ngoài quỹ không làm thay đổi ledger. Browser contract chạy ở 1440, 1366, 1024, 820, 768, 402 và 320px, không overflow ngang và không gọi `/api/`.
