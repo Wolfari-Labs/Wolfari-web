@@ -1,24 +1,29 @@
-.page {
-  min-height: calc(100dvh - 76px);
-  padding: 66px max(6.5vw, 32px) 64px;
+﻿.page {
+  width: 100%;
+  max-width: 1440px;
+  min-height: 884px;
+  margin-inline: auto;
+  padding: 66px 114px 64px 94px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 440px;
-  gap: clamp(40px, 12vw, 180px);
+  grid-template-columns: minmax(0, 590px) minmax(0, 440px);
+  column-gap: 202px;
   align-items: start;
-  background: linear-gradient(#f4fcff, white);
+  background: linear-gradient(#f4fcff, #fbfeff 58%, white);
+  color: #044791;
 }
 .introduction {
   min-width: 0;
   padding-top: 12px;
 }
-.introduction > p:first-child {
-  margin: 0 0 6px;
+.eyebrow {
+  margin: 0 0 8px 2px;
   color: #0488cc;
   font:
     400 22px/34px 'Kalam',
     cursive;
 }
 .introduction h1 {
+  min-height: 72px;
   margin: 0;
   color: #009da9;
   font:
@@ -27,259 +32,334 @@
 }
 .description {
   max-width: 500px;
+  min-height: 52px;
+  margin: 16px 0 0 4px;
   color: #044791;
   font-size: 14px;
-  line-height: 22px;
-  margin: 32px 0 0;
+  line-height: 20px;
 }
 .collage {
-  margin-top: 54px;
-  max-width: 570px;
   position: relative;
+  width: 570.175px;
+  max-width: calc(100% + 8px);
+  margin: 46px 0 0 -8px;
+}
+.collage::before {
+  position: absolute;
+  z-index: 0;
+  content: '';
+  width: 103.48%;
+  aspect-ratio: 590 / 370;
+  left: -4.91%;
+  top: -28px;
   background: url('../../shared/assets/figma/19867.svg') center / contain no-repeat;
 }
-.readingMascot {
+.mascotSlot {
   position: absolute;
-  width: 128px;
-  height: 128px;
-  bottom: -8px;
-  right: 28px;
-  object-fit: contain;
+  display: block;
+  left: 74.714%;
+  top: 65%;
+  width: 18.24%;
+  aspect-ratio: 1;
+  overflow: clip;
+}
+.mascotSlot img {
+  display: block;
+  width: 122.95%;
+  max-width: none;
+  height: auto;
 }
 .formColumn {
-  margin-top: 24px;
-  position: relative;
   min-width: 0;
-}
-.register .formColumn {
-  margin-top: 0;
+  margin-top: 24px;
 }
 .card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 32px 38px 38px;
+  min-height: 581px;
+  padding: 32px 38px 39px;
   border: 1px solid #bae4f4;
   border-radius: 14px;
   background: white;
 }
-.desktopHeading {
+.cardHeader {
+  margin-bottom: 26px;
+}
+.cardHeader h2 {
   margin: 0;
   color: #044791;
   font-size: 30px;
   line-height: 38px;
 }
-.cardSubtitle {
+.cardHeader p {
+  margin: 0;
   color: #5980ae;
-  margin: -12px 0 10px;
   font-size: 13px;
   line-height: 20px;
 }
-.card label {
-  font-size: 12.5px;
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.fields label {
+  font-size: 11.5px;
   line-height: 18px;
 }
-.card input {
-  font-size: 14px;
+.fields input {
+  font-size: 12.5px;
 }
 .previewNote {
-  margin: 0;
+  min-height: 34px;
+  margin: 18px 0 0;
   color: #5980ae;
-  font-size: 11px;
+  font-size: 10.6px;
   line-height: 17px;
 }
+.card .submit {
+  width: 100%;
+  margin-top: 18px;
+  font-size: 13.2px;
+}
 .alternative {
-  border-top: 1px solid var(--color-line);
-  padding-top: 20px;
-  margin-top: 6px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  font-size: 12px;
+  border-top: 1px solid #bae4f4;
+  margin-top: 22px;
+  padding-top: 15px;
   color: #5980ae;
+  font-size: 12.3px;
+  line-height: 20px;
 }
 .alternative a {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  min-width: 100px;
+  min-width: 137px;
+  padding-inline: 16px;
   border: 1px solid var(--color-line);
   border-radius: 18px;
   color: #044791;
+  font-size: 13.2px;
 }
-.card .consent {
+.stateNote {
+  margin-top: 19px;
+}
+.stateNote > div {
+  min-height: 60px;
+  padding: 10px 13px;
+  font-size: 10.2px;
+  line-height: 17px;
+  background: #f8fcff;
+}
+.feedback {
+  margin-top: 16px;
+}
+.consent {
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  color: #64747c;
+  margin-top: 12px;
+  color: #5980ae;
+  font-size: 11.5px;
+  line-height: 18px;
 }
 .consent input {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+  margin: 0;
   flex-shrink: 0;
-  accent-color: var(--ios-teal);
+  accent-color: #009da9;
 }
 .consent:has(input:focus-visible) {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: 4px;
 }
-.mobileTitle,
-.mobileDescription,
-.mobileMascot,
-.mobileLandscape {
-  display: none;
+.error {
+  margin: 4px 0 0;
+  color: var(--ios-error);
+  font-size: 12px;
 }
 .formColumn > :global(.preview) {
   margin-top: 24px;
 }
-@media (max-width: 1100px) and (min-width: 769px) {
-  .page {
-    grid-template-columns: minmax(0, 1fr) 400px;
-    padding: 44px 32px;
-    gap: 36px;
+.register {
+  grid-template-columns: minmax(0, 590px) minmax(0, 458px);
+  padding-right: 106px;
+  column-gap: 192px;
+}
+.register .formColumn {
+  margin-top: 0;
+}
+.register .eyebrow {
+  margin-bottom: 2px;
+}
+.register .introduction h1 {
+  min-height: 100px;
+  font-size: 42px;
+  line-height: 50px;
+}
+.register .description {
+  margin-top: 24px;
+}
+.register .collage {
+  margin-top: 34px;
+}
+.register .mascotSlot {
+  top: 66.7%;
+}
+.register .card {
+  min-height: 655px;
+  padding-top: 29px;
+}
+.register .cardHeader {
+  margin-bottom: 21px;
+}
+.register .cardHeader h2 {
+  font-size: 28px;
+  line-height: 36px;
+}
+.register .previewNote {
+  margin-top: 12px;
+}
+@media (min-width: 769px) and (max-width: 1439px) {
+  .page,
+  .register {
+    padding-inline: 6.5%;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 38%);
+    column-gap: clamp(36px, 8vw, 120px);
   }
   .introduction h1 {
-    font-size: 38px;
-    line-height: 46px;
-  }
-  .card {
-    padding: 28px;
-  }
-  .collage {
-    margin-top: 56px;
+    font-size: clamp(34px, 3.2vw, 46px);
   }
 }
-@media (max-height: 600px) and (min-width: 769px) {
-  .page {
-    padding-top: 28px;
-    gap: 56px;
+@media (max-width: 1000px) and (min-width: 769px) {
+  .page,
+  .register {
+    padding-inline: 32px;
+    column-gap: 32px;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 43%);
   }
-  .collage {
-    margin-top: 28px;
-    max-width: 440px;
+  .card {
+    padding-inline: 24px;
+  }
+  .cardHeader h2 {
+    font-size: 26px;
+  }
+  .introduction h1,
+  .register .introduction h1 {
+    font-size: 34px;
+    line-height: 44px;
   }
 }
 @media (max-width: 768px) {
-  .page {
-    display: block;
-    min-height: calc(100dvh - 54px);
-    padding: 24px 24px 36px;
-    background: var(--ios-background);
-    font-family: var(--font-ios);
+  .page,
+  .register {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px 24px 40px;
+    min-height: calc(100dvh - 64px);
   }
-  .introduction,
-  .desktopHeading,
-  .cardSubtitle {
-    display: none;
-  }
-  .mobileHeading {
-    display: block;
-    color: #21343b;
-    margin: 0;
-    font-size: 32px;
-    line-height: 38px;
-    letter-spacing: -0.6px;
-  }
-  .mobileDescription {
-    display: block;
-    color: #64747c;
-    font-size: 16px;
-    line-height: 24px;
-    margin: 14px 0 22px;
-  }
-  .card {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    gap: 18px;
-  }
-  .card label {
-    font-size: 16px;
-    line-height: 22px;
-  }
-  .card input {
-    font-size: 16px;
-  }
-  .alternative {
-    border: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 15px;
-  }
-  .alternative a {
-    border: 0;
-    color: #317c89;
-    font-weight: 600;
-  }
-  .mobileMascot {
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 8px;
-    width: 92px;
-    height: 92px;
-    object-fit: contain;
-  }
-  .mobileLandscape {
-    display: block;
+  .introduction {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
-    margin-top: 20px;
-    border-radius: 20px;
+    max-width: 480px;
+    margin-inline: auto;
+    padding: 0;
   }
-  .card .consent {
+  .eyebrow,
+  .register .eyebrow {
+    margin: 0 0 8px;
+    font-size: 19px;
+    line-height: 28px;
+  }
+  .introduction h1,
+  .register .introduction h1 {
+    min-height: 0;
+    font-size: 34px;
+    line-height: 42px;
+  }
+  .description,
+  .register .description {
+    min-height: 0;
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 21px;
+  }
+  .collage,
+  .register .collage {
+    width: min(240px, 80%);
+    margin: 20px auto 0;
+  }
+  .collage::before {
+    top: -12px;
+  }
+  .page .formColumn {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .card,
+  .register .card {
+    min-height: 0;
+    padding: 24px;
+  }
+  .cardHeader,
+  .register .cardHeader {
+    margin-bottom: 24px;
+  }
+  .cardHeader h2,
+  .register .cardHeader h2 {
+    font-size: 25px;
+    line-height: 34px;
+  }
+  .fields {
+    gap: 16px;
+  }
+  .fields label {
     font-size: 13px;
     line-height: 20px;
   }
-  .consent input {
-    width: 28px;
-    height: 44px;
+  .fields input {
+    font-size: 16px;
   }
-}
-@media (max-width: 768px) {
-  .page .formColumn {
-    margin-top: 0;
+  .previewNote {
+    font-size: 12px;
+    line-height: 19px;
   }
-  .card > button > span:has(img) {
-    display: none;
+  .consent {
+    font-size: 12px;
+    line-height: 20px;
   }
-}
-@media (max-width: 768px) {
-  .introduction {
-    display: block;
-    padding: 0;
+  .alternative {
+    flex-wrap: wrap;
+    font-size: 12px;
   }
-  .introduction > p,
-  .introduction .collage,
-  .desktopTitle {
-    display: none;
+  .alternative a {
+    min-width: 110px;
   }
-  .mobileTitle {
-    display: inline;
-  }
-  .introduction h1 {
-    color: #21343b;
-    font: 700 32px/38px var(--font-ios);
-    letter-spacing: -0.6px;
-  }
-  .mobileMascot {
-    top: -76px;
+  .stateNote > div {
+    font-size: 12px;
+    line-height: 19px;
   }
 }
 @media (max-width: 360px) {
-  .page {
+  .page,
+  .register {
     padding-inline: 16px;
   }
-  .mobileMascot {
-    width: 72px;
-    height: 72px;
+  .card,
+  .register .card {
+    padding-inline: 18px;
   }
-  .introduction h1 {
-    font-size: 29px;
-    line-height: 35px;
+  .introduction h1,
+  .register .introduction h1 {
+    font-size: 31px;
+    line-height: 40px;
   }
 }

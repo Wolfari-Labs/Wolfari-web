@@ -7,6 +7,8 @@
 - Figma là nguồn cho visual hierarchy, typography, spacing, component variants và prototype intent.
 - Backend runtime là nguồn cho khả năng nghiệp vụ, permission, version, error và mutation behavior.
 
+Lượt [chỉnh chi tiết 15/10/2026](ui-refinement-2026-10-15.md) giữ bố cục Home theo xác nhận người dùng, căn lại header/collage/CTA/footer và màu vai trò Trip List. Header Guest mở các phần trên Home bằng `/#home-features` và `/#home-about`; route Home xử lý hash sau khi lazy load. Khu vực đề xuất giữ nguyên frame nguồn tại section `767:5376`; Home Guest/User `768:5376`/`768:5746`, Web 402px `780:6444`.
+
 ## Shared shell mapping
 
 | Figma node/frame                          | Web mapping                                      | Responsive contract                                                                | Evidence                                            |
@@ -124,6 +126,8 @@ Acceptance ngày 15/10/2026: lint/typecheck/test/build/build:preview đạt; **9
 E2E chạy serial trên fixture preview với external server và Playwright CLI `test --workers=1` (exit 0). Managed dev-server teardown trong sandbox Windows bị treo sau assertions nên dùng preview server do runner sở hữu và đóng trong finally; giữ nguyên toàn bộ assertions. Production bundle không chứa catalog/UUID/error marker fixture; production browser `/trips` unavailable, không fixture controls/items/API request. Skip link được sửa từ 42px lên 44px; route aliases `/trips/`/`/TRIPS` giữ guard/layout; accessible status name bao gồm label Mobile.
 
 ### Phase 3 Auth fixture / Home / Self profile
+
+User-requested demo access extends existing Login `298:1893`/`317:2026` with a labelled sample-account panel, User Home demo banner and exit control. Đây là Web fixture preview extension, không Figma variant hoặc Backend mutation evidence; giữ route, form validation và responsive document flow. Xem [demo contract](screen-contracts.md#contract-auth-fixture--home--self-profile).
 
 [Figma → route → actor/component, domain và runtime gaps](auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header và document scroll thay native bars/tabs; không thêm route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
 

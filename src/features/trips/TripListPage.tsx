@@ -46,6 +46,16 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
   const readSucceeded = result?.status === 'ready' || result?.status === 'empty';
   return (
     <section className={styles.page} aria-label="Danh sách chuyến đi">
+      <div className={styles.pageArt} aria-hidden="true">
+        <span className={styles.sideClouds} />
+        <span className={styles.watercolorClouds} />
+        <span className={styles.cloudPuffs} />
+        <span className={styles.foliage}>
+          <span />
+          <span />
+        </span>
+        <span className={styles.lowerClouds} />
+      </div>
       <TripListHero />
       <div className={styles.content}>
         <button

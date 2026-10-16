@@ -1,13 +1,15 @@
 .page {
-  padding: 12px 18px 24px;
+  padding: 10px 22px 24px 18px;
+  max-width: 1220px;
+  margin-inline: auto;
   color: var(--color-ink);
 }
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 44px;
-  margin-bottom: 10px;
+  min-height: 22px;
+  margin-bottom: 8px;
   font-size: 13px;
 }
 .breadcrumb h1 {
@@ -17,20 +19,26 @@
 }
 .breadcrumb a {
   color: var(--color-active);
-  min-height: 44px;
+  position: relative;
+  min-height: 22px;
   display: inline-flex;
   align-items: center;
+}
+.breadcrumb a::after {
+  content: '';
+  position: absolute;
+  inset: -11px 0;
 }
 .days {
   display: flex;
   gap: 12px;
-  margin: 16px 0;
+  margin: 16px 0 14px;
   overflow-x: auto;
-  padding: 2px 0;
+  padding: 0;
 }
 .days > button {
-  min-width: 106px;
-  min-height: 52px;
+  min-width: 128px;
+  min-height: 54px;
   border-radius: 8px;
   border: 1px solid var(--color-line);
   background: white;
@@ -53,15 +61,49 @@
   border: 1px solid var(--color-line);
   border-radius: 8px;
   background: white;
-  padding: 16px;
+  padding: 12px 16px;
+  min-height: 74px;
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr 1fr;
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
   align-items: center;
   font-size: 13px;
 }
+.metrics > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding-inline: 12px;
+  border-left: 1px solid var(--color-line);
+}
+.metrics > div:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+.metricIcon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  background: #e6faf8;
+  border-radius: 50%;
+}
+.metrics > div:nth-child(2) .metricIcon {
+  background: #fff0f2;
+}
+.metrics > div:nth-child(3) .metricIcon {
+  background: #fff6df;
+}
+.metrics > div:nth-child(4) .metricIcon {
+  background: #e7f6ff;
+}
+.metricIcon img {
+  display: block;
+}
 .metrics strong {
-  font-size: 20px;
+  font-size: 18px;
   color: var(--color-active);
   display: block;
   margin-bottom: 4px;
@@ -87,6 +129,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
+  min-height: 68px;
   flex-wrap: wrap;
 }
 .toolbar h2 {
@@ -96,7 +139,7 @@
 }
 .timelineViewport {
   margin: 0;
-  padding: 8px 18px 18px 24px;
+  padding: 2px 30px 18px 42px;
   list-style: none;
   max-height: 414px;
   overflow-y: auto;
@@ -104,7 +147,7 @@
 }
 .activity {
   position: relative;
-  padding: 0 0 26px 36px;
+  padding: 0 0 32px 34px;
   border-left: 2px solid var(--color-active);
 }
 .activity:last-child {
@@ -246,243 +289,142 @@
 .mobileTrip {
   display: none;
 }
-@media (min-width: 769px) {
-  .hero :global(section[data-compact='true']) {
-    min-height: 150px;
-  }
-  .hero :global(section[data-compact='true']) > div:first-child {
-    padding-block: 20px;
-  }
-}
-@media (max-height: 650px) and (min-width: 769px) {
-  .days {
-    margin: 10px 0;
-  }
-  .metrics {
-    padding: 10px 14px;
-  }
-  .toolbar {
-    padding: 10px 12px;
-  }
-  .toolbar h2 {
-    font-size: 20px;
-  }
-  .timelineViewport {
-    max-height: 280px;
-  }
-  .hero :global(section[data-compact='true']) {
-    min-height: 116px;
-  }
-  .hero :global(section[data-compact='true']) > div:first-child {
-    padding: 12px 20px;
-  }
-}
-@media (max-width: 1200px) and (min-width: 769px) {
+
+@media (max-width: 1200px) {
   .cover {
     display: none;
   }
   .columns.withUnscheduled {
     grid-template-columns: minmax(0, 1fr);
   }
-  .time span {
-    display: none;
-  }
   .card {
     gap: 12px;
   }
-  .metrics {
-    grid-template-columns: 1fr 1fr;
-  }
-  .activityPreview strong {
-    font-size: 14px;
-  }
 }
-@media (max-width: 768px) {
-  .page {
-    padding: 24px;
-    font-family: var(--font-ios);
-    color: var(--ios-ink);
-  }
-  .breadcrumb {
-    display: block;
-    margin-bottom: 8px;
-    min-height: 0;
-  }
-  .breadcrumb > a,
-  .breadcrumb > span {
-    display: none;
-  }
-  .breadcrumb h1 {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 34px;
-  }
-  .mobileTrip {
-    display: block;
-    color: var(--ios-muted);
-    margin: 8px 0 20px;
-  }
-  .hero {
-    display: none;
-  }
-  .days {
-    background: var(--ios-secondary);
-    border-radius: 24px;
-    padding: 4px;
-    margin: 0 0 18px;
-    gap: 4px;
-  }
-  .days > button {
-    border: 0;
-    border-radius: 24px;
-    background: transparent;
-    min-width: 112px;
-    color: var(--ios-muted);
-  }
-  .days > button[aria-pressed='true'] {
-    background: white;
-    color: var(--ios-ink);
-    box-shadow: 0 1px 5px #1f333d14;
-  }
-  .days > button:disabled {
-    display: none;
-  }
+@media (max-width: 900px) {
   .metrics {
-    border: 0;
-    background: transparent;
-    padding: 0 0 8px;
-    font-size: 13px;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    color: var(--ios-muted);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 8px;
   }
-  .metrics strong {
-    font-size: 15px;
-    display: inline;
-    margin-right: 4px;
-    color: inherit;
-  }
-  .metrics > span:nth-child(3) {
-    grid-column: 1/-1;
-  }
-  .timeline {
-    border: 0;
-    background: transparent;
+  .metrics > div:nth-child(3) {
+    border-left: 0;
   }
   .toolbar {
-    padding: 8px 0 16px;
     gap: 8px;
   }
   .toolbar h2 {
     font-size: 22px;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding: 12px 20px 24px;
+  }
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .days {
+    margin: 16px 0;
+    gap: 8px;
+  }
+  .days > button {
+    min-width: 108px;
+  }
+  .metrics {
+    padding: 12px;
+    font-size: 11px;
+    gap: 16px 4px;
+  }
+  .metrics strong {
+    font-size: 17px;
+  }
+  .metrics > div {
+    gap: 8px;
+    padding-inline: 4px;
+  }
+  .metricIcon {
+    width: 36px;
+    height: 36px;
+  }
+  .columns.withUnscheduled {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .toolbar {
+    padding: 16px 12px;
+  }
+  .toolbar h2 {
+    width: 100%;
+    font-size: 20px;
     line-height: 28px;
   }
   .toolbar > button {
-    display: none;
+    flex: 1;
+    font-size: 12px;
+    padding-inline: 8px;
   }
   .timelineViewport {
-    overflow: visible;
     max-height: none;
-    padding: 0 0 0 24px;
+    overflow: visible;
+    padding: 4px 12px 20px 20px;
   }
   .activity {
-    padding: 0 0 32px 34px;
-    border-color: var(--ios-line);
+    padding-left: 24px;
+    padding-bottom: 20px;
   }
   .step {
-    display: none;
+    width: 28px;
+    height: 28px;
+    left: -15px;
+    top: 14px;
+    font-size: 12px;
   }
   .card {
-    position: relative;
-    gap: 12px;
-    padding: 16px 12px;
-    border: 0;
-    border-radius: 24px;
-    min-height: 82px;
-    background: white;
-    box-shadow: 0 3px 8px #154d500b;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px 10px;
+    padding: 12px;
   }
   .time {
-    position: absolute;
-    left: -60px;
-    top: 22px;
-    background: white;
-    border: 1px solid var(--ios-line);
-    padding: 4px 6px;
-    border-radius: 20px;
-    font-size: 13px;
-    line-height: 18px;
-    color: var(--ios-teal);
+    grid-column: 1 / -1;
+    padding: 0;
+    font-size: 12px;
+    border: 0;
   }
-  .time span {
-    display: none;
+  .activityPreview strong {
+    font-size: 14px;
+    line-height: 22px;
+  }
+  .activityPreview small {
+    font-size: 11px;
+  }
+  .activityPreview[open] {
+    min-width: 0;
   }
   .icon {
-    width: 52px;
-    height: 58px;
-    border-radius: 18px;
-    background: var(--ios-mint);
-    display: grid;
-    place-items: center;
     padding: 0;
   }
   .cover,
   .card > button {
     display: none;
   }
-  .activityPreview strong {
-    font-size: 17px;
-    line-height: 22px;
-  }
-  .activityPreview small {
-    color: var(--ios-muted);
-    font-size: 13px;
-  }
-  .activityPreview[open] {
-    min-width: 0;
-  }
-  .card:has(details[open]) {
-    flex-wrap: nowrap;
-  }
-  .columns.withUnscheduled {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .unscheduled {
-    border: 0;
-    border-radius: 24px;
-    background: var(--ios-amber);
-    padding-inline: 20px;
-  }
-  .unscheduled li {
-    background: white;
-    border: 0;
-    border-radius: 20px;
+    padding-inline: 12px;
   }
   .unscheduledToggle {
-    font-size: 20px;
-    line-height: 26px;
-    min-height: 70px;
-  }
-  .revisions {
-    color: var(--ios-muted);
+    font-size: 14px;
+    gap: 8px;
   }
 }
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .page {
     padding-inline: 16px;
   }
-  .card {
-    gap: 8px;
-    padding: 14px 10px;
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .icon {
-    width: 40px;
-    flex-shrink: 0;
-  }
-  .activityPreview strong {
-    font-size: 16px;
-  }
-  .unscheduledToggle {
-    font-size: 18px;
+  .metrics > div {
+    border-left: 0;
   }
 }

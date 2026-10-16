@@ -17,12 +17,27 @@ import { ContentState } from '../../shared/components/ContentState';
 import { Select } from '../../shared/components/Select';
 import { paths } from '../../app/route-paths';
 import type { RouteContext } from '../../app/route-context';
+import itineraryIcon from '../../shared/assets/figma/44c44.svg';
+import weatherIcon from '../../shared/assets/figma/a5eea.svg';
+import fundIcon from '../../shared/assets/figma/d6d19.svg';
+import packingIcon from '../../shared/assets/figma/000f9.svg';
 import styles from './TripOverviewPage.module.css';
 
-function Unavailable({ title, children }: { title: string; children?: ReactNode }) {
+function Unavailable({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon?: string;
+  children?: ReactNode;
+}) {
   return (
     <section className={styles.panel}>
-      <h2>{title}</h2>
+      <h2>
+        {icon && <img src={icon} alt="" />}
+        {title}
+      </h2>
       <p className={styles.unavailable}>Chưa khả dụng</p>
       {children}
     </section>
@@ -40,15 +55,18 @@ export function TripOverview({
   return (
     <>
       <TripHero trip={trip} />
-      {trip.description && <p>{trip.description}</p>}
+      {trip.description && <p className={styles.description}>{trip.description}</p>}
       <div className={styles.summaries}>
         <section className={styles.panel}>
-          <h2>Lịch trình ngày đầu</h2>
+          <h2>
+            <img src={itineraryIcon} alt="" />
+            Lịch trình ngày đầu
+          </h2>
           <PlanSummary trip={trip} result={plan} compact onRetry={onRetry} />
         </section>
-        <Unavailable title="Thời tiết" />
-        <Unavailable title="Ngân sách / Quỹ nhóm" />
-        <Unavailable title="Tiến độ Packing list" />
+        <Unavailable title="Thời tiết" icon={weatherIcon} />
+        <Unavailable title="Ngân sách / Quỹ nhóm" icon={fundIcon} />
+        <Unavailable title="Tiến độ Packing list" icon={packingIcon} />
       </div>
       <div className={styles.workspace}>
         <section className={styles.panel}>
@@ -56,7 +74,7 @@ export function TripOverview({
           <PlanSummary trip={trip} result={plan} onRetry={onRetry} />
         </section>
         <Unavailable title="Bản đồ hành trình">
-          <p>Chưa có projection bản đồ khả dụng.</p>
+          <p>Bản đồ hành trình sẽ xuất hiện khi có dữ liệu địa điểm.</p>
           <Button variant="plain" disabled>
             Xem chi tiết
           </Button>
@@ -76,26 +94,6 @@ export function TripOverview({
           </div>
         </div>
       </div>
-      <details className={styles.metadata}>
-        <summary>Thông tin và phiên bản</summary>
-        <dl>
-          <dt>Vai trò trong chuyến đi</dt>
-          <dd>{trip.currentMembership.role}</dd>
-          <dt>Quyền đọc / sửa metadata</dt>
-          <dd>
-            {trip.permissions.canRead ? 'Có' : 'Không'} /{' '}
-            {trip.permissions.canUpdate ? 'Có' : 'Không'}
-          </dd>
-          <dt>Plan / membership / export revision</dt>
-          <dd>
-            {trip.planVersion} / {trip.membershipRevision} / {trip.exportRevision}
-          </dd>
-          <dt>Chính sách sửa lịch trình</dt>
-          <dd>{trip.planEditPolicy}</dd>
-          <dt>Múi giờ</dt>
-          <dd>{trip.timezone}</dd>
-        </dl>
-      </details>
     </>
   );
 }
@@ -170,6 +168,23 @@ export function TripOverviewPage() {
       {previewEnabled && (
         <details className="preview" data-preview="trip-detail">
           <summary>Trip detail preview · Dữ liệu minh họa</summary>
+          {trip && (
+            <details className={styles.metadata}>
+              <summary>Thông tin và phiên bản</summary>
+              <dl>
+                <dt>Vai trò trong chuyến đi</dt>
+                <dd>{trip.currentMembership.role}</dd>
+                <dt>Plan / membership / export revision</dt>
+                <dd>
+                  {trip.planVersion} / {trip.membershipRevision} / {trip.exportRevision}
+                </dd>
+                <dt>Chính sách sửa lịch trình</dt>
+                <dd>{trip.planEditPolicy}</dd>
+                <dt>Múi giờ</dt>
+                <dd>{trip.timezone}</dd>
+              </dl>
+            </details>
+          )}
           <Select
             label="Trạng thái tổng quan"
             value={scenario}

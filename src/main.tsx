@@ -20,6 +20,7 @@ import type { PlanRepository } from './features/plan/model/plan';
 import { selectPlanRepository } from './infrastructure/repositories/select-plan-repository';
 import type { MembershipRepository, InvitationRepository } from './features/members/model/members';
 import { selectMembersRepositories } from './infrastructure/repositories/select-members-repositories';
+import type { DemoAccess } from './features/auth/model/demo-access';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -30,6 +31,7 @@ const root = createRoot(element);
 async function start() {
   try {
     let previewTripPath: string | null = null;
+    let demoAccess: DemoAccess | undefined;
     let fixtureFactory: (() => ShellRepository) | undefined;
     let tripFixtureFactory: (() => TripRepository) | undefined;
     let identityFixtureFactory: (() => IdentityRepository) | undefined;
@@ -42,6 +44,8 @@ async function start() {
         const { previewTripId, createFixtureShellRepository } =
           await import('./infrastructure/fixtures/shell.fixture-repository');
         previewTripPath = paths.trip(previewTripId);
+        const { createFixtureDemoAccess } = await import('./infrastructure/fixtures/demo-access');
+        demoAccess = createFixtureDemoAccess();
         fixtureFactory = createFixtureShellRepository;
         const { createFixtureTripRepository } =
           await import('./infrastructure/fixtures/trip.fixture-repository');
@@ -107,7 +111,7 @@ async function start() {
             planRepository={planRepository}
             membersRepositories={membersRepositories}
           >
-            <RouterProvider router={createRouter(previewTripPath)} />
+            <RouterProvider router={createRouter(previewTripPath, demoAccess)} />
           </Providers>
         </ErrorBoundary>
       </StrictMode>,

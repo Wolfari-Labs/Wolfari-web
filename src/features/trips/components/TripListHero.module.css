@@ -160,71 +160,68 @@
     right: 24px;
   }
 }
-@media (max-height: 600px) and (min-width: 769px) {
-  .hero {
-    min-height: 138px;
-  }
-  .copy {
-    padding-block: 16px;
-  }
-  .mascot {
-    width: 116px;
-    height: 116px;
-  }
-}
+
 @media (max-width: 768px) {
   .hero {
-    min-height: 0;
-    background: none;
-    padding: 0 24px;
-    font-family: var(--font-ios);
-  }
-  .art,
-  .underline,
-  .create,
-  .desktopSubtitle {
-    display: none;
+    min-height: 220px;
+    padding: 0 20px 16px;
+    background-position: center;
   }
   .copy {
-    margin: 0;
-    padding: 12px 0 20px;
-    width: 100%;
+    margin-left: 96px;
+    width: auto;
+    padding: 20px 0 8px;
   }
   .copy h1 {
-    max-width: 100%;
-    font: 700 34px/41px var(--font-ios);
-    letter-spacing: -0.6px;
-    color: #173b4b;
+    font-size: clamp(26px, 6vw, 38px);
+    line-height: 1.25;
   }
-  .copy h1 span {
-    color: #c65b3d;
+  .underline {
+    width: 100%;
+    max-width: 336px;
+    height: auto;
   }
-  .mobileSubtitle {
-    display: block;
-    margin: 12px 0 0;
-    font-size: 15px;
+  .desktopSubtitle {
+    margin: 8px 0 0;
+    font-size: 12px;
     line-height: 20px;
-    color: var(--ios-muted);
   }
-  .mobileUnderline {
-    display: block;
-    position: absolute;
-    width: 96px;
-    height: 10px;
-    left: 222px;
-    top: 48px;
-    max-width: calc(100% - 222px);
+  .mascot {
+    width: 100px;
+    height: 100px;
+    left: 12px;
+    top: 18px;
+  }
+  .pin,
+  .accent,
+  .note,
+  .plane,
+  .flightPath {
+    display: none;
+  }
+  .create {
+    position: relative;
+    inset: auto;
+    margin: 12px 0 0 96px;
+    width: 164px;
+    min-height: 46px;
+    font-size: 13px;
   }
 }
 @media (max-width: 360px) {
   .hero {
     padding-inline: 16px;
   }
-  .copy h1 {
-    font-size: 29px;
+  .copy {
+    margin-left: 88px;
   }
-  .mobileUnderline {
-    left: 190px;
-    max-width: calc(100% - 190px);
+  .mascot {
+    left: 8px;
+    width: 92px;
+    height: 92px;
+  }
+  .create {
+    margin-left: 88px;
+    width: 156px;
   }
 }

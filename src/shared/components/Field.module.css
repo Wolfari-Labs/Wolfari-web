@@ -103,33 +103,16 @@
   }
 }
 @media (max-width: 768px) {
-  .field {
-    font-family: var(--font-ios);
-  }
-  .field label,
-  .input,
-  .select {
-    color: var(--ios-ink);
-  }
   .inputRow,
   .select {
-    border-color: var(--ios-line);
-    border-radius: var(--radius-16);
     min-height: var(--control-height-mobile);
-  }
-  .inputRow {
-    --field-border: var(--ios-line);
   }
   .input {
     min-height: var(--control-height-mobile);
     font-size: 16px;
   }
   .inputRow:focus-within {
-    border-color: var(--ios-teal);
-    --field-border: var(--ios-teal);
-  }
-  .invalid {
-    border-color: var(--ios-error);
-    --field-border: var(--ios-error);
+    border-color: var(--color-blue);
+    --field-border: var(--color-blue);
   }
 }

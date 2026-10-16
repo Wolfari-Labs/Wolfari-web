@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router';
 import { AuthPage } from '../src/features/auth/AuthPage';
@@ -16,6 +16,7 @@ import { createGatewayIdentityRepository } from '../src/infrastructure/repositor
 import { createGatewayHomeRepository } from '../src/infrastructure/repositories/home.gateway-repository';
 import { selectIdentityRepository } from '../src/infrastructure/repositories/select-identity-repository';
 import { selectHomeRepository } from '../src/infrastructure/repositories/select-home-repository';
+import { createFixtureDemoAccess } from '../src/infrastructure/fixtures/demo-access';
 
 const valid: AuthFormValues = {
   fullName: 'Trang Nguyễn',
@@ -199,7 +200,7 @@ describe('Identity/Home read-only adapter contract', () => {
   });
 });
 
-function mount(path = '/profile', guest = false) {
+function mount(path = '/profile', guest = false, demo = false) {
   const shell = createFixtureShellRepository(),
     identity = createFixtureIdentityRepository(),
     trip = createFixtureTripRepository();
@@ -208,7 +209,12 @@ function mount(path = '/profile', guest = false) {
   const router = createMemoryRouter(
     [
       {
-        element: <App previewTripPath="/trips/11111111-1111-4111-8111-111111111111" />,
+        element: (
+          <App
+            previewTripPath="/trips/11111111-1111-4111-8111-111111111111"
+            {...(demo ? { demoAccess: createFixtureDemoAccess() } : {})}
+          />
+        ),
         children: [
           {
             path: '/profile',
@@ -216,6 +222,11 @@ function mount(path = '/profile', guest = false) {
             handle: { contentTitle: true, requiresViewer: true },
           },
           { path: '/', element: <HomeRoute />, handle: { contentTitle: true } },
+          {
+            path: '/login',
+            element: <AuthPage mode="login" previewEnabled />,
+            handle: { contentTitle: true },
+          },
         ],
       },
     ],
@@ -236,6 +247,44 @@ function mount(path = '/profile', guest = false) {
   return { router, readSelf, listTrips };
 }
 describe('Self/profile and Home composition', () => {
+  it('rejects incorrect demo credentials and opens a labelled in-memory User preview with the sample account', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    try {
+      const { listTrips, router } = mount('/login', false, true);
+      await userEvent.click(await screen.findByRole('button', { name: 'Điền tài khoản demo' }));
+      expect(screen.getByLabelText('Email')).toHaveValue('trang.nguyen@example.com');
+      await userEvent.clear(screen.getByLabelText('Mật khẩu'));
+      await userEvent.type(screen.getByLabelText('Mật khẩu'), 'incorrect');
+      await userEvent.click(screen.getByRole('button', { name: 'Đăng nhập' }));
+      await screen.findByText(/Email hoặc mật khẩu demo chưa đúng/);
+      expect(router.state.location.pathname).toBe('/login');
+      expect(listTrips).not.toHaveBeenCalled();
+      await userEvent.click(screen.getByRole('button', { name: 'Điền tài khoản demo' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Đăng nhập' }));
+      expect(await screen.findAllByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveLength(0);
+      expect(router.state.location.pathname).toBe('/');
+      expect(screen.getByText(/Phiên demo · Chỉ dữ liệu fixture/)).toBeInTheDocument();
+      expect(listTrips).not.toHaveBeenCalled();
+      await userEvent.click(screen.getByRole('button', { name: 'Thoát phiên demo' }));
+      await screen.findByRole('link', { name: 'Bắt đầu ngay' });
+      expect(screen.queryByText('Phú Quốc – Hẹn với biển')).not.toBeInTheDocument();
+      expect(fetchSpy).not.toHaveBeenCalled();
+      expect(localStorage.length + sessionStorage.length).toBe(0);
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+  it('matches only the public demo account, normalizing email without trimming or ignoring password case', () => {
+    const demo = createFixtureDemoAccess();
+    expect(
+      demo.accepts({ email: ' TRANG.NGUYEN@example.com ', password: demo.account.password }),
+    ).toBe(true);
+    expect(demo.accepts({ ...demo.account, email: 'other@example.com' })).toBe(false);
+    expect(demo.accepts({ ...demo.account, password: demo.account.password.toLowerCase() })).toBe(
+      false,
+    );
+    expect(demo.accepts({ ...demo.account, password: demo.account.password + ' ' })).toBe(false);
+  });
   it('keeps the profile draft across read error/recovery and never increments version on preview save', async () => {
     mount();
     const name = await screen.findByLabelText('Tên hiển thị');
@@ -246,10 +295,10 @@ describe('Self/profile and Home composition', () => {
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái hồ sơ'), 'success');
     expect(await screen.findByLabelText('Tên hiển thị')).toHaveValue('Tên sửa local');
     await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
-    await screen.findByText(/chưa lưu thay đổi hoặc tăng phiên bản/);
+    await screen.findByText(/Chưa thể lưu thay đổi lúc này/);
     expect(screen.getByText(/Phiên bản hồ sơ: 1/)).toBeInTheDocument();
     await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
-    await screen.findByText('Phiên 99999999');
+    await screen.findByText('Phiên đăng nhập 1');
   });
   it.each(['/profile', '/PROFILE/'])(
     'blocks initial Guest at %s before private reads',
@@ -260,23 +309,33 @@ describe('Self/profile and Home composition', () => {
       expect(screen.queryByLabelText('Tên hiển thị')).not.toBeInTheDocument();
     },
   );
-  it('Guest Home reads public inspiration without reading private Trip data', async () => {
-    const { listTrips } = mount('/', true);
+  it('Home defaults to Guest and reads public inspiration without reading private Trip data', async () => {
+    const { listTrips } = mount('/');
     await screen.findByText('Minh họa từ thiết kế');
+    expect(screen.getByRole('link', { name: 'Bắt đầu ngay' })).toHaveAttribute('href', '/register');
+    expect(screen.getByRole('link', { name: 'Bắt đầu hành trình' })).toHaveAttribute(
+      'href',
+      '/register',
+    );
     await userEvent.click(screen.getByText('Home preview · Dữ liệu minh họa'));
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái trang chủ'), 'error');
     await userEvent.click(await screen.findByRole('button', { name: 'Tải lại' }));
     expect(listTrips).not.toHaveBeenCalled();
     expect(screen.queryByText('Phú Quốc – Hẹn với biển')).not.toBeInTheDocument();
   });
-  it('User Home composes only readable upcoming trips from TripRepository', async () => {
-    mount('/');
-    await screen.findByText('Phú Quốc – Hẹn với biển');
+  it('User Home keeps the Figma landing composition without reading private Trip data', async () => {
+    const { listTrips } = mount('/');
+    await userEvent.click(await screen.findByText('UI preview · Dữ liệu minh họa'));
+    await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'success');
+    expect(await screen.findByRole('link', { name: 'Khám phá ứng dụng' })).toHaveAttribute(
+      'href',
+      '/trips',
+    );
+    expect(screen.getAllByRole('link', { name: 'Chuyến đi của tôi' })).toEqual(
+      expect.arrayContaining([expect.objectContaining({ pathname: '/trips' })]),
+    );
     expect(screen.queryByText('Chuyến đi riêng tư – không được hiển thị')).not.toBeInTheDocument();
-    expect(
-      within(screen.getByRole('region', { name: 'Khám phá hành trình' })).getByRole('link', {
-        name: /Phú Quốc/,
-      }),
-    ).toHaveAttribute('href', '/trips/33333333-3333-4333-8333-333333333333');
+    expect(screen.queryByText('Phú Quốc – Hẹn với biển')).not.toBeInTheDocument();
+    expect(listTrips).not.toHaveBeenCalled();
   });
 });

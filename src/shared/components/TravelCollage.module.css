@@ -10,10 +10,11 @@
 }
 .main {
   position: absolute;
-  left: 7.4%;
-  top: 4%;
-  width: 77%;
-  height: 78%;
+  /* Figma 34:497 / 298:1951: unrotated 500 × 367 postcard on a 650 × 470 canvas. */
+  left: 10.54%;
+  top: 6.84%;
+  width: 76.92%;
+  height: 78.09%;
   padding: 2.15%;
   border-radius: 6px;
   transform: rotate(-7deg);
@@ -38,17 +39,22 @@
 }
 .note {
   position: absolute;
-  left: 72%;
-  top: 13%;
-  width: 24.1%;
-  padding: 2.3% 1.5%;
+  left: 73%;
+  top: 15.37%;
+  width: 24.15%;
+  height: 37.23%;
+  padding: 3.08% 1.54%;
   background: #fff7cc;
   color: #008ca9;
   font:
-    400 clamp(14px, 3.85cqw, 25px)/1.56 'Kalam',
+    400 3.85cqw/1.56 'Kalam',
     cursive;
   transform: rotate(-8deg);
   box-shadow: 0 5px 5px #05458c1a;
+}
+.note span {
+  display: block;
+  white-space: pre;
 }
 .scene figure {
   position: absolute;
@@ -60,30 +66,46 @@
 .scene figure img {
   display: block;
   width: 100%;
-  height: 75%;
   object-fit: cover;
+  border-radius: 2px;
 }
 .scene figcaption {
-  margin-top: 8%;
+  margin-top: 0;
+  position: absolute;
   text-align: center;
   color: #0089c5;
   font:
-    700 clamp(10px, 2.77cqw, 18px)/1.3 'Kalam',
+    700 2.77cqw/1.3 'Kalam',
     cursive;
 }
 .daLat {
-  left: 68%;
-  top: 65%;
-  width: 16.6%;
-  height: 31.5%;
+  left: 68.98%;
+  top: 64.13%;
+  width: 16.62%;
+  height: 31.49%;
   transform: rotate(5deg);
 }
+.daLat img {
+  height: 15.38cqw;
+}
+.daLat figcaption {
+  top: 17.85cqw;
+  left: 2.62cqw;
+}
 .phuQuoc {
-  left: 85.8%;
-  top: 49%;
-  width: 15.8%;
-  height: 32.1%;
+  left: 86.67%;
+  top: 49.41%;
+  width: 15.85%;
+  height: 32.13%;
   transform: rotate(-5deg);
+}
+.phuQuoc img {
+  height: 13.54cqw;
+}
+.phuQuoc figcaption {
+  top: 15.85cqw;
+  left: 2.15cqw;
+  font-size: 2.46cqw;
 }
 .camera {
   position: absolute;

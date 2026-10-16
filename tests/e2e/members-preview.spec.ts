@@ -17,16 +17,24 @@ for (const size of [
       if (new URL(r.url()).pathname.startsWith('/api/')) api.push(r.url());
     });
     await page.goto(route);
-    await expect(page.getByText('Người dùng aaaaaaaa', { exact: true })).toBeVisible();
+    await expect(page.getByText('Thành viên 1', { exact: true })).toBeVisible();
     const region = page.getByRole('region', { name: 'Danh sách thành viên' });
     await expect(region.getByText(/Trang Nguyễn|Hà Nguyễn|Quyên Trần|Tân Lê/)).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
-    await page.getByText('Xem định danh', { exact: true }).first().click();
+    if (size.width === 1440) {
+      const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
+      for (const [key, expected] of Object.entries({ x: 238, y: 120, width: 1180, height: 150 }))
+        expect(
+          Math.abs(hero[key as keyof typeof hero] - expected),
+          `Figma hero ${key}`,
+        ).toBeLessThanOrEqual(4);
+    }
+    await expect(region.getByText('Xem định danh', { exact: true })).toHaveCount(0);
     await expect(
-      page.getByText('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { exact: true }),
-    ).toBeVisible();
+      region.getByText('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { exact: true }),
+    ).toHaveCount(0);
     await page.getByText('Rời chuyến đi', { exact: true }).scrollIntoViewIfNeeded();
     if (size.width > 768) {
       expect(await page.evaluate(() => scrollY)).toBe(0);
@@ -55,7 +63,7 @@ for (const size of [
   });
 test('member and invitation states, terminal statuses, draft and permission', async ({ page }) => {
   await page.goto(route);
-  await expect(page.getByText('Người dùng aaaaaaaa', { exact: true })).toBeVisible();
+  await expect(page.getByText('Thành viên 1', { exact: true })).toBeVisible();
   await page.locator('[data-preview=members] summary').click();
   for (const [state, text] of [
     ['error', 'Chưa thể tải nội dung'],
@@ -79,7 +87,7 @@ test('member and invitation states, terminal statuses, draft and permission', as
   ] as const) {
     await page.getByLabel('Trạng thái lời mời').selectOption(state);
     await expect(page.getByText(text, { exact: true })).toBeVisible();
-    await expect(page.getByText(/Phiên bản 2/)).toBeVisible();
+    await expect(page.getByText(/Phiên bản 2/)).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Gửi lại' })).toBeDisabled();
   }
   for (const [state, text] of [
@@ -100,6 +108,6 @@ test('member and invitation states, terminal statuses, draft and permission', as
   await expect(page.getByText(/Chưa xác nhận gửi lời mời/)).toBeVisible();
   await expect(page.getByText(/Membership revision 1/)).toBeVisible();
   await page.goto('/trips/33333333-3333-4333-8333-333333333333/members');
-  await expect(page.getByText('Người dùng aaaaaaaa', { exact: true })).toBeVisible();
+  await expect(page.getByText('Thành viên 1', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
 });

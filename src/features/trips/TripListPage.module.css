@@ -1,10 +1,65 @@
 .page {
+  position: relative;
+  isolation: isolate;
   min-height: 100%;
-  background:
-    url('../../shared/assets/figma/b3da6.svg') center top / 1440px 1000px no-repeat,
-    url('../../shared/assets/figma/a16a3.svg') center 116px / 1440px 790px no-repeat,
-    url('../../shared/assets/figma/f3bf1.svg') center 274px / 1440px 680px no-repeat,
-    linear-gradient(#f6fcfe, #eff9fc 28%, #f6fcfd 64%, #fbfdf9);
+  max-width: 1440px;
+  margin-inline: auto;
+  background: linear-gradient(#f6fcfe, #eff9fc 28%, #f6fcfd 64%, #fbfdf9);
+}
+.pageArt {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  z-index: -1;
+  pointer-events: none;
+}
+.pageArt > span {
+  position: absolute;
+  left: 50%;
+  width: 1440px;
+  transform: translateX(-50%);
+  background-repeat: no-repeat;
+}
+.sideClouds {
+  top: 0;
+  height: 1000px;
+  background-image: url('../../shared/assets/figma/b3da6.svg');
+}
+.watercolorClouds {
+  top: 116px;
+  height: 790px;
+  background-image: url('../../shared/assets/figma/a16a3.svg');
+}
+.cloudPuffs {
+  top: 138px;
+  height: 720px;
+  opacity: 0.85;
+  background: url('../../shared/assets/figma/039dc.svg') -60px 68px / 1558px 594px no-repeat;
+}
+.foliage {
+  top: 838px;
+  height: 150px;
+  overflow: clip;
+  opacity: 0.92;
+}
+.foliage > span {
+  position: absolute;
+  top: 63px;
+  left: -108px;
+  width: 384px;
+  height: 138px;
+  background: url('../../shared/assets/figma/95ec9.svg') no-repeat;
+}
+.foliage > span:last-child {
+  left: auto;
+  right: -108px;
+  transform: scaleX(-1);
+  background-image: url('../../shared/assets/figma/969e1.svg');
+}
+.lowerClouds {
+  top: 274px;
+  height: 680px;
+  background-image: url('../../shared/assets/figma/f3bf1.svg');
 }
 .content {
   padding: 6px 64px 32px;
@@ -213,37 +268,13 @@
     width: 270px;
   }
 }
-@media (max-height: 600px) and (min-width: 769px) {
-  .content {
-    padding-inline: 32px;
-  }
-  .toolbar {
-    margin-bottom: 12px;
-    margin-top: 8px;
-  }
-  .grid {
-    gap: 16px 24px;
-  }
-}
+
 @media (max-width: 768px) {
-  .page {
-    background: var(--ios-background);
-    font-family: var(--font-ios);
-  }
   .content {
-    padding: 0 24px 24px;
+    padding: 12px 20px 24px;
   }
-  .searchControls,
-  .sort {
-    display: none;
-  }
-  .searchControls.controlsOpen,
-  .sort.controlsOpen {
-    display: block;
-    width: 100%;
-  }
-  .searchControls.controlsOpen {
-    margin-bottom: 12px;
+  .searchControls {
+    flex-wrap: wrap;
   }
   .search {
     width: 100%;
@@ -251,91 +282,32 @@
   .unavailableFilters {
     display: none;
   }
-  .mobileControlsToggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 0;
-    margin-bottom: 8px;
-    background: transparent;
-    border: 0;
-    color: #64747c;
-    font-size: 13px;
-  }
-  .mobileControlsToggle img {
-    width: 20px;
-    height: 20px;
-  }
   .toolbar {
-    display: flex;
-    flex-direction: column;
     align-items: stretch;
+    flex-direction: column;
     gap: 12px;
-    margin: 0 0 16px;
+    margin: 12px 0 16px;
   }
   .statuses {
     max-width: 100%;
     overflow-x: auto;
-    gap: 4px;
-    background: #edf2f3;
-    border-radius: 26px;
-    padding: 4px;
-    scroll-padding: 4px;
+    gap: 20px;
+    padding-bottom: 2px;
   }
   .statuses button {
     flex-shrink: 0;
-    padding: 0 18px;
-    font-size: 13px;
-    line-height: 18px;
-    border-radius: 22px;
-    color: #64747c;
     min-height: 44px;
+    font-size: 12px;
   }
-  .statuses button[aria-pressed='true'] {
-    background: white;
-    color: #21343b;
-    box-shadow: var(--shadow-selection);
-  }
-  .statuses button[aria-pressed='true']::after {
-    display: none;
-  }
-  .statuses .count,
-  .statuses button[aria-pressed='true'] .count {
-    min-width: 0;
-    height: auto;
-    background: none;
-    font-size: inherit;
-  }
-  .count::before {
-    content: '·';
-    margin-right: 4px;
-  }
-  .desktopLabel {
-    display: none;
-  }
-  .mobileLabel {
-    display: inline;
+  .sort {
+    width: 100%;
   }
   .grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
+    gap: 20px;
   }
   .empty {
     padding: 20px;
-  }
-  .mobileCreate {
-    display: block;
-    width: 100%;
-    min-height: 52px;
-    padding: 12px 16px;
-    margin-top: 16px;
-    border: 0;
-    border-radius: 26px;
-    background: #f7eeea;
-    color: #955c49;
-    font-weight: 600;
-    font-size: 15px;
   }
 }
 @media (max-width: 360px) {

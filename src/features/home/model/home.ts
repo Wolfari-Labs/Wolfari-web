@@ -1,18 +1,6 @@
 import type { ReadResult } from '../../../shared/types/result';
-export interface HomeTripPreview {
-  readonly id: string;
-  readonly name: string;
-  readonly dates: string;
-  readonly memberCount: number | null;
-  readonly cover: { readonly src: string; readonly alt: string } | null;
-  readonly planVersion: number;
-  readonly membershipRevision: number;
-  readonly exportRevision: number;
-  readonly permissions: { readonly canRead: boolean; readonly canUpdate: boolean };
-}
 export interface HomeViewModel {
   readonly viewerName: string | null;
-  readonly featured: ReadResult<HomeTripPreview> | { readonly status: 'loading' };
   readonly landing: ReadResult<HomeLandingViewModel> | { readonly status: 'loading' };
 }
 export type HomeScenario =

@@ -8,7 +8,7 @@
   content: '';
   position: absolute;
   inset: 3px -2px -5px;
-  background: url('../../../shared/assets/figma/81ad9.svg') center / 100% 100% no-repeat;
+  background: url('../../../shared/assets/figma/81ad9.svg') center / cover no-repeat;
   transform: rotate(0.28deg);
   z-index: -2;
 }
@@ -16,8 +16,26 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: url('../../../shared/assets/figma/e8793.svg') center / 100% 100% no-repeat;
+  background: url('../../../shared/assets/figma/e8793.svg') center / cover no-repeat;
   z-index: -1;
+}
+.card:nth-child(6n + 2)::before {
+  background-image: url('../../../shared/assets/figma/89494.svg');
+  transform: rotate(-0.24deg);
+}
+.card:nth-child(6n + 3)::before {
+  background-image: url('../../../shared/assets/figma/037a8.svg');
+}
+.card:nth-child(6n + 4)::before {
+  background-image: url('../../../shared/assets/figma/2bc19.svg');
+  transform: rotate(-0.24deg);
+}
+.card:nth-child(6n + 5)::before {
+  background-image: url('../../../shared/assets/figma/bc2be.svg');
+}
+.card:nth-child(6n + 6)::before {
+  background-image: url('../../../shared/assets/figma/8db57.svg');
+  transform: rotate(-0.24deg);
 }
 .link {
   display: flex;
@@ -130,7 +148,7 @@
 .metadata .date {
   flex-basis: 100%;
 }
-.role {
+.ownerRole {
   color: #a76400;
 }
 .open {
@@ -154,163 +172,29 @@
     flex-basis: auto;
   }
 }
+
 @media (max-width: 768px) {
-  .card {
-    background: white;
-    border-radius: 20px;
-    min-height: 116px;
-    box-shadow: var(--shadow-mobile-surface);
-    font-family: var(--font-ios);
-  }
-  .card::before,
-  .card::after,
-  .more,
-  .open,
-  .role,
-  .metadata img,
-  .status img {
-    display: none;
-  }
-  .link {
-    position: relative;
-    min-height: 116px;
-    padding: 16px;
-    display: grid;
-    grid-template-columns: 112px minmax(0, 1fr);
-    gap: 14px;
-    align-items: center;
-  }
   .photo {
-    width: 112px;
-    height: 92px;
-    margin: 0;
-  }
-  .photo picture,
-  .photo img,
-  .noCover {
-    border-radius: 20px;
-  }
-  .body {
-    padding: 22px 0 0;
-    gap: 6px;
-  }
-  .body h2 {
-    color: #21343b;
-    font-size: 17px;
-    line-height: 22px;
+    height: auto;
+    aspect-ratio: 376 / 163;
   }
   .metadata {
-    color: #64747c;
-    font-size: 13px;
-    line-height: 18px;
-    gap: 0 4px;
+    font-size: 12px;
+    gap: 6px 12px;
   }
   .metadata .date {
-    flex-basis: auto;
+    flex-basis: 100%;
   }
-  .metadata span + span:not(.role)::before {
-    content: '·';
-    margin-right: 2px;
-  }
-  .metadata .role {
-    display: none;
-  }
-  .status {
-    top: 16px;
-    left: 142px;
-    padding: 0;
-    background: none;
-    color: #955c49;
-    font-size: 13px;
-    line-height: 18px;
-    min-height: 18px;
-    font-weight: 400;
-  }
-  .featured {
-    background: #fcf8f1;
-  }
-  .featured .link {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 254px;
-    padding: 154px 16px 16px;
-    gap: 0;
-    isolation: isolate;
-  }
-  .featured .photo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-  }
-  .featured .photo picture,
-  .featured .photo img,
-  .featured .noCover {
-    border-radius: 20px;
-  }
-  .featured .link::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(transparent 35%, #fcf8f1e8 70%, #fcf8f1 100%);
-    border-radius: 20px;
-  }
-  .featured .body {
-    padding: 0 36px 0 0;
-    align-self: stretch;
-    gap: 4px;
-  }
-  .featured .body h2 {
-    font-size: 28px;
-    line-height: 34px;
-    font-weight: 700;
-  }
-  .featured .status {
-    left: auto;
-    right: 16px;
-    border-radius: 14px;
-    padding: 4px 10px;
-    background: #f7eeea;
-    min-height: 28px;
-  }
-  .featured .arrow {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    right: 16px;
-    bottom: 32px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: white;
-  }
-  .arrow img {
-    width: 16.5px;
-    height: 16.5px;
-  }
-}
-@media (max-width: 360px) {
-  .link {
-    grid-template-columns: 84px minmax(0, 1fr);
-    gap: 12px;
-    padding: 12px;
-  }
-  .photo {
-    width: 84px;
-    height: 84px;
-  }
-  .status {
-    left: 108px;
-    top: 12px;
+  .body {
+    gap: 10px;
+    padding: 14px 20px 24px;
   }
   .body h2 {
-    font-size: 16px;
+    font-size: 17px;
+    line-height: 24px;
   }
-  .featured .body h2 {
-    font-size: 25px;
-    line-height: 31px;
+  .card,
+  .link {
+    min-height: 290px;
   }
 }

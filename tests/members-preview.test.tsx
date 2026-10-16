@@ -190,7 +190,7 @@ function mount({
 it('renders nullable identity and keeps invitation draft through errors without write success', async () => {
   const { listInvitations } = mount();
   const region = await screen.findByRole('region', { name: 'Danh sách thành viên' });
-  await within(region).findByText('Người dùng aaaaaaaa');
+  await within(region).findByText('Thành viên 1');
   expect(
     within(region).queryByText(/Trang Nguyễn|Hà Nguyễn|Quyên Trần|Tân Lê/),
   ).not.toBeInTheDocument();
@@ -215,7 +215,7 @@ it('renders nullable identity and keeps invitation draft through errors without 
 });
 it('Member cannot read Owner invitation projection and Guest performs no private reads', async () => {
   const { listInvitations } = mount({ tripId: '33333333-3333-4333-8333-333333333333' });
-  await screen.findByText('Người dùng aaaaaaaa');
+  await screen.findByText('Thành viên 1');
   expect(screen.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
   expect(listInvitations).not.toHaveBeenCalled();
 });
@@ -265,5 +265,5 @@ it('filters out members from another Trip instead of displaying a foreign projec
     },
   });
   await screen.findByText('Chưa có nội dung');
-  expect(screen.queryByText('Người dùng aaaaaaaa')).not.toBeInTheDocument();
+  expect(screen.queryByText('Thành viên 1')).not.toBeInTheDocument();
 });

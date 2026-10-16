@@ -144,6 +144,13 @@ for (const viewport of [
         return { x: box.x, y: box.y, width: box.width };
       }),
     );
+    if (viewport.width === 1440) {
+      for (const [key, expected] of Object.entries({ x: 64, y: 372, width: 416 }))
+        expect(
+          Math.abs(boxes[0]![key as keyof (typeof boxes)[number]] - expected),
+          `Figma first trip card ${key}`,
+        ).toBeLessThanOrEqual(4);
+    }
     if (desktop) {
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(
         true,
@@ -160,7 +167,7 @@ for (const viewport of [
       if (viewport.height === 520)
         expect(
           Math.round((await page.locator('header[data-node-id="65:548"]').boundingBox())!.height),
-        ).toBe(138);
+        ).toBe(174);
       await page.screenshot({ path: info.outputPath('trip-list.png') });
       await articles(page).last().scrollIntoViewIfNeeded();
       await expect(articles(page).last()).toBeInViewport();
@@ -272,9 +279,7 @@ for (const width of [1440, 402]) {
       for (const action of await articles(page).getByRole('button').all())
         await expect(action).toBeDisabled();
     } else
-      await expect(
-        page.getByRole('button', { name: '+ Tạo một hành trình mới', exact: true }),
-      ).toBeDisabled();
+      await expect(page.getByRole('button', { name: 'Tạo chuyến đi', exact: true })).toBeDisabled();
     await expectNoTransport(page, apiCalls);
   });
 

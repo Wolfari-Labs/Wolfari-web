@@ -3,8 +3,9 @@
   font-size: 13px;
 }
 .count {
-  font-size: 20px !important;
+  font-size: 18px !important;
   margin: 4px 0 14px;
+  font-weight: 600;
   color: var(--color-ink);
 }
 .summary ol {
@@ -13,7 +14,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 .summary li {
   display: flex;
@@ -22,7 +23,7 @@
   border: 1px solid var(--color-line);
   border-radius: 8px;
   padding: 8px 12px;
-  min-height: 60px;
+  min-height: 64px;
 }
 .summary time {
   color: var(--color-active);
@@ -44,17 +45,47 @@
 .summary > section {
   padding: 12px;
 }
+
+.days {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  margin-bottom: 8px;
+}
+.days button {
+  flex: 1;
+  flex-shrink: 0;
+  min-width: 100px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--color-ink);
+  background: #f0f8fc;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.days button small {
+  display: block;
+  margin-top: 2px;
+}
+.days button[aria-pressed='true'] {
+  color: white;
+  background: #079fc5;
+}
 @media (max-width: 768px) {
   .summary li {
-    border: 0;
-    border-radius: 20px;
-    padding: 16px;
-    background: var(--ios-background);
+    padding: 10px;
+    gap: 10px;
   }
   .summary img {
-    display: none;
+    width: 54px;
+    height: 38px;
   }
-  .count {
-    color: var(--ios-ink);
+  .summary li span {
+    font-size: 12px;
+  }
+  .days button {
+    min-width: 88px;
   }
 }

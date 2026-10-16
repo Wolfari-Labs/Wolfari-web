@@ -2,8 +2,6 @@ import { useOutletContext } from 'react-router';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from './route-context';
-import { useTripList } from '../features/trips/hooks/use-trip-list';
-import { tripDateLabel } from '../features/trips/model/trip-list-query';
 import { HomePage } from '../features/home/HomePage';
 import { homeScenarios, type HomeScenario, type HomeViewModel } from '../features/home/model/home';
 import { useHomeRepository } from '../features/home/repositories/home-context';
@@ -24,50 +22,11 @@ export function HomeRoute() {
           error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true },
         }
       : (landingQuery.data ?? { status: 'empty' });
-  const query = useTripList('success', !!viewer);
-  const result = query.data;
-  const item =
-    result?.status === 'ready'
-      ? result.data.items.find(
-          (trip) =>
-            trip.permissions.canRead &&
-            trip.currentMembership.leftAt === null &&
-            trip.lifecycle === 'UPCOMING',
-        )
-      : null;
-  const featured: HomeViewModel['featured'] = !viewer
-    ? { status: 'empty' }
-    : query.isPending
-      ? { status: 'loading' }
-      : query.isError
-        ? {
-            status: 'error',
-            error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true },
-          }
-        : result?.status === 'error'
-          ? result
-          : item
-            ? {
-                status: 'ready',
-                data: {
-                  id: item.id,
-                  name: item.name,
-                  dates: tripDateLabel(item),
-                  memberCount: item.presentation.memberCount,
-                  cover: item.presentation.cover,
-                  planVersion: item.planVersion,
-                  membershipRevision: item.membershipRevision,
-                  exportRevision: item.exportRevision,
-                  permissions: item.permissions,
-                },
-              }
-            : { status: 'empty' };
   return (
     <>
       <HomePage
-        model={{ viewerName: viewer?.fullName ?? null, featured, landing }}
+        model={{ viewerName: viewer?.fullName ?? null, landing }}
         onRetry={() => {
-          if (viewer) void query.refetch();
           void landingQuery.refetch();
         }}
       />

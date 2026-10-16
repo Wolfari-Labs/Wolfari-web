@@ -121,6 +121,8 @@ Browser acceptance đã bao phủ desktop 1440×800, short laptop 1366×520, tab
 
 Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable qua common repository result. Auth: validation giữ input/focus; pending/unknown/error/unavailable là presentation, không mutation receipt. Self save chỉ validate/unavailable, version không đổi; profile draft giữ qua error/recovery. Notification/push/avatar/logout/revoke disabled. [Evidence](auth-fixture-phase3.md).
 
+Demo login được người dùng yêu cầu: public sample credentials chỉ trong fixture bootstrap; invalid credentials → form alert/focus, Guest và route giữ nguyên; đúng → User Home + banner demo, không server success. Thoát demo hoặc reload Home → Guest; không token/storage/HTTP hoặc thay revisions. Nút thoát demo chỉ đổi preview, khác logout Backend vẫn disabled. Register/Gateway không có demo login. Pending/unknown selector vẫn là presentation và không activate demo khi pending.
+
 ### Trip Overview fixture
 
 Metadata read: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; unknown/denied opaque IDs → not-found. Snapshot canRead/active membership guard và Guest/Admin shell guard chặn private reads. Aggregate cards unavailable; writes disabled, pending/unknown không áp dụng cho read-only metadata. [Evidence](trip-overview-phase3.md).
