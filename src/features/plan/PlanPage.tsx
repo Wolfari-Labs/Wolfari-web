@@ -22,16 +22,16 @@ import mountain from '../../shared/assets/figma/eb8f3.svg';
 import meal from '../../shared/assets/figma/41563.svg';
 import beach from '../../shared/assets/figma/e9568.svg';
 import walk from '../../shared/assets/figma/9c64a.svg';
-import mobileMountain from '../../shared/assets/figma/d603c.svg';
-import mobileMeal from '../../shared/assets/figma/e033e.svg';
-import mobileBeach from '../../shared/assets/figma/dd51a.svg';
-import mobileWalk from '../../shared/assets/figma/36a12.svg';
+import activityMetric from '../../shared/assets/figma/b75a6.svg';
+import locationMetric from '../../shared/assets/figma/12507.svg';
+import timeMetric from '../../shared/assets/figma/13a40.svg';
+import travelMetric from '../../shared/assets/figma/a6d01.svg';
 import styles from './PlanPage.module.css';
-const icons: Record<string, [string, string]> = {
-  SIGHTSEEING: [mountain, mobileMountain],
-  MEAL: [meal, mobileMeal],
-  BEACH: [beach, mobileBeach],
-  WALK: [walk, mobileWalk],
+const icons: Record<string, string> = {
+  SIGHTSEEING: mountain,
+  MEAL: meal,
+  BEACH: beach,
+  WALK: walk,
 };
 
 function Activity({
@@ -55,10 +55,9 @@ function Activity({
           <span> – {activityTime(activity.endsAt, timezone)}</span>
         </time>
         {icon && (
-          <picture className={styles.icon}>
-            <source media="(max-width:768px)" srcSet={icon[1]} />
-            <img src={icon[0]} alt="" />
-          </picture>
+          <span className={styles.icon}>
+            <img src={icon} alt="" />
+          </span>
         )}
         <details className={styles.activityPreview}>
           <summary aria-label={`Xem hoạt động ${activity.title}`}>
@@ -73,8 +72,6 @@ function Activity({
             </dd>
             <dt>Trạng thái</dt>
             <dd>{activity.status === 'TODO' ? 'Chưa hoàn tất' : 'Đã hoàn tất'}</dd>
-            <dt>Phiên bản lịch trình</dt>
-            <dd>{activity.planVersion}</dd>
             <dt>Địa điểm liên kết</dt>
             <dd>{activity.selectedLocationId ? 'Có địa điểm đã chọn' : 'Chưa có địa điểm'}</dd>
           </dl>
@@ -125,9 +122,8 @@ export function PlanView({
   return (
     <>
       <div className={styles.hero}>
-        <TripHero trip={trip} compact />
+        <TripHero trip={trip} compact variant="schedule" />
       </div>
-      <p className={styles.mobileTrip}>{trip.name}</p>
       <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
         {days.map((date, i) => (
           <button
@@ -147,16 +143,41 @@ export function PlanView({
         </Button>
       </div>
       <div className={styles.metrics}>
-        <span>
-          <strong>{plan.activities.length}</strong> Hoạt động
-        </span>
-        <span>
-          <strong>{plan.selectedLocations.length}</strong> Địa điểm
-        </span>
-        <span>Thời gian di chuyển: Chưa khả dụng</span>
-        <span>
-          Hoàn tất {items.filter((a) => a.status === 'COMPLETED').length}/{items.length}
-        </span>
+        <div>
+          <span className={styles.metricIcon}>
+            <img src={activityMetric} alt="" />
+          </span>
+          <span>
+            <strong>{plan.activities.length}</strong>Hoạt động
+          </span>
+        </div>
+        <div>
+          <span className={styles.metricIcon}>
+            <img src={locationMetric} alt="" />
+          </span>
+          <span>
+            <strong>{plan.selectedLocations.length}</strong>Địa điểm
+          </span>
+        </div>
+        <div>
+          <span className={styles.metricIcon}>
+            <img src={timeMetric} alt="" />
+          </span>
+          <span>
+            <strong>
+              {items.filter((a) => a.status === 'COMPLETED').length}/{items.length}
+            </strong>
+            Hoàn tất trong ngày
+          </span>
+        </div>
+        <div>
+          <span className={styles.metricIcon}>
+            <img src={travelMetric} alt="" />
+          </span>
+          <span>
+            <strong>—</strong>Di chuyển · Chưa khả dụng
+          </span>
+        </div>
       </div>
       <div className={`${styles.columns} ${unscheduledOpen ? styles.withUnscheduled : ''}`}>
         <section className={styles.timeline} aria-labelledby="plan-day-title">
@@ -222,12 +243,6 @@ export function PlanView({
           )}
         </section>
       </div>
-      <p className={styles.revisions}>
-        Plan {plan.planVersion} · Membership {trip.membershipRevision} · Export{' '}
-        {plan.exportRevision} ·{' '}
-        {plan.permissions.canEdit ? 'Có quyền sửa lịch trình' : 'Không có quyền sửa lịch trình'} ·{' '}
-        {plan.permissions.canComplete ? 'Có quyền hoàn tất' : 'Không có quyền hoàn tất'}
-      </p>
     </>
   );
 }
@@ -310,6 +325,16 @@ export function PlanPage() {
       {previewEnabled && (
         <details className="preview" data-preview="plan">
           <summary>Plan preview · Dữ liệu minh họa</summary>
+          {trip && plan && (
+            <p className={styles.revisions}>
+              Plan {plan.planVersion} · Membership {trip.membershipRevision} · Export{' '}
+              {plan.exportRevision} ·{' '}
+              {plan.permissions.canEdit
+                ? 'Có quyền sửa lịch trình'
+                : 'Không có quyền sửa lịch trình'}{' '}
+              · {plan.permissions.canComplete ? 'Có quyền hoàn tất' : 'Không có quyền hoàn tất'}
+            </p>
+          )}
           <Select
             label="Trạng thái lịch trình"
             value={scenario}

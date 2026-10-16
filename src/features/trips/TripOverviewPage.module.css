@@ -1,49 +1,62 @@
 .page {
-  padding: 12px 18px 24px;
+  padding: 8px 22px 24px 18px;
   color: var(--color-ink);
+  max-width: 1220px;
+  margin-inline: auto;
 }
 .breadcrumb {
   display: flex;
-  gap: 12px;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 12px;
   min-height: 22px;
-  font-size: 13px;
-}
-.breadcrumb h1 {
+  margin-bottom: 4px;
   font-size: 13px;
   line-height: 20px;
-  font-weight: 400;
+}
+.breadcrumb h1 {
+  font: inherit;
   margin: 0;
 }
-.breadcrumb a,
-.page a {
+.breadcrumb a {
+  position: relative;
   color: var(--color-active);
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
+}
+.breadcrumb a::after {
+  content: '';
+  position: absolute;
+  inset: -11px 0;
 }
 .hero {
-  background-image: var(--trip-cover);
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
   min-height: 170px;
   border: 1px solid var(--color-line);
   border-radius: 8px;
-  background-position: center;
-  background-size: cover;
+  background: #f0fbff var(--trip-cover, none) center / cover no-repeat;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  gap: 20px;
+  gap: 16px;
 }
 .paper {
-  background: url('../../shared/assets/figma/b6b89.svg') right center / 100% 100% no-repeat;
-  padding: 32px 30px;
-  flex: 0 1 520px;
+  flex: 0 1 610px;
+  min-width: 0;
+  padding: 40px 29px 24px;
+}
+.paper::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -1px auto -1px -1px;
+  width: 490px;
+  max-width: 100%;
+  background: url('../../shared/assets/figma/b6b89.svg') left top / 490px 170px no-repeat;
 }
 .hero h2 {
   font-size: 30px;
   line-height: 40px;
-  margin: 0 0 4px;
+  margin: 0 0 10px;
   overflow-wrap: anywhere;
 }
 .meta {
@@ -51,24 +64,101 @@
   gap: 18px;
   align-items: center;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 20px;
+  font-weight: 500;
 }
-.meta > span:last-child {
+.meta > span,
+.meta > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta > a {
+  position: relative;
+  color: var(--color-ink);
+}
+.meta > a::after {
+  content: '';
+  position: absolute;
+  inset: -12px 0;
+}
+.meta img,
+.actions img {
+  display: block;
+  flex-shrink: 0;
+}
+.meta .status {
   padding: 6px 14px;
+  min-height: 32px;
   background: var(--color-pale);
   border-radius: 999px;
+}
+.status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #19b889;
 }
 .actions {
   display: flex;
   gap: 14px;
   align-self: flex-end;
-  padding: 14px;
+  padding: 14px 20px 14px 0;
+  flex-shrink: 0;
+}
+.actions > button {
+  width: 130px;
+  min-height: 44px;
+}
+.actions > button:last-child {
+  width: 135px;
+}
+.hero[data-variant='schedule'],
+.hero[data-variant='landscape'] {
+  min-height: 150px;
+}
+.hero[data-variant='schedule'] .paper {
+  padding: 32px 33px 22px;
+}
+.hero[data-variant='schedule'] .paper::before {
+  width: 610px;
+  background-image: url('../../shared/assets/figma/14db3.svg');
+  background-size: 610px 150px;
+}
+.hero[data-variant='schedule'] h2,
+.hero[data-variant='landscape'] h2 {
+  font-size: 32px;
+  line-height: 40px;
+}
+.hero[data-variant='schedule'] .actions {
+  padding-bottom: 20px;
+  padding-right: 30px;
+}
+.hero[data-variant='landscape'] {
+  border-radius: 16px;
+  background: #def7ff url('../../shared/assets/figma/bd989.svg') right top / 1180px 150px no-repeat;
+}
+.hero[data-variant='landscape'] .paper {
+  padding: 31px 28px 20px;
+}
+.hero[data-variant='landscape'] .paper::before {
+  width: 480px;
+  background-image: url('../../shared/assets/figma/25ff8.svg');
+  background-size: 480px 150px;
+}
+.hero[data-variant='landscape'] .actions > button {
+  border-radius: 18px;
+}
+.description {
+  font-size: 13px;
+  line-height: 20px;
+  margin: 12px 0;
 }
 .summaries {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 14px;
   margin-top: 16px;
 }
 .panel {
@@ -77,6 +167,7 @@
   border-radius: 8px;
   padding: 16px;
   min-width: 0;
+  box-shadow: 0 2px 5px #0547660a;
 }
 .panel h2 {
   margin: 0 0 14px;
@@ -88,21 +179,42 @@
   font-size: 13px;
   line-height: 20px;
 }
+.summaries > .panel {
+  min-height: 172px;
+  padding: 16px 15px;
+}
+.summaries h2 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+.summaries h2 img {
+  display: block;
+  flex-shrink: 0;
+}
 .unavailable {
   color: var(--color-muted);
   margin: 12px 0;
 }
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 16px;
-  margin-top: 16px;
-  min-height: 300px;
+  grid-template-columns: minmax(0, 578fr) minmax(0, 314fr) minmax(0, 260fr);
+  gap: 14px;
+  margin-top: 14px;
+  min-height: 410px;
 }
 .workspace > .panel {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+.workspace a {
+  color: var(--color-active);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .workspace > .panel > a {
   margin-top: auto;
@@ -114,8 +226,8 @@
 }
 .postcard {
   border-radius: 8px;
-  background: white url('../../shared/assets/figma/916ba.png') center bottom/100% auto no-repeat;
-  min-height: 160px;
+  background: white url('../../shared/assets/figma/916ba.png') center bottom / 100% auto no-repeat;
+  min-height: 200px;
   flex: 1;
   padding: 18px;
   font-size: 16px;
@@ -125,173 +237,133 @@
   margin: 0;
 }
 .metadata {
-  margin-top: 16px;
-  font-size: 13px;
-}
-.metadata summary {
-  cursor: pointer;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
 .metadata dl {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 12px;
-  overflow-wrap: anywhere;
+  gap: 8px 16px;
 }
 .metadata dd {
   margin: 0;
 }
 .page > :global(.preview) {
-  margin-top: 16px;
+  margin-top: 20px;
 }
-@media (max-height: 650px) and (min-width: 769px) {
-  .paper {
-    padding: 20px;
-  }
-  .hero {
-    min-height: 138px;
-  }
-  .workspace {
-    min-height: 240px;
-  }
-  .panel {
-    padding: 12px;
-  }
-  .summaries,
-  .workspace {
-    gap: 12px;
-    margin-top: 12px;
-  }
-}
-@media (max-width: 1100px) and (min-width: 769px) {
-  .summaries {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .hero {
-    flex-wrap: wrap;
-  }
-  .paper {
-    flex: 1 1 100%;
-    background-color: rgba(255, 255, 255, 0.94);
+@media (max-width: 1200px) {
+  .meta {
+    gap: 8px 12px;
   }
   .actions {
-    margin-left: auto;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hero h2 {
+    max-width: 360px;
+  }
+}
+@media (max-width: 1100px) {
+  .summaries {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .workspace {
     grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   }
   .aside {
-    grid-column: 1/-1;
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
 }
 @media (max-width: 768px) {
   .page {
-    padding: 24px;
-    font-family: var(--font-ios);
-    color: var(--ios-ink);
+    padding: 12px 20px 24px;
   }
   .breadcrumb {
-    display: block;
-    margin-bottom: 20px;
-  }
-  .breadcrumb > a,
-  .breadcrumb > span {
-    display: none;
-  }
-  .breadcrumb h1 {
-    font-size: 28px;
-    line-height: 34px;
-    font-weight: 700;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
   }
   .hero {
-    display: flex;
     flex-direction: column;
-    min-height: 250px;
-    border: 0;
-    border-radius: 30px;
-    background-image: var(--trip-mobile-cover);
-    background-size: cover;
-    background-position: center;
-    justify-content: flex-end;
+    gap: 0;
+    min-height: 210px;
+    background-position: right center;
   }
-  .paper {
-    background: linear-gradient(transparent, #fbf8f1 50%);
+  .paper,
+  .hero[data-variant='schedule'] .paper,
+  .hero[data-variant='landscape'] .paper {
     flex: none;
-    padding: 70px 20px 20px;
-    border-radius: 0 0 30px 30px;
+    padding: 24px 20px 12px;
   }
-  .hero h2 {
-    font-size: 30px;
-    line-height: 36px;
+  .paper::before {
+    background-size: 490px 170px;
+  }
+  .hero h2,
+  .hero[data-variant='schedule'] h2,
+  .hero[data-variant='landscape'] h2 {
+    font-size: 24px;
+    line-height: 32px;
   }
   .meta {
-    gap: 6px 14px;
+    max-width: 360px;
+    gap: 10px 16px;
+    font-size: 12px;
   }
-  .meta > span:last-child {
-    background: white;
+  .actions,
+  .hero[data-variant='schedule'] .actions {
+    flex-direction: row;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 20px 18px;
   }
-  .actions {
-    display: none;
+  .actions > button,
+  .actions > button:last-child {
+    width: auto;
+    min-width: 104px;
+  }
+  .hero[data-variant='landscape'] {
+    background-position: 70% top;
+  }
+  .hero[data-variant='landscape'] .paper::before {
+    background-color: #ffffffb8;
   }
   .summaries {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
-  .panel {
-    border: 0;
-    border-radius: 24px;
-    padding: 20px;
+  .summaries > .panel {
+    padding: 12px;
+    min-height: 148px;
   }
-  .panel h2 {
-    font-size: 17px;
-    line-height: 22px;
-  }
-  .summaries > .panel:nth-child(2) {
-    display: none;
-  }
-  .summaries > .panel:first-child {
-    grid-column: 1/-1;
-    order: 3;
-  }
-  .summaries > .panel:nth-child(3) {
-    background: #e0edef;
-  }
-  .summaries > .panel:nth-child(4) {
-    background: #f7eee9;
+  .summaries h2 {
+    font-size: 13px;
+    flex-wrap: wrap;
   }
   .workspace {
-    display: flex;
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
     min-height: 0;
-    gap: 16px;
-  }
-  .workspace > .panel {
-    min-height: 180px;
   }
   .aside {
-    display: flex;
-  }
-  .postcard {
-    min-height: 200px;
-  }
-  .metadata dl {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-}
-@media (max-width: 360px) {
-  .page {
-    padding-inline: 16px;
-  }
-  .hero h2 {
-    font-size: 26px;
-    line-height: 32px;
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
   }
   .panel {
     padding: 16px;
+  }
+  .metadata dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 380px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .summaries {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .summaries > .panel {
+    min-height: 136px;
   }
 }

@@ -21,6 +21,14 @@ for (const size of [
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
+    if (size.width === 1440) {
+      const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
+      for (const [key, expected] of Object.entries({ x: 238, y: 116, width: 1180, height: 150 }))
+        expect(
+          Math.abs(hero[key as keyof typeof hero] - expected),
+          `Figma hero ${key}`,
+        ).toBeLessThanOrEqual(4);
+    }
     const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
     await timeline.focus();
     if (size.width > 768) {
@@ -31,7 +39,7 @@ for (const size of [
         size.height,
       );
     } else {
-      await page.getByText('Plan 1', { exact: false }).scrollIntoViewIfNeeded();
+      await page.locator('[data-preview=plan] > summary').scrollIntoViewIfNeeded();
       expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
     }
     await page.getByRole('button', { name: /Ngày 2/ }).click();

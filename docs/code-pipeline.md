@@ -143,3 +143,30 @@ Khi thay fixture bằng Gateway:
 - Không cho phép UI quyết định quyền Owner/Member/Plan Editor.
 - Không thêm Redux/Zustand chỉ để giữ server state đã thuộc TanStack Query.
 - Không gom tất cả domain vào một Page hoặc một “API service” lớn; giữ boundary theo flow và repository.
+
+## 10. Quy trình nhánh bắt buộc
+
+Mỗi nhiệm vụ chỉ dùng một nhánh được tạo từ `develop` đã cập nhật. Không code trực tiếp trên `main` hoặc `develop`, không tiếp tục dùng lại nhánh đã merge và không gom nhiều nhiệm vụ độc lập vào cùng một nhánh.
+
+- Chức năng mới, kể cả khi có phần giao diện, dùng `feature/<ten-ngan-gon>`.
+- Thay đổi giao diện thuần túy dùng `ui/<ten-ngan-gon>`.
+- Tên nhánh viết thường, dùng dấu `-` và mô tả rõ phạm vi.
+- Trước khi commit phải chạy các gate phù hợp; trước khi merge phải hoàn tất lint, typecheck, unit, E2E và hai build theo Definition of Done.
+- Sau khi merge vào `develop`, kiểm tra `git status --short` và `git log --oneline --decorate -n 5`, rồi xóa nhánh nhiệm vụ nếu không còn sử dụng.
+- Nhiệm vụ kế tiếp luôn tạo nhánh mới từ `develop`; không tạo sẵn nhánh rỗng sau nhiệm vụ cuối.
+
+Quy trình thao tác chuẩn:
+
+```text
+git switch develop
+git status --short
+git switch -c feature/<ten-nhiem-vu>   # hoặc ui/<ten-nhiem-vu>
+# triển khai và kiểm tra
+git add <cac-file-thuoc-nhiem-vu>
+git commit -m "<type>(<scope>): <mo-ta>"
+git switch develop
+git merge --no-ff <ten-nhanh>
+git status --short
+git log --oneline --decorate -n 5
+git branch -d <ten-nhanh>
+```

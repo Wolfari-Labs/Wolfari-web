@@ -5,7 +5,6 @@ import pin from '../../../shared/assets/figma/56724.svg';
 import flightPath from '../../../shared/assets/figma/a5059.svg';
 import plane from '../../../shared/assets/figma/5f666.svg';
 import plus from '../../../shared/assets/figma/51f13.svg';
-import mobileUnderline from '../../../shared/assets/figma/ec029.svg';
 import styles from './TripListHero.module.css';
 
 export function TripListHero() {
@@ -30,9 +29,7 @@ export function TripListHero() {
           Chuyến đi <span>của tôi</span>
         </h1>
         <img className={styles.underline} src={underline} alt="" />
-        <img className={styles.mobileUnderline} src={mobileUnderline} alt="" />
         <p className={styles.desktopSubtitle}>Những hành trình bạn tạo và cùng tham gia.</p>
-        <p className={styles.mobileSubtitle}>Hẹn những ngày thật đẹp.</p>
       </div>
       <button
         className={styles.create}

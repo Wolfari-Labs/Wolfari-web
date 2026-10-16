@@ -23,6 +23,17 @@ for (const size of [
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
+    if (size.width === 1440) {
+      const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
+      for (const [key, expected] of Object.entries({ x: 238, y: 110, width: 1180, height: 170 }))
+        expect(
+          Math.abs(hero[key as keyof typeof hero] - expected),
+          `Figma hero ${key}`,
+        ).toBeLessThanOrEqual(4);
+    }
+    const preview = page.locator('[data-preview=trip-detail]');
+    if (!(await preview.evaluate((element) => (element as HTMLDetailsElement).open)))
+      await preview.locator(':scope > summary').click();
     await page.getByText('Thông tin và phiên bản', { exact: true }).click();
     await expect(page.getByText('1 / 1 / 1', { exact: true })).toBeVisible();
     if (size.width > 768) {
@@ -37,7 +48,8 @@ for (const size of [
     await page.getByRole('link', { name: '4 thành viên', exact: true }).click();
     await expect(page).toHaveURL(trip + '/members');
     await page.goBack();
-    await page.locator('[data-preview=trip-detail] summary').click();
+    if (!(await preview.evaluate((element) => (element as HTMLDetailsElement).open)))
+      await preview.locator(':scope > summary').click();
     for (const [scenario, text] of [
       ['error', 'Chưa thể tải nội dung'],
       ['forbidden', 'Bạn không có quyền truy cập'],

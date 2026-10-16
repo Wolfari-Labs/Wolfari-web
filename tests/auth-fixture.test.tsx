@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router';
 import { AuthPage } from '../src/features/auth/AuthPage';
@@ -261,9 +261,10 @@ describe('Self/profile and Home composition', () => {
       expect(listTrips).not.toHaveBeenCalled();
       await userEvent.click(screen.getByRole('button', { name: 'Điền tài khoản demo' }));
       await userEvent.click(screen.getByRole('button', { name: 'Đăng nhập' }));
-      await screen.findByText('Phú Quốc – Hẹn với biển');
+      expect(await screen.findAllByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveLength(0);
       expect(router.state.location.pathname).toBe('/');
       expect(screen.getByText(/Phiên demo · Chỉ dữ liệu fixture/)).toBeInTheDocument();
+      expect(listTrips).not.toHaveBeenCalled();
       await userEvent.click(screen.getByRole('button', { name: 'Thoát phiên demo' }));
       await screen.findByRole('link', { name: 'Bắt đầu ngay' });
       expect(screen.queryByText('Phú Quốc – Hẹn với biển')).not.toBeInTheDocument();
@@ -294,10 +295,10 @@ describe('Self/profile and Home composition', () => {
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái hồ sơ'), 'success');
     expect(await screen.findByLabelText('Tên hiển thị')).toHaveValue('Tên sửa local');
     await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
-    await screen.findByText(/chưa lưu thay đổi hoặc tăng phiên bản/);
+    await screen.findByText(/Chưa thể lưu thay đổi lúc này/);
     expect(screen.getByText(/Phiên bản hồ sơ: 1/)).toBeInTheDocument();
     await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
-    await screen.findByText('Phiên 99999999');
+    await screen.findByText('Phiên đăng nhập 1');
   });
   it.each(['/profile', '/PROFILE/'])(
     'blocks initial Guest at %s before private reads',
@@ -312,27 +313,29 @@ describe('Self/profile and Home composition', () => {
     const { listTrips } = mount('/');
     await screen.findByText('Minh họa từ thiết kế');
     expect(screen.getByRole('link', { name: 'Bắt đầu ngay' })).toHaveAttribute('href', '/register');
-    expect(
-      within(screen.getByRole('region', { name: 'Khám phá hành trình' })).getByRole('link', {
-        name: 'Bắt đầu hành trình',
-      }),
-    ).toHaveAttribute('href', '/register');
+    expect(screen.getByRole('link', { name: 'Bắt đầu hành trình' })).toHaveAttribute(
+      'href',
+      '/register',
+    );
     await userEvent.click(screen.getByText('Home preview · Dữ liệu minh họa'));
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái trang chủ'), 'error');
     await userEvent.click(await screen.findByRole('button', { name: 'Tải lại' }));
     expect(listTrips).not.toHaveBeenCalled();
     expect(screen.queryByText('Phú Quốc – Hẹn với biển')).not.toBeInTheDocument();
   });
-  it('User Home composes only readable upcoming trips from TripRepository', async () => {
-    mount('/');
+  it('User Home keeps the Figma landing composition without reading private Trip data', async () => {
+    const { listTrips } = mount('/');
     await userEvent.click(await screen.findByText('UI preview · Dữ liệu minh họa'));
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'success');
-    await screen.findByText('Phú Quốc – Hẹn với biển');
+    expect(await screen.findByRole('link', { name: 'Khám phá ứng dụng' })).toHaveAttribute(
+      'href',
+      '/trips',
+    );
+    expect(screen.getAllByRole('link', { name: 'Chuyến đi của tôi' })).toEqual(
+      expect.arrayContaining([expect.objectContaining({ pathname: '/trips' })]),
+    );
     expect(screen.queryByText('Chuyến đi riêng tư – không được hiển thị')).not.toBeInTheDocument();
-    expect(
-      within(screen.getByRole('region', { name: 'Khám phá hành trình' })).getByRole('link', {
-        name: /Phú Quốc/,
-      }),
-    ).toHaveAttribute('href', '/trips/33333333-3333-4333-8333-333333333333');
+    expect(screen.queryByText('Phú Quốc – Hẹn với biển')).not.toBeInTheDocument();
+    expect(listTrips).not.toHaveBeenCalled();
   });
 });

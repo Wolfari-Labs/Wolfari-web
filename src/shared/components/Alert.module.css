@@ -39,9 +39,3 @@
 .error .marker {
   color: inherit;
 }
-@media (max-width: 768px) {
-  .alert {
-    font-family: var(--font-ios);
-    border-radius: var(--radius-16);
-  }
-}

@@ -33,10 +33,7 @@ export function TripCard({ trip, featured }: { trip: TripListItem; featured: boo
       >
         <div className={styles.photo}>
           {cover ? (
-            <picture>
-              <source media="(max-width: 768px)" srcSet={cover.mobileSrc ?? cover.src} />
-              <img src={cover.src} alt={cover.alt} />
-            </picture>
+            <img src={cover.src} alt={cover.alt} />
           ) : (
             <span className={styles.noCover} aria-label="Chưa có ảnh chuyến đi" />
           )}
@@ -58,7 +55,7 @@ export function TripCard({ trip, featured }: { trip: TripListItem; featured: boo
                 {trip.presentation.memberCount} thành viên
               </span>
             )}
-            <span className={styles.role}>
+            <span className={owner ? styles.ownerRole : undefined}>
               <img src={owner ? crown : member} alt="" />
               {owner ? 'Chủ chuyến' : 'Thành viên'}
             </span>

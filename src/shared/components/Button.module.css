@@ -49,10 +49,15 @@
   opacity: 0.88;
 }
 .button:disabled {
-  background: var(--ios-line);
-  color: var(--ios-muted);
-  border-color: var(--ios-line);
+  background: var(--color-line);
+  color: var(--color-muted);
+  border-color: var(--color-line);
   cursor: not-allowed;
+}
+.outline:disabled {
+  background: var(--color-white);
+  color: var(--color-muted);
+  border-color: var(--color-line);
 }
 @media (hover: hover) {
   .button:hover:not(:disabled) {
@@ -66,26 +71,6 @@
 @media (max-width: 768px) {
   .button {
     min-height: var(--control-height-mobile);
-    border-radius: var(--radius-pill);
-    font-family: var(--font-ios);
-    font-size: var(--font-size-mobile-label);
-    font-weight: var(--weight-semibold);
-  }
-  .primary {
-    background: var(--ios-teal);
-  }
-  .primary:active:not(:disabled) {
-    background: var(--ios-pressed);
-  }
-  .outline {
-    background: var(--ios-secondary);
-    border-color: transparent;
-    color: var(--ios-teal);
-  }
-  .button:disabled {
-    background: var(--ios-line);
-    color: var(--ios-muted);
-    opacity: 0.65;
   }
 }
 @keyframes spin {

@@ -178,10 +178,10 @@ export function AppShell({
                 Trang chủ
               </NavLink>
               {guest ? (
-                <button disabled>
+                <a href={`${paths.home}#home-features`}>
                   <Icon file="5290c.svg" />
                   Tính năng
-                </button>
+                </a>
               ) : (
                 <Link
                   to={paths.trips}
@@ -199,10 +199,15 @@ export function AppShell({
                   <Icon file={schedule ? '28f71.svg' : '89e09.svg'} />
                   Lên lịch
                 </Link>
+              ) : guest ? (
+                <a href={`${paths.home}#home-about`}>
+                  <Icon file="89e09.svg" />
+                  Về Wolfari
+                </a>
               ) : (
                 <button disabled title="Chọn chuyến đi để mở lịch trình">
                   <Icon file="89e09.svg" />
-                  {guest ? 'Về Wolfari' : 'Lên lịch'}
+                  Lên lịch
                 </button>
               )}
             </nav>

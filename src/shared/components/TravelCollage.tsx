@@ -10,8 +10,9 @@ export function TravelCollage({ variant = 'home' }: { variant?: 'home' | 'auth' 
       </div>
       <div className={styles.tape} />
       <div className={styles.note}>
-        ✓ Plan ✓
-        <br />✓ Explore ✓<br />✓ Go! ✓
+        <span>✓ Plan ✓</span>
+        <span>✓ Explore ✓</span>
+        <span>✓ Go! ✓</span>
       </div>
       <figure className={styles.daLat}>
         <img src={art['6059f.png']} alt="" />

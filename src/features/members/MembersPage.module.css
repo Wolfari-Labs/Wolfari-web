@@ -1,12 +1,14 @@
 .page {
-  padding: 12px 18px 24px;
+  padding: 12px 22px 24px 18px;
+  max-width: 1220px;
+  margin-inline: auto;
   color: var(--color-ink);
 }
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 44px;
+  min-height: 22px;
   margin-bottom: 10px;
   font-size: 13px;
 }
@@ -17,15 +19,15 @@
 }
 .breadcrumb a {
   color: var(--color-active);
-  min-height: 44px;
+  position: relative;
+  min-height: 22px;
   display: inline-flex;
   align-items: center;
 }
-.hero :global(section[data-compact='true']) {
-  min-height: 150px;
-}
-.hero :global(section[data-compact='true']) > div:first-child {
-  padding-block: 20px;
+.breadcrumb a::after {
+  content: '';
+  position: absolute;
+  inset: -11px 0;
 }
 .tabs {
   display: flex;
@@ -34,14 +36,15 @@
   margin: 16px 0 12px;
   border: 1px solid var(--color-line);
   background: white;
-  padding: 4px 8px;
+  padding: 1px 8px;
+  min-height: 48px;
   border-radius: 8px;
   flex-wrap: wrap;
 }
 .tabs > button {
   border: 0;
   min-height: 44px;
-  min-width: 120px;
+  min-width: 150px;
   font: inherit;
   font-size: 13px;
   color: var(--color-ink);
@@ -60,17 +63,18 @@
 }
 .tabs small {
   margin-left: auto;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-muted);
 }
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 762fr) minmax(0, 336fr);
+  gap: 48px;
   border: 1px solid var(--color-line);
   background: white;
   border-radius: 8px;
-  padding: 16px;
+  padding: 16px 16px 16px 14px;
+  min-height: 588px;
 }
 .memberPanel,
 .responsibilities {
@@ -80,16 +84,36 @@
 .responsibilities > h2,
 .invitationForm h2,
 .invitationList h2 {
-  font-size: 22px;
-  line-height: 30px;
+  font-size: 20px;
+  line-height: 28px;
   margin: 0 0 8px;
 }
-.help,
-.count {
+.help {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: 11.5px;
+  line-height: 18px;
+  margin: 6px 0 12px;
+}
+.count {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+.rosterHead {
+  display: grid;
+  grid-template-columns: 238px minmax(0, 1fr) 110px;
+  padding-inline: 4px;
+  gap: 12px;
+  font-size: 10.5px;
   line-height: 20px;
-  margin: 8px 0 14px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 16px 0 10px;
+}
+.rosterHead > :last-child {
+  text-align: right;
 }
 .members {
   list-style: none;
@@ -97,21 +121,23 @@
   margin: 0 0 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 .members > li {
-  display: flex;
+  display: grid;
+  grid-template-columns: 34px 180px minmax(76px, 1fr) auto;
   gap: 12px;
   align-items: center;
-  padding: 14px;
+  padding: 12px 13px;
+  min-height: 76px;
   border: 1px solid var(--color-line);
   border-radius: 8px;
   min-width: 0;
   flex-wrap: wrap;
 }
 .avatar {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: #e8f6f8;
   display: grid;
@@ -122,14 +148,14 @@
   display: block;
 }
 .avatarPhoto {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
 }
 .identity {
   flex: 1;
-  min-width: 120px;
+  min-width: 150px;
   font-size: 14px;
   line-height: 22px;
   overflow-wrap: anywhere;
@@ -162,8 +188,10 @@
   border-radius: 999px;
   background: #e6f6ff;
   color: #0070c8;
-  padding: 6px 16px;
-  font-size: 12px;
+  padding: 6px 12px;
+  font-size: 11px;
+  justify-self: start;
+  white-space: nowrap;
 }
 .role.owner {
   background: #fff3d7;
@@ -189,7 +217,7 @@
   margin: 0;
 }
 .responsibilities section {
-  padding: 16px;
+  padding: 12px;
   border-radius: 8px;
   background: #ecf9fd;
   border-left: 3px solid #00a4d3;
@@ -207,14 +235,14 @@
   border-color: #8b5aff;
 }
 .responsibilities h3 {
-  font-size: 14px;
-  line-height: 22px;
+  font-size: 12.5px;
+  line-height: 20px;
   margin: 0 0 6px;
   font-weight: 500;
 }
 .responsibilities p {
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 11.5px;
+  line-height: 16px;
   color: var(--color-muted);
   margin: 6px 0;
   overflow-wrap: anywhere;
@@ -304,237 +332,141 @@
 .introduction {
   display: none;
 }
-@media (max-height: 650px) and (min-width: 769px) {
-  .hero :global(section[data-compact='true']) {
-    min-height: 116px;
-  }
-  .hero :global(section[data-compact='true']) > div:first-child {
-    padding: 12px 20px;
-  }
+
+@media (max-width: 1280px) {
   .workspace {
-    gap: 16px;
+    gap: 24px;
+    grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
   }
   .members > li {
-    padding: 10px 12px;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
   }
-  .responsibilities section {
-    padding: 12px;
+  .members > li > button {
+    grid-column: 2 / -1;
+    justify-self: end;
   }
-  .tabs {
-    margin-top: 10px;
+  .rosterHead {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rosterHead > :last-child {
+    display: none;
   }
 }
-@media (max-width: 1100px) and (min-width: 769px) {
-  .workspace {
+@media (max-width: 1100px) {
+  .workspace,
+  .invitationWorkspace {
     grid-template-columns: minmax(0, 1fr);
   }
   .responsibilities {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .responsibilities h2,
+  .responsibilities > h2,
   .responsibilities > button {
-    grid-column: 1/-1;
-  }
-  .invitationWorkspace {
-    grid-template-columns: minmax(0, 1fr);
+    grid-column: 1 / -1;
   }
   .tabs small {
-    margin-left: 0;
+    display: none;
+  }
+  .members > li > button {
+    grid-column: auto;
+  }
+  .members > li {
+    grid-template-columns: 34px minmax(0, 1fr) auto auto;
   }
 }
 @media (max-width: 768px) {
   .page {
-    padding: 24px;
-    font-family: var(--font-ios);
-    color: var(--ios-ink);
+    padding: 12px 20px 24px;
   }
   .breadcrumb {
-    display: block;
-    margin-bottom: 14px;
-    min-height: 0;
-  }
-  .breadcrumb > a,
-  .breadcrumb > span {
-    display: none;
-  }
-  .breadcrumb h1 {
-    font-size: 17px;
-    line-height: 22px;
-    font-weight: 600;
-  }
-  .hero {
-    display: none;
-  }
-  .introduction {
-    display: block;
-  }
-  .introduction h2 {
-    font-size: 28px;
-    line-height: 34px;
-    margin: 0 0 8px;
-  }
-  .introduction p {
-    color: var(--ios-muted);
-    font-size: 15px;
-    line-height: 20px;
-    margin: 0 0 20px;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
   }
   .tabs {
-    background: var(--ios-secondary);
-    border: 0;
-    border-radius: 24px;
-    padding: 4px;
-    margin: 0 0 20px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px 4px;
     gap: 4px;
   }
   .tabs > button {
-    min-width: 0;
-    flex: 1;
-    font-size: 13px;
+    min-width: max-content;
+    flex-shrink: 0;
+    font-size: 12px;
     padding: 8px 12px;
-    border-radius: 22px;
   }
-  .tabs > button[aria-pressed='true'] {
-    background: white;
-    box-shadow: 0 1px 5px #1f333d14;
-  }
-  .tabs > button:nth-child(3),
-  .tabs small {
-    display: none;
-  }
-  .workspace {
-    display: flex;
-    flex-direction: column;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    gap: 24px;
-  }
-  .memberPanel h2 {
-    font-size: 20px;
-    line-height: 26px;
-  }
-  .help {
-    color: var(--ios-muted);
-  }
-  .members {
-    background: white;
-    border-radius: 24px;
-    padding: 0 16px;
-    gap: 0;
-  }
-  .members > li {
-    padding: 16px 0;
-    border: 0;
-    border-bottom: 1px solid var(--ios-line);
-    border-radius: 0;
-    gap: 12px;
-  }
-  .members > li:last-child {
-    border-bottom: 0;
-  }
-  .identity {
-    min-width: 150px;
-    font-size: 16px;
-    line-height: 22px;
-  }
-  .identity small {
-    color: var(--ios-muted);
-    font-size: 13px;
-    line-height: 18px;
-  }
-  .identity summary {
-    color: var(--ios-teal);
-  }
-  .role {
-    background: var(--ios-secondary);
-    color: var(--ios-teal);
-  }
-  .role.owner {
-    color: #955c49;
-    background: #f7eeea;
-  }
-  .members > li > button {
-    margin-left: 56px;
-  }
-  .responsibilities {
-    background: white;
-    padding: 20px;
-    border-radius: 24px;
-  }
-  .responsibilities h2 {
-    font-size: 22px;
-    line-height: 28px;
-  }
-  .responsibilities section {
-    border: 0;
-    border-radius: 18px;
-  }
-  .responsibilities p {
-    font-size: 13px;
-    line-height: 18px;
-    color: var(--ios-muted);
-  }
+  .workspace,
   .invitationWorkspace {
-    display: flex;
-    flex-direction: column;
-    background: transparent;
-    border: 0;
-    padding: 0;
+    padding: 14px;
     gap: 24px;
+    min-height: 0;
   }
-  .invitationForm {
-    gap: 18px;
-  }
+  .memberPanel h2,
+  .responsibilities > h2,
   .invitationForm h2,
   .invitationList h2 {
-    font-size: 22px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .rosterHead {
+    display: none;
+  }
+  .members {
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .members > li {
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 12px;
+    gap: 8px 10px;
+  }
+  .members > li > button {
+    grid-column: 2;
+    justify-self: start;
+    font-size: 11px;
+  }
+  .role {
+    grid-column: 2;
+  }
+  .identity {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  .identity small {
+    font-size: 11px;
+    line-height: 18px;
+  }
+  .responsibilities {
+    display: flex;
+  }
+  .responsibilities p {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .invitationForm {
+    gap: 16px;
   }
   .invitationForm > button {
     align-self: stretch;
   }
   .invitationList li {
-    border: 0;
-    border-radius: 24px;
-    background: white;
-    padding: 20px;
+    padding: 14px;
   }
   .invitationHeading {
-    flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
   }
   .invitationStatus {
-    order: -1;
-  }
-  .invitationHeading strong {
-    font-size: 17px;
-    line-height: 22px;
-  }
-  .invitationList li p {
-    font-size: 13px;
-    color: var(--ios-muted);
-  }
-  .revisions {
-    color: var(--ios-muted);
+    font-size: 11px;
   }
 }
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .page {
     padding-inline: 16px;
   }
-  .members {
-    padding-inline: 14px;
-  }
-  .members > li {
-    gap: 10px;
-  }
-  .identity {
-    min-width: 140px;
-  }
-  .role {
-    margin-left: 54px;
+  .workspace,
+  .invitationWorkspace {
+    padding: 12px;
   }
 }

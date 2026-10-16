@@ -1,813 +1,184 @@
-.page {
-  color: #0068aa;
+.page { color: #0068aa; max-width: 1440px; margin-inline: auto; }
+.page section { position: relative; isolation: isolate; }
+.clouds, .topClouds { position: absolute; left: 0; right: 0; bottom: 0; height: 292px; overflow: hidden; opacity: .8; z-index: -2; pointer-events: none; }
+.clouds img, .topClouds img { width: 100%; height: 100%; object-fit: cover; }
+.topClouds { top: 0; height: 390px; opacity: 1; }
+.topClouds img { object-fit: contain; }
+.heroDecor, .featureDecor, .appDecor, .inspirationDecor { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.hero { display: grid; grid-template-columns: minmax(0, 608fr) minmax(0, 650fr); gap: 24px; min-height: 548px; padding: 35px 5% 43px 5.972222%; background: linear-gradient(#e8f9fe, #f6fcff 60%, white); overflow: clip; }
+.hero > .clouds { top: 60px; height: 490px; }
+.heroDecor { background: url('../../shared/assets/figma/82a69.svg') 470px 355px / 700px 170px no-repeat, url('../../shared/assets/figma/e5c79.svg') 1168px 64px / 180px 66px no-repeat, url('../../shared/assets/figma/6f91e.svg') 955px 20px / 610px 230px no-repeat, url('../../shared/assets/figma/51df8.svg') -140px 286px / 620px 235px no-repeat; }
+.heroCopy { min-width: 0; margin-top: 29px; }
+.eyebrow { margin: 0 0 12px; color: #0088c4; font: 400 27px/36px 'Kalam', cursive; background: url('../../shared/assets/figma/ba46c.svg') left bottom / 286px 12px no-repeat; }
+.hero h1 { position: relative; margin: 0; color: #008f9d; font: 700 71px/88px 'Kalam', cursive; width: 660px; }
+.hero h1 span { display: block; margin-left: 25px; }
+.hero h1 span:first-child { margin-left: 9px; font-size: 76px; line-height: 86px; color: #0088c4; }
+.hero h1 span + span { margin-top: -2px; }
+.hero h1::after { content: ''; position: absolute; left: 28px; bottom: -21px; width: 500px; height: 28px; background: url('../../shared/assets/figma/8bfec.svg') center / contain no-repeat; }
+.heroDescription { width: 536px; max-width: calc(100% - 29px); margin: 37px 0 23px 29px; font-size: 15.5px; line-height: 27px; }
+.heroDescription span { display: block; }
+.actions { display: flex; flex-wrap: wrap; gap: 23px; margin-left: 29px; }
+.actions > * { min-height: 52px; }
+.actions > a { min-width: 198px; }
+.actions > button { min-width: 226px; background: white; color: var(--color-muted); }
+.heroCollage { width: 100%; min-width: 0; }
+.heroMascot { position: absolute; width: 175px; height: 142px; left: 36.9444%; top: 63px; object-fit: contain; }
+.heroCopy::before { content: ''; position: absolute; left: 388px; top: 35px; width: 170px; height: 85px; background: url('../../shared/assets/figma/a91d9.svg') center / contain no-repeat; opacity: .55; }
+.features { display: grid; grid-template-columns: minmax(0, 455fr) minmax(0, 823fr); gap: 40px; padding: 53px 35px 2px 87px; min-height: 442px; background: linear-gradient(90deg, white, #faffff 55%, #ebfaff); overflow: clip; }
+.featureDecor { background: url('../../shared/assets/figma/344bd.svg') 10px 40px / 390px 120px no-repeat, url('../../shared/assets/figma/5c213.svg') 1220px 70px / 150px 55px no-repeat, url('../../shared/assets/figma/26d15.svg') 1100px 270px / 520px 190px no-repeat, url('../../shared/assets/figma/368cd.svg') -200px 282px / 560px 190px no-repeat, url('../../shared/assets/figma/231d3.svg') right 70px bottom / 284px 142px no-repeat; }
+.featureIntro { position: relative; padding-top: 5px; }
+.featureIntro > p:first-child { font: 400 26px/35px 'Kalam', cursive; margin: 0; }
+.featureIntro h2 { width: 330px; margin: 5px 0 40px 16px; padding-bottom: 12px; font: 700 42px/54px 'Kalam', cursive; color: #0088c4; background: url('../../shared/assets/figma/827dd.svg') left bottom / 330px 18px no-repeat; }
+.featureIntro > p:not(:first-child) { font-size: 14px; line-height: 26px; max-width: 400px; margin: 14px 0 0; }
+.featureIntro > img { position: absolute; left: 345px; top: 2px; width: 126px; height: 126px; object-fit: contain; }
+.featureGrid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-auto-rows: 189px; gap: 0 37px; }
+.featureGrid article { min-width: 0; }
+.featureGrid h3 { font-size: 17px; line-height: 23px; margin: 9px 0; font-weight: 600; color: #0088c4; }
+.featureGrid h3 span { display: block; }
+.featureGrid p { font-size: 13.5px; line-height: 23px; margin: 0; }
+.featureArt { position: relative; width: 98.8px; height: 88.4px; }
+.featureArt > img { position: absolute; left: 0; top: 0; }
+.featureArt .rim { left: -10.4px; top: -6.5px; }
+.featureArt .featureGlyph { left: 27.3px; top: 20.8px; }
+.appPreview { display: grid; grid-template-columns: minmax(0, 399fr) minmax(0, 890fr); gap: 24px; height: 432px; padding: 29px 53px 19px 74px; background: linear-gradient(#e8f9fe, #f6fcff 60%, white); overflow: clip; }
+.appPreview .clouds { height: 282px; }
+.appDecor { background: url('../../shared/assets/figma/c7fe2.svg') 760px 250px / 430px 130px no-repeat, url('../../shared/assets/figma/b52b6.svg') 1165px 45px / 150px 55px no-repeat, url('../../shared/assets/figma/28972.svg') -210px 300px / 560px 180px no-repeat, url('../../shared/assets/figma/d42fe.svg') 550px 112px / 850px 250px no-repeat; }
+.appCopy { padding-top: 14px; min-width: 0; }
+.appCopy h2 { width: 460px; margin: 0 0 14px; color: #008f9d; font: 700 45px/57px 'Kalam', cursive; background: url('../../shared/assets/figma/f8b2b.svg') 40px bottom / 280px 18px no-repeat; padding-bottom: 9px; }
+.appCopy h2 span { display: block; }
+.appCopy h2 span + span { margin-left: 3px; font-size: 37px; line-height: 51px; }
+.appCopy p { width: 400px; max-width: 100%; font-size: 15px; line-height: 25px; margin: 0 0 21px 13px; }
+.appCopy ul { list-style: none; padding: 0; margin: 0 0 17px 8px; }
+.appCopy li { position: relative; padding-left: 42px; min-height: 23px; font-size: 15px; line-height: 23px; margin-bottom: 15px; background: url('../../shared/assets/figma/eaabc.svg') left center / 22px 22px no-repeat; }
+.appCopy li::before { content: '✓'; position: absolute; left: 5px; color: white; }
+.appCopy > a { margin-left: 13px; min-width: 215px; min-height: 50px; }
+.devices { width: 100%; max-width: 890px; height: auto; align-self: start; object-fit: contain; }
+.inspiration { padding: 31px 29px 30px 55px; min-height: 390px; display: grid; grid-template-columns: minmax(0, 1069fr) minmax(0, 240fr); grid-template-rows: 99px auto; column-gap: 47px; background: white; overflow: clip; }
+.inspiration .clouds { height: 240px; opacity: .45; }
+.inspirationDecor { background: url('../../shared/assets/figma/0f484.svg') 20px 22px / 360px 115px no-repeat, url('../../shared/assets/figma/c93f4.svg') 1050px 205px / 520px 180px no-repeat, url('../../shared/assets/figma/bf193.svg') -160px 245px / 760px 190px no-repeat, url('../../shared/assets/figma/76022.svg') 1265px 42px / 72px 52px no-repeat, url('../../shared/assets/figma/8b1b8.svg') 1328px 25px / 48px 56px no-repeat, url('../../shared/assets/figma/88973.svg') 1260px 300px / 110px 70px no-repeat; }
+.inspiration header { grid-column: 1; position: relative; }
+.inspiration header h2 { color: #0088c4; font: 700 37px/46px 'Kalam',cursive; margin: 0 0 0 10px; }
+.inspiration header h2 span { display: block; }
+.inspiration header h2 span + span { font-size: 29px; line-height: 39px; margin: 1px 0 0 75px; }
+.inspiration header img { position: absolute; left: 398px; top: -20px; width: 90px; height: 102px; object-fit: contain; }
+.inspiration header p { position: absolute; right: 12px; top: 4px; font-size: 11px; }
+.stories { grid-column: 1; grid-row: 2; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 18px; align-items: start; }
+.stories figure { margin: 0; min-width: 0; min-height: 218px; padding: 10px 12px; background: url('../../shared/assets/figma/8250d.svg') center / cover no-repeat, white; border: 1px solid #e8dec4; border-radius: 3px; box-shadow: 0 5px 3px #4d5e591f; position: relative; }
+.stories figure::before { content: ''; position: absolute; width: 25px; height: 42px; left: 12px; top: -14px; background: url('../../shared/assets/figma/f5055.svg') center / contain no-repeat; }
+.stories figure:nth-child(2n)::before { left: auto; right: 12px; background-image: url('../../shared/assets/figma/ccd26.svg'); }
+.tiltRight { transform: rotate(1.4deg); }
+.tiltLeft { transform: rotate(-1.4deg); }
+.stories figure > img { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; }
+.stories strong { display: block; font-size: 13.2px; line-height: 19px; min-height: 19px; margin-top: 8px; }
+.stories p { margin: 18px 0 0; font-size: 11px; line-height: 19px; }
+.inspiration aside { grid-column: 2; grid-row: 1 / span 2; padding-top: 48px; background: url('../../shared/assets/figma/c446a.svg') center 81px / 300px 160px no-repeat; }
+.inspiration aside h3 { font: 700 24px/34px 'Kalam',cursive; color: #008f9d; margin: 0; }
+.inspiration blockquote { font: 400 23px/35px 'Kalam',cursive; margin: 25px 0 0 2px; }
+.footer { min-height: 256px; text-align: center; padding: 16px 300px 42px; background: url('../../shared/assets/figma/916ba.png') center -200px / 1440px auto no-repeat, linear-gradient(#e3f7ff,#f5fcff 60%,white); overflow: clip; }
+.footer::before { content: ''; position: absolute; left: 920px; top: 20px; width: 160px; height: 80px; background: url('../../shared/assets/figma/aea7a.svg') center / contain no-repeat; opacity: .38; }
+.footer h2 { font: 700 49px/63px 'Kalam',cursive; color: #0088c4; margin: 0 0 -3px; transform: translateX(76px); }
+.footer p { font: 400 19px/27px 'Kalam',cursive; margin: 0 0 30px; transform: translateX(62px); }
+.footer > a { min-width: 214px; min-height: 51px; }
+.footerCollage { position: absolute; width: 300px; height: 190px; left: 76.1806%; top: 50px; }
+.footerCollage img { position: absolute; width: 112px; height: 118px; object-fit: cover; border: 8px solid white; top: 60px; left: 10px; transform: rotate(-14deg); }
+.footerCollage img + img { left: 60px; top: 65px; transform: rotate(-5deg); }
+.signpost { position: absolute; width: 108px; height: 180px; left: 185px; top: 8px; background: url('../../shared/assets/figma/379f2.svg') center / contain no-repeat; }
+.signpost > span { position: absolute; left: 25px; font: 700 17px/24px 'Kalam',cursive; color: #815126; }
+.signpost > span:nth-child(1) { top: 15px; } .signpost > span:nth-child(2) { top: 58px; } .signpost > span:nth-child(3) { top: 101px; }
+.features, .appPreview { scroll-margin-top: 24px; }
+@media (max-width: 1320px) {
+  .hero h1 { width: 100%; font-size: clamp(40px,4.93vw,71px); line-height: 1.24; }
+  .hero h1 span:first-child { font-size: 1.07em; line-height: 1.13; }
+  .hero h1 span { margin-left: 0; }
+  .hero h1::after { width: 85%; left: 0; }
+  .heroDescription span { display: inline; }
+  .heroDescription, .actions { margin-left: 0; max-width: 100%; }
+  .heroMascot { width: 130px; height: 110px; left: 36%; top: 52px; }
+  .heroCopy::before { left: 27%; }
+  .features { padding: 40px 32px; grid-template-columns: minmax(0, 30%) minmax(0,1fr); gap: 32px; }
+  .featureGrid { gap: 20px 24px; grid-auto-rows: auto; grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .featureIntro > img { position: static; display: block; margin-left: auto; }
+  .featureIntro h2 { width: 100%; font-size: 34px; }
+  .desktopBreak { display: none; }
+  .appPreview { height: auto; min-height: 432px; padding: 29px 32px 25px; grid-template-columns: minmax(0,36%) minmax(0,1fr); }
+  .appCopy h2 { width: 100%; font-size: 40px; }
+  .appCopy h2 span + span { font-size: 32px; }
+  .appCopy p { margin-left: 0; }
+  .inspiration { padding-inline: 32px; grid-template-columns: minmax(0,1fr) 220px; gap: 24px; }
+  .stories { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+  .inspiration header img { left: 70%; width: 70px; }
+  .inspiration header p { display: none; }
+  .footer { padding-inline: 180px; }
+  .footer h2, .footer p { transform: none; }
 }
-.hero {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: start;
-  gap: 12px;
-  min-height: 548px;
-  padding: 58px 5vw 34px 6vw;
-  background:
-    url('../../shared/assets/figma/4bccc.png') center 60px / 1440px 490px no-repeat,
-    url('../../shared/assets/figma/82a69.svg') 60% bottom / 700px 170px no-repeat,
-    url('../../shared/assets/figma/e5c79.svg') right 70px top 64px / 180px 66px no-repeat,
-    url('../../shared/assets/figma/6f91e.svg') right top / 610px 230px no-repeat,
-    url('../../shared/assets/figma/51df8.svg') -140px bottom / 620px 235px no-repeat,
-    linear-gradient(#e8f9fe, #f6fcff 60%, white);
-}
-.heroCopy {
-  min-width: 0;
-  position: relative;
-  z-index: 1;
-}
-.eyebrow {
-  margin: 0 0 8px;
-  color: #0088c4;
-  font:
-    400 27px/36px 'Kalam',
-    cursive;
-  background: url('../../shared/assets/figma/ba46c.svg') 0 bottom / 286px 12px no-repeat;
-}
-.hero h1 {
-  font:
-    700 clamp(44px, 4.95vw, 71px)/1.2 'Kalam',
-    cursive;
-  margin: 0;
-  color: #008f9d;
-  padding: 2px 0 28px 10px;
-  background: url('../../shared/assets/figma/8bfec.svg') left 28px bottom / min(100%, 500px) 28px
-    no-repeat;
-}
-.desktopTitle > span {
-  color: #0088c4;
-  font-size: 1.07em;
-}
-.heroDescription {
-  max-width: 536px;
-  margin: 24px 0 22px 28px;
-  color: #0068aa;
-  font-size: 15.5px;
-  line-height: 27px;
-}
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  margin-left: 28px;
-}
-.actions > * {
-  min-height: 52px;
-}
-.heroCollage {
-  min-width: 0;
-  margin-top: -24px;
-}
-.heroMascot {
-  position: absolute;
-  width: 175px;
-  height: 142px;
-  left: 37%;
-  top: 63px;
-  object-fit: contain;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  left: 27%;
-  top: 35px;
-  width: 170px;
-  height: 85px;
-  background: url('../../shared/assets/figma/a91d9.svg') center / contain no-repeat;
-  opacity: 0.55;
-  pointer-events: none;
-}
-.features {
-  display: grid;
-  grid-template-columns: minmax(0, 36%) minmax(0, 1fr);
-  gap: 40px;
-  padding: 50px 3vw 36px 6vw;
-  min-height: 442px;
-  background:
-    url('../../shared/assets/figma/4bccc.png') center bottom / 1440px 292px no-repeat,
-    url('../../shared/assets/figma/26d15.svg') right bottom / 520px 190px no-repeat,
-    url('../../shared/assets/figma/368cd.svg') left bottom / 620px 160px no-repeat,
-    url('../../shared/assets/figma/231d3.svg') right 70px bottom / 284px 142px no-repeat,
-    linear-gradient(90deg, white, #faffff 55%, #ebfaff);
-}
-.featureIntro {
-  position: relative;
-  background:
-    url('../../shared/assets/figma/344bd.svg') left top / 390px 120px no-repeat,
-    url('../../shared/assets/figma/5c213.svg') right top / 150px 55px no-repeat,
-    url('../../shared/assets/figma/9249a.svg') 70% 86px / 30px 38px no-repeat;
-}
-.featureIntro > p:first-child {
-  font:
-    400 25px/36px 'Kalam',
-    cursive;
-  margin: 0;
-}
-.featureIntro h2 {
-  font:
-    700 38px/46px 'Kalam',
-    cursive;
-  margin: 4px 0 24px 16px;
-  padding-bottom: 12px;
-  background: url('../../shared/assets/figma/827dd.svg') left bottom / 330px 18px no-repeat;
-}
-.featureIntro > p:not(:first-child) {
-  font-size: 14px;
-  line-height: 26px;
-  max-width: 400px;
-}
-.featureIntro > img {
-  position: absolute;
-  right: -9px;
-  top: 0;
-  width: 126px;
-  height: 126px;
-  object-fit: contain;
-}
-.featureGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 24px;
-  row-gap: 22px;
-}
-.featureGrid article {
-  min-width: 0;
-}
-.featureGrid h3 {
-  font-size: 17px;
-  line-height: 23px;
-  margin: 10px 0 8px;
-  color: #0088c4;
-}
-.featureGrid p {
-  font-size: 13.5px;
-  line-height: 23px;
-  margin: 0;
-}
-.featureArt {
-  position: relative;
-  width: 98.8px;
-  height: 88.4px;
-}
-.featureArt > img {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.featureArt .rim {
-  left: -10.4px;
-  top: -6.5px;
-}
-.featureArt .featureGlyph {
-  left: 27.3px;
-  top: 20.8px;
-}
-.appPreview {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 35%) minmax(0, 1fr);
-  gap: 32px;
-  min-height: 432px;
-  padding: 42px 4vw 30px 6vw;
-  background:
-    url('../../shared/assets/figma/c7fe2.svg') left top / 800px 400px no-repeat,
-    url('../../shared/assets/figma/b52b6.svg') center top / 600px 160px no-repeat,
-    url('../../shared/assets/figma/28972.svg') left bottom / 700px 220px no-repeat,
-    url('../../shared/assets/figma/d42fe.svg') right center / 980px 400px no-repeat,
-    url('../../shared/assets/figma/4bccc.png') center bottom / 1440px 200px no-repeat,
-    #f4fcff;
-}
-.appPreview h2 {
-  font:
-    700 42px/50px 'Kalam',
-    cursive;
-  color: #008f9d;
-  margin: 0 0 18px;
-  padding-bottom: 12px;
-  background: url('../../shared/assets/figma/f8b2b.svg') 32px bottom / 280px 18px no-repeat;
-}
-.appPreview p {
-  font-size: 14px;
-  line-height: 24px;
-}
-.appPreview ul {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-}
-.appPreview li {
-  min-height: 30px;
-  padding-left: 40px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 23px;
-  margin-bottom: 8px;
-  background: url('../../shared/assets/figma/eaabc.svg') left center / 22px 22px no-repeat;
-}
-.appPreview li::before {
-  content: '✓';
-  color: white;
-  position: absolute;
-  left: calc(6vw + 5px);
-}
-.devices {
-  width: 100%;
-  max-width: 790px;
-  height: auto;
-  align-self: start;
-  object-fit: contain;
-}
-.inspiration {
-  position: relative;
-  padding: 20px 4.4vw 30px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  column-gap: 30px;
-  background:
-    url('../../shared/assets/figma/4bccc.png') center bottom / 1440px 240px no-repeat,
-    url('../../shared/assets/figma/0f484.svg') 20px 22px / 360px 115px no-repeat,
-    url('../../shared/assets/figma/c93f4.svg') right bottom / 520px 180px no-repeat,
-    url('../../shared/assets/figma/bf193.svg') left bottom / 760px 190px no-repeat,
-    white;
-}
-.inspiration header {
-  grid-column: 1/-1;
-  position: relative;
-  min-height: 100px;
-}
-.inspiration header h2 {
-  font:
-    700 32px/38px 'Kalam',
-    cursive;
-  color: #0088c4;
-  margin: 0;
-}
-.inspiration header img {
-  position: absolute;
-  left: 390px;
-  top: -10px;
-  width: 90px;
-  height: 115px;
-  object-fit: contain;
-}
-.inspiration header p {
-  position: absolute;
-  right: 28%;
-  top: 10px;
-  font-size: 11px;
-}
-.stories {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-.stories figure {
-  margin: 0;
-  min-width: 0;
-  padding: 10px 12px;
-  border: 1px solid #e8dec4;
-  border-radius: 3px;
-  background:
-    url('../../shared/assets/figma/8250d.svg') center / 100% 100% no-repeat,
-    white;
-  box-shadow: 0 5px 3px #4d5e591f;
-  position: relative;
-}
-.stories figure::before {
-  content: '';
-  position: absolute;
-  width: 25px;
-  height: 42px;
-  left: 12px;
-  top: -14px;
-  background: url('../../shared/assets/figma/f5055.svg') center / contain no-repeat;
-}
-.stories figure:nth-child(2n)::before {
-  left: auto;
-  right: 12px;
-  background-image: url('../../shared/assets/figma/ccd26.svg');
-}
-.tiltRight {
-  transform: rotate(1.4deg);
-}
-.tiltLeft {
-  transform: rotate(-1.4deg);
-}
-.stories figure > img {
-  width: 100%;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-.stories strong {
-  display: block;
-  font-size: 13.2px;
-  line-height: 19px;
-  min-height: 38px;
-  margin-top: 8px;
-}
-.stories p {
-  margin: 8px 0 0;
-  font-size: 11px;
-  line-height: 19px;
-}
-.inspiration aside {
-  padding: 0 0 60px;
-  background:
-    url('../../shared/assets/figma/c446a.svg') center / 300px 160px no-repeat,
-    url('../../shared/assets/figma/76022.svg') right top / 45px 38px no-repeat,
-    url('../../shared/assets/figma/8b1b8.svg') right 30px top / 64px 60px no-repeat,
-    url('../../shared/assets/figma/88973.svg') right bottom / 110px 70px no-repeat;
-}
-.inspiration aside h3 {
-  font:
-    700 24px/34px 'Kalam',
-    cursive;
-  color: #008f9d;
-  margin: 0;
-}
-.inspiration blockquote {
-  font:
-    400 23px/35px 'Kalam',
-    cursive;
-  margin: 16px 0 0;
-}
-.footer {
-  min-height: 256px;
-  text-align: center;
-  padding: 24px 300px 42px;
-  position: relative;
-  background:
-    url('../../shared/assets/figma/aea7a.svg') center top / 160px 80px no-repeat,
-    url('../../shared/assets/figma/916ba.png') center / cover no-repeat;
-}
-.footer h2 {
-  font:
-    700 46px/54px 'Kalam',
-    cursive;
-  color: #0088c4;
-  margin: 0 0 8px;
-}
-.footer p {
-  font:
-    400 20px/28px 'Kalam',
-    cursive;
-  margin: 0 0 20px;
-}
-.footerCollage {
-  position: absolute;
-  width: 250px;
-  height: 190px;
-  right: 20px;
-  bottom: 0;
-}
-.footerCollage img {
-  position: absolute;
-  width: 112px;
-  height: 118px;
-  object-fit: cover;
-  border: 8px solid white;
-  top: 50px;
-  left: 20px;
-  transform: rotate(-14deg);
-}
-.footerCollage img + img {
-  left: 54px;
-  top: 65px;
-  transform: rotate(-5deg);
-}
-.signpost {
-  position: absolute;
-  width: 144px;
-  height: 190px;
-  right: 0;
-  bottom: 0;
-  background: url('../../shared/assets/figma/379f2.svg') center / contain no-repeat;
-}
-.greeting,
-.mobileTitle,
-.mobileWelcome,
-.mobileFeatures,
-.mobileGreetingMascot,
-.mobileInspiration {
-  display: none;
-}
-@media (max-width: 1200px) and (min-width: 769px) {
-  .hero {
-    padding-inline: 32px;
-  }
-  .heroDescription {
-    margin-left: 0;
-  }
-  .actions {
-    margin-left: 0;
-    gap: 12px;
-  }
-  .heroMascot {
-    left: 38%;
-    width: 130px;
-  }
-  .features {
-    padding-inline: 32px;
-    grid-template-columns: minmax(0, 32%) minmax(0, 1fr);
-    gap: 24px;
-  }
-  .featureGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .featureIntro h2 {
-    font-size: 34px;
-  }
-  .featureIntro > img {
-    position: static;
-    display: block;
-    margin-left: auto;
-  }
-  .appPreview {
-    padding-inline: 32px;
-    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
-  }
-  .appPreview h2 {
-    font-size: 36px;
-    line-height: 44px;
-  }
-  .appPreview li::before {
-    left: 37px;
-  }
-  .stories {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
-  .inspiration aside {
-    grid-column: 2;
-    grid-row: 2;
-  }
-  .footer {
-    padding-inline: 200px;
-  }
-  .footerCollage {
-    width: 200px;
-  }
-}
-@media (max-width: 900px) and (min-width: 769px) {
-  .hero {
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 32px;
-  }
-  .hero h1 {
-    font-size: 60px;
-  }
-  .heroCollage {
-    max-width: 500px;
-    justify-self: center;
-  }
-  .heroMascot {
-    left: auto;
-    right: 32px;
-  }
-  .features {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .featureIntro > img {
-    position: absolute;
-    right: 32px;
-  }
-  .featureGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .appPreview {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .devices {
-    margin: 20px auto 0;
-    max-width: 700px;
-  }
-  .footer {
-    padding-inline: 80px;
-    padding-bottom: 200px;
-  }
+@media (max-width: 1000px) {
+  .hero { grid-template-columns: minmax(0,1fr); padding: 32px; }
+  .heroCopy { margin-top: 0; }
+  .hero h1 { max-width: 650px; font-size: 56px; }
+  .heroDescription { width: 536px; }
+  .heroMascot { right: 32px; left: auto; }
+  .heroCollage { width: min(100%,650px); justify-self: center; margin-block: 32px; }
+  .hero > .clouds { top: auto; bottom: 0; height: 260px; }
+  .features { grid-template-columns: 1fr; }
+  .featureIntro > img { position: absolute; right: 24px; left: auto; top: 0; }
+  .featureIntro h2 { width: 330px; }
+  .appPreview { grid-template-columns: 1fr; gap: 32px; }
+  .appCopy h2 { width: 100%; }
+  .devices { max-width: 700px; margin-inline: auto; }
+  .footer { padding: 32px 32px 220px; background-position: center bottom -80px; }
+  .footerCollage { left: auto; right: 24px; top: auto; bottom: 0; }
 }
 @media (max-width: 768px) {
-  .page {
-    font-family: var(--font-ios);
-    color: var(--ios-ink);
-  }
-  .hero {
-    display: block;
-    min-height: 0;
-    background: none;
-    padding: 20px 24px 16px;
-  }
-  .hero h1 {
-    background: none;
-    color: #21343b;
-    font:
-      700 34px/41px 'Kalam',
-      cursive;
-    padding: 0;
-    margin: 0;
-  }
-  .hero h1:has(em) {
-    font-family: var(--font-ios);
-    letter-spacing: -0.6px;
-  }
-  .hero h1 em {
-    font-style: normal;
-    color: #c65b3d;
-  }
-  .greeting {
-    display: block;
-    margin: 0 0 8px;
-    color: #64747c;
-    font-size: 13px;
-    line-height: 20px;
-  }
-  .mobileTitle {
-    display: inline;
-  }
-  .eyebrow,
-  .desktopTitle,
-  .heroDescription,
-  .actions,
-  .heroCollage,
-  .heroMascot,
-  .hero::after,
-  .features,
-  .appPreview,
-  .inspiration,
-  .footer {
-    display: none;
-  }
-  .mobileWelcome {
-    display: block;
-    padding: 0 24px 20px;
-  }
-  .destination {
-    position: relative;
-    min-height: 234px;
-    border-radius: 24px;
-    background:
-      linear-gradient(transparent 36%, #173b4b 100%),
-      url('../../shared/assets/figma/9ca6f.svg') center / cover no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    color: white;
-    padding: 18px 16px;
-  }
-  .destination strong {
-    font-size: 28px;
-    line-height: 34px;
-  }
-  .destination p {
-    font-size: 14px;
-    line-height: 20px;
-    margin: 4px 0 0;
-  }
-  .waveMascot {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    object-fit: contain;
-    top: 20px;
-    right: 16px;
-  }
-  .mobileIntro {
-    color: #64747c;
-    font-size: 16px;
-    line-height: 24px;
-    margin-block: 16px;
-  }
-  .mobileWelcome > a {
-    display: flex;
-    width: 100%;
-  }
-  .loginLine {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-    color: #64747c;
-    font-size: 15px;
-  }
-  .mobileFeatures {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 0 24px 32px;
-  }
-  .mobileFeatures h2 {
-    margin: 0;
-    font-size: 22px;
-    line-height: 28px;
-  }
-  .mobileFeatures article {
-    border-radius: 20px;
-    background: white;
-    min-height: 92px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .mobileFeatures article > img {
-    flex-shrink: 0;
-  }
-  .mobileFeatures h3 {
-    margin: 0;
-    font-size: 17px;
-    line-height: 22px;
-  }
-  .mobileFeatures p {
-    margin: 4px 0 0;
-    color: #64747c;
-    font-size: 13px;
-    line-height: 18px;
-  }
-  .mobileFeatures article > span {
-    margin-left: auto;
-    font-size: 11px;
-    color: #64747c;
-  }
-  .featured {
-    display: block;
-    background: white;
-    border-radius: 24px;
-    border: 1px solid #dce4e7;
-  }
-  .featuredCover {
-    position: relative;
-    height: 140px;
-    border-radius: 24px 24px 0 0;
-  }
-  .featuredCover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-  }
-  .featuredCover span {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    padding: 8px 12px;
-    background: white;
-    border-radius: 20px;
-    font-size: 12px;
-    color: #317c89;
-  }
-  .featured > div:last-child {
-    padding: 16px;
-  }
-  .featured h3 {
-    font-size: 20px;
-    line-height: 26px;
-    margin: 0;
-  }
-  .featured p {
-    margin: 4px 0 12px;
-    color: #64747c;
-    font-size: 13px;
-    line-height: 18px;
-  }
-  .featured strong {
-    color: #317c89;
-    font-size: 15px;
-  }
-  .unavailableTiles {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-  }
-  .unavailableTiles > div {
-    background: white;
-    border-radius: 24px;
-    padding: 20px;
-    font-size: 15px;
-  }
-  .unavailableTiles strong {
-    display: block;
-    margin-top: 12px;
-    color: #64747c;
-    font-size: 14px;
-  }
+  .hero, .features, .appPreview, .inspiration { padding-inline: 24px; }
+  .hero h1 { font-size: clamp(34px,7.8vw,56px); width: 100%; }
+  .hero h1 span:first-child { margin-left: 0; }
+  .eyebrow { font-size: 22px; line-height: 32px; max-width: 78%; background-size: 100% 10px; }
+  .heroMascot { width: 76px; height: 68px; right: 12px; top: 14px; }
+  .heroCopy::before { display: none; }
+  .heroDescription { margin-top: 32px; font-size: 15px; line-height: 26px; }
+  .actions { gap: 12px; }
+  .actions > * { width: 100%; }
+  .heroCollage { width: 93%; margin-bottom: 10px; }
+  .features { padding-block: 32px; }
+  .featureIntro > img { width: 90px; height: 100px; right: -4px; top: 7px; }
+  .featureIntro > p:first-child { font-size: 22px; }
+  .featureIntro h2 { max-width: calc(100% - 70px); font-size: 32px; margin-left: 0; margin-bottom: 20px; background-size: 100% 14px; }
+  .featureGrid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+  .featureGrid h3 { font-size: 15px; }
+  .featureGrid p { font-size: 13px; }
+  .featureDecor { background: none; }
+  .appPreview { display: flex; flex-direction: column; gap: 0; }
+  .appCopy { display: contents; }
+  .appCopy h2 { font-size: 36px; line-height: 46px; }
+  .appCopy h2 span + span { font-size: 29px; line-height: 39px; }
+  .appCopy ul { margin-left: 0; }
+  .appCopy li { padding-left: 32px; }
+  .devices { order: 1; margin: 0 auto 24px; }
+  .appCopy > a { order: 2; width: 100%; margin-left: 0; }
+  .inspiration { display: block; padding-block: 32px; }
+  .inspiration header { min-height: 110px; }
+  .inspiration header h2 { margin-left: 0; font-size: 30px; line-height: 40px; }
+  .inspiration header h2 span + span { margin-left: 25px; font-size: 25px; line-height: 35px; }
+  .inspiration header img { right: -8px; left: auto; width: 60px; top: -8px; }
+  .stories { grid-template-columns: 1fr; gap: 24px; }
+  .stories figure { padding: 8px; }
+  .stories figure > img { height: auto; aspect-ratio: 1.5; }
+  .stories strong { font-size: 12px; }
+  .stories p { margin-top: 12px; font-size: 10px; }
+  .inspiration aside { padding-top: 32px; }
+  .inspiration blockquote { margin-top: 12px; }
+  .footer h2 { font-size: 38px; line-height: 50px; }
+  .footer p { font-size: 18px; }
+  .footer > a { width: 100%; }
+  .footerCollage { left: 16px; right: auto; width: 280px; }
+}
+@media (max-width: 480px) {
+  .hero, .features, .appPreview, .inspiration { padding-inline: 16px; }
+  .footer { padding-inline: 16px; }
 }
 @media (max-width: 360px) {
-  .hero,
-  .mobileWelcome,
-  .mobileFeatures {
-    padding-inline: 16px;
-  }
-  .hero h1 {
-    font-size: 29px;
-    line-height: 37px;
-  }
-  .destination strong {
-    font-size: 25px;
-    line-height: 31px;
-  }
-  .mobileFeatures article {
-    gap: 10px;
-    padding: 12px;
-  }
-}
-@media (max-width: 768px) {
-  .mobileFeatures article > button {
-    margin-left: auto;
-    border: 0;
-    background: transparent;
-    min-width: 44px;
-    min-height: 44px;
-    display: grid;
-    place-items: center;
-    padding: 0;
-  }
-  .userHero .mobileGreetingMascot {
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 18px;
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-  }
-  .userHero h1 {
-    max-width: calc(100% - 58px);
-  }
-  .mobileInspiration {
-    display: block;
-    padding: 0 24px 24px;
-  }
-  .mobileInspiration header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-  .mobileInspiration header h2 {
-    margin: 0;
-    font-size: 22px;
-    line-height: 28px;
-  }
-  .mobileInspiration button {
-    min-height: 44px;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    color: #955c49;
-  }
-  .mobileInspiration figure {
-    margin: 12px 0 0;
-    position: relative;
-    min-height: 174px;
-    border-radius: 24px;
-    background: #fcf8f1;
-    isolation: isolate;
-  }
-  .mobileInspiration figure > img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -2;
-    border-radius: 24px;
-  }
-  .mobileInspiration figure::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    z-index: -1;
-    background: linear-gradient(transparent 35%, #fcf8f1e0 75%);
-  }
-  .mobileInspiration figcaption {
-    padding: 100px 16px 16px;
-  }
-  .mobileInspiration h3 {
-    margin: 0;
-    font-size: 28px;
-    line-height: 34px;
-  }
-  .mobileInspiration p {
-    color: #64747c;
-    font-size: 13px;
-    line-height: 18px;
-    margin: 4px 0 0;
-  }
-}
-@media (max-width: 360px) {
-  .mobileInspiration {
-    padding-inline: 16px;
-  }
-  .mobileInspiration header h2 {
-    font-size: 20px;
-  }
+  .hero, .features, .appPreview, .inspiration { padding-inline: 16px; }
+  .hero h1 { font-size: 32px; }
+  .eyebrow { font-size: 19px; }
+  .featureGrid { gap: 24px 16px; }
 }

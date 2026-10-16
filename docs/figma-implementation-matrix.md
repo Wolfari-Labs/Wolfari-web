@@ -7,6 +7,8 @@
 - Figma là nguồn cho visual hierarchy, typography, spacing, component variants và prototype intent.
 - Backend runtime là nguồn cho khả năng nghiệp vụ, permission, version, error và mutation behavior.
 
+Lượt [chỉnh chi tiết 15/10/2026](ui-refinement-2026-10-15.md) giữ bố cục Home theo xác nhận người dùng, căn lại header/collage/CTA/footer và màu vai trò Trip List. Header Guest mở các phần trên Home bằng `/#home-features` và `/#home-about`; route Home xử lý hash sau khi lazy load. Khu vực đề xuất giữ nguyên frame nguồn tại section `767:5376`; Home Guest/User `768:5376`/`768:5746`, Web 402px `780:6444`.
+
 ## Shared shell mapping
 
 | Figma node/frame                          | Web mapping                                      | Responsive contract                                                                | Evidence                                            |

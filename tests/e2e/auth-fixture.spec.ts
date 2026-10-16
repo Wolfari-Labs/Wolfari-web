@@ -1,5 +1,22 @@
 import { expect, test } from '@playwright/test';
 
+test('guest header opens the matching Home sections from Home and login', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 800 });
+  for (const [start, label, target] of [
+    ['/', 'Tính năng', 'home-features'],
+    ['/login', 'Về Wolfari', 'home-about'],
+  ] as const) {
+    await page.goto(start);
+    await page
+      .getByRole('navigation', { name: 'Điều hướng chính' })
+      .getByRole('link', { name: label, exact: true })
+      .click();
+    await expect(page).toHaveURL(`/#${target}`);
+    await expect(page.locator(`#${target}`)).toBeInViewport();
+    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+  }
+});
+
 for (const width of [1440, 402])
   test(`demo account opens User preview without API or persistent session ${width}`, async ({
     page,
@@ -65,12 +82,7 @@ for (const size of [
       if (route === '/') {
         await expect(page.getByRole('heading', { level: 1, name: /Cho những/ })).toBeVisible();
         await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
-        const guestCta =
-          size.width <= 768
-            ? page
-                .getByRole('region', { name: 'Khám phá hành trình' })
-                .getByRole('link', { name: 'Bắt đầu hành trình', exact: true })
-            : page.getByRole('link', { name: 'Bắt đầu ngay', exact: true });
+        const guestCta = page.getByRole('link', { name: 'Bắt đầu ngay', exact: true });
         await expect(guestCta).toHaveAttribute('href', '/register');
         await expect(page.getByLabel('Trạng thái preview')).toHaveValue('guest');
         await expect(page.getByText('Phú Quốc – Hẹn với biển')).toHaveCount(0);
@@ -85,12 +97,59 @@ for (const size of [
           }),
         ).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
+      if (size.width === 1440 && route === '/') {
+        const targets = [
+          ['home-hero', 76, 548],
+          ['home-features', 624, 442],
+          ['home-about', 1066, 432],
+          ['home-inspiration', 1498, 390],
+          ['home-footer', 1888, 256],
+        ] as const;
+        for (const [layout, y, height] of targets) {
+          const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
+          expect(bounds).not.toBeNull();
+          expect(Math.abs(bounds!.y - y)).toBeLessThanOrEqual(4);
+          expect(Math.abs(bounds!.height - height)).toBeLessThanOrEqual(4);
+        }
+        for (const [layout, target] of [
+          ['home-collage', { x: 718, y: 111, width: 650, height: 470 }],
+          ['home-devices', { x: 497, y: 1095, width: 890, height: 398 }],
+        ] as const) {
+          const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
+          expect(bounds).not.toBeNull();
+          for (const dimension of ['x', 'y', 'width', 'height'] as const)
+            expect(Math.abs(bounds![dimension] - target[dimension])).toBeLessThanOrEqual(4);
+        }
+        const previewStyle = await page.addStyleTag({
+          content: 'details.preview { display: none !important; }',
+        });
+        await expect(page).toHaveScreenshot('home-guest-1440.png', {
+          animations: 'disabled',
+          fullPage: true,
+          maxDiffPixelRatio: 0.03,
+          threshold: 0.3,
+        });
+        await previewStyle.evaluate((style) => style.parentNode?.removeChild(style));
+      }
+      if (size.width === 1440 && route !== '/') {
+        const form = page.getByRole('form');
+        const bounds = await form.boundingBox();
+        expect(bounds).not.toBeNull();
+        const target =
+          route === '/login'
+            ? { x: 886, y: 166, width: 440 }
+            : route === '/register'
+              ? { x: 876, y: 142, width: 458 }
+              : { x: 130, y: 220, width: 560 };
+        for (const dimension of ['x', 'y', 'width'] as const)
+          expect(Math.abs(bounds![dimension] - target[dimension])).toBeLessThanOrEqual(4);
+        if (route === '/login') expect(Math.abs(bounds!.height - 580.8)).toBeLessThanOrEqual(4);
+        if (route === '/profile') expect(Math.abs(bounds!.height - 620)).toBeLessThanOrEqual(4);
+      }
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
         size.width,
       );
       if (route === '/profile' && size.width <= 768) {
-        await expect(page.getByLabel('Tên hiển thị')).toBeHidden();
-        await page.getByRole('button', { name: 'Chỉnh sửa hồ sơ' }).click();
         await expect(page.getByLabel('Tên hiển thị')).toBeVisible();
       }
       await page.locator('main > details[data-preview="shell"] summary').scrollIntoViewIfNeeded();
@@ -139,15 +198,14 @@ test('registration validates and remains unavailable without session or redirect
 test('mobile profile keeps draft through error and never reports saved', async ({ page }) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto('/profile');
-  await page.getByRole('button', { name: 'Chỉnh sửa hồ sơ' }).click();
   await page.getByLabel('Tên hiển thị').fill('Bản nháp local');
   await page.locator('[data-preview="profile"] summary').click();
   for (const state of ['error', 'success'])
     await page.getByLabel('Trạng thái hồ sơ').selectOption(state);
   await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Bản nháp local');
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
-  await expect(page.getByText(/chưa lưu thay đổi hoặc tăng phiên bản/)).toBeVisible();
+  await expect(page.getByText(/Chưa thể lưu thay đổi lúc này/)).toBeVisible();
   await expect(page.getByText(/Phiên bản hồ sơ: 1/)).toBeVisible();
   await page.getByText('Phiên đăng nhập', { exact: true }).click();
-  await expect(page.getByText('Phiên 99999999')).toBeVisible();
+  await expect(page.getByText('Phiên đăng nhập 1')).toBeVisible();
 });

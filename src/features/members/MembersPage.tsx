@@ -99,11 +99,7 @@ export function MembersView({
   return (
     <>
       <div className={styles.hero}>
-        <TripHero trip={trip} compact />
-      </div>
-      <div className={styles.introduction}>
-        <h2>Bạn đồng hành</h2>
-        <p>{trip.name}</p>
+        <TripHero trip={trip} compact variant="landscape" />
       </div>
       <div className={styles.tabs} role="group" aria-label="Nội dung thành viên">
         <button
@@ -123,7 +119,7 @@ export function MembersView({
           Lời mời · Xem trước
         </button>
         <Button variant="plain" disabled>
-          Quyền sửa Plan
+          Quyền sửa lịch trình
         </Button>
         <small>Vai trò và trách nhiệm được quản lý riêng.</small>
       </div>
@@ -131,15 +127,22 @@ export function MembersView({
         <div className={styles.workspace}>
           <section className={styles.memberPanel} aria-label="Danh sách thành viên">
             <h2>Thành viên chuyến đi</h2>
-            <p className={styles.help}>Tên và ảnh chỉ hiển thị khi có thông tin được xác nhận.</p>
+            <p className={styles.help}>
+              Vai trò trong chuyến đi và trách nhiệm riêng được hiển thị tách biệt.
+            </p>
             <ReadPanel result={members} onRetry={onRetryMembers}>
               {(data) => {
                 const items = data.items.filter((m) => m.tripId === trip.id && m.leftAt === null);
                 return items.length ? (
                   <>
                     <p className={styles.count}>{items.length} thành viên trong trang này</p>
+                    <div className={styles.rosterHead} aria-hidden="true">
+                      <span>Thành viên</span>
+                      <span>Vai trò / Trách nhiệm</span>
+                      <span>Thao tác</span>
+                    </div>
                     <ul className={styles.members}>
-                      {items.map((member) => (
+                      {items.map((member, index) => (
                         <li key={member.id}>
                           <span className={styles.avatar}>
                             {member.presentation.avatar ? (
@@ -154,25 +157,14 @@ export function MembersView({
                           </span>
                           <div className={styles.identity}>
                             <strong>
-                              {member.presentation.displayName ??
-                                `Người dùng ${member.userId.slice(0, 8)}`}
+                              {member.presentation.displayName ?? `Thành viên ${index + 1}`}
                             </strong>
                             <small>Tham gia {date(member.joinedAt, trip.timezone)}</small>
-                            {!member.presentation.displayName && <small>Tên chưa khả dụng</small>}
-                            <details>
-                              <summary>Xem định danh</summary>
-                              <dl>
-                                <dt>User ID</dt>
-                                <dd>{member.userId}</dd>
-                                <dt>Membership ID</dt>
-                                <dd>{member.id}</dd>
-                              </dl>
-                            </details>
                           </div>
                           <span
                             className={`${styles.role} ${member.role === 'OWNER' ? styles.owner : ''}`}
                           >
-                            {member.role === 'OWNER' ? 'Owner' : 'Member'}
+                            {member.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
                           </span>
                           {owner && member.role === 'MEMBER' && (
                             <Button variant="outline" disabled>
@@ -207,29 +199,35 @@ export function MembersView({
           <aside className={styles.responsibilities}>
             <h2>Quyền & trách nhiệm</h2>
             <section>
-              <h3>Owner</h3>
+              <h3>Chủ chuyến</h3>
               <p>Quản lý thành viên, lời mời và quyền sửa lịch trình.</p>
             </section>
             <section>
-              <h3>Fund Holder</h3>
+              <h3>Người giữ quỹ</h3>
               <p>
-                Trách nhiệm quản lý quỹ tách biệt với vai trò trong Trip. Thông tin người quản lý
-                quỹ chưa khả dụng.
+                Trách nhiệm quản lý quỹ tách biệt với vai trò trong chuyến đi. Thông tin người quản
+                lý quỹ chưa khả dụng.
               </p>
             </section>
             <section>
-              <h3>PlanEditPolicy</h3>
-              <p>{trip.planEditPolicy}</p>
-              <p>Quyền sửa lịch trình không tự cấp quyền Finance hoặc quản lý thành viên.</p>
+              <h3>Quyền sửa lịch trình</h3>
+              <p>
+                {trip.planEditPolicy === 'OWNER_ONLY'
+                  ? 'Chỉ chủ chuyến được sửa lịch trình.'
+                  : trip.planEditPolicy === 'SELECTED_MEMBERS'
+                    ? 'Chủ chuyến và thành viên được phân công có thể sửa lịch trình.'
+                    : 'Mọi thành viên được sửa lịch trình.'}
+              </p>
+              <p>Quyền sửa lịch trình được quản lý riêng với quyền quản lý quỹ và thành viên.</p>
             </section>
             <section>
-              <h3>Khi chuyển Owner</h3>
+              <h3>Khi chuyển chủ chuyến</h3>
               <p>
-                Chưa khả dụng. Không suy ra thay đổi trách nhiệm quản lý quỹ hoặc quyền sửa Plan.
+                Thay đổi chủ chuyến vẫn giữ riêng trách nhiệm người giữ quỹ và quyền sửa lịch trình.
               </p>
             </section>
             <Button variant="outline" disabled>
-              Quản lý Fund Holder
+              Quản lý người giữ quỹ
             </Button>
           </aside>
         </div>
@@ -298,10 +296,7 @@ export function MembersView({
                                 {invitationLabels[invitation.status]}
                               </span>
                             </div>
-                            <p>
-                              Hết hạn {date(invitation.expiresAt, trip.timezone)} · Phiên bản{' '}
-                              {invitation.version}
-                            </p>
+                            <p>Hết hạn {date(invitation.expiresAt, trip.timezone)}</p>
                             {invitation.resolvedAt && (
                               <p>Kết thúc {date(invitation.resolvedAt, trip.timezone)}</p>
                             )}
@@ -332,10 +327,6 @@ export function MembersView({
           </section>
         </div>
       )}
-      <p className={styles.revisions}>
-        Membership revision {trip.membershipRevision} · Plan {trip.planVersion} · Export{' '}
-        {trip.exportRevision} · {owner ? 'Owner' : 'Member'}
-      </p>
     </>
   );
 }
@@ -434,6 +425,12 @@ export function MembersPage() {
       {previewEnabled && (
         <details className="preview" data-preview="members">
           <summary>Members preview · Dữ liệu minh họa</summary>
+          {trip && (
+            <p className={styles.revisions}>
+              Membership revision {trip.membershipRevision} · Plan {trip.planVersion} · Export{' '}
+              {trip.exportRevision} · {owner ? 'Owner' : 'Member'}
+            </p>
+          )}
           <Select
             label="Trạng thái thành viên"
             value={scenario}
