@@ -26,14 +26,16 @@ import styles from './TripOverviewPage.module.css';
 function Unavailable({
   title,
   icon,
+  region,
   children,
 }: {
   title: string;
   icon?: string;
+  region?: string;
   children?: ReactNode;
 }) {
   return (
-    <section className={styles.panel}>
+    <section className={styles.panel} data-region={region}>
       <h2>
         {icon && <img src={icon} alt="" />}
         {title}
@@ -56,7 +58,7 @@ export function TripOverview({
     <>
       <TripHero trip={trip} />
       {trip.description && <p className={styles.description}>{trip.description}</p>}
-      <div className={styles.summaries}>
+      <div className={styles.summaries} data-region="trip-overview-summaries">
         <section className={styles.panel}>
           <h2>
             <img src={itineraryIcon} alt="" />
@@ -68,8 +70,11 @@ export function TripOverview({
         <Unavailable title="Ngân sách / Quỹ nhóm" icon={fundIcon} />
         <Unavailable title="Tiến độ Packing list" icon={packingIcon} />
       </div>
-      <div className={styles.workspace}>
-        <section className={styles.panel}>
+      <div className={styles.workspace} data-region="trip-overview-workspace">
+        <section
+          className={`${styles.panel} ${styles.itineraryPanel}`}
+          data-region="trip-overview-itinerary"
+        >
           <h2>Lịch trình</h2>
           <PlanSummary trip={trip} result={plan} onRetry={onRetry} />
         </section>
@@ -80,12 +85,12 @@ export function TripOverview({
           </Button>
         </Unavailable>
         <div className={styles.aside}>
-          <Unavailable title="Theo dõi giá vé">
+          <Unavailable title="Theo dõi giá vé" region="trip-overview-fare">
             <Button variant="outline" disabled>
               Đặt ngưỡng
             </Button>
           </Unavailable>
-          <div className={styles.postcard}>
+          <div className={styles.postcard} data-region="trip-overview-postcard">
             <p>
               Mỗi chuyến đi
               <br />

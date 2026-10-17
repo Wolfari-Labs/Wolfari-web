@@ -1,8 +1,9 @@
 .page {
+  width: 100%;
   padding: 8px 22px 24px 18px;
   color: var(--color-ink);
-  max-width: 1220px;
-  margin-inline: auto;
+  max-width: none;
+  margin-inline: 0;
 }
 .breadcrumb {
   display: flex;
@@ -203,7 +204,7 @@
   grid-template-columns: minmax(0, 578fr) minmax(0, 314fr) minmax(0, 260fr);
   gap: 14px;
   margin-top: 14px;
-  min-height: 410px;
+  min-height: 0;
 }
 .workspace > .panel {
   display: flex;
@@ -236,6 +237,15 @@
 .postcard p {
   margin: 0;
 }
+
+/*
+ * The overview itinerary has a denser Figma contract than the reusable
+ * PlanSummary component. Keep these rules scoped to this page so the full
+ * Plan screen keeps its own rhythm.
+ */
+.itineraryPanel {
+  min-width: 0;
+}
 .metadata {
   font-size: 12px;
   overflow-wrap: anywhere;
@@ -250,6 +260,41 @@
 }
 .page > :global(.preview) {
   margin-top: 20px;
+}
+@media (min-width: 1101px) {
+  .workspace {
+    min-height: 408px;
+  }
+  .itineraryPanel {
+    padding: 12px 15px 0;
+  }
+  .itineraryPanel > h2 {
+    margin-bottom: 12px;
+  }
+  .itineraryPanel > div {
+    min-width: 0;
+  }
+  .itineraryPanel > div > div[role='group'] {
+    min-height: 46px;
+    margin-bottom: 8px;
+  }
+  .itineraryPanel > div > ol {
+    gap: 2px;
+  }
+  .itineraryPanel > div > ol > li {
+    min-height: 62px;
+    padding: 7px 10px;
+  }
+  .itineraryPanel > div > a {
+    min-height: 44px;
+    margin-top: 8px;
+  }
+  .aside > .panel:first-child {
+    min-height: 190px;
+  }
+  .postcard {
+    min-height: 204px;
+  }
 }
 @media (max-width: 1200px) {
   .meta {

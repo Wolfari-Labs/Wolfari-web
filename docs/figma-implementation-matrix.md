@@ -150,7 +150,9 @@ Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass
 
 `3:31`/`3:32` → Desktop expanded/collapsed; `317:2032` → Mobile Web adaptation của cùng `/trips/:tripId`, Member/Owner. [Component/domain/scroll/runtime mapping](trip-overview-phase3.md). Trip List canonical dates/name giữ nguyên; cover theo Overview frame, unsupported dashboard numbers thay unavailable. Tablet là Web adaptation, không tuyên bố có Figma tablet frame. Router lazy-load feature bodies và shell loading boundary.
 
-Overview acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass, **124 unit/component/proxy và 65 Chromium E2E tests pass**. Full regression sau route splitting dùng hai browser workers, exit 0; route/body readiness assertions giữ nguyên scroll/asset checks. Đã review Desktop/Mobile screenshots; production lazy chunks hết warning >500kB và fixture marker scan pass.
+Overview geometry refinement: nội dung dùng toàn bộ chiều rộng main sau sidebar, với gutter `18px/22px`; hero, summaries và workspace căn cùng mép. Tại 1440px, sidebar mở cho `x=238,width=1180`, sidebar thu cho `x=90,width=1328`. Hero có minimum 170px; workspace dùng tỉ lệ cột `578:314:260`, gap 14px và minimum 408px chỉ trên 1100px. Fare panel và postcard lần lượt có minimum 190px và 204px; itinerary rows/tabs/link giữ vùng bấm theo screen contract nhưng vẫn tăng chiều cao theo dữ liệu. Không đặt nested vertical scroll; desktop cuộn ở main, mobile cuộn document.
+
+Targeted browser contract suite: **17 Chromium cases pass** trên `2560/1920/1440/1366/1200/1101/1100/1024/820/768/402/320`, gồm 1440px sidebar mở/thu, alignment, column ratio, minimum heights, long fifth activity growth, end-link reachability, no horizontal overflow và state/navigation matrix. Baseline screenshot chỉ giữ hai trạng thái 1440px sau review trực quan; full regression và build evidence được ghi sau merge.
 
 ### Plan Preview fixture
 
