@@ -1,17 +1,18 @@
-.page { color: #0068aa; max-width: 1440px; margin-inline: auto; }
-.page section { position: relative; isolation: isolate; }
-.clouds, .topClouds { position: absolute; left: 0; right: 0; bottom: 0; height: 292px; overflow: hidden; opacity: .8; z-index: -2; pointer-events: none; }
-.clouds img, .topClouds img { width: 100%; height: 100%; object-fit: cover; }
-.topClouds { top: 0; height: 390px; opacity: 1; }
-.topClouds img { object-fit: contain; }
+.page { width: 100%; color: #0068aa; }
+.page section { position: relative; width: 100%; isolation: isolate; overflow: clip; }
+.heroInner, .featuresInner, .appPreviewInner, .inspirationInner, .footerInner { position: relative; width: min(100%, 1440px); margin-inline: auto; isolation: isolate; }
+.clouds, .topClouds { position: absolute; left: 0; right: 0; bottom: 0; height: max(64px, 20.2778vw); overflow: hidden; opacity: .8; z-index: -2; pointer-events: none; }
+.clouds img, .topClouds img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.topClouds { top: 0; bottom: auto; height: max(87px, 27.0833vw); opacity: 1; }
 .heroDecor, .featureDecor, .appDecor, .inspirationDecor { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.hero { display: grid; grid-template-columns: minmax(0, 608fr) minmax(0, 650fr); gap: 24px; min-height: 548px; padding: 35px 5% 43px 5.972222%; background: linear-gradient(#e8f9fe, #f6fcff 60%, white); overflow: clip; }
-.hero > .clouds { top: 60px; height: 490px; }
+.hero { background: linear-gradient(#e8f9fe, #f6fcff 60%, white); }
+.heroInner { display: grid; grid-template-columns: minmax(0, 608fr) minmax(0, 650fr); gap: 24px; min-height: 548px; padding: 35px min(5%, 72px) 43px min(5.972222%, 86px); }
+.hero > .clouds { top: max(13px, 4.1667vw); bottom: auto; height: max(109px, 34.0278vw); }
 .heroDecor { background: url('../../shared/assets/figma/82a69.svg') 470px 355px / 700px 170px no-repeat, url('../../shared/assets/figma/e5c79.svg') 1168px 64px / 180px 66px no-repeat, url('../../shared/assets/figma/6f91e.svg') 955px 20px / 610px 230px no-repeat, url('../../shared/assets/figma/51df8.svg') -140px 286px / 620px 235px no-repeat; }
 .heroCopy { min-width: 0; margin-top: 29px; }
 .eyebrow { margin: 0 0 12px; color: #0088c4; font: 400 27px/36px 'Kalam', cursive; background: url('../../shared/assets/figma/ba46c.svg') left bottom / 286px 12px no-repeat; }
 .hero h1 { position: relative; margin: 0; color: #008f9d; font: 700 71px/88px 'Kalam', cursive; width: 660px; }
-.hero h1 span { display: block; margin-left: 25px; }
+.hero h1 span { display: block; margin-left: 25px; white-space: nowrap; }
 .hero h1 span:first-child { margin-left: 9px; font-size: 76px; line-height: 86px; color: #0088c4; }
 .hero h1 span + span { margin-top: -2px; }
 .hero h1::after { content: ''; position: absolute; left: 28px; bottom: -21px; width: 500px; height: 28px; background: url('../../shared/assets/figma/8bfec.svg') center / contain no-repeat; }
@@ -24,7 +25,8 @@
 .heroCollage { width: 100%; min-width: 0; }
 .heroMascot { position: absolute; width: 175px; height: 142px; left: 36.9444%; top: 63px; object-fit: contain; }
 .heroCopy::before { content: ''; position: absolute; left: 388px; top: 35px; width: 170px; height: 85px; background: url('../../shared/assets/figma/a91d9.svg') center / contain no-repeat; opacity: .55; }
-.features { display: grid; grid-template-columns: minmax(0, 455fr) minmax(0, 823fr); gap: 40px; padding: 53px 35px 2px 87px; min-height: 442px; background: linear-gradient(90deg, white, #faffff 55%, #ebfaff); overflow: clip; }
+.features { background: linear-gradient(90deg, white, #faffff 55%, #ebfaff); }
+.featuresInner { display: grid; grid-template-columns: minmax(0, 455fr) minmax(0, 823fr); gap: 40px; padding: 53px 35px 2px 87px; min-height: 442px; }
 .featureDecor { background: url('../../shared/assets/figma/344bd.svg') 10px 40px / 390px 120px no-repeat, url('../../shared/assets/figma/5c213.svg') 1220px 70px / 150px 55px no-repeat, url('../../shared/assets/figma/26d15.svg') 1100px 270px / 520px 190px no-repeat, url('../../shared/assets/figma/368cd.svg') -200px 282px / 560px 190px no-repeat, url('../../shared/assets/figma/231d3.svg') right 70px bottom / 284px 142px no-repeat; }
 .featureIntro { position: relative; padding-top: 5px; }
 .featureIntro > p:first-child { font: 400 26px/35px 'Kalam', cursive; margin: 0; }
@@ -40,8 +42,9 @@
 .featureArt > img { position: absolute; left: 0; top: 0; }
 .featureArt .rim { left: -10.4px; top: -6.5px; }
 .featureArt .featureGlyph { left: 27.3px; top: 20.8px; }
-.appPreview { display: grid; grid-template-columns: minmax(0, 399fr) minmax(0, 890fr); gap: 24px; height: 432px; padding: 29px 53px 19px 74px; background: linear-gradient(#e8f9fe, #f6fcff 60%, white); overflow: clip; }
-.appPreview .clouds { height: 282px; }
+.appPreview { background: linear-gradient(#e8f9fe, #f6fcff 60%, white); }
+.appPreviewInner { display: grid; grid-template-columns: minmax(0, 399fr) minmax(0, 890fr); gap: 24px; min-height: 432px; padding: 29px 53px 5px 74px; }
+.appPreview .clouds { height: max(63px, 19.5833vw); }
 .appDecor { background: url('../../shared/assets/figma/c7fe2.svg') 760px 250px / 430px 130px no-repeat, url('../../shared/assets/figma/b52b6.svg') 1165px 45px / 150px 55px no-repeat, url('../../shared/assets/figma/28972.svg') -210px 300px / 560px 180px no-repeat, url('../../shared/assets/figma/d42fe.svg') 550px 112px / 850px 250px no-repeat; }
 .appCopy { padding-top: 14px; min-width: 0; }
 .appCopy h2 { width: 460px; margin: 0 0 14px; color: #008f9d; font: 700 45px/57px 'Kalam', cursive; background: url('../../shared/assets/figma/f8b2b.svg') 40px bottom / 280px 18px no-repeat; padding-bottom: 9px; }
@@ -53,8 +56,9 @@
 .appCopy li::before { content: '✓'; position: absolute; left: 5px; color: white; }
 .appCopy > a { margin-left: 13px; min-width: 215px; min-height: 50px; }
 .devices { width: 100%; max-width: 890px; height: auto; align-self: start; object-fit: contain; }
-.inspiration { padding: 31px 29px 30px 55px; min-height: 390px; display: grid; grid-template-columns: minmax(0, 1069fr) minmax(0, 240fr); grid-template-rows: 99px auto; column-gap: 47px; background: white; overflow: clip; }
-.inspiration .clouds { height: 240px; opacity: .45; }
+.inspiration { background: white; }
+.inspirationInner { padding: 31px 29px 30px 55px; min-height: 390px; display: grid; grid-template-columns: minmax(0, 1069fr) minmax(0, 240fr); grid-template-rows: 99px auto; column-gap: 47px; }
+.inspiration .clouds { height: max(54px, 16.6667vw); opacity: .45; }
 .inspirationDecor { background: url('../../shared/assets/figma/0f484.svg') 20px 22px / 360px 115px no-repeat, url('../../shared/assets/figma/c93f4.svg') 1050px 205px / 520px 180px no-repeat, url('../../shared/assets/figma/bf193.svg') -160px 245px / 760px 190px no-repeat, url('../../shared/assets/figma/76022.svg') 1265px 42px / 72px 52px no-repeat, url('../../shared/assets/figma/8b1b8.svg') 1328px 25px / 48px 56px no-repeat, url('../../shared/assets/figma/88973.svg') 1260px 300px / 110px 70px no-repeat; }
 .inspiration header { grid-column: 1; position: relative; }
 .inspiration header h2 { color: #0088c4; font: 700 37px/46px 'Kalam',cursive; margin: 0 0 0 10px; }
@@ -74,11 +78,12 @@
 .inspiration aside { grid-column: 2; grid-row: 1 / span 2; padding-top: 48px; background: url('../../shared/assets/figma/c446a.svg') center 81px / 300px 160px no-repeat; }
 .inspiration aside h3 { font: 700 24px/34px 'Kalam',cursive; color: #008f9d; margin: 0; }
 .inspiration blockquote { font: 400 23px/35px 'Kalam',cursive; margin: 25px 0 0 2px; }
-.footer { min-height: 256px; text-align: center; padding: 16px 300px 42px; background: url('../../shared/assets/figma/916ba.png') center -200px / 1440px auto no-repeat, linear-gradient(#e3f7ff,#f5fcff 60%,white); overflow: clip; }
-.footer::before { content: ''; position: absolute; left: 920px; top: 20px; width: 160px; height: 80px; background: url('../../shared/assets/figma/aea7a.svg') center / contain no-repeat; opacity: .38; }
+.footer { text-align: center; background: url('../../shared/assets/figma/916ba.png') center -13.8889vw / 100% auto no-repeat, linear-gradient(#e3f7ff,#f5fcff 60%,white); }
+.footerInner { min-height: 256px; padding: 16px 300px 42px; }
+.footerInner::before { content: ''; position: absolute; left: 920px; top: 20px; width: 160px; height: 80px; background: url('../../shared/assets/figma/aea7a.svg') center / contain no-repeat; opacity: .38; }
 .footer h2 { font: 700 49px/63px 'Kalam',cursive; color: #0088c4; margin: 0 0 -3px; transform: translateX(76px); }
 .footer p { font: 400 19px/27px 'Kalam',cursive; margin: 0 0 30px; transform: translateX(62px); }
-.footer > a { min-width: 214px; min-height: 51px; }
+.footerInner > a { min-width: 214px; min-height: 51px; }
 .footerCollage { position: absolute; width: 300px; height: 190px; left: 76.1806%; top: 50px; }
 .footerCollage img { position: absolute; width: 112px; height: 118px; object-fit: cover; border: 8px solid white; top: 60px; left: 10px; transform: rotate(-14deg); }
 .footerCollage img + img { left: 60px; top: 65px; transform: rotate(-5deg); }
@@ -86,6 +91,9 @@
 .signpost > span { position: absolute; left: 25px; font: 700 17px/24px 'Kalam',cursive; color: #815126; }
 .signpost > span:nth-child(1) { top: 15px; } .signpost > span:nth-child(2) { top: 58px; } .signpost > span:nth-child(3) { top: 101px; }
 .features, .appPreview { scroll-margin-top: 24px; }
+@media (min-width: 1321px) {
+  .devices { height: 398px; }
+}
 @media (max-width: 1320px) {
   .hero h1 { width: 100%; font-size: clamp(40px,4.93vw,71px); line-height: 1.24; }
   .hero h1 span:first-child { font-size: 1.07em; line-height: 1.13; }
@@ -95,41 +103,42 @@
   .heroDescription, .actions { margin-left: 0; max-width: 100%; }
   .heroMascot { width: 130px; height: 110px; left: 36%; top: 52px; }
   .heroCopy::before { left: 27%; }
-  .features { padding: 40px 32px; grid-template-columns: minmax(0, 30%) minmax(0,1fr); gap: 32px; }
+  .featuresInner { padding: 40px 32px; grid-template-columns: minmax(0, 30%) minmax(0,1fr); gap: 32px; }
   .featureGrid { gap: 20px 24px; grid-auto-rows: auto; grid-template-columns: repeat(3,minmax(0,1fr)); }
   .featureIntro > img { position: static; display: block; margin-left: auto; }
   .featureIntro h2 { width: 100%; font-size: 34px; }
   .desktopBreak { display: none; }
-  .appPreview { height: auto; min-height: 432px; padding: 29px 32px 25px; grid-template-columns: minmax(0,36%) minmax(0,1fr); }
+  .appPreviewInner { min-height: 432px; padding: 29px 32px 25px; grid-template-columns: minmax(0,36%) minmax(0,1fr); }
   .appCopy h2 { width: 100%; font-size: 40px; }
   .appCopy h2 span + span { font-size: 32px; }
   .appCopy p { margin-left: 0; }
-  .inspiration { padding-inline: 32px; grid-template-columns: minmax(0,1fr) 220px; gap: 24px; }
+  .inspirationInner { padding-inline: 32px; grid-template-columns: minmax(0,1fr) 220px; gap: 24px; }
   .stories { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
   .inspiration header img { left: 70%; width: 70px; }
   .inspiration header p { display: none; }
-  .footer { padding-inline: 180px; }
+  .footerInner { padding-inline: 180px; }
   .footer h2, .footer p { transform: none; }
 }
 @media (max-width: 1000px) {
-  .hero { grid-template-columns: minmax(0,1fr); padding: 32px; }
+  .heroInner { grid-template-columns: minmax(0,1fr); padding: 32px; }
   .heroCopy { margin-top: 0; }
   .hero h1 { max-width: 650px; font-size: 56px; }
   .heroDescription { width: 536px; }
   .heroMascot { right: 32px; left: auto; }
   .heroCollage { width: min(100%,650px); justify-self: center; margin-block: 32px; }
-  .hero > .clouds { top: auto; bottom: 0; height: 260px; }
-  .features { grid-template-columns: 1fr; }
+  .hero > .clouds { top: auto; bottom: 0; }
+  .featuresInner { grid-template-columns: 1fr; }
   .featureIntro > img { position: absolute; right: 24px; left: auto; top: 0; }
   .featureIntro h2 { width: 330px; }
-  .appPreview { grid-template-columns: 1fr; gap: 32px; }
+  .appPreviewInner { grid-template-columns: 1fr; gap: 32px; }
   .appCopy h2 { width: 100%; }
   .devices { max-width: 700px; margin-inline: auto; }
-  .footer { padding: 32px 32px 220px; background-position: center bottom -80px; }
+  .footer { background-position: center bottom; }
+  .footerInner { padding: 32px 32px 220px; }
   .footerCollage { left: auto; right: 24px; top: auto; bottom: 0; }
 }
 @media (max-width: 768px) {
-  .hero, .features, .appPreview, .inspiration { padding-inline: 24px; }
+  .heroInner, .featuresInner, .appPreviewInner, .inspirationInner { padding-inline: 24px; }
   .hero h1 { font-size: clamp(34px,7.8vw,56px); width: 100%; }
   .hero h1 span:first-child { margin-left: 0; }
   .eyebrow { font-size: 22px; line-height: 32px; max-width: 78%; background-size: 100% 10px; }
@@ -139,7 +148,7 @@
   .actions { gap: 12px; }
   .actions > * { width: 100%; }
   .heroCollage { width: 93%; margin-bottom: 10px; }
-  .features { padding-block: 32px; }
+  .featuresInner { padding-block: 32px; }
   .featureIntro > img { width: 90px; height: 100px; right: -4px; top: 7px; }
   .featureIntro > p:first-child { font-size: 22px; }
   .featureIntro h2 { max-width: calc(100% - 70px); font-size: 32px; margin-left: 0; margin-bottom: 20px; background-size: 100% 14px; }
@@ -147,7 +156,7 @@
   .featureGrid h3 { font-size: 15px; }
   .featureGrid p { font-size: 13px; }
   .featureDecor { background: none; }
-  .appPreview { display: flex; flex-direction: column; gap: 0; }
+  .appPreviewInner { display: flex; flex-direction: column; gap: 0; }
   .appCopy { display: contents; }
   .appCopy h2 { font-size: 36px; line-height: 46px; }
   .appCopy h2 span + span { font-size: 29px; line-height: 39px; }
@@ -155,7 +164,7 @@
   .appCopy li { padding-left: 32px; }
   .devices { order: 1; margin: 0 auto 24px; }
   .appCopy > a { order: 2; width: 100%; margin-left: 0; }
-  .inspiration { display: block; padding-block: 32px; }
+  .inspirationInner { display: block; padding-block: 32px; }
   .inspiration header { min-height: 110px; }
   .inspiration header h2 { margin-left: 0; font-size: 30px; line-height: 40px; }
   .inspiration header h2 span + span { margin-left: 25px; font-size: 25px; line-height: 35px; }
@@ -169,15 +178,15 @@
   .inspiration blockquote { margin-top: 12px; }
   .footer h2 { font-size: 38px; line-height: 50px; }
   .footer p { font-size: 18px; }
-  .footer > a { width: 100%; }
+  .footerInner > a { width: 100%; }
   .footerCollage { left: 16px; right: auto; width: 280px; }
 }
 @media (max-width: 480px) {
-  .hero, .features, .appPreview, .inspiration { padding-inline: 16px; }
-  .footer { padding-inline: 16px; }
+  .heroInner, .featuresInner, .appPreviewInner, .inspirationInner { padding-inline: 16px; }
+  .footerInner { padding-inline: 16px; }
 }
 @media (max-width: 360px) {
-  .hero, .features, .appPreview, .inspiration { padding-inline: 16px; }
+  .heroInner, .featuresInner, .appPreviewInner, .inspirationInner { padding-inline: 16px; }
   .hero h1 { font-size: 32px; }
   .eyebrow { font-size: 19px; }
   .featureGrid { gap: 24px 16px; }

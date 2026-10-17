@@ -1,7 +1,7 @@
 import { chromium, defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/e2e',
-  snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
+  snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{testFilePath}/{arg}{ext}',
   fullyParallel: true,
   workers: 2,
   use: {

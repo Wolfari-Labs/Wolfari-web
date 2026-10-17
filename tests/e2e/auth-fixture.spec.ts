@@ -37,6 +37,40 @@ for (const width of [1440, 402])
     await expect(page).toHaveURL('/');
     await expect(page.locator('[data-node-id="298:1642"]')).toBeVisible();
     await expect(page.getByText(/Phiên demo · Chỉ dữ liệu fixture/)).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }).last(),
+    ).toBeVisible();
+    for (const layout of [
+      'home-hero',
+      'home-features',
+      'home-about',
+      'home-inspiration',
+      'home-footer',
+    ]) {
+      const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(Math.abs(bounds!.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(bounds!.width - width)).toBeLessThanOrEqual(1);
+    }
+    await expect(page.locator('[data-cloud-layer]')).toHaveCount(5);
+    const userTopCloud = await page
+      .locator('[data-layout="home-hero"] [data-cloud-layer="top"]')
+      .boundingBox();
+    expect(userTopCloud).not.toBeNull();
+    expect(Math.abs(userTopCloud!.height - (390 * width) / 1440)).toBeLessThanOrEqual(1);
+    if (width === 1440) {
+      for (const [layout, height] of [
+        ['home-hero', 548],
+        ['home-features', 442],
+        ['home-about', 432],
+        ['home-inspiration', 390],
+        ['home-footer', 256],
+      ] as const) {
+        const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
+        expect(bounds).not.toBeNull();
+        expect(Math.abs(bounds!.height - height)).toBeLessThanOrEqual(4);
+      }
+    }
     if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chính' }).click();
     await page
       .getByRole('navigation', { name: 'Điều hướng chính' })
@@ -59,6 +93,94 @@ for (const width of [1440, 402])
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       width,
     );
+  });
+
+for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 402, 320])
+  test(`Home cloud layers cover the viewport at ${width}px`, async ({ page }, info) => {
+    await page.setViewportSize({ width, height: width <= 402 ? 874 : 900 });
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+
+    for (const layout of [
+      'home-hero',
+      'home-features',
+      'home-about',
+      'home-inspiration',
+      'home-footer',
+    ]) {
+      const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(Math.abs(bounds!.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(bounds!.width - width)).toBeLessThanOrEqual(1);
+    }
+
+    const cloudLayers = page.locator('[data-cloud-layer]');
+    expect(await cloudLayers.count()).toBe(5);
+    for (let index = 0; index < (await cloudLayers.count()); index += 1) {
+      const layer = cloudLayers.nth(index);
+      const bounds = await layer.boundingBox();
+      const image = await layer.locator('img').evaluate((element) => {
+        const target = element as HTMLImageElement;
+        return {
+          naturalWidth: target.naturalWidth,
+          naturalHeight: target.naturalHeight,
+          objectFit: getComputedStyle(target).objectFit,
+        };
+      });
+      expect(bounds).not.toBeNull();
+      expect(Math.abs(bounds!.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(bounds!.width - width)).toBeLessThanOrEqual(1);
+      expect(image.objectFit).toBe('cover');
+      expect(image.naturalWidth / image.naturalHeight).toBe(3);
+      const scale = Math.max(
+        bounds!.width / image.naturalWidth,
+        bounds!.height / image.naturalHeight,
+      );
+      const paintedWidth = image.naturalWidth * scale;
+      const paintedHeight = image.naturalHeight * scale;
+      expect(paintedWidth + 0.5).toBeGreaterThanOrEqual(bounds!.width);
+      expect(paintedHeight + 0.5).toBeGreaterThanOrEqual(bounds!.height);
+      expect(paintedWidth / paintedHeight).toBeCloseTo(3, 10);
+    }
+
+    for (const [selector, referenceHeight] of [
+      ['[data-layout="home-hero"] [data-cloud-layer="top"]', 390],
+      ['[data-layout="home-hero"] [data-cloud-layer="lower"]', 490],
+      ['[data-layout="home-features"] [data-cloud-layer="lower"]', 292],
+      ['[data-layout="home-about"] [data-cloud-layer="lower"]', 282],
+      ['[data-layout="home-inspiration"] [data-cloud-layer="lower"]', 240],
+    ] as const) {
+      const bounds = await page.locator(selector).boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(Math.abs(bounds!.height - (referenceHeight * width) / 1440)).toBeLessThanOrEqual(1);
+    }
+
+    const footerBackground = await page.locator('[data-layout="home-footer"]').evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        size: style.backgroundSize.split(',')[0]?.trim() ?? '',
+        positionY: Number.parseFloat(style.backgroundPositionY.split(',')[0] ?? ''),
+      };
+    });
+    expect(footerBackground.size).toBe('100% auto');
+    if (width > 1000)
+      expect(Math.abs(footerBackground.positionY + (200 * width) / 1440)).toBeLessThanOrEqual(1);
+
+    if (width >= 1440) {
+      const frame = await page.locator('[data-layout="home-hero-frame"]').boundingBox();
+      const collage = await page.locator('[data-layout="home-collage"]').boundingBox();
+      expect(frame).not.toBeNull();
+      expect(collage).not.toBeNull();
+      expect(Math.abs(frame!.x - (width - 1440) / 2)).toBeLessThanOrEqual(1);
+      expect(Math.abs(frame!.width - 1440)).toBeLessThanOrEqual(1);
+      expect(Math.abs(collage!.x - ((width - 1440) / 2 + 718))).toBeLessThanOrEqual(4);
+      expect(Math.abs(collage!.width - 650)).toBeLessThanOrEqual(4);
+    }
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      width,
+    );
+    await page.screenshot({ path: info.outputPath('home-clouds.png'), fullPage: true });
   });
 
 for (const size of [

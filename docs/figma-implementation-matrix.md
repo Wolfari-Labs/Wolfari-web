@@ -9,6 +9,19 @@
 
 Lượt [chỉnh chi tiết 15/10/2026](ui-refinement-2026-10-15.md) giữ bố cục Home theo xác nhận người dùng, căn lại header/collage/CTA/footer và màu vai trò Trip List. Header Guest mở các phần trên Home bằng `/#home-features` và `/#home-about`; route Home xử lý hash sau khi lazy load. Khu vực đề xuất giữ nguyên frame nguồn tại section `767:5376`; Home Guest/User `768:5376`/`768:5746`, Web 402px `780:6444`.
 
+Lượt full-width 17/10/2026 giữ foreground Home trong canvas tối đa 1440px và căn giữa, còn gradient, mây và footer landscape phủ toàn viewport. Asset mây local `4bccc.png` 840×280 giữ tỉ lệ 3:1; top/hero/features/app/inspiration dùng layer height, crop, opacity và anchor riêng. Thay đổi crop mây là ngoại lệ đã chốt; hình học foreground 1440px vẫn đối chiếu source. Mobile tiếp tục header Web 54px thay vì 72px của proposal `780:6444`.
+
+| Lớp trang trí Home | Mốc tại 1440px | Neo / opacity | Quy tắc responsive |
+| --- | ---: | --- | --- |
+| Hero top cloud | 390px | top 0 / 1 | Chiều cao và crop scale theo `viewport / 1440` |
+| Hero lower cloud | 490px | top 60px / .8 | Chiều cao và offset scale theo `viewport / 1440`; tại ≤1000px neo bottom 0 theo luồng một cột |
+| Features lower cloud | 292px | bottom 0 / .8 | Chiều cao và crop scale theo `viewport / 1440` |
+| App Preview lower cloud | 282px | bottom 0 / .8 | Chiều cao và crop scale theo `viewport / 1440` |
+| Inspiration lower cloud | 240px | bottom 0 / .45 | Chiều cao và crop scale theo `viewport / 1440` |
+| Footer landscape `916ba.png` | 1440×480, Y = -200px | center top / 1 | `100% auto`, Y scale theo `viewport / 1440`; tại ≤1000px neo bottom để giữ nội dung mobile |
+
+Khung trang trí bị crop bởi section và không tham gia document flow. App Preview dùng `min-height`; nội dung dài được phép làm section cao lên.
+
 ## Shared shell mapping
 
 | Figma node/frame                          | Web mapping                                      | Responsive contract                                                                | Evidence                                            |
