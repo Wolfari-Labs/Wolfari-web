@@ -61,11 +61,14 @@ export function App({
       ? 'members'
       : policyPath.endsWith('/fund')
         ? 'fund'
+      : policyPath.endsWith('/price-watch')
+        ? 'fare'
       : section;
   const routedTripSection =
     policyPath.endsWith('/plan') ||
     policyPath.endsWith('/members') ||
-    policyPath.endsWith('/fund');
+    policyPath.endsWith('/fund') ||
+    policyPath.endsWith('/price-watch');
   const targetSection =
     !!tripId &&
     !routedTripSection &&
@@ -178,6 +181,8 @@ export function App({
                 ? paths.members(tripId)
                 : next === 'fund'
                   ? paths.fund(tripId)
+                : next === 'fare'
+                  ? paths.priceWatch(tripId)
                 : paths.trip(tripId),
           );
         }

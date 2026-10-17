@@ -138,3 +138,7 @@ Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/
 ### Fund preview
 
 Fund `/trips/:tripId/fund` dùng `FundRepository.getFund` với fixture projection và Gateway `SERVICE_UNAVAILABLE`. Fixture kiểm tra `OPEN`, `CLOSING`, `CLOSED`, loading, empty, error, forbidden, not-found, conflict và unavailable; mọi số tiền là chuỗi số nguyên VND. Form chỉ kiểm tra bản nháp và luôn giữ thông báo “Chưa gửi, chưa trừ số dư”. `currentBalance`, `reservedRefund` và `availableBalance` hiển thị tách biệt; ngoài quỹ không làm thay đổi ledger. Browser contract chạy ở 1440, 1366, 1024, 820, 768, 402 và 320px, không overflow ngang và không gọi `/api/`.
+
+### Price Watch preview
+
+Price Watch `/trips/:tripId/price-watch` dùng `PriceWatchRepository.getPriceWatch` với fixture `TEST` và Gateway `SERVICE_UNAVAILABLE`. Fixture có watch của bản thân/người khác, `ACTIVE`, `PAUSED`, `STALE`, provider lỗi, loading, empty, error, forbidden, not-found, conflict và unavailable. Giá/ngưỡng là chuỗi VND; provider lỗi giữ giá quan sát gần nhất và không render `0`. Form chỉ kiểm tra bản xem trước; edit/pause/resume/delete không báo đã lưu. Browser contract giữ ba vùng Desktop và một cột Mobile ở 1440, 1366, 1024, 820, 768, 402, 320px, không overflow ngang và không gọi `/api/`.

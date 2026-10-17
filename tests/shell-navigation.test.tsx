@@ -23,6 +23,7 @@ function mount() {
           { path: '/trips/:tripId/plan', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/members', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/fund', element: <ContentState state="placeholder" /> },
+          { path: '/trips/:tripId/price-watch', element: <ContentState state="placeholder" /> },
           { path: '/trips', element: <ContentState state="placeholder" /> },
           { path: '/', element: <ContentState state="placeholder" /> },
           { path: '/admin', element: <ContentState state="placeholder" /> },
@@ -101,6 +102,11 @@ describe('Shell interactions', () => {
       '[aria-pressed="true"]',
     )).toHaveTextContent('Quỹ nhóm');
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/fund`);
+    await userEvent.click(within(sidebar).getByRole('button', { name: 'Theo dõi giá vé' }));
+    expect((screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' }) as HTMLElement).querySelector(
+      '[aria-pressed="true"]',
+    )).toHaveTextContent('Theo dõi giá vé');
+    expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/price-watch`);
     await userEvent.click(screen.getByRole('button', { name: 'Thu gọn thanh điều hướng' }));
     expect(screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toHaveAttribute(
       'aria-expanded',
