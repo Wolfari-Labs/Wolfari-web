@@ -26,7 +26,7 @@
 .watchBottom small { color:var(--color-muted); font-size:13px; line-height:20px; }
 .watchBottom strong { color:var(--color-ink); font-size:15px; line-height:22px; font-weight:500; white-space:nowrap; }
 .watchBottom strong[data-price-state='reached'] { color:var(--color-green); }
-.watchBottom strong[data-price-state='above'] { color:var(--color-red); }
+.watchBottom strong[data-price-state='above'] { color:var(--color-status-danger); }
 .watchBottom em { align-self:start; font-style:normal; font-size:13px; line-height:20px; border:1px solid var(--color-line); border-radius:17px; padding:5px 9px; white-space:nowrap; background:var(--color-pale); color:var(--color-ink); }
 .watchBottom [data-status='ACTIVE'] { color:var(--color-ink); background:var(--color-pale); }
 .watchBottom [data-status='PAUSED'] { color:#795900; background:#fff5cf; }

@@ -13,6 +13,7 @@ import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
 import { ContentState } from '../../shared/components/ContentState';
+import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { uiAssets } from '../../shared/assets/asset-map';
 import roleIcon from '../../shared/assets/figma/2fa29.svg';
 import timeIcon from '../../shared/assets/figma/40d4c.svg';
@@ -82,18 +83,33 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
             />
           </div>
           <div className={styles.unavailableFilters}>
-            <button disabled title="Lọc vai trò chưa có interaction contract">
+            <button
+              disabled
+              title="Lọc vai trò chưa có interaction contract"
+              aria-describedby="trip-filter-capability-note"
+            >
               <img src={roleIcon} alt="" />
               Vai trò: Tất cả<span aria-hidden="true">⌄</span>
             </button>
-            <button disabled title="Lọc thời gian chưa có interaction contract">
+            <button
+              disabled
+              title="Lọc thời gian chưa có interaction contract"
+              aria-describedby="trip-filter-capability-note"
+            >
               <img src={timeIcon} alt="" />
               Thời gian<span aria-hidden="true">⌄</span>
             </button>
-            <button disabled title="Bộ lọc nâng cao chưa có interaction contract">
+            <button
+              disabled
+              title="Bộ lọc nâng cao chưa có interaction contract"
+              aria-describedby="trip-filter-capability-note"
+            >
               <img src={filterIcon} alt="" />
               Bộ lọc
             </button>
+            <span id="trip-filter-capability-note" className={styles.srOnly}>
+              Bộ lọc vai trò, thời gian và nâng cao sẽ chỉ xuất hiện khi Gateway cung cấp dữ liệu tương ứng.
+            </span>
           </div>
         </div>
         <div className={styles.toolbar}>
@@ -179,6 +195,9 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
         >
           + Tạo một hành trình mới
         </button>
+        <CapabilityNote>
+          Tạo chuyến đi sẽ được mở khi Trip Gateway xác nhận endpoint và trạng thái idempotency.
+        </CapabilityNote>
         {previewEnabled && (
           <details className={`${styles.preview} preview`} data-preview="trip-list">
             <summary>Trip List preview · Dữ liệu minh họa</summary>

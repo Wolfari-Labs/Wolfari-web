@@ -3,10 +3,12 @@
 .breadcrumb h1 { font:inherit; margin:0; color:var(--color-muted); }
 .breadcrumb a { color:var(--color-active); }
 .stateBar,.metrics > div,.ledger,.formPanel { background:#fff; border:1px solid var(--color-line); }
-.stateBar { min-height:72px; border-radius:14px; margin-top:16px; padding:8px 16px; display:flex; align-items:center; gap:12px; }
+.stateBar { min-height:72px; border-radius:14px; margin-top:16px; padding:8px 16px; display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
 .stateBar > div { min-width:0; flex:1; }
+.environment { display:block; color:var(--color-status-warning); font-size:11px; font-weight:600; line-height:16px; letter-spacing:.04em; text-transform:uppercase; }
 .stateBar h2 { margin:0; font-size:24px; line-height:32px; }
 .stateBar p { margin:2px 0 0; font-size:12px; line-height:20px; color:var(--color-muted); }
+.stateBar > p { flex-basis: 100%; }
 .stateBar button { min-height:42px; border-radius:8px; white-space:nowrap; }
 .holder { display:inline-flex; align-items:center; justify-content:center; min-height:34px; padding-inline:18px; border-radius:17px; background:var(--color-green); color:#fff; font-size:13px; white-space:nowrap; }
 .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:16px; }

@@ -14,6 +14,13 @@
   --color-field-line: #bae4f4;
   --color-note: #ecf9fd;
   --color-note-text: #5980ae;
+  --color-text-muted-on-light: #4f7093;
+  --color-action-primary: #007caa;
+  --color-border-control: #6daac0;
+  --color-status-warning: #8a6500;
+  --color-status-warning-surface: #fff7df;
+  --color-status-danger: #a34b4b;
+  --color-status-danger-surface: #fff0f0;
   --color-gradient-start: #008ac4;
   --color-gradient-end: #008eaa;
   --action-gradient: linear-gradient(

@@ -19,6 +19,27 @@
   display: block;
   margin: 16px;
 }
+.recovery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: 10px var(--space-20);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-button);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-size: var(--font-size-label);
+  font-weight: var(--weight-medium);
+  line-height: var(--line-label);
+}
 .skeleton {
   width: 180px;
   margin: 0 auto 24px;

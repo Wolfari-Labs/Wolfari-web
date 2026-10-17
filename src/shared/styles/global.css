@@ -35,7 +35,8 @@ a {
   outline-offset: var(--focus-offset);
 }
 #main-content:focus {
-  outline: none;
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
 }
 .screen-title {
   color: var(--color-ink);
@@ -76,4 +77,12 @@ a {
   min-height: var(--target-min);
   display: inline-flex;
   align-items: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
 }

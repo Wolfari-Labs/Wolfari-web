@@ -41,6 +41,8 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         <ContentState
           state="error"
           error={{ code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false }}
+          showHome
+          onReload={() => window.location.reload()}
         />
       ),
       children: [
@@ -104,7 +106,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
           handle: { title: 'Đăng ký', contentTitle: true, fullBleed: true },
         },
         { path: '/admin', element: placeholder, handle: { layout: 'admin', requiresViewer: true } },
-        { path: '*', element: <ContentState state="not-found" />, handle: { notFound: true } },
+        {
+          path: '*',
+          element: <ContentState state="not-found" showHome />,
+          handle: { notFound: true, title: 'Không tìm thấy trang' },
+        },
       ],
     },
   ]);

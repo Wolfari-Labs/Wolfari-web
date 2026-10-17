@@ -89,12 +89,18 @@ export function App({
           tools: 'Tiện ích',
         }[effectiveSection]
       : (handle?.title ?? 'Không gian làm việc');
-  const previousNavigation = useRef([pathname, section, adminSection]);
   useEffect(() => {
+    document.title = title ? `${title} · Wolfari` : 'Wolfari';
+  }, [title]);
+  const previousNavigation = useRef<[string, ShellSection, AdminSection] | null>(null);
+  useEffect(() => {
+    const firstRenderNeedsFocus = previousNavigation.current === null && handle?.notFound === true;
     if (
+      firstRenderNeedsFocus ||
+      (previousNavigation.current !== null &&
       previousNavigation.current.some(
         (value, index) => value !== [pathname, section, adminSection][index],
-      )
+      ))
     ) {
       const main = document.getElementById('main-content');
       if (main) {
@@ -105,7 +111,7 @@ export function App({
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
     previousNavigation.current = [pathname, section, adminSection];
-  }, [pathname, section, adminSection]);
+  }, [pathname, section, adminSection, handle?.notFound]);
   const denied =
     result?.status === 'ready' &&
     (adminLayout

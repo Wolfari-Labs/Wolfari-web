@@ -2,6 +2,7 @@ import type { DomainError } from '../types/result';
 import styles from './ContentState.module.css';
 import { Button } from './Button';
 import { Skeleton } from './Skeleton';
+import { Link } from 'react-router';
 
 const messages = {
   PERMISSION_DENIED: ['Bạn không có quyền truy cập', 'Chọn nội dung bạn có quyền xem để tiếp tục.'],
@@ -14,12 +15,16 @@ export function ContentState({
   state,
   error,
   onRetry,
+  showHome = false,
+  onReload,
   headingLevel = 1,
 }: {
   state: 'loading' | 'empty' | 'error' | 'placeholder' | 'not-found' | 'unavailable';
   headingLevel?: 1 | 2;
   error?: DomainError;
   onRetry?: () => void;
+  showHome?: boolean;
+  onReload?: () => void;
 }) {
   const [title, description] =
     state === 'unavailable'
@@ -50,6 +55,20 @@ export function ContentState({
         <Button variant="outline" onClick={onRetry}>
           Tải lại
         </Button>
+      )}
+      {(showHome || onReload) && (
+        <div className={styles.recovery}>
+          {showHome && (
+            <Link className={styles.homeLink} to="/">
+              Về trang chủ
+            </Link>
+          )}
+          {onReload && (
+            <Button variant="outline" onClick={onReload}>
+              Tải lại trang
+            </Button>
+          )}
+        </div>
       )}
     </section>
   );
