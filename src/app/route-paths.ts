@@ -10,4 +10,5 @@ export const paths = {
   plan: (id: string) => `/trips/${encodeURIComponent(id)}/plan`,
   members: (id: string) => `/trips/${encodeURIComponent(id)}/members`,
   fund: (id: string) => `/trips/${encodeURIComponent(id)}/fund`,
+  priceWatch: (id: string) => `/trips/${encodeURIComponent(id)}/price-watch`,
 };

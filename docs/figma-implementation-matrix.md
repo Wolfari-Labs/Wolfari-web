@@ -156,3 +156,7 @@ Plan follow-up: activity disclosure luôn hiện đủ start/end time khi compac
 ## Fund preview mapping
 
 Figma `768:7778` (Desktop) và `781:6554` (Mobile) map tới `/trips/:tripId/fund`. `TripHero` landscape, finance state, four summary cards, ledger tabs and the right-side draft form reuse shared Web tokens and controls. Desktop giữ form bên phải; Mobile chuyển sang document flow một cột. Fixture chỉ là read-only preview; Gateway chưa có Finance REST contract.
+
+## Price Watch preview mapping
+
+Figma `768:7992` (Desktop) và `781:6626` (Mobile) map tới `/trips/:tripId/price-watch`. Desktop giữ danh sách theo dõi bên trái, chi tiết/lịch sử ở giữa và form tạo mới bên phải; Mobile xếp thành document flow một cột. Biểu đồ có đường ngưỡng và bảng lịch sử accessible. Fixture hiển thị `TEST`, provider lỗi giữ giá cũ; Gateway chưa có Price Watch REST contract.

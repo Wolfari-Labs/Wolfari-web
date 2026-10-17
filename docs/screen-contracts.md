@@ -204,6 +204,22 @@ Travel/DSS, Export/Share, Price Watch và các feature body Admin phải có con
 
 Fund preview dùng fixture read-only theo repository interface chung với Gateway. Nhãn `TEST/sandbox` phải hiển thị cạnh dữ liệu tiền; không gọi đây là số dư tiền thật. Khi Gateway chưa có route/handler/schema/permission/error contract, adapter trả `SERVICE_UNAVAILABLE` với trạng thái `unavailable` và không gọi `fetch`.
 
+## Contract: Price Watch preview
+
+| Mục         | Quy định                                                                                                                   |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Route       | `/trips/:tripId/price-watch`                                                                                               |
+| Actor       | Người tạo theo dõi, Member hoặc Owner của Trip; quyền xóa theo dõi của người khác phải được backend xác nhận              |
+| Scope       | MVP chỉ vé máy bay; mỗi theo dõi gắn với một Trip và một người tạo                                                       |
+| Form        | Điểm đi, điểm đến, một chiều/khứ hồi, ngày đi/về, hành khách, cabin và ngưỡng VND                                         |
+| Read        | Giá gần nhất, ngưỡng, provider, thời điểm cập nhật, trạng thái và lịch sử quan sát; biểu đồ có đường ngưỡng              |
+| States      | loading, ready, empty, error, forbidden, not-found, conflict, unavailable; watch `ACTIVE`/`PAUSED`/`STALE`/provider lỗi |
+| Provider    | Provider lỗi giữ giá cũ kèm trạng thái; không hiển thị giá `0`, không gọi là đặt vé hoặc cam kết giá thấp nhất           |
+| Commands    | Edit/pause/resume/delete chỉ là capability preview khi chưa có API; không báo success và không gửi request               |
+| Responsive  | Desktop Figma `23:657` giữ list trái, history giữa, form phải; mobile `781:6626` chuyển thành document flow một cột    |
+
+Price Watch dùng `PriceWatchRepository` với fixture `TEST` và Gateway `SERVICE_UNAVAILABLE`. Component không gọi `fetch`; khi API runtime có contract, chỉ thay adapter/query projection.
+
 ## Inventory contract profiles
 
 Inventory toàn bộ ngày 15/10/2026: [150 frame map](figma-screen-map-2026-10-15.md), [action/runtime evidence](runtime-evidence-2026-10-15.md), [snapshot JSON](figma-inventory-2026-10-15.json). Các profile dưới đây là **draft/blocked cho feature chưa code**, giữ nguyên shell đã triển khai. Tên view model/repository là đề xuất Web, không phải API/DTO đã có. `not-yet-routed` cần chốt URL trước code; existing route chỉ là shell placeholder. Data mode là fixture preview dự kiến, production unavailable đến khi verified adapter tồn tại.

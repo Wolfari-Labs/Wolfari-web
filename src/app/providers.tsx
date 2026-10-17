@@ -15,6 +15,8 @@ import type { MembershipRepository, InvitationRepository } from '../features/mem
 import { MembersRepositoryProvider } from '../features/members/repositories/members-context';
 import type { FundRepository } from '../features/fund/model/fund';
 import { FundRepositoryProvider } from '../features/fund/repositories/fund-context';
+import type { PriceWatchRepository } from '../features/price-watch/model/price-watch';
+import { PriceWatchRepositoryProvider } from '../features/price-watch/repositories/price-watch-context';
 
 export function Providers({
   repository,
@@ -24,6 +26,7 @@ export function Providers({
   planRepository,
   membersRepositories,
   fundRepository,
+  priceWatchRepository,
   children,
 }: {
   repository: ShellRepository;
@@ -33,6 +36,7 @@ export function Providers({
   planRepository?: PlanRepository;
   membersRepositories?: { membership: MembershipRepository; invitation: InvitationRepository };
   fundRepository?: FundRepository;
+  priceWatchRepository?: PriceWatchRepository;
   children: ReactNode;
 }) {
   const [client] = useState(createQueryClient);
@@ -46,10 +50,15 @@ export function Providers({
   ) : (
     membersContent
   );
-  const planContent = planRepository ? (
-    <PlanRepositoryProvider repository={planRepository}>{fundContent}</PlanRepositoryProvider>
+  const priceWatchContent = priceWatchRepository ? (
+    <PriceWatchRepositoryProvider repository={priceWatchRepository}>{fundContent}</PriceWatchRepositoryProvider>
   ) : (
     fundContent
+  );
+  const planContent = planRepository ? (
+    <PlanRepositoryProvider repository={planRepository}>{priceWatchContent}</PlanRepositoryProvider>
+  ) : (
+    priceWatchContent
   );
   const homeContent = homeRepository ? (
     <HomeRepositoryProvider repository={homeRepository}>{planContent}</HomeRepositoryProvider>
