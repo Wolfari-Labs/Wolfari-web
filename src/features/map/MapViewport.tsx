@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../shared/components/Button';
 import desktopMapArtwork from '../../shared/assets/figma/a75f2.svg';
 import desktopPlaceArtwork from '../../shared/assets/figma/a33fd.svg';
@@ -5,6 +6,7 @@ import mobileMapArtwork from '../../shared/assets/figma/316c4.svg';
 import destinationPhoto from '../../shared/assets/figma/16cac.png';
 import type { MapLocationPresentation } from './trip-map';
 import { activityScheduleLabel, validCoordinates } from './trip-map';
+import { loadGoogleMapsSdk } from './google-places';
 import styles from './TripMapPage.module.css';
 
 function locationPhoto(item: MapLocationPresentation | null, mobile = false) {
@@ -22,6 +24,7 @@ export function MapViewport({
   selectedLocationId,
   timezone,
   previewEnabled,
+  mapType = 'roadmap',
   onSelect,
   onOpenDetail,
 }: {
@@ -29,13 +32,52 @@ export function MapViewport({
   selectedLocationId: string | null;
   timezone: string;
   previewEnabled: boolean;
+  mapType?: 'roadmap' | 'satellite';
   onSelect: (locationId: string) => void;
   onOpenDetail: () => void;
 }) {
+  const mapCanvasRef = useRef<HTMLDivElement>(null);
+  const [googleMapReady, setGoogleMapReady] = useState(false);
   const markerItems = items.filter((item) => validCoordinates(item.location) !== null);
   const selected =
     items.find((item) => item.location.id === selectedLocationId) ?? items[0] ?? null;
   const primaryActivity = selected?.activities[0];
+  const googleConfigured = Boolean((import.meta.env.VITE_GOOGLE_MAPS_BROWSER_KEY as string | undefined)?.trim());
+
+  useEffect(() => {
+    let disposed = false;
+    if (!previewEnabled || markerItems.length === 0) return;
+    void loadGoogleMapsSdk().then((available) => { if (!disposed) setGoogleMapReady(available); });
+    return () => { disposed = true; };
+  }, [markerItems.length, previewEnabled]);
+
+  useEffect(() => {
+    if (!googleMapReady || !mapCanvasRef.current) return;
+    const googleMaps = (window as Window & { google?: any }).google?.maps;
+    if (!googleMaps?.Map) return;
+    const coordinates = markerItems.map((item) => validCoordinates(item.location)).filter(Boolean) as { latitude: number; longitude: number }[];
+    if (!coordinates.length) return;
+    const selectedCoordinate = selected ? validCoordinates(selected.location) : null;
+    const center = selectedCoordinate ?? coordinates[0]!;
+    const map = new googleMaps.Map(mapCanvasRef.current, {
+      center: { lat: center.latitude, lng: center.longitude }, zoom: 12, mapTypeId: mapType,
+      mapId: (import.meta.env.VITE_GOOGLE_MAPS_MAP_ID as string | undefined) || undefined,
+      streetViewControl: false, fullscreenControl: false, mapTypeControl: false,
+    });
+    const bounds = new googleMaps.LatLngBounds();
+    markerItems.forEach((item) => {
+      const coordinate = validCoordinates(item.location);
+      if (!coordinate) return;
+      bounds.extend({ lat: coordinate.latitude, lng: coordinate.longitude });
+      const marker = new googleMaps.Marker({
+        map, position: { lat: coordinate.latitude, lng: coordinate.longitude }, title: item.location.name,
+        label: { text: String(item.markerNumber), color: item.scheduled ? '#fff' : '#6c4a00', fontWeight: '700' },
+        icon: { path: googleMaps.SymbolPath.CIRCLE, scale: item.location.id === selected?.location.id ? 15 : 11, fillColor: item.scheduled ? '#0098c8' : '#f6b82e', fillOpacity: 1, strokeColor: item.scheduled ? '#007c9f' : '#da9b0a', strokeWeight: 2 },
+      });
+      marker.addListener('click', () => onSelect(item.location.id));
+    });
+    if (markerItems.length > 1) map.fitBounds(bounds, 48);
+  }, [googleMapReady, mapType, markerItems, onSelect, selected]);
 
   if (!previewEnabled) {
     return (
@@ -60,24 +102,26 @@ export function MapViewport({
 
   return (
     <section
-      className={styles.viewport}
+      className={`${styles.viewport} ${googleMapReady ? styles.googleMapActive : ''}`}
       aria-label="Bản đồ hành trình minh họa"
       aria-describedby="map-provider-note"
     >
-      <img
+      {googleMapReady && <div ref={mapCanvasRef} className={styles.googleMapCanvas} aria-label="Google Maps" />}
+      {!googleMapReady && <img
         className={styles.desktopMapArtwork}
         src={desktopMapArtwork}
         width="666"
         height="566"
         alt=""
-      />
-      <img
+      />}
+      {!googleMapReady && !googleConfigured && <span className={styles.providerUnavailableLabel}>Bản đồ nền chưa được cấu hình</span>}
+      {!googleMapReady && <img
         className={styles.mobileMapArtwork}
         src={mobileMapArtwork}
         width="354"
         height="428"
         alt=""
-      />
+      />}
 
       <div className={styles.mapLabels} aria-hidden="true">
         <span>Sơn Trà</span>

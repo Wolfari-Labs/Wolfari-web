@@ -1,13 +1,14 @@
 import type { ActivityViewModel, SelectedLocationViewModel } from '../plan/model/plan';
 import { activityTime, localDate } from '../plan/model/plan-presentation';
 
-export type LocationScheduleFilter = 'ALL' | 'SCHEDULED' | 'UNSCHEDULED';
+export type LocationScheduleFilter = 'ALL' | 'SELECTED' | 'SCHEDULED' | 'UNSCHEDULED';
 
 export interface MapLocationPresentation {
   readonly location: SelectedLocationViewModel;
   readonly activities: readonly ActivityViewModel[];
   readonly markerNumber: number;
   readonly scheduled: boolean;
+  readonly selected: boolean;
 }
 
 export function validCoordinates(
@@ -31,6 +32,7 @@ export function validCoordinates(
 export function mapLocationPresentations(
   locations: readonly SelectedLocationViewModel[],
   activities: readonly ActivityViewModel[],
+  selected = true,
 ): readonly MapLocationPresentation[] {
   return locations.map((location, index) => {
     const linkedActivities = activities
@@ -41,7 +43,38 @@ export function mapLocationPresentations(
       activities: linkedActivities,
       markerNumber: index + 1,
       scheduled: linkedActivities.length > 0,
+      selected,
     };
+  });
+}
+
+export type PlaceStatus = 'IN_SCHEDULE' | 'SELECTED_UNSCHEDULED' | 'UNSELECTED';
+
+export function placeStatus(item: Pick<MapLocationPresentation, 'selected' | 'scheduled'>): PlaceStatus {
+  if (!item.selected) return 'UNSELECTED';
+  return item.scheduled ? 'IN_SCHEDULE' : 'SELECTED_UNSCHEDULED';
+}
+
+export function normalizedPlaceText(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLocaleLowerCase('vi');
+}
+
+export function sortPlacePresentations(items: readonly MapLocationPresentation[]) {
+  const rank: Record<PlaceStatus, number> = {
+    IN_SCHEDULE: 0,
+    SELECTED_UNSCHEDULED: 1,
+    UNSELECTED: 2,
+  };
+  return [...items].sort((a, b) => {
+    const group = rank[placeStatus(a)] - rank[placeStatus(b)];
+    if (group) return group;
+    if (a.selected && b.selected) return a.markerNumber - b.markerNumber;
+    return a.location.name.localeCompare(b.location.name, 'vi');
   });
 }
 
@@ -99,7 +132,7 @@ export function selectMapLocations({
             .map((activity) => activity.selectedLocationId)
             .filter((id): id is string => id !== null),
         );
-  const normalizedQuery = query.trim().toLocaleLowerCase('vi');
+  const normalizedQuery = normalizedPlaceText(query.trim());
   return locations.filter((location) => {
     const scheduled = allScheduled.has(location.id);
     if (filter === 'SCHEDULED' && !scheduled) return false;
@@ -107,8 +140,7 @@ export function selectMapLocations({
     if (day !== null && !scheduledForDay.has(location.id)) return false;
     if (
       normalizedQuery &&
-      !`${location.name} ${location.address ?? ''}`
-        .toLocaleLowerCase('vi')
+      !normalizedPlaceText(`${location.name} ${location.address ?? ''}`)
         .includes(normalizedQuery)
     )
       return false;
