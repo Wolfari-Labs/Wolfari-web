@@ -1,10 +1,12 @@
 import type { TripRepository } from '../../features/trips/repositories/trip.repository';
 import { createGatewayTripRepository } from './trip.gateway-repository';
+import type { GatewayHttpClient } from '../http/http-client';
 
 export async function selectTripRepository(
   mode: string | undefined,
   previewAllowed: boolean,
   fixtureFactory?: () => TripRepository,
+  client?: GatewayHttpClient,
 ): Promise<TripRepository> {
   const selected = mode ?? (previewAllowed ? 'fixture' : 'gateway');
   if (selected !== 'fixture' && selected !== 'gateway') throw new Error('Invalid data mode');
@@ -13,5 +15,5 @@ export async function selectTripRepository(
     if (!fixtureFactory) throw new Error('Fixture factory is missing');
     return fixtureFactory();
   }
-  return createGatewayTripRepository();
+  return createGatewayTripRepository(undefined, undefined, client);
 }

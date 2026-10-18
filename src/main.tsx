@@ -25,6 +25,7 @@ import { selectPriceWatchRepository } from './infrastructure/repositories/select
 import type { MembershipRepository, InvitationRepository } from './features/members/model/members';
 import { selectMembersRepositories } from './infrastructure/repositories/select-members-repositories';
 import type { DemoAccess } from './features/auth/model/demo-access';
+import { createGatewayHttpClient } from './infrastructure/http/http-client';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -34,6 +35,7 @@ if (!element) throw new Error('Root element missing');
 const root = createRoot(element);
 async function start() {
   try {
+    const gatewayHttpClient = createGatewayHttpClient();
     let previewTripPath: string | null = null;
     let demoAccess: DemoAccess | undefined;
     let fixtureFactory: (() => ShellRepository) | undefined;
@@ -91,6 +93,7 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       tripFixtureFactory,
+      gatewayHttpClient,
     );
     const identityRepository = selectIdentityRepository(
       import.meta.env.VITE_DATA_MODE,
@@ -106,6 +109,7 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       planFixtureFactory,
+      gatewayHttpClient,
     );
     const fundRepository = selectFundRepository(
       import.meta.env.VITE_DATA_MODE,
