@@ -16,6 +16,9 @@ const HomeRoute = lazy(async () => ({ default: (await import('./HomeRoute')).Hom
 const TripOverviewPage = lazy(async () => ({
   default: (await import('../features/trips/TripOverviewPage')).TripOverviewPage,
 }));
+const TripMapPage = lazy(async () => ({
+  default: (await import('../features/map/TripMapPage')).TripMapPage,
+}));
 const PlanPage = lazy(async () => ({
   default: (await import('../features/plan/PlanPage')).PlanPage,
 }));
@@ -64,6 +67,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         {
           path: '/trips/:tripId/plan',
           element: feature(<PlanPage />),
+          handle: { contentTitle: true, fullBleed: true, requiresViewer: true },
+        },
+        {
+          path: '/trips/:tripId/map',
+          element: feature(<TripMapPage />),
           handle: { contentTitle: true, fullBleed: true, requiresViewer: true },
         },
         {

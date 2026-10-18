@@ -35,6 +35,14 @@ export interface SelectedLocationViewModel {
   readonly tripId: string;
   readonly name: string;
   readonly address: string | null;
+  readonly latitude: string | null;
+  readonly longitude: string | null;
+  readonly provider: string | null;
+  readonly providerPlaceId: string | null;
+  readonly source: 'MANUAL' | 'PROVIDER' | 'DSS';
+  readonly openingHours: unknown | null;
+  readonly fetchedAt: string | null;
+  readonly metadata: Readonly<Record<string, unknown>>;
   readonly planVersion: number;
 }
 export interface PlanViewModel {

@@ -57,6 +57,8 @@ export function App({
   const snapshot = result?.status === 'ready' ? result.data : null;
   const effectiveSection = policyPath.endsWith('/plan')
     ? 'plan'
+    : policyPath.endsWith('/map')
+      ? 'map'
     : policyPath.endsWith('/members')
       ? 'members'
       : policyPath.endsWith('/fund')
@@ -66,6 +68,7 @@ export function App({
       : section;
   const routedTripSection =
     policyPath.endsWith('/plan') ||
+    policyPath.endsWith('/map') ||
     policyPath.endsWith('/members') ||
     policyPath.endsWith('/fund') ||
     policyPath.endsWith('/price-watch');
@@ -183,6 +186,8 @@ export function App({
           navigate(
             next === 'plan'
               ? paths.plan(tripId)
+              : next === 'map'
+                ? paths.map(tripId)
               : next === 'members'
                 ? paths.members(tripId)
                 : next === 'fund'
