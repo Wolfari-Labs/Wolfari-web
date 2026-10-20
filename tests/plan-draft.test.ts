@@ -66,6 +66,8 @@ describe('plan draft persistence and reconciliation', () => {
       exportRevision: 1,
       activities: [],
       selectedLocations: [location],
+      dressCodes: [],
+      packingItems: [],
       permissions: { canRead: true, canEdit: true, canComplete: true },
     };
     const created = createPlanDraft(plan, [location, location], userId, timezone, 0);
@@ -93,6 +95,8 @@ describe('plan draft persistence and reconciliation', () => {
       exportRevision: 1,
       activities: [],
       selectedLocations: [location],
+      dressCodes: [],
+      packingItems: [],
       permissions: { canRead: true, canEdit: true, canComplete: true },
     };
     const stored = movePlanDraftActivity(

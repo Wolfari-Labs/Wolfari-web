@@ -17,6 +17,9 @@ function domainError(error: unknown): DomainError {
 
 function text(value: unknown): string | null { return typeof value === 'string' ? value : null; }
 function number(value: unknown, fallback = 0): number { return typeof value === 'number' && Number.isFinite(value) ? value : fallback; }
+function source(value: unknown): 'MANUAL' | 'PROVIDER' | 'DSS' {
+  return value === 'PROVIDER' || value === 'DSS' ? value : 'MANUAL';
+}
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' ? value as Record<string, unknown> : {};
 }
@@ -25,6 +28,8 @@ function mapPlan(raw: unknown): PlanViewModel {
   const data = record(raw);
   const activities = Array.isArray(data.activities) ? data.activities : [];
   const locations = Array.isArray(data.selected_locations) ? data.selected_locations : [];
+  const dressCodes = Array.isArray(data.dress_codes) ? data.dress_codes : [];
+  const packingItems = Array.isArray(data.packing_items) ? data.packing_items : [];
   const permissions = record(data.permissions);
   return {
     tripId: String(data.trip_id), planVersion: number(data.plan_version), exportRevision: number(data.export_revision),
@@ -34,7 +39,7 @@ function mapPlan(raw: unknown): PlanViewModel {
         id: String(activity.id), tripId: String(activity.trip_id), title: String(activity.title), description: text(activity.description), publicDescription: text(activity.public_description),
         activityType: String(activity.activity_type), selectedLocationId: text(activity.selected_location_id), startsAt: text(activity.starts_at), endsAt: text(activity.ends_at), position: number(activity.position),
         status: activity.status === 'COMPLETED' ? 'COMPLETED' as const : 'TODO' as const,
-        source: activity.source === 'PROVIDER' || activity.source === 'DSS' ? activity.source : 'MANUAL',
+        source: source(activity.source),
         planVersion: number(activity.plan_version), createdByUserId: String(activity.created_by_user_id), completedByUserId: text(activity.completed_by_user_id), completedAt: text(activity.completed_at), presentation: { cover: null },
       };
     }),
@@ -42,8 +47,31 @@ function mapPlan(raw: unknown): PlanViewModel {
       const location = record(value);
       return {
         id: String(location.id), tripId: String(location.trip_id), name: String(location.name), address: text(location.address), latitude: text(location.latitude), longitude: text(location.longitude), provider: text(location.provider), providerPlaceId: text(location.provider_place_id),
-        source: location.source === 'PROVIDER' || location.source === 'DSS' ? location.source : 'MANUAL',
+        source: source(location.source),
         openingHours: location.opening_hours ?? null, fetchedAt: text(location.fetched_at), metadata: record(location.metadata), planVersion: number(location.plan_version),
+      };
+    }),
+    dressCodes: dressCodes.map((value) => {
+      const dressCode = record(value);
+      const scopeType = dressCode.scope_type === 'DAY' || dressCode.scope_type === 'ACTIVITY'
+        ? dressCode.scope_type
+        : 'TRIP';
+      return {
+        id: String(dressCode.id), tripId: String(dressCode.trip_id), scopeType,
+        planDate: text(dressCode.plan_date), activityId: text(dressCode.activity_id), label: String(dressCode.label),
+        description: text(dressCode.description), publicDescription: text(dressCode.public_description),
+        source: source(dressCode.source), planVersion: number(dressCode.plan_version),
+      };
+    }),
+    packingItems: packingItems.map((value) => {
+      const packingItem = record(value);
+      return {
+        id: String(packingItem.id), tripId: String(packingItem.trip_id), name: String(packingItem.name),
+        quantity: String(packingItem.quantity), unit: text(packingItem.unit), note: text(packingItem.note),
+        category: text(packingItem.category), assignedMemberId: text(packingItem.assigned_member_id), dueAt: text(packingItem.due_at),
+        status: packingItem.status === 'COMPLETED' ? 'COMPLETED' as const : 'TODO' as const,
+        source: source(packingItem.source), completedByUserId: text(packingItem.completed_by_user_id),
+        completedAt: text(packingItem.completed_at), planVersion: number(packingItem.plan_version),
       };
     }),
     permissions: { canRead: Boolean(permissions.can_read), canEdit: Boolean(permissions.can_edit), canComplete: Boolean(permissions.can_complete) },

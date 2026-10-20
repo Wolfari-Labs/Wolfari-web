@@ -41,6 +41,14 @@ export function createGatewayTripRepository(
   client?: GatewayHttpClient,
 ): TripRepository {
   return {
+    createTrip: async ({ signal }) => {
+      signal.throwIfAborted();
+      return {
+        status: 'unavailable' as const,
+        correlationId: null,
+        retryable: false,
+      };
+    },
     getTrip:
       detailReader ??
       (async ({ tripId, signal }) => {
