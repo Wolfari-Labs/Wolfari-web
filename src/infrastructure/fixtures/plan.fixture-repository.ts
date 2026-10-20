@@ -47,12 +47,36 @@ export function createFixturePlanRepository(
         'Chùa Linh Ứng',
         'Ngũ Hành Sơn',
       ];
+      const coordinates: readonly (readonly [string, string] | null)[] = [
+        ['16.118200', '108.277700'],
+        ['16.067800', '108.220800'],
+        ['16.054400', '108.246100'],
+        ['16.061100', '108.227700'],
+        ['16.100300', '108.277100'],
+        null,
+      ];
+      const addresses = [
+        'Thọ Quang, Sơn Trà, Đà Nẵng',
+        'Sơn Trà, Đà Nẵng',
+        'Võ Nguyên Giáp, Sơn Trà, Đà Nẵng',
+        'An Hải, Sơn Trà, Đà Nẵng',
+        'Hoàng Sa, Sơn Trà, Đà Nẵng',
+        null,
+      ];
       const locations = seed
         ? names.map((name, i) => ({
             id: `a0000000-0000-4000-8000-${String(i + 1).padStart(12, '0')}`,
             tripId,
             name,
-            address: null,
+            address: addresses[i] ?? null,
+            latitude: coordinates[i]?.[0] ?? null,
+            longitude: coordinates[i]?.[1] ?? null,
+            provider: i < 2 ? 'fixture-map' : null,
+            providerPlaceId: i < 2 ? `fixture-place-${i + 1}` : null,
+            source: i < 2 ? ('PROVIDER' as const) : ('MANUAL' as const),
+            openingHours: null,
+            fetchedAt: i < 2 ? '2026-09-20T08:00:00+07:00' : null,
+            metadata: {},
             planVersion: trip.planVersion,
           }))
         : [];
@@ -70,7 +94,10 @@ export function createFixturePlanRepository(
               id: `b0000000-0000-4000-8000-${String(i + 1).padStart(12, '0')}`,
               tripId,
               title,
-              description: null,
+              description:
+                i === 2
+                  ? 'Bãi cát trắng, làn nước trong xanh và không gian thoáng đãng để cả nhóm cùng thư giãn.'
+                  : null,
               publicDescription: null,
               activityType: ['SIGHTSEEING', 'MEAL', 'BEACH', 'WALK'][i]!,
               selectedLocationId: locations[i]!.id,

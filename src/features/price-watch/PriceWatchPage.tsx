@@ -335,7 +335,12 @@ function PriceWatchWorkspace({ data }: { data: PriceWatchViewModel }) {
   if (!selected) return <ContentState state="empty" headingLevel={2} />;
   const focusCreateForm = () => {
     const target = document.getElementById('new-watch-form');
-    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const behavior =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth';
+    target?.scrollIntoView({ behavior, block: 'start' });
     target?.focus({ preventScroll: true });
   };
   return (

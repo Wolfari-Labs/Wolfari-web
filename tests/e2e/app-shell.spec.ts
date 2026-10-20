@@ -218,6 +218,9 @@ for (const size of sizes)
     expect(calls).toEqual([]);
     expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
     await page.goto('/missing-shell-page');
+    await expect(page).toHaveTitle(/Wolfari/);
+    await expect(page.locator('main')).toBeFocused();
+    await expect(page.locator('main').getByRole('link', { name: /trang ch/i })).toBeVisible();
     await expect(page.getByText('Không tìm thấy trang', { exact: true })).toBeVisible();
     await page.goto('/trips/22222222-2222-4222-8222-222222222222');
     await expect(page.getByText('Không tìm thấy nội dung', { exact: true })).toBeVisible();

@@ -1,12 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useParams, useOutletContext } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
-import { useTripRepository } from '../trips/repositories/repository-context';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
-import { usePlanRepository } from './repositories/plan-context';
+import { useTripPlanSnapshot } from './hooks/use-trip-plan-snapshot';
 import {
   planScenarios,
   type PlanScenario,
@@ -27,6 +25,7 @@ import locationMetric from '../../shared/assets/figma/12507.svg';
 import timeMetric from '../../shared/assets/figma/13a40.svg';
 import travelMetric from '../../shared/assets/figma/a6d01.svg';
 import styles from './PlanPage.module.css';
+import { mergePlaceSelections, usePlaceSelection } from '../map/place-selection-store';
 const icons: Record<string, string> = {
   SIGHTSEEING: mountain,
   MEAL: meal,
@@ -249,48 +248,23 @@ export function PlanView({
 export function PlanPage() {
   const { tripId = '' } = useParams(),
     { previewEnabled } = useOutletContext<RouteContext>();
-  const tripRepository = useTripRepository(),
-    repository = usePlanRepository();
   const [scenario, setScenario] = useState<PlanScenario>('success'),
     [day, setDay] = useState<string | null>(null),
     [unscheduledOpen, setUnscheduledOpen] = useState(false),
     [commandState, setCommandState] = useState('idle');
-  const tripQuery = useQuery({
-    queryKey: ['trip', 'detail', tripId, 'success'],
-    queryFn: ({ signal }) => tripRepository.getTrip({ tripId, scenario: 'success', signal }),
-  });
-  const trip = tripQuery.data?.status === 'ready' ? tripQuery.data.data : null;
-  const allowed =
-    !!trip?.permissions.canRead &&
-    trip.id === tripId &&
-    trip.currentMembership.leftAt === null &&
-    trip.currentMembership.tripId === tripId;
-  const query = useQuery({
-    queryKey: ['plan', tripId, scenario],
-    queryFn: ({ signal }) => repository.getPlan({ tripId, scenario, signal }),
-    enabled: allowed,
-  });
-  const plan = query.data?.status === 'ready' ? query.data.data : null;
-  const conflict =
-    plan &&
-    trip &&
-    (plan.tripId !== tripId ||
-      plan.planVersion !== trip.planVersion ||
-      plan.exportRevision !== trip.exportRevision);
-  const error =
-    tripQuery.isError || query.isError
-      ? { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true }
-      : tripQuery.data?.status === 'error'
-        ? tripQuery.data.error
-        : trip && !allowed
-          ? { code: 'PERMISSION_DENIED' as const, correlationId: null, retryable: false }
-          : query.data?.status === 'error'
-            ? query.data.error
-            : plan && !plan.permissions.canRead
-              ? { code: 'PERMISSION_DENIED' as const, correlationId: null, retryable: false }
-              : conflict
-                ? { code: 'VERSION_CONFLICT' as const, correlationId: null, retryable: false }
-                : null;
+  const snapshot = useTripPlanSnapshot(tripId, scenario);
+  const trip = snapshot.state.status === 'ready' ? snapshot.state.trip : null;
+  const plan = snapshot.state.status === 'ready' ? snapshot.state.plan : null;
+  const userId = trip?.currentMembership.userId ?? '';
+  const localSelection = usePlaceSelection(userId, tripId);
+  const effectivePlan = useMemo(() => {
+    if (!plan) return null;
+    return {
+      ...plan,
+      selectedLocations: mergePlaceSelections(plan.selectedLocations, plan.activities, localSelection),
+    };
+  }, [localSelection, plan]);
+  const error = snapshot.state.status === 'error' ? snapshot.state.error : null;
   return (
     <section className={styles.page} data-flow="plan-preview" data-node-id="20:236">
       <div className={styles.breadcrumb}>
@@ -303,17 +277,14 @@ export function PlanPage() {
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
           error={error}
           headingLevel={2}
-          onRetry={() => {
-            void tripQuery.refetch();
-            if (allowed) void query.refetch();
-          }}
+          onRetry={snapshot.retry}
         />
-      ) : tripQuery.isPending || (allowed && query.isPending) ? (
+      ) : snapshot.state.status === 'loading' ? (
         <ContentState state="loading" headingLevel={2} />
-      ) : trip && plan ? (
+      ) : trip && effectivePlan ? (
         <PlanView
           trip={trip}
-          plan={plan}
+          plan={effectivePlan}
           selectedDay={day}
           onDayChange={setDay}
           unscheduledOpen={unscheduledOpen}

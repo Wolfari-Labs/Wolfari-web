@@ -14,6 +14,8 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
           correlationId: null,
           retryable: false,
         }}
+        showHome
+        onReload={() => window.location.reload()}
       />
     ) : (
       this.props.children

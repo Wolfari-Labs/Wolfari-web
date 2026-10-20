@@ -57,6 +57,8 @@ export function App({
   const snapshot = result?.status === 'ready' ? result.data : null;
   const effectiveSection = policyPath.endsWith('/plan')
     ? 'plan'
+    : policyPath.endsWith('/map')
+      ? 'map'
     : policyPath.endsWith('/members')
       ? 'members'
       : policyPath.endsWith('/fund')
@@ -66,6 +68,7 @@ export function App({
       : section;
   const routedTripSection =
     policyPath.endsWith('/plan') ||
+    policyPath.endsWith('/map') ||
     policyPath.endsWith('/members') ||
     policyPath.endsWith('/fund') ||
     policyPath.endsWith('/price-watch');
@@ -89,12 +92,18 @@ export function App({
           tools: 'Tiện ích',
         }[effectiveSection]
       : (handle?.title ?? 'Không gian làm việc');
-  const previousNavigation = useRef([pathname, section, adminSection]);
   useEffect(() => {
+    document.title = title ? `${title} · Wolfari` : 'Wolfari';
+  }, [title]);
+  const previousNavigation = useRef<[string, ShellSection, AdminSection] | null>(null);
+  useEffect(() => {
+    const firstRenderNeedsFocus = previousNavigation.current === null && handle?.notFound === true;
     if (
+      firstRenderNeedsFocus ||
+      (previousNavigation.current !== null &&
       previousNavigation.current.some(
         (value, index) => value !== [pathname, section, adminSection][index],
-      )
+      ))
     ) {
       const main = document.getElementById('main-content');
       if (main) {
@@ -105,7 +114,7 @@ export function App({
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
     previousNavigation.current = [pathname, section, adminSection];
-  }, [pathname, section, adminSection]);
+  }, [pathname, section, adminSection, handle?.notFound]);
   const denied =
     result?.status === 'ready' &&
     (adminLayout
@@ -177,6 +186,8 @@ export function App({
           navigate(
             next === 'plan'
               ? paths.plan(tripId)
+              : next === 'map'
+                ? paths.map(tripId)
               : next === 'members'
                 ? paths.members(tripId)
                 : next === 'fund'

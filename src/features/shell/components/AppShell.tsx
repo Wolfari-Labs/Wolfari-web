@@ -311,7 +311,7 @@ export function AppShell({
               onClick={() => setCollapsed((value) => !value)}
             >
               {collapsed ? (
-                <Icon file="cea87.svg" />
+                <Icon file="cea87.svg" className={styles.collapseIconReversed} />
               ) : (
                 <>
                   <strong>«</strong>
