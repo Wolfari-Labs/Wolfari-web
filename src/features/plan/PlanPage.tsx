@@ -565,7 +565,14 @@ export function PlanView({
     const target = operation.target.data as DropData | undefined;
     if (!target || (target.container !== 'POOL' && target.container !== 'DAY')) return;
     const activityId = String(operation.source.id);
-    onMove(target.container === 'POOL' ? { activityId, target: { type: 'POOL' } } : { activityId, target: { type: 'DAY', day, index: target.index } });
+    if (target.container === 'POOL') {
+      const targetIndex = target.activityId
+        ? allPoolItems.findIndex((activity) => activity.id === target.activityId)
+        : allPoolItems.length;
+      onMove({ activityId, target: { type: 'POOL', index: targetIndex < 0 ? allPoolItems.length : targetIndex } });
+      return;
+    }
+    onMove({ activityId, target: { type: 'DAY', day, index: target.index } });
   };
   const keyboardMove = (activityId: string, direction: 'to-day' | 'to-pool') => {
     onKeyMove?.(activityId, direction);

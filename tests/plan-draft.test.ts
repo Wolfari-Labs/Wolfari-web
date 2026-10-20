@@ -175,6 +175,50 @@ describe('plan draft movement and editing', () => {
     expect(movePlanDraftActivity(draft, { activityId: 'missing', target: { type: 'POOL' } })).toBe(draft);
   });
 
+  it('reindexes both days and preserves the moved order after reconciliation', async () => {
+    const plan = await fixturePlan();
+    const draft = createPlanDraft(plan, plan.selectedLocations, userId, timezone, 0);
+    const dayOne = '2026-09-22';
+    const dayTwo = '2026-09-23';
+    const source = draftActivitiesForDay(draft.activities, dayOne);
+    const moved = movePlanDraftActivity(draft, {
+      activityId: source[1]!.id,
+      target: { type: 'DAY', day: dayTwo, index: 0 },
+    }, 1);
+
+    expect(draftActivitiesForDay(moved.activities, dayOne).map((activity) => activity.position)).toEqual([0, 1, 2]);
+    expect(draftActivitiesForDay(moved.activities, dayTwo)).toMatchObject([
+      { id: source[1]!.id, position: 0, scheduledDate: dayTwo, startsAt: null, endsAt: null },
+    ]);
+
+    const rehydrated = reconcilePlanDraft(moved, plan, plan.selectedLocations, userId, timezone, 2);
+    expect(draftActivitiesForDay(rehydrated.activities, dayTwo).map((activity) => activity.id)).toEqual([source[1]!.id]);
+    expect(draftActivitiesForDay(rehydrated.activities, dayOne).map((activity) => activity.id)).toEqual([
+      source[0]!.id,
+      source[2]!.id,
+      source[3]!.id,
+    ]);
+  });
+
+  it('inserts a timeline activity at an explicit pool position', async () => {
+    const plan = await fixturePlan();
+    const draft = createPlanDraft(plan, plan.selectedLocations, userId, timezone, 0);
+    const day = '2026-09-22';
+    const source = draftActivitiesForDay(draft.activities, day)[1]!;
+    const moved = movePlanDraftActivity(draft, {
+      activityId: source.id,
+      target: { type: 'POOL', index: 0 },
+    }, 1);
+
+    expect(unscheduledDraftActivities(moved.activities)[0]).toMatchObject({
+      id: source.id,
+      scheduledDate: null,
+      startsAt: null,
+      endsAt: null,
+      position: 0,
+    });
+  });
+
   it('validates the editor and changes day without resetting other activity times', async () => {
     expect(validatePlanDraftEdit({ title: ' ', day: '2026-09-22', startTime: '', endTime: '', allowedDays: ['2026-09-22'] })).toMatch(/bắt buộc/);
     expect(validatePlanDraftEdit({ title: 'A', day: '2026-09-22', startTime: '09:00', endTime: '', allowedDays: ['2026-09-22'] })).toMatch(/cả giờ/);

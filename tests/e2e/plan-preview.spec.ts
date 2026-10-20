@@ -138,6 +138,11 @@ test('keyboard drag moves an activity between the local pool and the selected da
   const pool = page.getByRole('region', { name: 'Hoạt động đã chọn' });
   const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
   const poolHandle = pool.getByRole('button', { name: 'Kéo hoạt động Chùa Linh Ứng' });
+  const poolBox = await pool.boundingBox();
+  const timelineBox = await timeline.locator('xpath=ancestor::section[1]').boundingBox();
+  expect(poolBox).not.toBeNull();
+  expect(timelineBox).not.toBeNull();
+  expect(Math.abs(poolBox!.height - timelineBox!.height)).toBeLessThanOrEqual(2);
   await poolHandle.focus();
   await page.keyboard.press('Enter');
   await page.keyboard.press('ArrowRight');

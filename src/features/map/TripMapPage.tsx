@@ -18,6 +18,7 @@ import { PlaceDetail } from './PlaceDetail';
 import { mapLocationPresentations, normalizedPlaceText, placeDiscoveryCenter, placeStatus, sortPlacePresentations, type LocationScheduleFilter } from './trip-map';
 import { hideSavedLocation, mergePlaceSelections, removePlaceSelection, savePlaceSelection, usePlaceSelection, type LocalPlaceSelection } from './place-selection-store';
 import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
+import { fallbackPlaceSelections } from './fallback-place-suggestions';
 import styles from './TripMapPage.module.css';
 
 export function TripMapPage() {
@@ -104,12 +105,13 @@ export function TripMapPage() {
     const timer = window.setTimeout(() => {
       void searchGooglePlaces(text, tripId, controller.signal, discoveryCenter).then((result) => {
         if (requestId !== providerRequestRef.current) return;
-        setProviderPlaces(result.places);
+        setProviderPlaces(result.unavailable ? fallbackPlaceSelections(tripId, discoveryCenter) : result.places);
         providerSessionRef.current = result.loadMore ?? null;
         setProviderHasMore(result.hasMore);
         setProviderState(result.unavailable ? 'unavailable' : 'ready');
       }).catch(() => {
         if (!controller.signal.aborted && requestId === providerRequestRef.current) {
+          setProviderPlaces(fallbackPlaceSelections(tripId, discoveryCenter));
           providerSessionRef.current = null;
           setProviderHasMore(false);
           setProviderState('error');

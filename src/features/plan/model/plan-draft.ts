@@ -30,7 +30,7 @@ export interface PlanDraftState {
 
 export type PlanDraftMove = {
   readonly activityId: string;
-  readonly target: { readonly type: 'POOL' } | { readonly type: 'DAY'; readonly day: string; readonly index: number };
+  readonly target: { readonly type: 'POOL'; readonly index?: number } | { readonly type: 'DAY'; readonly day: string; readonly index: number };
 };
 
 export type PlanDraftEdit = {
@@ -163,13 +163,29 @@ function payload(
   activities: readonly PlanDraftActivity[],
   now = Date.now(),
 ): PlanDraftPayloadV1 {
+  const normalized = normalizeActivities(activities);
   return {
     version: 1,
     basePlanVersion,
     updatedAt: new Date(now).toISOString(),
     expiresAt: new Date(now + PLAN_DRAFT_TTL_MS).toISOString(),
-    activities,
+    activities: normalized,
   };
+}
+
+function normalizeActivities(activities: readonly PlanDraftActivity[]) {
+  const groups = new Map<string, PlanDraftActivity[]>();
+  for (const activity of activities) {
+    const key = activity.scheduledDate ?? 'POOL';
+    const group = groups.get(key) ?? [];
+    group.push(activity);
+    groups.set(key, group);
+  }
+  return [...groups.values()].flatMap((group) =>
+    group
+      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+      .map((activity, position) => ({ ...activity, position })),
+  );
 }
 
 export function reconcilePlanDraft(
@@ -234,26 +250,15 @@ export function movePlanDraftActivity(
   let activities = [...current.activities];
   if (move.target.type === 'POOL') {
     const pool = unscheduledDraftActivities(activities).filter((item) => item.id !== selected.id);
-    const poolPositions = new Map(pool.map((item, position) => [item.id, position]));
-    const sourceDay = selected.scheduledDate;
-    const sourceItems = sourceDay
-      ? orderedForDay(activities, sourceDay).filter((item) => item.id !== selected.id)
-      : [];
-    const sourcePositions = new Map(sourceItems.map((item, position) => [item.id, position]));
-    activities = activities.map((activity) => {
-      if (activity.id === selected.id)
-        return {
-          ...activity,
-          scheduledDate: null,
-          startsAt: null,
-          endsAt: null,
-          position: pool.length,
-        };
-      const poolPosition = poolPositions.get(activity.id);
-      if (poolPosition !== undefined) return { ...activity, position: poolPosition };
-      const position = sourcePositions.get(activity.id);
-      return position === undefined ? activity : { ...activity, position };
+    const index = Math.max(0, Math.min(move.target.index ?? pool.length, pool.length));
+    pool.splice(index, 0, {
+      ...selected,
+      scheduledDate: null,
+      startsAt: null,
+      endsAt: null,
     });
+    const poolById = new Map(pool.map((item, position) => [item.id, { ...item, position }]));
+    activities = activities.map((activity) => poolById.get(activity.id) ?? activity);
     return payload(current.basePlanVersion, activities, now);
   }
 
