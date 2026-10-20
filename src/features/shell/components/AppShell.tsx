@@ -58,6 +58,7 @@ export function AppShell({
   const canReadAdmin = viewer?.systemRole === 'ADMIN';
   const home = currentPath === paths.home;
   const schedule = currentPath.endsWith('/plan');
+  const dressRoute = currentPath.endsWith('/dress-code');
   const selectedHeader = home
     ? 'home'
     : schedule
@@ -186,7 +187,7 @@ export function AppShell({
   );
   return (
     <div
-      className={`${styles.shell} ${adminLayout ? styles.adminShell : tripLayout || listLayout ? styles.tripShell : styles.flowShell}`}
+      className={`${styles.shell} ${dressRoute ? styles.dressRoute : ''} ${adminLayout ? styles.adminShell : tripLayout || listLayout ? styles.tripShell : styles.flowShell}`}
     >
       <a className={styles.skip} href="#main-content">
         Đến nội dung chính

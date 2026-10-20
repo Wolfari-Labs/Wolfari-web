@@ -73,6 +73,22 @@ function mountMap() {
 }
 
 describe('trip map nearby suggestions', () => {
+  it('shows ten deterministic fallback destinations when Google Places is unavailable', async () => {
+    searchGooglePlacesMock.mockResolvedValue({ places: [], unavailable: true, hasMore: false });
+
+    const router = mountMap();
+    const list = await screen.findByRole('list');
+    await waitFor(() => expect(within(list).getByText('Chợ Hàn')).toBeInTheDocument());
+
+    const checkboxes = within(list).getAllByRole('checkbox');
+    expect(checkboxes.filter((checkbox) => !(checkbox as HTMLInputElement).checked)).toHaveLength(10);
+    await userEvent.click(within(list).getByRole('checkbox', { name: /Chợ Hàn/ }));
+    await waitFor(() => expect(within(list).getByRole('checkbox', { name: /Chợ Hàn/ })).toBeChecked());
+    expect(screen.getAllByRole('button').some((button) => button.textContent?.includes('(7)'))).toBe(true);
+    expect(Array.from({ length: window.localStorage.length }, (_, index) => window.localStorage.getItem(window.localStorage.key(index)!)).some((value) => value?.includes('fallback-cho-han'))).toBe(true);
+    router.dispose();
+  });
+
   it('shows unselected nearby results in All, loads more rows, and moves a checked place into selected-unscheduled', async () => {
     const places = Array.from({ length: 30 }, (_, index) => providerPlace(index + 1));
     const loadMore = vi.fn().mockResolvedValue({

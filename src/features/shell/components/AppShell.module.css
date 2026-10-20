@@ -337,6 +337,9 @@
 .mobileHeader {
   display: none;
 }
+.dressRoute .mobileHeader {
+  display: none;
+}
 .mobileMenuButton {
   width: 44px;
   height: 44px;
@@ -461,6 +464,9 @@
     height: 54px;
     margin: env(safe-area-inset-top, 0px) 24px 0;
     font-family: var(--font-body);
+  }
+  .dressRoute .mobileHeader {
+    display: none;
   }
   .mobileMenuButton {
     font-family: var(--font-body);

@@ -11,12 +11,14 @@ import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import { planScenarios, type PlanScenario } from '../plan/model/plan';
 import { planDays } from '../plan/model/plan-presentation';
+import { usePlanDraft } from '../plan/hooks/use-plan-draft';
 import { TripHero } from '../trips/components/TripHero';
 import { MapViewport } from './MapViewport';
 import { PlaceDetail } from './PlaceDetail';
 import { mapLocationPresentations, normalizedPlaceText, placeDiscoveryCenter, placeStatus, sortPlacePresentations, type LocationScheduleFilter } from './trip-map';
 import { hideSavedLocation, mergePlaceSelections, removePlaceSelection, savePlaceSelection, usePlaceSelection, type LocalPlaceSelection } from './place-selection-store';
 import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
+import { fallbackPlaceSelections } from './fallback-place-suggestions';
 import styles from './TripMapPage.module.css';
 
 export function TripMapPage() {
@@ -40,13 +42,22 @@ export function TripMapPage() {
   const snapshot = useTripPlanSnapshot(tripId, scenario);
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
   const dataReady = snapshot.state.status === 'ready';
+  const sourcePlan = data?.plan ?? null;
   const userId = data?.trip.currentMembership.userId ?? '';
   const localSelection = usePlaceSelection(userId, tripId);
   const days = data ? planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone) : [];
   const selectedLocations = useMemo(
-    () => data ? mergePlaceSelections(data.plan.selectedLocations, data.plan.activities, localSelection) : [],
-    [data, localSelection],
+    () => sourcePlan ? mergePlaceSelections(sourcePlan.selectedLocations, sourcePlan.activities, localSelection) : [],
+    [sourcePlan, localSelection],
   );
+  const planDraft = usePlanDraft({
+    userId,
+    tripId,
+    plan: sourcePlan,
+    locations: selectedLocations,
+    timezone: data?.trip.timezone ?? 'UTC',
+  });
+  const effectiveActivities = data ? planDraft.activities : [];
   const discoveryLocations = data?.plan.selectedLocations ?? selectedLocations;
   const discoveryCenter = useMemo(
     () => placeDiscoveryCenter(discoveryLocations),
@@ -58,11 +69,11 @@ export function TripMapPage() {
 
   const allItems = useMemo(() => {
     if (!data) return [];
-    const selectedItems = mapLocationPresentations(selectedLocations, data.plan.activities, true);
+    const selectedItems = mapLocationPresentations(selectedLocations, effectiveActivities, true);
     const selectedKeys = new Set(selectedLocations.map((location) => `${location.provider ?? ''}:${location.providerPlaceId ?? location.id}`));
-    const candidates = providerPlaces.filter((place) => !selectedKeys.has(`google:${place.providerPlaceId}`)).map((place) => ({ ...mapLocationPresentations([place], data.plan.activities, false)[0]!, markerNumber: 0 }));
+    const candidates = providerPlaces.filter((place) => !selectedKeys.has(`google:${place.providerPlaceId}`)).map((place) => ({ ...mapLocationPresentations([place], effectiveActivities, false)[0]!, markerNumber: 0 }));
     return sortPlacePresentations([...selectedItems, ...candidates]);
-  }, [data, providerPlaces, selectedLocations]);
+  }, [data, effectiveActivities, providerPlaces, selectedLocations]);
 
   useEffect(() => {
     if (!data) {
@@ -94,12 +105,13 @@ export function TripMapPage() {
     const timer = window.setTimeout(() => {
       void searchGooglePlaces(text, tripId, controller.signal, discoveryCenter).then((result) => {
         if (requestId !== providerRequestRef.current) return;
-        setProviderPlaces(result.places);
+        setProviderPlaces(result.unavailable ? fallbackPlaceSelections(tripId, discoveryCenter) : result.places);
         providerSessionRef.current = result.loadMore ?? null;
         setProviderHasMore(result.hasMore);
         setProviderState(result.unavailable ? 'unavailable' : 'ready');
       }).catch(() => {
         if (!controller.signal.aborted && requestId === providerRequestRef.current) {
+          setProviderPlaces(fallbackPlaceSelections(tripId, discoveryCenter));
           providerSessionRef.current = null;
           setProviderHasMore(false);
           setProviderState('error');
@@ -137,7 +149,10 @@ export function TripMapPage() {
       if (filter === 'SELECTED' && !item.selected) return false;
       if (filter === 'SCHEDULED' && status !== 'IN_SCHEDULE') return false;
       if (filter === 'UNSCHEDULED' && status !== 'SELECTED_UNSCHEDULED') return false;
-      if (day !== null && status === 'IN_SCHEDULE' && !item.activities.some((activity) => activity.startsAt && new Date(activity.startsAt).toLocaleDateString('en-CA', { timeZone: data.trip.timezone }) === day)) return false;
+      if (day !== null && status === 'IN_SCHEDULE' && !item.activities.some((activity) => {
+        const scheduledDate = 'scheduledDate' in activity ? activity.scheduledDate : null;
+        return scheduledDate === day || Boolean(activity.startsAt && new Date(activity.startsAt).toLocaleDateString('en-CA', { timeZone: data.trip.timezone }) === day);
+      })) return false;
       return !normalizedQuery || normalizedPlaceText(`${item.location.name} ${item.location.address ?? ''}`).includes(normalizedQuery);
     });
   }, [allItems, data, day, filter, query]);
