@@ -1,0 +1,200 @@
+import { describe, expect, it } from 'vitest';
+import { createFixturePlanRepository } from '../src/infrastructure/fixtures/plan.fixture-repository';
+import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
+import type { PlanViewModel, SelectedLocationViewModel } from '../src/features/plan/model/plan';
+import {
+  PLAN_DRAFT_TTL_MS,
+  createPlanDraft,
+  draftActivitiesForDay,
+  editPlanDraftActivity,
+  movePlanDraftActivity,
+  parsePlanDraft,
+  reconcilePlanDraft,
+  unscheduledDraftActivities,
+  validatePlanDraftEdit,
+} from '../src/features/plan/model/plan-draft';
+
+const timezone = 'Asia/Ho_Chi_Minh';
+const userId = 'user-local';
+
+async function fixturePlan() {
+  const result = await createFixturePlanRepository().getPlan({
+    tripId: previewTripId,
+    scenario: 'success',
+    signal: new AbortController().signal,
+  });
+  if (result.status !== 'ready') throw new Error('Missing fixture plan');
+  return result.data;
+}
+
+function localLocation(overrides: Partial<SelectedLocationViewModel> = {}): SelectedLocationViewModel {
+  return {
+    id: 'local-location',
+    tripId: previewTripId,
+    name: 'Quán cà phê ven biển',
+    address: 'Đà Nẵng',
+    latitude: '16.06',
+    longitude: '108.22',
+    provider: 'google',
+    providerPlaceId: 'google-place',
+    source: 'PROVIDER',
+    openingHours: null,
+    fetchedAt: '2026-10-20T00:00:00.000Z',
+    metadata: { types: ['cafe'] },
+    planVersion: 1,
+    ...overrides,
+  };
+}
+
+describe('plan draft persistence and reconciliation', () => {
+  it('rejects malformed and expired payloads and accepts a valid 30-day payload', async () => {
+    const plan = await fixturePlan();
+    const now = Date.parse('2026-10-21T00:00:00.000Z');
+    const draft = createPlanDraft(plan, plan.selectedLocations, userId, timezone, now);
+    expect(parsePlanDraft('{bad json', now)).toBeNull();
+    expect(parsePlanDraft(JSON.stringify({ ...draft, version: 2 }), now)).toBeNull();
+    expect(parsePlanDraft(JSON.stringify(draft), now)).toEqual(draft);
+    expect(Date.parse(draft.expiresAt) - now).toBe(PLAN_DRAFT_TTL_MS);
+    expect(parsePlanDraft(JSON.stringify(draft), now + PLAN_DRAFT_TTL_MS)).toBeNull();
+  });
+
+  it('creates one typed draft per selected location and removes only an unscheduled client draft', () => {
+    const location = localLocation();
+    const plan: PlanViewModel = {
+      tripId: previewTripId,
+      planVersion: 1,
+      exportRevision: 1,
+      activities: [],
+      selectedLocations: [location],
+      permissions: { canRead: true, canEdit: true, canComplete: true },
+    };
+    const created = createPlanDraft(plan, [location, location], userId, timezone, 0);
+    expect(created.activities).toHaveLength(1);
+    expect(created.activities[0]).toMatchObject({
+      id: 'draft:local-location',
+      activityType: 'MEAL',
+      scheduledDate: null,
+      clientOnly: true,
+    });
+    expect(reconcilePlanDraft(created, plan, [], userId, timezone, 1).activities).toEqual([]);
+
+    const scheduled = movePlanDraftActivity(created, {
+      activityId: 'draft:local-location',
+      target: { type: 'DAY', day: '2026-09-22', index: 0 },
+    });
+    expect(reconcilePlanDraft(scheduled, plan, [], userId, timezone, 2).activities).toHaveLength(1);
+  });
+
+  it('drops schedule overrides when the base plan version changes while rebuilding selected places', () => {
+    const location = localLocation();
+    const oldPlan: PlanViewModel = {
+      tripId: previewTripId,
+      planVersion: 1,
+      exportRevision: 1,
+      activities: [],
+      selectedLocations: [location],
+      permissions: { canRead: true, canEdit: true, canComplete: true },
+    };
+    const stored = movePlanDraftActivity(
+      createPlanDraft(oldPlan, [location], userId, timezone, 0),
+      { activityId: 'draft:local-location', target: { type: 'DAY', day: '2026-09-22', index: 0 } },
+      1,
+    );
+    const current = { ...oldPlan, planVersion: 2 };
+    const reconciled = reconcilePlanDraft(stored, current, [location], userId, timezone, 2);
+    expect(reconciled.basePlanVersion).toBe(2);
+    expect(reconciled.activities[0]).toMatchObject({
+      selectedLocationId: location.id,
+      scheduledDate: null,
+      startsAt: null,
+      endsAt: null,
+    });
+  });
+});
+
+describe('plan draft movement and editing', () => {
+  it('moves pool → timeline and resets the dropped activity plus the full suffix', async () => {
+    const plan = await fixturePlan();
+    const draft = createPlanDraft(plan, plan.selectedLocations, userId, timezone, 0);
+    const poolActivity = unscheduledDraftActivities(draft.activities)[0]!;
+    const day = '2026-09-22';
+    const before = draftActivitiesForDay(draft.activities, day);
+    const moved = movePlanDraftActivity(draft, {
+      activityId: poolActivity.id,
+      target: { type: 'DAY', day, index: 2 },
+    }, 1);
+    const after = draftActivitiesForDay(moved.activities, day);
+    expect(after.map((activity) => activity.id)).toEqual([
+      before[0]!.id,
+      before[1]!.id,
+      poolActivity.id,
+      before[2]!.id,
+      before[3]!.id,
+    ]);
+    expect(after.slice(0, 2).every((activity) => activity.startsAt !== null)).toBe(true);
+    expect(after.slice(2).every((activity) => activity.startsAt === null && activity.endsAt === null)).toBe(true);
+    expect(after.slice(2).every((activity) => activity.scheduledDate === day)).toBe(true);
+  });
+
+  it('reorders within a day, resets from the final dragged position and moves timeline → pool without changing remaining times', async () => {
+    const plan = await fixturePlan();
+    const draft = createPlanDraft(plan, plan.selectedLocations, userId, timezone, 0);
+    const day = '2026-09-22';
+    const before = draftActivitiesForDay(draft.activities, day);
+    const reordered = movePlanDraftActivity(draft, {
+      activityId: before[0]!.id,
+      target: { type: 'DAY', day, index: 2 },
+    }, 1);
+    const dayItems = draftActivitiesForDay(reordered.activities, day);
+    expect(dayItems.map((activity) => activity.id)).toEqual([
+      before[1]!.id,
+      before[2]!.id,
+      before[0]!.id,
+      before[3]!.id,
+    ]);
+    expect(dayItems.slice(0, 2).every((activity) => activity.startsAt !== null)).toBe(true);
+    expect(dayItems.slice(2).every((activity) => activity.startsAt === null)).toBe(true);
+
+    const removed = movePlanDraftActivity(draft, {
+      activityId: before[1]!.id,
+      target: { type: 'POOL' },
+    }, 2);
+    const remaining = draftActivitiesForDay(removed.activities, day);
+    expect(remaining).toHaveLength(before.length - 1);
+    expect(remaining.every((activity) => activity.startsAt !== null && activity.endsAt !== null)).toBe(true);
+    expect(unscheduledDraftActivities(removed.activities).at(-1)).toMatchObject({
+      id: before[1]!.id,
+      scheduledDate: null,
+      startsAt: null,
+      endsAt: null,
+    });
+    expect(movePlanDraftActivity(draft, { activityId: 'missing', target: { type: 'POOL' } })).toBe(draft);
+  });
+
+  it('validates the editor and changes day without resetting other activity times', async () => {
+    expect(validatePlanDraftEdit({ title: ' ', day: '2026-09-22', startTime: '', endTime: '', allowedDays: ['2026-09-22'] })).toMatch(/bắt buộc/);
+    expect(validatePlanDraftEdit({ title: 'A', day: '2026-09-22', startTime: '09:00', endTime: '', allowedDays: ['2026-09-22'] })).toMatch(/cả giờ/);
+    expect(validatePlanDraftEdit({ title: 'A', day: '2026-09-22', startTime: '10:00', endTime: '09:00', allowedDays: ['2026-09-22'] })).toMatch(/phải sau/);
+    expect(validatePlanDraftEdit({ title: 'A', day: '2026-09-23', startTime: '', endTime: '', allowedDays: ['2026-09-22'] })).toMatch(/trong chuyến đi/);
+
+    const plan = await fixturePlan();
+    const draft = createPlanDraft(plan, plan.selectedLocations, userId, timezone, 0);
+    const source = draftActivitiesForDay(draft.activities, '2026-09-22')[0]!;
+    const untouched = draft.activities.find((activity) => activity.id !== source.id && activity.startsAt)!;
+    const edited = editPlanDraftActivity(draft, {
+      activityId: source.id,
+      title: '  Tên mới  ',
+      day: '2026-09-23',
+      startTime: '09:15',
+      endTime: '10:30',
+      timezone,
+    }, 1);
+    expect(edited.activities.find((activity) => activity.id === source.id)).toMatchObject({
+      title: 'Tên mới',
+      scheduledDate: '2026-09-23',
+      startsAt: '2026-09-23T02:15:00.000Z',
+      endsAt: '2026-09-23T03:30:00.000Z',
+    });
+    expect(edited.activities.find((activity) => activity.id === untouched.id)?.startsAt).toBe(untouched.startsAt);
+  });
+});

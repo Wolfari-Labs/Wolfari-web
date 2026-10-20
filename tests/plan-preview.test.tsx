@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { App } from '../src/app/App';
@@ -162,12 +162,45 @@ it('keeps selected day on error/recovery and no writes/version change in pending
   );
   screen
     .getAllByRole('button', { name: 'Chỉnh sửa hoạt động' })
-    .forEach((button) => expect(button).toBeDisabled());
+    .forEach((button) => expect(button).toBeEnabled());
   await userEvent.selectOptions(screen.getByLabelText('Trạng thái thao tác preview'), 'unknown');
   expect(screen.getByText(/Chưa xác nhận thay đổi/)).toBeInTheDocument();
   expect(screen.getByText(/Plan 1 · Membership 1 · Export 1/)).toBeInTheDocument();
-  await userEvent.click(screen.getByRole('button', { name: /Đã chọn · Chưa xếp lịch/ }));
+  expect(screen.queryByRole('heading', { name: 'Hoạt động đã chọn' })).not.toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'Thêm hoạt động' }));
+  expect(screen.getByRole('heading', { name: 'Hoạt động đã chọn' })).toBeInTheDocument();
+  expect(screen.getByText('Chỉ lưu trên thiết bị này')).toBeInTheDocument();
   expect(screen.getByText('Chùa Linh Ứng')).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'Đóng danh sách hoạt động' }));
+  expect(screen.queryByRole('heading', { name: 'Hoạt động đã chọn' })).not.toBeInTheDocument();
+});
+it('opens the local planner in read-only mode without drag or edit controls', async () => {
+  mount();
+  await screen.findByText('Bán đảo Sơn Trà');
+  await userEvent.click(screen.getByText('Plan preview · Dữ liệu minh họa'));
+  await userEvent.selectOptions(screen.getByLabelText('Trạng thái lịch trình'), 'read-only');
+  await screen.findByText(/Không có quyền sửa lịch trình/);
+  await userEvent.click(screen.getByRole('button', { name: 'Thêm hoạt động' }));
+  expect(screen.getByText(/Chế độ chỉ đọc/)).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /^Kéo hoạt động/ })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument();
+});
+it('validates, saves and cancels the local activity editor while returning focus', async () => {
+  mount();
+  await screen.findByText('Bán đảo Sơn Trà');
+  await userEvent.click(screen.getByLabelText('Xem hoạt động Bán đảo Sơn Trà'));
+  const trigger = screen.getAllByRole('button', { name: 'Chỉnh sửa hoạt động' })[0]!;
+  await userEvent.click(trigger);
+  const dialog = screen.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' });
+  const title = within(dialog).getByLabelText('Tên hoạt động');
+  await userEvent.clear(title);
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Lưu thay đổi' }));
+  expect(within(dialog).getAllByText('Tên hoạt động là bắt buộc.').length).toBeGreaterThan(0);
+  await userEvent.type(title, 'Khám phá Sơn Trà');
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Lưu thay đổi' }));
+  await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument());
+  expect(screen.getByText('Khám phá Sơn Trà')).toBeInTheDocument();
+  await waitFor(() => expect(trigger).toHaveFocus());
 });
 it('does not read Plan for Guest', async () => {
   const getPlan = mount(true);
