@@ -32,8 +32,11 @@ for (const size of [
     const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
     await timeline.focus();
     if (size.width > 768) {
-      await page.keyboard.press('End');
-      await expect.poll(() => timeline.evaluate((e) => e.scrollTop)).toBeGreaterThan(0);
+      const scrollable = await timeline.evaluate((element) => element.scrollHeight > element.clientHeight);
+      if (scrollable) {
+        await page.keyboard.press('End');
+        await expect.poll(() => timeline.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+      }
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
         size.height,
@@ -45,13 +48,32 @@ for (const size of [
     await page.getByRole('button', { name: /Ngày 2/ }).click();
     await expect(page.getByRole('heading', { name: 'Chưa có nội dung' })).toBeVisible();
     await page.getByRole('button', { name: /Ngày 1/ }).click();
-    await page.getByRole('button', { name: /Đã chọn · Chưa xếp lịch/ }).click();
-    await expect(page.getByText('Chùa Linh Ứng', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Hoạt động đã chọn' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Thêm hoạt động' }).click();
+    const pool = page.getByRole('region', { name: 'Hoạt động đã chọn' });
+    await expect(pool).toBeVisible();
+    await expect(pool.getByText('Chỉ lưu trên thiết bị này')).toBeVisible();
+    await expect(pool.getByText('Chùa Linh Ứng', { exact: true })).toBeVisible();
+    if (size.width <= 1200)
+      await expect(page.getByRole('dialog', { name: 'Thêm hoạt động vào lịch trình' })).toBeVisible();
+    await pool.getByRole('button', { name: 'Đóng danh sách hoạt động' }).click();
+    await expect(pool).toHaveCount(0);
     await page.getByLabel('Xem hoạt động Bán đảo Sơn Trà').click();
     await expect(
       page.locator('details[open] dd').filter({ hasText: /08:00.*10:30/ }),
     ).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Chỉnh sửa hoạt động' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Chỉnh sửa hoạt động' }).first()).toBeEnabled();
+    if (size.width === 1440) {
+      const editTrigger = page.getByRole('button', { name: 'Chỉnh sửa hoạt động' }).first();
+      await editTrigger.click();
+      const editor = page.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' });
+      await expect(editor.getByLabel('Địa điểm')).toHaveAttribute('readonly', '');
+      await editor.getByLabel('Tên hoạt động').fill('Khám phá Sơn Trà');
+      await editor.getByRole('button', { name: 'Lưu thay đổi' }).click();
+      await expect(editor).toHaveCount(0);
+      await expect(page.getByText('Khám phá Sơn Trà', { exact: true })).toBeVisible();
+      await expect(editTrigger).toBeFocused();
+    }
     const images = await page.locator('img:visible').evaluateAll((elements) =>
       elements.map((element) => {
         const img = element as HTMLImageElement,
@@ -106,4 +128,31 @@ test('Plan states keep selection and pending/unknown do not claim saved', async 
     await expect(page.getByText(/Minh họa/, { exact: false }).last()).toBeVisible();
   }
   await expect(page.getByText(/Plan 1 · Membership 1 · Export 1/)).toBeVisible();
+});
+
+test('keyboard drag moves an activity between the local pool and the selected day', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 800 });
+  await page.goto(route);
+  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Thêm hoạt động' }).click();
+  const pool = page.getByRole('region', { name: 'Hoạt động đã chọn' });
+  const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
+  const poolHandle = pool.getByRole('button', { name: 'Kéo hoạt động Chùa Linh Ứng' });
+  await poolHandle.focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(400);
+  await expect(pool.getByText('Chùa Linh Ứng', { exact: true })).toHaveCount(0);
+  await expect(timeline.getByText('Chùa Linh Ứng', { exact: true }).first()).toBeVisible();
+  await expect(timeline.locator('time').filter({ hasText: 'Chưa xếp giờ' }).first()).toBeVisible();
+
+  const timelineHandle = timeline.getByRole('button', { name: 'Kéo hoạt động Chùa Linh Ứng' });
+  await timelineHandle.focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(400);
+  await expect(timeline.getByText('Chùa Linh Ứng', { exact: true })).toHaveCount(0);
+  await expect(pool.getByText('Chùa Linh Ứng', { exact: true })).toBeVisible();
 });

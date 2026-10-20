@@ -216,7 +216,14 @@ for (const size of sizes)
       await expect(page.getByRole('navigation', { name: 'Điều hướng Mobile' })).toHaveCount(0);
     }
     expect(calls).toEqual([]);
-    expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+    expect(await page.evaluate(() => ({
+      localStorageKeys: Object.keys(localStorage),
+      sessionStorageLength: sessionStorage.length,
+    }))).toMatchObject({
+      localStorageKeys: expect.arrayContaining([]),
+      sessionStorageLength: 0,
+    });
+    expect(await page.evaluate(() => Object.keys(localStorage).every((key) => key.startsWith('wolfari:plan-draft:v1:')))).toBe(true);
     await page.goto('/missing-shell-page');
     await expect(page).toHaveTitle(/Wolfari/);
     await expect(page.locator('main')).toBeFocused();
