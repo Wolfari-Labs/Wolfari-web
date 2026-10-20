@@ -38,6 +38,7 @@ function mount({
             handle: { title: 'Chuyến đi của tôi', layout: 'trip-list', requiresViewer: true },
           },
           { path: '/trips/:tripId', element: <ContentState state="placeholder" /> },
+          { path: '/trips/new', element: <ContentState state="placeholder" /> },
           {
             path: '/admin',
             element: <ContentState state="placeholder" />,
@@ -80,8 +81,8 @@ describe('Trip List route slice', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.queryByText('Chuyến đi riêng tư – không được hiển thị')).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /88888888/ })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Tạo chuyến đi' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: '+ Tạo một hành trình mới' })).toBeDisabled();
+    expect(screen.getByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute('href', '/trips/new');
+    expect(screen.getByRole('link', { name: '+ Tạo một hành trình mới' })).toHaveAttribute('href', '/trips/new');
     const moreActions = screen.getAllByRole('button', { name: /^Thao tác / });
     expect(moreActions).toHaveLength(6);
     moreActions.forEach((button) => expect(button).toBeDisabled());

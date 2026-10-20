@@ -2,6 +2,17 @@
 
 Tài liệu này là hợp đồng giữa thiết kế Figma, UI code, fixture và Gateway adapter. Không implement một flow mới nếu thiếu các mục bắt buộc bên dưới.
 
+## Contracts: Create Trip, Dress Code, Packing List và Trip Map (18/10/2026)
+
+| Screen | Route | Read/write contract | Trạng thái và giới hạn |
+| --- | --- | --- | --- |
+| Create Trip | `/trips/new` | Draft `v1` gồm name, description, start/end date và timezone `Asia/Ho_Chi_Minh`; chỉ lưu `sessionStorage` trong tab | Validation name 1–200, ngày bắt buộc và end ≥ start. Date-only → RFC3339 chưa chốt nên submit giữ draft, hiển thị unavailable và không gọi repository. `CreateTripSuccess` chỉ nhận `tripId` từ kết quả `created`. |
+| Dress Code | `/trips/:tripId/dress-code` | Đọc `PlanViewModel.dressCodes` qua `useTripPlanSnapshot` | Nhóm TRIP/DAY/ACTIVITY; activity mất liên kết có fallback. Không ảnh, palette, live AI hoặc write control. DSS là source lịch sử. |
+| Packing List | `/trips/:tripId/packing` | Đọc `PlanViewModel.packingItems` qua cùng snapshot | Nhóm category, null → Khác; progress từ status; quantity giữ exact string; assignee chỉ hiện “Đã phân công”. Không checkbox/action hoặc Activity completion. |
+| Trip Map | `/trips/:tripId/map` | Đọc `selectedLocations` và `activities` qua cùng snapshot | List/filter/detail hoạt động khi provider unavailable. Tọa độ chỉ parse sau finite/range validation; không tải tile/script ngoài. Mobile detail là sheet không modal trong document flow. |
+
+Các route workspace dùng `handle.section` và `NavLink`; `/trips/new` được khai báo trước dynamic trip route. Shared snapshot chỉ ready khi membership/canRead, trip ID, plan/export revision và toàn bộ row `planVersion` đồng nhất.
+
 ## Common screen contract
 
 Mỗi screen contract phải ghi:

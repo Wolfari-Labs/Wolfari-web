@@ -273,13 +273,13 @@ for (const width of [1440, 402]) {
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     if (width > 768) {
-      await expect(page.getByRole('button', { name: 'Tạo chuyến đi', exact: true })).toBeDisabled();
+      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute('href', '/trips/new');
       for (const label of ['Vai trò: Tất cả', 'Thời gian', 'Bộ lọc'])
         await expect(page.getByRole('button', { name: label, exact: true })).toBeDisabled();
       for (const action of await articles(page).getByRole('button').all())
         await expect(action).toBeDisabled();
     } else
-      await expect(page.getByRole('button', { name: 'Tạo chuyến đi', exact: true })).toBeDisabled();
+      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute('href', '/trips/new');
     await expectNoTransport(page, apiCalls);
   });
 

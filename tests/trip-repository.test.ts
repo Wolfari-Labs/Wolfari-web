@@ -29,7 +29,19 @@ describe('Trip repository boundary', () => {
         status: 'error',
         error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false },
       });
-      expect(Object.keys(repository).sort()).toEqual(['getTrip', 'listTrips']);
+      expect(
+        await repository.createTrip({
+          intent: {
+            name: 'Trip',
+            startAt: '2026-10-20T00:00:00+07:00',
+            endAt: '2026-10-21T00:00:00+07:00',
+            timezone: 'Asia/Ho_Chi_Minh',
+            clientRequestId: 'request-1',
+          },
+          signal: new AbortController().signal,
+        }),
+      ).toMatchObject({ status: 'unavailable' });
+      expect(Object.keys(repository).sort()).toEqual(['createTrip', 'getTrip', 'listTrips']);
       expect(fetchSpy).not.toHaveBeenCalled();
     } finally {
       fetchSpy.mockRestore();
@@ -88,6 +100,11 @@ describe('Trip repository boundary', () => {
     const adapter: TripRepository = {
       listTrips: async () => ({ status: 'empty' }),
       getTrip: async () => ({ status: 'empty' }),
+      createTrip: async () => ({
+        status: 'unavailable',
+        correlationId: null,
+        retryable: false,
+      }),
     };
     const factory = vi.fn(() => adapter);
     expect(await selectTripRepository(undefined, true, factory)).toBe(adapter);
@@ -156,7 +173,7 @@ describe('Trip List fixture projection', () => {
         permissions: { canRead: true, canUpdate: false },
       });
     }
-    expect(Object.keys(repository).sort()).toEqual(['getTrip', 'listTrips']);
+    expect(Object.keys(repository).sort()).toEqual(['createTrip', 'getTrip', 'listTrips']);
   });
 
   it('uses responsive source illustrations only for the two mapped cards', async () => {

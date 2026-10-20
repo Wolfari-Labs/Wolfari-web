@@ -1,12 +1,10 @@
 import { TripHero } from './components/TripHero';
-import { usePlanRepository } from '../plan/repositories/plan-context';
 import { PlanSummary } from '../plan/components/PlanSummary';
 import type { PlanViewModel } from '../plan/model/plan';
 import type { ReadResult } from '../../shared/types/result';
 import { useState, type ReactNode } from 'react';
 import { Link, useOutletContext, useParams } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
-import { useTripRepository } from './repositories/repository-context';
+import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import {
   tripDetailScenarios,
   type TripDetailScenario,
@@ -105,41 +103,17 @@ export function TripOverview({
 export function TripOverviewPage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
-  const repository = useTripRepository();
-  const planRepository = usePlanRepository();
   const [scenario, setScenario] = useState<TripDetailScenario>('success');
-  const query = useQuery({
-    queryKey: ['trip', 'detail', tripId, scenario],
-    queryFn: ({ signal }) => repository.getTrip({ tripId, scenario, signal }),
-  });
-  const result = query.data;
-  const trip = result?.status === 'ready' ? result.data : null;
-  const denied =
-    trip &&
-    (!trip.permissions.canRead ||
-      trip.id !== tripId ||
-      trip.currentMembership.leftAt !== null ||
-      trip.currentMembership.tripId !== tripId);
-  const planQuery = useQuery({
-    queryKey: ['plan', tripId, 'success'],
-    queryFn: ({ signal }) => planRepository.getPlan({ tripId, scenario: 'success', signal }),
-    enabled: !!trip && !denied,
-  });
-  const plan: ReadResult<PlanViewModel> | { status: 'loading' } = planQuery.isPending
-    ? { status: 'loading' }
-    : planQuery.isError
-      ? {
-          status: 'error',
-          error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true },
-        }
-      : (planQuery.data ?? { status: 'empty' });
-  const error = query.isError
-    ? { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true }
-    : result?.status === 'error'
-      ? result.error
-      : denied
-        ? { code: 'PERMISSION_DENIED' as const, correlationId: null, retryable: false }
-        : null;
+  const snapshot = useTripPlanSnapshot(tripId, 'success', scenario);
+  const trip = snapshot.state.status === 'ready' ? snapshot.state.trip : null;
+  const plan: ReadResult<PlanViewModel> | { status: 'loading' } = snapshot.state.status === 'ready'
+    ? { status: 'ready', data: snapshot.state.plan }
+    : snapshot.state.status === 'error'
+      ? { status: 'error', error: snapshot.state.error }
+      : snapshot.state.status === 'empty'
+        ? { status: 'empty' }
+        : { status: 'loading' };
+  const error = snapshot.state.status === 'error' ? snapshot.state.error : null;
   return (
     <section className={styles.page} data-flow="trip-overview" data-node-id="3:31">
       <div className={styles.breadcrumb}>
@@ -147,25 +121,20 @@ export function TripOverviewPage() {
         <span aria-hidden="true">›</span>
         <h1>Tổng quan chuyến đi</h1>
       </div>
-      {query.isPending ? (
+      {snapshot.state.status === 'loading' ? (
         <ContentState state="loading" headingLevel={2} />
       ) : error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
           error={error}
           headingLevel={2}
-          onRetry={() => {
-            void query.refetch();
-          }}
+          onRetry={snapshot.retry}
         />
       ) : trip ? (
         <TripOverview
           trip={trip}
           plan={plan}
-          onRetry={() => {
-            void query.refetch();
-            if (!denied) void planQuery.refetch();
-          }}
+          onRetry={snapshot.retry}
         />
       ) : (
         <ContentState state="empty" headingLevel={2} />

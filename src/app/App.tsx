@@ -36,6 +36,7 @@ export function App({
         requiresViewer?: boolean;
         contentTitle?: boolean;
         fullBleed?: boolean;
+        section?: ShellSection;
       }
     | undefined;
   // Router matching permits case/trailing-slash aliases. Policies must use the same identity.
@@ -50,32 +51,11 @@ export function App({
   const [scenario, setScenario] = useState<ShellScenario>(() =>
     [paths.home, paths.login, paths.register].includes(policyPath) ? 'guest' : 'success',
   );
-  const [section, setSection] = useState<ShellSection>('overview');
   const [demoActive, setDemoActive] = useState(false);
   const query = useShell(tripId ?? null, scenario);
   const result = query.data;
   const snapshot = result?.status === 'ready' ? result.data : null;
-  const effectiveSection = policyPath.endsWith('/plan')
-    ? 'plan'
-    : policyPath.endsWith('/map')
-      ? 'map'
-    : policyPath.endsWith('/members')
-      ? 'members'
-      : policyPath.endsWith('/fund')
-        ? 'fund'
-      : policyPath.endsWith('/price-watch')
-        ? 'fare'
-      : section;
-  const routedTripSection =
-    policyPath.endsWith('/plan') ||
-    policyPath.endsWith('/map') ||
-    policyPath.endsWith('/members') ||
-    policyPath.endsWith('/fund') ||
-    policyPath.endsWith('/price-watch');
-  const targetSection =
-    !!tripId &&
-    !routedTripSection &&
-    effectiveSection !== 'overview';
+  const effectiveSection = handle?.section ?? 'overview';
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
     : tripId
@@ -95,14 +75,14 @@ export function App({
   useEffect(() => {
     document.title = title ? `${title} · Wolfari` : 'Wolfari';
   }, [title]);
-  const previousNavigation = useRef<[string, ShellSection, AdminSection] | null>(null);
+  const previousNavigation = useRef<[string, AdminSection] | null>(null);
   useEffect(() => {
     const firstRenderNeedsFocus = previousNavigation.current === null && handle?.notFound === true;
     if (
       firstRenderNeedsFocus ||
       (previousNavigation.current !== null &&
       previousNavigation.current.some(
-        (value, index) => value !== [pathname, section, adminSection][index],
+        (value, index) => value !== [pathname, adminSection][index],
       ))
     ) {
       const main = document.getElementById('main-content');
@@ -113,8 +93,8 @@ export function App({
       if (typeof window.matchMedia === 'function')
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
-    previousNavigation.current = [pathname, section, adminSection];
-  }, [pathname, section, adminSection, handle?.notFound]);
+    previousNavigation.current = [pathname, adminSection];
+  }, [pathname, adminSection, handle?.notFound]);
   const denied =
     result?.status === 'ready' &&
     (adminLayout
@@ -181,13 +161,16 @@ export function App({
       currentPath={policyPath}
       section={effectiveSection}
       onSectionChange={(next) => {
-        setSection(next === 'plan' || next === 'members' ? 'overview' : next);
         if (tripId) {
           navigate(
             next === 'plan'
               ? paths.plan(tripId)
               : next === 'map'
                 ? paths.map(tripId)
+              : next === 'dress'
+                ? paths.dressCode(tripId)
+              : next === 'packing'
+                ? paths.packing(tripId)
               : next === 'members'
                 ? paths.members(tripId)
                 : next === 'fund'
@@ -217,7 +200,7 @@ export function App({
           </Button>
         </Alert>
       )}
-      {!handle?.notFound && (!ownContentTitle || targetSection || !snapshot || denied) && (
+      {!handle?.notFound && (!ownContentTitle || !snapshot || denied) && (
         <h1 className="screen-title">{title}</h1>
       )}
       {!ownContentTitle && previewControls}
@@ -255,8 +238,6 @@ export function App({
           headingLevel={2}
           error={{ code: 'PERMISSION_DENIED', correlationId: null, retryable: false }}
         />
-      ) : targetSection ? (
-        <ContentState state="unavailable" headingLevel={2} />
       ) : (
         <Outlet context={routeContext} />
       )}
