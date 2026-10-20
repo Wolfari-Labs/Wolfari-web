@@ -156,7 +156,7 @@ Targeted browser contract suite: **17 Chromium cases pass** trên `2560/1920/144
 
 ### Plan Preview fixture
 
-Desktop `20:236`, unscheduled `439:2028`, Mobile `317:2033` → `/trips/:tripId/plan`, Member/Owner/Plan Editor theo permissions, PlanPage/PlanView/Activity/TripHero. [Domain, canonical fixture, scroll và capability mapping](plan-preview-phase3.md). Overview now reads first-day PlanSummary. Không map/detail production route; no fake travel metrics/presence/write success. Timeline boundaries giữ source VERTICAL, Mobile natural scroll.
+Desktop `20:236`, pool `439:2028`, editor `26:411`, Mobile planner `317:2053` → `/trips/:tripId/plan`, Member/Owner/Plan Editor theo permissions. Pool ẩn mặc định; desktop mở cột phải, ≤1200px mở fullscreen dialog chứa pool + ngày đang chọn. Pointer/touch/keyboard DnD và editor chỉ cập nhật draft local TTL 30 ngày, không Activity/Selected Location write hoặc đồng bộ thành viên. [Domain, state, reset rule và capability mapping](plan-preview-phase3.md). Overview vẫn đọc first-day PlanSummary; không fake travel metrics/presence/write success.
 
 Plan acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; **137 unit/component/proxy và 74 Chromium E2E pass** (two browser workers, stored `.last-run.json` passed/no failed tests). Đã xem screenshot 1440×800 và Mobile402, có kiểm tra 1366×600/520, tablet1024/820/768 và Mobile320. Keyboard timeline scroll assertion đợi browser hoàn tất scroll, không bỏ assertion; local assets giữ intrinsic SVG geometry. Production marker scan không chứa Plan/Trip/Identity fixture records.
 

@@ -223,7 +223,7 @@ Readable Trip List card → Overview metadata → existing Plan/Members route; B
 
 ### Plan preview
 
-Overview/sidebar → Plan → chọn ngày/activity disclosure/unscheduled panel → Overview hoặc Members bằng existing navigation. Day selection và expansion local, giữ qua read error/recovery; không route cho map/activity hoặc drag/drop mutation. Overview đọc cùng first-day Plan projection. [Contract/evidence](plan-preview-phase3.md).
+Overview/sidebar → Plan → chọn ngày/activity disclosure → “Thêm hoạt động” mở pool local → kéo pool ↔ timeline hoặc mở editor activity. Pool luôn ẩn khi mới vào trang; desktop dùng cột phải, ≤1200px dùng planner dialog chứa đồng thời pool và timeline. Draft lưu trên thiết bị 30 ngày, không route activity mới, không Activity/Selected Location write API và chưa đồng bộ thành viên. Map selection tạo client draft chưa xếp; chỉ draft có `scheduledDate` được coi là “Trong lịch”. Overview vẫn đọc first-day Plan projection nguồn. [Contract/evidence](plan-preview-phase3.md).
 
 ### Members / Invitation preview
 
