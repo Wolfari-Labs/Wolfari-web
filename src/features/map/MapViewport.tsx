@@ -9,6 +9,17 @@ import { activityScheduleLabel, validCoordinates } from './trip-map';
 import { loadGoogleMapsSdk } from './google-places';
 import styles from './TripMapPage.module.css';
 
+type GoogleMapsRuntime = {
+  Map: new (element: HTMLElement, options: Record<string, unknown>) => {
+    fitBounds: (bounds: unknown, padding: number) => void;
+  };
+  LatLngBounds: new () => { extend: (coordinate: { lat: number; lng: number }) => void };
+  Marker: new (options: Record<string, unknown>) => {
+    addListener: (eventName: string, listener: () => void) => void;
+  };
+  SymbolPath: { CIRCLE: unknown };
+};
+
 function locationPhoto(item: MapLocationPresentation | null, mobile = false) {
   if (!item) return mobile ? destinationPhoto : desktopPlaceArtwork;
   if (item.location.name === 'Bãi biển Mỹ Khê')
@@ -38,6 +49,7 @@ export function MapViewport({
 }) {
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const [googleMapReady, setGoogleMapReady] = useState(false);
+  const [mapProviderState, setMapProviderState] = useState<'idle' | 'loading' | 'ready' | 'unavailable'>('idle');
   const markerItems = items.filter((item) => validCoordinates(item.location) !== null);
   const selected =
     items.find((item) => item.location.id === selectedLocationId) ?? items[0] ?? null;
@@ -46,14 +58,22 @@ export function MapViewport({
 
   useEffect(() => {
     let disposed = false;
-    if (!previewEnabled || markerItems.length === 0) return;
-    void loadGoogleMapsSdk().then((available) => { if (!disposed) setGoogleMapReady(available); });
+    if (!googleConfigured || markerItems.length === 0) {
+      setMapProviderState('unavailable');
+      return;
+    }
+    setMapProviderState('loading');
+    void loadGoogleMapsSdk().then((available) => {
+      if (disposed) return;
+      setGoogleMapReady(available);
+      setMapProviderState(available ? 'ready' : 'unavailable');
+    });
     return () => { disposed = true; };
-  }, [markerItems.length, previewEnabled]);
+  }, [googleConfigured, markerItems.length]);
 
   useEffect(() => {
     if (!googleMapReady || !mapCanvasRef.current) return;
-    const googleMaps = (window as Window & { google?: any }).google?.maps;
+    const googleMaps = (window as unknown as { google?: { maps?: GoogleMapsRuntime } }).google?.maps;
     if (!googleMaps?.Map) return;
     const coordinates = markerItems.map((item) => validCoordinates(item.location)).filter(Boolean) as { latitude: number; longitude: number }[];
     if (!coordinates.length) return;
@@ -72,14 +92,14 @@ export function MapViewport({
       const marker = new googleMaps.Marker({
         map, position: { lat: coordinate.latitude, lng: coordinate.longitude }, title: item.location.name,
         label: { text: String(item.markerNumber), color: item.scheduled ? '#fff' : '#6c4a00', fontWeight: '700' },
-        icon: { path: googleMaps.SymbolPath.CIRCLE, scale: item.location.id === selected?.location.id ? 15 : 11, fillColor: item.scheduled ? '#0098c8' : '#f6b82e', fillOpacity: 1, strokeColor: item.scheduled ? '#007c9f' : '#da9b0a', strokeWeight: 2 },
+        icon: { path: googleMaps.SymbolPath.CIRCLE, scale: item.location.id === selected?.location.id ? 15 : 11, fillColor: item.scheduled ? '#0e8e69' : '#f6b82e', fillOpacity: 1, strokeColor: item.scheduled ? '#087052' : '#da9b0a', strokeWeight: 2 },
       });
       marker.addListener('click', () => onSelect(item.location.id));
     });
     if (markerItems.length > 1) map.fitBounds(bounds, 48);
   }, [googleMapReady, mapType, markerItems, onSelect, selected]);
 
-  if (!previewEnabled) {
+  if (!previewEnabled && mapProviderState !== 'ready') {
     return (
       <section
         className={`${styles.viewport} ${styles.unavailableViewport}`}
@@ -87,7 +107,9 @@ export function MapViewport({
       >
         <div aria-hidden="true" className={styles.mapPattern} />
         <div className={styles.providerState}>
-          <strong id="map-viewport-title">Bản đồ nền chưa được cấu hình</strong>
+          <strong id="map-viewport-title">
+            {mapProviderState === 'loading' ? 'Đang tải Google Maps' : 'Bản đồ nền chưa được cấu hình'}
+          </strong>
           <p>
             Danh sách và chi tiết địa điểm vẫn dùng được. Không có tile, script hoặc request
             tới nhà cung cấp bên ngoài.

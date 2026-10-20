@@ -1,7 +1,12 @@
 .page {
   --map-teal: #008cac;
+  --map-scheduled: #0e8e69;
+  --map-scheduled-surface: #eaf9f4;
+  --map-scheduled-line: #bcead9;
   --map-warning: #f6b82e;
   --map-warning-line: #da9b0a;
+  --map-muted: #65757d;
+  --map-muted-surface: #f7f9fa;
   width: 100%;
   min-height: 100%;
   padding: 8px 22px 24px 18px;
@@ -46,7 +51,7 @@
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(360px, 470px) minmax(500px, 694px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
   align-items: stretch;
   margin-top: 16px;
@@ -152,7 +157,7 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  min-height: 28px;
+  min-height: 44px;
   padding: 5px 11px;
   border: 1px solid #cde7f2;
   border-radius: 15px;
@@ -163,29 +168,55 @@
   line-height: 16px;
 }
 
-.desktopFilters button:first-child[aria-pressed='true'] {
-  border-color: #0098c8;
-  background: #0098c8;
-  color: var(--color-white);
-}
-
 .desktopFilters > span {
   border-color: #b9e7ef;
   background: #e9f8fb;
   color: #0098c8;
 }
 
-.desktopFilters button:nth-of-type(2)[aria-pressed='true'] {
-  border-color: #bcead9;
-  background: #eaf9f4;
-  color: #0e8e69;
+.filterAll,
+.filterSelected,
+.filterScheduled,
+.filterUnscheduled {
+  border-color: #cde7f2 !important;
+  background: var(--color-white) !important;
+  color: #0b4f91 !important;
 }
 
-.desktopFilters button:nth-of-type(3),
-.desktopFilters button:nth-of-type(3)[aria-pressed='true'] {
-  border-color: #f4d88a;
-  background: #fff7de;
-  color: #9b6a00;
+.filterAll[aria-pressed='true'] {
+  border-color: var(--map-teal) !important;
+  background: var(--map-teal) !important;
+  color: var(--color-white) !important;
+}
+
+.filterSelected {
+  border-color: #b9e7ef !important;
+  background: #e9f8fb !important;
+  color: #0b84a8 !important;
+}
+
+.filterSelected[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.filterScheduled {
+  border-color: var(--map-scheduled-line) !important;
+  background: var(--map-scheduled-surface) !important;
+  color: var(--map-scheduled) !important;
+}
+
+.filterScheduled[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.filterUnscheduled {
+  border-color: #f4d88a !important;
+  background: #fff7de !important;
+  color: #9b6a00 !important;
+}
+
+.filterUnscheduled[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 1px currentColor;
 }
 
 .mobileFilters {
@@ -290,9 +321,9 @@
 }
 
 .statusScheduled {
-  border-color: #bcead9;
-  background: #eaf9f4;
-  color: #0e8e69;
+  border-color: var(--map-scheduled-line);
+  background: var(--map-scheduled-surface);
+  color: var(--map-scheduled);
 }
 
 .statusUnscheduled {
@@ -375,7 +406,7 @@
 
 .viewport {
   position: relative;
-  width: 666px;
+  width: 100%;
   max-width: 100%;
   height: 566px;
   overflow: hidden;
@@ -415,8 +446,9 @@
 }
 
 .desktopMapArtwork {
-  width: 666px;
-  height: 566px;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
 
 .mobileMapArtwork,
@@ -448,8 +480,8 @@
 }
 
 .markerScheduled {
-  border-color: #0098c8;
-  background: #0098c8;
+  border-color: var(--map-scheduled);
+  background: var(--map-scheduled);
   color: var(--color-white);
 }
 
@@ -506,8 +538,8 @@
 }
 
 .scheduledDot {
-  border-color: #0098c8 !important;
-  background: #0098c8;
+  border-color: var(--map-scheduled) !important;
+  background: var(--map-scheduled);
 }
 
 .unscheduledDot {
@@ -621,13 +653,13 @@
   }
 
   .placePanel {
-    height: auto;
-    min-height: 500px;
+    height: min(650px, calc(100dvh - 160px));
+    min-height: 420px;
   }
 
   .mapPanel {
-    width: min(100%, 694px);
-    justify-self: center;
+    width: 100%;
+    justify-self: stretch;
   }
 }
 
@@ -690,7 +722,7 @@
   .mobileFilters label,
   .mobileFilters select {
     width: 100%;
-    height: 36px;
+    height: 44px;
     min-width: 0;
     border: 0;
     border-radius: 999px;
@@ -720,6 +752,21 @@
   .mobileFilters > button[aria-pressed='true'] {
     background: #e4f8f1;
     color: var(--map-teal);
+  }
+
+  .mobileFilters .filterSelected {
+    background: #e9f8fb !important;
+    color: #0b84a8 !important;
+  }
+
+  .mobileFilters .filterScheduled {
+    background: var(--map-scheduled-surface) !important;
+    color: var(--map-scheduled) !important;
+  }
+
+  .mobileFilters .filterSelected[aria-pressed='true'],
+  .mobileFilters .filterScheduled[aria-pressed='true'] {
+    box-shadow: inset 0 0 0 1px currentColor;
   }
 
   .mobileFilters select {
@@ -1103,18 +1150,66 @@
   text-align: left;
 }
 
-.placeCheckbox {
+.checkboxTarget {
   position: absolute;
-  right: 10px;
+  right: 0;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  cursor: pointer;
+}
+
+.checkboxTarget:has(.placeCheckbox:disabled) {
+  cursor: not-allowed;
+}
+
+.placeCheckbox {
   width: 24px;
   height: 24px;
-  min-width: 24px;
+  margin: 0;
   accent-color: #008cac;
+}
+
+.placeCheckboxUnscheduled {
+  accent-color: var(--map-warning-line);
 }
 
 .placeRowActive { border-color: #0098c8; box-shadow: var(--shadow-selection); }
 .unselectedDot { width: 28px; height: 28px; flex: none; border: 2px solid #bdc9cf; border-radius: 50%; }
-.statusUnselected { border-color: #d7e0e4; background: #f7f9fa; color: #65757d; }
+.statusUnselected { border-color: #d7e0e4; background: var(--map-muted-surface); color: var(--map-muted); }
+
+.listState {
+  min-height: 44px;
+  padding: 12px;
+  color: var(--color-muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+.filterSelect[data-filter='ALL'] select {
+  border-color: var(--map-teal);
+  background-color: #e9f8fb;
+  color: #0b84a8;
+}
+
+.filterSelect[data-filter='SELECTED'] select {
+  border-color: #b9e7ef;
+  background-color: #e9f8fb;
+  color: #0b84a8;
+}
+
+.filterSelect[data-filter='SCHEDULED'] select {
+  border-color: var(--map-scheduled-line);
+  background-color: var(--map-scheduled-surface);
+  color: var(--map-scheduled);
+}
+
+.filterSelect[data-filter='UNSCHEDULED'] select {
+  border-color: #f4d88a;
+  background-color: #fff7de;
+  color: #9b6a00;
+}
 
 @media (max-width: 360px) {
   .page {

@@ -13,6 +13,7 @@ type GooglePlaceSearchResponse = { places?: GooglePlaceLike[]; nextPage?: () => 
 type GooglePlacesLibrary = {
   Place?: {
     searchByText?: (request: Record<string, unknown>) => Promise<GooglePlaceSearchResponse>;
+    searchNearby?: (request: Record<string, unknown>) => Promise<GooglePlaceSearchResponse>;
   };
 };
 
@@ -65,35 +66,38 @@ function coordinate(value: GooglePlaceLike['location']) {
 export interface PlaceSearchResult {
   readonly places: readonly LocalPlaceSelection[];
   readonly unavailable: boolean;
+  readonly hasMore: boolean;
+  readonly loadMore?: () => Promise<PlaceSearchResult>;
 }
 
-export async function searchGooglePlaces(query: string, tripId: string, signal?: AbortSignal): Promise<PlaceSearchResult> {
-  signal?.throwIfAborted();
-  if (!(await loadGoogleMapsSdk())) return { places: [], unavailable: true };
-  signal?.throwIfAborted();
-  const library = await window.google!.maps!.importLibrary!('places');
-  const search = library.Place?.searchByText;
-  if (!search) return { places: [], unavailable: true };
-  let response = await search({
-    textQuery: query,
-    fields: ['id', 'displayName', 'formattedAddress', 'location', 'types'],
-    language: 'vi',
-    region: 'VN',
-    maxResultCount: 20,
-  });
-  signal?.throwIfAborted();
-  const rawPlaces: GooglePlaceLike[] = [...(response.places ?? [])];
-  let page = 0;
-  while (response.nextPage && page < 5) {
-    response = await response.nextPage();
-    rawPlaces.push(...(response.places ?? []));
-    page += 1;
-  }
+export interface PlaceSearchCenter {
+  readonly latitude: number;
+  readonly longitude: number;
+}
+
+const SEARCH_RADIUS_METERS = 20_000;
+const MAX_PROVIDER_NEXT_PAGES = 5;
+const NEARBY_TYPES = [
+  'tourist_attraction',
+  'restaurant',
+  'cafe',
+  'museum',
+  'shopping_mall',
+  'market',
+];
+
+function unavailableResult(): PlaceSearchResult {
+  return { places: [], unavailable: true, hasMore: false };
+}
+
+function mapPlaces(
+  rawPlaces: readonly GooglePlaceLike[],
+  tripId: string,
+  seenProviderIds: Set<string>,
+) {
   const fetchedAt = new Date().toISOString();
-  const seenProviderIds = new Set<string>();
-  const places = rawPlaces.flatMap((place) => {
-    if (!place.id) return [];
-    if (seenProviderIds.has(place.id)) return [];
+  return rawPlaces.flatMap((place) => {
+    if (!place.id || seenProviderIds.has(place.id)) return [];
     seenProviderIds.add(place.id);
     const name = typeof place.displayName === 'string' ? place.displayName : place.displayName?.text;
     if (!name) return [];
@@ -116,5 +120,71 @@ export async function searchGooglePlaces(query: string, tripId: string, signal?:
       local: true as const,
     }];
   });
-  return { places, unavailable: false };
+}
+
+function pageResult(
+  response: GooglePlaceSearchResponse,
+  tripId: string,
+  signal: AbortSignal | undefined,
+  seenProviderIds: Set<string>,
+  remainingPages = MAX_PROVIDER_NEXT_PAGES,
+): PlaceSearchResult {
+  const nextPage = response.nextPage;
+  const canLoadMore = Boolean(nextPage && remainingPages > 0);
+  const baseResult = {
+    places: mapPlaces(response.places ?? [], tripId, seenProviderIds),
+    unavailable: false,
+    hasMore: canLoadMore,
+  };
+  if (!canLoadMore || !nextPage) return baseResult;
+  return {
+    ...baseResult,
+    loadMore: async () => {
+      signal?.throwIfAborted();
+      const nextResponse = await nextPage();
+      signal?.throwIfAborted();
+      return pageResult(nextResponse, tripId, signal, seenProviderIds, remainingPages - 1);
+    },
+  };
+}
+
+export async function searchGooglePlaces(
+  query: string,
+  tripId: string,
+  signal?: AbortSignal,
+  center?: PlaceSearchCenter | null,
+): Promise<PlaceSearchResult> {
+  signal?.throwIfAborted();
+  if (!(await loadGoogleMapsSdk())) return unavailableResult();
+  signal?.throwIfAborted();
+  const library = await window.google!.maps!.importLibrary!('places');
+  const seenProviderIds = new Set<string>();
+  const fields = ['id', 'displayName', 'formattedAddress', 'location', 'types'];
+  const search = query.trim().length >= 2
+    ? library.Place?.searchByText
+    : library.Place?.searchNearby;
+  if (!search || !center) return unavailableResult();
+
+  const location = { lat: center.latitude, lng: center.longitude };
+  const request = query.trim().length >= 2
+    ? {
+        textQuery: query.trim(),
+        fields,
+        language: 'vi',
+        region: 'VN',
+        maxResultCount: 20,
+        locationBias: { center: location, radius: SEARCH_RADIUS_METERS },
+      }
+    : {
+        fields,
+        language: 'vi',
+        region: 'VN',
+        maxResultCount: 20,
+        rankPreference: 'POPULARITY',
+        includedPrimaryTypes: NEARBY_TYPES,
+        locationRestriction: { center: location, radius: SEARCH_RADIUS_METERS },
+      };
+  const response = await search(request);
+  signal?.throwIfAborted();
+  return pageResult(response, tripId, signal, seenProviderIds);
 }

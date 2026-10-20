@@ -8,6 +8,7 @@ import { TripMapPage } from '../src/features/map/TripMapPage';
 import {
   activityDurationLabel,
   activityScheduleLabel,
+  placeDiscoveryCenter,
   selectMapLocations,
   validCoordinates,
 } from '../src/features/map/trip-map';
@@ -67,6 +68,17 @@ const location = (
 });
 
 describe('trip map projection', () => {
+  it('derives a nearby-search center from valid saved coordinates', () => {
+    expect(
+      placeDiscoveryCenter([
+        location('first', '16.0000', '108.0000'),
+        location('second', '16.2000', '108.4000'),
+        location('invalid', '91', '0'),
+      ]),
+    ).toEqual({ latitude: 16.1, longitude: 108.2 });
+    expect(placeDiscoveryCenter([location('invalid', null, null)])).toBeNull();
+  });
+
   it('validates coordinates and filters saved locations without changing Plan data', () => {
     const locations = [
       { ...location('beach', '16.05', '108.24'), name: 'Bãi biển Mỹ Khê', address: 'Võ Nguyên Giáp, Sơn Trà' },
@@ -124,7 +136,22 @@ describe('trip map projection', () => {
       </Providers>,
     );
 
-    expect(await screen.findByText('Bản đồ nền chưa được cấu hình')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Bản đồ nền chưa được cấu hình', { selector: 'strong' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('searchbox', { name: 'Tìm địa điểm' }),
+    ).toHaveAttribute('placeholder', 'Tìm địa điểm, quán ăn, điểm tham quan...');
+    expect(screen.getByRole('group', { name: 'Lọc địa điểm' })).toHaveTextContent('Tất cả');
+    expect(screen.queryByText(/(?:Ã|Â|Ä‘|áº)/)).not.toBeInTheDocument();
     const list = screen.getByRole('region', { name: /^Địa điểm/ });
     await userEvent.click(within(list).getByRole('button', { name: /Ngũ Hành Sơn/ }));
     expect(screen.getByRole('complementary', { name: 'Chi tiết địa điểm' })).toHaveTextContent(

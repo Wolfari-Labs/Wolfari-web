@@ -57,6 +57,7 @@ export function mergePlaceSelections(
 const EMPTY_PAYLOAD: PlaceSelectionPayload = Object.freeze({ version: 1, places: [], hiddenLocationIds: [] });
 const empty = (): PlaceSelectionPayload => EMPTY_PAYLOAD;
 const listeners = new Map<string, Set<() => void>>();
+const snapshotCache = new Map<string, { raw: string | null; payload: PlaceSelectionPayload; validUntil: number }>();
 
 export function placeSelectionKey(userId: string, tripId: string) {
   return `${PREFIX}${userId}:${tripId}`;
@@ -98,13 +99,26 @@ export function parsePlaceSelection(value: string | null): PlaceSelectionPayload
 
 function read(key: string): PlaceSelectionPayload {
   if (typeof window === 'undefined') return empty();
-  return parsePlaceSelection(window.localStorage.getItem(key));
+  const raw = window.localStorage.getItem(key);
+  const cached = snapshotCache.get(key);
+  if (cached?.raw === raw && Date.now() < cached.validUntil) return cached.payload;
+  const payload = parsePlaceSelection(raw);
+  snapshotCache.set(key, { raw, payload, validUntil: payload.places.reduce(
+    (earliest, place) => Math.min(earliest, Date.parse(place.fetchedAt) + MAX_CACHE_AGE_MS),
+    Number.POSITIVE_INFINITY,
+  ) });
+  return payload;
 }
 
 function write(key: string, payload: PlaceSelectionPayload) {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(key, JSON.stringify(payload));
+    const raw = JSON.stringify(payload);
+    window.localStorage.setItem(key, raw);
+    snapshotCache.set(key, { raw, payload, validUntil: payload.places.reduce(
+      (earliest, place) => Math.min(earliest, Date.parse(place.fetchedAt) + MAX_CACHE_AGE_MS),
+      Number.POSITIVE_INFINITY,
+    ) });
     notify(key);
   } catch {
     // Storage can be disabled or full. The UI remains usable for this session.
@@ -142,7 +156,7 @@ export function usePlaceSelection(userId: string, tripId: string) {
       const set = listeners.get(key) ?? new Set<() => void>();
       set.add(listener);
       listeners.set(key, set);
-      const onStorage = (event: StorageEvent) => event.key === key && listener();
+      const onStorage = (event: StorageEvent) => (event.key === key || event.key === null) && listener();
       window.addEventListener('storage', onStorage);
       return () => {
         window.removeEventListener('storage', onStorage);

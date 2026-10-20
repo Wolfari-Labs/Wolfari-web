@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
@@ -14,9 +14,9 @@ import { planDays } from '../plan/model/plan-presentation';
 import { TripHero } from '../trips/components/TripHero';
 import { MapViewport } from './MapViewport';
 import { PlaceDetail } from './PlaceDetail';
-import { mapLocationPresentations, normalizedPlaceText, placeStatus, sortPlacePresentations, type LocationScheduleFilter } from './trip-map';
+import { mapLocationPresentations, normalizedPlaceText, placeDiscoveryCenter, placeStatus, sortPlacePresentations, type LocationScheduleFilter } from './trip-map';
 import { hideSavedLocation, mergePlaceSelections, removePlaceSelection, savePlaceSelection, usePlaceSelection, type LocalPlaceSelection } from './place-selection-store';
-import { searchGooglePlaces } from './google-places';
+import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
 import styles from './TripMapPage.module.css';
 
 export function TripMapPage() {
@@ -30,36 +30,104 @@ export function TripMapPage() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [providerPlaces, setProviderPlaces] = useState<readonly LocalPlaceSelection[]>([]);
   const [providerState, setProviderState] = useState<'idle' | 'loading' | 'ready' | 'unavailable' | 'error'>('idle');
+  const [providerLoadingMore, setProviderLoadingMore] = useState(false);
+  const [providerHasMore, setProviderHasMore] = useState(false);
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [mutationId, setMutationId] = useState<string | null>(null);
+  const providerSessionRef = useRef<NonNullable<PlaceSearchResult['loadMore']> | null>(null);
+  const providerRequestRef = useRef(0);
+  const placeListRef = useRef<HTMLUListElement>(null);
   const snapshot = useTripPlanSnapshot(tripId, scenario);
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
+  const dataReady = snapshot.state.status === 'ready';
   const userId = data?.trip.currentMembership.userId ?? '';
   const localSelection = usePlaceSelection(userId, tripId);
   const days = data ? planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone) : [];
+  const selectedLocations = useMemo(
+    () => data ? mergePlaceSelections(data.plan.selectedLocations, data.plan.activities, localSelection) : [],
+    [data, localSelection],
+  );
+  const discoveryLocations = data?.plan.selectedLocations ?? selectedLocations;
+  const discoveryCenter = useMemo(
+    () => placeDiscoveryCenter(discoveryLocations),
+    [discoveryLocations],
+  );
+  const discoveryCenterKey = discoveryCenter
+    ? `${discoveryCenter.latitude.toFixed(5)}:${discoveryCenter.longitude.toFixed(5)}`
+    : 'none';
 
   const allItems = useMemo(() => {
     if (!data) return [];
-    const selectedLocations = mergePlaceSelections(data.plan.selectedLocations, data.plan.activities, localSelection);
     const selectedItems = mapLocationPresentations(selectedLocations, data.plan.activities, true);
     const selectedKeys = new Set(selectedLocations.map((location) => `${location.provider ?? ''}:${location.providerPlaceId ?? location.id}`));
     const candidates = providerPlaces.filter((place) => !selectedKeys.has(`google:${place.providerPlaceId}`)).map((place) => ({ ...mapLocationPresentations([place], data.plan.activities, false)[0]!, markerNumber: 0 }));
     return sortPlacePresentations([...selectedItems, ...candidates]);
-  }, [data, localSelection, providerPlaces]);
+  }, [data, providerPlaces, selectedLocations]);
 
   useEffect(() => {
+    if (!data) {
+      setProviderPlaces([]);
+      setProviderState('idle');
+      setProviderHasMore(false);
+      setProviderLoadingMore(false);
+      providerSessionRef.current = null;
+      return;
+    }
     const text = query.trim();
-    if (text.length < 2 || !data) { setProviderPlaces([]); setProviderState('idle'); return; }
+    if (text.length === 1) {
+      providerRequestRef.current += 1;
+      setProviderPlaces([]);
+      setProviderState('idle');
+      setProviderHasMore(false);
+      setProviderLoadingMore(false);
+      providerSessionRef.current = null;
+      return;
+    }
     const controller = new AbortController();
+    const requestId = providerRequestRef.current + 1;
+    providerRequestRef.current = requestId;
+    setProviderPlaces([]);
+    setProviderState('loading');
+    setProviderHasMore(false);
+    setProviderLoadingMore(false);
+    providerSessionRef.current = null;
     const timer = window.setTimeout(() => {
-      setProviderState('loading');
-      void searchGooglePlaces(text, tripId, controller.signal).then((result) => {
+      void searchGooglePlaces(text, tripId, controller.signal, discoveryCenter).then((result) => {
+        if (requestId !== providerRequestRef.current) return;
         setProviderPlaces(result.places);
+        providerSessionRef.current = result.loadMore ?? null;
+        setProviderHasMore(result.hasMore);
         setProviderState(result.unavailable ? 'unavailable' : 'ready');
-      }).catch(() => { if (!controller.signal.aborted) setProviderState('error'); });
+      }).catch(() => {
+        if (!controller.signal.aborted && requestId === providerRequestRef.current) {
+          providerSessionRef.current = null;
+          setProviderHasMore(false);
+          setProviderState('error');
+        }
+      });
     }, 300);
     return () => { window.clearTimeout(timer); controller.abort(); };
-  }, [data, query, tripId]);
+  }, [dataReady, discoveryCenterKey, query, tripId]);
+
+  const loadMoreProviderPlaces = () => {
+    const loadMore = providerSessionRef.current;
+    if (!loadMore || providerLoadingMore || !providerHasMore) return;
+    const requestId = providerRequestRef.current;
+    setProviderLoadingMore(true);
+    void loadMore().then((result) => {
+      if (requestId !== providerRequestRef.current) return;
+      setProviderPlaces((current) => {
+        const seen = new Set(current.map((place) => place.providerPlaceId));
+        return [...current, ...result.places.filter((place) => !seen.has(place.providerPlaceId))];
+      });
+      providerSessionRef.current = result.loadMore ?? null;
+      setProviderHasMore(result.hasMore);
+    }).catch(() => {
+      if (requestId === providerRequestRef.current) setProviderState('error');
+    }).finally(() => {
+      if (requestId === providerRequestRef.current) setProviderLoadingMore(false);
+    });
+  };
 
   const visibleItems = useMemo(() => {
     if (!data) return [];
@@ -104,26 +172,173 @@ export function TripMapPage() {
     <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
       {data && <>
         <div className={styles.mapContent}>
-          <div className={styles.breadcrumb}><Link to={paths.trips}>Chuyáº¿n Ä‘i cá»§a tÃ´i</Link><span aria-hidden="true">â€º</span><Link to={paths.trip(tripId)}>{data.trip.name}</Link><span aria-hidden="true">â€º</span><h1>Báº£n Ä‘á»“ &amp; Ä‘á»‹a Ä‘iá»ƒm</h1></div>
-          <div className={styles.hero}><TripHero trip={data.trip} compact variant="landscape" /></div>
-          <div className={styles.workspace}>
-            <section className={styles.placePanel} aria-label="Địa điểm đã lưu">
-              <header className={styles.panelHeader}><h2>TÃ¬m kiáº¿m &amp; chá»n Ä‘á»‹a Ä‘iá»ƒm</h2><p>TÃ¬m kiáº¿m má»i Ä‘á»‹a Ä‘iá»ƒm. Äá»‹a Ä‘iá»ƒm Ä‘Ã£ chá»n sáº½ Ä‘Æ°á»£c ghim trÃªn báº£n Ä‘á»“.</p></header>
-              <div className={styles.localNotice} role="status">Lá»±a chá»n chá»‰ Ä‘Æ°á»£c lÆ°u trÃªn thiáº¿t bá»‹ nÃ y, chÆ°a Ä‘á»“ng bá»™ vá»›i thÃ nh viÃªn khÃ¡c.</div>
-              <label className={styles.searchBox}><span className={styles.visuallyHidden}>TÃ¬m Ä‘á»‹a Ä‘iá»ƒm</span><img src={searchIcon} width="18" height="18" alt="" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="TÃ¬m Ä‘á»‹a Ä‘iá»ƒm, quÃ¡n Äƒn, Ä‘iá»ƒm tham quan..." /><img src={pinIcon} width="16" height="16" alt="" /></label>
-              <div className={styles.desktopFilters} role="group" aria-label="Lá»c Ä‘á»‹a Ä‘iá»ƒm"><button type="button" aria-pressed={filter === 'ALL'} onClick={() => setFilter('ALL')}>Táº¥t cáº£</button><button type="button" aria-pressed={filter === 'SELECTED'} onClick={() => setFilter('SELECTED')}>ÄÃ£ chá»n ({selectedCount})</button><button type="button" aria-pressed={filter === 'SCHEDULED'} onClick={() => setFilter('SCHEDULED')}>Trong lá»‹ch ({scheduledCount})</button><button type="button" aria-pressed={filter === 'UNSCHEDULED'} onClick={() => setFilter('UNSCHEDULED')}>ChÆ°a xáº¿p ({unscheduledCount})</button></div>
-              <div className={styles.mobileFilters}><button type="button" aria-pressed={filter === 'SELECTED'} onClick={() => setFilter(filter === 'SELECTED' ? 'ALL' : 'SELECTED')}>ÄÃ£ chá»n Â· {selectedCount}</button><button type="button" aria-pressed={filter === 'SCHEDULED'} onClick={() => setFilter(filter === 'SCHEDULED' ? 'ALL' : 'SCHEDULED')}>Trong lá»‹ch Â· {scheduledCount}</button><label><span className={styles.visuallyHidden}>Sáº¯p xáº¿p lá»‹ch</span><select aria-label="Sáº¯p xáº¿p lá»‹ch" value={filter} onChange={(event) => setFilter(event.target.value as LocationScheduleFilter)}><option value="ALL">Bá»™ lá»c</option><option value="SELECTED">ÄÃ£ chá»n</option><option value="SCHEDULED">Trong lá»‹ch trÃ¬nh</option><option value="UNSCHEDULED">ChÆ°a xáº¿p lá»‹ch</option></select></label></div>
-              {providerState === 'loading' && <div className={styles.searchState} role="status">Äang tÃ¬m Ä‘á»‹a Ä‘iá»ƒm...</div>}
-              {providerState === 'unavailable' && query.trim().length >= 2 && <div className={styles.searchState} role="status">Google Places chÆ°a kháº£ dá»¥ng. CÃ¡c Ä‘á»‹a Ä‘iá»ƒm Ä‘Ã£ lÆ°u váº«n hiá»ƒn thá»‹.</div>}
-              {visibleItems.length ? <ul className={styles.placeList}>{visibleItems.map((item) => { const focused = item.location.id === effectiveSelectedId; const status = placeStatus(item); const locked = status === 'IN_SCHEDULE' || !data.plan.permissions.canEdit; return <li key={item.location.id}><div className={`${styles.placeRow} ${focused ? styles.placeRowActive : ''}`}><button type="button" className={styles.placeMainButton} aria-pressed={focused} onClick={() => chooseLocation(item.location.id, true)}>{item.selected ? <span className={`${styles.pinBadge} ${status === 'IN_SCHEDULE' ? styles.pinScheduled : styles.pinUnscheduled}`}>{item.markerNumber}</span> : <span className={styles.unselectedDot} aria-hidden="true" />}<span className={styles.placeCopy}><strong>{item.location.name}</strong><small>{item.activities[0]?.activityType === 'MEAL' ? 'áº¨m thá»±c' : 'Tham quan'} Â· {item.location.address ?? 'ChÆ°a cÃ³ Ä‘á»‹a chá»‰'}</small></span><span className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}>{status === 'IN_SCHEDULE' ? 'Trong lá»‹ch' : status === 'SELECTED_UNSCHEDULED' ? 'ÄÃ£ chá»n Â· ChÆ°a xáº¿p' : 'ChÆ°a chá»n'}</span><img className={styles.rowChevron} src={chevronIcon} width="22" height="22" alt="" /></button><input className={styles.placeCheckbox} type="checkbox" checked={item.selected} disabled={locked || mutationId === item.location.id} onChange={() => togglePlace(item)} aria-label={`${item.selected ? 'Bá» chá»n' : 'Chá»n'} ${item.location.name}`} /></div></li>; })}</ul> : <div className={styles.empty} role="status"><strong>KhÃ´ng cÃ³ Ä‘á»‹a Ä‘iá»ƒm phÃ¹ há»£p</strong><p>Thá»­ tá»« khÃ³a, ngÃ y hoáº·c bá»™ lá»c khÃ¡c.</p></div>}
-            </section>
-            <section className={styles.mapPanel} aria-labelledby="map-panel-title"><div className={styles.mapToolbar}><label className={styles.routeSelector}><span id="map-panel-title" className={styles.visuallyHidden}>Báº£n Ä‘á»“ hÃ nh trÃ¬nh</span><select aria-label="NgÃ y" value={day ?? 'ALL'} onChange={(event) => setDay(event.target.value === 'ALL' ? null : event.target.value)}><option value="ALL">Hiá»ƒn thá»‹ lá»‹ch trÃ¬nh</option>{days.map((value, index) => <option key={value} value={value}>NgÃ y {index + 1}</option>)}</select></label><div className={styles.mapType} role="group" aria-label="Kiá»ƒu báº£n Ä‘á»“"><button type="button" aria-pressed={mapType === 'roadmap'} onClick={() => setMapType('roadmap')}>Báº£n Ä‘á»“</button><button type="button" aria-pressed={mapType === 'satellite'} onClick={() => setMapType('satellite')}>Vá»‡ tinh</button></div></div><MapViewport items={mapItems} selectedLocationId={effectiveSelectedId} timezone={data.trip.timezone} previewEnabled={previewEnabled} mapType={mapType} onSelect={(locationId) => chooseLocation(locationId)} onOpenDetail={() => setDetailOpen(true)} /></section>
+          <div className={styles.breadcrumb}>
+            <Link to={paths.trips}>Chuyến đi của tôi</Link>
+            <span aria-hidden="true">›</span>
+            <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
+            <span aria-hidden="true">›</span>
+            <h1>Bản đồ &amp; địa điểm</h1>
           </div>
-          <CapabilityNote id="map-provider-note"><strong>Báº£n Ä‘á»“ ná»n chÆ°a Ä‘Æ°á»£c cáº¥u hÃ¬nh</strong>. Báº£n Ä‘á»“ Ä‘ang lÃ  minh há»a Figma trong preview; Google Maps sáº½ Ä‘Æ°á»£c dÃ¹ng khi cÃ³ browser key.</CapabilityNote>
+          <div className={styles.hero}><TripHero trip={data.trip} compact variant="landscape" /></div>
+          <div className={styles.workspace} data-region="map-workspace">
+            <section className={styles.placePanel} aria-label="Địa điểm đã lưu" data-region="place-panel">
+              <header className={styles.panelHeader}>
+                <h2>Tìm kiếm &amp; chọn địa điểm</h2>
+                <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
+              </header>
+              <div className={styles.localNotice} role="status">
+                Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.
+              </div>
+              <label className={styles.searchBox}>
+                <span className={styles.visuallyHidden}>Tìm địa điểm</span>
+                <img src={searchIcon} width="18" height="18" alt="" />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
+                />
+                <img src={pinIcon} width="16" height="16" alt="" />
+              </label>
+              <div className={styles.desktopFilters} role="group" aria-label="Lọc địa điểm">
+                <button className={styles.filterAll} type="button" aria-pressed={filter === 'ALL'} onClick={() => setFilter('ALL')}>
+                  Tất cả
+                </button>
+                <button className={styles.filterSelected} type="button" aria-pressed={filter === 'SELECTED'} onClick={() => setFilter('SELECTED')}>
+                  Đã chọn ({selectedCount})
+                </button>
+                <button className={styles.filterScheduled} type="button" aria-pressed={filter === 'SCHEDULED'} onClick={() => setFilter('SCHEDULED')}>
+                  Trong lịch ({scheduledCount})
+                </button>
+                <button className={styles.filterUnscheduled} type="button" aria-pressed={filter === 'UNSCHEDULED'} onClick={() => setFilter('UNSCHEDULED')}>
+                  Chưa xếp ({unscheduledCount})
+                </button>
+              </div>
+              <div className={styles.mobileFilters}>
+                <button className={styles.filterSelected} type="button" aria-pressed={filter === 'SELECTED'} onClick={() => setFilter(filter === 'SELECTED' ? 'ALL' : 'SELECTED')}>
+                  Đã chọn · {selectedCount}
+                </button>
+                <button className={styles.filterScheduled} type="button" aria-pressed={filter === 'SCHEDULED'} onClick={() => setFilter(filter === 'SCHEDULED' ? 'ALL' : 'SCHEDULED')}>
+                  Trong lịch · {scheduledCount}
+                </button>
+                <label className={styles.filterSelect} data-filter={filter}>
+                  <span className={styles.visuallyHidden}>Sắp xếp lịch</span>
+                  <select aria-label="Sắp xếp lịch" value={filter} onChange={(event) => setFilter(event.target.value as LocationScheduleFilter)}>
+                    <option value="ALL">Bộ lọc</option>
+                    <option value="SELECTED">Đã chọn</option>
+                    <option value="SCHEDULED">Trong lịch trình</option>
+                    <option value="UNSCHEDULED">Chưa xếp lịch</option>
+                  </select>
+                </label>
+              </div>
+              {providerState === 'loading' && <div className={styles.searchState} role="status">Đang tìm địa điểm...</div>}
+              {providerState === 'unavailable' && (
+                <div className={styles.searchState} role="status">
+                  Google Places chưa khả dụng. Các địa điểm đã lưu vẫn hiển thị.
+                </div>
+              )}
+              {providerState === 'error' && (
+                <div className={styles.searchState} role="status">
+                  Không thể tải thêm địa điểm từ Google Places. Các địa điểm đã lưu vẫn hiển thị.
+                </div>
+              )}
+              {visibleItems.length ? (
+                <ul
+                  ref={placeListRef}
+                  className={styles.placeList}
+                  data-region="place-list"
+                  onScroll={(event) => {
+                    const list = event.currentTarget;
+                    if (list.scrollHeight - list.scrollTop - list.clientHeight < 160) loadMoreProviderPlaces();
+                  }}
+                >
+                  {visibleItems.map((item) => {
+                    const focused = item.location.id === effectiveSelectedId;
+                    const status = placeStatus(item);
+                    const locked = status === 'IN_SCHEDULE' || !data.plan.permissions.canEdit;
+                    return (
+                      <li key={item.location.id}>
+                        <div className={`${styles.placeRow} ${focused ? styles.placeRowActive : ''}`}>
+                          <button
+                            type="button"
+                            className={styles.placeMainButton}
+                            aria-pressed={focused}
+                            onClick={() => chooseLocation(item.location.id, true)}
+                          >
+                            {item.selected ? (
+                              <span className={`${styles.pinBadge} ${status === 'IN_SCHEDULE' ? styles.pinScheduled : styles.pinUnscheduled}`}>
+                                {item.markerNumber}
+                              </span>
+                            ) : (
+                              <span className={styles.unselectedDot} aria-hidden="true" />
+                            )}
+                            <span className={styles.placeCopy}>
+                              <strong>{item.location.name}</strong>
+                              <small>
+                                {item.activities[0]?.activityType === 'MEAL' ? 'Ẩm thực' : 'Tham quan'} · {item.location.address ?? 'Chưa có địa chỉ'}
+                              </small>
+                            </span>
+                            <span className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}>
+                              {status === 'IN_SCHEDULE' ? 'Trong lịch' : status === 'SELECTED_UNSCHEDULED' ? 'Đã chọn · Chưa xếp' : 'Chưa chọn'}
+                            </span>
+                            <img className={styles.rowChevron} src={chevronIcon} width="22" height="22" alt="" />
+                          </button>
+                          <label className={styles.checkboxTarget}>
+                            <input
+                              className={`${styles.placeCheckbox} ${status === 'SELECTED_UNSCHEDULED' ? styles.placeCheckboxUnscheduled : ''}`}
+                              type="checkbox"
+                              checked={item.selected}
+                              disabled={locked || mutationId === item.location.id}
+                              onChange={() => togglePlace(item)}
+                              aria-label={`${item.selected ? 'Bỏ chọn' : 'Chọn'} ${item.location.name}`}
+                            />
+                          </label>
+                        </div>
+                      </li>
+                    );
+                  })}
+                  {providerLoadingMore && <li className={styles.listState} role="status">Đang tải thêm địa điểm...</li>}
+                </ul>
+              ) : (
+                <div className={styles.empty} role="status">
+                  <strong>Không có địa điểm phù hợp</strong>
+                  <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
+                </div>
+              )}
+            </section>
+            <section className={styles.mapPanel} aria-labelledby="map-panel-title" data-region="map-panel">
+              <div className={styles.mapToolbar}>
+                <label className={styles.routeSelector}>
+                  <span id="map-panel-title" className={styles.visuallyHidden}>Bản đồ hành trình</span>
+                  <select aria-label="Ngày" value={day ?? 'ALL'} onChange={(event) => setDay(event.target.value === 'ALL' ? null : event.target.value)}>
+                    <option value="ALL">Hiển thị lịch trình</option>
+                    {days.map((value, index) => <option key={value} value={value}>Ngày {index + 1}</option>)}
+                  </select>
+                </label>
+                <div className={styles.mapType} role="group" aria-label="Kiểu bản đồ">
+                  <button type="button" aria-pressed={mapType === 'roadmap'} onClick={() => setMapType('roadmap')}>Bản đồ</button>
+                  <button type="button" aria-pressed={mapType === 'satellite'} onClick={() => setMapType('satellite')}>Vệ tinh</button>
+                </div>
+              </div>
+              <MapViewport
+                items={mapItems}
+                selectedLocationId={effectiveSelectedId}
+                timezone={data.trip.timezone}
+                previewEnabled={previewEnabled}
+                mapType={mapType}
+                onSelect={(locationId) => chooseLocation(locationId)}
+                onOpenDetail={() => setDetailOpen(true)}
+              />
+            </section>
+          </div>
+          <CapabilityNote id="map-provider-note">
+            <strong>Bản đồ nền chưa được cấu hình</strong>. Bản đồ đang là minh họa Figma trong preview;
+            Google Maps sẽ được dùng khi có browser key.
+          </CapabilityNote>
         </div>
         <PlaceDetail item={selectedItem} tripId={tripId} timezone={data.trip.timezone} open={detailOpen} onClose={() => setDetailOpen(false)} />
       </>}
     </TripPlanBoundary>
-    {previewEnabled && <details className="preview"><summary>Trip Map preview Â· Dá»¯ liá»‡u minh há»a</summary><Select label="Tráº¡ng thÃ¡i dá»¯ liá»‡u" value={scenario} onChange={(event) => setScenario(event.target.value as PlanScenario)}>{planScenarios.map((value) => <option key={value}>{value}</option>)}</Select></details>}
+    {previewEnabled && <details className="preview"><summary>Trip Map preview · Dữ liệu minh họa</summary><Select label="Trạng thái dữ liệu" value={scenario} onChange={(event) => setScenario(event.target.value as PlanScenario)}>{planScenarios.map((value) => <option key={value}>{value}</option>)}</Select></details>}
   </section>;
 }

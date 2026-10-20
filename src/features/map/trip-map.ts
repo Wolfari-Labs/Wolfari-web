@@ -29,6 +29,19 @@ export function validCoordinates(
   return { latitude, longitude };
 }
 
+export function placeDiscoveryCenter(
+  locations: readonly SelectedLocationViewModel[],
+) {
+  const coordinates = locations
+    .map(validCoordinates)
+    .filter((coordinate): coordinate is { latitude: number; longitude: number } => coordinate !== null);
+  if (!coordinates.length) return null;
+  return {
+    latitude: coordinates.reduce((sum, coordinate) => sum + coordinate.latitude, 0) / coordinates.length,
+    longitude: coordinates.reduce((sum, coordinate) => sum + coordinate.longitude, 0) / coordinates.length,
+  };
+}
+
 export function mapLocationPresentations(
   locations: readonly SelectedLocationViewModel[],
   activities: readonly ActivityViewModel[],
