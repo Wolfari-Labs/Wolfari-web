@@ -1,26 +1,22 @@
 import { expect, test, type Page } from '@playwright/test';
 const tripPath = '/trips/11111111-1111-4111-8111-111111111111';
 for (const width of [1440, 402])
-  test(`target-only sections keep unavailable preview ${width}`, async ({ page }) => {
+  test(`workspace projection sections use real routes ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 800 });
     await page.goto(tripPath);
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
     if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
-    await page
-      .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
-      .getByRole('button', { name: 'Packing list', exact: true })
-      .click();
-    await expect(
-      page.getByRole('heading', { name: 'Chức năng chưa khả dụng', exact: true }),
-    ).toBeVisible();
+    await page.getByRole('link', { name: 'Packing list', exact: true }).click();
+    await expect(page.locator('[data-flow="packing-read"]')).toBeVisible();
     await expect(page.locator('[data-flow="trip-overview"]')).toHaveCount(0);
-    await expect(page).toHaveURL(tripPath);
+    await expect(page).toHaveURL(tripPath + '/packing');
     await expect(page.locator('main')).toBeFocused();
     if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
-    await page
-      .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
-      .getByRole('button', { name: 'Tổng quan chuyến đi', exact: true })
-      .click();
+    if (width <= 768) {
+      await page.getByRole('dialog', { name: 'Điều hướng chuyến đi' }).getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }).click();
+    } else {
+      await page.locator('#main-content').getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }).click();
+    }
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
     await expect(page.locator('main')).toBeFocused();
   });
@@ -146,14 +142,14 @@ for (const size of sizes)
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(size.height);
       const nav = side.getByRole('navigation');
       const navTargets = await nav
-        .getByRole('button')
+        .locator('a,button')
         .evaluateAll((elements) =>
           elements.map((element) => element.getBoundingClientRect().height),
         );
       for (const height of navTargets) expect(height).toBeGreaterThanOrEqual(44);
-      await nav.getByRole('button', { name: 'Cài đặt', exact: true }).scrollIntoViewIfNeeded();
+      await nav.getByRole('button', { name: 'Cài đặt · Chưa khả dụng', exact: true }).scrollIntoViewIfNeeded();
       const navBox = (await nav.boundingBox())!,
-        settings = (await nav.getByRole('button', { name: 'Cài đặt', exact: true }).boundingBox())!;
+        settings = (await nav.getByRole('button', { name: 'Cài đặt · Chưa khả dụng', exact: true }).boundingBox())!;
       expect(settings.y + settings.height).toBeLessThanOrEqual(navBox.y + navBox.height + 1);
       await page.screenshot({ path: info.outputPath('desktop-expanded.png') });
       await toggle.focus();
@@ -171,7 +167,7 @@ for (const size of sizes)
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(
         true,
       );
-      await nav.getByRole('button', { name: 'Thành viên', exact: true }).click();
+      await nav.getByRole('link', { name: 'Thành viên', exact: true }).click();
       await expect(page).toHaveURL(tripPath + '/members');
       await expect(page.getByRole('heading', { name: 'Thành viên', exact: true })).toBeVisible();
       expect(await page.locator('main').evaluate((element) => element.scrollTop)).toBe(0);
@@ -200,12 +196,12 @@ for (const size of sizes)
       const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
       await expect(drawer).toBeVisible();
       expect((await drawer.boundingBox())!.width).toBeLessThanOrEqual(280);
-      const settings = drawer.getByRole('button', { name: 'Cài đặt', exact: true });
+      const settings = drawer.getByRole('button', { name: 'Cài đặt · Chưa khả dụng', exact: true });
       await settings.scrollIntoViewIfNeeded();
       const settingBox = (await settings.boundingBox())!,
         drawerBox = (await drawer.boundingBox())!;
       expect(settingBox.y + settingBox.height).toBeLessThanOrEqual(drawerBox.y + drawerBox.height);
-      await drawer.getByRole('button', { name: 'Lịch trình', exact: true }).click();
+      await drawer.getByRole('link', { name: 'Lịch trình', exact: true }).click();
       await expect(page).toHaveURL(tripPath + '/plan');
       await expect(drawer).not.toBeVisible();
       await expect(page.locator('main')).toBeFocused();
@@ -259,7 +255,7 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
   await menu.click();
-  await drawer.getByRole('button', { name: 'Tổng quan chuyến đi', exact: true }).click();
+  await drawer.getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }).click();
   await expect(page).toHaveURL(tripPath);
   await expect(drawer).not.toBeVisible();
   await expect(page.locator('main')).toBeFocused();

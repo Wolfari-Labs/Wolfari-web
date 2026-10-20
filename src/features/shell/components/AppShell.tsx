@@ -31,7 +31,6 @@ export function AppShell({
   listLayout = false,
   fullBleed = false,
   currentPath,
-  section,
   onSectionChange,
   children,
   adminLayout = false,
@@ -99,6 +98,22 @@ export function AppShell({
     selectDestination();
     onSectionChange(next);
   };
+  const tripPath = (id: ShellSection) => {
+    if (!snapshot?.trip) return null;
+    const tripId = snapshot.trip.id;
+    return {
+      overview: paths.trip(tripId),
+      map: paths.map(tripId),
+      plan: paths.plan(tripId),
+      dress: paths.dressCode(tripId),
+      packing: paths.packing(tripId),
+      members: paths.members(tripId),
+      fund: paths.fund(tripId),
+      fare: paths.priceWatch(tripId),
+      settings: null,
+      tools: null,
+    }[id];
+  };
   const selectAdmin = (next: AdminSection) => {
     selectDestination();
     onAdminSectionChange(next);
@@ -106,18 +121,32 @@ export function AppShell({
   const tripNavigation = (
     <nav aria-label="Điều hướng chuyến đi">
       {sections.map((item) => (
-        <NavigationButton
-          key={item.id}
-          className={section === item.id ? styles.selectedSection : ''}
-          disabled={!canReadTrip}
-          aria-label={item.label}
-          selected={section === item.id}
-          title={item.label}
-          onClick={() => selectTrip(item.id)}
-        >
-          <Icon file={item.icon} />
-          <span>{item.label}</span>
-        </NavigationButton>
+        tripPath(item.id) && canReadTrip ? (
+          <NavLink
+            key={item.id}
+            end={item.id === 'overview'}
+            to={tripPath(item.id)!}
+            className={({ isActive }) => (isActive ? styles.selectedSection : '')}
+            aria-label={item.label}
+            title={item.label}
+            onClick={selectDestination}
+          >
+            <Icon file={item.icon} />
+            <span>{item.label}</span>
+          </NavLink>
+        ) : (
+          <NavigationButton
+            key={item.id}
+            disabled
+            selected={false}
+            aria-label={`${item.label} · Chưa khả dụng`}
+            title={`${item.label} · Chưa khả dụng`}
+            onClick={() => selectTrip(item.id)}
+          >
+            <Icon file={item.icon} />
+            <span>{item.label}</span>
+          </NavigationButton>
+        )
       ))}
     </nav>
   );

@@ -2,6 +2,17 @@
 
 ## State vocabulary
 
+### Projection screens triển khai 18/10/2026
+
+| Screen | Loading/empty/error | Conflict/permission | Write state |
+| --- | --- | --- | --- |
+| Create Trip | Draft restore và validation summary | Session guard ở shell | Valid draft hiện unavailable vì temporal contract chưa chốt; không pending/success giả |
+| Dress Code | Shared Plan boundary; empty copy riêng | Snapshot mismatch hoặc row mismatch chặn toàn body | Read-only cho mọi role, kể cả `canEdit=true` |
+| Packing List | Shared Plan boundary; empty/filter-empty | Như Dress Code | Không checkbox/add/edit/delete/reassign/complete |
+| Trip Map | Shared Plan boundary; list còn dùng được khi provider lỗi | Như Dress Code | Không search/save/remove/route; zero external tile request |
+
+Fixture Plan có dữ liệu deterministic cho null/valid coordinates, ba Dress scope và Packing category/status/decimal/assignee. Fixture/Gateway Create đều trả `unavailable`; runtime UI không tạo success giả.
+
 | State              | Ý nghĩa                                | UI bắt buộc                                      |
 | ------------------ | -------------------------------------- | ------------------------------------------------ |
 | `loading`          | Chưa có dữ liệu dùng được              | Skeleton hoặc progress; không render dữ liệu giả |

@@ -28,6 +28,8 @@ function projectionMatches(plan: PlanViewModel) {
   return [
     ...plan.activities,
     ...plan.selectedLocations,
+    ...plan.dressCodes,
+    ...plan.packingItems,
   ].every((item) => item.tripId === plan.tripId && item.planVersion === plan.planVersion);
 }
 

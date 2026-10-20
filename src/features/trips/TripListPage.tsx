@@ -13,12 +13,13 @@ import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
 import { ContentState } from '../../shared/components/ContentState';
-import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { uiAssets } from '../../shared/assets/asset-map';
 import roleIcon from '../../shared/assets/figma/2fa29.svg';
 import timeIcon from '../../shared/assets/figma/40d4c.svg';
 import filterIcon from '../../shared/assets/figma/40418.svg';
 import styles from './TripListPage.module.css';
+import { Link } from 'react-router';
+import { paths } from '../../app/route-paths';
 
 const statuses: readonly { value: TripStatusFilter; label: string; mobileLabel: string }[] = [
   { value: 'ALL', label: 'Tất cả', mobileLabel: 'Tất cả' },
@@ -188,16 +189,12 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
         {model?.nextCursor && (
           <p role="status">Danh sách còn dữ liệu chưa tải. Phân trang chưa khả dụng.</p>
         )}
-        <button
+        <Link
           className={styles.mobileCreate}
-          disabled
-          title="Tạo chuyến đi chưa được triển khai trong flow này"
+          to={paths.newTrip}
         >
           + Tạo một hành trình mới
-        </button>
-        <CapabilityNote>
-          Tạo chuyến đi sẽ được mở khi Trip Gateway xác nhận endpoint và trạng thái idempotency.
-        </CapabilityNote>
+        </Link>
         {previewEnabled && (
           <details className={`${styles.preview} preview`} data-preview="trip-list">
             <summary>Trip List preview · Dữ liệu minh họa</summary>

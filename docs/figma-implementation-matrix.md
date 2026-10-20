@@ -37,6 +37,17 @@ Khung trang trí bị crop bởi section và không tham gia document flow. App 
 
 Native Mobile tab bar/section switcher không thuộc Mobile Web contract hiện tại. Desktop decor thu gọn/ẩn ở short laptop; nội dung main/nav không được cắt để né responsive. Admin prototype nav dẫn tới các frame `194:1094–1098`; Phase 1 chỉ đổi selection/placeholder trên `/admin`, không triển khai body hoặc API của các frame đó.
 
+### Workspace slices 18/10/2026
+
+| Figma canonical | Web route | Implementation label | Evidence |
+| --- | --- | --- | --- |
+| Create desktop `3:30`, mobile `317:2030`/`317:2031`, success `450:4374` | `/trips/new` | UI/draft ready; Gateway write gated | `features/trips/create`, validation/draft/component tests |
+| Dress proposal `768:8228`, mobile `781:6748` | `/trips/:tripId/dress-code` | fixture read-only | `features/dress-code`, shared Plan snapshot |
+| Packing desktop `23:312`, mobile `317:2037` | `/trips/:tripId/packing` | fixture read-only | `features/packing`, exact-string quantity/status tests |
+| Map desktop `20:386`/`224:1253`, mobile `317:2034`/`317:2035` | `/trips/:tripId/map` | saved-location UI; provider gated | `features/map`, coordinate/filter/component tests |
+
+Các adaptation không sao chép native device chrome/bottom tabs. Map không thêm MapLibre hoặc tile provider ở slice này; viewport là boundary thay thế được và hiển thị provider unavailable trung thực.
+
 Acceptance evidence ngày 15/10/2026: `tests/e2e/app-shell.spec.ts` đạt 24 browser tests với Chromium có sẵn. Đã xem screenshot Desktop 1440×800, Mobile 402×874, Admin 1440×800 và Admin drawer 402×600; ảnh được sinh trong `test-results/` (ignored). Xem [báo cáo reconcile Phase 1](app-shell-reconcile-2026-10-15.md) cho mapping và giới hạn hiện tại.
 
 ## Frame-to-screen mapping rules

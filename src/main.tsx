@@ -88,6 +88,7 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       fixtureFactory,
+      gatewayHttpClient,
     );
     const tripRepository = await selectTripRepository(
       import.meta.env.VITE_DATA_MODE,

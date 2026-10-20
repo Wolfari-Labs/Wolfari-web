@@ -45,12 +45,42 @@ export interface SelectedLocationViewModel {
   readonly metadata: Readonly<Record<string, unknown>>;
   readonly planVersion: number;
 }
+export interface DressCodeViewModel {
+  readonly id: string;
+  readonly tripId: string;
+  readonly scopeType: 'TRIP' | 'DAY' | 'ACTIVITY';
+  readonly planDate: string | null;
+  readonly activityId: string | null;
+  readonly label: string;
+  readonly description: string | null;
+  readonly publicDescription: string | null;
+  readonly source: 'MANUAL' | 'PROVIDER' | 'DSS';
+  readonly planVersion: number;
+}
+export interface PackingItemViewModel {
+  readonly id: string;
+  readonly tripId: string;
+  readonly name: string;
+  readonly quantity: string;
+  readonly unit: string | null;
+  readonly note: string | null;
+  readonly category: string | null;
+  readonly assignedMemberId: string | null;
+  readonly dueAt: string | null;
+  readonly status: 'TODO' | 'COMPLETED';
+  readonly source: 'MANUAL' | 'PROVIDER' | 'DSS';
+  readonly completedByUserId: string | null;
+  readonly completedAt: string | null;
+  readonly planVersion: number;
+}
 export interface PlanViewModel {
   readonly tripId: string;
   readonly planVersion: number;
   readonly exportRevision: number;
   readonly activities: readonly ActivityViewModel[];
   readonly selectedLocations: readonly SelectedLocationViewModel[];
+  readonly dressCodes: readonly DressCodeViewModel[];
+  readonly packingItems: readonly PackingItemViewModel[];
   readonly permissions: {
     readonly canRead: boolean;
     readonly canEdit: boolean;

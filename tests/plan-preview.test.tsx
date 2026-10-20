@@ -187,3 +187,24 @@ it('blocks a stale Plan revision before rendering activities', async () => {
   await screen.findByText('Dữ liệu đã thay đổi');
   expect(screen.queryByText('Bán đảo Sơn Trà')).not.toBeInTheDocument();
 });
+it('blocks a projection row from another Plan revision before rendering feature data', async () => {
+  const fixture = createFixturePlanRepository();
+  mount(false, {
+    getPlan: async (request) => {
+      const result = await fixture.getPlan(request);
+      return result.status === 'ready'
+        ? {
+            ...result,
+            data: {
+              ...result.data,
+              selectedLocations: result.data.selectedLocations.map((location, index) =>
+                index === 0 ? { ...location, planVersion: location.planVersion + 1 } : location,
+              ),
+            },
+          }
+        : result;
+    },
+  });
+  await screen.findByText('Dữ liệu đã thay đổi');
+  expect(screen.queryByText('Bán đảo Sơn Trà')).not.toBeInTheDocument();
+});

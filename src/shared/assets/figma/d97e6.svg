@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="CreateTrip/Style icon 1" clip-path="url(#clip0_0_123)">
+<g id="Vector">
+<path d="M15 23V10Z" fill="black"/>
+<path d="M15 23V10" stroke-width="2" stroke="#13B485"/>
+</g>
+<path id="Vector_2" d="M18.4912 7.01182C17.3618 7.57071 16.1809 8.52388 15 10C11 5 7 6 5 8C10 8 12 10 15 13C18 10 20 8 25 8C23.5904 6.59045 21.1875 5.6776 18.4912 7.01182ZM15 10C15 5 17 2 20 1C19.4658 3.13687 19.217 4.98835 18.4912 7.01182M15 13C16.8631 10.6711 17.8584 8.77608 18.4912 7.01182" stroke-width="2" stroke-linecap="round" stroke="#13B485"/>
+</g>
+<defs>
+<clipPath id="clip0_0_123">
+<rect width="30" height="26" fill="white"/>
+</clipPath>
+</defs>
+</svg>

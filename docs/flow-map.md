@@ -15,6 +15,23 @@ Figma frame
 
 Component chỉ nhận view model và event callback. Component không gọi `fetch`, không ghép URL và không đọc raw HTTP envelope. Quy tắc này được thực thi qua ranh giới `ShellRepository` hiện tại và sẽ mở rộng cho từng feature.
 
+## Flow triển khai 18/10/2026
+
+```text
+Trip List → /trips/new
+  → validate + session draft
+  → temporal write gate chưa chốt
+  → unavailable, không POST, không fake success
+
+Workspace route → Trip + Plan shared snapshot
+  → permission/membership/revision guard
+  ├─ Dress Code: group saved projection
+  ├─ Packing List: category/progress saved projection
+  └─ Trip Map: list/filter/detail → provider-unavailable viewport
+```
+
+Back/forward/refresh/deep-link dùng route thật cho Map, Dress Code và Packing. Chuyển filter Map xóa selection nếu địa điểm không còn trong tập hiển thị. Phase provider/Gateway activation vẫn bị gate.
+
 ## Flow tổng thể
 
 ```text

@@ -19,6 +19,14 @@ export function createFixtureTripRepository(
   const viewerId = options.viewerId ?? fixtureViewerId;
   const records = structuredClone(options.records ?? fixtureTripCatalog);
   return {
+    async createTrip({ signal }) {
+      signal.throwIfAborted();
+      return {
+        status: 'unavailable',
+        correlationId: 'fixture-trip-create',
+        retryable: false,
+      };
+    },
     async getTrip({ tripId, scenario, signal }) {
       signal.throwIfAborted();
       if (scenario === 'loading')

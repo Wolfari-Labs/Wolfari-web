@@ -21,6 +21,9 @@ function mount() {
         children: [
           { path: '/trips/:tripId', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/plan', element: <ContentState state="placeholder" /> },
+          { path: '/trips/:tripId/map', element: <ContentState state="placeholder" /> },
+          { path: '/trips/:tripId/dress-code', element: <ContentState state="placeholder" /> },
+          { path: '/trips/:tripId/packing', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/members', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/fund', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/price-watch', element: <ContentState state="placeholder" /> },
@@ -91,27 +94,16 @@ describe('Shell interactions', () => {
     const router = mount();
     await screen.findByText('Trang Nguyễn ⌄');
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
-    await userEvent.click(within(sidebar).getByRole('button', { name: 'Packing list' }));
-    expect(within(sidebar).getByRole('button', { name: 'Packing list' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    expect(screen.getByText('Chức năng chưa khả dụng')).toBeInTheDocument();
-    await userEvent.click(within(sidebar).getByRole('button', { name: 'Quỹ nhóm' }));
-    expect((screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' }) as HTMLElement).querySelector(
-      '[aria-pressed="true"]',
-    )).toHaveTextContent('Quỹ nhóm');
+    await userEvent.click(within(sidebar).getByRole('link', { name: 'Packing list' }));
+    expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/packing`);
+    await userEvent.click(within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', { name: 'Quỹ nhóm' }));
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/fund`);
-    await userEvent.click(within(sidebar).getByRole('button', { name: 'Theo dõi giá vé' }));
-    expect((screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' }) as HTMLElement).querySelector(
-      '[aria-pressed="true"]',
-    )).toHaveTextContent('Theo dõi giá vé');
+    await userEvent.click(within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', { name: 'Theo dõi giá vé' }));
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/price-watch`);
     await userEvent.click(screen.getByRole('button', { name: 'Thu gọn thanh điều hướng' }));
-    expect(screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toHaveAttribute(
-      'aria-expanded',
-      'false',
-    );
+    const expand = screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' });
+    expect(expand).toHaveAttribute('aria-expanded', 'false');
+    expect(expand.querySelector('img')?.className).toContain('collapseIconReversed');
     expect(screen.queryByText(/đã lưu/i)).not.toBeInTheDocument();
   });
   it('forbidden clears the membership and prevents section actions', async () => {
@@ -145,13 +137,11 @@ describe('Shell interactions', () => {
     const drawer = within(screen.getByRole('dialog')).getByRole('navigation', {
       name: 'Điều hướng chuyến đi',
     });
-    await userEvent.click(within(drawer).getByRole('button', { name: 'Lịch trình' }));
+    await userEvent.click(within(drawer).getByRole('link', { name: 'Lịch trình' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(
-      screen
-        .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
-        .querySelector('[aria-pressed="true"]'),
-    ).toHaveTextContent('Lịch trình');
+      within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', { name: 'Lịch trình' }),
+    ).toHaveAttribute('aria-current', 'page');
     expect(screen.queryByRole('navigation', { name: 'Điều hướng Mobile' })).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'Đóng điều hướng chuyến đi' }),

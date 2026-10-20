@@ -6,6 +6,8 @@ import flightPath from '../../../shared/assets/figma/a5059.svg';
 import plane from '../../../shared/assets/figma/5f666.svg';
 import plus from '../../../shared/assets/figma/51f13.svg';
 import styles from './TripListHero.module.css';
+import { Link } from 'react-router';
+import { paths } from '../../../app/route-paths';
 
 export function TripListHero() {
   return (
@@ -31,14 +33,13 @@ export function TripListHero() {
         <img className={styles.underline} src={underline} alt="" />
         <p className={styles.desktopSubtitle}>Những hành trình bạn tạo và cùng tham gia.</p>
       </div>
-      <button
+      <Link
         className={styles.create}
-        disabled
-        title="Tạo chuyến đi chưa được triển khai trong flow này"
+        to={paths.newTrip}
       >
         <img src={plus} alt="" />
         Tạo chuyến đi
-      </button>
+      </Link>
     </header>
   );
 }
