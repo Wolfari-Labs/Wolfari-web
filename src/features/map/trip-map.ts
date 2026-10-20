@@ -55,7 +55,13 @@ export function mapLocationPresentations(
       location,
       activities: linkedActivities,
       markerNumber: index + 1,
-      scheduled: linkedActivities.length > 0,
+      scheduled: linkedActivities.some(
+        (activity) =>
+          activity.startsAt !== null ||
+          ('scheduledDate' in activity &&
+            typeof activity.scheduledDate === 'string' &&
+            activity.scheduledDate.length > 0),
+      ),
       selected,
     };
   });
@@ -95,7 +101,13 @@ export function activityScheduleLabel(
   activity: ActivityViewModel | undefined,
   timezone: string,
 ) {
-  if (!activity?.startsAt) return 'Đã lưu · Chưa xếp lịch';
+  if (!activity?.startsAt) {
+    const scheduledDate =
+      activity && 'scheduledDate' in activity && typeof activity.scheduledDate === 'string'
+        ? activity.scheduledDate
+        : null;
+    return scheduledDate ? `${scheduledDate} · Chưa xếp giờ` : 'Đã lưu · Chưa xếp lịch';
+  }
   const start = activityTime(activity.startsAt, timezone);
   const end = activityTime(activity.endsAt, timezone);
   const day = localDate(activity.startsAt, timezone);
@@ -130,6 +142,13 @@ export function selectMapLocations({
 }) {
   const allScheduled = new Set(
     activities
+      .filter(
+        (activity) =>
+          activity.startsAt !== null ||
+          ('scheduledDate' in activity &&
+            typeof activity.scheduledDate === 'string' &&
+            activity.scheduledDate.length > 0),
+      )
       .map((activity) => activity.selectedLocationId)
       .filter((id): id is string => id !== null),
   );
@@ -140,7 +159,8 @@ export function selectMapLocations({
           activities
             .filter(
               (activity) =>
-                activity.startsAt && localDate(activity.startsAt, timezone) === day,
+                (activity.startsAt && localDate(activity.startsAt, timezone) === day) ||
+                ('scheduledDate' in activity && activity.scheduledDate === day),
             )
             .map((activity) => activity.selectedLocationId)
             .filter((id): id is string => id !== null),
