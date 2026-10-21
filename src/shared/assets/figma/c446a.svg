@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="300" height="160" viewBox="0 0 300 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Soft/Mint quote wash" opacity="0.25" clip-path="url(#clip0_0_259)">
+<path id="Vector" d="M150 160C232.843 160 300 124.183 300 80C300 35.8172 232.843 0 150 0C67.1573 0 0 35.8172 0 80C0 124.183 67.1573 160 150 160Z" fill="url(#paint0_radial_0_259)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_259" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(150 80) scale(150 80)">
+<stop stop-color="#DCF6EE" stop-opacity="0.7"/>
+<stop offset="0.72" stop-color="#DCF6EE" stop-opacity="0.24"/>
+<stop offset="1" stop-color="#DCF6EE" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_259">
+<rect width="300" height="160" fill="white"/>
+</clipPath>
+</defs>
+</svg>

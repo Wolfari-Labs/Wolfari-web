@@ -1,0 +1,23 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="650" height="430" viewBox="0 0 650 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Refine/Hero collage watercolor" clip-path="url(#clip0_0_376)">
+<path id="Vector" d="M280 410C451.208 410 590 340.604 590 255C590 169.396 451.208 100 280 100C108.792 100 -30 169.396 -30 255C-30 340.604 108.792 410 280 410Z" fill="url(#paint0_radial_0_376)"/>
+<path id="Vector_2" opacity="0.65" d="M525 270C605.081 270 670 225.228 670 170C670 114.772 605.081 70 525 70C444.919 70 380 114.772 380 170C380 225.228 444.919 270 525 270Z" fill="url(#paint1_radial_0_376)"/>
+<path id="Vector_3" opacity="0.55" d="M54 352C142 334 218 361 301 348C402 332 477 357 593 342" stroke="#C5EEF7" stroke-width="22" stroke-linecap="round"/>
+<path id="Vector_4" opacity="0.8" d="M396 18C446 35 488 73 528 124" stroke="#159FD5" stroke-width="2" stroke-dasharray="7 8"/>
+<path id="Vector_5" d="M530 120L558 116L542 140L538 129L530 120Z" fill="#F6C019"/>
+<path id="Vector_6" opacity="0.55" d="M528 42C548 29 572 35 580 50C595 35 618 42 623 60C640 58 652 68 653 81H541C540 68 543 57 548 50L528 42Z" stroke="#4DB6D6" stroke-width="2"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_376" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(280 255) scale(310 155)">
+<stop stop-color="#DDF5FC" stop-opacity="0.92"/>
+<stop offset="1" stop-color="#DDF5FC" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_0_376" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(525 170) scale(145 100)">
+<stop stop-color="#DDF5FC" stop-opacity="0.92"/>
+<stop offset="1" stop-color="#DDF5FC" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_376">
+<rect width="650" height="430" fill="white"/>
+</clipPath>
+</defs>
+</svg>

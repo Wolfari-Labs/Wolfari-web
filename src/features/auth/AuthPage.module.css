@@ -1,0 +1,365 @@
+﻿.page {
+  width: 100%;
+  max-width: 1440px;
+  min-height: 884px;
+  margin-inline: auto;
+  padding: 66px 114px 64px 94px;
+  display: grid;
+  grid-template-columns: minmax(0, 590px) minmax(0, 440px);
+  column-gap: 202px;
+  align-items: start;
+  background: linear-gradient(#f4fcff, #fbfeff 58%, white);
+  color: #044791;
+}
+.introduction {
+  min-width: 0;
+  padding-top: 12px;
+}
+.eyebrow {
+  margin: 0 0 8px 2px;
+  color: #0488cc;
+  font:
+    400 22px/34px 'Kalam',
+    cursive;
+}
+.introduction h1 {
+  min-height: 72px;
+  margin: 0;
+  color: #009da9;
+  font:
+    700 46px/54px 'Kalam',
+    cursive;
+}
+.description {
+  max-width: 500px;
+  min-height: 52px;
+  margin: 16px 0 0 4px;
+  color: #044791;
+  font-size: 14px;
+  line-height: 20px;
+}
+.collage {
+  position: relative;
+  width: 570.175px;
+  max-width: calc(100% + 8px);
+  margin: 46px 0 0 -8px;
+}
+.collage::before {
+  position: absolute;
+  z-index: 0;
+  content: '';
+  width: 103.48%;
+  aspect-ratio: 590 / 370;
+  left: -4.91%;
+  top: -28px;
+  background: url('../../shared/assets/figma/19867.svg') center / contain no-repeat;
+}
+.mascotSlot {
+  position: absolute;
+  display: block;
+  left: 74.714%;
+  top: 65%;
+  width: 18.24%;
+  aspect-ratio: 1;
+  overflow: clip;
+}
+.mascotSlot img {
+  display: block;
+  width: 122.95%;
+  max-width: none;
+  height: auto;
+}
+.formColumn {
+  min-width: 0;
+  margin-top: 24px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  min-height: 581px;
+  padding: 32px 38px 39px;
+  border: 1px solid #bae4f4;
+  border-radius: 14px;
+  background: white;
+}
+.cardHeader {
+  margin-bottom: 26px;
+}
+.cardHeader h2 {
+  margin: 0;
+  color: #044791;
+  font-size: 30px;
+  line-height: 38px;
+}
+.cardHeader p {
+  margin: 0;
+  color: #5980ae;
+  font-size: 13px;
+  line-height: 20px;
+}
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.fields label {
+  font-size: 11.5px;
+  line-height: 18px;
+}
+.fields input {
+  font-size: 12.5px;
+}
+.previewNote {
+  min-height: 34px;
+  margin: 18px 0 0;
+  color: #5980ae;
+  font-size: 10.6px;
+  line-height: 17px;
+}
+.card .submit {
+  width: 100%;
+  margin-top: 18px;
+  font-size: 13.2px;
+}
+.alternative {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #bae4f4;
+  margin-top: 22px;
+  padding-top: 15px;
+  color: #5980ae;
+  font-size: 12.3px;
+  line-height: 20px;
+}
+.alternative a {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 137px;
+  padding-inline: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  color: #044791;
+  font-size: 13.2px;
+}
+.stateNote {
+  margin-top: 19px;
+}
+.stateNote > div {
+  min-height: 60px;
+  padding: 10px 13px;
+  font-size: 10.2px;
+  line-height: 17px;
+  background: #f8fcff;
+}
+.feedback {
+  margin-top: 16px;
+}
+.consent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 12px;
+  color: #5980ae;
+  font-size: 11.5px;
+  line-height: 18px;
+}
+.consent input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: #009da9;
+}
+.consent:has(input:focus-visible) {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: 4px;
+}
+.error {
+  margin: 4px 0 0;
+  color: var(--ios-error);
+  font-size: 12px;
+}
+.formColumn > :global(.preview) {
+  margin-top: 24px;
+}
+.register {
+  grid-template-columns: minmax(0, 590px) minmax(0, 458px);
+  padding-right: 106px;
+  column-gap: 192px;
+}
+.register .formColumn {
+  margin-top: 0;
+}
+.register .eyebrow {
+  margin-bottom: 2px;
+}
+.register .introduction h1 {
+  min-height: 100px;
+  font-size: 42px;
+  line-height: 50px;
+}
+.register .description {
+  margin-top: 24px;
+}
+.register .collage {
+  margin-top: 34px;
+}
+.register .mascotSlot {
+  top: 66.7%;
+}
+.register .card {
+  min-height: 655px;
+  padding-top: 29px;
+}
+.register .cardHeader {
+  margin-bottom: 21px;
+}
+.register .cardHeader h2 {
+  font-size: 28px;
+  line-height: 36px;
+}
+.register .previewNote {
+  margin-top: 12px;
+}
+@media (min-width: 769px) and (max-width: 1439px) {
+  .page,
+  .register {
+    padding-inline: 6.5%;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 38%);
+    column-gap: clamp(36px, 8vw, 120px);
+  }
+  .introduction h1 {
+    font-size: clamp(34px, 3.2vw, 46px);
+  }
+}
+@media (max-width: 1000px) and (min-width: 769px) {
+  .page,
+  .register {
+    padding-inline: 32px;
+    column-gap: 32px;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 43%);
+  }
+  .card {
+    padding-inline: 24px;
+  }
+  .cardHeader h2 {
+    font-size: 26px;
+  }
+  .introduction h1,
+  .register .introduction h1 {
+    font-size: 34px;
+    line-height: 44px;
+  }
+}
+@media (max-width: 768px) {
+  .page,
+  .register {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px 24px 40px;
+    min-height: calc(100dvh - 64px);
+  }
+  .introduction {
+    width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    padding: 0;
+  }
+  .eyebrow,
+  .register .eyebrow {
+    margin: 0 0 8px;
+    font-size: 19px;
+    line-height: 28px;
+  }
+  .introduction h1,
+  .register .introduction h1 {
+    min-height: 0;
+    font-size: 34px;
+    line-height: 42px;
+  }
+  .description,
+  .register .description {
+    min-height: 0;
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 21px;
+  }
+  .collage,
+  .register .collage {
+    width: min(240px, 80%);
+    margin: 20px auto 0;
+  }
+  .collage::before {
+    top: -12px;
+  }
+  .page .formColumn {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .card,
+  .register .card {
+    min-height: 0;
+    padding: 24px;
+  }
+  .cardHeader,
+  .register .cardHeader {
+    margin-bottom: 24px;
+  }
+  .cardHeader h2,
+  .register .cardHeader h2 {
+    font-size: 25px;
+    line-height: 34px;
+  }
+  .fields {
+    gap: 16px;
+  }
+  .fields label {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  .fields input {
+    font-size: 16px;
+  }
+  .previewNote {
+    font-size: 12px;
+    line-height: 19px;
+  }
+  .consent {
+    font-size: 12px;
+    line-height: 20px;
+  }
+  .alternative {
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .alternative a {
+    min-width: 110px;
+  }
+  .stateNote > div {
+    font-size: 12px;
+    line-height: 19px;
+  }
+}
+@media (max-width: 360px) {
+  .page,
+  .register {
+    padding-inline: 16px;
+  }
+  .card,
+  .register .card {
+    padding-inline: 18px;
+  }
+  .introduction h1,
+  .register .introduction h1 {
+    font-size: 31px;
+    line-height: 40px;
+  }
+}

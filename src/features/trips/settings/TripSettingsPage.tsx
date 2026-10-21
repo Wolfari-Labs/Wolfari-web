@@ -1,0 +1,460 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link, useOutletContext, useParams, useSearchParams } from 'react-router';
+import type { RouteContext } from '../../../app/route-context';
+import { paths } from '../../../app/route-paths';
+import { Alert } from '../../../shared/components/Alert';
+import { Button } from '../../../shared/components/Button';
+import { ButtonLink } from '../../../shared/components/ButtonLink';
+import { ContentState } from '../../../shared/components/ContentState';
+import { Input } from '../../../shared/components/Input';
+import { Textarea } from '../../../shared/components/Textarea';
+import { TripHero } from '../components/TripHero';
+import type { TripDetailViewModel } from '../model/trip-detail';
+import { tripQueryKeys } from '../model/trip-query-keys';
+import { useTripRepository } from '../repositories/repository-context';
+import type { UpdateTripIntent, UpdateTripResult } from '../repositories/trip.repository';
+import coverFallback from '../../../shared/assets/figma/bd989.svg';
+import styles from './TripSettingsPage.module.css';
+
+function displayDate(value: string) {
+  const date = value.slice(0, 10).split('-');
+  return date.length === 3 ? `${date[2]}/${date[1]}/${date[0]}` : value;
+}
+
+function requestKey() {
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `trip-settings-${Date.now()}-${Math.random().toString(16).slice(2)}`
+  );
+}
+
+function mutationMessage(result: Exclude<UpdateTripResult, { status: 'updated' }>) {
+  switch (result.status) {
+    case 'forbidden':
+      return 'Bạn không còn quyền chỉnh sửa chuyến đi này.';
+    case 'not-found':
+      return 'Không tìm thấy chuyến đi để cập nhật.';
+    case 'conflict':
+      return 'Thông tin chuyến đi đã thay đổi. Dữ liệu mới đã được tải lại; hãy kiểm tra bản nháp rồi xác nhận lưu lần nữa.';
+    case 'unavailable':
+      return 'Dịch vụ đang tạm gián đoạn. Bản nháp được giữ nguyên; bạn có thể thử lưu lại.';
+    case 'unknown':
+      return 'Chưa xác định được kết quả lưu. Bản nháp được giữ nguyên; thử lại sẽ dùng cùng mã yêu cầu.';
+    case 'validation-error':
+      return 'Vui lòng kiểm tra lại thông tin cần lưu.';
+  }
+}
+
+function LockedField({ label, value }: { label: string; value: string }) {
+  return (
+    <Input
+      label={label}
+      value={value}
+      disabled
+      readOnly
+      hint="Chưa hỗ trợ chỉnh sửa trong phiên bản này."
+    />
+  );
+}
+
+function CoverPreview({
+  trip,
+  editable = false,
+}: {
+  trip: TripDetailViewModel;
+  editable?: boolean;
+}) {
+  const cover = trip.presentation.cover;
+  return (
+    <div className={styles.coverField}>
+      <span className={styles.fieldLabel}>Ảnh bìa chuyến đi</span>
+      <div className={styles.coverRow}>
+        <picture>
+          {cover?.mobileSrc && <source media="(max-width: 768px)" srcSet={cover.mobileSrc} />}
+          <img src={cover?.src ?? coverFallback} alt="" />
+        </picture>
+        <div>
+          {editable && (
+            <Button variant="outline" disabled title="Thay ảnh chưa được hỗ trợ">
+              Thay ảnh
+            </Button>
+          )}
+          <p>
+            {editable
+              ? 'Chưa hỗ trợ thay ảnh bìa.'
+              : 'Ảnh hiện đang được sử dụng làm bìa chuyến đi.'}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEdit: () => void }) {
+  return (
+    <section className={styles.card} aria-labelledby="trip-information-heading">
+      <div className={styles.cardHeading}>
+        <div>
+          <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
+          <p>Xem thông tin hiện tại trước khi thực hiện chỉnh sửa.</p>
+        </div>
+        {trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED' && (
+          <Button id="edit-trip-information" variant="outline" onClick={onEdit}>
+            Chỉnh sửa thông tin
+          </Button>
+        )}
+      </div>
+      <dl className={styles.informationGrid}>
+        <div className={styles.fullRow}>
+          <dt>Tên chuyến đi</dt>
+          <dd>{trip.name}</dd>
+        </div>
+        <div>
+          <dt>Điểm đến chính</dt>
+          <dd>Chưa có dữ liệu</dd>
+        </div>
+        <div>
+          <dt>Thời gian</dt>
+          <dd>
+            {displayDate(trip.startAt)} → {displayDate(trip.endAt)}
+          </dd>
+        </div>
+        <div>
+          <dt>Ngân sách dự kiến</dt>
+          <dd>Chưa có dữ liệu</dd>
+        </div>
+        <div>
+          <dt>Thành viên</dt>
+          <dd>
+            {trip.presentation.memberCount === null
+              ? 'Chưa có dữ liệu'
+              : `${trip.presentation.memberCount} người`}
+          </dd>
+        </div>
+        <div className={`${styles.fullRow} ${styles.descriptionBox}`}>
+          <dt>Mô tả chuyến đi</dt>
+          <dd>{trip.description || 'Chưa có mô tả.'}</dd>
+        </div>
+      </dl>
+      <CoverPreview trip={trip} />
+    </section>
+  );
+}
+
+function TripInformationForm({
+  trip,
+  onCancel,
+  onSaved,
+}: {
+  trip: TripDetailViewModel;
+  onCancel: () => void;
+  onSaved: (trip: TripDetailViewModel) => void;
+}) {
+  const repository = useTripRepository();
+  const queryClient = useQueryClient();
+  const [name, setName] = useState(trip.name);
+  const [description, setDescription] = useState(trip.description ?? '');
+  const [focused, setFocused] = useState<'name' | 'description' | null>(null);
+  const [result, setResult] = useState<Exclude<UpdateTripResult, { status: 'updated' }> | null>(
+    null,
+  );
+  const attempt = useRef<{ fingerprint: string; key: string } | null>(null);
+  const controller = useRef<AbortController | null>(null);
+  const trimmedName = name.trim();
+  const nameDirty = trimmedName !== trip.name;
+  const descriptionValue = description.trim() === '' ? null : description;
+  const descriptionDirty = descriptionValue !== trip.description;
+  const dirty = nameDirty || descriptionDirty;
+  const nameError =
+    result?.status === 'validation-error' && result.fieldErrors.name
+      ? result.fieldErrors.name
+      : trimmedName.length === 0
+        ? 'Tên chuyến đi không được để trống.'
+        : trimmedName.length > 200
+          ? 'Tên chuyến đi không được vượt quá 200 ký tự.'
+          : undefined;
+
+  useEffect(() => () => controller.current?.abort(), []);
+
+  const mutation = useMutation({
+    retry: false,
+    mutationFn: async (intent: UpdateTripIntent) => {
+      controller.current = new AbortController();
+      return repository.updateTrip({ tripId: trip.id, intent, signal: controller.current.signal });
+    },
+  });
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    setResult(null);
+    if (!dirty || nameError) return;
+    const changes: Pick<UpdateTripIntent, 'name' | 'description'> = {
+      ...(nameDirty ? { name: trimmedName } : {}),
+      ...(descriptionDirty ? { description: descriptionValue } : {}),
+    };
+    const fingerprint = JSON.stringify(changes);
+    if (!attempt.current || attempt.current.fingerprint !== fingerprint) {
+      attempt.current = { fingerprint, key: requestKey() };
+    }
+    const response = await mutation.mutateAsync({
+      ...changes,
+      expectedPlanVersion: trip.planVersion,
+      expectedExportRevision: trip.exportRevision,
+      idempotencyKey: attempt.current.key,
+    });
+    if (response.status === 'updated') {
+      queryClient.setQueryData(tripQueryKeys.detail(trip.id, 'success'), {
+        status: 'ready',
+        data: response.trip,
+      });
+      // Other projections must be fetched from their repositories, not stamped
+      // with a revision from a different response.
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
+        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
+        queryClient.invalidateQueries({ queryKey: ['plan', trip.id] }),
+      ]);
+      attempt.current = null;
+      onSaved(response.trip);
+      return;
+    }
+    setResult(response);
+    if (response.status === 'conflict') {
+      attempt.current = null;
+      await queryClient.invalidateQueries({ queryKey: tripQueryKeys.detail(trip.id, 'success') });
+    }
+  }
+
+  return (
+    <section className={styles.card} aria-labelledby="edit-trip-heading">
+      <h2 id="edit-trip-heading">Chỉnh sửa thông tin chuyến đi</h2>
+      <form className={styles.form} onSubmit={(event) => void submit(event)} noValidate>
+        {result && result.status !== 'validation-error' && (
+          <Alert tone={result.status === 'conflict' ? 'warning' : 'error'}>
+            {mutationMessage(result)}
+          </Alert>
+        )}
+        <Input
+          label="Tên chuyến đi"
+          value={name}
+          maxLength={201}
+          error={nameError}
+          className={!nameDirty && focused !== 'name' ? styles.currentValue : ''}
+          onFocus={() => setFocused('name')}
+          onBlur={() => setFocused(null)}
+          onChange={(event) => {
+            setName(event.target.value);
+            setResult(null);
+          }}
+        />
+        <LockedField label="Điểm đến" value="Chưa có dữ liệu" />
+        <div className={styles.formColumns}>
+          <LockedField label="Ngày bắt đầu" value={displayDate(trip.startAt)} />
+          <LockedField label="Ngày kết thúc" value={displayDate(trip.endAt)} />
+        </div>
+        <LockedField label="Ngân sách dự kiến" value="Chưa có dữ liệu" />
+        <Textarea
+          label="Mô tả chuyến đi"
+          value={description}
+          error={result?.status === 'validation-error' ? result.fieldErrors.description : undefined}
+          className={!descriptionDirty && focused !== 'description' ? styles.currentValue : ''}
+          onFocus={() => setFocused('description')}
+          onBlur={() => setFocused(null)}
+          onChange={(event) => {
+            setDescription(event.target.value);
+            setResult(null);
+          }}
+        />
+        <CoverPreview trip={trip} editable />
+        <div className={styles.formActions}>
+          <Button variant="outline" onClick={onCancel} disabled={mutation.isPending}>
+            ← Hủy
+          </Button>
+          <Button type="submit" loading={mutation.isPending} disabled={!dirty || !!nameError}>
+            Lưu thay đổi
+          </Button>
+        </div>
+      </form>
+    </section>
+  );
+}
+
+function ManagementCard({
+  trip,
+  ownerName,
+}: {
+  trip: TripDetailViewModel;
+  ownerName: string | null;
+}) {
+  const owner = trip.currentMembership.role === 'OWNER' ? ownerName : null;
+  return (
+    <section className={`${styles.card} ${styles.management}`} aria-labelledby="management-heading">
+      <div className={styles.memberHeading}>
+        <div>
+          <h2 id="management-heading">Thành viên &amp; nhắc nhở</h2>
+          <p>Chủ sở hữu (Owner): {owner ?? 'Xem trong danh sách thành viên'}</p>
+        </div>
+        <ButtonLink variant="outline" to={paths.members(trip.id)}>
+          Quản lý thành viên
+        </ButtonLink>
+      </div>
+      <div className={styles.separator} />
+      <section className={styles.settingSection} aria-labelledby="reminders-heading">
+        <h3 id="reminders-heading">Cài đặt nhắc nhở</h3>
+        {[
+          ['Nhắc nhở trước chuyến đi', '1 ngày trước'],
+          ['Nhắc lịch trình trong ngày', 'Buổi sáng 08:00'],
+          ['Thông báo khi có thay đổi', 'Bật'],
+        ].map(([label, value]) => (
+          <div className={styles.reminderRow} key={label}>
+            <span className={styles.disabledCheck} aria-hidden="true">
+              ✓
+            </span>
+            <span>{label}</span>
+            <button disabled title="Cài đặt nhắc nhở chưa được hỗ trợ">
+              {value}
+            </button>
+          </div>
+        ))}
+        <p className={styles.capabilityNote}>Nhắc nhở chưa hỗ trợ cấu hình trên Web.</p>
+      </section>
+      <div className={styles.separator} />
+      <section className={styles.settingSection} aria-labelledby="trip-management-heading">
+        <h3 id="trip-management-heading">Quản lý chuyến đi</h3>
+        <div className={styles.managementGrid}>
+          <div>
+            <button disabled title="Lưu trữ chuyến đi chưa được hỗ trợ">
+              Lưu trữ chuyến đi
+            </button>
+            <p>Chưa hỗ trợ trong phiên bản này.</p>
+          </div>
+          <div>
+            <button disabled title="Chuyển quyền Owner chưa được hỗ trợ">
+              Chuyển quyền Owner
+            </button>
+            <p>Chưa hỗ trợ trong phiên bản này.</p>
+          </div>
+          <div className={styles.dangerCard}>
+            <button disabled title="Xóa chuyến đi chưa được hỗ trợ">
+              Xóa chuyến đi
+            </button>
+            <p>Chưa hỗ trợ trong phiên bản này.</p>
+          </div>
+        </div>
+        <div className={styles.fundNote}>
+          <strong>Quỹ nhóm được quản lý riêng</strong>
+          <span>Kiểm tra trạng thái quỹ trước khi thay đổi vòng đời chuyến đi.</span>
+          <Link to={paths.fund(trip.id)}>Mở Quỹ nhóm</Link>
+        </div>
+      </section>
+    </section>
+  );
+}
+
+export function TripSettingsPage() {
+  const { tripId = '' } = useParams();
+  const { viewer } = useOutletContext<RouteContext>();
+  const repository = useTripRepository();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [notice, setNotice] = useState<string | null>(null);
+  const focusEditOnView = useRef(false);
+  const editRequested = searchParams.get('mode') === 'edit';
+  const query = useQuery({
+    queryKey: tripQueryKeys.detail(tripId, 'success'),
+    queryFn: ({ signal }) => repository.getTrip({ tripId, scenario: 'success', signal }),
+    enabled: tripId !== '',
+  });
+  const trip = query.data?.status === 'ready' ? query.data.data : null;
+  const canEdit = !!trip?.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED';
+  const editMode = editRequested && canEdit;
+  const deniedEdit = editRequested && !!trip && !canEdit;
+
+  useEffect(() => {
+    if (editMode || !focusEditOnView.current) return;
+    focusEditOnView.current = false;
+    requestAnimationFrame(() => document.getElementById('edit-trip-information')?.focus());
+  }, [editMode]);
+
+  const error = useMemo(() => {
+    if (tripId === '')
+      return { code: 'RESOURCE_NOT_FOUND' as const, correlationId: null, retryable: false };
+    if (query.isError)
+      return { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true };
+    return query.data?.status === 'error' ? query.data.error : null;
+  }, [query.data, query.isError, tripId]);
+
+  function returnToView() {
+    focusEditOnView.current = true;
+    setSearchParams({}, { replace: true });
+  }
+
+  return (
+    <section className={styles.page} data-flow="trip-settings" data-node-id="25:676">
+      <div className={styles.breadcrumb}>
+        <Link to={paths.trips}>Chuyến đi của tôi</Link>
+        <span aria-hidden="true">›</span>
+        {trip && <Link to={paths.trip(trip.id)}>{trip.name}</Link>}
+        <span aria-hidden="true">›</span>
+        {editMode && trip && (
+          <>
+            <Link to={paths.settings(trip.id)}>Cài đặt</Link>
+            <span aria-hidden="true">›</span>
+          </>
+        )}
+        <h1>{editMode ? 'Chỉnh sửa' : 'Cài đặt'}</h1>
+      </div>
+      {query.isPending ? (
+        <ContentState state="loading" headingLevel={2} />
+      ) : error ? (
+        <ContentState
+          state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
+          error={error}
+          headingLevel={2}
+          onRetry={() => void query.refetch()}
+        />
+      ) : trip ? (
+        <>
+          <TripHero trip={trip} compact variant="landscape" />
+          <div className={styles.mobileTitle}>
+            <h2>
+              Một chuyến đi,
+              <br />
+              cùng một nhịp
+            </h2>
+          </div>
+          {notice && <Alert tone="success">{notice}</Alert>}
+          {deniedEdit && (
+            <Alert tone="warning">
+              Chuyến đi này chỉ có thể xem. Bạn không có quyền chỉnh sửa.
+            </Alert>
+          )}
+          <div className={styles.columns}>
+            {editMode ? (
+              <TripInformationForm
+                trip={trip}
+                onCancel={returnToView}
+                onSaved={() => {
+                  setNotice('Đã lưu thông tin chuyến đi.');
+                  returnToView();
+                }}
+              />
+            ) : (
+              <TripInformationView
+                trip={trip}
+                onEdit={() => {
+                  setNotice(null);
+                  setSearchParams({ mode: 'edit' });
+                }}
+              />
+            )}
+            <ManagementCard trip={trip} ownerName={viewer?.fullName ?? null} />
+          </div>
+        </>
+      ) : (
+        <ContentState state="empty" headingLevel={2} />
+      )}
+    </section>
+  );
+}

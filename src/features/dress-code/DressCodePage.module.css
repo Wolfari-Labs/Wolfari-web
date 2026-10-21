@@ -1,0 +1,231 @@
+.page {
+  width: min(1180px, calc(100% - 36px));
+  min-height: 100%;
+  margin: 15px 0 0 18px;
+  color: var(--color-ink);
+  background: var(--color-pale);
+  font-family: var(--font-body);
+}
+
+.mobileHeader {
+  display: none;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 20px;
+  margin-bottom: 9px;
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.breadcrumb strong { color: var(--color-ink); font-weight: 400; }
+.breadcrumb a:hover { color: var(--color-blue); }
+
+.tripBanner {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--color-pale);
+}
+
+.tripLandscape,
+.tripLandscapeForeground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.tripLandscapeForeground { width: 480px; object-fit: fill; }
+
+.tripDetails {
+  position: absolute;
+  top: 27px;
+  left: 28px;
+}
+
+.tripDetails h1 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+}
+
+.tripDetails h1 span { font-size: 24px; }
+.tripDetails p { margin: 9px 0 0 2px; font-size: 15px; line-height: 22px; font-weight: 500; }
+
+.statusChip {
+  position: absolute;
+  top: 82px;
+  left: 310px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: var(--color-pale);
+  color: var(--color-ink);
+  font-size: 13px;
+}
+
+.statusChip i { width: 8px; height: 8px; border-radius: 50%; background: var(--color-green); }
+
+.bannerActions {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  display: flex;
+  gap: 15px;
+}
+
+.bannerActions button { min-width: 130px; height: 44px; border-radius: var(--radius-button); }
+.bannerActions button:last-child { min-width: 135px; }
+.outlineAction { display: inline-flex; align-items: center; justify-content: center; min-width: 130px; height: 44px; border: 1px solid var(--color-line); border-radius: var(--radius-button); background: white; color: var(--color-ink); font-size: 15px; }
+
+.scopeTabs {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.scopeTabs button {
+  min-width: 140px;
+  height: 34px;
+  padding: 0 18px;
+  border: 1px solid var(--color-line);
+  border-radius: 17px;
+  background: var(--color-pale);
+  color: var(--color-ink);
+  font-size: 13px;
+}
+
+.scopeTabs button:first-child { min-width: 120px; }
+.scopeTabs button[aria-selected='true'] { border-color: var(--color-teal, #008cac); background: var(--color-teal, #008cac); color: white; }
+.scopeTabs button:hover { border-color: var(--color-blue); }
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 364px;
+  gap: 16px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+
+.card,
+.editor {
+  min-width: 0;
+  height: 570px;
+  padding: 15px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--color-white);
+}
+
+.cardHeader { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cardHeader h3 { min-width: 0; margin: 0; overflow: hidden; color: var(--color-ink); font-size: 24px; line-height: 32px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.cardBadge { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 104px; height: 34px; border: 1px solid var(--color-line); border-radius: 17px; font-size: 13px; }
+
+.artwork { display: block; height: 245px; margin-top: 10px; overflow: hidden; border-radius: 12px; background: var(--color-pale); }
+.artwork img { display: block; width: 100%; height: 100%; object-fit: fill; }
+
+.palette { display: flex; align-items: center; gap: 18px; margin-top: 12px; color: var(--color-muted); font-size: 13px; }
+.palette > div { display: flex; gap: 10px; }
+.palette img { width: 22px; height: 22px; }
+.metaLabel { display: block; margin-top: 13px; color: var(--color-muted); font-size: 13px; }
+
+.tags { display: flex; gap: 12px; margin-top: 9px; }
+.tags span { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 20px; border: 1px solid var(--color-line); border-radius: 17px; color: var(--color-ink); font-size: 13px; white-space: nowrap; }
+
+.suggestion { min-height: 102px; margin-top: 23px; padding: 10px 12px; border-radius: 10px; background: var(--color-status-warning-surface); color: var(--color-ink); }
+.suggestion strong { display: block; color: var(--color-blue); font-size: 15px; line-height: 22px; font-weight: 500; }
+.suggestion p { margin: 6px 0 0; font-size: 12px; line-height: 20px; }
+.suggestion small { display: block; margin-top: 2px; font-size: 12px; line-height: 20px; }
+
+.editor { display: flex; flex-direction: column; gap: 12px; }
+.editor h2 { margin: 0; color: var(--color-ink); font-size: 24px; line-height: 32px; font-weight: 600; }
+.field { display: flex; flex-direction: column; gap: 4px; min-height: 64px; color: var(--color-ink); font-size: 13px; line-height: 20px; }
+.field input, .field select, .field textarea { width: 100%; border: 1px solid var(--color-line); border-radius: 9px; background: var(--color-white); color: var(--color-ink); font: inherit; outline: none; }
+.field input, .field select { height: 42px; padding: 0 12px; }
+.field textarea { height: 92px; padding: 12px; resize: vertical; }
+.field input::placeholder { color: var(--color-muted); }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--color-blue); box-shadow: 0 0 0 2px rgb(0 137 199 / 12%); }
+
+.editorNote { margin-top: -2px; color: var(--color-ink); font-size: 12px; line-height: 20px; }
+.editorNote p { margin: 0; }
+.checkButton { width: 100%; min-height: 42px; border-radius: var(--radius-button); }
+.checkButton img { width: 18px; height: 18px; }
+.editor :global([role='note']) { margin: 0; padding: 8px 10px; font-size: 12px; }
+
+.empty { grid-column: 1 / -1; padding: 36px 24px; border: 1px dashed var(--color-line); border-radius: 14px; background: white; text-align: center; }
+.empty h2 { margin: 0 0 8px; font-size: 20px; }
+.empty p { margin: 0; color: var(--color-muted); }
+.legacySource { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .contentGrid { grid-template-columns: minmax(0, 1fr) 320px; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cardHeader h3 { font-size: 20px; }
+  .tags { gap: 6px; }
+  .tags span { padding-inline: 11px; }
+  .bannerActions { right: 14px; }
+}
+
+@media (max-width: 768px) {
+  .page { width: calc(100% - 32px); min-height: 0; margin: 0 16px; padding: 0 0 24px; }
+  .mobileHeader { display: flex; align-items: center; justify-content: space-between; height: 72px; margin: 0 -16px; padding: 0 16px; border-bottom: 1px solid #dff0f7; background: white; }
+  .mobileHeader img { width: 130px; height: 43px; object-fit: contain; }
+  .mobileHeader button { width: 84px; height: 40px; border: 1px solid var(--color-line); border-radius: 18px; background: white; color: var(--color-ink); font-size: 13px; }
+  .breadcrumb { display: none; }
+  .tripBanner { height: 160px; margin-top: 16px; border-radius: 16px; }
+  .tripLandscape, .tripLandscapeForeground { height: 160px; }
+  .tripLandscape { object-position: center bottom; }
+  .tripLandscapeForeground { left: -130px; width: 600px; height: 76px; top: 84px; object-fit: fill; }
+  .tripDetails { top: 22px; left: 16px; }
+  .tripDetails h1 { font-size: 24px; line-height: 36px; }
+  .tripDetails h1 span { display: none; }
+  .tripDetails p { margin-top: 6px; font-size: 12px; line-height: 20px; }
+  .statusChip, .bannerActions { display: none; }
+  .scopeTabs { display: none; }
+  .contentGrid { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+  .contentGrid::before { content: 'Dress code'; order: -2; color: var(--color-ink); font-size: 24px; line-height: 30px; font-weight: 600; }
+  .contentGrid::after { content: 'Cả chuyến  ·  Theo ngày  ·  Theo hoạt động'; order: -1; margin-top: -8px; color: var(--color-ink); font-size: 13px; line-height: 22px; }
+  .cards { display: flex; flex-direction: column; width: 100%; gap: 16px; }
+  .card, .editor { width: 100%; height: 538px; padding: 14px; border-radius: 13px; }
+  .cardHeader h3, .editor h2 { font-size: 23px; line-height: 30px; }
+  .cardBadge { width: 98px; height: 32px; font-size: 12px; }
+  .artwork { height: 231px; margin-top: 9px; }
+  .palette { gap: 17px; margin-top: 11px; font-size: 12px; }
+  .palette img { width: 21px; height: 21px; }
+  .metaLabel { margin-top: 12px; font-size: 12px; }
+  .tags { gap: 10px; margin-top: 8px; }
+  .tags span { height: 32px; padding: 0 13px; font-size: 12px; }
+  .suggestion { min-height: 96px; margin-top: 22px; padding: 9px 11px; }
+  .suggestion strong { font-size: 14px; line-height: 21px; }
+  .suggestion p, .suggestion small { font-size: 11px; line-height: 19px; }
+  .editor { gap: 12px; }
+  .editor h2 { margin-bottom: 1px; }
+  .field { min-height: 64px; font-size: 12px; }
+  .field input, .field select { height: 40px; }
+  .field textarea { height: 92px; }
+  .editorNote { font-size: 11px; line-height: 18px; }
+  .editor :global([role='note']) { display: none; }
+  .empty { min-height: 120px; }
+}
+
+@media (max-width: 360px) {
+  .page { width: calc(100% - 32px); }
+  .tripBanner { margin-top: 12px; }
+  .card, .editor { height: auto; min-height: 520px; }
+  .tags span { padding-inline: 9px; }
+}

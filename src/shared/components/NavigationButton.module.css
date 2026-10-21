@@ -1,0 +1,26 @@
+.item {
+  min-height: var(--target-min);
+  min-width: var(--target-min);
+  border: 0;
+  border-radius: var(--radius-nav);
+  padding: var(--space-8) var(--space-12);
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  background: var(--color-white);
+  color: var(--color-nav);
+  text-align: left;
+  flex-shrink: 0;
+}
+.item[aria-pressed='true'] {
+  background: var(--color-selected);
+}
+.item:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+@media (hover: hover) {
+  .item:hover:not(:disabled) {
+    box-shadow: var(--shadow-selection);
+  }
+}

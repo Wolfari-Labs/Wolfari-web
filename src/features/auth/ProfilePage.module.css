@@ -1,0 +1,268 @@
+﻿.page {
+  max-width: 1244px;
+  margin: auto;
+  padding: 42px 32px 48px;
+  color: #044791;
+}
+.page h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 44px;
+}
+.subtitle {
+  margin: 0 0 34px;
+  color: #5980ae;
+  font-size: 15px;
+  line-height: 24px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 560fr) minmax(0, 590fr);
+  align-items: start;
+  gap: 30px;
+}
+.panel {
+  min-width: 0;
+  min-height: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: white;
+  border: 1px solid #bae4f4;
+  border-radius: 14px;
+  padding: 22px 24px 44px;
+}
+.panel h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+}
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 18px;
+}
+.avatarRow button {
+  width: 150px;
+}
+.avatar {
+  width: 78px;
+  height: 78px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.avatar img {
+  position: absolute;
+  display: block;
+}
+.avatar strong {
+  position: relative;
+  color: #009da9;
+  font-size: 22px;
+}
+.avatar .avatarPhoto {
+  width: 78px;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.fields {
+  --control-height: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+.fields > div {
+  gap: 4px;
+}
+.fields label {
+  font-size: 12.5px;
+  line-height: 18px;
+}
+.fields input {
+  font-size: 14px;
+}
+.ruleNote {
+  margin-top: 24px;
+}
+.ruleNote > div {
+  min-height: 76px;
+  font-size: 12px;
+  line-height: 20px;
+}
+.personal .save {
+  align-self: flex-end;
+  width: 180px;
+  margin-top: 30px;
+}
+.personal .logout {
+  align-self: flex-start;
+  width: 150px;
+  margin-top: 22px;
+}
+.feedback {
+  margin-top: 16px;
+}
+.muted {
+  color: #5980ae;
+  font-size: 13px;
+  line-height: 20px;
+  margin: 2px 0 0;
+}
+.preferences {
+  margin-top: 24px;
+}
+.preference {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  min-height: 64px;
+  padding: 5px 8px 7px 0;
+}
+.preference span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.preference strong {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.preference small {
+  font-size: 11.5px;
+  line-height: 18px;
+  color: #5980ae;
+}
+.preference button {
+  min-height: 44px;
+  width: 52px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: #f6fcff;
+  color: #5980ae;
+}
+.devices {
+  margin-top: 18px;
+  padding-top: 22px;
+  border-top: 1px solid #bae4f4;
+}
+.devices h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+}
+.devices > div {
+  font-size: 12px;
+  line-height: 20px;
+}
+.sessions {
+  margin-top: 18px;
+  border-top: 1px solid var(--color-line);
+  padding-top: 8px;
+}
+.sessions summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+.sessions ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sessions li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.page > :global(.preview) {
+  margin-top: 24px;
+}
+@media (max-width: 1000px) {
+  .page {
+    padding-inline: 24px;
+  }
+  .grid {
+    gap: 20px;
+  }
+  .panel {
+    padding-inline: 20px;
+  }
+  .panel h2 {
+    font-size: 21px;
+    line-height: 30px;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding-top: 28px;
+  }
+  .page h1 {
+    font-size: 28px;
+    line-height: 38px;
+  }
+  .subtitle {
+    margin: 8px 0 24px;
+    font-size: 13px;
+    line-height: 21px;
+  }
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .panel {
+    padding: 20px;
+    min-height: 0;
+  }
+  .fields input {
+    font-size: 16px;
+  }
+  .preference {
+    gap: 12px;
+    padding-block: 10px;
+  }
+  .personal .save {
+    width: 100%;
+    margin-top: 24px;
+  }
+  .personal .logout {
+    margin-top: 16px;
+  }
+}
+@media (max-width: 360px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .panel {
+    padding: 18px;
+  }
+  .panel h2 {
+    font-size: 20px;
+  }
+  .avatarRow {
+    gap: 12px;
+  }
+  .avatarRow button {
+    width: auto;
+  }
+}

@@ -1,0 +1,227 @@
+.hero {
+  position: relative;
+  min-height: 174px;
+  background:
+    url('../../../shared/assets/figma/e0f62.svg') center / 1440px 174px no-repeat,
+    url('../../../shared/assets/figma/c0f8d.svg') center / 1440px 174px no-repeat,
+    url('../../../shared/assets/figma/b329f.svg') right / 940px 174px no-repeat,
+    url('../../../shared/assets/figma/5a593.svg') right / 940px 174px no-repeat,
+    url('../../../shared/assets/figma/7a549.svg') center / 1440px 174px no-repeat,
+    linear-gradient(#f4fbfe, #eef9fc 72%, #f1fafc);
+}
+.art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.mascot {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 50px;
+  top: 17px;
+}
+.pin {
+  position: absolute;
+  left: 166px;
+  top: 22px;
+  width: 38px;
+  height: 38px;
+  border: 1.4px solid #a9dff1;
+  border-radius: 50%;
+  background: #fffffff2;
+  box-shadow: 0 2px 7px #05578c1a;
+  display: grid;
+  place-items: center;
+}
+.pin img {
+  width: 20px;
+  height: 20px;
+}
+.accent {
+  position: absolute;
+  width: 34px;
+  height: 18px;
+  left: 610px;
+  top: 36px;
+}
+.note {
+  position: absolute;
+  top: 13px;
+  right: 331px;
+  margin: 0;
+  transform: rotate(3deg);
+  width: 250px;
+  color: #087cbc;
+  font:
+    700 16px/20px 'Kalam',
+    cursive;
+}
+.flightPath {
+  position: absolute;
+  right: 262px;
+  top: 31px;
+  width: 178px;
+  height: 70px;
+}
+.plane {
+  position: absolute;
+  right: 263px;
+  top: 12px;
+  width: 46px;
+  height: 34px;
+  transform: rotate(7deg);
+}
+.copy {
+  position: relative;
+  padding: 34px 0 27px;
+  margin-left: 238px;
+  width: 410px;
+}
+.copy h1 {
+  margin: 0;
+  font:
+    700 49px/58px 'Kalam',
+    cursive;
+  color: #008f9d;
+}
+.underline {
+  display: block;
+  width: 336px;
+  height: 17px;
+}
+.desktopSubtitle {
+  margin: 4px 0 0 32px;
+  font-size: 14.5px;
+  line-height: 22px;
+  color: #075495;
+}
+.mobileSubtitle,
+.mobileUnderline {
+  display: none;
+}
+.create {
+  position: absolute;
+  right: 80px;
+  top: 39px;
+  width: 178px;
+  min-height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(to right, #05a99f, #008bb5);
+  color: white;
+  box-shadow: 0 5px 12px #036b8029;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.create img {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 1250px) {
+  .note,
+  .flightPath,
+  .plane {
+    display: none;
+  }
+  .create {
+    right: 32px;
+  }
+}
+@media (max-width: 1000px) and (min-width: 769px) {
+  .mascot {
+    left: 20px;
+    width: 110px;
+    height: 110px;
+    top: 32px;
+  }
+  .pin {
+    left: 104px;
+  }
+  .copy {
+    margin-left: 150px;
+    width: 350px;
+  }
+  .copy h1 {
+    font-size: 41px;
+  }
+  .desktopSubtitle {
+    margin-left: 0;
+    font-size: 12px;
+  }
+  .accent {
+    display: none;
+  }
+  .create {
+    width: 160px;
+    right: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 220px;
+    padding: 0 20px 16px;
+    background-position: center;
+  }
+  .copy {
+    margin-left: 96px;
+    width: auto;
+    padding: 20px 0 8px;
+  }
+  .copy h1 {
+    font-size: clamp(26px, 6vw, 38px);
+    line-height: 1.25;
+  }
+  .underline {
+    width: 100%;
+    max-width: 336px;
+    height: auto;
+  }
+  .desktopSubtitle {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  .mascot {
+    width: 100px;
+    height: 100px;
+    left: 12px;
+    top: 18px;
+  }
+  .pin,
+  .accent,
+  .note,
+  .plane,
+  .flightPath {
+    display: none;
+  }
+  .create {
+    position: relative;
+    inset: auto;
+    margin: 12px 0 0 96px;
+    width: 164px;
+    min-height: 46px;
+    font-size: 13px;
+  }
+}
+@media (max-width: 360px) {
+  .hero {
+    padding-inline: 16px;
+  }
+  .copy {
+    margin-left: 88px;
+  }
+  .mascot {
+    left: 8px;
+    width: 92px;
+    height: 92px;
+  }
+  .create {
+    margin-left: 88px;
+    width: 156px;
+  }
+}

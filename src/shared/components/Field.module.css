@@ -1,0 +1,136 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-width: 0;
+  font-size: var(--font-size-label);
+  line-height: var(--line-label);
+}
+.field label {
+  font-weight: var(--weight-medium);
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+.inputRow,
+.select {
+  background: var(--color-white);
+  border: 1px solid var(--color-field-line);
+  border-radius: var(--radius-10);
+  min-height: var(--control-height);
+  width: 100%;
+  min-width: 0;
+}
+.inputRow {
+  border: 0;
+  --field-border: var(--color-field-line);
+  box-shadow: inset 0 0 0 1px var(--field-border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding-inline: var(--space-14);
+}
+.input {
+  border: 0;
+  background: transparent;
+  outline: 0;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-height);
+  padding: 0;
+  color: var(--color-ink);
+  font: inherit;
+}
+.input::placeholder {
+  color: var(--color-note-text);
+  opacity: 1;
+}
+.textarea {
+  width: 100%;
+  min-height: 112px;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1px solid var(--color-field-line);
+  border-radius: var(--radius-10);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font: inherit;
+}
+.textarea:focus {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+.textarea.invalid {
+  border-color: var(--ios-error);
+}
+.icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.select {
+  font: inherit;
+  color: var(--color-ink);
+  padding: 10px 40px 10px var(--space-14);
+  appearance: none;
+  background-image: url('../assets/figma/9c529.svg');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+.select[multiple],
+.select[size]:not([size='1']) {
+  appearance: auto;
+  background-image: none;
+  padding-right: var(--space-14);
+}
+.inputRow:focus-within {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+.invalid {
+  border-color: var(--ios-error);
+  --field-border: var(--ios-error);
+}
+.hint,
+.error {
+  font-size: var(--font-size-small);
+  line-height: var(--line-small);
+  overflow-wrap: anywhere;
+}
+.hint {
+  color: var(--color-note-text);
+}
+.error {
+  color: var(--ios-error);
+}
+.inputRow:has(input:disabled),
+.select:disabled {
+  background-color: var(--ios-secondary);
+  color: var(--ios-muted);
+  cursor: not-allowed;
+}
+.input:disabled {
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .inputRow:hover:not(.invalid):not(:has(input:disabled)):not(:focus-within) {
+    --field-border: var(--color-blue);
+  }
+  .select:hover:not(:disabled):not(.invalid) {
+    border-color: var(--color-blue);
+  }
+}
+@media (max-width: 768px) {
+  .inputRow,
+  .select {
+    min-height: var(--control-height-mobile);
+  }
+  .input {
+    min-height: var(--control-height-mobile);
+    font-size: 16px;
+  }
+  .inputRow:focus-within {
+    border-color: var(--color-blue);
+    --field-border: var(--color-blue);
+  }
+}

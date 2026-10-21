@@ -1,0 +1,98 @@
+.drawer {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0 auto 0 0;
+  margin: 0;
+  width: min(var(--drawer-width), 86vw);
+  height: 100dvh;
+  max-height: 100dvh;
+  max-width: 86vw;
+  border: 0;
+  padding: var(--space-16) var(--space-12);
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-drawer);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  transform: translateX(-100%);
+  transition: transform 180ms ease-out;
+}
+.drawer[open] {
+  transform: translateX(0);
+}
+.right {
+  inset: 0 0 0 auto;
+  transform: translateX(100%);
+  box-shadow: -8px 0 24px rgb(10 85 161 / 16%);
+}
+.right[open] {
+  transform: translateX(0);
+}
+.drawer:not([open]),
+.drawer[hidden] {
+  display: none;
+}
+.drawer::backdrop {
+  background: var(--drawer-backdrop);
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.heading button {
+  min-width: var(--target-drawer);
+  min-height: var(--target-drawer);
+  background: var(--color-white);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-10);
+}
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-4);
+}
+.content nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.content nav button,
+.content nav a {
+  position: relative;
+  width: 100%;
+  min-height: var(--target-drawer);
+  flex-shrink: 0;
+  border: 0;
+  border-radius: var(--radius-nav);
+  padding: var(--space-8) var(--space-12);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-size: 14px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.content nav img {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.content nav [aria-pressed='true'],
+.content nav [aria-current='page'] {
+  background: var(--color-selected);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    transition: none;
+  }
+}

@@ -1,0 +1,17 @@
+.skeleton {
+  height: var(--space-16);
+  max-width: 100%;
+  border-radius: var(--radius-8);
+  background: var(--color-selected);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

@@ -1,0 +1,472 @@
+.page {
+  padding: 12px 22px 24px 18px;
+  max-width: 1220px;
+  margin-inline: auto;
+  color: var(--color-ink);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 22px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.breadcrumb h1 {
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0;
+}
+.breadcrumb a {
+  color: var(--color-active);
+  position: relative;
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+}
+.breadcrumb a::after {
+  content: '';
+  position: absolute;
+  inset: -11px 0;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 16px 0 12px;
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: 1px 8px;
+  min-height: 48px;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+.tabs > button {
+  border: 0;
+  min-height: 44px;
+  min-width: 150px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--color-ink);
+  background: transparent;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.tabs > button[aria-pressed='true'] {
+  background: var(--color-selected);
+  box-shadow: inset 0 -3px var(--color-active);
+}
+.tabs > button:disabled {
+  cursor: not-allowed;
+  color: var(--color-muted);
+}
+.tabs small {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 762fr) minmax(0, 336fr);
+  gap: 48px;
+  border: 1px solid var(--color-line);
+  background: white;
+  border-radius: 8px;
+  padding: 16px 16px 16px 14px;
+  min-height: 588px;
+}
+.memberPanel,
+.responsibilities {
+  min-width: 0;
+}
+.memberPanel h2,
+.responsibilities > h2,
+.invitationForm h2,
+.invitationList h2 {
+  font-size: 20px;
+  line-height: 28px;
+  margin: 0 0 8px;
+}
+.help {
+  color: var(--color-muted);
+  font-size: 11.5px;
+  line-height: 18px;
+  margin: 6px 0 12px;
+}
+.count {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+.rosterHead {
+  display: grid;
+  grid-template-columns: 238px minmax(0, 1fr) 110px;
+  padding-inline: 4px;
+  gap: 12px;
+  font-size: 10.5px;
+  line-height: 20px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 16px 0 10px;
+}
+.rosterHead > :last-child {
+  text-align: right;
+}
+.members {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.members > li {
+  display: grid;
+  grid-template-columns: 34px 180px minmax(76px, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 13px;
+  min-height: 76px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e8f6f8;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.avatar img {
+  display: block;
+}
+.avatarPhoto {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.identity {
+  flex: 1;
+  min-width: 150px;
+  font-size: 14px;
+  line-height: 22px;
+  overflow-wrap: anywhere;
+}
+.identity strong {
+  display: block;
+}
+.identity small {
+  display: block;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+.identity summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-active);
+}
+.identity dl {
+  font-size: 12px;
+  line-height: 20px;
+}
+.identity dd {
+  margin: 0 0 8px;
+}
+.role {
+  border-radius: 999px;
+  background: #e6f6ff;
+  color: #0070c8;
+  padding: 6px 12px;
+  font-size: 11px;
+  justify-self: start;
+  white-space: nowrap;
+}
+.role.owner {
+  background: #fff3d7;
+  color: #b67500;
+}
+.members > li > button {
+  font-size: 12px;
+  min-height: 44px;
+}
+.lifecycle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+.responsibilities {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+.responsibilities h2 {
+  margin: 0;
+}
+.responsibilities section {
+  padding: 12px;
+  border-radius: 8px;
+  background: #ecf9fd;
+  border-left: 3px solid #00a4d3;
+}
+.responsibilities section:nth-of-type(1) {
+  background: #fff6de;
+  border-color: #f19a19;
+}
+.responsibilities section:nth-of-type(2) {
+  background: #e5f7ef;
+  border-color: #15b784;
+}
+.responsibilities section:nth-of-type(3) {
+  background: #f1eaff;
+  border-color: #8b5aff;
+}
+.responsibilities h3 {
+  font-size: 12.5px;
+  line-height: 20px;
+  margin: 0 0 6px;
+  font-weight: 500;
+}
+.responsibilities p {
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--color-muted);
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+.invitationWorkspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 28px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: white;
+  padding: 20px;
+}
+.invitationForm,
+.invitationList {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+}
+.invitationForm h2,
+.invitationList h2 {
+  margin: 0;
+}
+.invitationForm > p {
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 20px;
+  margin: 0;
+}
+.invitationForm > button {
+  align-self: flex-end;
+}
+.invitationList ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.invitationList li {
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 0 14px;
+  overflow-wrap: anywhere;
+}
+.invitationHeading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.invitationHeading strong {
+  font-size: 14px;
+}
+.invitationStatus {
+  padding: 7px 14px;
+  border-radius: 24px;
+  background: #fff4df;
+  color: #a16a00;
+  font-size: 12px;
+}
+.invitationStatus[data-status='EXPIRED'],
+.invitationStatus[data-status='REVOKED'] {
+  color: #955c49;
+  background: #f7eeea;
+}
+.invitationList li p {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-muted);
+  margin: 12px 0;
+}
+.invitationList li .lifecycle {
+  justify-content: flex-end;
+}
+.revisions {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-muted);
+  margin: 16px 0;
+}
+.page > :global(.preview) {
+  margin-top: 20px;
+}
+.introduction {
+  display: none;
+}
+
+@media (max-width: 1280px) {
+  .workspace {
+    gap: 24px;
+    grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  }
+  .members > li {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+  }
+  .members > li > button {
+    grid-column: 2 / -1;
+    justify-self: end;
+  }
+  .rosterHead {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rosterHead > :last-child {
+    display: none;
+  }
+}
+@media (max-width: 1100px) {
+  .workspace,
+  .invitationWorkspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .responsibilities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .responsibilities > h2,
+  .responsibilities > button {
+    grid-column: 1 / -1;
+  }
+  .tabs small {
+    display: none;
+  }
+  .members > li > button {
+    grid-column: auto;
+  }
+  .members > li {
+    grid-template-columns: 34px minmax(0, 1fr) auto auto;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding: 12px 20px 24px;
+  }
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px 4px;
+    gap: 4px;
+  }
+  .tabs > button {
+    min-width: max-content;
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .workspace,
+  .invitationWorkspace {
+    padding: 14px;
+    gap: 24px;
+    min-height: 0;
+  }
+  .memberPanel h2,
+  .responsibilities > h2,
+  .invitationForm h2,
+  .invitationList h2 {
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .rosterHead {
+    display: none;
+  }
+  .members {
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .members > li {
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 12px;
+    gap: 8px 10px;
+  }
+  .members > li > button {
+    grid-column: 2;
+    justify-self: start;
+    font-size: 11px;
+  }
+  .role {
+    grid-column: 2;
+  }
+  .identity {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  .identity small {
+    font-size: 11px;
+    line-height: 18px;
+  }
+  .responsibilities {
+    display: flex;
+  }
+  .responsibilities p {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .invitationForm {
+    gap: 16px;
+  }
+  .invitationForm > button {
+    align-self: stretch;
+  }
+  .invitationList li {
+    padding: 14px;
+  }
+  .invitationHeading {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .invitationStatus {
+    font-size: 11px;
+  }
+}
+@media (max-width: 380px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .workspace,
+  .invitationWorkspace {
+    padding: 12px;
+  }
+}

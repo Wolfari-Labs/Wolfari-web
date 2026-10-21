@@ -1,0 +1,414 @@
+.page {
+  width: 100%;
+  padding: 8px 22px 24px 18px;
+  color: var(--color-ink);
+  max-width: none;
+  margin-inline: 0;
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 22px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  line-height: 20px;
+}
+.breadcrumb h1 {
+  font: inherit;
+  margin: 0;
+}
+.breadcrumb a {
+  position: relative;
+  color: var(--color-active);
+}
+.breadcrumb a::after {
+  content: '';
+  position: absolute;
+  inset: -11px 0;
+}
+.hero {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+  min-height: 170px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: #f0fbff var(--trip-cover, none) center / cover no-repeat;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 16px;
+}
+.paper {
+  flex: 0 1 610px;
+  min-width: 0;
+  padding: 40px 29px 24px;
+}
+.paper::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -1px auto -1px -1px;
+  width: 490px;
+  max-width: 100%;
+  background: url('../../shared/assets/figma/b6b89.svg') left top / 490px 170px no-repeat;
+}
+.hero h2 {
+  font-size: 30px;
+  line-height: 40px;
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+.meta {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.meta > span,
+.meta > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta > a {
+  position: relative;
+  color: var(--color-ink);
+}
+.meta > a::after {
+  content: '';
+  position: absolute;
+  inset: -12px 0;
+}
+.meta img,
+.actions img {
+  display: block;
+  flex-shrink: 0;
+}
+.meta .status {
+  padding: 6px 14px;
+  min-height: 32px;
+  background: var(--color-pale);
+  border-radius: 999px;
+}
+.status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #19b889;
+}
+.actions {
+  display: flex;
+  gap: 14px;
+  align-self: flex-end;
+  padding: 14px 20px 14px 0;
+  flex-shrink: 0;
+}
+.actions > :is(button, a) {
+  width: 130px;
+  min-height: 44px;
+}
+.actions > :is(button, a):last-child {
+  width: 135px;
+}
+.hero[data-variant='schedule'],
+.hero[data-variant='landscape'] {
+  min-height: 150px;
+}
+.hero[data-variant='schedule'] .paper {
+  padding: 32px 33px 22px;
+}
+.hero[data-variant='schedule'] .paper::before {
+  width: 610px;
+  background-image: url('../../shared/assets/figma/14db3.svg');
+  background-size: 610px 150px;
+}
+.hero[data-variant='schedule'] h2,
+.hero[data-variant='landscape'] h2 {
+  font-size: 32px;
+  line-height: 40px;
+}
+.hero[data-variant='schedule'] .actions {
+  padding-bottom: 20px;
+  padding-right: 30px;
+}
+.hero[data-variant='landscape'] {
+  border-radius: 16px;
+  background: #def7ff url('../../shared/assets/figma/bd989.svg') right top / 1180px 150px no-repeat;
+}
+.hero[data-variant='landscape'] .paper {
+  padding: 31px 28px 20px;
+}
+.hero[data-variant='landscape'] .paper::before {
+  width: 480px;
+  background-image: url('../../shared/assets/figma/25ff8.svg');
+  background-size: 480px 150px;
+}
+.hero[data-variant='landscape'] .actions > :is(button, a) {
+  border-radius: 18px;
+}
+.description {
+  font-size: 13px;
+  line-height: 20px;
+  margin: 12px 0;
+}
+.summaries {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.panel {
+  background: white;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 0;
+  box-shadow: 0 2px 5px #0547660a;
+}
+.panel h2 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 500;
+}
+.panel p {
+  font-size: 13px;
+  line-height: 20px;
+}
+.summaries > .panel {
+  min-height: 172px;
+  padding: 16px 15px;
+}
+.summaries h2 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+.summaries h2 img {
+  display: block;
+  flex-shrink: 0;
+}
+.unavailable {
+  color: var(--color-muted);
+  margin: 12px 0;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 578fr) minmax(0, 314fr) minmax(0, 260fr);
+  gap: 14px;
+  margin-top: 14px;
+  min-height: 0;
+}
+.workspace > .panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.workspace a {
+  color: var(--color-active);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.workspace > .panel > a {
+  margin-top: auto;
+}
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.postcard {
+  border-radius: 8px;
+  background: white url('../../shared/assets/figma/916ba.png') center bottom / 100% auto no-repeat;
+  min-height: 200px;
+  flex: 1;
+  padding: 18px;
+  font-size: 16px;
+  line-height: 26px;
+}
+.postcard p {
+  margin: 0;
+}
+
+/*
+ * The overview itinerary has a denser Figma contract than the reusable
+ * PlanSummary component. Keep these rules scoped to this page so the full
+ * Plan screen keeps its own rhythm.
+ */
+.itineraryPanel {
+  min-width: 0;
+}
+.metadata {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.metadata dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+}
+.metadata dd {
+  margin: 0;
+}
+.page > :global(.preview) {
+  margin-top: 20px;
+}
+@media (min-width: 1101px) {
+  .workspace {
+    min-height: 408px;
+  }
+  .itineraryPanel {
+    padding: 12px 15px 0;
+  }
+  .itineraryPanel > h2 {
+    margin-bottom: 12px;
+  }
+  .itineraryPanel > div {
+    min-width: 0;
+  }
+  .itineraryPanel > div > div[role='group'] {
+    min-height: 46px;
+    margin-bottom: 8px;
+  }
+  .itineraryPanel > div > ol {
+    gap: 2px;
+  }
+  .itineraryPanel > div > ol > li {
+    min-height: 62px;
+    padding: 7px 10px;
+  }
+  .itineraryPanel > div > a {
+    min-height: 44px;
+    margin-top: 8px;
+  }
+  .aside > .panel:first-child {
+    min-height: 190px;
+  }
+  .postcard {
+    min-height: 204px;
+  }
+}
+@media (max-width: 1200px) {
+  .meta {
+    gap: 8px 12px;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hero h2 {
+    max-width: 360px;
+  }
+}
+@media (max-width: 1100px) {
+  .summaries {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .workspace {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+  .aside {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 768px) {
+  .page {
+    padding: 12px 20px 24px;
+  }
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .hero {
+    flex-direction: column;
+    gap: 0;
+    min-height: 210px;
+    background-position: right center;
+  }
+  .paper,
+  .hero[data-variant='schedule'] .paper,
+  .hero[data-variant='landscape'] .paper {
+    flex: none;
+    padding: 24px 20px 12px;
+  }
+  .paper::before {
+    background-size: 490px 170px;
+  }
+  .hero h2,
+  .hero[data-variant='schedule'] h2,
+  .hero[data-variant='landscape'] h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .meta {
+    max-width: 360px;
+    gap: 10px 16px;
+    font-size: 12px;
+  }
+  .actions,
+  .hero[data-variant='schedule'] .actions {
+    flex-direction: row;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 20px 18px;
+  }
+  .actions > :is(button, a),
+  .actions > :is(button, a):last-child {
+    width: auto;
+    min-width: 104px;
+  }
+  .hero[data-variant='landscape'] {
+    background-position: 70% top;
+  }
+  .hero[data-variant='landscape'] .paper::before {
+    background-color: #ffffffb8;
+  }
+  .summaries {
+    gap: 12px;
+  }
+  .summaries > .panel {
+    padding: 12px;
+    min-height: 148px;
+  }
+  .summaries h2 {
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .aside {
+    grid-column: auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .panel {
+    padding: 16px;
+  }
+  .metadata dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 380px) {
+  .page {
+    padding-inline: 16px;
+  }
+  .summaries {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .summaries > .panel {
+    min-height: 136px;
+  }
+}

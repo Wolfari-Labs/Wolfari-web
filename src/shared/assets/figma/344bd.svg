@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="390" height="120" viewBox="0 0 390 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Soft/Yellow title glow" opacity="0.42" clip-path="url(#clip0_0_365)">
+<path id="Vector" d="M195 120C302.696 120 390 93.1371 390 60C390 26.8629 302.696 0 195 0C87.3045 0 0 26.8629 0 60C0 93.1371 87.3045 120 195 120Z" fill="url(#paint0_radial_0_365)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_365" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(195 60) scale(195 60)">
+<stop stop-color="#FFF0A9" stop-opacity="0.7"/>
+<stop offset="0.72" stop-color="#FFF0A9" stop-opacity="0.24"/>
+<stop offset="1" stop-color="#FFF0A9" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_0_365">
+<rect width="390" height="120" fill="white"/>
+</clipPath>
+</defs>
+</svg>

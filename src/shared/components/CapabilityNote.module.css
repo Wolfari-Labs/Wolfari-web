@@ -1,0 +1,15 @@
+.note {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--color-action-primary);
+  border-radius: var(--radius-8);
+  background: var(--color-note);
+  color: var(--color-text-muted-on-light);
+  font-size: var(--font-size-small);
+  line-height: var(--line-body);
+}
+
+.warning {
+  border-left-color: var(--color-status-warning);
+  background: var(--color-status-warning-surface);
+}
