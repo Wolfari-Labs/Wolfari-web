@@ -5,11 +5,15 @@ export function Drawer({
   open,
   label,
   onDismiss,
+  side = 'left',
+  className = '',
   children,
 }: {
   open: boolean;
   label: string;
   onDismiss: () => void;
+  side?: 'left' | 'right';
+  className?: string;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -29,7 +33,7 @@ export function Drawer({
     <dialog
       ref={ref}
       hidden={!open}
-      className={styles.drawer}
+      className={`${styles.drawer} ${side === 'right' ? styles.right : ''} ${className}`}
       aria-label={label}
       onCancel={(event) => {
         event.preventDefault();

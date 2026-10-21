@@ -14,6 +14,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
+  transform: translateX(-100%);
+  transition: transform 180ms ease-out;
+}
+.drawer[open] {
+  transform: translateX(0);
+}
+.right {
+  inset: 0 0 0 auto;
+  transform: translateX(100%);
+  box-shadow: -8px 0 24px rgb(10 85 161 / 16%);
+}
+.right[open] {
+  transform: translateX(0);
 }
 .drawer:not([open]),
 .drawer[hidden] {
@@ -75,4 +88,10 @@
 .content nav [aria-pressed='true'],
 .content nav [aria-current='page'] {
   background: var(--color-selected);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    transition: none;
+  }
 }
