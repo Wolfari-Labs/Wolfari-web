@@ -139,6 +139,7 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       membersFixtureFactory,
+      gatewayHttpClient,
     );
     root.render(
       <StrictMode>
