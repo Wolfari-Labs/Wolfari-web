@@ -34,6 +34,9 @@ const PlanPage = lazy(async () => ({
 const MembersPage = lazy(async () => ({
   default: (await import('../features/members/MembersPage')).MembersPage,
 }));
+const InvitationPage = lazy(async () => ({
+  default: (await import('../features/members/InvitationPage')).InvitationPage,
+}));
 const FundPage = lazy(async () => ({
   default: (await import('../features/fund/FundPage')).FundPage,
 }));
@@ -145,6 +148,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
             contentTitle: true,
             fullBleed: true,
           },
+        },
+        {
+          path: '/invitations',
+          element: feature(<InvitationPage />),
+          handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
         },
         {
           path: '/login',

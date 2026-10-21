@@ -16,7 +16,7 @@ export function selectMembersRepositories(
   if (selected === 'gateway')
     return {
       membership: createGatewayMembershipRepository(undefined, client),
-      invitation: createGatewayInvitationRepository(),
+      invitation: createGatewayInvitationRepository(undefined, client),
     };
   if (!allowed || !factory)
     throw Error('Fixture requires development or explicit UI preview and factory');

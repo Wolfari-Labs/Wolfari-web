@@ -7,6 +7,7 @@ export const paths = {
   profile: '/profile',
   login: '/login',
   register: '/register',
+  invitations: '/invitations',
   trip: (id: string) => `/trips/${encodeURIComponent(id)}`,
   plan: (id: string) => `/trips/${encodeURIComponent(id)}/plan`,
   map: (id: string) => `/trips/${encodeURIComponent(id)}/map`,
