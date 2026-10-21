@@ -33,10 +33,10 @@
 .tableHead { min-height: 28px; margin: 0 14px 12px; border-radius: 5px; background: #f3fbff; color: #6c8bb2; font-size: 9px; }
 .tableHead span { overflow: hidden; white-space: nowrap; }
 .groups { display: grid; gap: 0; margin: 0 14px; background: white; }
-.group { overflow: hidden; background: white; }
+.group { overflow: visible; background: white; }
 .groupHeading { display: flex; align-items: center; gap: 10px; width: 100%; height: 36px; margin: 0 0 4px; padding: 0 12px; border: 0; border-radius: 8px; background: #f3fbff; color: #06458b; text-align: left; font-size: 15px; font-weight: 500; }
 .groupHeading em { min-width: 24px; padding: 2px 7px; border-radius: 999px; font-size: 13px; font-style: normal; text-align: center; }
-.table { overflow-x: auto; }
+.table { overflow: visible; }
 .row { min-height: 32px; color: #6c8bb2; font-size: 13px; }
 .row:last-child { margin-bottom: 4px; }
 .checkbox { width: 20px; height: 20px; border: 1px solid #cdebf7; border-radius: 5px; background: white; color: white; }
@@ -46,9 +46,10 @@
 .name strong { display: block; overflow-wrap: anywhere; color: #6c8bb2; font-weight: 400; }
 .name small { display: none; }
 .menu { position: relative; }
+.menu[open] { z-index: 10; }
 .menu summary { cursor: pointer; list-style: none; color: #0089c7; text-align: center; }
 .menu summary::-webkit-details-marker { display: none; }
-.menu > div { position: absolute; right: 0; z-index: 2; display: grid; min-width: 120px; padding: 4px; border: 1px solid #d9eaf2; border-radius: 5px; background: white; box-shadow: 0 8px 20px rgb(19 74 92 / 12%); }
+.menu > div { position: absolute; right: 0; bottom: calc(100% + 4px); z-index: 2; display: grid; min-width: 120px; padding: 4px; border: 1px solid #d9eaf2; border-radius: 5px; background: white; box-shadow: 0 8px 20px rgb(19 74 92 / 12%); }
 .menu button { border: 0; padding: 8px; background: white; text-align: left; }
 .menu button:hover { background: #f1f8fa; }
 .empty { margin: 0 14px; padding: 34px; border: 1px dashed #c6dbe3; border-radius: 5px; background: white; text-align: center; }

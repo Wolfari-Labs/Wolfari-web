@@ -206,7 +206,7 @@ export function groupPackingItems(items: readonly PackingItemViewModel[]): Packi
     groups.set(category, [...(groups.get(category) ?? []), item]);
   }
   return [...groups.entries()]
-    .sort(([a], [b]) => a === 'Khác' ? 1 : b === 'Khác' ? -1 : a.localeCompare(b, 'vi'))
+    .sort(([a], [b]) => a === 'Khác' ? 1 : b === 'Khác' ? -1 : 0)
     .map(([category, grouped]) => ({ category, items: grouped }));
 }
 
@@ -218,5 +218,5 @@ export function packingDueDate(value: string | null, timezone: string) {
   if (!value) return null;
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return null;
-  return new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium', timeStyle: 'short', timeZone: timezone }).format(date);
+  return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: timezone }).format(date);
 }

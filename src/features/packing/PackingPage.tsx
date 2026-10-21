@@ -29,7 +29,8 @@ export function PackingPage() {
   const [feedback, setFeedback] = useState('');
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
-  const viewerId = data?.trip.currentMembership.userId ?? '';
+  const viewerUserId = data?.trip.currentMembership.userId ?? '';
+  const viewerMemberId = data?.trip.currentMembership.id ?? '';
   const canEdit = data?.plan.permissions.canEdit === true;
   const canComplete = data?.plan.permissions.canComplete === true;
   const canWrite = canEdit && canComplete;
@@ -45,11 +46,11 @@ export function PackingPage() {
     return () => window.clearTimeout(timer);
   }, [feedback]);
 
-  const visible = filterPackingItems(items, filter, category, viewerId);
+  const visible = filterPackingItems(items, filter, category, viewerMemberId);
   const groups = groupPackingItems(visible);
   const progress = packingProgress(items);
   const percent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
-  const members = data ? [{ id: viewerId, label: 'Tôi' }] : [];
+  const members = data ? [{ id: viewerMemberId, label: 'Tôi' }] : [];
   const initial: PackingFormValues = drawer.item && data
     ? packingFormFromItem(drawer.item, data.trip.timezone)
     : emptyPackingForm;
@@ -80,7 +81,7 @@ export function PackingPage() {
       ...entry,
       status: entry.status === 'COMPLETED' ? 'TODO' : 'COMPLETED',
       completedAt: entry.status === 'COMPLETED' ? null : new Date().toISOString(),
-      completedByUserId: entry.status === 'COMPLETED' ? null : viewerId,
+      completedByUserId: entry.status === 'COMPLETED' ? null : viewerUserId,
     } : entry));
   };
 
@@ -110,16 +111,17 @@ export function PackingPage() {
         <div className={styles.tableHead}><span aria-hidden="true" /><span>Vật dụng</span><span>Số lượng</span><span>Người chuẩn bị</span><span>Hạn chuẩn bị</span><span>Thao tác</span></div>
         {groups.length ? <div className={styles.groups}>{groups.map((group) => {
         const isCollapsed = collapsed.has(group.category);
+        const completed = group.items.filter((item) => item.status === 'COMPLETED').length;
         return <section key={group.category} className={styles.group}>
           <button className={styles.groupHeading} aria-expanded={!isCollapsed} onClick={() => setCollapsed((current) => { const next = new Set(current); if (isCollapsed) next.delete(group.category); else next.add(group.category); return next; })}>
-            <span>{isCollapsed ? '▸' : '▾'} {group.category}</span><em>{group.items.length}</em>
+            <span>{isCollapsed ? '▸' : '▾'} {group.category}</span><em>({completed}/{group.items.length})</em>
           </button>
           {!isCollapsed && <div className={styles.table}>
             {group.items.map((item) => <div className={styles.row} key={item.id}>
               <button className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`} aria-label={`Đánh dấu ${item.name}`} aria-pressed={item.status === 'COMPLETED'} disabled={!canWrite} onClick={() => toggle(item)}>{item.status === 'COMPLETED' ? '✓' : ''}</button>
               <div className={styles.name}><strong>{item.name}</strong>{item.note && <small>{item.note}</small>}</div>
               <span>{item.quantity} {item.unit ?? ''}</span>
-              <span>{item.assignedMemberId === viewerId ? 'Tôi' : item.assignedMemberId ? 'Đã phân công' : 'Chưa phân công'}</span>
+              <span>{item.assignedMemberId === viewerMemberId ? 'Tôi' : item.assignedMemberId ? 'Đã phân công' : 'Chưa phân công'}</span>
               <span>{packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC') ?? '—'}</span>
               <details className={styles.menu}><summary aria-label={`Thao tác ${item.name}`}>•••</summary><div><button disabled={!canWrite} onClick={() => setDrawer({ open: true, mode: 'edit', item })}>Chỉnh sửa</button><button disabled={!canWrite} onClick={() => remove(item)}>Xóa</button></div></details>
             </div>)}

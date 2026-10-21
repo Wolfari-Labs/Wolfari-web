@@ -39,6 +39,42 @@ export function createFixturePlanRepository(
           },
         };
       const seed = tripId === previewTripId;
+      const packingItem = ({
+        sequence,
+        name,
+        category,
+        status,
+        quantity = '1',
+        unit = null,
+        note = null,
+        assignedMemberId = null,
+        dueAt = '2026-09-21T18:00:00+07:00',
+      }: {
+        sequence: number;
+        name: string;
+        category: string;
+        status: 'TODO' | 'COMPLETED';
+        quantity?: string;
+        unit?: string | null;
+        note?: string | null;
+        assignedMemberId?: string | null;
+        dueAt?: string | null;
+      }): PlanViewModel['packingItems'][number] => ({
+        id: `d0000000-0000-4000-8000-${String(sequence).padStart(12, '0')}`,
+        tripId,
+        name,
+        quantity,
+        unit,
+        note,
+        category,
+        assignedMemberId,
+        dueAt,
+        status,
+        source: 'MANUAL',
+        completedByUserId: status === 'COMPLETED' ? fixtureViewerId : null,
+        completedAt: status === 'COMPLETED' ? '2026-09-21T20:00:00+07:00' : null,
+        planVersion: trip.planVersion,
+      });
       const names = [
         'Bán đảo Sơn Trà',
         'Ăn trưa hải sản',
@@ -161,54 +197,18 @@ export function createFixturePlanRepository(
           : [],
         packingItems: seed
           ? [
-              {
-                id: 'd0000000-0000-4000-8000-000000000001',
-                tripId,
-                name: 'Áo thun',
-                quantity: '3',
-                unit: 'cái',
-                note: null,
-                category: 'Trang phục',
-                assignedMemberId: null,
-                dueAt: null,
-                status: 'COMPLETED',
-                source: 'MANUAL',
-                completedByUserId: fixtureViewerId,
-                completedAt: '2026-09-21T20:00:00+07:00',
-                planVersion: trip.planVersion,
-              },
-              {
-                id: 'd0000000-0000-4000-8000-000000000002',
-                tripId,
-                name: 'Kem chống nắng',
-                quantity: '1.5',
-                unit: 'chai',
-                note: 'Dùng chung cho nhóm',
-                category: 'Chăm sóc cá nhân',
-                assignedMemberId: trip.currentMembership.id,
-                dueAt: '2026-09-21T18:00:00+07:00',
-                status: 'TODO',
-                source: 'MANUAL',
-                completedByUserId: null,
-                completedAt: null,
-                planVersion: trip.planVersion,
-              },
-              {
-                id: 'd0000000-0000-4000-8000-000000000003',
-                tripId,
-                name: 'Sạc dự phòng',
-                quantity: '1',
-                unit: null,
-                note: null,
-                category: null,
-                assignedMemberId: null,
-                dueAt: null,
-                status: 'TODO',
-                source: 'MANUAL',
-                completedByUserId: null,
-                completedAt: null,
-                planVersion: trip.planVersion,
-              },
+              packingItem({ sequence: 1, name: 'Áo khoác mỏng', category: 'Quần áo', status: 'COMPLETED', assignedMemberId: trip.currentMembership.id }),
+              packingItem({ sequence: 2, name: 'Quần dài', category: 'Quần áo', status: 'COMPLETED', assignedMemberId: 'b0000000-0000-4000-8000-000000000002' }),
+              packingItem({ sequence: 3, name: 'Đồ ngủ', category: 'Quần áo', status: 'COMPLETED' }),
+              packingItem({ sequence: 4, name: 'Áo thun', category: 'Quần áo', status: 'COMPLETED', quantity: '3', unit: 'cái' }),
+              packingItem({ sequence: 5, name: 'Nón rộng vành', category: 'Quần áo', status: 'COMPLETED' }),
+              packingItem({ sequence: 6, name: 'Áo mưa', category: 'Quần áo', status: 'COMPLETED' }),
+              packingItem({ sequence: 7, name: 'Bàn chải đánh răng', category: 'Đồ vệ sinh', status: 'COMPLETED', assignedMemberId: trip.currentMembership.id }),
+              packingItem({ sequence: 8, name: 'Sữa tắm (dạng nhỏ)', category: 'Đồ vệ sinh', status: 'TODO' }),
+              packingItem({ sequence: 9, name: 'Điện thoại', category: 'Điện tử', status: 'COMPLETED' }),
+              packingItem({ sequence: 10, name: 'Sạc dự phòng', category: 'Điện tử', status: 'TODO' }),
+              packingItem({ sequence: 11, name: 'Kem chống nắng', category: 'Thuốc & y tế', status: 'TODO', quantity: '1.5', unit: 'chai', note: 'Dùng chung cho nhóm', assignedMemberId: trip.currentMembership.id }),
+              packingItem({ sequence: 12, name: 'Thuốc đau đầu', category: 'Thuốc & y tế', status: 'TODO', dueAt: null }),
             ]
           : [],
         permissions: {

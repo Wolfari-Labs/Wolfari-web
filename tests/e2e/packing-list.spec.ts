@@ -27,4 +27,16 @@ test.describe('Packing List preview suggestions', () => {
     await expect(drawer.getByRole('option', { name: '+ Tạo danh mục “Đồ đi biển”' })).toBeVisible();
     await expect(page.evaluate(() => document.documentElement.scrollWidth)).resolves.toBeLessThanOrEqual(402);
   });
+
+  test('keeps the last item edit action visible and usable', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 960 });
+    await page.goto(route);
+    const action = page.locator('summary[aria-label="Thao tác Thuốc đau đầu"]');
+    await action.scrollIntoViewIfNeeded();
+    await action.click();
+    const edit = action.locator('..').getByRole('button', { name: 'Chỉnh sửa' });
+    await expect(edit).toBeVisible();
+    await edit.click();
+    await expect(page.getByRole('dialog', { name: 'Chỉnh sửa vật dụng' })).toBeVisible();
+  });
 });
