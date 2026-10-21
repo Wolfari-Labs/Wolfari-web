@@ -7,6 +7,7 @@ import { Select } from '../../shared/components/Select';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
+import { TripHero } from '../trips/components/TripHero';
 import { planScenarios, type PlanScenario } from '../plan/model/plan';
 import type { PackingFormValues, PackingFilter, PackingPreviewItem } from './packing';
 import { emptyPackingForm, filterPackingItems, groupPackingItems, packingDueDate, packingFormFromItem, packingItemsFromForm, packingProgress } from './packing';
@@ -44,9 +45,10 @@ export function PackingPage() {
   const toggle = (item: PackingPreviewItem) => { if (!canComplete) return; setItems((current) => current.map((entry) => entry.id === item.id ? { ...entry, status: entry.status === 'COMPLETED' ? 'TODO' : 'COMPLETED', completedAt: entry.status === 'COMPLETED' ? null : new Date().toISOString(), completedByUserId: entry.status === 'COMPLETED' ? null : viewerId } : entry)); };
   return <section className={styles.page} data-flow="packing-preview">
     <div className={styles.breadcrumb}><Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link><span aria-hidden="true">›</span><h1>Packing List</h1></div>
-    <header className={styles.hero}><div><p>HÀNH LÝ</p><h2>Chuẩn bị thật gọn nhẹ</h2><span>Danh sách trong kế hoạch chuyến đi · bản xem trước.</span></div><div className={styles.progress}><strong>{progress.completed}/{progress.total}</strong><span>Đã chuẩn bị · {percent}%</span><i><b style={{ width: `${percent}%` }} /></i></div></header>
+    {data && <TripHero trip={data.trip} />}
     <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
-      <div className={styles.toolbar}><div className={styles.filters} role="group" aria-label="Bộ lọc vật dụng"><button className={filter === 'ALL' ? styles.active : ''} onClick={() => setFilter('ALL')}>Tất cả</button><button className={filter === 'MINE' ? styles.active : ''} onClick={() => setFilter('MINE')}>Của tôi</button><button className={filter === 'TODO' ? styles.active : ''} onClick={() => setFilter('TODO')}>Chưa hoàn thành</button></div><Select label="Danh mục" value={category} onChange={(event) => setCategory(event.target.value)}><option value="ALL">Tất cả danh mục</option>{categories.map((value) => <option key={value}>{value}</option>)}</Select>{canEdit && <Button onClick={(event) => { addButtonRef.current = event.currentTarget; setDrawer({ open: true, mode: 'add', item: null }); }}>+ Thêm vật dụng</Button>}</div>
+      <section className={styles.summary} aria-label="Tiến độ packing list"><div><h2>Packing list</h2><p>{progress.completed}/{progress.total} món đã hoàn thành</p></div><div className={styles.progress}><i><b style={{ width: `${percent}%` }} /></i><span>{percent}%</span></div>{canEdit && <Button onClick={(event) => { addButtonRef.current = event.currentTarget; setDrawer({ open: true, mode: 'add', item: null }); }}>✈ Thêm vật dụng</Button>}</section>
+      <div className={styles.toolbar}><div className={styles.filters} role="group" aria-label="Bộ lọc vật dụng"><button className={filter === 'ALL' ? styles.active : ''} onClick={() => setFilter('ALL')}>Tất cả</button><button className={filter === 'MINE' ? styles.active : ''} onClick={() => setFilter('MINE')}>Của tôi</button><button className={filter === 'TODO' ? styles.active : ''} onClick={() => setFilter('TODO')}>Chưa hoàn thành</button></div><Select label="Danh mục" value={category} onChange={(event) => setCategory(event.target.value)}><option value="ALL">Danh mục: Tất cả</option>{categories.map((value) => <option key={value}>{value}</option>)}</Select></div>
       {!canEdit && <CapabilityNote>Bạn đang ở chế độ chỉ đọc. Các thao tác thay đổi danh sách đã được khóa.</CapabilityNote>}
       {items.some((item) => item.assignedMemberId) && <span className={styles.assignedHint}>Đã phân công</span>}
       {feedback && <div className={styles.feedback} role="status">{feedback}</div>}
