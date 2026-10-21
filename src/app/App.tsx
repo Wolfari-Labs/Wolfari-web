@@ -16,6 +16,7 @@ import { Alert } from '../shared/components/Alert';
 import { Button } from '../shared/components/Button';
 import type { DemoAccess } from '../features/auth/model/demo-access';
 import type { RouteContext } from './route-context';
+import { useOptionalSessionManager } from './session-context';
 
 export function App({
   previewTripPath,
@@ -27,6 +28,7 @@ export function App({
   const { tripId } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const sessionManager = useOptionalSessionManager();
   const matches = useMatches();
   const handle = matches.at(-1)?.handle as
     | {
@@ -52,10 +54,32 @@ export function App({
     [paths.home, paths.login, paths.register].includes(policyPath) ? 'guest' : 'success',
   );
   const [demoActive, setDemoActive] = useState(false);
+  const [sessionStatus, setSessionStatus] = useState(() => sessionManager?.status() ?? 'unknown');
+  useEffect(() => {
+    if (!sessionManager) return;
+    setSessionStatus(sessionManager.status());
+    return sessionManager.subscribe(() => setSessionStatus(sessionManager.status()));
+  }, [sessionManager]);
   const query = useShell(tripId ?? null, scenario);
   const result = query.data;
   const snapshot = result?.status === 'ready' ? result.data : null;
   const effectiveSection = handle?.section ?? 'overview';
+  useEffect(() => {
+    if (sessionStatus === 'authenticated') setScenario('success');
+    if (sessionStatus === 'anonymous' && [paths.home, paths.login, paths.register].includes(policyPath))
+      setScenario('guest');
+  }, [policyPath, sessionStatus]);
+  useEffect(() => {
+    if (
+      result?.status === 'error' &&
+      result.error.code === 'UNAUTHENTICATED' &&
+      requiresViewer &&
+      policyPath !== paths.login &&
+      policyPath !== paths.register
+    ) {
+      navigate(`${paths.login}?returnTo=${encodeURIComponent(pathname)}`, { replace: true });
+    }
+  }, [navigate, pathname, policyPath, requiresViewer, result]);
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
     : tripId
