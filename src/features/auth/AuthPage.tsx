@@ -1,5 +1,5 @@
 ﻿import { useState, type FormEvent } from 'react';
-import { Link, useOutletContext } from 'react-router';
+import { Link, useLocation, useNavigate, useOutletContext } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
@@ -11,6 +11,7 @@ import loginSubmitIcon from '../../shared/assets/figma/e48f0.svg';
 import registerSubmitIcon from '../../shared/assets/figma/cadd3.svg';
 import { validateAuth, type AuthFormValues, type AuthFormErrors } from './model/auth-validation';
 import styles from './AuthPage.module.css';
+import { useOptionalIdentityRepository } from './repositories/identity-context';
 
 type Preview = 'idle' | 'pending' | 'unknown' | 'error' | 'unavailable';
 const previewStates: readonly Preview[] = ['idle', 'pending', 'unknown', 'error', 'unavailable'];
@@ -24,6 +25,9 @@ export function AuthPage({
 }) {
   const register = mode === 'register';
   const context = useOutletContext<RouteContext | null>();
+  const repository = useOptionalIdentityRepository();
+  const navigate = useNavigate();
+  const location = useLocation();
   const demoLogin = previewEnabled && !register ? context?.demoLogin : undefined;
   const [demoError, setDemoError] = useState(false);
   const [values, setValues] = useState<AuthFormValues>({
@@ -40,7 +44,7 @@ export function AuthPage({
     setValues((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: undefined }));
   };
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (preview === 'pending') return;
     const next = validateAuth(mode, values);
@@ -50,6 +54,23 @@ export function AuthPage({
     else if (demoLogin) {
       setDemoError(!demoLogin.activate({ email: values.email, password: values.password }));
       document.getElementById('auth-password')?.focus();
+    } else if (repository && (register ? repository.register : repository.login)) {
+      setPreview('pending');
+      const signal = new AbortController().signal;
+      const result = register
+        ? await repository.register!({
+            intent: { email: values.email, password: values.password, fullName: values.fullName },
+            signal,
+          })
+        : await repository.login!({ intent: { email: values.email, password: values.password }, signal });
+      if (result.status === 'error') {
+        setPreview(result.error.retryable ? 'error' : 'unknown');
+      } else if (register) {
+        setPreview('unknown');
+      } else {
+        const returnTo = new URLSearchParams(location.search).get('returnTo');
+        navigate(returnTo?.startsWith('/') ? returnTo : '/');
+      }
     } else setPreview('unavailable');
   };
   return (
@@ -86,7 +107,7 @@ export function AuthPage({
         <form
           className={styles.card}
           noValidate
-          onSubmit={submit}
+          onSubmit={(event) => void submit(event)}
           aria-label={register ? 'Biểu mẫu đăng ký' : 'Biểu mẫu đăng nhập'}
         >
           <header className={styles.cardHeader}>
