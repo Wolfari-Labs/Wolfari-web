@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
@@ -95,7 +95,10 @@ describe('Trip Settings', () => {
     expect(screen.getByRole('button', { name: 'Lưu thay đổi' })).toBeDisabled();
     await user.click(screen.getByRole('button', { name: '← Hủy' }));
     expect(router.state.location.search).toBe('');
-    expect(await screen.findByRole('button', { name: 'Chỉnh sửa thông tin' })).toHaveFocus();
+    const editButton = await screen.findByRole('button', { name: 'Chỉnh sửa thông tin' });
+    await waitFor(() => {
+      expect(editButton).toHaveFocus();
+    });
     expect(updateTrip).not.toHaveBeenCalled();
   });
 
