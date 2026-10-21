@@ -84,36 +84,37 @@ export function PackingPage() {
     } : entry));
   };
 
-  return <section className={styles.page} data-flow="packing-read" data-mode="preview">
-    <div className={styles.breadcrumb}><Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link><span aria-hidden="true">›</span><h1>Packing List</h1></div>
-    {data && <TripHero trip={data.trip} />}
+  return <section className={`${styles.page} ${drawer.open ? styles.drawerOpen : ''}`} data-flow="packing-read" data-mode="preview">
+    <div className={styles.breadcrumb}><Link to={paths.trips}>Chuyến đi của tôi</Link><span aria-hidden="true">›</span>{data && <><Link to={paths.trip(tripId)}>{data.trip.name}</Link><span aria-hidden="true">›</span></>}<h1>Packing list</h1></div>
+    {data && <TripHero trip={data.trip} variant="landscape" />}
     <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
       <section className={styles.summary} aria-label="Tiến độ packing list">
         <div><h2>Packing list</h2><p>{progress.completed}/{progress.total} món đã hoàn thành</p></div>
         <div className={styles.progress}><i><b style={{ width: `${percent}%` }} /></i><span>{percent}%</span></div>
         {canWrite && <Button onClick={(event) => { addButtonRef.current = event.currentTarget; setDrawer({ open: true, mode: 'add', item: null }); }}>✈ Thêm vật dụng</Button>}
       </section>
-      <div className={styles.toolbar}>
-        <div className={styles.filters} role="group" aria-label="Bộ lọc vật dụng">
+      <div className={styles.list}>
+        <div className={styles.toolbar}>
+          <div className={styles.filters} role="group" aria-label="Bộ lọc vật dụng">
           <button className={filter === 'ALL' ? styles.active : ''} onClick={() => setFilter('ALL')}>Tất cả</button>
           <button className={filter === 'MINE' ? styles.active : ''} onClick={() => setFilter('MINE')}>Của tôi</button>
           <button className={filter === 'TODO' ? styles.active : ''} onClick={() => setFilter('TODO')}>Chưa hoàn thành</button>
+          </div>
+          <div className={styles.categorySelect}>
+            <Select label="Danh mục" value={category} onChange={(event) => setCategory(event.target.value)}>
+              <option value="ALL">Danh mục: Tất cả</option>
+              {catalog.categories.map((value) => <option key={value}>{value}</option>)}
+            </Select>
+          </div>
         </div>
-        <Select label="Danh mục" value={category} onChange={(event) => setCategory(event.target.value)}>
-          <option value="ALL">Danh mục: Tất cả</option>
-          {catalog.categories.map((value) => <option key={value}>{value}</option>)}
-        </Select>
-      </div>
-      {!canWrite && <CapabilityNote>Bạn đang ở chế độ chỉ đọc. Các thao tác thay đổi danh sách đã được khóa.</CapabilityNote>}
-      {feedback && <div className={styles.feedback} role="status">{feedback}</div>}
-      {groups.length ? <div className={styles.groups}>{groups.map((group) => {
+        <div className={styles.tableHead}><span aria-hidden="true" /><span>Vật dụng</span><span>Số lượng</span><span>Người chuẩn bị</span><span>Hạn chuẩn bị</span><span>Thao tác</span></div>
+        {groups.length ? <div className={styles.groups}>{groups.map((group) => {
         const isCollapsed = collapsed.has(group.category);
         return <section key={group.category} className={styles.group}>
           <button className={styles.groupHeading} aria-expanded={!isCollapsed} onClick={() => setCollapsed((current) => { const next = new Set(current); if (isCollapsed) next.delete(group.category); else next.add(group.category); return next; })}>
             <span>{isCollapsed ? '▸' : '▾'} {group.category}</span><em>{group.items.length}</em>
           </button>
           {!isCollapsed && <div className={styles.table}>
-            <div className={styles.tableHead}><span>Vật dụng</span><span>Số lượng</span><span>Người chuẩn bị</span><span>Hạn chuẩn bị</span><span /></div>
             {group.items.map((item) => <div className={styles.row} key={item.id}>
               <button className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`} aria-label={`Đánh dấu ${item.name}`} aria-pressed={item.status === 'COMPLETED'} disabled={!canWrite} onClick={() => toggle(item)}>{item.status === 'COMPLETED' ? '✓' : ''}</button>
               <div className={styles.name}><strong>{item.name}</strong>{item.note && <small>{item.note}</small>}</div>
@@ -124,7 +125,10 @@ export function PackingPage() {
             </div>)}
           </div>}
         </section>;
-      })}</div> : <div className={styles.empty}><h2>{items.length ? 'Không có mục phù hợp' : 'Chưa có hành lý đã lưu'}</h2><p>Danh sách phù hợp sẽ xuất hiện tại đây.</p></div>}
+        })}</div> : <div className={styles.empty}><h2>{items.length ? 'Không có mục phù hợp' : 'Chưa có hành lý đã lưu'}</h2><p>Danh sách phù hợp sẽ xuất hiện tại đây.</p></div>}
+      </div>
+      {!canWrite && <CapabilityNote>Bạn đang ở chế độ chỉ đọc. Các thao tác thay đổi danh sách đã được khóa.</CapabilityNote>}
+      {feedback && <div className={styles.feedback} role="status">{feedback}</div>}
     </TripPlanBoundary>
     <PackingItemDrawer open={drawer.open} mode={drawer.mode} initial={initial} catalog={catalog} members={members} onDismiss={closeDrawer} onSubmit={save} />
     {previewEnabled && <details className="preview"><summary>Packing preview · Dữ liệu minh họa</summary><Select label="Trạng thái dữ liệu" value={scenario} onChange={(event) => setScenario(event.target.value as PlanScenario)}>{planScenarios.map((value) => <option key={value}>{value}</option>)}</Select></details>}
