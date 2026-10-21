@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useIdentityRepository } from './repositories/identity-context';
 import { identityScenarios, type IdentityScenario } from './model/identity';
@@ -17,12 +17,32 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const [validation, setValidation] = useState<string | undefined>();
   const [unavailable, setUnavailable] = useState(false);
   const [showSessions, setShowSessions] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const avatarInput = useRef<HTMLInputElement>(null);
   const query = useQuery({
     queryKey: ['identity', 'self', scenario],
     queryFn: ({ signal }) => repository.readSelf({ scenario, signal }),
   });
   const result = query.data;
   const profile = result?.status === 'ready' ? result.data : null;
+  useEffect(() => {
+    let disposed = false;
+    let objectUrl: string | null = null;
+    if (profile?.avatar && repository.getAvatar) {
+      void repository.getAvatar({ signal: new AbortController().signal }).then((avatar) => {
+        if (disposed || avatar.status !== 'ready') return;
+        objectUrl = URL.createObjectURL(new Blob([avatar.bytes], { type: avatar.contentType ?? 'image/png' }));
+        setAvatarUrl(objectUrl);
+      });
+    } else {
+      setAvatarUrl(null);
+    }
+    return () => {
+      disposed = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [profile?.avatar, repository]);
   const sessionsQuery = useQuery({
     queryKey: ['identity', 'sessions', scenario],
     queryFn: ({ signal }) => repository.listSessions({ scenario, signal }),
@@ -33,7 +53,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     : result?.status === 'error'
       ? result.error
       : null;
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     const name = (draft ?? profile?.fullName ?? '').trim();
     if (!name || name.length > 150) {
@@ -41,7 +61,28 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
       document.getElementById('profile-name')?.focus();
     } else {
       setValidation(undefined);
-      setUnavailable(true);
+      if (!repository.updateProfile) {
+        setUnavailable(true);
+        return;
+      }
+      setSaving(true);
+      try {
+        const result = await repository.updateProfile({
+          intent: { fullName: name, expectedVersion: profile?.version ?? 0 },
+          signal: new AbortController().signal,
+        });
+        if (result.status === 'updated') {
+          setDraft(null);
+          setUnavailable(false);
+          await query.refetch();
+        } else {
+          setUnavailable(true);
+        }
+      } catch {
+        setUnavailable(true);
+      } finally {
+        setSaving(false);
+      }
     }
   };
   return (
@@ -75,10 +116,10 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
             <h2>Thông tin cá nhân</h2>
             <div className={styles.avatarRow}>
               <span className={styles.avatar}>
-                {profile.avatar ? (
+                {profile.avatar && avatarUrl ? (
                   <img
                     className={styles.avatarPhoto}
-                    src={profile.avatar.src}
+                    src={avatarUrl}
                     alt={profile.avatar.alt}
                   />
                 ) : (
@@ -94,9 +135,33 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                   </>
                 )}
               </span>
-              <Button variant="outline" disabled title="Upload ảnh chưa được kết nối">
+              <Button variant="outline" disabled={!repository.uploadAvatar} title="Upload ảnh" onClick={() => avatarInput.current?.click()}>
                 Đổi ảnh
               </Button>
+              {repository.uploadAvatar && (
+                <input
+                  ref={avatarInput}
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  hidden
+                  onChange={async (event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = '';
+                    if (!file || !repository.uploadAvatar) return;
+                    const uploaded = await repository.uploadAvatar({ file, filename: file.name, signal: new AbortController().signal });
+                    if (uploaded.status !== 'uploaded' || !repository.updateProfile) {
+                      setUnavailable(true);
+                      return;
+                    }
+                    const updated = await repository.updateProfile({
+                      intent: { fullName: profile.fullName, expectedVersion: profile.version, avatarObjectKey: uploaded.objectKey },
+                      signal: new AbortController().signal,
+                    });
+                    if (updated.status === 'updated') await query.refetch();
+                    else setUnavailable(true);
+                  }}
+                />
+              )}
             </div>
             <div className={styles.fields}>
               <Input
@@ -121,6 +186,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
             <Button
               className={styles.save}
               type="submit"
+              disabled={saving}
               icon={<img src={art['ac8db.svg']} alt="" />}
             >
               Lưu thay đổi
@@ -211,7 +277,18 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                             }).format(new Date(session.lastUsedAt))
                           : 'Chưa có thông tin'}
                       </span>
-                      <Button variant="outline" disabled>
+                      <Button
+                        variant="outline"
+                        disabled={!repository.revokeSession}
+                        onClick={async () => {
+                          if (!repository.revokeSession) return;
+                          const result = await repository.revokeSession({
+                            sessionId: session.id,
+                            signal: new AbortController().signal,
+                          });
+                          if (result.status === 'revoked') void sessionsQuery.refetch();
+                        }}
+                      >
                         Thu hồi phiên
                       </Button>
                     </li>
