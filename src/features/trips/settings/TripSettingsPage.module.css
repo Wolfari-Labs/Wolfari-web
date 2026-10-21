@@ -1,0 +1,463 @@
+.page {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 8px 22px 26px 18px;
+  color: var(--color-ink);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-muted);
+}
+
+.breadcrumb h1 {
+  margin: 0;
+  font: inherit;
+  color: var(--color-muted);
+}
+
+.breadcrumb a {
+  color: var(--color-muted);
+}
+
+.columns {
+  display: grid;
+  /* The information card is the primary surface; management stays compact. */
+  grid-template-columns: minmax(0, 1.6fr) minmax(360px, 1fr);
+  gap: 18px;
+  margin-top: 16px;
+  align-items: stretch;
+}
+
+@media (min-width: 1101px) {
+  .columns > .card {
+    min-height: 648px;
+  }
+}
+
+.card {
+  min-width: 0;
+  padding: 14px 15px 20px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-white);
+}
+
+.card h2,
+.card h3,
+.card p {
+  margin-top: 0;
+}
+
+.card h2 {
+  margin-bottom: 4px;
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.cardHeading,
+.memberHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cardHeading > div,
+.memberHeading > div {
+  min-width: 0;
+}
+
+.cardHeading p,
+.memberHeading p {
+  margin-bottom: 0;
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--color-muted);
+}
+
+.cardHeading > button,
+.memberHeading > a {
+  flex: 0 0 auto;
+}
+
+.informationGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  margin: 20px 0;
+}
+
+.informationGrid > div {
+  min-width: 0;
+  min-height: 66px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-pale);
+}
+
+.informationGrid .fullRow {
+  grid-column: 1 / -1;
+}
+
+.informationGrid dt,
+.fieldLabel {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--color-muted);
+}
+
+.informationGrid dd {
+  margin: 0;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.informationGrid .descriptionBox {
+  min-height: 96px;
+}
+
+.descriptionBox dd {
+  font-weight: 400;
+}
+
+.coverField {
+  margin-top: 8px;
+}
+
+.coverRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.coverRow picture,
+.coverRow img {
+  display: block;
+  width: 250px;
+  height: 78px;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.coverRow > div {
+  min-width: 0;
+}
+
+.coverRow p {
+  margin: 8px 0 0;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--color-muted);
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.formColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.currentValue {
+  color: var(--color-muted) !important;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.separator {
+  height: 1px;
+  margin: 16px 0;
+  background: var(--color-line);
+}
+
+.memberHeading p {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.settingSection h3 {
+  margin-top: 0;
+}
+
+.reminderRow {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 140px;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.disabledCheck {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 5px;
+  background: var(--color-active);
+  color: white;
+}
+
+.reminderRow button,
+.managementGrid button {
+  min-height: 36px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-pale);
+  color: var(--color-ink);
+  font: inherit;
+}
+
+.reminderRow button:disabled,
+.managementGrid button:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.capabilityNote {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.managementGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.managementGrid > div {
+  min-height: 126px;
+  padding: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: var(--color-white);
+}
+
+.managementGrid button {
+  min-height: 44px;
+  width: 100%;
+  padding: 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+  font-weight: 500;
+}
+
+.managementGrid p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--color-muted);
+}
+
+.managementGrid .dangerCard {
+  border-color: #f27461;
+}
+
+.dangerCard button {
+  color: #e35442;
+}
+
+.fundNote {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff7dd;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.fundNote span {
+  grid-column: 1;
+  color: var(--color-muted);
+}
+
+.fundNote a {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mobileTitle {
+  display: none;
+}
+
+.page > :global([role='status']),
+.page > :global([role='alert']) {
+  margin-top: 14px;
+}
+
+@media (max-width: 1100px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .managementGrid > div {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 12px 16px 28px;
+  }
+
+  .breadcrumb {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .breadcrumb a:not(:last-of-type),
+  .breadcrumb span {
+    display: none;
+  }
+
+  .breadcrumb h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .mobileTitle {
+    display: block;
+    margin: 24px 0;
+  }
+
+  .mobileTitle h2 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .columns {
+    margin-top: 16px;
+    gap: 16px;
+  }
+
+  .card {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .card h2,
+  .card h3 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .cardHeading,
+  .memberHeading {
+    flex-direction: column;
+  }
+
+  .cardHeading > button,
+  .memberHeading > a {
+    width: 100%;
+  }
+
+  .informationGrid,
+  .formColumns,
+  .managementGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .coverRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .coverRow picture,
+  .coverRow img {
+    width: 100%;
+    height: 166px;
+    border-radius: 14px;
+  }
+
+  .coverRow > div,
+  .coverRow button {
+    width: 100%;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+  }
+
+  .formActions button {
+    width: 100%;
+  }
+
+  .reminderRow {
+    grid-template-columns: 20px minmax(0, 1fr);
+    min-height: 52px;
+  }
+
+  .reminderRow button {
+    grid-column: 2;
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .fundNote {
+    grid-template-columns: 1fr;
+  }
+
+  .fundNote a,
+  .fundNote span {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding-inline: 10px;
+  }
+
+  .card {
+    padding-inline: 12px;
+  }
+}

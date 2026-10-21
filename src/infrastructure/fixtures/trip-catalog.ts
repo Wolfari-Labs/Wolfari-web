@@ -24,6 +24,7 @@ function trip({
   src,
   mobileSrc = null,
   canRead = true,
+  canUpdate = role === 'OWNER' && lifecycle !== 'ARCHIVED',
 }: {
   id: string;
   name: string;
@@ -35,6 +36,7 @@ function trip({
   src: string;
   mobileSrc?: string | null;
   canRead?: boolean;
+  canUpdate?: boolean;
 }): TripListItem {
   return Object.freeze({
     id,
@@ -54,7 +56,7 @@ function trip({
       joinedAt: '2026-06-01T00:00:00+07:00',
       leftAt: null,
     }),
-    permissions: Object.freeze({ canRead, canUpdate: false }),
+    permissions: Object.freeze({ canRead, canUpdate }),
     presentation: Object.freeze({
       memberCount,
       cover: Object.freeze({ src, mobileSrc, alt: '' }),

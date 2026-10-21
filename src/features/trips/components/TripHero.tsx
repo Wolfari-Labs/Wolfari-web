@@ -4,6 +4,7 @@ import type { TripDetailViewModel } from '../model/trip-detail';
 import { tripDateLabel } from '../model/trip-list-query';
 import { paths } from '../../../app/route-paths';
 import { Button } from '../../../shared/components/Button';
+import { ButtonLink } from '../../../shared/components/ButtonLink';
 import calendar from '../../../shared/assets/figma/94ab0.svg';
 import members from '../../../shared/assets/figma/fdd6a.svg';
 import share from '../../../shared/assets/figma/ac8db.svg';
@@ -56,9 +57,15 @@ export function TripHero({
         </div>
       </div>
       <div className={styles.actions}>
-        <Button variant="outline" disabled title="Chỉnh sửa chưa khả dụng">
-          Chỉnh sửa
-        </Button>
+        {trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED' ? (
+          <ButtonLink variant="outline" to={paths.settings(trip.id)}>
+            Chỉnh sửa
+          </ButtonLink>
+        ) : (
+          <Button variant="outline" disabled title="Bạn không có quyền chỉnh sửa chuyến đi">
+            Chỉnh sửa
+          </Button>
+        )}
         <Button disabled title="Chia sẻ chưa khả dụng" icon={<img src={share} alt="" />}>
           Chia sẻ
         </Button>

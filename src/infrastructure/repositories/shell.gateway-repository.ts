@@ -15,7 +15,7 @@ function domainError(error: unknown): DomainError {
     code:
       code === 'PERMISSION_DENIED' || code === 'RESOURCE_NOT_FOUND' || code === 'VERSION_CONFLICT'
         ? code
-        : 'SERVICE_UNAVAILABLE' as const,
+        : ('SERVICE_UNAVAILABLE' as const),
     correlationId: api?.correlationId ?? null,
     retryable: api?.retryable ?? true,
   };
@@ -74,7 +74,7 @@ function mapTrip(raw: unknown): NonNullable<ShellSnapshot['trip']> {
 
 export function createGatewayShellRepository(
   reader?: GatewayShellReader,
-  client?: GatewayHttpClient,
+  client?: Pick<GatewayHttpClient, 'read'>,
 ): ShellRepository {
   return {
     read:

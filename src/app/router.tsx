@@ -40,6 +40,9 @@ const FundPage = lazy(async () => ({
 const PriceWatchPage = lazy(async () => ({
   default: (await import('../features/price-watch/PriceWatchPage')).PriceWatchPage,
 }));
+const TripSettingsPage = lazy(async () => ({
+  default: (await import('../features/trips/settings/TripSettingsPage')).TripSettingsPage,
+}));
 const feature = (element: ReactNode) => (
   <Suspense fallback={<ContentState state="loading" headingLevel={2} />}>{element}</Suspense>
 );
@@ -81,7 +84,12 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         {
           path: '/trips/:tripId',
           element: feature(<TripOverviewPage />),
-          handle: { section: 'overview', contentTitle: true, fullBleed: true, requiresViewer: true },
+          handle: {
+            section: 'overview',
+            contentTitle: true,
+            fullBleed: true,
+            requiresViewer: true,
+          },
         },
         {
           path: '/trips/:tripId/plan',
@@ -117,6 +125,16 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
           path: '/trips/:tripId/price-watch',
           element: feature(<PriceWatchPage />),
           handle: { section: 'fare', contentTitle: true, fullBleed: true, requiresViewer: true },
+        },
+        {
+          path: '/trips/:tripId/settings',
+          element: feature(<TripSettingsPage />),
+          handle: {
+            section: 'settings',
+            contentTitle: true,
+            fullBleed: true,
+            requiresViewer: true,
+          },
         },
         {
           path: '/profile',

@@ -108,11 +108,11 @@
   padding: 14px 20px 14px 0;
   flex-shrink: 0;
 }
-.actions > button {
+.actions > :is(button, a) {
   width: 130px;
   min-height: 44px;
 }
-.actions > button:last-child {
+.actions > :is(button, a):last-child {
   width: 135px;
 }
 .hero[data-variant='schedule'],
@@ -148,7 +148,7 @@
   background-image: url('../../shared/assets/figma/25ff8.svg');
   background-size: 480px 150px;
 }
-.hero[data-variant='landscape'] .actions > button {
+.hero[data-variant='landscape'] .actions > :is(button, a) {
   border-radius: 18px;
 }
 .description {
@@ -364,8 +364,8 @@
     gap: 8px;
     padding: 8px 20px 18px;
   }
-  .actions > button,
-  .actions > button:last-child {
+  .actions > :is(button, a),
+  .actions > :is(button, a):last-child {
     width: auto;
     min-width: 104px;
   }

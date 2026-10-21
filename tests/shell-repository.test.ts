@@ -34,7 +34,7 @@ describe('Shell repository boundary', () => {
       data: { trip: { permissions: { canRead: false } } },
     });
   });
-  it('fixture preserves revisions and read permission without granting write permission', async () => {
+  it('fixture preserves revisions and grants update only to the active Owner', async () => {
     const result = await createFixtureShellRepository().read(request());
     expect(result.status).toBe('ready');
     if (result.status !== 'ready') throw new Error('Expected fixture');
@@ -43,7 +43,7 @@ describe('Shell repository boundary', () => {
       planVersion: 1,
       membershipRevision: 1,
       exportRevision: 1,
-      permissions: { canRead: true, canUpdate: false },
+      permissions: { canRead: true, canUpdate: true },
     });
     expect(Object.keys(createFixtureShellRepository())).toEqual(['read']);
   });
@@ -133,9 +133,10 @@ describe('Shell repository boundary', () => {
   });
   it('does not call the Gateway for a guest shell route', async () => {
     const client = { read: vi.fn() };
-    expect(
-      await createGatewayShellRepository(undefined, client).read(request('guest')),
-    ).toEqual({ status: 'ready', data: { viewer: null, trip: null } });
+    expect(await createGatewayShellRepository(undefined, client).read(request('guest'))).toEqual({
+      status: 'ready',
+      data: { viewer: null, trip: null },
+    });
     expect(client.read).not.toHaveBeenCalled();
   });
   it('unconfigured Gateway reports unavailable and sends no requests', async () => {
