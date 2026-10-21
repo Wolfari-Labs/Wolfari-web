@@ -12,6 +12,7 @@ import { Link, useParams, useOutletContext } from 'react-router';
 import { Accessibility } from '@dnd-kit/dom';
 import {
   DragDropProvider,
+  useDragDropManager,
   useDroppable,
   type DragEndEvent,
   type DragOverEvent,
@@ -181,6 +182,7 @@ function NativeDialog({
 }
 
 function DragHandle({ label, handleRef, onKeyMove }: { label: string; handleRef: (element: Element | null) => void; onKeyMove?: (direction: 'to-day' | 'to-pool') => void }) {
+  const manager = useDragDropManager();
   return (
     <button
       ref={handleRef}
@@ -188,10 +190,14 @@ function DragHandle({ label, handleRef, onKeyMove }: { label: string; handleRef:
       className={styles.dragHandle}
       aria-label={label}
       title="Kéo để sắp xếp"
-      onKeyDown={(event) => {
+      onKeyDownCapture={(event) => {
         const direction = event.key === 'ArrowRight' ? 'to-day' : event.key === 'ArrowLeft' ? 'to-pool' : null;
         if (direction && onKeyMove) {
           event.preventDefault();
+          event.stopPropagation();
+          // This shortcut owns the move. Cancel the sensor's drag so its later
+          // drop cannot overwrite the asynchronous draft update.
+          if (manager?.dragOperation.source) manager.actions.stop({ canceled: true, event: event.nativeEvent });
           onKeyMove(direction);
         }
       }}
@@ -408,6 +414,7 @@ function ActivityPool({
 
 function ActivityEditor({
   activity,
+  latest,
   locationName,
   days,
   timezone,
@@ -415,10 +422,11 @@ function ActivityEditor({
   onDismiss,
 }: {
   activity: PlanDraftActivity | null;
+  latest: PlanDraftActivity | undefined;
   locationName: string;
   days: readonly string[];
   timezone: string;
-  onSave: (edit: PlanDraftEdit) => void;
+  onSave: (edit: PlanDraftEdit, expected: PlanDraftActivity) => Promise<boolean>;
   onDismiss: () => void;
 }) {
   const [title, setTitle] = useState(activity?.title ?? '');
@@ -426,24 +434,46 @@ function ActivityEditor({
   const [startTime, setStartTime] = useState(localClock(activity?.startsAt ?? null, timezone));
   const [endTime, setEndTime] = useState(localClock(activity?.endsAt ?? null, timezone));
   const [error, setError] = useState<string | null>(null);
+  const [baseline, setBaseline] = useState(activity);
+  const [saveConflict, setSaveConflict] = useState(false);
+  const [saving, setSaving] = useState(false);
   const titleRef = useRef<HTMLInputElement>(null);
   if (!activity) return null;
-  const submit = (event: FormEvent) => {
+  const conflict = saveConflict || JSON.stringify(latest) !== JSON.stringify(baseline);
+  const reload = () => {
+    if (!latest) return;
+    setBaseline(latest);
+    setTitle(latest.title);
+    setDay(latest.scheduledDate ?? days[0] ?? '');
+    setStartTime(localClock(latest.startsAt, timezone));
+    setEndTime(localClock(latest.endsAt, timezone));
+    setError(null);
+    setSaveConflict(false);
+  };
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
+    if (conflict || saving || !baseline) return;
     const validation = validatePlanDraftEdit({ title, day, startTime, endTime, allowedDays: days });
     setError(validation);
     if (validation) return;
-    onSave({ activityId: activity.id, title, day, startTime, endTime, timezone });
+    setSaving(true);
+    try {
+      const saved = await onSave({ activityId: activity.id, title, day, startTime, endTime, timezone }, baseline);
+      if (!saved) setSaveConflict(true);
+    } finally {
+      setSaving(false);
+    }
   };
   return (
     <NativeDialog open className={styles.editorDialog} label="Chỉnh sửa hoạt động" initialFocusRef={titleRef} onDismiss={onDismiss}>
-      <form onSubmit={submit} noValidate>
+      <form onSubmit={(event) => void submit(event)} noValidate>
         <header className={styles.dialogHeader}>
           <div><p>Chỉ lưu trên thiết bị này</p><h2>Chỉnh sửa hoạt động</h2></div>
           <button type="button" onClick={onDismiss} aria-label="Đóng chỉnh sửa hoạt động">×</button>
         </header>
         <div className={styles.editorFields}>
           {error && <Alert live>{error}</Alert>}
+          {conflict && <Alert tone="warning" live>Hoạt động đã thay đổi ở tab khác hoặc không còn trong bản nháp. Nội dung bạn đang nhập vẫn được giữ. Hãy nạp bản mới hoặc hủy chỉnh sửa.</Alert>}
           <Input ref={titleRef} label="Tên hoạt động" required maxLength={255} value={title} onChange={(event) => setTitle(event.target.value)} error={error?.startsWith('Tên hoạt động') ? error : undefined} />
           <label className={styles.nativeField}>
             <span>Ngày</span>
@@ -457,7 +487,7 @@ function ActivityEditor({
           </div>
           <Input label="Địa điểm" value={locationName} readOnly />
         </div>
-        <footer className={styles.dialogActions}><Button variant="outline" onClick={onDismiss}>Hủy</Button><Button type="submit">Lưu thay đổi</Button></footer>
+        <footer className={styles.dialogActions}><Button variant="outline" onClick={onDismiss}>Hủy</Button>{conflict && <Button variant="outline" disabled={!latest || saving} onClick={reload}>Nạp bản mới</Button>}<Button type="submit" disabled={conflict || saving}>Lưu thay đổi</Button></footer>
       </form>
     </NativeDialog>
   );
@@ -532,7 +562,7 @@ export function PlanView({
   onPlannerClose: () => void;
   storageStatus: 'saved' | 'memory';
   onMove: (move: PlanDraftMove) => void;
-  onEdit: (edit: PlanDraftEdit) => void;
+  onEdit: (edit: PlanDraftEdit, expected: PlanDraftActivity) => Promise<boolean>;
   onKeyMove?: (activityId: string, direction: 'to-day' | 'to-pool') => void;
 }) {
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
@@ -545,6 +575,14 @@ export function PlanView({
   const addButtonRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const compact = useCompactPlanner();
+  useEffect(() => {
+    if (editing !== null || !editReturnFocus.current) return;
+    // Wait for the closing render to remove the modal before focusing outside
+    // it. A requestAnimationFrame from an async save can precede that commit.
+    const target = editReturnFocus.current.isConnected ? editReturnFocus.current : addButtonRef.current;
+    target?.focus();
+    editReturnFocus.current = null;
+  }, [editing]);
   const normalizedQuery = query.trim().toLocaleLowerCase('vi');
   const poolItems = allPoolItems.filter((activity) => `${activity.title} ${activity.description ?? ''}`.toLocaleLowerCase('vi').includes(normalizedQuery));
   const locationMap = useMemo(() => new Map(plan.selectedLocations.map((location) => [location.id, location])), [plan.selectedLocations]);
@@ -554,7 +592,6 @@ export function PlanView({
   };
   const closeEditor = () => {
     setEditing(null);
-    window.requestAnimationFrame(() => editReturnFocus.current?.focus());
   };
   const beginEdit = (activity: PlanDraftActivity, trigger: HTMLButtonElement) => {
     editReturnFocus.current = trigger;
@@ -580,6 +617,7 @@ export function PlanView({
   return (
     <>
       <div className={styles.hero}><TripHero trip={trip} compact variant="schedule" /></div>
+      {storageStatus === 'memory' && <Alert tone="warning" live>Không thể lưu vào trình duyệt. Bản nháp chỉ được giữ trong bộ nhớ của tab này và sẽ mất khi tải lại hoặc đóng tab.</Alert>}
       <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
         {days.map((date, index) => <button key={date} type="button" aria-pressed={date === day} onClick={() => onDayChange(date)}>Ngày {index + 1}<small>{date.slice(8, 10)}/{date.slice(5, 7)}</small></button>)}
         <Button variant="outline" disabled>+ Thêm ngày</Button>
@@ -618,10 +656,15 @@ export function PlanView({
       <ActivityEditor
         key={editing?.id ?? 'closed'}
         activity={editing}
+        latest={activities.find((activity) => activity.id === editing?.id)}
         locationName={(editing?.selectedLocationId && locationMap.get(editing.selectedLocationId)?.name) || 'Chưa có địa điểm'}
         days={days}
         timezone={trip.timezone}
-        onSave={(edit) => { onEdit(edit); closeEditor(); }}
+        onSave={async (edit, expected) => {
+          const saved = await onEdit(edit, expected);
+          if (saved) closeEditor();
+          return saved;
+        }}
         onDismiss={closeEditor}
       />
     </>
