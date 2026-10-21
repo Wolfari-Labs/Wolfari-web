@@ -15,7 +15,6 @@ export interface SessionManager {
   readonly register: (email: string, password: string, fullName: string, signal?: AbortSignal) => Promise<{ correlationId: string | null }>;
   readonly clear: () => void;
 }
-
 export function createSessionManager(client: GatewayHttpClient, token: AccessTokenStore): SessionManager {
   let csrfToken: string | null = null;
   let current: SessionStatus = 'unknown';
@@ -114,4 +113,3 @@ export function createSessionManager(client: GatewayHttpClient, token: AccessTok
     },
   };
 }
-

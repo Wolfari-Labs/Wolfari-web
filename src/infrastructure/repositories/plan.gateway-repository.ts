@@ -1,18 +1,10 @@
 import type { PlanRepository, PlanViewModel } from '../../features/plan/model/plan';
 import type { DomainError } from '../../shared/types/result';
 import type { GatewayHttpClient } from '../http/http-client';
-import { ApiError } from '../http/api-error';
+import { toDomainError } from '../http/domain-error';
 
 function domainError(error: unknown): DomainError {
-  const api = error instanceof ApiError ? error : null;
-  const code = api?.code;
-  return {
-    code: code === 'PERMISSION_DENIED' || code === 'RESOURCE_NOT_FOUND' || code === 'VERSION_CONFLICT'
-      ? code
-      : 'SERVICE_UNAVAILABLE' as const,
-    correlationId: api?.correlationId ?? null,
-    retryable: api?.retryable ?? true,
-  };
+  return toDomainError(error);
 }
 
 function text(value: unknown): string | null { return typeof value === 'string' ? value : null; }
@@ -22,6 +14,22 @@ function source(value: unknown): 'MANUAL' | 'PROVIDER' | 'DSS' {
 }
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' ? value as Record<string, unknown> : {};
+}
+
+function mapActivity(raw: unknown): PlanViewModel['activities'][number] {
+  const activity = record(raw);
+  return {
+    id: String(activity.id), tripId: String(activity.trip_id), title: String(activity.title), description: text(activity.description), publicDescription: text(activity.public_description),
+    activityType: String(activity.activity_type), selectedLocationId: text(activity.selected_location_id), startsAt: text(activity.starts_at), endsAt: text(activity.ends_at), position: number(activity.position),
+    status: activity.status === 'COMPLETED' ? 'COMPLETED' as const : 'TODO' as const,
+    source: source(activity.source),
+    planVersion: number(activity.plan_version), createdByUserId: String(activity.created_by_user_id), completedByUserId: text(activity.completed_by_user_id), completedAt: text(activity.completed_at), presentation: { cover: null },
+  };
+}
+
+function mapPlanVersion(raw: unknown): { planVersion: number; exportRevision: number } {
+  const data = record(raw);
+  return { planVersion: number(data.plan_version), exportRevision: number(data.export_revision) };
 }
 
 function mapPlan(raw: unknown): PlanViewModel {
@@ -34,14 +42,7 @@ function mapPlan(raw: unknown): PlanViewModel {
   return {
     tripId: String(data.trip_id), planVersion: number(data.plan_version), exportRevision: number(data.export_revision),
     activities: activities.map((value) => {
-      const activity = record(value);
-      return {
-        id: String(activity.id), tripId: String(activity.trip_id), title: String(activity.title), description: text(activity.description), publicDescription: text(activity.public_description),
-        activityType: String(activity.activity_type), selectedLocationId: text(activity.selected_location_id), startsAt: text(activity.starts_at), endsAt: text(activity.ends_at), position: number(activity.position),
-        status: activity.status === 'COMPLETED' ? 'COMPLETED' as const : 'TODO' as const,
-        source: source(activity.source),
-        planVersion: number(activity.plan_version), createdByUserId: String(activity.created_by_user_id), completedByUserId: text(activity.completed_by_user_id), completedAt: text(activity.completed_at), presentation: { cover: null },
-      };
+      return mapActivity(value);
     }),
     selectedLocations: locations.map((value) => {
       const location = record(value);
@@ -78,7 +79,7 @@ function mapPlan(raw: unknown): PlanViewModel {
   };
 }
 export function createGatewayPlanRepository(reader?: PlanRepository['getPlan'], client?: GatewayHttpClient): PlanRepository {
-  return {
+  const repository: PlanRepository = {
     getPlan:
       reader ??
       (async ({ tripId, signal }) => {
@@ -98,4 +99,76 @@ export function createGatewayPlanRepository(reader?: PlanRepository['getPlan'], 
         };
       }),
   };
+  if (!client) return repository;
+
+  const command = async <T>(
+    path: string,
+    method: 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+    body: unknown,
+    idempotencyKey: string,
+    signal: AbortSignal,
+    map: (value: unknown) => T,
+  ) => {
+    signal.throwIfAborted();
+    try {
+      const result = await client.write(path, {
+        method,
+        body,
+        idempotencyKey,
+        signal,
+        includeCredentials: true,
+      });
+      return { status: 'success' as const, data: map(result.data), correlationId: result.correlationId };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+      return { status: 'error' as const, error: domainError(error) };
+    }
+  };
+
+  repository.createActivity = ({ tripId, expectedPlanVersion, idempotencyKey, activity, signal }) =>
+    command(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/activities`,
+      'POST',
+      { expected_plan_version: expectedPlanVersion, title: activity.title, activity_type: activity.activityType, description: activity.description, public_description: activity.publicDescription, selected_location_id: activity.selectedLocationId, starts_at: activity.startsAt, ends_at: activity.endsAt, position: activity.position },
+      idempotencyKey,
+      signal,
+      mapActivity,
+    );
+  repository.updateActivity = ({ tripId, activityId, expectedPlanVersion, idempotencyKey, fields, signal }) =>
+    command(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/activities/${encodeURIComponent(activityId)}`,
+      'PATCH',
+      { expected_plan_version: expectedPlanVersion, ...fields },
+      idempotencyKey,
+      signal,
+      mapActivity,
+    );
+  repository.setActivityCompletion = ({ tripId, activityId, expectedPlanVersion, idempotencyKey, status, signal }) =>
+    command(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/activities/${encodeURIComponent(activityId)}/completion`,
+      'PATCH',
+      { expected_plan_version: expectedPlanVersion, status },
+      idempotencyKey,
+      signal,
+      mapActivity,
+    );
+  repository.deleteActivity = ({ tripId, activityId, expectedPlanVersion, idempotencyKey, signal }) =>
+    command(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/activities/${encodeURIComponent(activityId)}`,
+      'DELETE',
+      { expected_plan_version: expectedPlanVersion, confirmed: true },
+      idempotencyKey,
+      signal,
+      mapPlanVersion,
+    );
+  repository.reorderActivities = ({ tripId, expectedPlanVersion, idempotencyKey, activityIds, signal }) =>
+    command(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/activities/order`,
+      'PUT',
+      { expected_plan_version: expectedPlanVersion, activity_ids: activityIds },
+      idempotencyKey,
+      signal,
+      mapPlanVersion,
+    );
+  return repository;
 }

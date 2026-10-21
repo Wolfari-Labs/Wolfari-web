@@ -38,4 +38,3 @@ export function toDomainError(error: unknown): DomainError {
     details: api?.details ?? null,
   };
 }
-
