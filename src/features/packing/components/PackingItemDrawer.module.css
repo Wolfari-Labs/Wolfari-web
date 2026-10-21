@@ -1,5 +1,10 @@
 .drawer { --drawer-width: 394px; padding: 20px; }
 .form { display: grid; gap: 14px; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.combobox { position: relative; min-width: 0; }
+.suggestions { position: absolute; z-index: 5; top: calc(100% - 2px); left: 0; right: 0; max-height: 144px; margin: 0; padding: 0; overflow-y: auto; border: 1px solid var(--color-line); border-radius: 5px; background: var(--color-white); box-shadow: 0 8px 20px rgb(6 69 139 / 12%); list-style: none; }
+.suggestions li { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; padding: 7px 12px; color: var(--color-ink); cursor: pointer; font-size: 13px; }
+.suggestions li small { color: var(--color-muted); font-size: 11px; }
+.suggestions li:hover, .suggestionActive { background: var(--color-pale); }
 .actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 8px; }
 @media (max-width: 640px) { .drawer { width: 100%; max-width: 100%; padding: 16px; } .two { grid-template-columns: 1fr 1fr; } .actions { position: sticky; bottom: 0; margin-inline: -16px; padding: 12px 16px; background: var(--color-white); border-top: 1px solid var(--color-line); } .actions button { flex: 1; } }

@@ -9,7 +9,7 @@ import {
   writeCreateTripDraft,
 } from '../src/features/trips/create/create-trip';
 import { groupDressCodes } from '../src/features/dress-code/dress-code';
-import { groupPackingItems, packingProgress } from '../src/features/packing/packing';
+import { createPackingSuggestionCatalog, getPackingCategorySuggestions, getPackingItemSuggestions, groupPackingItems, normalizePackingText, packingProgress } from '../src/features/packing/packing';
 import {
   activityDurationLabel,
   activityScheduleLabel,
@@ -108,5 +108,21 @@ describe('read-only Plan projection selectors', () => {
     expect(selectMapLocations({ locations: places, activities: [scheduled], filter: 'ALL', day: null, timezone: 'Asia/Ho_Chi_Minh', query: 'võ nguyên giáp' }).map((item) => item.id)).toEqual(['beach']);
     expect(activityScheduleLabel(scheduled, 'Asia/Ho_Chi_Minh')).toBe('2026-09-22 · 14:00–16:30');
     expect(activityDurationLabel(scheduled)).toBe('2 giờ 30 phút');
+  });
+});
+
+describe('Packing suggestion catalog', () => {
+  it('normalizes Vietnamese text and ranks prefix matches before contains matches', () => {
+    expect(normalizePackingText('  Áo Mưa  ')).toBe('ao mua');
+    const catalog = createPackingSuggestionCatalog();
+    expect(getPackingItemSuggestions(catalog, 'áo').slice(0, 2).map((item) => item.label)).toEqual(['Áo khoác mỏng', 'Áo mưa']);
+  });
+
+  it('keeps custom item and category values and offers create rows', () => {
+    const catalog = createPackingSuggestionCatalog([], { itemNames: ['Áo đi biển'], categories: ['Đồ đi biển'] });
+    expect(catalog.itemNames).toContain('Áo đi biển');
+    expect(catalog.categories).toContain('Đồ đi biển');
+    expect(getPackingItemSuggestions(catalog, 'Áo mới').at(-1)?.kind).toBe('create-item');
+    expect(getPackingCategorySuggestions(catalog, 'Đồ mới').at(-1)?.kind).toBe('create-category');
   });
 });

@@ -24,9 +24,15 @@ export function Drawer({
     if (!open && dialog.open) dialog.close();
     if (!open) return;
     const previous = document.body.style.overflow;
+    const previousOverflowX = document.body.style.overflowX;
+    const previousDocumentOverflowX = document.documentElement.style.overflowX;
     document.body.style.overflow = 'hidden'; // Modal scroll lock; drawer content remains scrollable.
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
     return () => {
       document.body.style.overflow = previous;
+      document.body.style.overflowX = previousOverflowX;
+      document.documentElement.style.overflowX = previousDocumentOverflowX;
     };
   }, [open]);
   return (
