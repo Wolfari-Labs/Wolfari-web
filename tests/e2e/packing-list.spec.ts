@@ -6,7 +6,7 @@ test.describe('Packing List preview suggestions', () => {
   test('desktop opens the right drawer and accepts a suggested item', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(route);
-    await expect(page.getByRole('heading', { name: 'Packing list', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Packing list', level: 1, exact: true })).toBeVisible();
     await page.getByRole('button', { name: /Thêm vật dụng/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Thêm vật dụng' });
     await expect(drawer).toBeVisible();

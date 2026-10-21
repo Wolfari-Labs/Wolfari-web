@@ -11,12 +11,24 @@ export interface SessionManager {
   readonly getCsrfToken: () => string | null;
   readonly subscribe: (listener: () => void) => () => void;
   readonly bootstrap: (signal?: AbortSignal) => Promise<SessionStatus>;
-  readonly login: (email: string, password: string, signal?: AbortSignal) => Promise<{ data: unknown; correlationId: string | null }>;
-  readonly register: (email: string, password: string, fullName: string, signal?: AbortSignal) => Promise<{ correlationId: string | null }>;
+  readonly login: (
+    email: string,
+    password: string,
+    signal?: AbortSignal,
+  ) => Promise<{ data: unknown; correlationId: string | null }>;
+  readonly register: (
+    email: string,
+    password: string,
+    fullName: string,
+    signal?: AbortSignal,
+  ) => Promise<{ correlationId: string | null }>;
   readonly clear: () => void;
 }
 
-export function createSessionManager(client: GatewayHttpClient, token: AccessTokenStore): SessionManager {
+export function createSessionManager(
+  client: GatewayHttpClient,
+  token: AccessTokenStore,
+): SessionManager {
   let csrfToken: string | null = null;
   let current: SessionStatus = 'unknown';
   let refreshFlight: Promise<SessionStatus> | null = null;
@@ -36,7 +48,14 @@ export function createSessionManager(client: GatewayHttpClient, token: AccessTok
     });
     const value = response.data as { csrf_token?: unknown };
     if (typeof value.csrf_token !== 'string' || value.csrf_token.length < 10)
-      throw new ApiError('Invalid CSRF response', 'invalid-response', response.status ?? null, null, response.correlationId, false);
+      throw new ApiError(
+        'Invalid CSRF response',
+        'invalid-response',
+        response.status ?? null,
+        null,
+        response.correlationId,
+        false,
+      );
     csrfToken = value.csrf_token;
     return csrfToken;
   }
@@ -54,7 +73,15 @@ export function createSessionManager(client: GatewayHttpClient, token: AccessTok
             csrfToken: csrfValue,
           });
           const data = response.data as { access_token?: unknown };
-          if (typeof data.access_token !== 'string') throw new ApiError('Invalid session response', 'invalid-response', response.status ?? null, null, response.correlationId, false);
+          if (typeof data.access_token !== 'string')
+            throw new ApiError(
+              'Invalid session response',
+              'invalid-response',
+              response.status ?? null,
+              null,
+              response.correlationId,
+              false,
+            );
           token.set(data.access_token);
           setStatus('authenticated');
           return 'authenticated';
@@ -92,7 +119,15 @@ export function createSessionManager(client: GatewayHttpClient, token: AccessTok
         includeCredentials: true,
       });
       const data = response.data as { access_token?: unknown };
-      if (typeof data.access_token !== 'string') throw new ApiError('Invalid session response', 'invalid-response', response.status ?? null, null, response.correlationId, false);
+      if (typeof data.access_token !== 'string')
+        throw new ApiError(
+          'Invalid session response',
+          'invalid-response',
+          response.status ?? null,
+          null,
+          response.correlationId,
+          false,
+        );
       token.set(data.access_token);
       setStatus('authenticated');
       return { data: response.data, correlationId: response.correlationId };
@@ -114,4 +149,3 @@ export function createSessionManager(client: GatewayHttpClient, token: AccessTok
     },
   };
 }
-
