@@ -5,18 +5,10 @@ import type { TripLifecycle, TripListViewModel } from '../../features/trips/mode
 import type { DomainError } from '../../shared/types/result';
 import type { GatewayHttpClient } from '../http/http-client';
 import { ApiError } from '../http/api-error';
+import { toDomainError } from '../http/domain-error';
 
 function domainError(error: unknown): DomainError {
-  const api = error instanceof ApiError ? error : null;
-  const code = api?.code;
-  return {
-    code:
-      code === 'PERMISSION_DENIED' || code === 'RESOURCE_NOT_FOUND' || code === 'VERSION_CONFLICT'
-        ? code
-        : ('SERVICE_UNAVAILABLE' as const),
-    correlationId: api?.correlationId ?? null,
-    retryable: api?.retryable ?? true,
-  };
+  return toDomainError(error);
 }
 function text(value: unknown): string | null {
   return typeof value === 'string' ? value : null;
@@ -85,6 +77,9 @@ function updateError(error: unknown): UpdateTripResult {
   if (api?.status === 409 || api?.code === 'VERSION_CONFLICT') {
     return { status: 'conflict', correlationId: api.correlationId, retryable: false };
   }
+  if (api?.code === 'STATE_CONFLICT' || api?.code === 'IDEMPOTENCY_CONFLICT') {
+    return { status: 'conflict', correlationId: api.correlationId, retryable: false };
+  }
   if (api?.status === 503) {
     return { status: 'unavailable', correlationId: api.correlationId, retryable: true };
   }
@@ -103,9 +98,44 @@ export function createGatewayTripRepository(
   detailReader?: TripRepository['getTrip'],
   client?: GatewayHttpClient,
 ): TripRepository {
-  return {
-    createTrip: async ({ signal }) => {
+  const repository: TripRepository = {
+    createTrip: async ({ intent, signal }) => {
       signal.throwIfAborted();
+      if (client) {
+        try {
+          const result = await client.write('/api/v1/trips', {
+            method: 'POST',
+            body: {
+              name: intent.name,
+              ...(intent.description === undefined ? {} : { description: intent.description }),
+              start_at: intent.startAt,
+              end_at: intent.endAt,
+              timezone: intent.timezone,
+              client_request_id: intent.clientRequestId,
+            },
+            idempotencyKey: intent.clientRequestId,
+            signal,
+            includeCredentials: true,
+          });
+          const trip = mapTrip(result.data);
+          return { status: 'created', tripId: trip.id, correlationId: result.correlationId };
+        } catch (error) {
+          if (signal.aborted) throw signal.reason;
+          const api = error instanceof ApiError ? error : null;
+          if (api?.status === 400 || api?.code === 'VALIDATION_FAILED') {
+            return {
+              status: 'validation-error',
+              fieldErrors: {},
+              correlationId: api.correlationId,
+            };
+          }
+          return {
+            status: api?.status === 403 ? 'forbidden' : api?.status === 409 ? 'conflict' : api?.status === 503 ? 'unavailable' : 'error',
+            correlationId: api?.correlationId ?? null,
+            retryable: api?.retryable ?? true,
+          };
+        }
+      }
       return {
         status: 'unavailable' as const,
         correlationId: null,
@@ -123,6 +153,7 @@ export function createGatewayTripRepository(
       };
       if (intent.name !== undefined) body.name = intent.name;
       if (intent.description !== undefined) body.description = intent.description;
+      if (intent.publicDescription !== undefined) body.public_description = intent.publicDescription;
       try {
         const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}`, {
           method: 'PATCH',
@@ -139,6 +170,32 @@ export function createGatewayTripRepository(
       } catch (error) {
         if (signal.aborted) throw signal.reason;
         return updateError(error);
+      }
+    },
+    updatePlanPolicy: async ({ tripId, policy, editorMemberIds, expectedMembershipRevision, idempotencyKey, signal }) => {
+      signal.throwIfAborted();
+      if (!client) return { status: 'error', error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false } };
+      try {
+        const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`, {
+          method: 'PUT',
+          body: { policy, editor_member_ids: editorMemberIds, expected_membership_revision: expectedMembershipRevision },
+          idempotencyKey,
+          signal,
+          includeCredentials: true,
+        });
+        const data = record(result.data);
+        return {
+          status: 'updated',
+          data: {
+            policy: data.policy === 'OWNER_ONLY' || data.policy === 'SELECTED_MEMBERS' ? data.policy : 'ALL_MEMBERS',
+            editorMemberIds: Array.isArray(data.editor_member_ids) ? data.editor_member_ids.map(String) : [],
+            membershipRevision: Number(data.membership_revision),
+          },
+          correlationId: result.correlationId,
+        };
+      } catch (error) {
+        if (signal.aborted) throw signal.reason;
+        return { status: 'error', error: domainError(error) };
       }
     },
     getTrip:
@@ -164,11 +221,13 @@ export function createGatewayTripRepository(
       }),
     listTrips:
       reader ??
-      (async ({ signal }) => {
+      (async ({ signal, cursor, limit = 100 }) => {
         signal.throwIfAborted();
         if (client) {
           try {
-            const result = await client.read('/api/v1/trips?limit=100', {
+            const params = new URLSearchParams({ limit: String(limit) });
+            if (cursor) params.set('cursor', cursor);
+            const result = await client.read(`/api/v1/trips?${params.toString()}`, {
               signal,
               includeCredentials: true,
             });
@@ -193,4 +252,6 @@ export function createGatewayTripRepository(
         };
       }),
   };
+  if (!client) delete repository.updatePlanPolicy;
+  return repository;
 }

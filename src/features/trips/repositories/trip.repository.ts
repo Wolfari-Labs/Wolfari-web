@@ -28,12 +28,13 @@ export type CreateTripResult =
 export interface UpdateTripIntent {
   readonly name?: string;
   readonly description?: string | null;
+  readonly publicDescription?: string | null;
   readonly expectedPlanVersion: number;
   readonly expectedExportRevision: number;
   readonly idempotencyKey: string;
 }
 
-export type UpdateTripField = 'name' | 'description';
+export type UpdateTripField = 'name' | 'description' | 'publicDescription';
 
 export type UpdateTripResult =
   | {
@@ -55,6 +56,8 @@ export type UpdateTripResult =
 export interface TripListRequest {
   readonly scenario: TripListScenario;
   readonly signal: AbortSignal;
+  readonly cursor?: string;
+  readonly limit?: number;
 }
 
 // The adapter is session-scoped; the caller cannot select another viewer through a user ID.
@@ -74,4 +77,15 @@ export interface TripRepository {
     readonly intent: UpdateTripIntent;
     readonly signal: AbortSignal;
   }): Promise<UpdateTripResult>;
+  updatePlanPolicy?(request: {
+    readonly tripId: string;
+    readonly policy: 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS';
+    readonly editorMemberIds: readonly string[];
+    readonly expectedMembershipRevision: number;
+    readonly idempotencyKey: string;
+    readonly signal: AbortSignal;
+  }): Promise<
+    | { status: 'updated'; data: { policy: 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS'; editorMemberIds: readonly string[]; membershipRevision: number }; correlationId: string | null }
+    | { status: 'error'; error: import('../../../shared/types/result').DomainError }
+  >;
 }

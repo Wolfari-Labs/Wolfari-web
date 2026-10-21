@@ -1,24 +1,15 @@
 import type { ShellRepository } from '../../features/shell/repositories/shell.repository';
 import type { ShellSnapshot } from '../../features/shell/model/shell';
 import type { GatewayHttpClient } from '../http/http-client';
-import { ApiError } from '../http/api-error';
 import type { DomainError } from '../../shared/types/result';
+import { toDomainError } from '../http/domain-error';
 
 // The Gateway exposes Identity and Trip projections separately; the shell adapter
 // composes those read-only projections without inventing a /shell endpoint.
 export type GatewayShellReader = ShellRepository['read'];
 
 function domainError(error: unknown): DomainError {
-  const api = error instanceof ApiError ? error : null;
-  const code = api?.code;
-  return {
-    code:
-      code === 'PERMISSION_DENIED' || code === 'RESOURCE_NOT_FOUND' || code === 'VERSION_CONFLICT'
-        ? code
-        : ('SERVICE_UNAVAILABLE' as const),
-    correlationId: api?.correlationId ?? null,
-    retryable: api?.retryable ?? true,
-  };
+  return toDomainError(error);
 }
 
 function record(value: unknown): Record<string, unknown> | null {
