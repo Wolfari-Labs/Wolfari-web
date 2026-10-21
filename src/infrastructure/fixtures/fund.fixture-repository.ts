@@ -1,36 +1,41 @@
 import type {
+  FundMemberPresentation,
+  FundPermissions,
   FundRepository,
   FundScenario,
   FundViewModel,
-  FundPermissions,
-  FundMemberPresentation,
 } from '../../features/fund/model/fund';
 import { fixtureViewerId, previewTripId, readableFixtureTrips } from './trip-catalog';
 
+const fixtureHolderId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const member: FundMemberPresentation = { displayName: 'Trang Nguyễn', avatar: null };
+const holder: FundMemberPresentation = { displayName: 'Minh Trần', avatar: null };
 
-const permissions = (overrides: Partial<FundPermissions> = {}): FundPermissions => ({
+const permissions = (viewerId: string, overrides: Partial<FundPermissions> = {}): FundPermissions => ({
   canRead: true,
   canConfigure: false,
-  canCreateContributionRequest: false,
+  canCreateContributionRequest: true,
   canReportTransfer: true,
-  canConfirmContribution: true,
+  canConfirmContribution: viewerId === fixtureHolderId,
   canCreateExpense: true,
   canEditOwnExpenseDraft: true,
-  canEditAnyExpenseDraft: false,
-  canConfirmExpense: true,
+  canEditAnyExpenseDraft: viewerId === fixtureHolderId,
+  canConfirmExpense: viewerId === fixtureHolderId,
   canCreateOutsideFundNote: true,
-  canCreateRefund: false,
-  canBeginClosure: true,
-  canCancelClosure: false,
-  canConfirmClosure: true,
+  canCreateRefund: viewerId === fixtureHolderId,
+  canBeginClosure: viewerId === fixtureHolderId,
+  canCancelClosure: viewerId === fixtureHolderId,
+  canConfirmClosure: viewerId === fixtureHolderId,
   ...overrides,
 });
 
-function readyFund(tripId: string, scenario: Extract<FundScenario, 'success' | 'read-only' | 'closing' | 'closed'>): FundViewModel {
+type ReadyScenario = Extract<FundScenario, 'success' | 'read-only' | 'closing' | 'closed'>;
+
+function readyFund(tripId: string, scenario: ReadyScenario, viewerId: string): FundViewModel {
   const status = scenario === 'closing' ? 'CLOSING' : scenario === 'closed' ? 'CLOSED' : 'OPEN';
-  const readOnly = scenario === 'read-only' || status !== 'OPEN';
+  const readOnly = scenario !== 'success';
   const fundId = `fund-${tripId.slice(0, 8)}`;
+  const isClosed = status === 'CLOSED';
   const expenseSeeds = [
     ['expense-hotel', 'Khách sạn', '3600000', '2026-10-12'],
     ['expense-transfer', 'Di chuyển', '1200000', '2026-10-12'],
@@ -58,54 +63,111 @@ function readyFund(tripId: string, scenario: Extract<FundScenario, 'success' | '
     memberUserId: fixtureViewerId,
     amount: '7000000',
     status: 'CONFIRMED' as const,
-    selfContribution: true,
+    selfContribution: viewerId === fixtureViewerId,
     version: 1,
     presentation: member,
   };
-  const ledger = expenses.map((expense, index) => ({
-    id: `ledger-${index + 1}`,
+  const refund = {
+    id: 'refund-1',
     fundId,
-    sequence: index + 1,
-    direction: 'OUT' as const,
-    transactionType: 'EXPENSE' as const,
-    amount: expense.amount,
-    balanceAfter: ['3600000', '4800000', '5800000', '6250000'][index]!,
-    contributionId: null,
-    expenseId: expense.id,
-    refundId: null,
-    reversalOfId: null,
-    actorUserId: fixtureViewerId,
-    reason: null,
-    createdAt: `${expense.paidAt}T09:00:00+07:00`,
-    presentation: { title: expense.title, actor: member },
-  }));
-  const blockers = [
-    { code: 'NON_ZERO_BALANCE' as const, label: 'Số dư ghi sổ chưa bằng 0', amount: '750000' },
-    { code: 'RESERVED_REFUND' as const, label: 'Còn khoản hoàn dư đang giữ', amount: '250000' },
-    { code: 'PENDING_CONFIRMATIONS' as const, label: 'Cần xác nhận đóng quỹ của thành viên', amount: null },
+    memberUserId: fixtureViewerId,
+    amount: isClosed ? '750000' : '250000',
+    status: isClosed ? ('CONFIRMED' as const) : ('PENDING' as const),
+    reason: isClosed ? 'Hoàn số dư khi đóng quỹ' : 'Hoàn phần chi còn dư',
+    version: 1,
+    presentation: member,
+  };
+  const balances = ['7000000', '3400000', '2200000', '1200000', '750000'];
+  const ledger = [
+    {
+      id: 'ledger-1',
+      fundId,
+      sequence: '1',
+      direction: 'IN' as const,
+      transactionType: 'CONTRIBUTION' as const,
+      amount: contribution.amount,
+      balanceAfter: balances[0]!,
+      contributionId: contribution.id,
+      expenseId: null,
+      refundId: null,
+      reversalOfId: null,
+      actorUserId: contribution.memberUserId,
+      reason: null,
+      createdAt: '2026-10-11T09:00:00+07:00',
+      presentation: { title: 'Đóng góp đã xác nhận', actor: member },
+    },
+    ...expenses.map((expense, index) => ({
+      id: `ledger-${index + 2}`,
+      fundId,
+      sequence: String(index + 2),
+      direction: 'OUT' as const,
+      transactionType: 'EXPENSE' as const,
+      amount: expense.amount,
+      balanceAfter: balances[index + 1]!,
+      contributionId: null,
+      expenseId: expense.id,
+      refundId: null,
+      reversalOfId: null,
+      actorUserId: expense.paidByUserId,
+      reason: null,
+      createdAt: `${expense.paidAt}T09:00:00+07:00`,
+      presentation: { title: expense.title, actor: member },
+    })),
+    ...(isClosed
+      ? [{
+          id: 'ledger-6',
+          fundId,
+          sequence: '6',
+          direction: 'OUT' as const,
+          transactionType: 'REFUND' as const,
+          amount: refund.amount,
+          balanceAfter: '0',
+          contributionId: null,
+          expenseId: null,
+          refundId: refund.id,
+          reversalOfId: null,
+          actorUserId: fixtureHolderId,
+          reason: refund.reason,
+          createdAt: '2026-10-14T09:00:00+07:00',
+          presentation: { title: 'Hoàn số dư khi đóng quỹ', actor: holder },
+        }]
+      : []),
   ];
+  const currentBalance = isClosed ? '0' : '750000';
+  const reservedRefund = isClosed ? '0' : '250000';
+  const availableBalance = isClosed ? '0' : '500000';
+  const blockers = isClosed
+    ? []
+    : [
+        { code: 'NON_ZERO_BALANCE' as const, label: 'Số dư ghi sổ chưa bằng 0', amount: currentBalance },
+        { code: 'RESERVED_REFUND' as const, label: 'Còn khoản hoàn dư đang giữ', amount: reservedRefund },
+        { code: 'PENDING_CONFIRMATIONS' as const, label: 'Cần xác nhận đóng quỹ của thành viên', amount: null },
+      ];
+  const closedAt = isClosed ? '2026-10-14T09:30:00+07:00' : null;
   return {
     tripId,
+    environment: scenario === 'read-only' ? 'SANDBOX' : 'TEST',
+    viewerRole: viewerId === fixtureHolderId ? 'HOLDER' : 'MEMBER',
     fund: {
       id: fundId,
       tripId,
-      holderUserId: fixtureViewerId,
+      holderUserId: fixtureHolderId,
       currency: 'VND',
-      budgetAmount: '9000000',
-      currentBalance: '750000',
-      reservedRefund: '250000',
-      availableBalance: '500000',
+      budgetAmount: scenario === 'read-only' ? null : '9000000',
+      currentBalance,
+      reservedRefund,
+      availableBalance,
       status,
+      closedAt,
       financeVersion: 3,
-      environment: 'TEST',
     },
     totals: {
       confirmedContributions: '7000000',
       confirmedExpenses: '6250000',
-      confirmedRefunds: '0',
-      ledgerBalance: '750000',
-      reservedRefund: '250000',
-      availableBalance: '500000',
+      confirmedRefunds: isClosed ? '750000' : '0',
+      ledgerBalance: currentBalance,
+      reservedRefund,
+      availableBalance,
     },
     contributions: [contribution],
     expenses,
@@ -120,26 +182,29 @@ function readyFund(tripId: string, scenario: Extract<FundScenario, 'success' | '
         presentation: member,
       },
     ],
-    refunds: [],
+    refunds: [refund],
     ledger,
+    nextCursor: null,
     closure: {
       id: 'closure-1',
       fundId,
-      status: 'PENDING_CONFIRMATIONS',
-      snapshotHash: 'fixture-snapshot-v3',
-      requiredUserIds: [fixtureViewerId],
-      confirmedUserIds: [],
+      status: isClosed ? 'COMPLETED' : 'PENDING_CONFIRMATIONS',
+      snapshotHash: 'fixture-snapshot-v4',
+      requiredUserIds: isClosed ? [] : [fixtureViewerId, fixtureHolderId],
+      confirmedUserIds: isClosed ? [fixtureViewerId, fixtureHolderId] : [],
       blockers,
+      closedAt,
       financeVersion: 3,
     },
-    permissions: permissions({
+    permissions: permissions(viewerId, {
       canCreateExpense: !readOnly,
       canEditOwnExpenseDraft: !readOnly,
-      canConfirmExpense: !readOnly,
-      canConfirmContribution: !readOnly,
+      canConfirmExpense: !readOnly && viewerId === fixtureHolderId,
+      canConfirmContribution: !readOnly && viewerId === fixtureHolderId,
       canReportTransfer: !readOnly,
-      canBeginClosure: status === 'OPEN',
-      canConfirmClosure: status !== 'CLOSED',
+      canBeginClosure: status === 'OPEN' && viewerId === fixtureHolderId,
+      canCancelClosure: status === 'CLOSING' && viewerId === fixtureHolderId,
+      canConfirmClosure: status === 'CLOSING' && viewerId === fixtureHolderId,
     }),
     blockers,
   };
@@ -164,7 +229,10 @@ function errorFor(scenario: FundScenario) {
 }
 
 export function createFixtureFundRepository(options: { viewerId?: string } = {}): FundRepository {
-  const trips = readableFixtureTrips(options.viewerId ?? fixtureViewerId);
+  const viewerId = options.viewerId ?? fixtureViewerId;
+  // The preview trip has one membership record; allow the synthetic Holder
+  // identity to inspect that same read projection for permission coverage.
+  const trips = readableFixtureTrips(viewerId === fixtureHolderId ? fixtureViewerId : viewerId);
   return {
     async getFund({ tripId, scenario, signal }) {
       signal.throwIfAborted();
@@ -176,19 +244,13 @@ export function createFixtureFundRepository(options: { viewerId?: string } = {})
       const trip = trips.find((item) => item.id === tripId);
       if (!trip || scenario === 'not-found') return errorFor('not-found');
       if (scenario === 'forbidden') return errorFor('forbidden');
-      if (!['success', 'read-only', 'closing', 'closed'].includes(scenario))
-        return errorFor(scenario);
+      if (!['success', 'read-only', 'closing', 'closed'].includes(scenario)) return errorFor(scenario);
       return {
         status: 'ready',
-        data: structuredClone(
-          readyFund(
-            tripId,
-            scenario as 'success' | 'read-only' | 'closing' | 'closed',
-          ),
-        ),
+        data: structuredClone(readyFund(tripId, scenario as ReadyScenario, viewerId)),
       };
     },
   };
 }
 
-export { previewTripId };
+export { fixtureHolderId, previewTripId };

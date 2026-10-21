@@ -24,6 +24,7 @@ export type FundScenario = (typeof fundScenarios)[number];
 
 export const fundStatuses = ['OPEN', 'CLOSING', 'CLOSED'] as const;
 export type FundStatus = (typeof fundStatuses)[number];
+export type FundViewerRole = 'MEMBER' | 'OWNER' | 'HOLDER';
 
 export const contributionStatuses = [
   'PENDING',
@@ -53,15 +54,14 @@ export type LedgerTransactionType =
   | 'CONTRIBUTION'
   | 'EXPENSE'
   | 'REFUND'
-  | 'REVERSAL'
-  | 'ADJUSTMENT';
+  | 'REVERSAL';
 
 export interface FundProjection {
   readonly id: string;
   readonly tripId: string;
   readonly holderUserId: string;
   readonly currency: 'VND';
-  readonly budgetAmount: MoneyVnd;
+  readonly budgetAmount: MoneyVnd | null;
   /** Confirmed ledger balance, before subtracting reservations. */
   readonly currentBalance: MoneyVnd;
   /** Confirmed refunds which are reserved but not yet settled. */
@@ -69,8 +69,8 @@ export interface FundProjection {
   /** currentBalance - reservedRefund. */
   readonly availableBalance: MoneyVnd;
   readonly status: FundStatus;
+  readonly closedAt: string | null;
   readonly financeVersion: number;
-  readonly environment: 'TEST' | 'SANDBOX';
 }
 
 export interface FundTotals {
@@ -139,7 +139,8 @@ export interface FundRefundViewModel {
 export interface FundLedgerEntryViewModel {
   readonly id: string;
   readonly fundId: string;
-  readonly sequence: number;
+  /** Decimal string from the append-only Finance ledger. */
+  readonly sequence: string;
   readonly direction: LedgerDirection;
   readonly transactionType: LedgerTransactionType;
   readonly amount: MoneyVnd;
@@ -179,6 +180,7 @@ export interface FundClosureViewModel {
   readonly requiredUserIds: readonly string[];
   readonly confirmedUserIds: readonly string[];
   readonly blockers: readonly FundClosureBlocker[];
+  readonly closedAt: string | null;
   readonly financeVersion: number;
 }
 
@@ -205,6 +207,8 @@ export interface FundPermissions {
 
 export interface FundViewModel {
   readonly tripId: string;
+  readonly environment: 'TEST' | 'SANDBOX';
+  readonly viewerRole: FundViewerRole;
   readonly fund: FundProjection;
   readonly totals: FundTotals;
   readonly contributions: readonly FundContributionViewModel[];
@@ -212,6 +216,8 @@ export interface FundViewModel {
   readonly notes: readonly FundNoteViewModel[];
   readonly refunds: readonly FundRefundViewModel[];
   readonly ledger: readonly FundLedgerEntryViewModel[];
+  /** Cursor for the next ledger page; null means the fixture is complete. */
+  readonly nextCursor: string | null;
   readonly closure: FundClosureViewModel | null;
   readonly permissions: FundPermissions;
   readonly blockers: readonly FundClosureBlocker[];

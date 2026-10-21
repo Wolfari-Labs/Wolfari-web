@@ -64,4 +64,13 @@ test('Fund preview states stay truthful and do not claim a ledger mutation', asy
   await scenario.selectOption('success');
   await expect(page.getByText(/TEST|sandbox/i).first()).toBeVisible();
   await expect(page.getByText(/Chưa gửi, chưa trừ số dư/i)).toBeVisible();
+  await page.getByRole('tab', { name: 'Hoàn dư' }).click();
+  await expect(page.getByText('Đang chờ', { exact: true })).toBeVisible();
+  await scenario.selectOption('read-only');
+  await expect(page.getByText('SANDBOX · OPEN', { exact: true })).toBeVisible();
+  await expect(page.getByText('—', { exact: true })).toBeVisible();
+  await scenario.selectOption('closed');
+  await expect(page.getByText('TEST · CLOSED', { exact: true })).toBeVisible();
+  await expect(page.getByText('Closure: COMPLETED', { exact: true })).toBeVisible();
+  await expect(page.getByText('Không còn blocker', { exact: true })).toBeVisible();
 });
