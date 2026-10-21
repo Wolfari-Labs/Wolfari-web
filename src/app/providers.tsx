@@ -17,6 +17,8 @@ import type { FundRepository } from '../features/fund/model/fund';
 import { FundRepositoryProvider } from '../features/fund/repositories/fund-context';
 import type { PriceWatchRepository } from '../features/price-watch/model/price-watch';
 import { PriceWatchRepositoryProvider } from '../features/price-watch/repositories/price-watch-context';
+import type { SessionManagerLike } from './session-context';
+import { SessionManagerProvider } from './session-context';
 
 export function Providers({
   repository,
@@ -27,6 +29,7 @@ export function Providers({
   membersRepositories,
   fundRepository,
   priceWatchRepository,
+  sessionManager,
   children,
 }: {
   repository: ShellRepository;
@@ -37,6 +40,7 @@ export function Providers({
   membersRepositories?: { membership: MembershipRepository; invitation: InvitationRepository };
   fundRepository?: FundRepository;
   priceWatchRepository?: PriceWatchRepository;
+  sessionManager?: SessionManagerLike;
   children: ReactNode;
 }) {
   const [client] = useState(createQueryClient);
@@ -72,13 +76,16 @@ export function Providers({
   ) : (
     homeContent
   );
+  const sessionContent = sessionManager ? (
+    <SessionManagerProvider manager={sessionManager}>{content}</SessionManagerProvider>
+  ) : content;
   return (
     <QueryClientProvider client={client}>
       <ShellRepositoryProvider repository={repository}>
         {tripRepository ? (
-          <TripRepositoryProvider repository={tripRepository}>{content}</TripRepositoryProvider>
+          <TripRepositoryProvider repository={tripRepository}>{sessionContent}</TripRepositoryProvider>
         ) : (
-          content
+          sessionContent
         )}
       </ShellRepositoryProvider>
     </QueryClientProvider>

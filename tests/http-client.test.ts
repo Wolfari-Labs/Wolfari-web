@@ -79,6 +79,29 @@ describe('unconnected Gateway transport foundation', () => {
     expect(request?.credentials).toBe('include');
     expect(new Headers(request?.headers).get('X-Client-Type')).toBe('web');
   });
+  it('supports FormData and treats only 204 as an empty success', async () => {
+    const transport = vi.fn<typeof fetch>().mockResolvedValueOnce(new Response(null, { status: 204 }));
+    const client = createGatewayHttpClient({ transport });
+    const form = new FormData();
+    form.append('file', new Blob(['avatar'], { type: 'image/png' }), 'avatar.png');
+    await expect(client.write('/api/v1/me/avatar', { method: 'POST', body: form, responseType: 'empty' })).resolves.toMatchObject({ data: null });
+    const request = transport.mock.calls[0]![1];
+    expect(new Headers(request?.headers).has('Content-Type')).toBe(false);
+    transport.mockResolvedValueOnce(new Response(JSON.stringify({ error: { code: 'RESOURCE_NOT_FOUND', message: 'missing', retryable: false, details: null }, meta: { correlation_id: 'empty-error' } }), { status: 404 }));
+    await expect(client.write('/api/v1/me/sessions/session', { method: 'DELETE', responseType: 'empty' })).rejects.toMatchObject({ code: 'RESOURCE_NOT_FOUND', status: 404 });
+  });
+  it('refreshes once for a read 401 but never retries a mutation', async () => {
+    const unauthorized = () => new Response(JSON.stringify({ error: { code: 'UNAUTHENTICATED', message: 'expired', retryable: false, details: null }, meta: { correlation_id: 'expired' } }), { status: 401 });
+    const transport = vi.fn<typeof fetch>().mockResolvedValueOnce(unauthorized()).mockResolvedValueOnce(success());
+    const onUnauthorized = vi.fn().mockResolvedValue(true);
+    const client = createGatewayHttpClient({ transport, onUnauthorized });
+    await expect(client.read('/api/v1/me')).resolves.toMatchObject({ data: { id: 'fixture-http-only' } });
+    expect(onUnauthorized).toHaveBeenCalledTimes(1);
+    transport.mockReset();
+    transport.mockResolvedValue(unauthorized());
+    await expect(client.write('/api/v1/me', { method: 'PATCH', body: {} })).rejects.toMatchObject({ status: 401 });
+    expect(onUnauthorized).toHaveBeenCalledTimes(1);
+  });
   it.each([
     'https://other.invalid/api/v1/me',
     '//other.invalid/api/v1/me',

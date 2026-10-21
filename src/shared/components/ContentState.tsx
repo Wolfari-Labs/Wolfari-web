@@ -30,7 +30,7 @@ export function ContentState({
     state === 'unavailable'
       ? ['Chức năng chưa khả dụng', 'Phần này chưa được tích hợp.']
       : error
-        ? messages[error.code]
+        ? messages[error.code as keyof typeof messages] ?? messages.SERVICE_UNAVAILABLE
         : state === 'error'
           ? messages.SERVICE_UNAVAILABLE
           : state === 'loading'
