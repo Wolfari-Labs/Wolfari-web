@@ -62,7 +62,9 @@ export function createFixtureShellRepository(): ShellRepository {
                   exportRevision: trip.exportRevision,
                   permissions: {
                     canRead: !['forbidden-snapshot', 'admin'].includes(scenario),
-                    canUpdate: false,
+                    canUpdate:
+                      !['forbidden-snapshot', 'admin'].includes(scenario) &&
+                      trip.permissions.canUpdate,
                   },
                 }
               : null,

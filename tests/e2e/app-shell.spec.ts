@@ -13,9 +13,15 @@ for (const width of [1440, 402])
     await expect(page.locator('main')).toBeFocused();
     if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
     if (width <= 768) {
-      await page.getByRole('dialog', { name: 'Điều hướng chuyến đi' }).getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }).click();
+      await page
+        .getByRole('dialog', { name: 'Điều hướng chuyến đi' })
+        .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true })
+        .click();
     } else {
-      await page.locator('#main-content').getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }).click();
+      await page
+        .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
+        .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true })
+        .click();
     }
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
     await expect(page.locator('main')).toBeFocused();
@@ -147,9 +153,9 @@ for (const size of sizes)
           elements.map((element) => element.getBoundingClientRect().height),
         );
       for (const height of navTargets) expect(height).toBeGreaterThanOrEqual(44);
-      await nav.getByRole('button', { name: 'Cài đặt · Chưa khả dụng', exact: true }).scrollIntoViewIfNeeded();
+      await nav.getByRole('link', { name: 'Cài đặt', exact: true }).scrollIntoViewIfNeeded();
       const navBox = (await nav.boundingBox())!,
-        settings = (await nav.getByRole('button', { name: 'Cài đặt · Chưa khả dụng', exact: true }).boundingBox())!;
+        settings = (await nav.getByRole('link', { name: 'Cài đặt', exact: true }).boundingBox())!;
       expect(settings.y + settings.height).toBeLessThanOrEqual(navBox.y + navBox.height + 1);
       await page.screenshot({ path: info.outputPath('desktop-expanded.png') });
       await toggle.focus();
@@ -196,7 +202,7 @@ for (const size of sizes)
       const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
       await expect(drawer).toBeVisible();
       expect((await drawer.boundingBox())!.width).toBeLessThanOrEqual(280);
-      const settings = drawer.getByRole('button', { name: 'Cài đặt · Chưa khả dụng', exact: true });
+      const settings = drawer.getByRole('link', { name: 'Cài đặt', exact: true });
       await settings.scrollIntoViewIfNeeded();
       const settingBox = (await settings.boundingBox())!,
         drawerBox = (await drawer.boundingBox())!;
@@ -212,14 +218,20 @@ for (const size of sizes)
       await expect(page.getByRole('navigation', { name: 'Điều hướng Mobile' })).toHaveCount(0);
     }
     expect(calls).toEqual([]);
-    expect(await page.evaluate(() => ({
-      localStorageKeys: Object.keys(localStorage),
-      sessionStorageLength: sessionStorage.length,
-    }))).toMatchObject({
+    expect(
+      await page.evaluate(() => ({
+        localStorageKeys: Object.keys(localStorage),
+        sessionStorageLength: sessionStorage.length,
+      })),
+    ).toMatchObject({
       localStorageKeys: expect.arrayContaining([]),
       sessionStorageLength: 0,
     });
-    expect(await page.evaluate(() => Object.keys(localStorage).every((key) => key.startsWith('wolfari:plan-draft:v1:')))).toBe(true);
+    expect(
+      await page.evaluate(() =>
+        Object.keys(localStorage).every((key) => key.startsWith('wolfari:plan-draft:v1:')),
+      ),
+    ).toBe(true);
     await page.goto('/missing-shell-page');
     await expect(page).toHaveTitle(/Wolfari/);
     await expect(page.locator('main')).toBeFocused();

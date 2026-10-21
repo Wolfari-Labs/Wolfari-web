@@ -111,7 +111,7 @@ export function AppShell({
       members: paths.members(tripId),
       fund: paths.fund(tripId),
       fare: paths.priceWatch(tripId),
-      settings: null,
+      settings: paths.settings(tripId),
       tools: null,
     }[id];
   };
@@ -121,7 +121,7 @@ export function AppShell({
   };
   const tripNavigation = (
     <nav aria-label="Điều hướng chuyến đi">
-      {sections.map((item) => (
+      {sections.map((item) =>
         tripPath(item.id) && canReadTrip ? (
           <NavLink
             key={item.id}
@@ -147,8 +147,8 @@ export function AppShell({
             <Icon file={item.icon} />
             <span>{item.label}</span>
           </NavigationButton>
-        )
-      ))}
+        ),
+      )}
     </nav>
   );
   const adminNavigation = (

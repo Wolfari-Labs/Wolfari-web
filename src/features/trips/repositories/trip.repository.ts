@@ -25,6 +25,33 @@ export type CreateTripResult =
       readonly retryable: boolean;
     };
 
+export interface UpdateTripIntent {
+  readonly name?: string;
+  readonly description?: string | null;
+  readonly expectedPlanVersion: number;
+  readonly expectedExportRevision: number;
+  readonly idempotencyKey: string;
+}
+
+export type UpdateTripField = 'name' | 'description';
+
+export type UpdateTripResult =
+  | {
+      readonly status: 'updated';
+      readonly trip: TripDetailViewModel;
+      readonly correlationId: string | null;
+    }
+  | {
+      readonly status: 'validation-error';
+      readonly fieldErrors: Readonly<Partial<Record<UpdateTripField, string>>>;
+      readonly correlationId: string | null;
+    }
+  | {
+      readonly status: 'forbidden' | 'not-found' | 'conflict' | 'unavailable' | 'unknown';
+      readonly correlationId: string | null;
+      readonly retryable: boolean;
+    };
+
 export interface TripListRequest {
   readonly scenario: TripListScenario;
   readonly signal: AbortSignal;
@@ -42,4 +69,9 @@ export interface TripRepository {
     readonly scenario: TripDetailScenario;
     readonly signal: AbortSignal;
   }): Promise<ReadResult<TripDetailViewModel>>;
+  updateTrip(request: {
+    readonly tripId: string;
+    readonly intent: UpdateTripIntent;
+    readonly signal: AbortSignal;
+  }): Promise<UpdateTripResult>;
 }

@@ -81,9 +81,9 @@ export function App({
     if (
       firstRenderNeedsFocus ||
       (previousNavigation.current !== null &&
-      previousNavigation.current.some(
-        (value, index) => value !== [pathname, adminSection][index],
-      ))
+        previousNavigation.current.some(
+          (value, index) => value !== [pathname, adminSection][index],
+        ))
     ) {
       const main = document.getElementById('main-content');
       if (main) {
@@ -167,17 +167,19 @@ export function App({
               ? paths.plan(tripId)
               : next === 'map'
                 ? paths.map(tripId)
-              : next === 'dress'
-                ? paths.dressCode(tripId)
-              : next === 'packing'
-                ? paths.packing(tripId)
-              : next === 'members'
-                ? paths.members(tripId)
-                : next === 'fund'
-                  ? paths.fund(tripId)
-                : next === 'fare'
-                  ? paths.priceWatch(tripId)
-                : paths.trip(tripId),
+                : next === 'dress'
+                  ? paths.dressCode(tripId)
+                  : next === 'packing'
+                    ? paths.packing(tripId)
+                    : next === 'members'
+                      ? paths.members(tripId)
+                      : next === 'fund'
+                        ? paths.fund(tripId)
+                        : next === 'fare'
+                          ? paths.priceWatch(tripId)
+                          : next === 'settings'
+                            ? paths.settings(tripId)
+                            : paths.trip(tripId),
           );
         }
       }}

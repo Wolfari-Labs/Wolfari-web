@@ -33,7 +33,10 @@ describe('Trip detail read contract', () => {
           membershipRevision: item.membershipRevision,
           exportRevision: item.exportRevision,
           permissions: item.permissions,
-          description: null,
+          description:
+            item.id === previewTripId
+              ? 'Khám phá Đà Nẵng – thành phố biển xinh đẹp với những người bạn đồng hành.'
+              : null,
         },
       });
     }
@@ -101,7 +104,10 @@ it('guards Guest before detail reads and renders unavailable summaries with real
     </Providers>,
   );
   await screen.findByRole('heading', { name: 'Đà Nẵng – Hội An' });
-  expect(screen.getByRole('button', { name: 'Chỉnh sửa' })).toBeDisabled();
+  expect(screen.getByRole('link', { name: 'Chỉnh sửa' })).toHaveAttribute(
+    'href',
+    `/trips/${previewTripId}/settings`,
+  );
   expect(screen.getByRole('link', { name: '4 thành viên' })).toHaveAttribute(
     'href',
     `/trips/${previewTripId}/members`,

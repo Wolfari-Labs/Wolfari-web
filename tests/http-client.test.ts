@@ -16,6 +16,36 @@ const success = () =>
     },
   );
 describe('unconnected Gateway transport foundation', () => {
+  it('sends one same-origin PATCH with JSON, credentials and idempotency metadata', async () => {
+    const transport = vi.fn<typeof fetch>().mockResolvedValue(success());
+    const client = createGatewayHttpClient({ transport });
+    await client.write('/api/v1/trips/trip-1', {
+      method: 'PATCH',
+      body: {
+        name: 'Tên mới',
+        description: null,
+        expected_plan_version: 3,
+        expected_export_revision: 5,
+      },
+      idempotencyKey: '11111111-1111-4111-8111-111111111111',
+      includeCredentials: true,
+    });
+    expect(transport).toHaveBeenCalledTimes(1);
+    const [path, request] = transport.mock.calls[0]!;
+    const headers = new Headers(request?.headers);
+    expect(path).toBe('/api/v1/trips/trip-1');
+    expect(request?.method).toBe('PATCH');
+    expect(request?.credentials).toBe('include');
+    expect(headers.get('Content-Type')).toBe('application/json');
+    expect(headers.get('Idempotency-Key')).toBe('11111111-1111-4111-8111-111111111111');
+    expect(JSON.parse(String(request?.body))).toEqual({
+      name: 'Tên mới',
+      description: null,
+      expected_plan_version: 3,
+      expected_export_revision: 5,
+    });
+  });
+
   it('keeps token in one memory store and sends only same-origin GET with cookies omitted', async () => {
     const store = createAccessTokenStore();
     const otherStore = createAccessTokenStore();

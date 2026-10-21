@@ -27,6 +27,7 @@ function mount() {
           { path: '/trips/:tripId/members', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/fund', element: <ContentState state="placeholder" /> },
           { path: '/trips/:tripId/price-watch', element: <ContentState state="placeholder" /> },
+          { path: '/trips/:tripId/settings', element: <ContentState state="placeholder" /> },
           { path: '/trips', element: <ContentState state="placeholder" /> },
           { path: '/', element: <ContentState state="placeholder" /> },
           { path: '/admin', element: <ContentState state="placeholder" /> },
@@ -96,10 +97,24 @@ describe('Shell interactions', () => {
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
     await userEvent.click(within(sidebar).getByRole('link', { name: 'Packing list' }));
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/packing`);
-    await userEvent.click(within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', { name: 'Quỹ nhóm' }));
+    await userEvent.click(
+      within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', {
+        name: 'Quỹ nhóm',
+      }),
+    );
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/fund`);
-    await userEvent.click(within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', { name: 'Theo dõi giá vé' }));
+    await userEvent.click(
+      within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', {
+        name: 'Theo dõi giá vé',
+      }),
+    );
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/price-watch`);
+    await userEvent.click(
+      within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', {
+        name: 'Cài đặt',
+      }),
+    );
+    expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/settings`);
     await userEvent.click(screen.getByRole('button', { name: 'Thu gọn thanh điều hướng' }));
     const expand = screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' });
     expect(expand).toHaveAttribute('aria-expanded', 'false');
@@ -140,7 +155,9 @@ describe('Shell interactions', () => {
     await userEvent.click(within(drawer).getByRole('link', { name: 'Lịch trình' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(
-      within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', { name: 'Lịch trình' }),
+      within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', {
+        name: 'Lịch trình',
+      }),
     ).toHaveAttribute('aria-current', 'page');
     expect(screen.queryByRole('navigation', { name: 'Điều hướng Mobile' })).not.toBeInTheDocument();
     expect(
