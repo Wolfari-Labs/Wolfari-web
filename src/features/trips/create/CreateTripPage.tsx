@@ -4,6 +4,7 @@ import { paths } from '../../../app/route-paths';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
+import { browserStorage, type StorageStatus } from '../../../shared/lib/browser-storage';
 import { Textarea } from '../../../shared/components/Textarea';
 import banner from '../../../shared/assets/figma/32882.svg';
 import mapArtwork from '../../../shared/assets/figma/8222b.svg';
@@ -37,7 +38,7 @@ import {
 import { CreateTripSuccess } from './CreateTripSuccess';
 import styles from './CreateTripPage.module.css';
 
-const storage = () => (typeof window === 'undefined' ? null : window.sessionStorage);
+const storage = () => browserStorage('sessionStorage');
 
 const destinations = [
   { name: 'Đà Nẵng', caption: 'Thành phố biển', image: destinationPhoto },
@@ -81,11 +82,12 @@ export function CreateTripPage() {
   const [createdTripId, setCreatedTripId] = useState<string | null>(null);
   const [customCover, setCustomCover] = useState<string | null>(null);
   const [coverError, setCoverError] = useState('');
+  const [storageStatus, setStorageStatus] = useState<StorageStatus>('saved');
   const activeRequest = useRef<AbortController | null>(null);
   const submitting = useRef(false);
 
   useEffect(() => {
-    writeCreateTripDraft(storage(), draft);
+    setStorageStatus(writeCreateTripDraft(storage(), draft));
   }, [draft]);
 
   useEffect(() => () => {
@@ -238,6 +240,7 @@ export function CreateTripPage() {
       </nav>
 
       {showRestored && <div className={styles.topAlert}><Alert live>Bản nháp trong tab này đã được khôi phục.</Alert></div>}
+      {storageStatus === 'memory' && <div className={styles.topAlert}><Alert tone="warning" live>Không thể lưu vào trình duyệt. Bản nháp chỉ được giữ trong bộ nhớ của tab này và sẽ mất khi tải lại hoặc đóng tab.</Alert></div>}
 
       <form onSubmit={submit} noValidate>
         <div className={styles.layout}>

@@ -6,22 +6,19 @@ import type {
 import type { TripRepository } from '../../features/trips/repositories/trip.repository';
 import type { TripDetailViewModel } from '../../features/trips/model/trip-detail';
 import {
-  fixtureTripCatalog,
   fixtureViewerId,
   readableFixtureTrips,
   previewTripId,
 } from './trip-catalog';
 import overviewMobile from '../../shared/assets/figma/8efc6.svg';
 import overviewCover from '../../shared/assets/figma/1dc61.png';
+import { createFixtureTripStore, type FixtureTripStore } from './trip-store';
 
 export function createFixtureTripRepository(
-  options: { viewerId?: string; records?: readonly TripListItem[] } = {},
+  options: { viewerId?: string; records?: readonly TripListItem[]; store?: FixtureTripStore } = {},
 ): TripRepository {
   const viewerId = options.viewerId ?? fixtureViewerId;
-  const records = structuredClone(options.records ?? fixtureTripCatalog) as TripListItem[];
-  const descriptions = new Map<string, string | null>([
-    [previewTripId, 'Khám phá Đà Nẵng – thành phố biển xinh đẹp với những người bạn đồng hành.'],
-  ]);
+  const store = options.store ?? createFixtureTripStore(options.records);
   const receipts = new Map<
     string,
     { fingerprint: string; result: Awaited<ReturnType<TripRepository['updateTrip']>> }
@@ -41,7 +38,7 @@ export function createFixtureTripRepository(
             }
           : null,
       },
-      description: descriptions.get(item.id) ?? null,
+      description: store.readDescription(item.id),
       publicDescription: null,
       archivedAt: item.lifecycle === 'ARCHIVED' ? '2026-09-24T00:00:00+07:00' : null,
       planEditPolicy: 'OWNER_ONLY',
@@ -58,8 +55,7 @@ export function createFixtureTripRepository(
     },
     async updateTrip({ tripId, intent, signal }) {
       signal.throwIfAborted();
-      const itemIndex = records.findIndex((item) => item.id === tripId);
-      const item = records[itemIndex];
+      const item = readableFixtureTrips(viewerId, store.readTrips()).find((item) => item.id === tripId);
       if (!item)
         return { status: 'not-found', correlationId: 'fixture-trip-update', retryable: false };
       if (
@@ -101,17 +97,16 @@ export function createFixtureTripRepository(
       }
       const nextDescription = hasDescription
         ? (intent.description ?? null)
-        : (descriptions.get(tripId) ?? null);
+        : store.readDescription(tripId);
       const changed =
         (hasName && name !== item.name) ||
-        (hasDescription && nextDescription !== (descriptions.get(tripId) ?? null));
+        (hasDescription && nextDescription !== store.readDescription(tripId));
       const next: TripListItem = {
         ...item,
         ...(hasName ? { name: name! } : {}),
         exportRevision: item.exportRevision + (changed ? 1 : 0),
       };
-      records[itemIndex] = next;
-      if (hasDescription) descriptions.set(tripId, nextDescription);
+      store.saveTrip(next, nextDescription);
       const result = {
         status: 'updated' as const,
         trip: detail(next),
@@ -127,7 +122,7 @@ export function createFixtureTripRepository(
           signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
         );
       if (scenario === 'empty') return { status: 'empty' };
-      const item = readableFixtureTrips(viewerId, records).find((t) => t.id === tripId);
+      const item = readableFixtureTrips(viewerId, store.readTrips()).find((t) => t.id === tripId);
       if (scenario !== 'success' || !item)
         return {
           status: 'error',
@@ -169,7 +164,7 @@ export function createFixtureTripRepository(
           },
         };
       }
-      const items = readableFixtureTrips(viewerId, records);
+      const items = readableFixtureTrips(viewerId, store.readTrips());
       if (items.length === 0) return { status: 'empty' };
       return { status: 'ready', data: structuredClone({ items, nextCursor: null }) };
     },
