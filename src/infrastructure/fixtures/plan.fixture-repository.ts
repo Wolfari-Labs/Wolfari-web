@@ -8,11 +8,12 @@ import beach from '../../shared/assets/figma/a84f7.png';
 import mountain from '../../shared/assets/figma/3a3f8.png';
 import seafood from '../../shared/assets/figma/1dc61.png';
 import bridge from '../../shared/assets/figma/42524.png';
+import { createFixtureTripStore, type FixtureTripStore } from './trip-store';
 
 export function createFixturePlanRepository(
-  options: { viewerId?: string; editorTripIds?: readonly string[] } = {},
+  options: { viewerId?: string; editorTripIds?: readonly string[]; store?: FixtureTripStore } = {},
 ): PlanRepository {
-  const records = readableFixtureTrips(options.viewerId ?? fixtureViewerId);
+  const store = options.store ?? createFixtureTripStore();
   return {
     async getPlan({ tripId, scenario, signal }) {
       signal.throwIfAborted();
@@ -21,7 +22,7 @@ export function createFixturePlanRepository(
           signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
         );
       if (scenario === 'empty') return { status: 'empty' };
-      const trip = records.find((t) => t.id === tripId);
+      const trip = readableFixtureTrips(options.viewerId ?? fixtureViewerId, store.readTrips()).find((t) => t.id === tripId);
       if (!trip || !['success', 'read-only'].includes(scenario))
         return {
           status: 'error',

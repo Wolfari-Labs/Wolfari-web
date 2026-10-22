@@ -1,14 +1,15 @@
 import type { ReadResult, ShellSnapshot } from '../../features/shell/model/shell';
 import type { ShellRepository } from '../../features/shell/repositories/shell.repository';
 import { readableFixtureTrips } from './trip-catalog';
+import { createFixtureTripStore, type FixtureTripStore } from './trip-store';
 
 export { previewTripId } from './trip-catalog';
 
-export function createFixtureShellRepository(): ShellRepository {
+export function createFixtureShellRepository({ store = createFixtureTripStore() }: { store?: FixtureTripStore } = {}): ShellRepository {
   return {
     async read({ tripId, scenario, signal }): Promise<ReadResult<ShellSnapshot>> {
       signal.throwIfAborted();
-      const trip = tripId ? readableFixtureTrips().find((item) => item.id === tripId) : null;
+      const trip = tripId ? readableFixtureTrips(undefined, store.readTrips()).find((item) => item.id === tripId) : null;
       if (tripId && !trip)
         return {
           status: 'error',

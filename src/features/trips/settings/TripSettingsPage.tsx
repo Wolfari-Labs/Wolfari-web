@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useOutletContext, useParams, useSearchParams } from 'react-router';
 import type { RouteContext } from '../../../app/route-context';
 import { paths } from '../../../app/route-paths';
-import { planQueryKeys } from '../../plan/model/plan-query-keys';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { ButtonLink } from '../../../shared/components/ButtonLink';
@@ -209,58 +208,13 @@ function TripInformationForm({
         status: 'ready',
         data: response.trip,
       });
-      queryClient.setQueriesData({ queryKey: ['trips', 'list'] }, (current: unknown) => {
-        if (!current || typeof current !== 'object') return current;
-        const value = current as { status?: string; data?: { items?: TripDetailViewModel[] } };
-        if (value.status !== 'ready' || !Array.isArray(value.data?.items)) return current;
-        return {
-          ...value,
-          data: {
-            ...value.data,
-            items: value.data.items.map((item) =>
-              item.id === response.trip.id ? { ...item, ...response.trip } : item,
-            ),
-          },
-        };
-      });
-      queryClient.setQueriesData({ queryKey: ['shell', trip.id] }, (current: unknown) => {
-        if (!current || typeof current !== 'object') return current;
-        const value = current as {
-          status?: string;
-          data?: { trip?: { id?: string } | null };
-        };
-        if (value.status !== 'ready' || value.data?.trip?.id !== response.trip.id) return current;
-        return {
-          ...value,
-          data: {
-            ...value.data,
-            trip: {
-              ...value.data.trip,
-              planVersion: response.trip.planVersion,
-              membershipRevision: response.trip.membershipRevision,
-              exportRevision: response.trip.exportRevision,
-              permissions: response.trip.permissions,
-            },
-          },
-        };
-      });
-      queryClient.setQueriesData({ queryKey: ['plan', trip.id] }, (current: unknown) => {
-        if (!current || typeof current !== 'object') return current;
-        const value = current as {
-          status?: string;
-          data?: { tripId?: string; exportRevision?: number };
-        };
-        if (value.status !== 'ready' || value.data?.tripId !== response.trip.id) return current;
-        return {
-          ...value,
-          data: { ...value.data, exportRevision: response.trip.exportRevision },
-        };
-      });
+      // Other projections must be fetched from their repositories, not stamped
+      // with a revision from a different response.
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: tripQueryKeys.all, refetchType: 'none' }),
-        queryClient.invalidateQueries({ queryKey: ['trips'], refetchType: 'none' }),
-        queryClient.invalidateQueries({ queryKey: ['shell', trip.id], refetchType: 'none' }),
-        queryClient.invalidateQueries({ queryKey: planQueryKeys.all, refetchType: 'none' }),
+        queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
+        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
+        queryClient.invalidateQueries({ queryKey: ['plan', trip.id] }),
       ]);
       attempt.current = null;
       onSaved(response.trip);

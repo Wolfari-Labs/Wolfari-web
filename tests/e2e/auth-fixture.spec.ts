@@ -155,13 +155,15 @@ for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 4
       expect(Math.abs(bounds!.height - (referenceHeight * width) / 1440)).toBeLessThanOrEqual(1);
     }
 
-    const footerBackground = await page.locator('[data-layout="home-footer"]').evaluate((element) => {
-      const style = getComputedStyle(element);
-      return {
-        size: style.backgroundSize.split(',')[0]?.trim() ?? '',
-        positionY: Number.parseFloat(style.backgroundPositionY.split(',')[0] ?? ''),
-      };
-    });
+    const footerBackground = await page
+      .locator('[data-layout="home-footer"]')
+      .evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          size: style.backgroundSize.split(',')[0]?.trim() ?? '',
+          positionY: Number.parseFloat(style.backgroundPositionY.split(',')[0] ?? ''),
+        };
+      });
     expect(footerBackground.size).toBe('100% auto');
     if (width > 1000)
       expect(Math.abs(footerBackground.positionY + (200 * width) / 1440)).toBeLessThanOrEqual(1);
@@ -254,7 +256,15 @@ for (const size of [
         await previewStyle.evaluate((style) => style.parentNode?.removeChild(style));
       }
       if (size.width === 1440 && route !== '/') {
-        const form = page.getByRole('form');
+        const form = page.getByRole('form', {
+          name:
+            route === '/profile'
+              ? 'Thông tin cá nhân'
+              : route === '/login'
+                ? 'Biểu mẫu đăng nhập'
+                : 'Biểu mẫu đăng ký',
+          exact: true,
+        });
         const bounds = await form.boundingBox();
         expect(bounds).not.toBeNull();
         const target =
@@ -305,7 +315,7 @@ test('registration validates and remains unavailable without session or redirect
   await page.getByLabel('Họ và tên').fill('Người xem trước');
   await page.getByLabel('Email', { exact: true }).fill('preview@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill('a long preview password');
-  await page.getByLabel('Nhập lại mật khẩu').fill('a long preview password');
+  await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill('a long preview password');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
   await expect(page.getByText(/Identity chưa kết nối/)).toBeVisible();
