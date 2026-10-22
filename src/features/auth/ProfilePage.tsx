@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIdentityRepository } from './repositories/identity-context';
-import { identityScenarios, type IdentityScenario, type IdentitySessionsViewModel } from './model/identity';
+import {
+  identityScenarios,
+  type IdentityScenario,
+  type SelfProfileViewModel,
+} from './model/identity';
+import type { DomainError } from '../../shared/types/result';
 import { useOptionalSessionManager } from '../../app/session-context';
+import { useIdentityTask } from './use-identity-task';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
@@ -12,12 +18,34 @@ import { ContentState } from '../../shared/components/ContentState';
 import { sceneAssets as art } from '../../shared/assets/scene-assets';
 import styles from './ProfilePage.module.css';
 
-function mutationMessage(code: string): string {
-  if (code === 'VERSION_CONFLICT') return 'Hồ sơ đã thay đổi ở nơi khác. Tải lại dữ liệu rồi thử lại.';
-  if (code === 'UNAUTHENTICATED') return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
-  if (code === 'VALIDATION_FAILED') return 'Thông tin chưa hợp lệ.';
-  return 'Chưa thể hoàn tất lúc này. Vui lòng thử lại sau.';
+const unavailable: DomainError = {
+  code: 'SERVICE_UNAVAILABLE',
+  correlationId: null,
+  retryable: true,
+};
+class SessionReadError extends Error {
+  constructor(readonly domain: DomainError) {
+    super(domain.code);
+  }
 }
+function mutationMessage(error: DomainError): string {
+  const message =
+    error.code === 'VERSION_CONFLICT'
+      ? 'Hồ sơ đã thay đổi ở nơi khác. Dữ liệu đã được yêu cầu tải lại; kiểm tra bản nháp rồi lưu lại.'
+      : error.code === 'UNAUTHENTICATED'
+        ? 'Thông tin xác thực không hợp lệ hoặc phiên đã hết hạn. Kiểm tra thông tin hoặc đăng nhập lại.'
+        : error.code === 'VALIDATION_FAILED'
+          ? 'Thông tin chưa hợp lệ.'
+          : error.code === 'RESOURCE_EXHAUSTED'
+            ? 'Bạn đã thử quá nhiều lần. Vui lòng thử lại sau.'
+            : 'Chưa thể hoàn tất lúc này. Vui lòng thử lại sau.';
+  return message + (error.correlationId ? ' Mã hỗ trợ: ' + error.correlationId : '');
+}
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat('vi-VN', {
+    dateStyle: 'medium',
+    timeZone: 'Asia/Ho_Chi_Minh',
+  }).format(new Date(value));
 
 export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const repository = useIdentityRepository();
@@ -29,58 +57,95 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const [validation, setValidation] = useState<string | undefined>();
   const [feedback, setFeedback] = useState<string | null>(null);
   const [showSessions, setShowSessions] = useState(false);
-  const [sessionCursor, setSessionCursor] = useState<string | null>(null);
-  const [sessionItems, setSessionItems] = useState<IdentitySessionsViewModel['items']>([]);
-  const [saving, setSaving] = useState(false);
-  const [avatarBusy, setAvatarBusy] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState(false);
   const [password, setPassword] = useState({ current: '', next: '', confirmation: '' });
-  const [passwordBusy, setPasswordBusy] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [sessionFeedback, setSessionFeedback] = useState<string | null>(null);
+  const [endingSession, setEndingSession] = useState(false);
   const avatarInput = useRef<HTMLInputElement>(null);
+  const { pending, run } = useIdentityTask();
+  const busy = pending !== null;
+  const profileKey = ['identity', 'self', scenario] as const;
+  const sessionsKey = ['identity', 'sessions', scenario] as const;
   const query = useQuery({
-    queryKey: ['identity', 'self', scenario],
+    queryKey: profileKey,
     queryFn: ({ signal }) => repository.readSelf({ scenario, signal }),
+    enabled: !endingSession,
   });
   const result = query.data;
   const profile = result?.status === 'ready' ? result.data : null;
-  const sessionsQuery = useQuery({
-    queryKey: ['identity', 'sessions', scenario, sessionCursor],
-    queryFn: ({ signal }) => repository.listSessions({ scenario, signal, cursor: sessionCursor, limit: 20 }),
-    enabled: showSessions && !!profile,
-  });
-
-  useEffect(() => {
-    setSessionItems([]);
-    setSessionCursor(null);
-  }, [scenario]);
-
-  useEffect(() => {
-    const sessionResult = sessionsQuery.data;
-    if (sessionResult?.status === 'ready') {
-      setSessionItems((current) => sessionCursor ? [...current, ...sessionResult.data.items] : sessionResult.data.items);
-    }
-  }, [sessionsQuery.data, sessionCursor]);
-
-  useEffect(() => {
-    let disposed = false;
-    let objectUrl: string | null = null;
-    if (profile?.avatar && repository.getAvatar && typeof URL.createObjectURL === 'function') {
-      void repository.getAvatar({ signal: new AbortController().signal }).then((avatar) => {
-        if (disposed || avatar.status !== 'ready') return;
-        objectUrl = URL.createObjectURL(new Blob([avatar.bytes], { type: avatar.contentType ?? 'image/png' }));
-        setAvatarUrl(objectUrl);
+  const sessionsQuery = useInfiniteQuery({
+    queryKey: sessionsKey,
+    initialPageParam: null as string | null,
+    queryFn: async ({ signal, pageParam }) => {
+      const response = await repository.listSessions({
+        scenario,
+        signal,
+        cursor: pageParam,
+        limit: 20,
       });
-    } else setAvatarUrl(null);
+      if (response.status === 'error') throw new SessionReadError(response.error);
+      return response.status === 'empty' ? { items: [], nextCursor: null } : response.data;
+    },
+    getNextPageParam: (last, _pages, _param, params) =>
+      last.nextCursor && !params.includes(last.nextCursor) ? last.nextCursor : undefined,
+    enabled: showSessions && !!profile && !endingSession,
+    retry: false,
+  });
+  const sessionItems = Array.from(
+    new Map(
+      (sessionsQuery.data?.pages.flatMap((page) => page.items) ?? []).map((item) => [
+        item.id,
+        item,
+      ]),
+    ).values(),
+  );
+
+  // The endpoint stays constant after upload; version is the avatar cache boundary.
+  const avatarPresent = !!profile?.avatar;
+  useEffect(() => {
+    const controller = new AbortController();
+    let objectUrl: string | null = null;
+    setAvatarUrl(null);
+    setAvatarError(false);
+    if (avatarPresent && repository.getAvatar && typeof URL.createObjectURL === 'function') {
+      void (async () => {
+        try {
+          const avatar = await repository.getAvatar!({ signal: controller.signal });
+          controller.signal.throwIfAborted();
+          if (avatar.status !== 'ready') {
+            setAvatarError(true);
+            return;
+          }
+          objectUrl = URL.createObjectURL(
+            new Blob([avatar.bytes], { type: avatar.contentType ?? 'image/png' }),
+          );
+          setAvatarUrl(objectUrl);
+        } catch {
+          if (!controller.signal.aborted) setAvatarError(true);
+        }
+      })();
+    }
     return () => {
-      disposed = true;
+      controller.abort();
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [profile?.avatar, repository]);
+  }, [avatarPresent, profile?.id, profile?.version, repository]);
 
-  const error = query.isError ? { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true } : result?.status === 'error' ? result.error : null;
+  const error = query.isError ? unavailable : result?.status === 'error' ? result.error : null;
+  const applyProfile = async (updated: SelfProfileViewModel) => {
+    queryClient.setQueryData(profileKey, { status: 'ready', data: updated });
+    await queryClient.invalidateQueries({ queryKey: ['shell'] });
+  };
+  const mutationFailed = async (failure: DomainError, prefix = '') => {
+    setFeedback(prefix + mutationMessage(failure));
+    if (failure.code === 'VERSION_CONFLICT') await query.refetch();
+  };
 
-  const submitProfile = async (event: FormEvent) => {
+  const submitProfile = (event: FormEvent) => {
     event.preventDefault();
+    if (busy) return;
     const name = (draft ?? profile?.fullName ?? '').trim();
     if (!name || Array.from(name).length > 150) {
       setValidation('Tên hiển thị cần từ 1 đến 150 ký tự.');
@@ -93,142 +158,425 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     }
     setValidation(undefined);
     setFeedback(null);
-    setSaving(true);
-    try {
-      const update = await repository.updateProfile({ intent: { fullName: name, expectedVersion: profile.version }, signal: new AbortController().signal });
-      if (update.status === 'updated') {
-        setDraft(null);
-        await query.refetch();
-      } else {
-        setFeedback(mutationMessage(update.error.code));
-        if (update.error.code === 'VERSION_CONFLICT') void query.refetch();
-      }
-    } catch {
-      setFeedback('Chưa thể lưu thay đổi lúc này. Bản nháp của bạn vẫn được giữ trên trang.');
-    } finally {
-      setSaving(false);
-    }
+    void run(
+      'profile',
+      async (signal) => {
+        const update = await repository.updateProfile!({
+          intent: { fullName: name, expectedVersion: profile.version },
+          signal,
+        });
+        signal.throwIfAborted();
+        if (update.status === 'updated') {
+          setDraft(null);
+          setFeedback('Đã lưu thông tin cá nhân.');
+          await applyProfile(update.profile);
+        } else await mutationFailed(update.error);
+      },
+      () =>
+        setFeedback(
+          'Chưa thể xác nhận lưu thay đổi. Bản nháp vẫn được giữ; tải lại dữ liệu trước khi thử lại.',
+        ),
+    );
   };
 
-  const uploadAvatar = async (file: File) => {
+  const uploadAvatar = (file: File) => {
+    if (busy) return;
     if (!repository.uploadAvatar || !repository.updateProfile || !profile) {
       setFeedback('Identity chưa kết nối; ảnh chưa được tải lên.');
       return;
     }
-    if (!['image/png', 'image/jpeg'].includes(file.type) || file.size > 10 * 1024 * 1024) {
-      setFeedback('Ảnh phải là PNG/JPEG và không vượt quá 10 MB.');
+    if (
+      !['image/png', 'image/jpeg'].includes(file.type) ||
+      file.size < 1 ||
+      file.size > 10 * 1024 * 1024
+    ) {
+      setFeedback('Ảnh phải là PNG/JPEG, không rỗng và không vượt quá 10 MB.');
       return;
     }
-    setAvatarBusy(true);
-    try {
-      const uploaded = await repository.uploadAvatar({ file, filename: file.name, signal: new AbortController().signal });
-      if (uploaded.status !== 'uploaded') {
-        setFeedback(mutationMessage(uploaded.error.code));
-        return;
-      }
-      const attached = await repository.updateProfile({ intent: { fullName: profile.fullName, expectedVersion: profile.version, avatarObjectKey: uploaded.objectKey }, signal: new AbortController().signal });
-      if (attached.status === 'updated') await query.refetch();
-      else {
-        setFeedback(`Ảnh đã tải lên nhưng chưa được gắn vào hồ sơ. ${mutationMessage(attached.error.code)}`);
-        if (attached.error.code === 'VERSION_CONFLICT') void query.refetch();
-      }
-    } catch {
-      setFeedback('Chưa thể hoàn tất tải ảnh lúc này. Ảnh chưa được gắn vào hồ sơ.');
-    } finally {
-      setAvatarBusy(false);
-    }
+    setFeedback(null);
+    void run(
+      'avatar',
+      async (signal) => {
+        const uploaded = await repository.uploadAvatar!({ file, filename: file.name, signal });
+        signal.throwIfAborted();
+        if (uploaded.status !== 'uploaded') {
+          await mutationFailed(uploaded.error);
+          return;
+        }
+        const attached = await repository.updateProfile!({
+          intent: { expectedVersion: profile.version, avatarObjectKey: uploaded.objectKey },
+          signal,
+        });
+        signal.throwIfAborted();
+        if (attached.status === 'updated') {
+          setFeedback('Đã cập nhật ảnh đại diện.');
+          await applyProfile(attached.profile);
+        } else
+          await mutationFailed(attached.error, 'Ảnh đã tải lên nhưng chưa được gắn vào hồ sơ. ');
+      },
+      () => setFeedback('Chưa thể xác nhận thay ảnh. Tải lại hồ sơ để kiểm tra trước khi thử lại.'),
+    );
   };
 
-  const submitPassword = async () => {
+  const submitPassword = (event: FormEvent) => {
+    event.preventDefault();
+    if (busy) return;
     if (!repository.changePassword) {
-      setFeedback('Identity chưa kết nối; mật khẩu chưa được đổi.');
+      setPasswordError('Identity chưa kết nối; mật khẩu chưa được đổi.');
       return;
     }
-    if (Array.from(password.next).length < 15 || Array.from(password.next).length > 128 || password.next !== password.confirmation) {
-      setFeedback('Mật khẩu mới cần từ 15 đến 128 ký tự và phải khớp khi nhập lại.');
+    const invalid = !password.current
+      ? 'profile-current-password'
+      : Array.from(password.next).length < 15 || Array.from(password.next).length > 128
+        ? 'profile-new-password'
+        : password.next !== password.confirmation
+          ? 'profile-confirm-password'
+          : null;
+    if (invalid) {
+      setPasswordError(
+        'Nhập mật khẩu hiện tại; mật khẩu mới cần từ 15 đến 128 ký tự và phải khớp khi nhập lại.',
+      );
+      document.getElementById(invalid)?.focus();
       return;
     }
-    setPasswordBusy(true);
-    try {
-      const changed = await repository.changePassword({ currentPassword: password.current, newPassword: password.next, signal: new AbortController().signal });
-      if (changed.status === 'changed') {
-        sessionManager?.clear?.();
-        navigate('/login', { replace: true });
-      } else setFeedback(mutationMessage(changed.error.code));
-    } catch {
-      setFeedback('Chưa thể đổi mật khẩu lúc này. Phiên hiện tại vẫn được giữ nguyên.');
-    } finally {
-      setPasswordBusy(false);
-    }
+    setPasswordError(null);
+    void run(
+      'password',
+      async (signal) => {
+        const changed = await repository.changePassword!({
+          currentPassword: password.current,
+          newPassword: password.next,
+          signal,
+        });
+        signal.throwIfAborted();
+        if (changed.status === 'changed') {
+          setEndingSession(true);
+          setPassword({ current: '', next: '', confirmation: '' });
+          // Leave the private route before notifying its guard; otherwise the guard's
+          // expiry redirect can replace this explicit success notice/URL.
+          await navigate('/login', {
+            replace: true,
+            flushSync: true,
+            state: { identityNotice: 'password-changed' },
+          });
+          sessionManager?.clear?.();
+          await queryClient.cancelQueries();
+          queryClient.removeQueries();
+        } else setPasswordError(mutationMessage(changed.error));
+      },
+      () =>
+        setPasswordError(
+          'Chưa thể xác nhận đổi mật khẩu. Không tự gửi lại yêu cầu; kiểm tra bằng cách đăng nhập.',
+        ),
+    );
   };
 
-  const resendVerification = async () => {
+  const resendVerification = () => {
     if (!repository.resendEmailVerification) {
       setFeedback('Identity chưa kết nối; chưa thể gửi lại email xác minh.');
       return;
     }
-    try {
-      const resent = await repository.resendEmailVerification({ signal: new AbortController().signal });
-      setFeedback(resent.status === 'accepted' ? 'Đã gửi lại email xác minh. Hãy kiểm tra hộp thư.' : mutationMessage(resent.error.code));
-    } catch {
-      setFeedback('Chưa thể gửi lại email xác minh lúc này. Vui lòng thử lại sau.');
-    }
+    void run(
+      'verify',
+      async (signal) => {
+        const resent = await repository.resendEmailVerification!({ signal });
+        signal.throwIfAborted();
+        setFeedback(
+          resent.status === 'accepted'
+            ? 'Yêu cầu gửi email xác minh đã được tiếp nhận. Hãy kiểm tra hộp thư.'
+            : mutationMessage(resent.error),
+        );
+      },
+      () => setFeedback('Chưa thể gửi lại email xác minh lúc này. Vui lòng thử lại sau.'),
+    );
+  };
+
+  const revokeSession = (sessionId: string) => {
+    if (!repository.revokeSession) return;
+    setSessionFeedback(null);
+    void run(
+      'revoke:' + sessionId,
+      async (signal) => {
+        const revoked = await repository.revokeSession!({ sessionId, signal });
+        signal.throwIfAborted();
+        if (revoked.status === 'revoked') {
+          setSessionFeedback('Đã thu hồi phiên.');
+          await queryClient.resetQueries({ queryKey: sessionsKey, exact: true });
+        } else setSessionFeedback(mutationMessage(revoked.error));
+      },
+      () =>
+        setSessionFeedback('Chưa thể xác nhận thu hồi phiên. Tải lại danh sách trước khi thử lại.'),
+    );
   };
 
   return (
     <section className={styles.page} data-node-id="299:1847">
       <h1>Tài khoản của tôi</h1>
-      <p className={styles.subtitle}>Quản lý thông tin cá nhân, kênh nhận thông báo và thiết bị của riêng bạn.</p>
-      {query.isPending ? <ContentState state="loading" headingLevel={2} /> : error ? (
-        <ContentState state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'} error={error} headingLevel={2} onRetry={() => void query.refetch()} />
-      ) : !profile ? <ContentState state="empty" headingLevel={2} /> : (
+      <p className={styles.subtitle}>
+        Quản lý thông tin cá nhân, kênh nhận thông báo và thiết bị của riêng bạn.
+      </p>
+      {query.isPending ? (
+        <ContentState state="loading" headingLevel={2} />
+      ) : error ? (
+        <ContentState
+          state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
+          error={error}
+          headingLevel={2}
+          onRetry={() => void query.refetch()}
+        />
+      ) : !profile ? (
+        <ContentState state="empty" headingLevel={2} />
+      ) : (
         <div className={styles.grid}>
-          <form id="profile-editor" className={`${styles.panel} ${styles.personal}`} onSubmit={(event) => void submitProfile(event)} noValidate aria-label="Thông tin cá nhân">
-              <h2>Thông tin cá nhân</h2>
-              <div className={styles.avatarRow}>
-                <span className={styles.avatar}>
-                  {profile.avatar && avatarUrl ? <img className={styles.avatarPhoto} src={avatarUrl} alt={profile.avatar.alt} /> : <><img src={art['95b35.svg']} alt="" /><strong>{profile.fullName.split(/\s+/).map((s) => s[0]).slice(0, 2).join('')}</strong></>}
-                </span>
-                <Button variant="outline" loading={avatarBusy} disabled={!repository.uploadAvatar} title="Upload ảnh" onClick={() => avatarInput.current?.click()}>Đổi ảnh</Button>
-                <input ref={avatarInput} hidden type="file" accept="image/png,image/jpeg" onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void uploadAvatar(file); }} />
+          <form
+            id="profile-editor"
+            className={styles.panel + ' ' + styles.personal}
+            onSubmit={submitProfile}
+            noValidate
+            aria-label="Thông tin cá nhân"
+          >
+            <h2>Thông tin cá nhân</h2>
+            <div className={styles.avatarRow}>
+              <span className={styles.avatar}>
+                {profile.avatar && avatarUrl ? (
+                  <img className={styles.avatarPhoto} src={avatarUrl} alt={profile.avatar.alt} />
+                ) : (
+                  <>
+                    <img src={art['95b35.svg']} alt="" />
+                    <strong>
+                      {profile.fullName
+                        .split(/\s+/)
+                        .map((s) => s[0])
+                        .slice(0, 2)
+                        .join('')}
+                    </strong>
+                  </>
+                )}
+              </span>
+              <Button
+                variant="outline"
+                loading={pending === 'avatar'}
+                disabled={busy || !repository.uploadAvatar}
+                title="Upload ảnh"
+                onClick={() => avatarInput.current?.click()}
+              >
+                Đổi ảnh
+              </Button>
+              <input
+                aria-label="Chọn ảnh đại diện"
+                ref={avatarInput}
+                hidden
+                type="file"
+                accept="image/png,image/jpeg"
+                disabled={busy}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = '';
+                  if (file) uploadAvatar(file);
+                }}
+              />
+            </div>
+            {avatarError && (
+              <Alert tone="info">Chưa tải được ảnh đại diện. Thông tin hồ sơ vẫn được giữ.</Alert>
+            )}
+            <div className={styles.fields}>
+              <Input
+                id="profile-name"
+                label="Tên hiển thị"
+                value={draft ?? profile.fullName}
+                disabled={busy}
+                error={validation}
+                onChange={(event) => {
+                  setDraft(event.target.value);
+                  setValidation(undefined);
+                  setFeedback(null);
+                }}
+              />
+              <Input label="Email" value={profile.email} readOnly type="email" />
+            </div>
+            {!profile.emailVerifiedAt && (
+              <Alert tone="info">
+                <p>Email chưa được xác minh.</p>
+                <Button
+                  variant="outline"
+                  disabled={busy || !repository.resendEmailVerification}
+                  loading={pending === 'verify'}
+                  onClick={resendVerification}
+                >
+                  Gửi lại email xác minh
+                </Button>
+              </Alert>
+            )}
+            <Button
+              className={styles.save}
+              type="submit"
+              loading={pending === 'profile'}
+              disabled={busy}
+              icon={<img src={art['ac8db.svg']} alt="" />}
+            >
+              Lưu thay đổi
+            </Button>
+            {feedback && (
+              <div className={styles.feedback}>
+                <Alert live>{feedback}</Alert>
               </div>
-              <div className={styles.fields}>
-                <Input id="profile-name" label="Tên hiển thị" value={draft ?? profile.fullName} error={validation} onChange={(event) => { setDraft(event.target.value); setValidation(undefined); setFeedback(null); }} />
-                <Input label="Email" value={profile.email} readOnly type="email" />
-              </div>
-              {!profile.emailVerifiedAt && <Alert tone="info"><p>Email chưa được xác minh.</p><Button variant="outline" onClick={() => void resendVerification()}>Gửi lại email xác minh</Button></Alert>}
-              <Button className={styles.save} type="submit" loading={saving} icon={<img src={art['ac8db.svg']} alt="" />}>Lưu thay đổi</Button>
-            {feedback && <div className={styles.feedback}><Alert live>{feedback}</Alert></div>}
-            <Button variant="outline" className={styles.logout} disabled title="Backend chưa cung cấp session_id của phiên hiện tại">Đăng xuất (chưa khả dụng)</Button>
+            )}
+            <Button
+              variant="outline"
+              className={styles.logout}
+              disabled
+              title="Backend chưa cung cấp session_id của phiên hiện tại"
+            >
+              Đăng xuất (chưa khả dụng)
+            </Button>
           </form>
           <section className={styles.panel} aria-labelledby="profile-notifications">
             <h2 id="profile-notifications">Thông báo & thiết bị</h2>
             <p className={styles.muted}>Mỗi người tự quản lý kênh nhận thông báo của mình.</p>
-            <Alert live={false}>Cài đặt thông báo và thiết bị chưa có projection Identity khả dụng.</Alert>
-            <details onToggle={(event) => setShowSessions(event.currentTarget.open)} className={styles.sessions}>
+            <Alert live={false}>
+              Cài đặt thông báo và thiết bị chưa có projection Identity khả dụng.
+            </Alert>
+            <details
+              onToggle={(event) => setShowSessions(event.currentTarget.open)}
+              className={styles.sessions}
+            >
               <summary>Phiên đăng nhập</summary>
-              {sessionsQuery.isPending ? <ContentState state="loading" headingLevel={2} /> : sessionsQuery.isError || sessionsQuery.data?.status === 'error' ? (
-                <ContentState state="error" headingLevel={2} error={sessionsQuery.data?.status === 'error' ? sessionsQuery.data.error : { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true }} onRetry={() => void sessionsQuery.refetch()} />
-              ) : sessionItems.length === 0 ? <ContentState state="empty" headingLevel={2} /> : (
+              {sessionsQuery.isPending ? (
+                <ContentState state="loading" headingLevel={2} />
+              ) : (
                 <>
-                  <ul>{sessionItems.map((session, index) => <li key={session.id}><strong>Phiên đăng nhập {index + 1}</strong><span>Tạo: {new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium', timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date(session.createdAt))}</span><span>Lần dùng cuối: {session.lastUsedAt ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium', timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date(session.lastUsedAt)) : 'Chưa có thông tin'}</span><Button variant="outline" disabled={!repository.revokeSession} onClick={async () => { if (!repository.revokeSession) return; const revoked = await repository.revokeSession({ sessionId: session.id, signal: new AbortController().signal }); setFeedback(revoked.status === 'revoked' ? 'Đã thu hồi phiên.' : mutationMessage(revoked.error.code)); if (revoked.status === 'revoked') { setSessionItems([]); setSessionCursor(null); void queryClient.invalidateQueries({ queryKey: ['identity', 'sessions'] }); } }}>Thu hồi phiên</Button></li>)}</ul>
-                  {sessionsQuery.data?.status === 'ready' && sessionsQuery.data.data.nextCursor && <Button variant="outline" onClick={() => setSessionCursor(sessionsQuery.data?.status === 'ready' ? sessionsQuery.data.data.nextCursor : null)}>Tải thêm phiên</Button>}
+                  {sessionsQuery.isError && (
+                    <ContentState
+                      state="error"
+                      headingLevel={2}
+                      error={
+                        sessionsQuery.error instanceof SessionReadError
+                          ? sessionsQuery.error.domain
+                          : unavailable
+                      }
+                      onRetry={() =>
+                        void (sessionsQuery.isFetchNextPageError
+                          ? sessionsQuery.fetchNextPage()
+                          : sessionsQuery.refetch())
+                      }
+                    />
+                  )}
+                  {!sessionsQuery.isError && sessionItems.length === 0 && (
+                    <ContentState state="empty" headingLevel={2} />
+                  )}
+                  <ul>
+                    {sessionItems.map((session, index) => (
+                      <li key={session.id}>
+                        <strong>Phiên đăng nhập {index + 1}</strong>
+                        <span>Tạo: {formatDate(session.createdAt)}</span>
+                        <span>
+                          Lần dùng cuối:{' '}
+                          {session.lastUsedAt
+                            ? formatDate(session.lastUsedAt)
+                            : 'Chưa có thông tin'}
+                        </span>
+                        <Button
+                          variant="outline"
+                          disabled={busy || !repository.revokeSession}
+                          loading={pending === 'revoke:' + session.id}
+                          onClick={() => revokeSession(session.id)}
+                        >
+                          Thu hồi phiên
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                  {sessionsQuery.hasNextPage && (
+                    <Button
+                      variant="outline"
+                      disabled={busy || sessionsQuery.isFetching}
+                      loading={sessionsQuery.isFetchingNextPage}
+                      onClick={() => void sessionsQuery.fetchNextPage()}
+                    >
+                      Tải thêm phiên
+                    </Button>
+                  )}
+                  {sessionFeedback && <Alert live>{sessionFeedback}</Alert>}
                 </>
               )}
             </details>
           </section>
-          <section className={`${styles.panel} ${styles.ruleNote}`} aria-label="Đổi mật khẩu">
+          <form
+            className={styles.panel + ' ' + styles.ruleNote}
+            aria-label="Đổi mật khẩu"
+            noValidate
+            onSubmit={submitPassword}
+          >
             <h2>Đổi mật khẩu</h2>
             <div className={styles.fields}>
-              <Input label="Mật khẩu hiện tại" type="password" value={password.current} onChange={(event) => setPassword({ ...password, current: event.target.value })} />
-              <Input label="Mật khẩu mới" type="password" value={password.next} onChange={(event) => setPassword({ ...password, next: event.target.value })} />
-              <Input label="Nhập lại mật khẩu mới" type="password" value={password.confirmation} onChange={(event) => setPassword({ ...password, confirmation: event.target.value })} />
+              <Input
+                id="profile-current-password"
+                label="Mật khẩu hiện tại"
+                type="password"
+                autoComplete="current-password"
+                disabled={busy}
+                value={password.current}
+                onChange={(event) => setPassword({ ...password, current: event.target.value })}
+              />
+              <Input
+                id="profile-new-password"
+                label="Mật khẩu mới"
+                type="password"
+                autoComplete="new-password"
+                disabled={busy}
+                value={password.next}
+                onChange={(event) => setPassword({ ...password, next: event.target.value })}
+              />
+              <Input
+                id="profile-confirm-password"
+                label="Nhập lại mật khẩu mới"
+                type="password"
+                autoComplete="new-password"
+                disabled={busy}
+                value={password.confirmation}
+                onChange={(event) => setPassword({ ...password, confirmation: event.target.value })}
+              />
             </div>
-            <Button variant="outline" loading={passwordBusy} onClick={() => void submitPassword()}>Đổi mật khẩu</Button>
-          </section>
+            {passwordError && (
+              <Alert tone="error" live>
+                {passwordError}
+              </Alert>
+            )}
+            <Button
+              type="submit"
+              variant="outline"
+              disabled={busy}
+              loading={pending === 'password'}
+            >
+              Đổi mật khẩu
+            </Button>
+          </form>
         </div>
       )}
-      {previewEnabled && <details className="preview" data-preview="profile"><summary>Profile preview · Dữ liệu minh họa</summary>{profile && <p>Phiên bản hồ sơ: {profile.version} · {profile.emailVerifiedAt ? 'Email đã xác minh' : 'Email chưa xác minh'}</p>}<Select label="Trạng thái hồ sơ" value={scenario} onChange={(event) => { const next = identityScenarios.find((value) => value === event.target.value); if (next) setScenario(next); }}>{identityScenarios.map((value) => <option key={value}>{value}</option>)}</Select></details>}
+      {previewEnabled && (
+        <details className="preview" data-preview="profile">
+          <summary>Profile preview · Dữ liệu minh họa</summary>
+          {profile && (
+            <p>
+              Phiên bản hồ sơ: {profile.version} ·{' '}
+              {profile.emailVerifiedAt ? 'Email đã xác minh' : 'Email chưa xác minh'}
+            </p>
+          )}
+          <Select
+            label="Trạng thái hồ sơ"
+            value={scenario}
+            disabled={busy}
+            onChange={(event) => {
+              const next = identityScenarios.find((value) => value === event.target.value);
+              if (next) setScenario(next);
+            }}
+          >
+            {identityScenarios.map((value) => (
+              <option key={value}>{value}</option>
+            ))}
+          </Select>
+        </details>
+      )}
     </section>
   );
 }
