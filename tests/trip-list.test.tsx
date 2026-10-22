@@ -81,8 +81,14 @@ describe('Trip List route slice', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.queryByText('Chuyến đi riêng tư – không được hiển thị')).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /88888888/ })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute('href', '/trips/new');
-    expect(screen.getByRole('link', { name: '+ Tạo một hành trình mới' })).toHaveAttribute('href', '/trips/new');
+    expect(screen.getByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute(
+      'href',
+      '/trips/new',
+    );
+    expect(screen.getByRole('link', { name: '+ Tạo một hành trình mới' })).toHaveAttribute(
+      'href',
+      '/trips/new',
+    );
     const moreActions = screen.getAllByRole('button', { name: /^Thao tác / });
     expect(moreActions).toHaveLength(6);
     moreActions.forEach((button) => expect(button).toBeDisabled());
@@ -209,6 +215,63 @@ describe('Trip List route slice', () => {
     expect(statusButton('Đã kết thúc')).toHaveAttribute('aria-pressed', 'true');
     expect(read).toHaveBeenCalledTimes(2);
     expect(screen.queryByText('internal transport detail')).not.toBeInTheDocument();
+  });
+
+  it('loads cursor pages, keeps prior cards on a page error and retries only the next page', async () => {
+    const first = fixtureTripCatalog[0]!;
+    const second = fixtureTripCatalog[1]!;
+    let failNextPage = true;
+    const listTrips = vi.fn<TripRepository['listTrips']>(async ({ cursor, limit }) => {
+      expect(limit).toBe(20);
+      if (cursor === undefined) {
+        return { status: 'ready', data: { items: [first], nextCursor: 'opaque/page+2==' } };
+      }
+      expect(cursor).toBe('opaque/page+2==');
+      if (failNextPage) {
+        return {
+          status: 'error',
+          error: {
+            code: 'SERVICE_UNAVAILABLE',
+            correlationId: 'trip-page-two',
+            retryable: true,
+          },
+        };
+      }
+      return { status: 'ready', data: { items: [second], nextCursor: null } };
+    });
+    mount({
+      tripRepository: { ...createFixtureTripRepository(), listTrips },
+    });
+    await loaded();
+    expect(tripLinks()).toHaveLength(1);
+    expect(listTrips.mock.calls[0]?.[0]).not.toHaveProperty('cursor');
+    await userEvent.click(screen.getByRole('button', { name: 'Tải thêm chuyến đi' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Chưa thể tải nội dung');
+    expect(screen.getByText('Mã đối chiếu: trip-page-two')).toBeInTheDocument();
+    expect(tripLinks()).toHaveLength(1);
+    expect(tripLinks()[0]).toHaveAccessibleName(`Mở chuyến đi ${first.name}`);
+
+    failNextPage = false;
+    await userEvent.click(screen.getByRole('button', { name: 'Tải lại' }));
+    await waitFor(() => expect(tripLinks()).toHaveLength(2));
+    expect(listTrips).toHaveBeenCalledTimes(3);
+    expect(listTrips.mock.calls[1]?.[0]).toMatchObject({
+      cursor: 'opaque/page+2==',
+      limit: 20,
+    });
+    expect(listTrips.mock.calls[2]?.[0]).toMatchObject({
+      cursor: 'opaque/page+2==',
+      limit: 20,
+    });
+    expect(screen.queryByRole('button', { name: 'Tải thêm chuyến đi' })).not.toBeInTheDocument();
+    expect(statusButton('Tất cả')).toHaveAccessibleName('Tất cả · 2');
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Tìm chuyến đi theo tên' }),
+      'phu quoc',
+    );
+    expect(tripLinks()).toHaveLength(1);
+    expect(tripLinks()[0]).toHaveAccessibleName(`Mở chuyến đi ${second.name}`);
   });
 
   it('renders missing enrichment without a fake cover or fabricated member total', async () => {

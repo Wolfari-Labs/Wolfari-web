@@ -132,7 +132,6 @@ export function DressCodePage() {
   );
   const groups = data ? groupDressCodes(filteredItems, data.plan.activities) : [];
   const items = groups.flatMap((group) => group.items);
-  const firstTwoItems = items.slice(0, 2);
   const trip = data?.trip;
   const title = trip ? tripTitle(trip.name) : 'Đà Nẵng 3N2Đ';
   const dateRange = trip ? `${formatDate(trip.startAt)} – ${formatDate(trip.endAt)}` : '12 – 14/10/2026';
@@ -177,9 +176,8 @@ export function DressCodePage() {
         </div>
         <div className={styles.contentGrid}>
           <div className={styles.cards}>
-            {(firstTwoItems.length ? firstTwoItems : allItems.slice(0, 2)).map((item, index) => <OutfitCard key={item.id} item={item} index={index} />)}
-            {!firstTwoItems.length && <div className={styles.empty} role="status"><h2>Chưa có dress code đã lưu</h2><p>Các hướng dẫn đã lưu sẽ xuất hiện tại đây.</p></div>}
-            {allItems.some((item) => item.source === 'DSS') && <span className={styles.legacySource}>Nguồn: Gợi ý đã lưu trước đây</span>}
+            {items.map((item, index) => <OutfitCard key={item.id} item={item} index={index} />)}
+            {!items.length && <div className={styles.empty} role="status"><h2>Chưa có dress code đã lưu</h2><p>Chưa có hướng dẫn trong phạm vi đang chọn.</p></div>}
           </div>
           <aside className={styles.editor} aria-label="Tạo hoặc sửa Dress code">
             <h2>Tạo / sửa Dress code</h2>

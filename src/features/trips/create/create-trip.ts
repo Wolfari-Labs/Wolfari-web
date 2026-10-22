@@ -1,8 +1,10 @@
 import type { CreateTripIntent } from '../repositories/trip.repository';
+import { createStorageFallback } from '../../../shared/lib/browser-storage';
 
 export const CREATE_TRIP_TIMEZONE = 'Asia/Ho_Chi_Minh';
 export const CREATE_TRIP_DRAFT_KEY = 'wolfari:create-trip:v2';
 const LEGACY_CREATE_TRIP_DRAFT_KEY = 'wolfari:create-trip:v1';
+const drafts = createStorageFallback();
 
 export type TripStyle = 'explore' | 'relax' | 'food' | 'culture';
 export type TripTemplate = 'blank' | 'balanced' | 'discovery';
@@ -104,12 +106,11 @@ function isV2Draft(value: unknown): value is CreateTripDraftV2 {
 }
 
 export function readCreateTripDraft(storage: Storage | null): CreateTripDraftV2 | null {
-  if (!storage) return null;
   try {
-    const parsed = JSON.parse(storage.getItem(CREATE_TRIP_DRAFT_KEY) ?? 'null') as unknown;
+    const parsed = JSON.parse(drafts.read(storage, CREATE_TRIP_DRAFT_KEY).raw ?? 'null') as unknown;
     if (isV2Draft(parsed)) return { ...parsed, timezone: CREATE_TRIP_TIMEZONE };
 
-    const legacy = JSON.parse(storage.getItem(LEGACY_CREATE_TRIP_DRAFT_KEY) ?? 'null') as Record<string, unknown> | null;
+    const legacy = JSON.parse(drafts.read(storage, LEGACY_CREATE_TRIP_DRAFT_KEY).raw ?? 'null') as Record<string, unknown> | null;
     if (!legacy || legacy.version !== 1) return null;
     if (![legacy.name, legacy.description, legacy.startDate, legacy.endDate].every(isString)) return null;
     return {
@@ -125,10 +126,11 @@ export function readCreateTripDraft(storage: Storage | null): CreateTripDraftV2 
 }
 
 export function writeCreateTripDraft(storage: Storage | null, draft: CreateTripDraftV2) {
-  storage?.setItem(CREATE_TRIP_DRAFT_KEY, JSON.stringify(draft));
+  return drafts.write(storage, CREATE_TRIP_DRAFT_KEY, JSON.stringify(draft));
 }
 
 export function clearCreateTripDraft(storage: Storage | null) {
-  storage?.removeItem(CREATE_TRIP_DRAFT_KEY);
-  storage?.removeItem(LEGACY_CREATE_TRIP_DRAFT_KEY);
+  const current = drafts.write(storage, CREATE_TRIP_DRAFT_KEY, null);
+  const legacy = drafts.write(storage, LEGACY_CREATE_TRIP_DRAFT_KEY, null);
+  return current === 'saved' && legacy === 'saved' ? 'saved' : 'memory';
 }

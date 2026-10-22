@@ -123,7 +123,18 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
               ['refunds', 'Hoàn dư'],
               ['history', 'Lịch sử'],
             ] as const).map(([value, label]) => (
-              <button key={value} id={`fund-tab-${value}`} type="button" role="tab" aria-selected={tab === value} aria-controls="fund-tabpanel" tabIndex={tab === value ? 0 : -1} onClick={() => setTab(value)}>{label}</button>
+              <button key={value} id={`fund-tab-${value}`} type="button" role="tab" aria-selected={tab === value} aria-controls="fund-tabpanel" tabIndex={tab === value ? 0 : -1} onClick={() => setTab(value)} onKeyDown={(event) => {
+                const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+                if (!tabs?.length) return;
+                const index = Array.from(tabs).indexOf(event.currentTarget);
+                const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length
+                  : event.key === 'ArrowLeft' ? (index - 1 + tabs.length) % tabs.length
+                    : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : null;
+                if (next === null) return;
+                event.preventDefault();
+                tabs[next]?.focus();
+                tabs[next]?.click();
+              }}>{label}</button>
             ))}
           </div>
           {tab === 'expenses' ? (
