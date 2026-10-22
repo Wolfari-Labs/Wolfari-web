@@ -40,8 +40,10 @@ export interface IdentitySessionsViewModel {
   readonly nextCursor: string | null;
 }
 export interface IdentityReadRequest {
-  readonly scenario: IdentityScenario;
+  readonly scenario?: IdentityScenario;
   readonly signal: AbortSignal;
+  readonly cursor?: string | null;
+  readonly limit?: number;
 }
 export interface IdentityRepository {
   readSelf(request: IdentityReadRequest): Promise<ReadResult<SelfProfileViewModel>>;
@@ -77,7 +79,15 @@ export interface IdentityRepository {
     | { status: 'changed'; correlationId: string | null }
     | { status: 'error'; error: import('../../../shared/types/result').DomainError }
   >;
+  resendEmailVerification?(request: { signal: AbortSignal }): Promise<IdentityAcceptedResult>;
+  confirmEmailVerification?(request: { token: string; signal: AbortSignal }): Promise<IdentityAcceptedResult>;
+  requestPasswordReset?(request: { email: string; signal: AbortSignal }): Promise<IdentityAcceptedResult>;
+  resetPassword?(request: { token: string; newPassword: string; signal: AbortSignal }): Promise<IdentityAcceptedResult>;
 }
+
+export type IdentityAcceptedResult =
+  | { status: 'accepted'; correlationId: string | null }
+  | { status: 'error'; error: import('../../../shared/types/result').DomainError };
 // These intent fields keep form validation separate from the Gateway adapter.
 export interface LoginIntent {
   readonly email: string;

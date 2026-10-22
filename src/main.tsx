@@ -152,7 +152,7 @@ async function start() {
             fundRepository={fundRepository}
             priceWatchRepository={priceWatchRepository}
             membersRepositories={membersRepositories}
-            sessionManager={sessionManager}
+            {...(!fixtureSelected ? { sessionManager } : {})}
           >
             <RouterProvider router={createRouter(previewTripPath, demoAccess)} />
           </Providers>

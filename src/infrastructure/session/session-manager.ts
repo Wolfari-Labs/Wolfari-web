@@ -104,6 +104,8 @@ export function createSessionManager(client: GatewayHttpClient, token: AccessTok
         ...(signal ? { signal } : {}),
         includeCredentials: true,
       });
+      token.clear();
+      csrfToken = null;
       setStatus('anonymous');
       return { correlationId: response.correlationId };
     },

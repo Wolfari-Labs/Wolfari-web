@@ -17,6 +17,7 @@ import { Button } from '../shared/components/Button';
 import type { DemoAccess } from '../features/auth/model/demo-access';
 import type { RouteContext } from './route-context';
 import { useOptionalSessionManager } from './session-context';
+import { safeReturnTo } from './safe-return-to';
 
 export function App({
   previewTripPath,
@@ -55,12 +56,20 @@ export function App({
   );
   const [demoActive, setDemoActive] = useState(false);
   const [sessionStatus, setSessionStatus] = useState(() => sessionManager?.status() ?? 'unknown');
+  const privateSessionBlocked =
+    !!sessionManager &&
+    requiresViewer &&
+    (sessionStatus === 'unknown' || sessionStatus === 'anonymous' || sessionStatus === 'expired');
+  const standaloneAuthRoute =
+    !!sessionManager &&
+    [paths.login, paths.register, paths.forgotPassword, paths.verifyEmail, paths.resetPassword].includes(policyPath);
+  const shellQueryEnabled = !privateSessionBlocked && !standaloneAuthRoute;
   useEffect(() => {
     if (!sessionManager) return;
     setSessionStatus(sessionManager.status());
     return sessionManager.subscribe(() => setSessionStatus(sessionManager.status()));
   }, [sessionManager]);
-  const query = useShell(tripId ?? null, scenario);
+  const query = useShell(tripId ?? null, scenario, shellQueryEnabled);
   const result = query.data;
   const snapshot = result?.status === 'ready' ? result.data : null;
   const effectiveSection = handle?.section ?? 'overview';
@@ -70,6 +79,10 @@ export function App({
       setScenario('guest');
   }, [policyPath, sessionStatus]);
   useEffect(() => {
+    if ((sessionStatus === 'anonymous' || sessionStatus === 'expired') && requiresViewer && policyPath !== paths.login && policyPath !== paths.register) {
+      navigate(`${paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname))}`, { replace: true });
+      return;
+    }
     if (
       result?.status === 'error' &&
       result.error.code === 'UNAUTHENTICATED' &&
@@ -77,9 +90,9 @@ export function App({
       policyPath !== paths.login &&
       policyPath !== paths.register
     ) {
-      navigate(`${paths.login}?returnTo=${encodeURIComponent(pathname)}`, { replace: true });
+      navigate(`${paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname))}`, { replace: true });
     }
-  }, [navigate, pathname, policyPath, requiresViewer, result]);
+  }, [navigate, pathname, policyPath, requiresViewer, result, sessionStatus]);
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
     : tripId
@@ -232,7 +245,9 @@ export function App({
       {!ownContentTitle && previewControls}
       {handle?.notFound ? (
         <Outlet context={routeContext} />
-      ) : query.isPending ? (
+      ) : !shellQueryEnabled ? (
+        <Outlet context={routeContext} />
+      ) : privateSessionBlocked || query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : query.isError ? (
         <ContentState

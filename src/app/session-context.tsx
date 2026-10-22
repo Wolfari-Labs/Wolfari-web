@@ -3,6 +3,7 @@ import { createContext, useContext, type ReactNode } from 'react';
 export interface SessionManagerLike {
   status(): string;
   subscribe(listener: () => void): () => void;
+  clear?(): void;
 }
 
 const Context = createContext<SessionManagerLike | null>(null);

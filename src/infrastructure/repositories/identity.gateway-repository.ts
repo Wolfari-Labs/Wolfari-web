@@ -39,18 +39,20 @@ export function createGatewayIdentityRepository(
     signal.throwIfAborted();
     if (!client) return unavailable({ signal, scenario: 'unavailable' });
     try {
-      const result = await client.read('/api/v1/me', { signal, includeCredentials: true });
+      const result = await client.read('/api/v1/me', { signal });
       return { status: 'ready', data: profile(result.data) };
     } catch (error) {
       if (signal.aborted) throw signal.reason;
       return { status: 'error', error: toDomainError(error) };
     }
   };
-  const listSessions: IdentityRepository['listSessions'] = async ({ signal }) => {
+  const listSessions: IdentityRepository['listSessions'] = async ({ signal, cursor, limit }) => {
     signal.throwIfAborted();
     if (!client) return unavailable({ signal, scenario: 'unavailable' });
     try {
-      const result = await client.read('/api/v1/me/sessions?limit=100', { signal, includeCredentials: true });
+      const query = new URLSearchParams({ limit: String(Math.min(100, Math.max(1, limit ?? 20))) });
+      if (cursor) query.set('cursor', cursor);
+      const result = await client.read(`/api/v1/me/sessions?${query.toString()}`, { signal });
       const data = record(result.data);
       const items = Array.isArray(data.items) ? data.items : [];
       return {
@@ -107,7 +109,6 @@ export function createGatewayIdentityRepository(
           ...(intent.avatarObjectKey === undefined ? {} : { avatar_object_key: intent.avatarObjectKey }),
         },
         signal,
-        includeCredentials: true,
       });
       return { status: 'updated', profile: profile(result.data), correlationId: result.correlationId };
     } catch (error) {
@@ -121,7 +122,6 @@ export function createGatewayIdentityRepository(
       const result = await client.write(`/api/v1/me/sessions/${encodeURIComponent(sessionId)}`, {
         method: 'DELETE',
         signal,
-        includeCredentials: true,
         responseType: 'empty',
       });
       return { status: 'revoked', correlationId: result.correlationId };
@@ -134,7 +134,7 @@ export function createGatewayIdentityRepository(
     if (!client) return { status: 'error', error: toDomainError(new Error('Gateway unavailable')) };
     try {
       const result = await client.read('/api/v1/me/avatar', {
-        signal, includeCredentials: true, responseType: 'bytes',
+        signal, responseType: 'bytes',
       });
       return {
         status: 'ready', bytes: result.data as ArrayBuffer,
@@ -151,7 +151,7 @@ export function createGatewayIdentityRepository(
       const form = new FormData();
       form.append('file', file, filename);
       const result = await client.write('/api/v1/me/avatar', {
-        method: 'POST', body: form, signal, includeCredentials: true,
+        method: 'POST', body: form, signal,
       });
       const data = record(result.data);
       return { status: 'uploaded', objectKey: String(data.object_key), correlationId: result.correlationId };
@@ -164,9 +164,57 @@ export function createGatewayIdentityRepository(
     if (!client) return { status: 'error', error: toDomainError(new Error('Gateway unavailable')) };
     try {
       const result = await client.write('/api/v1/me/password-change', {
-        method: 'POST', body: { current_password: currentPassword, new_password: newPassword }, signal, includeCredentials: true,
+        method: 'POST', body: { current_password: currentPassword, new_password: newPassword }, signal,
       });
       return { status: 'changed', correlationId: result.correlationId };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+      return { status: 'error', error: toDomainError(error) };
+    }
+  };
+  repository.resendEmailVerification = async ({ signal }) => {
+    if (!client) return { status: 'error', error: toDomainError(new Error('Gateway unavailable')) };
+    try {
+      const result = await client.write('/api/v1/auth/email-verifications', {
+        method: 'POST', body: {}, signal,
+      });
+      return { status: 'accepted', correlationId: result.correlationId };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+      return { status: 'error', error: toDomainError(error) };
+    }
+  };
+  repository.confirmEmailVerification = async ({ token: value, signal }) => {
+    if (!client) return { status: 'error', error: toDomainError(new Error('Gateway unavailable')) };
+    try {
+      const result = await client.write('/api/v1/auth/email-verifications/confirm', {
+        method: 'POST', body: { token: value }, signal,
+      });
+      return { status: 'accepted', correlationId: result.correlationId };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+      return { status: 'error', error: toDomainError(error) };
+    }
+  };
+  repository.requestPasswordReset = async ({ email, signal }) => {
+    if (!client) return { status: 'error', error: toDomainError(new Error('Gateway unavailable')) };
+    try {
+      const result = await client.write('/api/v1/auth/password-reset-requests', {
+        method: 'POST', body: { email }, signal,
+      });
+      return { status: 'accepted', correlationId: result.correlationId };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+      return { status: 'error', error: toDomainError(error) };
+    }
+  };
+  repository.resetPassword = async ({ token: value, newPassword, signal }) => {
+    if (!client) return { status: 'error', error: toDomainError(new Error('Gateway unavailable')) };
+    try {
+      const result = await client.write('/api/v1/auth/password-resets', {
+        method: 'POST', body: { token: value, new_password: newPassword }, signal,
+      });
+      return { status: 'accepted', correlationId: result.correlationId };
     } catch (error) {
       if (signal.aborted) throw signal.reason;
       return { status: 'error', error: toDomainError(error) };
