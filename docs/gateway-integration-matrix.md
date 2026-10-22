@@ -10,7 +10,7 @@ already wired into the browser runtime.
 | Register      | `POST /auth/register`                                                          | runtime           | `feat/3` runtime                                   | `202`; no automatic login                                           |
 | Login         | `POST /auth/login`                                                             | runtime           | `feat/3` runtime                                   | refresh cookie; access token memory-only                            |
 | Refresh       | `GET /auth/csrf`, `POST /auth/refresh`                                         | runtime           | `feat/2` foundation; `feat/3` runtime              | cookie + Origin + CSRF; single-flight per tab                       |
-| Email verification | `POST /auth/email-verifications`, `POST /auth/email-verifications/confirm` | runtime        | `feat/4` runtime                                   | authenticated resend; one-time URL token is scrubbed                |
+| Email verification | `POST /auth/email-verifications`, `POST /auth/email-verifications/confirm` | runtime        | `feat/4` runtime                                   | authenticated resend; one-time URL token is scrubbed; successful confirmation shows registration success and redirects to login |
 | Password recovery | `POST /auth/password-reset-requests`, `POST /auth/password-resets`         | runtime           | `feat/4` runtime                                   | generic `202`; one-time URL token is scrubbed                       |
 | Self profile  | `GET/PATCH /me`                                                                | runtime           | `feat/4` runtime                                   | `expected_version` on PATCH                                         |
 | Avatar        | `POST /me/avatar`, `GET /me/avatar`                                            | runtime           | `feat/4` runtime                                   | multipart upload; private binary download                           |
@@ -56,3 +56,38 @@ Backend email links currently open `/api/v1/auth/local/verify` or
 to land directly on the Web routes. Logout remains visibly blocked because the current Web
 contract requires a `session_id` that is not exposed for the HttpOnly refresh cookie; the Web
 does not fake logout or revoke every session.
+
+## Profile/Sessions acceptance boundary (Issue #4)
+
+- Self/session projections are validated before creating view models. Missing fields,
+  non-integer versions and unparseable timestamps become contract errors with the
+  response correlation ID; they are not coerced into display data.
+- PATCH always carries the confirmed `expected_version`. `fullName` is optional in
+  the Web intent so avatar-only attachment cannot resend a stale name. A confirmed
+  response replaces the profile and invalidates shell data; conflict retains the
+  draft, refetches the version, and requires an explicit resubmission. Writes are
+  serialized and never automatically retried.
+- Avatar accepts nonempty PNG/JPEG up to 10 MB. Multipart upload and attachment are
+  separate operations; an attachment failure is not reported as a changed avatar.
+  Downloads use the authenticated HTTP client and Blob URLs, keyed by profile
+  version, with cancellation and URL revocation on replacement/unmount.
+- Sessions use cursor-based infinite queries, deduplicate IDs across pages, retain
+  loaded items after later-page errors, and reset to page one after a successful
+  `204` revoke. Device/IP/current-session metadata is not invented.
+- Password change validates current password, 15–128 Unicode code points for the
+  new password, and confirmation, without trimming passwords. Successful change
+  or reset clears the local session/private cache and redirects to login; failed
+  writes do not claim success or clear a session solely because of a mutation `401`.
+- Private children cannot mount while bootstrap is unknown/anonymous. Session
+  changes cancel/remove query data before another account signs in. An obsolete
+  refresh/login result cannot restore a cleared or replaced access token.
+- Verification/reset tokens stay in component memory, are removed from the URL
+  before submission and discarded after success/unmount. Pending actions are
+  cancellable and duplicate submissions are locked; redirect timers are cleaned up.
+
+`corepack pnpm test:e2e:gateway` uses the real Web adapters/session manager with
+Playwright-intercepted HTTP on port **5174**, with `VITE_DATA_MODE=gateway` supplied
+through the server process. Every API request is fulfilled or rejected by the test
+harness, never forwarded to Backend. CI runs this separately from fixture E2E.
+This proves the mocked browser contract, **not a live Backend/email/storage integration**.
+See [Issue #4 evidence](profile-sessions-evidence-2026-10-22.md).

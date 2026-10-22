@@ -106,6 +106,22 @@ describe('Auth validation without Identity writes', () => {
       fetchSpy.mockRestore();
     }
   });
+  it('reveals and hides a password without changing its value', async () => {
+    render(
+      <MemoryRouter initialEntries={['/login']}>
+        <AuthPage mode="login" previewEnabled />
+      </MemoryRouter>,
+    );
+    const password = screen.getByLabelText('Mật khẩu');
+    await userEvent.type(password, 'Secret value 123');
+    expect(password).toHaveAttribute('type', 'password');
+    await userEvent.click(screen.getByRole('button', { name: 'Hiện mật khẩu' }));
+    expect(password).toHaveAttribute('type', 'text');
+    expect(password).toHaveValue('Secret value 123');
+    await userEvent.click(screen.getByRole('button', { name: 'Ẩn mật khẩu' }));
+    expect(password).toHaveAttribute('type', 'password');
+    expect(password).toHaveValue('Secret value 123');
+  });
   it('uses presentation pending/unknown without a fabricated session result', async () => {
     render(
       <MemoryRouter>
