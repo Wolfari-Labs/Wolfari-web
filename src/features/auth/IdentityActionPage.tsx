@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useOptionalIdentityRepository } from './repositories/identity-context';
 import type { IdentityAcceptedResult } from './model/identity';
@@ -7,6 +7,8 @@ import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
 import { validateAuth } from './model/auth-validation';
 import styles from './AuthPage.module.css';
+import { useIdentityTask } from './use-identity-task';
+import { useOptionalSessionManager } from '../../app/session-context';
 
 type Action = 'forgot' | 'verify' | 'reset';
 
@@ -20,7 +22,16 @@ export function IdentityActionPage({ action }: { action: Action }) {
   const [confirmation, setConfirmation] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const { pending, run } = useIdentityTask();
+  const [completed, setCompleted] = useState(false);
+  const sessionManager = useOptionalSessionManager();
+  const redirectTimer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (redirectTimer.current !== null) window.clearTimeout(redirectTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     const value = new URLSearchParams(location.search).get('token');
@@ -32,12 +43,13 @@ export function IdentityActionPage({ action }: { action: Action }) {
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (pending) return;
+    if (pending || completed) return;
     setError(null);
     setFeedback(null);
     if (action === 'forgot') {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || email.trim().length > 255) {
         setError('Nhập địa chỉ email hợp lệ.');
+        document.getElementById('identity-email')?.focus();
         return;
       }
     }
@@ -54,52 +66,93 @@ export function IdentityActionPage({ action }: { action: Action }) {
         acceptedTerms: true,
       });
       if (!token) setError('Liên kết đặt lại mật khẩu không có mã token.');
-      else if (validation.password || validation.confirmation) setError(validation.password ?? validation.confirmation ?? null);
-      if (!token || validation.password || validation.confirmation) return;
+      else if (validation.password || validation.confirmation)
+        setError(validation.password ?? validation.confirmation ?? null);
+      if (!token || validation.password || validation.confirmation) {
+        document
+          .getElementById(validation.password ? 'identity-password' : 'identity-confirmation')
+          ?.focus();
+        return;
+      }
     }
-    setPending(true);
-    const signal = new AbortController().signal;
-    let result: IdentityAcceptedResult | undefined;
-    let failed = false;
-    try {
-      result = action === 'forgot'
-        ? await repository?.requestPasswordReset?.({ email: email.trim(), signal })
-        : action === 'verify'
-          ? await repository?.confirmEmailVerification?.({ token: token!, signal })
-          : await repository?.resetPassword?.({ token: token!, newPassword: password, signal });
-    } catch {
-      failed = true;
-      setError('Identity hiện không khả dụng. Vui lòng thử lại sau.');
-    } finally {
-      setPending(false);
-    }
-    if (failed) return;
-    if (!result) {
-      setError('Identity chưa kết nối; chưa có thay đổi nào được xác nhận.');
-    } else if (result.status === 'error') {
-      setError(
-        result.error.code === 'VALIDATION_FAILED' || result.error.code === 'UNAUTHENTICATED'
-          ? 'Liên kết không còn hiệu lực hoặc thông tin chưa hợp lệ.'
-          : result.error.code === 'RESOURCE_EXHAUSTED'
-            ? 'Bạn đã thử quá nhiều lần. Vui lòng thử lại sau.'
-            : 'Chưa thể hoàn tất lúc này. Vui lòng thử lại sau.',
-      );
-    } else if (action === 'forgot') {
-      setFeedback('Nếu email tồn tại, hướng dẫn đặt lại mật khẩu sẽ được gửi. Hãy kiểm tra hộp thư của bạn.');
-    } else if (action === 'verify') {
-      setFeedback('Email đã được xác minh. Bạn có thể đăng nhập.');
-    } else {
-      setFeedback('Mật khẩu đã được đặt lại. Vui lòng đăng nhập lại.');
-      window.setTimeout(() => navigate('/login', { replace: true }), 600);
-    }
+    await run(
+      'identity',
+      async (signal) => {
+        let result: IdentityAcceptedResult | undefined;
+        let failed = false;
+        try {
+          result =
+            action === 'forgot'
+              ? await repository?.requestPasswordReset?.({ email: email.trim(), signal })
+              : action === 'verify'
+                ? await repository?.confirmEmailVerification?.({ token: token!, signal })
+                : await repository?.resetPassword?.({
+                    token: token!,
+                    newPassword: password,
+                    signal,
+                  });
+        } catch {
+          if (signal.aborted) return;
+          failed = true;
+          setError('Identity hiện không khả dụng. Vui lòng thử lại sau.');
+        }
+        signal.throwIfAborted();
+        if (failed) return;
+        if (!result) {
+          setError('Identity chưa kết nối; chưa có thay đổi nào được xác nhận.');
+        } else if (result.status === 'error') {
+          setError(
+            result.error.code === 'VALIDATION_FAILED' || result.error.code === 'UNAUTHENTICATED'
+              ? 'Liên kết không còn hiệu lực hoặc thông tin chưa hợp lệ.'
+              : result.error.code === 'RESOURCE_EXHAUSTED'
+                ? 'Bạn đã thử quá nhiều lần. Vui lòng thử lại sau.'
+                : 'Chưa thể hoàn tất lúc này. Vui lòng thử lại sau.',
+          );
+        } else if (action === 'forgot') {
+          setFeedback(
+            'Nếu email tồn tại, hướng dẫn đặt lại mật khẩu sẽ được gửi. Hãy kiểm tra hộp thư của bạn.',
+          );
+        } else if (action === 'verify') {
+          setToken(null);
+          setCompleted(true);
+          setFeedback(
+            'Đăng ký thành công. Email đã được xác minh. Đang chuyển tới trang đăng nhập…',
+          );
+          redirectTimer.current = window.setTimeout(
+            () =>
+              navigate('/login', { replace: true, state: { identityNotice: 'email-verified' } }),
+            600,
+          );
+        } else {
+          setToken(null);
+          setPassword('');
+          setConfirmation('');
+          setCompleted(true);
+          sessionManager?.clear?.();
+          setFeedback('Mật khẩu đã được đặt lại. Vui lòng đăng nhập lại.');
+          redirectTimer.current = window.setTimeout(
+            () =>
+              navigate('/login', { replace: true, state: { identityNotice: 'password-reset' } }),
+            600,
+          );
+        }
+      },
+      () => setError('Identity hiện không khả dụng. Vui lòng thử lại sau.'),
+    );
   };
 
-  const title = action === 'forgot' ? 'Quên mật khẩu?' : action === 'verify' ? 'Xác minh email' : 'Đặt lại mật khẩu';
-  const description = action === 'forgot'
-    ? 'Nhập email để nhận hướng dẫn đặt lại mật khẩu.'
-    : action === 'verify'
-      ? 'Xác nhận liên kết để hoàn tất địa chỉ email của bạn.'
-      : 'Chọn mật khẩu mới để tiếp tục sử dụng Wolfari.';
+  const title =
+    action === 'forgot'
+      ? 'Quên mật khẩu?'
+      : action === 'verify'
+        ? 'Xác minh email'
+        : 'Đặt lại mật khẩu';
+  const description =
+    action === 'forgot'
+      ? 'Nhập email để nhận hướng dẫn đặt lại mật khẩu.'
+      : action === 'verify'
+        ? 'Xác nhận liên kết để hoàn tất địa chỉ email của bạn.'
+        : 'Chọn mật khẩu mới để tiếp tục sử dụng Wolfari.';
 
   return (
     <section className={styles.page} data-flow={`identity-${action}`}>
@@ -109,27 +162,73 @@ export function IdentityActionPage({ action }: { action: Action }) {
         <p className={styles.description}>{description}</p>
       </div>
       <div className={styles.formColumn}>
-        <form className={styles.card} noValidate onSubmit={(event) => void submit(event)} aria-label={title}>
+        <form
+          className={styles.card}
+          noValidate
+          onSubmit={(event) => void submit(event)}
+          aria-label={title}
+        >
           <header className={styles.cardHeader}>
             <h2>{title}</h2>
             <p>{description}</p>
           </header>
           <div className={styles.fields}>
             {action === 'forgot' && (
-              <Input id="identity-email" label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+              <Input
+                id="identity-email"
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
             )}
             {action === 'reset' && (
               <>
-                <Input id="identity-password" label="Mật khẩu mới" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-                <Input id="identity-confirmation" label="Nhập lại mật khẩu" type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
+                <Input
+                  id="identity-password"
+                  label="Mật khẩu mới"
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <Input
+                  id="identity-confirmation"
+                  label="Nhập lại mật khẩu"
+                  type="password"
+                  value={confirmation}
+                  onChange={(event) => setConfirmation(event.target.value)}
+                />
               </>
             )}
           </div>
-          {action === 'verify' && !token && <Alert tone="error">Liên kết xác minh không có token.</Alert>}
-          {error && <div className={styles.feedback}><Alert tone="error" live>{error}</Alert></div>}
-          {feedback && <div className={styles.feedback}><Alert tone="info" live>{feedback}</Alert></div>}
-          <Button className={styles.submit} type="submit" loading={pending} disabled={action === 'verify' && !token}>
-            {action === 'forgot' ? 'Gửi hướng dẫn' : action === 'verify' ? 'Xác minh email' : 'Đặt lại mật khẩu'}
+          {action === 'verify' && !token && !completed && (
+            <Alert tone="error">Liên kết xác minh không có token.</Alert>
+          )}
+          {error && (
+            <div className={styles.feedback}>
+              <Alert tone="error" live>
+                {error}
+              </Alert>
+            </div>
+          )}
+          {feedback && (
+            <div className={styles.feedback}>
+              <Alert tone="info" live>
+                {feedback}
+              </Alert>
+            </div>
+          )}
+          <Button
+            className={styles.submit}
+            type="submit"
+            loading={!!pending}
+            disabled={completed || (action === 'verify' && !token)}
+          >
+            {action === 'forgot'
+              ? 'Gửi hướng dẫn'
+              : action === 'verify'
+                ? 'Xác minh email'
+                : 'Đặt lại mật khẩu'}
           </Button>
           <div className={styles.alternative}>
             <span>Đã có tài khoản?</span>

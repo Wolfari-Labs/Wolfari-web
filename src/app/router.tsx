@@ -165,17 +165,17 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         },
         {
           path: '/forgot-password',
-          element: feature(<IdentityActionPage action="forgot" />),
+          element: feature(<IdentityActionPage key="forgot" action="forgot" />),
           handle: { title: 'Quên mật khẩu', contentTitle: true, fullBleed: true },
         },
         {
           path: '/verify-email',
-          element: feature(<IdentityActionPage action="verify" />),
+          element: feature(<IdentityActionPage key="verify" action="verify" />),
           handle: { title: 'Xác minh email', contentTitle: true, fullBleed: true },
         },
         {
           path: '/reset-password',
-          element: feature(<IdentityActionPage action="reset" />),
+          element: feature(<IdentityActionPage key="reset" action="reset" />),
           handle: { title: 'Đặt lại mật khẩu', contentTitle: true, fullBleed: true },
         },
         { path: '/admin', element: placeholder, handle: { layout: 'admin', requiresViewer: true } },
