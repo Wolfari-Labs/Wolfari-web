@@ -1,6 +1,8 @@
 import type {
   CreateTripResult,
   TripRepository,
+  PlanEditPolicy,
+  UpdatePlanPolicyResult,
   UpdateTripResult,
 } from '../../features/trips/repositories/trip.repository';
 import type { TripDetailViewModel } from '../../features/trips/model/trip-detail';
@@ -22,14 +24,18 @@ function record(value: unknown): Record<string, unknown> {
 function lifecycle(value: unknown): TripLifecycle {
   return value === 'ONGOING' || value === 'COMPLETED' || value === 'ARCHIVED' ? value : 'UPCOMING';
 }
-function mapTrip(raw: unknown): TripDetailViewModel {
+function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailViewModel {
   const t = record(raw);
   const membership = record(t.current_membership);
   const permissions = record(t.permissions);
-  const planEditPolicy =
-    t.plan_edit_policy === 'OWNER_ONLY' || t.plan_edit_policy === 'SELECTED_MEMBERS'
-      ? t.plan_edit_policy
-      : 'ALL_MEMBERS';
+  if (
+    t.plan_edit_policy !== 'OWNER_ONLY' &&
+    t.plan_edit_policy !== 'SELECTED_MEMBERS' &&
+    t.plan_edit_policy !== 'ALL_MEMBERS'
+  ) {
+    throw new ApiError('Invalid Trip response', 'invalid-response', 200, null, correlationId, false);
+  }
+  const planEditPolicy: PlanEditPolicy = t.plan_edit_policy;
   return {
     id: String(t.id),
     name: String(t.name),
@@ -135,6 +141,41 @@ function updateError(error: unknown): UpdateTripResult {
   };
 }
 
+function planPolicyError(error: unknown): UpdatePlanPolicyResult {
+  const api = error instanceof ApiError ? error : null;
+  const domain = domainError(error);
+  if (api?.kind === 'network' || api?.kind === 'timeout' || api?.kind === 'invalid-response' || (api?.status !== null && api?.status !== undefined && api.status >= 500)) {
+    return { status: 'unknown', error: domain };
+  }
+  return { status: 'error', error: domain };
+}
+
+function planPolicy(value: unknown, correlationId: string | null): {
+  policy: PlanEditPolicy;
+  editorMemberIds: readonly string[];
+  membershipRevision: number;
+} {
+  const data = record(value);
+  if (
+    (data.policy !== 'ALL_MEMBERS' && data.policy !== 'OWNER_ONLY' && data.policy !== 'SELECTED_MEMBERS') ||
+    !Array.isArray(data.editor_member_ids) ||
+    !data.editor_member_ids.every((id) => typeof id === 'string' && id.trim() !== '') ||
+    !Number.isSafeInteger(data.membership_revision) ||
+    Number(data.membership_revision) < 1
+  ) {
+    throw new ApiError('Invalid plan policy response', 'invalid-response', 200, null, correlationId, false);
+  }
+  const editorMemberIds = data.editor_member_ids as string[];
+  if (new Set(editorMemberIds).size !== editorMemberIds.length) {
+    throw new ApiError('Invalid plan policy response', 'invalid-response', 200, null, correlationId, false);
+  }
+  return {
+    policy: data.policy,
+    editorMemberIds,
+    membershipRevision: Number(data.membership_revision),
+  };
+}
+
 // Integration supplies a verified session-bound projection reader; no HTTP route is assumed here.
 export type GatewayTripListReader = TripRepository['listTrips'];
 
@@ -162,7 +203,7 @@ export function createGatewayTripRepository(
             signal,
             includeCredentials: true,
           });
-          const trip = mapTrip(result.data);
+          const trip = mapTrip(result.data, result.correlationId);
           return { status: 'created', tripId: trip.id, correlationId: result.correlationId };
         } catch (error) {
           if (signal.aborted) throw signal.reason;
@@ -198,7 +239,7 @@ export function createGatewayTripRepository(
         });
         return {
           status: 'updated',
-          trip: mapTrip(result.data),
+          trip: mapTrip(result.data, result.correlationId),
           correlationId: result.correlationId,
         };
       } catch (error) {
@@ -227,7 +268,7 @@ export function createGatewayTripRepository(
             method: 'PUT',
             body: {
               policy,
-              editor_member_ids: editorMemberIds,
+              editor_member_ids: policy === 'SELECTED_MEMBERS' ? editorMemberIds : [],
               expected_membership_revision: expectedMembershipRevision,
             },
             idempotencyKey,
@@ -235,24 +276,14 @@ export function createGatewayTripRepository(
             includeCredentials: true,
           },
         );
-        const data = record(result.data);
         return {
           status: 'updated',
-          data: {
-            policy:
-              data.policy === 'OWNER_ONLY' || data.policy === 'SELECTED_MEMBERS'
-                ? data.policy
-                : 'ALL_MEMBERS',
-            editorMemberIds: Array.isArray(data.editor_member_ids)
-              ? data.editor_member_ids.map(String)
-              : [],
-            membershipRevision: Number(data.membership_revision),
-          },
+            data: planPolicy(result.data, result.correlationId),
           correlationId: result.correlationId,
         };
       } catch (error) {
         if (signal.aborted) throw signal.reason;
-        return { status: 'error', error: domainError(error) };
+        return planPolicyError(error);
       }
     },
     getTrip:
@@ -265,7 +296,7 @@ export function createGatewayTripRepository(
               signal,
               includeCredentials: true,
             });
-            return { status: 'ready' as const, data: mapTrip(result.data) };
+            return { status: 'ready' as const, data: mapTrip(result.data, result.correlationId) };
           } catch (error) {
             if (signal.aborted) throw signal.reason;
             return { status: 'error' as const, error: domainError(error) };
@@ -290,7 +321,9 @@ export function createGatewayTripRepository(
             });
             const data = result.data as { items?: unknown[]; next_cursor?: string | null };
             const projection: TripListViewModel = {
-              items: Array.isArray(data.items) ? data.items.map(mapTrip) : [],
+            items: Array.isArray(data.items)
+              ? data.items.map((item) => mapTrip(item, result.correlationId))
+              : [],
               nextCursor: data.next_cursor ?? null,
             };
             return { status: 'ready' as const, data: projection };

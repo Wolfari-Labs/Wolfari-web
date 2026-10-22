@@ -88,6 +88,9 @@ export interface GatewayModel {
   writeGate?: Promise<void>;
   avatarReads: number;
   tripConflictOnce: boolean;
+  planPolicyConflictOnce: boolean;
+  planPolicyUnknownOnce: boolean;
+  planPolicyReceipts: Map<string, { fingerprint: string; data: unknown }>;
 }
 
 export const test = base.extend<{ gateway: GatewayModel }>({
@@ -101,6 +104,9 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       failures: new Map(),
       avatarReads: 0,
       tripConflictOnce: false,
+      planPolicyConflictOnce: false,
+      planPolicyUnknownOnce: false,
+      planPolicyReceipts: new Map(),
     };
     const unexpected: string[] = [],
       pageErrors: string[] = [];
@@ -289,6 +295,94 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           created.timezone = data.timezone;
           model.trips.push(created);
           return json(route, created, 201);
+        }
+        const membersMatch = /^\/api\/v1\/trips\/([^/]+)\/members$/.exec(path);
+        if (membersMatch && method === 'GET') {
+          const tripId = decodeURIComponent(membersMatch[1]!);
+          const current = model.trips.find((item) => item.id === tripId);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          expect(url.searchParams.get('limit')).toBe('100');
+          const includeLeft = url.searchParams.get('include_left');
+          expect(includeLeft).toMatch(/^(true|false)$/);
+          const owner = {
+            id: current.current_membership.id,
+            trip_id: tripId,
+            user_id: current.current_membership.user_id,
+            role: current.current_membership.role,
+            joined_at: current.current_membership.joined_at,
+            left_at: null,
+          };
+          const member = {
+            id: `membership-member-${tripId.slice(0, 8)}`,
+            trip_id: tripId,
+            user_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+            role: current.current_membership.role === 'OWNER' ? 'MEMBER' : 'OWNER',
+            joined_at: '2026-10-02T00:00:00Z',
+            left_at: null,
+          };
+          const departed = {
+            id: `membership-left-${tripId.slice(0, 8)}`,
+            trip_id: tripId,
+            user_id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+            role: 'MEMBER',
+            joined_at: '2026-10-03T00:00:00Z',
+            left_at: '2026-10-10T00:00:00Z',
+          };
+          const cursor = url.searchParams.get('cursor');
+          if (cursor === null) {
+            return json(route, { items: [owner, member], next_cursor: 'member-page/+==' });
+          }
+          expect(cursor).toBe('member-page/+==');
+          return json(route, {
+            items: [member, ...(includeLeft === 'true' ? [departed] : [])],
+            next_cursor: null,
+          });
+        }
+        const policyMatch = /^\/api\/v1\/trips\/([^/]+)\/plan-policy$/.exec(path);
+        if (policyMatch && method === 'PUT') {
+          const tripId = decodeURIComponent(policyMatch[1]!);
+          const current = model.trips.find((item) => item.id === tripId);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          const data = body as {
+            policy: 'OWNER_ONLY' | 'ALL_MEMBERS' | 'SELECTED_MEMBERS';
+            editor_member_ids: string[];
+            expected_membership_revision: number;
+          };
+          const key = request.headers()['idempotency-key'];
+          expect(key).toBeTruthy();
+          expect(data.policy).toMatch(/^(OWNER_ONLY|ALL_MEMBERS)$/);
+          expect(data.editor_member_ids).toEqual([]);
+          const fingerprint = JSON.stringify(data);
+          const receipt = model.planPolicyReceipts.get(key!);
+          if (receipt) {
+            if (receipt.fingerprint !== fingerprint) return error(route, 409, 'IDEMPOTENCY_CONFLICT');
+            return json(route, receipt.data);
+          }
+          if (model.planPolicyConflictOnce) {
+            model.planPolicyConflictOnce = false;
+            current.membership_revision += 1;
+            return error(route, 409, 'STATE_CONFLICT', {
+              current_membership_revision: current.membership_revision,
+            });
+          }
+          if (data.expected_membership_revision !== current.membership_revision) {
+            return error(route, 409, 'STATE_CONFLICT', {
+              current_membership_revision: current.membership_revision,
+            });
+          }
+          current.plan_edit_policy = data.policy;
+          current.membership_revision += 1;
+          const projection = {
+            policy: current.plan_edit_policy,
+            editor_member_ids: [],
+            membership_revision: current.membership_revision,
+          };
+          model.planPolicyReceipts.set(key!, { fingerprint, data: projection });
+          if (model.planPolicyUnknownOnce) {
+            model.planPolicyUnknownOnce = false;
+            return error(route, 503, 'SERVICE_UNAVAILABLE');
+          }
+          return json(route, projection);
         }
         const planMatch = /^\/api\/v1\/trips\/([^/]+)\/plan$/.exec(path);
         if (planMatch && method === 'GET') {

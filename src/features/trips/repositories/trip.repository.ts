@@ -53,6 +53,20 @@ export type UpdateTripResult =
       readonly retryable: boolean;
     };
 
+export type PlanEditPolicy = 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS';
+export type UpdatePlanPolicyResult =
+  | {
+      readonly status: 'updated';
+      readonly data: {
+        readonly policy: PlanEditPolicy;
+        readonly editorMemberIds: readonly string[];
+        readonly membershipRevision: number;
+      };
+      readonly correlationId: string | null;
+    }
+  | { readonly status: 'error'; readonly error: import('../../../shared/types/result').DomainError }
+  | { readonly status: 'unknown'; readonly error: import('../../../shared/types/result').DomainError };
+
 export interface TripListRequest {
   readonly scenario: TripListScenario;
   readonly signal: AbortSignal;
@@ -79,13 +93,10 @@ export interface TripRepository {
   }): Promise<UpdateTripResult>;
   updatePlanPolicy?(request: {
     readonly tripId: string;
-    readonly policy: 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS';
+    readonly policy: PlanEditPolicy;
     readonly editorMemberIds: readonly string[];
     readonly expectedMembershipRevision: number;
     readonly idempotencyKey: string;
     readonly signal: AbortSignal;
-  }): Promise<
-    | { status: 'updated'; data: { policy: 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS'; editorMemberIds: readonly string[]; membershipRevision: number }; correlationId: string | null }
-    | { status: 'error'; error: import('../../../shared/types/result').DomainError }
-  >;
+  }): Promise<UpdatePlanPolicyResult>;
 }

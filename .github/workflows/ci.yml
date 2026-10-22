@@ -2,7 +2,7 @@ name: Web checks
 
 on:
   push:
-    branches: [main, develop, 'ui/**', 'feature/**']
+    branches: [main, develop, 'ui/**', 'feature/**', 'feat/**']
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
