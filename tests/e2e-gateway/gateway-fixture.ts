@@ -15,15 +15,79 @@ export const initialProfile = {
   email_verified_at: '2026-10-01T00:00:00Z',
 };
 const sessionIds = ['11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222'];
+export interface GatewayTrip {
+  id: string;
+  name: string;
+  description: string | null;
+  public_description: string | null;
+  start_at: string;
+  end_at: string;
+  timezone: string;
+  lifecycle: 'UPCOMING' | 'ONGOING' | 'COMPLETED' | 'ARCHIVED';
+  archived_at: string | null;
+  plan_edit_policy: 'OWNER_ONLY' | 'SELECTED_MEMBERS' | 'ALL_MEMBERS';
+  plan_version: number;
+  membership_revision: number;
+  export_revision: number;
+  current_membership: {
+    id: string;
+    trip_id: string;
+    user_id: string;
+    role: 'OWNER' | 'MEMBER';
+    joined_at: string;
+    left_at: null;
+  };
+  permissions: { can_read: boolean; can_update: boolean };
+}
+
+function trip(id: string, name: string, role: 'OWNER' | 'MEMBER'): GatewayTrip {
+  return {
+    id,
+    name,
+    description: `Mô tả ${name}`,
+    public_description: null,
+    start_at: '2026-11-01T00:00:00+07:00',
+    end_at: '2026-11-04T00:00:00+07:00',
+    timezone: 'Asia/Ho_Chi_Minh',
+    lifecycle: 'UPCOMING',
+    archived_at: null,
+    plan_edit_policy: 'OWNER_ONLY',
+    plan_version: 1,
+    membership_revision: 1,
+    export_revision: 1,
+    current_membership: {
+      id: `a${id.slice(1)}`,
+      trip_id: id,
+      user_id: initialProfile.id,
+      role,
+      joined_at: '2026-10-01T00:00:00Z',
+      left_at: null,
+    },
+    permissions: { can_read: true, can_update: role === 'OWNER' },
+  };
+}
+
+export const initialTrips: readonly GatewayTrip[] = [
+  trip('11111111-1111-4111-8111-111111111111', 'Đà Nẵng Gateway', 'OWNER'),
+  trip('33333333-3333-4333-8333-333333333333', 'Phú Quốc Gateway', 'MEMBER'),
+];
 export interface GatewayModel {
   authenticated: boolean;
   profile: typeof initialProfile;
   sessions: string[];
-  calls: { method: string; path: string; body: unknown }[];
+  trips: GatewayTrip[];
+  calls: {
+    method: string;
+    path: string;
+    query: string;
+    body: unknown;
+    idempotencyKey: string | null;
+  }[];
   failures: Map<string, number>;
   csrfGate?: Promise<void>;
   writeGate?: Promise<void>;
   avatarReads: number;
+  tripConflictOnce: boolean;
 }
 
 export const test = base.extend<{ gateway: GatewayModel }>({
@@ -32,21 +96,29 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       authenticated: false,
       profile: { ...initialProfile },
       sessions: [...sessionIds],
+      trips: structuredClone([...initialTrips]),
       calls: [],
       failures: new Map(),
       avatarReads: 0,
+      tripConflictOnce: false,
     };
     const unexpected: string[] = [],
       pageErrors: string[] = [];
     page.on('pageerror', (error) => pageErrors.push(error.message));
     const json = (route: Route, data: unknown, status = 200) =>
       route.fulfill({ status, json: { data, meta: { correlation_id: 'gateway-e2e' } } });
-    const error = (route: Route, status: number) =>
+    const error = (
+      route: Route,
+      status: number,
+      codeOverride?: string,
+      detailsOverride?: unknown,
+    ) =>
       route.fulfill({
         status,
         json: {
           error: {
             code:
+              codeOverride ??
               (
                 {
                   400: 'VALIDATION_FAILED',
@@ -55,10 +127,13 @@ export const test = base.extend<{ gateway: GatewayModel }>({
                   429: 'RESOURCE_EXHAUSTED',
                   503: 'SERVICE_UNAVAILABLE',
                 } as Record<number, string>
-              )[status] ?? 'SERVICE_UNAVAILABLE',
+              )[status] ??
+              'SERVICE_UNAVAILABLE',
             message: 'Test error',
             retryable: status === 503,
-            details: status === 409 ? { current_version: model.profile.version } : null,
+            details:
+              detailsOverride ??
+              (status === 409 ? { current_version: model.profile.version } : null),
           },
           meta: { correlation_id: 'gateway-e2e' },
         },
@@ -75,7 +150,13 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           ? request.postData()
           : request.postDataJSON()
         : null;
-      model.calls.push({ method, path, body });
+      model.calls.push({
+        method,
+        path,
+        query: url.search,
+        body,
+        idempotencyKey: request.headers()['idempotency-key'] ?? null,
+      });
       expect(request.headers()['x-client-type']).toBe('web');
       if (path === '/api/v1/auth/csrf' && method === 'GET') {
         await model.csrfGate;
@@ -164,6 +245,115 @@ export const test = base.extend<{ gateway: GatewayModel }>({
         if (path === '/api/v1/me/password-change') {
           model.authenticated = false;
           return json(route, { message_code: 'REQUEST_ACCEPTED' });
+        }
+      }
+      if (path === '/api/v1/trips' || path.startsWith('/api/v1/trips/')) {
+        if (!model.authenticated) return error(route, 401);
+        expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        if (path === '/api/v1/trips' && method === 'GET') {
+          expect(url.searchParams.get('limit')).toBe('20');
+          const cursor = url.searchParams.get('cursor');
+          if (cursor === null) {
+            return json(route, {
+              items: model.trips.slice(0, 1),
+              next_cursor: model.trips.length > 1 ? 'trip-page-two/+==' : null,
+            });
+          }
+          expect(cursor).toBe('trip-page-two/+==');
+          return json(route, { items: model.trips.slice(1), next_cursor: null });
+        }
+        if (path === '/api/v1/trips' && method === 'POST') {
+          const data = body as {
+            name: string;
+            description?: string;
+            start_at: string;
+            end_at: string;
+            timezone: string;
+            client_request_id: string;
+          };
+          expect(request.headers()['idempotency-key']).toBe(data.client_request_id);
+          expect(Object.keys(data).sort()).toEqual(
+            [
+              'client_request_id',
+              ...(data.description === undefined ? [] : ['description']),
+              'end_at',
+              'name',
+              'start_at',
+              'timezone',
+            ].sort(),
+          );
+          const created = trip('99999999-9999-4999-8999-999999999999', data.name, 'OWNER');
+          created.description = data.description ?? null;
+          created.start_at = data.start_at;
+          created.end_at = data.end_at;
+          created.timezone = data.timezone;
+          model.trips.push(created);
+          return json(route, created, 201);
+        }
+        const planMatch = /^\/api\/v1\/trips\/([^/]+)\/plan$/.exec(path);
+        if (planMatch && method === 'GET') {
+          const tripId = decodeURIComponent(planMatch[1]!);
+          const current = model.trips.find((item) => item.id === tripId);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          return json(route, {
+            trip_id: current.id,
+            plan_version: current.plan_version,
+            export_revision: current.export_revision,
+            activities: [],
+            selected_locations: [],
+            dress_codes: [],
+            packing_items: [],
+            permissions: { can_read: true, can_edit: true, can_complete: true },
+          });
+        }
+        const detailMatch = /^\/api\/v1\/trips\/([^/]+)$/.exec(path);
+        if (detailMatch) {
+          const tripId = decodeURIComponent(detailMatch[1]!);
+          const current = model.trips.find((item) => item.id === tripId);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          if (method === 'GET') return json(route, current);
+          if (method === 'PATCH') {
+            const data = body as {
+              name?: string;
+              description?: string | null;
+              public_description?: string | null;
+              expected_plan_version: number;
+              expected_export_revision: number;
+            };
+            expect(request.headers()['idempotency-key']).toBeTruthy();
+            const allowed = new Set([
+              'name',
+              'description',
+              'public_description',
+              'expected_plan_version',
+              'expected_export_revision',
+            ]);
+            expect(Object.keys(data).every((key) => allowed.has(key))).toBe(true);
+            if (model.tripConflictOnce) {
+              model.tripConflictOnce = false;
+              current.export_revision += 1;
+              return error(route, 409, 'VERSION_CONFLICT', {
+                current_plan_version: current.plan_version,
+                current_export_revision: current.export_revision,
+              });
+            }
+            if (
+              data.expected_plan_version !== current.plan_version ||
+              data.expected_export_revision !== current.export_revision
+            ) {
+              return error(route, 409, 'VERSION_CONFLICT', {
+                current_plan_version: current.plan_version,
+                current_export_revision: current.export_revision,
+              });
+            }
+            if (Object.hasOwn(data, 'name')) current.name = data.name!;
+            if (Object.hasOwn(data, 'description')) current.description = data.description ?? null;
+            if (Object.hasOwn(data, 'public_description')) {
+              current.public_description = data.public_description ?? null;
+            }
+            current.export_revision += 1;
+            return json(route, current);
+          }
         }
       }
       unexpected.push(method + ' ' + path);
