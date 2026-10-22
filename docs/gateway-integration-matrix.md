@@ -17,8 +17,8 @@ already wired into the browser runtime.
 | Password change | `POST /me/password-change`                                                  | runtime           | `feat/4` runtime                                   | clears the memory token and requires login again                    |
 | Sessions      | `GET /me/sessions`, `DELETE /me/sessions/:id`                                  | runtime           | `feat/4` runtime                                   | `204` revoke; current-session logout needs session-id contract      |
 | Trips         | `GET/POST /trips`, `GET/PATCH /trips/:id`                                      | runtime           | `feat/5`                                           | create uses `client_request_id`; PATCH uses revisions + idempotency |
-| Plan policy   | `PUT /trips/:id/plan-policy`                                                   | partial           | `feat/6`                                           | no read projection for selected editor IDs                          |
-| Members       | `GET /trips/:id/members`                                                       | runtime           | `feat/6`                                           | IDs/roles/timestamps only; lifecycle writes disabled                |
+| Plan policy   | `PUT /trips/:id/plan-policy`                                                   | partial           | `feat/6` basic policy writer                      | Owner + active + `can_update` + unarchived; empty editor IDs for basic policies; revision + idempotency; Trip GET confirms state; Selected editor IDs remain unreadable |
+| Members       | `GET /trips/:id/members`                                                       | runtime           | `feat/6` paginated read                           | `limit=100`, opaque cursor, `include_left`, dedupe/retain/retry; IDs/roles/timestamps only; lifecycle writes disabled |
 | Invitations   | `GET/POST /trips/:id/invitations`, token preview/accept/decline, revoke/resend | runtime           | `feat/7`                                           | mutation idempotency; one-time link is memory-only                  |
 | Plan/Activity | `GET /trips/:id/plan`, activity POST/PATCH/DELETE/order PUT                    | runtime           | `feat/8`                                           | expected plan version + idempotency on writes                       |
 | Finance/Fund  | none in Gateway                                                                | blocker           | unavailable                                        | fixture/unavailable only                                            |
@@ -91,3 +91,19 @@ through the server process. Every API request is fulfilled or rejected by the te
 harness, never forwarded to Backend. CI runs this separately from fixture E2E.
 This proves the mocked browser contract, **not a live Backend/email/storage integration**.
 See [Issue #4 evidence](profile-sessions-evidence-2026-10-22.md).
+
+## Feature #6 Members / Plan policy boundary
+
+- Members reads validate the complete page projection and requested Trip scope, preserve the
+  opaque Gateway cursor, correlation ID, error and cancellation behavior, and use
+  `include_left` only for the opt-in departed-members view. The browser harness mocks every
+  request; it does not contact a live Gateway or Backend.
+- The policy writer supports only `OWNER_ONLY` and `ALL_MEMBERS` with an empty editor ID list.
+  A `SELECTED_MEMBERS` value remains visible but read-only until a server projection exposes its
+  selected membership IDs. Fixture mode has no writer and must not produce a successful mutation.
+- A policy intent carries `expected_membership_revision` and a fixed idempotency key. Conflict
+  requires a fresh explicit submission; ambiguous post-send outcomes remain unknown and only
+  retry on explicit user action with the same intent. The refreshed Trip GET, not the PUT body,
+  is the saved-state authority. Plan, Trip detail, Members, shell and Trip-list caches are
+  refreshed because this policy changes membership revision rather than plan version.
+- Leave/remove/transfer, invitation mutations and Plan/Activity operations remain outside `feat/6`.
