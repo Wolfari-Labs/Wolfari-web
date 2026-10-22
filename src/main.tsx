@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 import './shared/styles/fonts.css';
 import './shared/styles/global.css';
 import { Providers } from './app/providers';
@@ -154,7 +154,7 @@ async function start() {
             fundRepository={fundRepository}
             priceWatchRepository={priceWatchRepository}
             membersRepositories={membersRepositories}
-            sessionManager={sessionManager}
+            {...(!fixtureSelected ? { sessionManager } : {})}
           >
             <RouterProvider router={createRouter(previewTripPath, demoAccess)} />
           </Providers>

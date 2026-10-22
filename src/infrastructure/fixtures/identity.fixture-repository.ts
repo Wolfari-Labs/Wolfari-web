@@ -29,25 +29,26 @@ const sessions: IdentitySessionsViewModel = {
 };
 async function read<T>({ scenario, signal }: IdentityReadRequest, data: T): Promise<ReadResult<T>> {
   signal.throwIfAborted();
-  if (scenario === 'loading')
+  const effectiveScenario = scenario ?? 'success';
+  if (effectiveScenario === 'loading')
     return new Promise((_, reject) =>
       signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
     );
-  if (scenario === 'empty') return { status: 'empty' };
-  if (scenario === 'success') return { status: 'ready', data: structuredClone(data) };
+  if (effectiveScenario === 'empty') return { status: 'empty' };
+  if (effectiveScenario === 'success') return { status: 'ready', data: structuredClone(data) };
   return {
     status: 'error',
     error: {
       code:
-        scenario === 'forbidden'
+        effectiveScenario === 'forbidden'
           ? 'PERMISSION_DENIED'
-          : scenario === 'not-found'
+          : effectiveScenario === 'not-found'
             ? 'RESOURCE_NOT_FOUND'
-            : scenario === 'conflict'
+            : effectiveScenario === 'conflict'
               ? 'VERSION_CONFLICT'
               : 'SERVICE_UNAVAILABLE',
       correlationId: 'fixture-identity-read',
-      retryable: scenario === 'error',
+      retryable: effectiveScenario === 'error',
     },
   };
 }

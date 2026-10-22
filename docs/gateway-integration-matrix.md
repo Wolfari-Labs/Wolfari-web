@@ -7,12 +7,15 @@ already wired into the browser runtime.
 
 | Capability    | Gateway route                                                                  | Gateway readiness | Web integration slice                              | Concurrency/security                                                |
 | ------------- | ------------------------------------------------------------------------------ | ----------------- | -------------------------------------------------- | ------------------------------------------------------------------- |
-| Register      | `POST /auth/register`                                                          | runtime           | `feat/3`                                           | `202`; no automatic login                                           |
-| Login         | `POST /auth/login`                                                             | runtime           | `feat/3`                                           | refresh cookie; access token memory-only                            |
-| Refresh       | `GET /auth/csrf`, `POST /auth/refresh`                                         | runtime           | foundation in `feat/2`, runtime wiring in `feat/3` | cookie + Origin + CSRF; single-flight per tab                       |
-| Self profile  | `GET/PATCH /me`                                                                | runtime           | `feat/4`                                           | `expected_version` on PATCH                                         |
-| Avatar        | `POST /me/avatar`, `GET /me/avatar`                                            | runtime           | `feat/4`                                           | multipart upload; private binary download                           |
-| Sessions      | `GET /me/sessions`, `DELETE /me/sessions/:id`                                  | runtime           | `feat/4`                                           | `204` revoke; current-session logout needs session-id contract      |
+| Register      | `POST /auth/register`                                                          | runtime           | `feat/3` runtime                                   | `202`; no automatic login                                           |
+| Login         | `POST /auth/login`                                                             | runtime           | `feat/3` runtime                                   | refresh cookie; access token memory-only                            |
+| Refresh       | `GET /auth/csrf`, `POST /auth/refresh`                                         | runtime           | `feat/2` foundation; `feat/3` runtime              | cookie + Origin + CSRF; single-flight per tab                       |
+| Email verification | `POST /auth/email-verifications`, `POST /auth/email-verifications/confirm` | runtime        | `feat/4` runtime                                   | authenticated resend; one-time URL token is scrubbed; successful confirmation shows registration success and redirects to login |
+| Password recovery | `POST /auth/password-reset-requests`, `POST /auth/password-resets`         | runtime           | `feat/4` runtime                                   | generic `202`; one-time URL token is scrubbed                       |
+| Self profile  | `GET/PATCH /me`                                                                | runtime           | `feat/4` runtime                                   | `expected_version` on PATCH                                         |
+| Avatar        | `POST /me/avatar`, `GET /me/avatar`                                            | runtime           | `feat/4` runtime                                   | multipart upload; private binary download                           |
+| Password change | `POST /me/password-change`                                                  | runtime           | `feat/4` runtime                                   | clears the memory token and requires login again                    |
+| Sessions      | `GET /me/sessions`, `DELETE /me/sessions/:id`                                  | runtime           | `feat/4` runtime                                   | `204` revoke; current-session logout needs session-id contract      |
 | Trips         | `GET/POST /trips`, `GET/PATCH /trips/:id`                                      | runtime           | `feat/5`                                           | create uses `client_request_id`; PATCH uses revisions + idempotency |
 | Plan policy   | `PUT /trips/:id/plan-policy`                                                   | partial           | `feat/6`                                           | no read projection for selected editor IDs                          |
 | Members       | `GET /trips/:id/members`                                                       | runtime           | `feat/6`                                           | IDs/roles/timestamps only; lifecycle writes disabled                |
@@ -40,3 +43,51 @@ attempt; mutations are never retried automatically.
   `http://127.0.0.1:5173` for local development.
 - Production must expose the SPA and `/api/v1` through the same HTTPS origin. No
   secret or internal service address belongs in a `VITE_*` variable.
+
+## Identity security boundary
+
+Identity tokens are never written to `localStorage`, `sessionStorage`, query caches, logs, or
+analytics. Recovery and verification routes use the existing Auth layout and remove `token` from
+the address bar with navigation replacement before submission; the document also sends
+`Referrer-Policy: no-referrer`.
+
+Backend email links currently open `/api/v1/auth/local/verify` or
+`/api/v1/auth/local/reset`, so those links still need a Backend contract or configuration change
+to land directly on the Web routes. Logout remains visibly blocked because the current Web
+contract requires a `session_id` that is not exposed for the HttpOnly refresh cookie; the Web
+does not fake logout or revoke every session.
+
+## Profile/Sessions acceptance boundary (Issue #4)
+
+- Self/session projections are validated before creating view models. Missing fields,
+  non-integer versions and unparseable timestamps become contract errors with the
+  response correlation ID; they are not coerced into display data.
+- PATCH always carries the confirmed `expected_version`. `fullName` is optional in
+  the Web intent so avatar-only attachment cannot resend a stale name. A confirmed
+  response replaces the profile and invalidates shell data; conflict retains the
+  draft, refetches the version, and requires an explicit resubmission. Writes are
+  serialized and never automatically retried.
+- Avatar accepts nonempty PNG/JPEG up to 10 MB. Multipart upload and attachment are
+  separate operations; an attachment failure is not reported as a changed avatar.
+  Downloads use the authenticated HTTP client and Blob URLs, keyed by profile
+  version, with cancellation and URL revocation on replacement/unmount.
+- Sessions use cursor-based infinite queries, deduplicate IDs across pages, retain
+  loaded items after later-page errors, and reset to page one after a successful
+  `204` revoke. Device/IP/current-session metadata is not invented.
+- Password change validates current password, 15–128 Unicode code points for the
+  new password, and confirmation, without trimming passwords. Successful change
+  or reset clears the local session/private cache and redirects to login; failed
+  writes do not claim success or clear a session solely because of a mutation `401`.
+- Private children cannot mount while bootstrap is unknown/anonymous. Session
+  changes cancel/remove query data before another account signs in. An obsolete
+  refresh/login result cannot restore a cleared or replaced access token.
+- Verification/reset tokens stay in component memory, are removed from the URL
+  before submission and discarded after success/unmount. Pending actions are
+  cancellable and duplicate submissions are locked; redirect timers are cleaned up.
+
+`corepack pnpm test:e2e:gateway` uses the real Web adapters/session manager with
+Playwright-intercepted HTTP on port **5174**, with `VITE_DATA_MODE=gateway` supplied
+through the server process. Every API request is fulfilled or rejected by the test
+harness, never forwarded to Backend. CI runs this separately from fixture E2E.
+This proves the mocked browser contract, **not a live Backend/email/storage integration**.
+See [Issue #4 evidence](profile-sessions-evidence-2026-10-22.md).

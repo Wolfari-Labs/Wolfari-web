@@ -12,9 +12,19 @@ import registerSubmitIcon from '../../shared/assets/figma/cadd3.svg';
 import { validateAuth, type AuthFormValues, type AuthFormErrors } from './model/auth-validation';
 import styles from './AuthPage.module.css';
 import { useOptionalIdentityRepository } from './repositories/identity-context';
+import { safeReturnTo } from '../../app/safe-return-to';
+import { useIdentityTask } from './use-identity-task';
 
 type Preview = 'idle' | 'pending' | 'unknown' | 'error' | 'unavailable';
 const previewStates: readonly Preview[] = ['idle', 'pending', 'unknown', 'error', 'unavailable'];
+
+function authErrorMessage(code: string): string {
+  if (code === 'UNAUTHENTICATED' || code === 'VALIDATION_FAILED')
+    return 'Email hoặc mật khẩu chưa đúng.';
+  if (code === 'RESOURCE_EXHAUSTED') return 'Bạn đã thử quá nhiều lần. Vui lòng thử lại sau.';
+  if (code === 'SERVICE_UNAVAILABLE') return 'Identity hiện không khả dụng. Vui lòng thử lại sau.';
+  return 'Chưa thể hoàn tất đăng nhập. Vui lòng thử lại sau.';
+}
 
 export function AuthPage({
   mode,
@@ -28,6 +38,7 @@ export function AuthPage({
   const repository = useOptionalIdentityRepository();
   const navigate = useNavigate();
   const location = useLocation();
+  const identityNotice = (location.state as { identityNotice?: unknown } | null)?.identityNotice;
   const demoLogin = previewEnabled && !register ? context?.demoLogin : undefined;
   const [demoError, setDemoError] = useState(false);
   const [values, setValues] = useState<AuthFormValues>({
@@ -39,38 +50,74 @@ export function AuthPage({
   });
   const [errors, setErrors] = useState<AuthFormErrors>({});
   const [preview, setPreview] = useState<Preview>('idle');
+  const { pending, run } = useIdentityTask();
+  const [feedback, setFeedback] = useState<string | null>(() =>
+    identityNotice === 'email-verified'
+      ? 'Đăng ký thành công. Email đã được xác minh, bạn có thể đăng nhập.'
+      : identityNotice === 'password-reset' || identityNotice === 'password-changed'
+        ? 'Mật khẩu đã được đặt lại. Vui lòng đăng nhập bằng mật khẩu mới.'
+        : null,
+  );
   const field = (name: keyof AuthFormValues, value: string | boolean) => {
     setDemoError(false);
     setValues((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: undefined }));
+    setFeedback(null);
   };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (preview === 'pending') return;
+    if (preview === 'pending' || pending) return;
     const next = validateAuth(mode, values);
     setErrors(next);
+    setFeedback(null);
     const first = Object.keys(next)[0];
     if (first) document.getElementById(`auth-${first}`)?.focus();
     else if (demoLogin) {
       setDemoError(!demoLogin.activate({ email: values.email, password: values.password }));
       document.getElementById('auth-password')?.focus();
     } else if (repository && (register ? repository.register : repository.login)) {
-      setPreview('pending');
-      const signal = new AbortController().signal;
-      const result = register
-        ? await repository.register!({
-            intent: { email: values.email, password: values.password, fullName: values.fullName },
-            signal,
-          })
-        : await repository.login!({ intent: { email: values.email, password: values.password }, signal });
-      if (result.status === 'error') {
-        setPreview(result.error.retryable ? 'error' : 'unknown');
-      } else if (register) {
-        setPreview('unknown');
-      } else {
-        const returnTo = new URLSearchParams(location.search).get('returnTo');
-        navigate(returnTo?.startsWith('/') ? returnTo : '/');
-      }
+      await run(
+        'auth',
+        async (signal) => {
+          let result:
+            | Awaited<ReturnType<NonNullable<typeof repository.register>>>
+            | Awaited<ReturnType<NonNullable<typeof repository.login>>>;
+          try {
+            result = register
+              ? await repository.register!({
+                  intent: {
+                    email: values.email.trim(),
+                    password: values.password,
+                    fullName: values.fullName.trim(),
+                  },
+                  signal,
+                })
+              : await repository.login!({
+                  intent: { email: values.email.trim(), password: values.password },
+                  signal,
+                });
+          } catch {
+            if (signal.aborted) return;
+            setPreview('idle');
+            setFeedback('Identity hiện không khả dụng. Vui lòng thử lại sau.');
+            return;
+          }
+          signal.throwIfAborted();
+          if (result.status === 'error') {
+            setPreview('idle');
+            setFeedback(authErrorMessage(result.error.code));
+          } else if (register) {
+            setPreview('idle');
+            setFeedback(
+              'Yêu cầu đăng ký đã được tiếp nhận. Nếu email hợp lệ, hãy kiểm tra hộp thư để xác minh tài khoản.',
+            );
+          } else {
+            const returnTo = new URLSearchParams(location.search).get('returnTo');
+            navigate(safeReturnTo(returnTo), { replace: true });
+          }
+        },
+        () => setFeedback('Identity hiện không khả dụng. Vui lòng thử lại sau.'),
+      );
     } else setPreview('unavailable');
   };
   return (
@@ -187,9 +234,13 @@ export function AuthPage({
             </>
           )}
           <p className={styles.previewNote}>
-            {register
-              ? 'Mật khẩu từ 15–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
-              : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'}
+            {previewEnabled
+              ? register
+                ? 'Mật khẩu từ 15–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
+                : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'
+              : register
+                ? 'Mật khẩu cần từ 15 đến 128 ký tự.'
+                : 'Mật khẩu phân biệt chữ hoa, chữ thường và không được gửi vào URL.'}
           </p>
           {demoError && (
             <Alert tone="error">
@@ -199,11 +250,12 @@ export function AuthPage({
           <Button
             className={styles.submit}
             type="submit"
-            loading={preview === 'pending'}
+            loading={preview === 'pending' || !!pending}
             icon={<img src={register ? registerSubmitIcon : loginSubmitIcon} alt="" />}
           >
             {register ? 'Tạo tài khoản' : 'Đăng nhập'}
           </Button>
+          {pending && <Alert live>Đang gửi yêu cầu tới Identity…</Alert>}
           {preview !== 'idle' && (
             <div className={styles.feedback}>
               <Alert tone={preview === 'error' ? 'error' : 'info'} live>
@@ -217,8 +269,20 @@ export function AuthPage({
               </Alert>
             </div>
           )}
+          {feedback && (
+            <div className={styles.feedback}>
+              <Alert tone="info" live>
+                {feedback}
+              </Alert>
+            </div>
+          )}
           <div className={styles.alternative}>
             <span>{register ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}</span>
+            {!register && (
+              <Link className={styles.forgotLink} to="/forgot-password">
+                Quên mật khẩu?
+              </Link>
+            )}
             <Link to={register ? '/login' : '/register'}>{register ? 'Đăng nhập' : 'Đăng ký'}</Link>
           </div>
           {!register && (

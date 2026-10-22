@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:e2e:gateway": "playwright test --config playwright.gateway.config.ts",
     "build": "vite build",
     "build:preview": "vite build --mode preview",
     "preview": "vite preview",
