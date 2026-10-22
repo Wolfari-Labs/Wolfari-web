@@ -5,11 +5,7 @@ import type {
 } from '../../features/trips/model/trip-list';
 import type { TripRepository } from '../../features/trips/repositories/trip.repository';
 import type { TripDetailViewModel } from '../../features/trips/model/trip-detail';
-import {
-  fixtureViewerId,
-  readableFixtureTrips,
-  previewTripId,
-} from './trip-catalog';
+import { fixtureViewerId, readableFixtureTrips, previewTripId } from './trip-catalog';
 import overviewMobile from '../../shared/assets/figma/8efc6.svg';
 import overviewCover from '../../shared/assets/figma/1dc61.png';
 import { createFixtureTripStore, type FixtureTripStore } from './trip-store';
@@ -39,7 +35,7 @@ export function createFixtureTripRepository(
           : null,
       },
       description: store.readDescription(item.id),
-      publicDescription: null,
+      publicDescription: store.readPublicDescription(item.id),
       archivedAt: item.lifecycle === 'ARCHIVED' ? '2026-09-24T00:00:00+07:00' : null,
       planEditPolicy: 'OWNER_ONLY',
     };
@@ -55,7 +51,9 @@ export function createFixtureTripRepository(
     },
     async updateTrip({ tripId, intent, signal }) {
       signal.throwIfAborted();
-      const item = readableFixtureTrips(viewerId, store.readTrips()).find((item) => item.id === tripId);
+      const item = readableFixtureTrips(viewerId, store.readTrips()).find(
+        (item) => item.id === tripId,
+      );
       if (!item)
         return { status: 'not-found', correlationId: 'fixture-trip-update', retryable: false };
       if (
@@ -80,8 +78,9 @@ export function createFixtureTripRepository(
       }
       const hasName = intent.name !== undefined;
       const hasDescription = intent.description !== undefined;
+      const hasPublicDescription = intent.publicDescription !== undefined;
       const name = intent.name?.trim();
-      if (!hasName && !hasDescription) {
+      if (!hasName && !hasDescription && !hasPublicDescription) {
         return {
           status: 'validation-error',
           fieldErrors: { name: 'Không có thay đổi để lưu.' },
@@ -98,15 +97,19 @@ export function createFixtureTripRepository(
       const nextDescription = hasDescription
         ? (intent.description ?? null)
         : store.readDescription(tripId);
+      const nextPublicDescription = hasPublicDescription
+        ? (intent.publicDescription ?? null)
+        : store.readPublicDescription(tripId);
       const changed =
         (hasName && name !== item.name) ||
-        (hasDescription && nextDescription !== store.readDescription(tripId));
+        (hasDescription && nextDescription !== store.readDescription(tripId)) ||
+        (hasPublicDescription && nextPublicDescription !== store.readPublicDescription(tripId));
       const next: TripListItem = {
         ...item,
         ...(hasName ? { name: name! } : {}),
         exportRevision: item.exportRevision + (changed ? 1 : 0),
       };
-      store.saveTrip(next, nextDescription);
+      store.saveTrip(next, nextDescription, nextPublicDescription);
       const result = {
         status: 'updated' as const,
         trip: detail(next),
