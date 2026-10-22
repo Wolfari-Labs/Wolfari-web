@@ -206,6 +206,11 @@
   column-gap: 32px;
   row-gap: 18px;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 28px 0 8px;
+}
 .empty {
   padding: 32px;
   background: #ffffffb3;

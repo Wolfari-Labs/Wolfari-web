@@ -4,7 +4,11 @@ import type {
   TripListItem,
   TripListViewModel,
 } from '../src/features/trips/model/trip-list';
-import type { TripRepository } from '../src/features/trips/repositories/trip.repository';
+import type {
+  CreateTripIntent,
+  TripRepository,
+  UpdateTripIntent,
+} from '../src/features/trips/repositories/trip.repository';
 import { createGatewayTripRepository } from '../src/infrastructure/repositories/trip.gateway-repository';
 import { selectTripRepository } from '../src/infrastructure/repositories/select-trip-repository';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
@@ -21,6 +25,35 @@ import {
 
 function request(signal = new AbortController().signal) {
   return { scenario: 'success' as const, signal };
+}
+
+function gatewayTrip(overrides: Record<string, unknown> = {}) {
+  const source = fixtureTripCatalog[0]!;
+  return {
+    id: source.id,
+    name: source.name,
+    description: 'Mô tả nội bộ',
+    public_description: 'Mô tả công khai',
+    start_at: source.startAt,
+    end_at: source.endAt,
+    timezone: source.timezone,
+    lifecycle: source.lifecycle,
+    archived_at: null,
+    plan_edit_policy: 'OWNER_ONLY',
+    plan_version: source.planVersion,
+    membership_revision: source.membershipRevision,
+    export_revision: source.exportRevision,
+    current_membership: {
+      id: source.currentMembership.id,
+      trip_id: source.id,
+      user_id: source.currentMembership.userId,
+      role: source.currentMembership.role,
+      joined_at: source.currentMembership.joinedAt,
+      left_at: null,
+    },
+    permissions: { can_read: true, can_update: true },
+    ...overrides,
+  };
 }
 
 describe('Trip repository boundary', () => {
@@ -63,15 +96,20 @@ describe('Trip repository boundary', () => {
       undefined,
       createGatewayHttpClient({ transport }),
     );
+    const intent = {
+      name: 'Tên mới',
+      description: null,
+      publicDescription: 'Mô tả công khai mới',
+      expectedPlanVersion: 1,
+      expectedExportRevision: 1,
+      idempotencyKey: '22222222-2222-4222-8222-222222222222',
+      destination: 'must-not-leak',
+      budget: 123,
+      startAt: 'must-not-leak',
+    } as UpdateTripIntent & Record<string, unknown>;
     const result = await repository.updateTrip({
       tripId: source.id,
-      intent: {
-        name: 'Tên mới',
-        description: null,
-        expectedPlanVersion: 1,
-        expectedExportRevision: 1,
-        idempotencyKey: '22222222-2222-4222-8222-222222222222',
-      },
+      intent,
       signal: new AbortController().signal,
     });
     expect(result).toMatchObject({
@@ -86,6 +124,7 @@ describe('Trip repository boundary', () => {
     expect(JSON.parse(String(init?.body))).toEqual({
       name: 'Tên mới',
       description: null,
+      public_description: 'Mô tả công khai mới',
       expected_plan_version: 1,
       expected_export_revision: 1,
     });
@@ -96,21 +135,28 @@ describe('Trip repository boundary', () => {
     [403, 'PERMISSION_DENIED', 'forbidden'],
     [404, 'RESOURCE_NOT_FOUND', 'not-found'],
     [409, 'VERSION_CONFLICT', 'conflict'],
+    [409, 'STATE_CONFLICT', 'conflict'],
+    [409, 'IDEMPOTENCY_CONFLICT', 'conflict'],
     [503, 'SERVICE_UNAVAILABLE', 'unavailable'],
   ] as const)('maps update HTTP %s to %s without retrying', async (status, code, expected) => {
-    const write = vi
-      .fn<GatewayHttpClient['write']>()
-      .mockRejectedValue(
-        new ApiError(
-          'Update failed',
-          'http',
-          status,
-          code,
-          'update-correlation',
-          status === 503,
-          status === 400 ? { field_errors: { name: 'Tên chưa hợp lệ' } } : null,
-        ),
-      );
+    const write = vi.fn<GatewayHttpClient['write']>().mockRejectedValue(
+      new ApiError(
+        'Update failed',
+        'http',
+        status,
+        code,
+        'update-correlation',
+        status === 503,
+        status === 400
+          ? {
+              field_errors: {
+                name: 'Tên chưa hợp lệ',
+                public_description: 'Mô tả công khai chưa hợp lệ',
+              },
+            }
+          : null,
+      ),
+    );
     const client: GatewayHttpClient = {
       read: vi.fn<GatewayHttpClient['read']>(),
       write,
@@ -127,7 +173,12 @@ describe('Trip repository boundary', () => {
     });
     expect(result).toMatchObject({ status: expected, correlationId: 'update-correlation' });
     if (expected === 'validation-error') {
-      expect(result).toMatchObject({ fieldErrors: { name: 'Tên chưa hợp lệ' } });
+      expect(result).toMatchObject({
+        fieldErrors: {
+          name: 'Tên chưa hợp lệ',
+          publicDescription: 'Mô tả công khai chưa hợp lệ',
+        },
+      });
     }
     expect(write).toHaveBeenCalledTimes(1);
   });
@@ -157,6 +208,201 @@ describe('Trip repository boundary', () => {
       expect(write).toHaveBeenCalledTimes(1);
     },
   );
+
+  it('uses the default page size, preserves an opaque cursor and maps next_cursor', async () => {
+    const transport = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          data: { items: [gatewayTrip()], next_cursor: 'next/+opaque==' },
+          meta: { correlation_id: 'trip-list-correlation' },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      ),
+    );
+    const repository = createGatewayTripRepository(
+      undefined,
+      undefined,
+      createGatewayHttpClient({ transport }),
+    );
+    const result = await repository.listTrips({
+      ...request(),
+      cursor: 'current/+opaque==',
+    });
+    expect(result).toMatchObject({
+      status: 'ready',
+      data: {
+        nextCursor: 'next/+opaque==',
+        items: [
+          {
+            id: previewTripId,
+            description: 'Mô tả nội bộ',
+            publicDescription: 'Mô tả công khai',
+          },
+        ],
+      },
+    });
+    const url = new URL(String(transport.mock.calls[0]![0]), 'https://wolfari.invalid');
+    expect(url.pathname).toBe('/api/v1/trips');
+    expect(url.searchParams.get('limit')).toBe('20');
+    expect(url.searchParams.get('cursor')).toBe('current/+opaque==');
+  });
+
+  it('maps a Gateway trip detail projection without inventing presentation data', async () => {
+    const read = vi.fn<GatewayHttpClient['read']>().mockResolvedValue({
+      data: gatewayTrip(),
+      correlationId: 'trip-detail-correlation',
+    });
+    const repository = createGatewayTripRepository(undefined, undefined, {
+      read,
+      write: vi.fn<GatewayHttpClient['write']>(),
+    });
+    const result = await repository.getTrip({
+      tripId: previewTripId,
+      scenario: 'success',
+      signal: new AbortController().signal,
+    });
+    expect(result).toMatchObject({
+      status: 'ready',
+      data: {
+        id: previewTripId,
+        description: 'Mô tả nội bộ',
+        publicDescription: 'Mô tả công khai',
+        presentation: { memberCount: null, cover: null },
+      },
+    });
+    expect(read).toHaveBeenCalledExactlyOnceWith(`/api/v1/trips/${previewTripId}`, {
+      signal: expect.any(AbortSignal),
+      includeCredentials: true,
+    });
+  });
+
+  it.each([
+    [403, 'PERMISSION_DENIED', 'PERMISSION_DENIED'],
+    [404, 'RESOURCE_NOT_FOUND', 'RESOURCE_NOT_FOUND'],
+    [409, 'VERSION_CONFLICT', 'VERSION_CONFLICT'],
+    [503, 'SERVICE_UNAVAILABLE', 'SERVICE_UNAVAILABLE'],
+  ] as const)('maps detail HTTP %s/%s to a domain read error', async (status, code, expected) => {
+    const read = vi
+      .fn<GatewayHttpClient['read']>()
+      .mockRejectedValue(
+        new ApiError('Read failed', 'http', status, code, 'detail-id', status === 503),
+      );
+    const result = await createGatewayTripRepository(undefined, undefined, {
+      read,
+      write: vi.fn<GatewayHttpClient['write']>(),
+    }).getTrip({
+      tripId: previewTripId,
+      scenario: 'success',
+      signal: new AbortController().signal,
+    });
+    expect(result).toMatchObject({
+      status: 'error',
+      error: { code: expected, correlationId: 'detail-id' },
+    });
+    expect(read).toHaveBeenCalledTimes(1);
+  });
+
+  it('POSTs only the create allowlist and uses client_request_id as the idempotency key', async () => {
+    const transport = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          data: gatewayTrip({ name: 'Hành trình mới' }),
+          meta: { correlation_id: 'trip-create-correlation' },
+        }),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      ),
+    );
+    const repository = createGatewayTripRepository(
+      undefined,
+      undefined,
+      createGatewayHttpClient({ transport }),
+    );
+    const intent = {
+      name: 'Hành trình mới',
+      description: 'Mô tả',
+      startAt: '2026-11-01T00:00:00+07:00',
+      endAt: '2026-11-03T00:00:00+07:00',
+      timezone: 'Asia/Ho_Chi_Minh',
+      clientRequestId: '33333333-3333-4333-8333-333333333333',
+      destination: 'must-not-leak',
+      budget: 'must-not-leak',
+      cover: 'must-not-leak',
+      template: 'must-not-leak',
+      style: 'must-not-leak',
+      expectedMembers: 10,
+    } as CreateTripIntent & Record<string, unknown>;
+    expect(
+      await repository.createTrip({ intent, signal: new AbortController().signal }),
+    ).toMatchObject({
+      status: 'created',
+      tripId: previewTripId,
+      correlationId: 'trip-create-correlation',
+    });
+    const [, init] = transport.mock.calls[0]!;
+    expect(new Headers(init?.headers).get('Idempotency-Key')).toBe(intent.clientRequestId);
+    expect(JSON.parse(String(init?.body))).toEqual({
+      name: intent.name,
+      description: intent.description,
+      start_at: intent.startAt,
+      end_at: intent.endAt,
+      timezone: intent.timezone,
+      client_request_id: intent.clientRequestId,
+    });
+    expect(transport).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    [new ApiError('Timed out', 'timeout', null, null, null, true), 'unknown'],
+    [
+      new ApiError('Unavailable', 'http', 503, 'SERVICE_UNAVAILABLE', 'create-id', true),
+      'unavailable',
+    ],
+    [new ApiError('Conflict', 'http', 409, 'IDEMPOTENCY_CONFLICT', 'create-id', false), 'conflict'],
+  ] as const)('does not retry a failed create mutation', async (failure, expected) => {
+    const write = vi.fn<GatewayHttpClient['write']>().mockRejectedValue(failure);
+    const repository = createGatewayTripRepository(undefined, undefined, {
+      read: vi.fn<GatewayHttpClient['read']>(),
+      write,
+    });
+    const result = await repository.createTrip({
+      intent: {
+        name: 'Trip',
+        startAt: '2026-11-01T00:00:00+07:00',
+        endAt: '2026-11-03T00:00:00+07:00',
+        timezone: 'Asia/Ho_Chi_Minh',
+        clientRequestId: '99999999-9999-4999-8999-999999999999',
+      },
+      signal: new AbortController().signal,
+    });
+    expect(result).toMatchObject({ status: expected });
+    expect(write).toHaveBeenCalledTimes(1);
+  });
+
+  it('propagates cancellation and never retries an aborted mutation', async () => {
+    const controller = new AbortController();
+    const abortError = new DOMException('Cancelled', 'AbortError');
+    const write = vi.fn<GatewayHttpClient['write']>((_path, { signal }) => {
+      return new Promise((_, reject) => {
+        signal?.addEventListener('abort', () => reject(signal.reason), { once: true });
+      });
+    });
+    const pending = createGatewayTripRepository(undefined, undefined, {
+      read: vi.fn<GatewayHttpClient['read']>(),
+      write,
+    }).updateTrip({
+      tripId: previewTripId,
+      intent: {
+        name: 'Draft',
+        expectedPlanVersion: 1,
+        expectedExportRevision: 1,
+        idempotencyKey: '77777777-7777-4777-8777-777777777777',
+      },
+      signal: controller.signal,
+    });
+    controller.abort(abortError);
+    await expect(pending).rejects.toBe(abortError);
+    expect(write).toHaveBeenCalledTimes(1);
+  });
 
   it('reports unavailable without an HTTP request or a fabricated mutation', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');

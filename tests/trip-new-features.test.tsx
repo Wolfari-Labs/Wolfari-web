@@ -25,6 +25,7 @@ function mount(
   element: ReactNode,
   handle: Record<string, unknown> = {},
   tripRepository = createFixtureTripRepository(),
+  planRepository = createFixturePlanRepository(),
 ) {
   const createTrip = vi.spyOn(tripRepository, 'createTrip');
   const router = createMemoryRouter([
@@ -34,7 +35,7 @@ function mount(
     },
   ], { initialEntries: [path.replace(':tripId', previewTripId)] });
   routers.push(router);
-  render(<Providers repository={createFixtureShellRepository()} tripRepository={tripRepository} planRepository={createFixturePlanRepository()}><RouterProvider router={router} /></Providers>);
+  render(<Providers repository={createFixtureShellRepository()} tripRepository={tripRepository} planRepository={planRepository}><RouterProvider router={router} /></Providers>);
   return { router, createTrip };
 }
 
@@ -83,7 +84,23 @@ describe('new trip workspace routes', () => {
     mount('/trips/:tripId/dress-code', <DressCodePage />, { section: 'dress' });
     expect(await screen.findByText('Thoải mái và gọn nhẹ')).toBeInTheDocument();
     expect(screen.getByText(/Nguồn: Gợi ý đã lưu trước đây/)).toBeInTheDocument();
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+    expect(screen.getByRole('article', { name: 'Trang phục đi biển' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /thêm|sửa|xóa/i })).not.toBeInTheDocument();
+  });
+
+  it('shows an empty Dress Code scope without leaking cards from other scopes', async () => {
+    const repository = createFixturePlanRepository();
+    const getPlan = repository.getPlan;
+    vi.spyOn(repository, 'getPlan').mockImplementation(async (request) => {
+      const result = await getPlan(request);
+      return result.status === 'ready' ? { ...result, data: { ...result.data, dressCodes: result.data.dressCodes.filter((item) => item.scopeType !== 'ACTIVITY') } } : result;
+    });
+    mount('/trips/:tripId/dress-code', <DressCodePage />, { section: 'dress' }, createFixtureTripRepository(), repository);
+    await screen.findByText('Thoải mái và gọn nhẹ');
+    await userEvent.click(screen.getByRole('tab', { name: 'Theo hoạt động' }));
+    expect(screen.getByRole('heading', { name: 'Chưa có dress code đã lưu' })).toBeInTheDocument();
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 
   it('renders projected Packing status without checkbox actions or raw assignee ids', async () => {

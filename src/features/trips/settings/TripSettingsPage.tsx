@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { Link, useOutletContext, useParams, useSearchParams } from 'react-router';
 import type { RouteContext } from '../../../app/route-context';
 import { paths } from '../../../app/route-paths';
-import { planQueryKeys } from '../../plan/model/plan-query-keys';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { ButtonLink } from '../../../shared/components/ButtonLink';
@@ -12,6 +11,8 @@ import { Input } from '../../../shared/components/Input';
 import { Textarea } from '../../../shared/components/Textarea';
 import { TripHero } from '../components/TripHero';
 import type { TripDetailViewModel } from '../model/trip-detail';
+import type { TripListViewModel } from '../model/trip-list';
+import { updateTripInListPages } from '../model/trip-list-cache';
 import { tripQueryKeys } from '../model/trip-query-keys';
 import { useTripRepository } from '../repositories/repository-context';
 import type { UpdateTripIntent, UpdateTripResult } from '../repositories/trip.repository';
@@ -100,11 +101,13 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
           <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
           <p>Xem thông tin hiện tại trước khi thực hiện chỉnh sửa.</p>
         </div>
-        {trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED' && (
-          <Button id="edit-trip-information" variant="outline" onClick={onEdit}>
-            Chỉnh sửa thông tin
-          </Button>
-        )}
+        {trip.currentMembership.role === 'OWNER' &&
+          trip.permissions.canUpdate &&
+          trip.lifecycle !== 'ARCHIVED' && (
+            <Button id="edit-trip-information" variant="outline" onClick={onEdit}>
+              Chỉnh sửa thông tin
+            </Button>
+          )}
       </div>
       <dl className={styles.informationGrid}>
         <div className={styles.fullRow}>
@@ -137,6 +140,10 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
           <dt>Mô tả chuyến đi</dt>
           <dd>{trip.description || 'Chưa có mô tả.'}</dd>
         </div>
+        <div className={`${styles.fullRow} ${styles.descriptionBox}`}>
+          <dt>Mô tả công khai</dt>
+          <dd>{trip.publicDescription || 'Chưa có mô tả công khai.'}</dd>
+        </div>
       </dl>
       <CoverPreview trip={trip} />
     </section>
@@ -156,17 +163,21 @@ function TripInformationForm({
   const queryClient = useQueryClient();
   const [name, setName] = useState(trip.name);
   const [description, setDescription] = useState(trip.description ?? '');
-  const [focused, setFocused] = useState<'name' | 'description' | null>(null);
+  const [publicDescription, setPublicDescription] = useState(trip.publicDescription ?? '');
+  const [focused, setFocused] = useState<'name' | 'description' | 'publicDescription' | null>(null);
   const [result, setResult] = useState<Exclude<UpdateTripResult, { status: 'updated' }> | null>(
     null,
   );
+  const [refreshingConflict, setRefreshingConflict] = useState(false);
   const attempt = useRef<{ fingerprint: string; key: string } | null>(null);
   const controller = useRef<AbortController | null>(null);
   const trimmedName = name.trim();
   const nameDirty = trimmedName !== trip.name;
   const descriptionValue = description.trim() === '' ? null : description;
   const descriptionDirty = descriptionValue !== trip.description;
-  const dirty = nameDirty || descriptionDirty;
+  const publicDescriptionValue = publicDescription.trim() === '' ? null : publicDescription;
+  const publicDescriptionDirty = publicDescriptionValue !== trip.publicDescription;
+  const dirty = nameDirty || descriptionDirty || publicDescriptionDirty;
   const nameError =
     result?.status === 'validation-error' && result.fieldErrors.name
       ? result.fieldErrors.name
@@ -188,11 +199,12 @@ function TripInformationForm({
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (!dirty || nameError || refreshingConflict) return;
     setResult(null);
-    if (!dirty || nameError) return;
-    const changes: Pick<UpdateTripIntent, 'name' | 'description'> = {
+    const changes: Pick<UpdateTripIntent, 'name' | 'description' | 'publicDescription'> = {
       ...(nameDirty ? { name: trimmedName } : {}),
       ...(descriptionDirty ? { description: descriptionValue } : {}),
+      ...(publicDescriptionDirty ? { publicDescription: publicDescriptionValue } : {}),
     };
     const fingerprint = JSON.stringify(changes);
     if (!attempt.current || attempt.current.fingerprint !== fingerprint) {
@@ -209,58 +221,17 @@ function TripInformationForm({
         status: 'ready',
         data: response.trip,
       });
-      queryClient.setQueriesData({ queryKey: ['trips', 'list'] }, (current: unknown) => {
-        if (!current || typeof current !== 'object') return current;
-        const value = current as { status?: string; data?: { items?: TripDetailViewModel[] } };
-        if (value.status !== 'ready' || !Array.isArray(value.data?.items)) return current;
-        return {
-          ...value,
-          data: {
-            ...value.data,
-            items: value.data.items.map((item) =>
-              item.id === response.trip.id ? { ...item, ...response.trip } : item,
-            ),
-          },
-        };
-      });
-      queryClient.setQueriesData({ queryKey: ['shell', trip.id] }, (current: unknown) => {
-        if (!current || typeof current !== 'object') return current;
-        const value = current as {
-          status?: string;
-          data?: { trip?: { id?: string } | null };
-        };
-        if (value.status !== 'ready' || value.data?.trip?.id !== response.trip.id) return current;
-        return {
-          ...value,
-          data: {
-            ...value.data,
-            trip: {
-              ...value.data.trip,
-              planVersion: response.trip.planVersion,
-              membershipRevision: response.trip.membershipRevision,
-              exportRevision: response.trip.exportRevision,
-              permissions: response.trip.permissions,
-            },
-          },
-        };
-      });
-      queryClient.setQueriesData({ queryKey: ['plan', trip.id] }, (current: unknown) => {
-        if (!current || typeof current !== 'object') return current;
-        const value = current as {
-          status?: string;
-          data?: { tripId?: string; exportRevision?: number };
-        };
-        if (value.status !== 'ready' || value.data?.tripId !== response.trip.id) return current;
-        return {
-          ...value,
-          data: { ...value.data, exportRevision: response.trip.exportRevision },
-        };
-      });
+      queryClient.setQueriesData<InfiniteData<TripListViewModel>>(
+        { queryKey: ['trips', 'list'] },
+        (current) => updateTripInListPages(current, response.trip),
+      );
+      // Other projections must be fetched from their repositories, not stamped
+      // with a revision from a different response.
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: tripQueryKeys.all, refetchType: 'none' }),
-        queryClient.invalidateQueries({ queryKey: ['trips'], refetchType: 'none' }),
-        queryClient.invalidateQueries({ queryKey: ['shell', trip.id], refetchType: 'none' }),
-        queryClient.invalidateQueries({ queryKey: planQueryKeys.all, refetchType: 'none' }),
+        queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
+        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
+        queryClient.invalidateQueries({ queryKey: ['plan', trip.id] }),
       ]);
       attempt.current = null;
       onSaved(response.trip);
@@ -269,7 +240,14 @@ function TripInformationForm({
     setResult(response);
     if (response.status === 'conflict') {
       attempt.current = null;
-      await queryClient.invalidateQueries({ queryKey: tripQueryKeys.detail(trip.id, 'success') });
+      setRefreshingConflict(true);
+      try {
+        await queryClient.invalidateQueries({
+          queryKey: tripQueryKeys.detail(trip.id, 'success'),
+        });
+      } finally {
+        setRefreshingConflict(false);
+      }
     }
   }
 
@@ -313,12 +291,36 @@ function TripInformationForm({
             setResult(null);
           }}
         />
+        <Textarea
+          label="Mô tả công khai"
+          value={publicDescription}
+          error={
+            result?.status === 'validation-error' ? result.fieldErrors.publicDescription : undefined
+          }
+          className={
+            !publicDescriptionDirty && focused !== 'publicDescription' ? styles.currentValue : ''
+          }
+          onFocus={() => setFocused('publicDescription')}
+          onBlur={() => setFocused(null)}
+          onChange={(event) => {
+            setPublicDescription(event.target.value);
+            setResult(null);
+          }}
+        />
         <CoverPreview trip={trip} editable />
         <div className={styles.formActions}>
-          <Button variant="outline" onClick={onCancel} disabled={mutation.isPending}>
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            disabled={mutation.isPending || refreshingConflict}
+          >
             ← Hủy
           </Button>
-          <Button type="submit" loading={mutation.isPending} disabled={!dirty || !!nameError}>
+          <Button
+            type="submit"
+            loading={mutation.isPending}
+            disabled={!dirty || !!nameError || refreshingConflict}
+          >
             Lưu thay đổi
           </Button>
         </div>
@@ -413,7 +415,10 @@ export function TripSettingsPage() {
     enabled: tripId !== '',
   });
   const trip = query.data?.status === 'ready' ? query.data.data : null;
-  const canEdit = !!trip?.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED';
+  const canEdit =
+    trip?.currentMembership.role === 'OWNER' &&
+    trip.permissions.canUpdate &&
+    trip.lifecycle !== 'ARCHIVED';
   const editMode = editRequested && canEdit;
   const deniedEdit = editRequested && !!trip && !canEdit;
 

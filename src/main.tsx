@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 import './shared/styles/fonts.css';
 import './shared/styles/global.css';
 import { Providers } from './app/providers';
@@ -60,15 +60,17 @@ async function start() {
       (() => { membership: MembershipRepository; invitation: InvitationRepository }) | undefined;
     if (import.meta.env.DEV || import.meta.env.MODE === 'preview') {
       if (fixtureSelected) {
+        const { createFixtureTripStore } = await import('./infrastructure/fixtures/trip-store');
+        const store = createFixtureTripStore();
         const { previewTripId, createFixtureShellRepository } =
           await import('./infrastructure/fixtures/shell.fixture-repository');
         previewTripPath = paths.trip(previewTripId);
         const { createFixtureDemoAccess } = await import('./infrastructure/fixtures/demo-access');
         demoAccess = createFixtureDemoAccess();
-        fixtureFactory = createFixtureShellRepository;
+        fixtureFactory = () => createFixtureShellRepository({ store });
         const { createFixtureTripRepository } =
           await import('./infrastructure/fixtures/trip.fixture-repository');
-        tripFixtureFactory = createFixtureTripRepository;
+        tripFixtureFactory = () => createFixtureTripRepository({ store });
         const { createFixtureIdentityRepository } =
           await import('./infrastructure/fixtures/identity.fixture-repository');
         identityFixtureFactory = createFixtureIdentityRepository;
@@ -77,7 +79,7 @@ async function start() {
         homeFixtureFactory = createFixtureHomeRepository;
         const { createFixturePlanRepository } =
           await import('./infrastructure/fixtures/plan.fixture-repository');
-        planFixtureFactory = createFixturePlanRepository;
+        planFixtureFactory = () => createFixturePlanRepository({ store });
         const { createFixtureFundRepository } =
           await import('./infrastructure/fixtures/fund.fixture-repository');
         fundFixtureFactory = createFixtureFundRepository;
@@ -153,7 +155,7 @@ async function start() {
             fundRepository={fundRepository}
             priceWatchRepository={priceWatchRepository}
             membersRepositories={membersRepositories}
-            sessionManager={sessionManager}
+            {...(!fixtureSelected ? { sessionManager } : {})}
           >
             <RouterProvider router={createRouter(previewTripPath, demoAccess)} />
           </Providers>

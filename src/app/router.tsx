@@ -9,6 +9,9 @@ const TripListPage = lazy(async () => ({
 const AuthPage = lazy(async () => ({
   default: (await import('../features/auth/AuthPage')).AuthPage,
 }));
+const IdentityActionPage = lazy(async () => ({
+  default: (await import('../features/auth/IdentityActionPage')).IdentityActionPage,
+}));
 const ProfilePage = lazy(async () => ({
   default: (await import('../features/auth/ProfilePage')).ProfilePage,
 }));
@@ -167,6 +170,21 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
             <AuthPage key="register" mode="register" previewEnabled={!!previewTripPath} />,
           ),
           handle: { title: 'Đăng ký', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/forgot-password',
+          element: feature(<IdentityActionPage key="forgot" action="forgot" />),
+          handle: { title: 'Quên mật khẩu', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/verify-email',
+          element: feature(<IdentityActionPage key="verify" action="verify" />),
+          handle: { title: 'Xác minh email', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/reset-password',
+          element: feature(<IdentityActionPage key="reset" action="reset" />),
+          handle: { title: 'Đặt lại mật khẩu', contentTitle: true, fullBleed: true },
         },
         { path: '/admin', element: placeholder, handle: { layout: 'admin', requiresViewer: true } },
         {
