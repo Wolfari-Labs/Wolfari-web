@@ -16,9 +16,8 @@ import { TripHero } from '../trips/components/TripHero';
 import { MapViewport } from './MapViewport';
 import { PlaceDetail } from './PlaceDetail';
 import { mapLocationPresentations, normalizedPlaceText, placeDiscoveryCenter, placeStatus, sortPlacePresentations, type LocationScheduleFilter } from './trip-map';
-import { hideSavedLocation, mergePlaceSelections, removePlaceSelection, savePlaceSelection, usePlaceSelection, type LocalPlaceSelection } from './place-selection-store';
+import { hideSavedLocation, mergePlaceSelections, removePlaceSelection, savePlaceSelection, usePlaceSelection, usePlaceSelectionStorageStatus, type LocalPlaceSelection } from './place-selection-store';
 import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
-import { fallbackPlaceSelections } from './fallback-place-suggestions';
 import styles from './TripMapPage.module.css';
 
 export function TripMapPage() {
@@ -45,6 +44,7 @@ export function TripMapPage() {
   const sourcePlan = data?.plan ?? null;
   const userId = data?.trip.currentMembership.userId ?? '';
   const localSelection = usePlaceSelection(userId, tripId);
+  const storageStatus = usePlaceSelectionStorageStatus(userId, tripId);
   const days = data ? planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone) : [];
   const selectedLocations = useMemo(
     () => sourcePlan ? mergePlaceSelections(sourcePlan.selectedLocations, sourcePlan.activities, localSelection) : [],
@@ -105,13 +105,13 @@ export function TripMapPage() {
     const timer = window.setTimeout(() => {
       void searchGooglePlaces(text, tripId, controller.signal, discoveryCenter).then((result) => {
         if (requestId !== providerRequestRef.current) return;
-        setProviderPlaces(result.unavailable ? fallbackPlaceSelections(tripId, discoveryCenter) : result.places);
+        setProviderPlaces(result.unavailable ? [] : result.places);
         providerSessionRef.current = result.loadMore ?? null;
         setProviderHasMore(result.hasMore);
         setProviderState(result.unavailable ? 'unavailable' : 'ready');
       }).catch(() => {
         if (!controller.signal.aborted && requestId === providerRequestRef.current) {
-          setProviderPlaces(fallbackPlaceSelections(tripId, discoveryCenter));
+          setProviderPlaces([]);
           providerSessionRef.current = null;
           setProviderHasMore(false);
           setProviderState('error');
@@ -174,7 +174,7 @@ export function TripMapPage() {
     if (!data || !data.plan.permissions.canEdit || mutationId || item.scheduled) return;
     setMutationId(item.location.id);
     if (item.selected) {
-      if (item.location.provider === 'google' && item.location.providerPlaceId) removePlaceSelection(userId, tripId, item.location.providerPlaceId);
+      if ('local' in item.location && item.location.local === true && item.location.providerPlaceId) removePlaceSelection(userId, tripId, item.location.providerPlaceId);
       else hideSavedLocation(userId, tripId, item.location.id);
     } else {
       const place = providerPlaces.find((candidate) => candidate.providerPlaceId === item.location.providerPlaceId);
@@ -202,7 +202,9 @@ export function TripMapPage() {
                 <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
               </header>
               <div className={styles.localNotice} role="status">
-                Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.
+                {storageStatus === 'memory'
+                  ? 'Không thể lưu vào trình duyệt. Lựa chọn chỉ được giữ trong bộ nhớ của tab này và sẽ mất khi tải lại hoặc đóng tab.'
+                  : 'Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.'}
               </div>
               <label className={styles.searchBox}>
                 <span className={styles.visuallyHidden}>Tìm địa điểm</span>
