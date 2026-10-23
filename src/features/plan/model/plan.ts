@@ -87,6 +87,18 @@ export interface PlanViewModel {
     readonly canComplete: boolean;
   };
 }
+export interface ActivityCreateInput {
+  readonly title: string;
+  readonly activityType: string;
+  readonly description?: string | null;
+  readonly publicDescription?: string | null;
+  readonly selectedLocationId?: string | null;
+  readonly startsAt?: string | null;
+  readonly endsAt?: string | null;
+  readonly position: number;
+}
+export type ActivityUpdateFields = Partial<ActivityCreateInput>;
+
 export interface PlanRepository {
   getPlan(request: {
     readonly tripId: string;
@@ -97,16 +109,7 @@ export interface PlanRepository {
     readonly tripId: string;
     readonly expectedPlanVersion: number;
     readonly idempotencyKey: string;
-    readonly activity: {
-      readonly title: string;
-      readonly activityType: string;
-      readonly description?: string | null;
-      readonly publicDescription?: string | null;
-      readonly selectedLocationId?: string | null;
-      readonly startsAt?: string | null;
-      readonly endsAt?: string | null;
-      readonly position: number;
-    };
+    readonly activity: ActivityCreateInput;
     readonly signal: AbortSignal;
   }): Promise<PlanCommandResult<ActivityViewModel>>;
   updateActivity?(request: {
@@ -114,7 +117,7 @@ export interface PlanRepository {
     readonly activityId: string;
     readonly expectedPlanVersion: number;
     readonly idempotencyKey: string;
-    readonly fields: Record<string, unknown>;
+    readonly fields: ActivityUpdateFields;
     readonly signal: AbortSignal;
   }): Promise<PlanCommandResult<ActivityViewModel>>;
   deleteActivity?(request: {
@@ -143,7 +146,10 @@ export interface PlanRepository {
 
 export type PlanCommandResult<T> =
   | { readonly status: 'success'; readonly data: T; readonly correlationId: string | null }
-  | { readonly status: 'error'; readonly error: import('../../../shared/types/result').DomainError };
+  | {
+      readonly status: 'error';
+      readonly error: import('../../../shared/types/result').DomainError;
+    };
 // Commands carry the revisions and idempotency keys required by the Gateway contract.
 export interface PlanWriteIntent {
   readonly idempotencyKey: string;

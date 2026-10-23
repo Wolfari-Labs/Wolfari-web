@@ -1,28 +1,38 @@
-# Follow-up: connect Plan activity mutations to UI
+# Plan activity UI — Web-only delivery
 
 ## Context
 
-The Plan repository now exposes Gateway-backed activity commands with
-`expected_plan_version` and `Idempotency-Key`. The current Plan screen still
-uses `usePlanDraft` for local editing and does not call those commands.
+The Plan page separates **Dữ liệu trên server** from **Bản nháp trên thiết bị**.
+The server panel calls create, typed update, confirmed delete, completion/reopen,
+and complete-list reorder with `expected_plan_version` and `Idempotency-Key`.
 
 ## Scope
 
-- Connect create, update, completion, delete, and reorder controls to
-  `PlanRepository`.
-- Keep the local draft until the Gateway confirms the command.
-- Invalidate the plan query after success.
-- Preserve the draft and show a reload action on `VERSION_CONFLICT` or
-  `STATE_CONFLICT`.
-- Do not retry mutations when the outcome is unknown.
+- Only server-selected location IDs can be linked. Pure reorder preserves times.
+- One write per trip at a time in the tab; no automatic write retry/version increment.
+- Pending/unknown outcomes retain the exact intent, revision and key in session
+  storage scoped to actor/trip, including route changes and reload in that session.
+  Explicit reconciliation and explicit replay are required to retry. Failure to
+  persist a recoverable intent prevents its write from being sent.
+- Refresh both Trip and Plan after success; retain form content on conflict.
+- Draft version mismatch preserves the draft and locks it for explicit review/reset.
 
 ## Dependency
 
-Depends on the Plan/Activity adapter slice and a Gateway environment that can
-exercise the activity endpoints end to end.
+The current Backend cannot store a day independently from activity timestamps.
+Dragging and changing day remain local: retain the date and clear times on the
+moved activity and target-day suffix. Source-day remaining times are unchanged;
+pool moves clear only the moved activity, and same-slot drops do nothing.
+
+Drafts are never partially published via multiple PATCHes. Server editing supports
+existing times; changing day uses the local editor. No fake midnight timestamps or
+local map IDs are sent to Gateway. Backend/API/protobuf/database are unchanged.
 
 ## Completion
 
-Do not reference this follow-up as closed from the Plan/Activity issue until
-the Plan UI invokes the real repository commands and has adapter/component
-coverage for success, conflict, permission, and uncertain outcomes.
+Gateway commands are connected and have adapter/component/HTTP-mock browser
+coverage. Shared date-only scheduling remains an explicit contract limitation;
+do not mark that flow as Gateway-complete. Recovery survives reload within the
+browser session, not storage deletion, a closed session or a different device.
+
+See [implementation evidence](plan-activity-evidence-2026-10-23.md).
