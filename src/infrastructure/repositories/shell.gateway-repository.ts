@@ -93,7 +93,7 @@ export function createGatewayShellRepository(
           const trip = tripId
             ? await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}`, {
                 signal,
-                includeCredentials: true,
+              includeCredentials: true,
               })
             : null;
           return {

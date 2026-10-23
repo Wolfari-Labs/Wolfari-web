@@ -67,6 +67,29 @@
   align-items: center;
   flex-shrink: 0;
 }
+.passwordToggle {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-blue);
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  font: inherit;
+  font-weight: var(--weight-medium);
+}
+.passwordToggle:hover:not(:disabled) {
+  text-decoration: underline;
+}
+.passwordToggle:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-6);
+}
+.passwordToggle:disabled {
+  color: var(--ios-muted);
+  cursor: not-allowed;
+}
 .select {
   font: inherit;
   color: var(--color-ink);

@@ -4,12 +4,12 @@
 
 ### Projection screens triển khai 18/10/2026
 
-| Screen | Loading/empty/error | Conflict/permission | Write state |
-| --- | --- | --- | --- |
-| Create Trip | Draft restore và validation summary | Session guard ở shell | Valid draft hiện unavailable vì temporal contract chưa chốt; không pending/success giả |
-| Dress Code | Shared Plan boundary; empty copy riêng | Snapshot mismatch hoặc row mismatch chặn toàn body | Read-only cho mọi role, kể cả `canEdit=true` |
-| Packing List | Shared Plan boundary; empty/filter-empty | Như Dress Code | Không checkbox/add/edit/delete/reassign/complete |
-| Trip Map | Shared Plan boundary; list còn dùng được khi provider lỗi | Như Dress Code | Không search/save/remove/route; zero external tile request |
+| Screen       | Loading/empty/error                                       | Conflict/permission                                | Write state                                                                            |
+| ------------ | --------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Create Trip  | Draft restore và validation summary                       | Session guard ở shell                              | Valid draft hiện unavailable vì temporal contract chưa chốt; không pending/success giả |
+| Dress Code   | Shared Plan boundary; empty copy riêng                    | Snapshot mismatch hoặc row mismatch chặn toàn body | Read-only cho mọi role, kể cả `canEdit=true`                                           |
+| Packing List | Shared Plan boundary; empty/filter-empty                  | Như Dress Code                                     | Không checkbox/add/edit/delete/reassign/complete                                       |
+| Trip Map     | Shared Plan boundary; list còn dùng được khi provider lỗi | Như Dress Code                                     | Không search/save/remove/route; zero external tile request                             |
 
 Fixture Plan có dữ liệu deterministic cho null/valid coordinates, ba Dress scope và Packing category/status/decimal/assignee. Fixture/Gateway Create đều trả `unavailable`; runtime UI không tạo success giả.
 
@@ -66,6 +66,15 @@ idle → validating → pending → success → refetch
 ```
 
 Không được chuyển trực tiếp `pending → success` bằng fixture trong production path. Fixture chỉ được tạo response deterministic cho preview và test.
+
+### Invitation runtime state (feat/7)
+
+| Flow                | Pending                                            | Conflict / permission                                                              | Unknown / terminal                                                                                          |
+| ------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Owner create        | Khóa form và mọi command khác; giữ draft           | Revision conflict refetch projection, yêu cầu submit mới; 403/404 khóa theo server | 503/network giữ nguyên intent + key để explicit retry; LINK receipt thiếu secret không được tạo lại tự động |
+| Owner resend/revoke | Một command tại một thời điểm; revoke cần xác nhận | Version conflict refetch list; chỉ EMAIL/PENDING resend, PENDING revoke            | Retry cùng invitation/version/key; success cập nhật list, delivery không được gọi là delivered              |
+| Token preview       | Chỉ sau authenticated bootstrap                    | 401 về auth; 403/404/409 copy trung tính, không suy đoán nguyên nhân               | Fragment đã scrub; reload/token mất yêu cầu mở lại link gốc                                                 |
+| Accept/decline      | Khóa cả hai action                                 | Wrong account/email chưa xác minh/terminal token dùng copy trung tính              | Retry cùng token/key; receipt success là terminal, không preview lại token đã consume                       |
 
 ## Inventory state profiles
 
@@ -145,6 +154,25 @@ Plan read loading/ready/empty/error/forbidden/not-found/conflict/unavailable; nu
 ### Members / Invitation preview
 
 Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; Invitation EXPIRED/REVOKED/ACCEPTED “đã dùng” là read scenarios/version2. Owner-only invitation query; Guest và denied metadata không đọc members/invitations; foreign-trip rows không hiển thị. Nullable name/avatar → neutral ID fallback, không role/Holder inference. Draft email giữ qua read recovery; pending/unknown không tăng revision hoặc báo sent/saved. Target-only selection unavailable thay vì sai body. [Evidence](members-preview-phase3.md).
+
+### Feature 6 — Gateway Members / Plan policy
+
+| State / intent             | UI and invariant                                                                                                                                                                                                            |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Members first page         | Requests use `limit=100`, `include_left=false` by default and preserve an opaque `next_cursor`; rows are scoped to the requested Trip and deduplicated by membership ID.                                                    |
+| Next page / retry          | Explicit load-more uses the returned cursor. A failed later page keeps prior rows and retry uses that same cursor; changing Trip or departed filter starts at page one.                                                     |
+| Departed filter            | `include_left` is sent with the selected filter; off by default. Departed rows show `leftAt` and are excluded from active-membership actions/policy selection.                                                              |
+| Identity projection        | Stable User ID and Membership ID are shown, with complete IDs in disclosure and `Bạn` keyed by current membership ID. Missing name/avatar/email and responsibility assignments remain unknown.                              |
+| Malformed Members response | Missing/invalid `items`, ID, Trip scope, role, timestamp, `left_at` or cursor becomes a read error carrying correlation ID; it never renders as an empty success or `undefined`.                                            |
+| Policy availability        | Only active Owner + `canUpdate` + unarchived Trip can open the writer. Fixture, Member, departed viewer and archived Trip do not issue policy writes.                                                                       |
+| Basic policy write         | `OWNER_ONLY`/`ALL_MEMBERS` always send `editor_member_ids: []`, expected `membership_revision` and one stable idempotency key per intent. Unchanged policy sends no request; duplicate submit is locked.                    |
+| Selected policy            | Existing `SELECTED_MEMBERS` is shown as read-only; no editor list is invented because the Trip GET projection omits it. Switching to either basic policy remains available to an eligible Owner.                            |
+| Confirmed write            | PUT is not the final authority. Reset Plan cache and refetch Trip detail, Members, shell and Trip list; show saved only when the fresh Trip projection reflects the intended policy/revision.                               |
+| Conflict                   | Keep the draft, refetch projections and require an explicit resubmit using the fresh membership revision and a new idempotency key. Never replay automatically.                                                             |
+| Unknown write              | Timeout/network/5xx/malformed 2xx after sending remains unknown, even if a later read appears to match. Do not claim success or retry automatically; explicit retry reuses identical payload, revision and idempotency key. |
+| Deferred capabilities      | Leave/remove/transfer and invitation writes remain disabled until their owning Backend lifecycle gates are enabled; no `feat/7`, `feat/8` or editor-ID read API is introduced.                                              |
+
+Gateway browser tests use Playwright HTTP interception and the real Web adapters; they are mocked contract coverage, not live Backend E2E. See [Members Phase 3 / Feature 6 status](members-preview-phase3.md#feature-6-gateway-status--22102026) and [Gateway Integration Matrix](gateway-integration-matrix.md).
 
 ### Fund preview
 

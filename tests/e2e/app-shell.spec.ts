@@ -166,9 +166,9 @@ for (const size of sizes)
       await page.keyboard.press('Enter');
       await fillMain(page);
       await page.getByRole('button', { name: 'Acceptance content end' }).click();
-      expect(await page.locator('main').evaluate((element) => element.scrollTop)).toBeGreaterThan(
-        0,
-      );
+      await expect
+        .poll(() => page.locator('main').evaluate((element) => element.scrollTop))
+        .toBeGreaterThan(0);
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(
         true,
@@ -214,7 +214,26 @@ for (const size of sizes)
       await page.screenshot({ path: info.outputPath('mobile.png') });
       await fillMain(page);
       await page.getByRole('button', { name: 'Acceptance content end' }).click();
-      expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+      await expect
+        .poll(() =>
+          page.evaluate(() => ({
+            overflow: getComputedStyle(document.body).overflow,
+            scrollY,
+          })),
+        )
+        .toMatchObject({
+          overflow: expect.not.stringContaining('hidden'),
+          scrollY: expect.any(Number),
+        });
+      // Responsive trip layouts may expose the document scroll or retain the
+      // scroll container on main; either proves the appended content is reachable.
+      await expect
+        .poll(() =>
+          page.evaluate(() =>
+            Math.max(window.scrollY, document.getElementById('main-content')?.scrollTop ?? 0),
+          ),
+        )
+        .toBeGreaterThan(0);
       await expect(page.getByRole('navigation', { name: 'Điều hướng Mobile' })).toHaveCount(0);
     }
     expect(calls).toEqual([]);

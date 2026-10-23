@@ -17,7 +17,7 @@ for (const size of [
       if (new URL(r.url()).pathname.startsWith('/api/')) api.push(r.url());
     });
     await page.goto(route);
-    await expect(page.getByText('Thành viên 1', { exact: true })).toBeVisible();
+    await expect(page.getByText('User aaaaaaaa…aaaa', { exact: true })).toBeVisible();
     const region = page.getByRole('region', { name: 'Danh sách thành viên' });
     await expect(region.getByText(/Trang Nguyễn|Hà Nguyễn|Quyên Trần|Tân Lê/)).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -31,10 +31,12 @@ for (const size of [
           `Figma hero ${key}`,
         ).toBeLessThanOrEqual(4);
     }
-    await expect(region.getByText('Xem định danh', { exact: true })).toHaveCount(0);
+    const identity = region.locator('details').first().locator('summary');
+    await identity.click();
     await expect(
       region.getByText('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { exact: true }),
-    ).toHaveCount(0);
+    ).toBeVisible();
+    await identity.click();
     await page.getByText('Rời chuyến đi', { exact: true }).scrollIntoViewIfNeeded();
     if (size.width > 768) {
       expect(await page.evaluate(() => scrollY)).toBe(0);
@@ -63,7 +65,7 @@ for (const size of [
   });
 test('member and invitation states, terminal statuses, draft and permission', async ({ page }) => {
   await page.goto(route);
-  await expect(page.getByText('Thành viên 1', { exact: true })).toBeVisible();
+  await expect(page.getByText('User aaaaaaaa…aaaa', { exact: true })).toBeVisible();
   await page.locator('[data-preview=members] summary').click();
   for (const [state, text] of [
     ['error', 'Chưa thể tải nội dung'],
@@ -78,6 +80,7 @@ test('member and invitation states, terminal statuses, draft and permission', as
     await expect(page.getByRole('heading', { name: text, exact: true })).toBeVisible();
   }
   await page.getByLabel('Trạng thái thành viên').selectOption('success');
+  await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình' })).toBeDisabled();
   await page.getByRole('button', { name: 'Lời mời · Xem trước' }).click();
   await page.getByLabel('Email người nhận').fill('draft@example.com');
   for (const [state, text] of [
@@ -108,6 +111,6 @@ test('member and invitation states, terminal statuses, draft and permission', as
   await expect(page.getByText(/Chưa xác nhận gửi lời mời/)).toBeVisible();
   await expect(page.getByText(/Membership revision 1/)).toBeVisible();
   await page.goto('/trips/33333333-3333-4333-8333-333333333333/members');
-  await expect(page.getByText('Thành viên 1', { exact: true })).toBeVisible();
+  await expect(page.getByText('User aaaaaaaa…aaaa', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
 });

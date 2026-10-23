@@ -1,5 +1,9 @@
 # Members / Invitation Preview — Phase 3
 
+> Phase 3 documents the fixture-only baseline as of 15 October. The newer `feat/6` Gateway
+> integration and its current capability boundaries are recorded below; those details supersede
+> earlier statements that the Members projection and basic Plan policy were preview-only.
+
 Branch `ui/members-preview` từ `develop`/Plan `58c8b2d`. Route duy nhất `/trips/:tripId/members`, actor active Member/Owner, không Admin override.
 
 | Figma → route scope | Component / adaptation |
@@ -38,3 +42,25 @@ Screenshots ignored `test-results/members-preview-Members-preview-*/members.png`
 | Manual CSS blob avatar / production browser |78×78/no overflow; 8 route unavailable + unknown fallback, no API/storage/fixture UI |
 | Production marker/chunk scan / component transport search | Pass; không private fixture records hoặc fetch/raw `/api/v1`/token storage trong components |
 | `git diff --check`, status/graph review | Pass; chỉ Web, không reset/rebase/force-push/Issue/PR |
+
+## Feature 6 Gateway status — 22/10/2026
+
+`feat/6-members-plan-policy` now consumes the Gateway Members projection with `limit=100`, opaque
+cursor pagination and `include_left`; the UI deduplicates by membership ID, retains loaded rows on
+next-page failure, retries the same cursor and resets pagination when the departed-members filter
+changes. Active memberships are shown by default. User/member IDs are stable and fully available
+through disclosure; no name, avatar, email, Fund Holder or Plan Editor identity is inferred.
+
+The policy panel is available only to an active Owner with `can_update=true` on an unarchived Trip.
+`OWNER_ONLY` and `ALL_MEMBERS` writes always send an empty `editor_member_ids`; `SELECTED_MEMBERS`
+can be read but not edited because the GET Trip projection does not expose selected editor IDs.
+Writes use a stable idempotency key and `expected_membership_revision`. Conflict retains the draft,
+refetches projections and requires another explicit submit. Timeout/network/5xx/malformed success
+stays unknown and can only be retried with the same intent. A write response never serves as the
+saved-state authority; the refreshed Trip projection does.
+
+Leave/remove/transfer and invitation writes remain disabled. Fixture mode has no policy writer and
+does not issue HTTP or claim a mutation succeeded. Gateway Playwright coverage intercepts every
+HTTP request and verifies browser contracts only; it is not a live Backend integration test.
+Detailed state transitions are in [state-matrix.md](state-matrix.md), and route/runtime boundaries
+are in [gateway-integration-matrix.md](gateway-integration-matrix.md).

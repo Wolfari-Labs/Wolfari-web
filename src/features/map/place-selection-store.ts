@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { browserStorage, createStorageFallback, type StorageStatus } from '../../shared/lib/browser-storage';
 import type { ActivityViewModel, SelectedLocationViewModel } from '../plan/model/plan';
 
 export const PLACE_SELECTION_VERSION = 1;
@@ -57,6 +58,7 @@ export function mergePlaceSelections(
 const EMPTY_PAYLOAD: PlaceSelectionPayload = Object.freeze({ version: 1, places: [], hiddenLocationIds: [] });
 const empty = (): PlaceSelectionPayload => EMPTY_PAYLOAD;
 const listeners = new Map<string, Set<() => void>>();
+const storage = createStorageFallback();
 const snapshotCache = new Map<string, { raw: string | null; payload: PlaceSelectionPayload; validUntil: number }>();
 
 export function placeSelectionKey(userId: string, tripId: string) {
@@ -87,7 +89,12 @@ export function parsePlaceSelection(value: string | null): PlaceSelectionPayload
     const parsed = JSON.parse(value) as Record<string, unknown>;
     if (parsed.version !== PLACE_SELECTION_VERSION || !Array.isArray(parsed.places)) return empty();
     const now = Date.now();
-    const places = parsed.places.filter(isPlace).filter((place) => now - Date.parse(place.fetchedAt) <= MAX_CACHE_AGE_MS);
+    const places = parsed.places.filter(isPlace).filter((place) =>
+      // Ignore synthetic suggestions persisted by older previews. These IDs
+      // were generated locally and never represented Google Places results.
+      !(place.id.startsWith('fallback:') && place.providerPlaceId.startsWith('fallback-')) &&
+      now - Date.parse(place.fetchedAt) <= MAX_CACHE_AGE_MS,
+    );
     const hiddenLocationIds = Array.isArray(parsed.hiddenLocationIds)
       ? parsed.hiddenLocationIds.filter((id): id is string => typeof id === 'string')
       : [];
@@ -99,7 +106,7 @@ export function parsePlaceSelection(value: string | null): PlaceSelectionPayload
 
 function read(key: string): PlaceSelectionPayload {
   if (typeof window === 'undefined') return empty();
-  const raw = window.localStorage.getItem(key);
+  const { raw } = storage.read(browserStorage('localStorage'), key);
   const cached = snapshotCache.get(key);
   if (cached?.raw === raw && Date.now() < cached.validUntil) return cached.payload;
   const payload = parsePlaceSelection(raw);
@@ -111,18 +118,11 @@ function read(key: string): PlaceSelectionPayload {
 }
 
 function write(key: string, payload: PlaceSelectionPayload) {
-  if (typeof window === 'undefined') return;
-  try {
-    const raw = JSON.stringify(payload);
-    window.localStorage.setItem(key, raw);
-    snapshotCache.set(key, { raw, payload, validUntil: payload.places.reduce(
-      (earliest, place) => Math.min(earliest, Date.parse(place.fetchedAt) + MAX_CACHE_AGE_MS),
-      Number.POSITIVE_INFINITY,
-    ) });
-    notify(key);
-  } catch {
-    // Storage can be disabled or full. The UI remains usable for this session.
-  }
+  const raw = JSON.stringify(payload);
+  const status = storage.write(browserStorage('localStorage'), key, raw);
+  snapshotCache.delete(key);
+  notify(key);
+  return status;
 }
 
 export function readPlaceSelection(userId: string, tripId: string) {
@@ -133,38 +133,56 @@ export function savePlaceSelection(userId: string, tripId: string, place: LocalP
   const key = placeSelectionKey(userId, tripId);
   const current = read(key);
   const places = current.places.filter((item) => item.providerPlaceId !== place.providerPlaceId);
-  write(key, { ...current, places: [...places, place] });
+  return write(key, { ...current, places: [...places, place] });
 }
 
 export function hideSavedLocation(userId: string, tripId: string, locationId: string) {
   const key = placeSelectionKey(userId, tripId);
   const current = read(key);
   if (!current.hiddenLocationIds.includes(locationId))
-    write(key, { ...current, hiddenLocationIds: [...current.hiddenLocationIds, locationId] });
+    return write(key, { ...current, hiddenLocationIds: [...current.hiddenLocationIds, locationId] });
+  return storage.read(browserStorage('localStorage'), key).status;
 }
 
 export function removePlaceSelection(userId: string, tripId: string, providerPlaceId: string) {
   const key = placeSelectionKey(userId, tripId);
   const current = read(key);
-  write(key, { ...current, places: current.places.filter((item) => item.providerPlaceId !== providerPlaceId) });
+  return write(key, { ...current, places: current.places.filter((item) => item.providerPlaceId !== providerPlaceId) });
 }
 
-export function usePlaceSelection(userId: string, tripId: string) {
-  const key = placeSelectionKey(userId, tripId);
-  return useSyncExternalStore(
-    (listener) => {
+function subscribe(key: string, listener: () => void) {
       const set = listeners.get(key) ?? new Set<() => void>();
       set.add(listener);
       listeners.set(key, set);
-      const onStorage = (event: StorageEvent) => (event.key === key || event.key === null) && listener();
+      const onStorage = (event: StorageEvent) => {
+        if (event.storageArea && event.storageArea !== browserStorage('localStorage')) return;
+        if (event.key !== key && event.key !== null) return;
+        storage.accept(key, event.key === null ? null : event.newValue);
+        snapshotCache.delete(key);
+        listener();
+      };
       window.addEventListener('storage', onStorage);
       return () => {
         window.removeEventListener('storage', onStorage);
         set.delete(listener);
         if (!set.size) listeners.delete(key);
       };
-    },
+}
+
+export function usePlaceSelection(userId: string, tripId: string) {
+  const key = placeSelectionKey(userId, tripId);
+  return useSyncExternalStore(
+    (listener) => subscribe(key, listener),
     () => read(key),
     () => empty(),
+  );
+}
+
+export function usePlaceSelectionStorageStatus(userId: string, tripId: string): StorageStatus {
+  const key = placeSelectionKey(userId, tripId);
+  return useSyncExternalStore(
+    (listener) => subscribe(key, listener),
+    () => storage.read(browserStorage('localStorage'), key).status,
+    () => 'memory',
   );
 }

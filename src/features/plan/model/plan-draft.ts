@@ -203,6 +203,7 @@ export function reconcilePlanDraft(
   const planIds = new Set(plan.activities.map((activity) => activity.id));
   const activities = stored.activities.filter((activity) => {
     if (activity.origin === 'PLAN') return planIds.has(activity.id);
+    if (activity.selectedLocationId?.startsWith('fallback:')) return false;
     return (
       activity.selectedLocationId !== null &&
       (selectedIds.has(activity.selectedLocationId) || activity.scheduledDate !== null)

@@ -20,6 +20,7 @@ import filterIcon from '../../shared/assets/figma/40418.svg';
 import styles from './TripListPage.module.css';
 import { Link } from 'react-router';
 import { paths } from '../../app/route-paths';
+import type { DomainError } from '../../shared/types/result';
 
 const statuses: readonly { value: TripStatusFilter; label: string; mobileLabel: string }[] = [
   { value: 'ALL', label: 'Tất cả', mobileLabel: 'Tất cả' },
@@ -29,23 +30,35 @@ const statuses: readonly { value: TripStatusFilter; label: string; mobileLabel: 
   { value: 'ARCHIVED', label: 'Đã lưu trữ', mobileLabel: 'Lưu trữ' },
 ];
 
+function queryError(value: unknown): DomainError {
+  if (
+    value &&
+    typeof value === 'object' &&
+    'code' in value &&
+    'retryable' in value &&
+    'correlationId' in value
+  ) {
+    return value as DomainError;
+  }
+  return { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true };
+}
+
 export function TripListPage({ previewEnabled = false }: { previewEnabled?: boolean }) {
   const [scenario, setScenario] = useState<TripListScenario>('success');
   const [filter, setFilter] = useState<TripListFilter>(initialTripFilter);
   const [controlsOpen, setControlsOpen] = useState(false);
   const query = useTripList(scenario);
-  const result = query.data;
-  const model = result?.status === 'ready' ? result.data : null;
-  const { visible, counts } = selectTrips(model?.items ?? [], filter);
+  const pages = query.data?.pages ?? [];
+  const items = Array.from(
+    new Map(pages.flatMap((page) => page.items).map((item) => [item.id, item])).values(),
+  );
+  const { visible, counts } = selectTrips(items, filter);
   const retry = () => {
     void query.refetch();
   };
-  const readError = query.isError
-    ? { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true }
-    : result?.status === 'error'
-      ? result.error
-      : null;
-  const readSucceeded = result?.status === 'ready' || result?.status === 'empty';
+  const readError = query.isError && !query.data ? queryError(query.error) : null;
+  const nextPageError = query.isFetchNextPageError ? queryError(query.error) : null;
+  const readSucceeded = !!query.data;
   return (
     <section className={styles.page} aria-label="Danh sách chuyến đi">
       <div className={styles.pageArt} aria-hidden="true">
@@ -109,7 +122,8 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
               Bộ lọc
             </button>
             <span id="trip-filter-capability-note" className={styles.srOnly}>
-              Bộ lọc vai trò, thời gian và nâng cao sẽ chỉ xuất hiện khi Gateway cung cấp dữ liệu tương ứng.
+              Bộ lọc vai trò, thời gian và nâng cao sẽ chỉ xuất hiện khi Gateway cung cấp dữ liệu
+              tương ứng.
             </span>
           </div>
         </div>
@@ -186,13 +200,27 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
             </div>
           </>
         )}
-        {model?.nextCursor && (
-          <p role="status">Danh sách còn dữ liệu chưa tải. Phân trang chưa khả dụng.</p>
+        {query.hasNextPage && !nextPageError && (
+          <div className={styles.pagination}>
+            <Button
+              variant="outline"
+              loading={query.isFetchingNextPage}
+              disabled={query.isFetching}
+              onClick={() => void query.fetchNextPage()}
+            >
+              Tải thêm chuyến đi
+            </Button>
+          </div>
         )}
-        <Link
-          className={styles.mobileCreate}
-          to={paths.newTrip}
-        >
+        {nextPageError && (
+          <ContentState
+            state="error"
+            error={nextPageError}
+            headingLevel={2}
+            onRetry={() => void query.fetchNextPage()}
+          />
+        )}
+        <Link className={styles.mobileCreate} to={paths.newTrip}>
           + Tạo một hành trình mới
         </Link>
         {previewEnabled && (

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { App } from './App';
+import { captureInvitationToken } from '../features/members/invitation-token';
 import { ContentState } from '../shared/components/ContentState';
 import { lazy, Suspense, type ReactNode } from 'react';
 import type { DemoAccess } from '../features/auth/model/demo-access';
@@ -8,6 +9,9 @@ const TripListPage = lazy(async () => ({
 }));
 const AuthPage = lazy(async () => ({
   default: (await import('../features/auth/AuthPage')).AuthPage,
+}));
+const IdentityActionPage = lazy(async () => ({
+  default: (await import('../features/auth/IdentityActionPage')).IdentityActionPage,
 }));
 const ProfilePage = lazy(async () => ({
   default: (await import('../features/auth/ProfilePage')).ProfilePage,
@@ -51,6 +55,7 @@ const feature = (element: ReactNode) => (
 );
 
 export function createRouter(previewTripPath: string | null, demoAccess?: DemoAccess) {
+  captureInvitationToken();
   const placeholder = <ContentState state="placeholder" headingLevel={2} />;
   return createBrowserRouter([
     {
@@ -155,6 +160,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
           handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
         },
         {
+          path: '/invitations/local',
+          element: feature(<InvitationPage />),
+          handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
+        },
+        {
           path: '/login',
           element: feature(
             <AuthPage key="login" mode="login" previewEnabled={!!previewTripPath} />,
@@ -167,6 +177,21 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
             <AuthPage key="register" mode="register" previewEnabled={!!previewTripPath} />,
           ),
           handle: { title: 'Đăng ký', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/forgot-password',
+          element: feature(<IdentityActionPage key="forgot" action="forgot" />),
+          handle: { title: 'Quên mật khẩu', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/verify-email',
+          element: feature(<IdentityActionPage key="verify" action="verify" />),
+          handle: { title: 'Xác minh email', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/reset-password',
+          element: feature(<IdentityActionPage key="reset" action="reset" />),
+          handle: { title: 'Đặt lại mật khẩu', contentTitle: true, fullBleed: true },
         },
         { path: '/admin', element: placeholder, handle: { layout: 'admin', requiresViewer: true } },
         {
