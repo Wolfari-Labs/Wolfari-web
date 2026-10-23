@@ -38,3 +38,16 @@ There is no Backend date-only activity field. Local scheduling is not shared or
 published. Unknown recovery survives navigation/reload within the same session
 using actor/trip-scoped session storage, not session closure/storage deletion or
 another device. No Backend contracts or files are changed.
+
+## CI mobile scroll follow-up
+
+The push check on `47c6ba4` failed `workspace boundaries 402×874` while the PR
+check on the same commit passed. The failed run's `mobile.png` still showed Trip
+Overview after the URL had changed to Plan; the failure snapshot later showed
+Plan with focus back on main. The test appended/clicked its scroll probe before
+the lazy route committed, so navigation could reset the scroll afterward.
+
+The mobile boundary test now waits for the Plan heading, timeline and assets
+before inserting the probe. A gated lazy-module regression reproduces the old
+Overview remaining visible after drawer dismissal and checks document scrolling
+after Plan becomes ready. Timeouts and application scroll behavior are unchanged.
