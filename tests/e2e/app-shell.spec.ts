@@ -166,9 +166,9 @@ for (const size of sizes)
       await page.keyboard.press('Enter');
       await fillMain(page);
       await page.getByRole('button', { name: 'Acceptance content end' }).click();
-      expect(await page.locator('main').evaluate((element) => element.scrollTop)).toBeGreaterThan(
-        0,
-      );
+      await expect
+        .poll(() => page.locator('main').evaluate((element) => element.scrollTop))
+        .toBeGreaterThan(0);
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(
         true,
