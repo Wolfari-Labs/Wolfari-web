@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { App } from './App';
+import { captureInvitationToken } from '../features/members/invitation-token';
 import { ContentState } from '../shared/components/ContentState';
 import { lazy, Suspense, type ReactNode } from 'react';
 import type { DemoAccess } from '../features/auth/model/demo-access';
@@ -54,6 +55,7 @@ const feature = (element: ReactNode) => (
 );
 
 export function createRouter(previewTripPath: string | null, demoAccess?: DemoAccess) {
+  captureInvitationToken();
   const placeholder = <ContentState state="placeholder" headingLevel={2} />;
   return createBrowserRouter([
     {
@@ -154,6 +156,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         },
         {
           path: '/invitations',
+          element: feature(<InvitationPage />),
+          handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/invitations/local',
           element: feature(<InvitationPage />),
           handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
         },

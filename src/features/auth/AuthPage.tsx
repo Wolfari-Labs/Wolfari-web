@@ -283,7 +283,7 @@ export function AuthPage({
                 Quên mật khẩu?
               </Link>
             )}
-            <Link to={register ? '/login' : '/register'}>{register ? 'Đăng nhập' : 'Đăng ký'}</Link>
+            <Link to={`${register ? '/login' : '/register'}?returnTo=${encodeURIComponent(safeReturnTo(new URLSearchParams(location.search).get('returnTo')))}`}>{register ? 'Đăng nhập' : 'Đăng ký'}</Link>
           </div>
           {!register && (
             <div className={styles.stateNote}>
