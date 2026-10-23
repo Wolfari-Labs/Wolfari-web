@@ -1,4 +1,9 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  captureInvitationToken,
+  invitationResponseAttempt,
+} from '../features/members/invitation-token';
+import { invitationManagementAttempt } from '../features/members/invitation-management-attempt';
 import { Link, useLocation, useNavigate, useParams, useMatches, Outlet } from 'react-router';
 import {
   scenarios,
@@ -30,7 +35,14 @@ export function App({
   demoAccess?: DemoAccess;
 }) {
   const { tripId } = useParams();
-  const { pathname, search } = useLocation();
+  const location = useLocation();
+  const { pathname, search, hash } = location;
+  useLayoutEffect(() => {
+    captureInvitationToken();
+    const sync = () => captureInvitationToken();
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, [pathname, search, hash, location.key]);
   const navigate = useNavigate();
   const sessionManager = useOptionalSessionManager();
   const matches = useMatches();
@@ -62,6 +74,18 @@ export function App({
     sessionManager?.subscribe ?? noSessionSubscription,
     sessionManager?.status ?? unknownSession,
   );
+  const previousSessionStatus = useRef(sessionStatus);
+  useEffect(() => {
+    if (
+      sessionStatus === 'anonymous' ||
+      sessionStatus === 'expired' ||
+      (sessionStatus === 'unknown' && previousSessionStatus.current === 'authenticated')
+    ) {
+      invitationResponseAttempt.clear();
+      invitationManagementAttempt.clear();
+    }
+    previousSessionStatus.current = sessionStatus;
+  }, [sessionStatus]);
   const privateSessionBlocked =
     !!sessionManager &&
     requiresViewer &&
@@ -74,6 +98,8 @@ export function App({
       paths.forgotPassword,
       paths.verifyEmail,
       paths.resetPassword,
+      paths.invitations,
+      '/invitations/local',
     ].includes(policyPath);
   const shellQueryEnabled = !privateSessionBlocked && !standaloneAuthRoute;
   const query = useShell(tripId ?? null, scenario, shellQueryEnabled);

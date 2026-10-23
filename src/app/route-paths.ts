@@ -7,6 +7,7 @@ export const paths = {
   profile: '/profile',
   login: '/login',
   register: '/register',
+  invitations: '/invitations',
   forgotPassword: '/forgot-password',
   verifyEmail: '/verify-email',
   resetPassword: '/reset-password',

@@ -91,6 +91,16 @@ export interface GatewayModel {
   planPolicyConflictOnce: boolean;
   planPolicyUnknownOnce: boolean;
   planPolicyReceipts: Map<string, { fingerprint: string; data: unknown }>;
+  invitations: Array<{
+    id: string;
+    trip_id: string;
+    invitation_type: 'EMAIL' | 'LINK';
+    email: string | null;
+    status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'REVOKED' | 'EXPIRED';
+    version: number;
+    expires_at: string;
+    resolved_at: string | null;
+  }>;
 }
 
 export const test = base.extend<{ gateway: GatewayModel }>({
@@ -107,6 +117,18 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       planPolicyConflictOnce: false,
       planPolicyUnknownOnce: false,
       planPolicyReceipts: new Map(),
+      invitations: [
+        {
+          id: '77777777-7777-4777-8777-777777777777',
+          trip_id: initialTrips[0]!.id,
+          invitation_type: 'EMAIL',
+          email: 'guest@example.com',
+          status: 'PENDING',
+          version: 1,
+          expires_at: '2026-12-01T00:00:00Z',
+          resolved_at: null,
+        },
+      ],
     };
     const unexpected: string[] = [],
       pageErrors: string[] = [];
@@ -253,6 +275,48 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           return json(route, { message_code: 'REQUEST_ACCEPTED' });
         }
       }
+      const tokenAction = /^\/api\/v1\/invitations\/(preview|accept|decline)$/.exec(path);
+      if (tokenAction && method === 'POST') {
+        if (!model.authenticated) return error(route, 401);
+        expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        const data = body as { token: string };
+        expect(data.token).toMatch(/^inv1_[A-Za-z0-9_-]{43}$/);
+        const invitation = model.invitations.find((item) => item.status === 'PENDING');
+        if (!invitation) return error(route, 409, 'STATE_CONFLICT');
+        const response = {
+          id: invitation.id,
+          trip_name: model.trips.find((trip) => trip.id === invitation.trip_id)!.name,
+          inviter_display_name: 'Owner Gateway',
+          status: invitation.status,
+          expires_at: invitation.expires_at,
+        };
+        if (tokenAction[1] === 'preview') {
+          expect(request.headers()['idempotency-key']).toBeUndefined();
+          return json(route, response);
+        }
+        expect(request.headers()['idempotency-key']).toBeTruthy();
+        invitation.status = tokenAction[1] === 'accept' ? 'ACCEPTED' : 'DECLINED';
+        invitation.version += 1;
+        invitation.resolved_at = '2026-10-23T00:00:00Z';
+        if (tokenAction[1] === 'decline') return json(route, { ...response, status: 'DECLINED' });
+        const current = model.trips.find((trip) => trip.id === invitation.trip_id)!;
+        current.membership_revision += 1;
+        return json(route, {
+          membership: {
+            id: '88888888-8888-4888-8888-888888888888',
+            trip_id: current.id,
+            user_id: model.profile.id,
+            role: 'MEMBER',
+            joined_at: '2026-10-23T00:00:00Z',
+            left_at: null,
+          },
+          revisions: {
+            plan_version: current.plan_version,
+            membership_revision: current.membership_revision,
+            export_revision: current.export_revision,
+          },
+        });
+      }
       if (path === '/api/v1/trips' || path.startsWith('/api/v1/trips/')) {
         if (!model.authenticated) return error(route, 401);
         expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
@@ -295,6 +359,64 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           created.timezone = data.timezone;
           model.trips.push(created);
           return json(route, created, 201);
+        }
+        const invitationsMatch =
+          /^\/api\/v1\/trips\/([^/]+)\/invitations(?:\/([^/]+)\/(revoke|resend))?$/.exec(path);
+        if (invitationsMatch) {
+          const tripId = decodeURIComponent(invitationsMatch[1]!);
+          const current = model.trips.find((item) => item.id === tripId);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          if (current.current_membership.role !== 'OWNER')
+            return error(route, 403, 'PERMISSION_DENIED');
+          if (method === 'GET' && !invitationsMatch[2]) {
+            expect(url.searchParams.get('limit')).toBe('20');
+            const status = url.searchParams.get('status');
+            const items = model.invitations.filter(
+              (item) => item.trip_id === tripId && (!status || item.status === status),
+            );
+            return json(route, { items, next_cursor: null });
+          }
+          expect(method).toBe('POST');
+          expect(request.headers()['idempotency-key']).toBeTruthy();
+          if (!invitationsMatch[2]) {
+            const data = body as {
+              invitation_type: 'EMAIL' | 'LINK';
+              email?: string;
+              expected_membership_revision: number;
+            };
+            if (data.expected_membership_revision !== current.membership_revision)
+              return error(route, 409, 'STATE_CONFLICT');
+            const created = {
+              id: `99999999-9999-4999-8999-${String(model.invitations.length + 1).padStart(12, '0')}`,
+              trip_id: tripId,
+              invitation_type: data.invitation_type,
+              email: data.invitation_type === 'EMAIL' ? data.email! : null,
+              status: 'PENDING' as const,
+              version: 1,
+              expires_at: '2026-12-15T00:00:00Z',
+              resolved_at: null,
+            };
+            model.invitations.push(created);
+            return json(route, {
+              invitation: created,
+              one_time_link: `http://127.0.0.1:5174/invitations/local#token=inv1_${'z'.repeat(43)}`,
+            });
+          }
+          const invitation = model.invitations.find(
+            (item) => item.trip_id === tripId && item.id === invitationsMatch[2],
+          );
+          if (!invitation) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          const data = body as { expected_version: number };
+          if (data.expected_version !== invitation.version)
+            return error(route, 409, 'VERSION_CONFLICT', {
+              invitation_version: invitation.version,
+            });
+          invitation.version += 1;
+          if (invitationsMatch[3] === 'revoke') {
+            invitation.status = 'REVOKED';
+            invitation.resolved_at = '2026-10-23T00:00:00Z';
+          }
+          return json(route, { invitation });
         }
         const membersMatch = /^\/api\/v1\/trips\/([^/]+)\/members$/.exec(path);
         if (membersMatch && method === 'GET') {
@@ -355,7 +477,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           const fingerprint = JSON.stringify(data);
           const receipt = model.planPolicyReceipts.get(key!);
           if (receipt) {
-            if (receipt.fingerprint !== fingerprint) return error(route, 409, 'IDEMPOTENCY_CONFLICT');
+            if (receipt.fingerprint !== fingerprint)
+              return error(route, 409, 'IDEMPOTENCY_CONFLICT');
             return json(route, receipt.data);
           }
           if (model.planPolicyConflictOnce) {

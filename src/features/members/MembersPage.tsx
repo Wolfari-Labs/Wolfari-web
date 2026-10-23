@@ -26,6 +26,7 @@ import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
 import userIcon from '../../shared/assets/figma/2e748.svg';
 import styles from './MembersPage.module.css';
+import { InvitationManagement } from './InvitationManagement';
 type Snapshot<T> = ReadResult<T> | { status: 'loading' };
 function ReadPanel<T>({
   result,
@@ -151,16 +152,10 @@ function PlanPolicyPanel({
           disabled={
             !available ||
             pending ||
-            (!retryingUnknown &&
-              feedback?.status !== 'conflict' &&
-              policy === trip.planEditPolicy)
+            (!retryingUnknown && feedback?.status !== 'conflict' && policy === trip.planEditPolicy)
           }
         >
-          {retryingUnknown
-            ? 'Thử lại cùng yêu cầu'
-            : pending
-              ? 'Đang lưu'
-              : 'Lưu quyền'}
+          {retryingUnknown ? 'Thử lại cùng yêu cầu' : pending ? 'Đang lưu' : 'Lưu quyền'}
         </Button>
       </form>
     </section>
@@ -196,7 +191,9 @@ export function MembersView({
   onSubmitPolicy,
   draft,
   onDraftChange,
+  invitationManagement,
 }: {
+  invitationManagement?: ReactNode;
   trip: TripDetailViewModel;
   members: Snapshot<MembershipPageViewModel>;
   invitations: Snapshot<InvitationPageViewModel>;
@@ -250,13 +247,15 @@ export function MembersView({
           title={!owner ? 'Chỉ Owner được đọc lời mời' : undefined}
           onClick={() => onTabChange('invitations')}
         >
-          Lời mời · Xem trước
+          {invitationManagement ? 'Lời mời' : 'Lời mời · Xem trước'}
         </button>
         <button
           type="button"
           aria-pressed={tab === 'policy'}
           disabled={!policyAvailable}
-          title={!policyAvailable ? 'Quyền sửa chỉ khả dụng cho Owner có quyền cập nhật' : undefined}
+          title={
+            !policyAvailable ? 'Quyền sửa chỉ khả dụng cho Owner có quyền cập nhật' : undefined
+          }
           onClick={() => onTabChange('policy')}
         >
           Quyền sửa lịch trình
@@ -292,8 +291,7 @@ export function MembersView({
             <ReadPanel result={members} onRetry={onRetryMembers}>
               {(data) => {
                 const items = data.items.filter(
-                  (member) =>
-                    member.tripId === trip.id && (includeLeft || member.leftAt === null),
+                  (member) => member.tripId === trip.id && (includeLeft || member.leftAt === null),
                 );
                 return items.length || data.nextCursor ? (
                   <>
@@ -321,7 +319,8 @@ export function MembersView({
                             <details>
                               <summary>
                                 <strong>
-                                  {member.presentation.displayName ?? `User ${shortId(member.userId)}`}
+                                  {member.presentation.displayName ??
+                                    `User ${shortId(member.userId)}`}
                                 </strong>
                                 {member.id === trip.currentMembership.id && (
                                   <span className={styles.self}>Bạn</span>
@@ -431,7 +430,7 @@ export function MembersView({
           headingLevel={2}
           error={{ code: 'PERMISSION_DENIED', correlationId: null, retryable: false }}
         />
-      ) : (
+      ) : invitationManagement ? null : (
         <div className={styles.invitationWorkspace}>
           <form
             className={styles.invitationForm}
@@ -521,6 +520,7 @@ export function MembersView({
           </section>
         </div>
       )}
+      {invitationManagement && <div hidden={tab !== 'invitations'}>{invitationManagement}</div>}
     </>
   );
 }
@@ -598,7 +598,7 @@ export function MembersPage() {
     queryKey: ['invitations', tripId, invitationScenario],
     queryFn: ({ signal }) =>
       invitation.listInvitations({ tripId, scenario: invitationScenario, signal }),
-    enabled: owner && tab === 'invitations',
+    enabled: owner && tab === 'invitations' && (previewEnabled || !invitation.createInvitation),
   });
   const memberPages = membersQuery.data?.pages ?? [];
   const uniqueMembers = new Map(
@@ -611,7 +611,8 @@ export function MembersPage() {
       ? {
           status: 'error',
           error:
-            typeof membersQuery.error === 'object' && membersQuery.error !== null &&
+            typeof membersQuery.error === 'object' &&
+            membersQuery.error !== null &&
             'code' in membersQuery.error
               ? (membersQuery.error as unknown as DomainError)
               : { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true },
@@ -783,6 +784,15 @@ export function MembersPage() {
         <ContentState state="loading" headingLevel={2} />
       ) : trip ? (
         <MembersView
+          invitationManagement={
+            !previewEnabled && invitation.createInvitation ? (
+              <InvitationManagement
+                key={`${trip.id}:${trip.currentMembership.id}`}
+                trip={trip}
+                active={tab === 'invitations'}
+              />
+            ) : undefined
+          }
           trip={trip}
           members={members}
           invitations={invitations}

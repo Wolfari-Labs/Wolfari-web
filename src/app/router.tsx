@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { App } from './App';
+import { captureInvitationToken } from '../features/members/invitation-token';
 import { ContentState } from '../shared/components/ContentState';
 import { lazy, Suspense, type ReactNode } from 'react';
 import type { DemoAccess } from '../features/auth/model/demo-access';
@@ -37,6 +38,9 @@ const PlanPage = lazy(async () => ({
 const MembersPage = lazy(async () => ({
   default: (await import('../features/members/MembersPage')).MembersPage,
 }));
+const InvitationPage = lazy(async () => ({
+  default: (await import('../features/members/InvitationPage')).InvitationPage,
+}));
 const FundPage = lazy(async () => ({
   default: (await import('../features/fund/FundPage')).FundPage,
 }));
@@ -51,6 +55,7 @@ const feature = (element: ReactNode) => (
 );
 
 export function createRouter(previewTripPath: string | null, demoAccess?: DemoAccess) {
+  captureInvitationToken();
   const placeholder = <ContentState state="placeholder" headingLevel={2} />;
   return createBrowserRouter([
     {
@@ -148,6 +153,16 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
             contentTitle: true,
             fullBleed: true,
           },
+        },
+        {
+          path: '/invitations',
+          element: feature(<InvitationPage />),
+          handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/invitations/local',
+          element: feature(<InvitationPage />),
+          handle: { title: 'Lời mời chuyến đi', contentTitle: true, fullBleed: true },
         },
         {
           path: '/login',
