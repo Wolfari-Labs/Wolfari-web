@@ -87,14 +87,70 @@ export interface PlanViewModel {
     readonly canComplete: boolean;
   };
 }
+export interface ActivityCreateInput {
+  readonly title: string;
+  readonly activityType: string;
+  readonly description?: string | null;
+  readonly publicDescription?: string | null;
+  readonly selectedLocationId?: string | null;
+  readonly startsAt?: string | null;
+  readonly endsAt?: string | null;
+  readonly position: number;
+}
+export type ActivityUpdateFields = Partial<ActivityCreateInput>;
+
 export interface PlanRepository {
   getPlan(request: {
     readonly tripId: string;
     readonly scenario: PlanScenario;
     readonly signal: AbortSignal;
   }): Promise<ReadResult<PlanViewModel>>;
+  createActivity?(request: {
+    readonly tripId: string;
+    readonly expectedPlanVersion: number;
+    readonly idempotencyKey: string;
+    readonly activity: ActivityCreateInput;
+    readonly signal: AbortSignal;
+  }): Promise<PlanCommandResult<ActivityViewModel>>;
+  updateActivity?(request: {
+    readonly tripId: string;
+    readonly activityId: string;
+    readonly expectedPlanVersion: number;
+    readonly idempotencyKey: string;
+    readonly fields: ActivityUpdateFields;
+    readonly signal: AbortSignal;
+  }): Promise<PlanCommandResult<ActivityViewModel>>;
+  deleteActivity?(request: {
+    readonly tripId: string;
+    readonly activityId: string;
+    readonly expectedPlanVersion: number;
+    readonly idempotencyKey: string;
+    readonly signal: AbortSignal;
+  }): Promise<PlanCommandResult<{ planVersion: number; exportRevision: number }>>;
+  reorderActivities?(request: {
+    readonly tripId: string;
+    readonly expectedPlanVersion: number;
+    readonly idempotencyKey: string;
+    readonly activityIds: readonly string[];
+    readonly signal: AbortSignal;
+  }): Promise<PlanCommandResult<{ planVersion: number; exportRevision: number }>>;
+  setActivityCompletion?(request: {
+    readonly tripId: string;
+    readonly activityId: string;
+    readonly expectedPlanVersion: number;
+    readonly idempotencyKey: string;
+    readonly status: 'TODO' | 'COMPLETED';
+    readonly signal: AbortSignal;
+  }): Promise<PlanCommandResult<ActivityViewModel>>;
 }
-// Reserved verified command metadata. Phase 3 deliberately exposes no write method.
+
+export type PlanCommandResult<T> =
+  | { readonly status: 'success'; readonly data: T; readonly correlationId: string | null }
+  | {
+      readonly status: 'error';
+      readonly error: import('../../../shared/types/result').DomainError;
+    };
+// Commands carry the revisions and idempotency keys required by the Gateway contract.
 export interface PlanWriteIntent {
   readonly idempotencyKey: string;
   readonly expectedPlanVersion: number;

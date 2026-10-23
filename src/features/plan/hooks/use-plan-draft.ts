@@ -6,6 +6,7 @@ import {
 } from '../../../shared/lib/browser-storage';
 import type { PlanViewModel, SelectedLocationViewModel } from '../model/plan';
 import {
+  createPlanDraft,
   editPlanDraftActivity,
   movePlanDraftActivity,
   parsePlanDraft,
@@ -112,12 +113,23 @@ export function usePlanDraft({
   return {
     activities: payload.activities,
     storageStatus,
+    needsReview: !!plan && payload.basePlanVersion !== plan.planVersion,
+    async resetToServer() {
+      if (!plan || !userId || !tripId) return false;
+      return update(() => createPlanDraft(plan, locations, userId, timezone));
+    },
     move(move: PlanDraftMove) {
-      if (plan) void update((current) => movePlanDraftActivity(current, move));
+      if (plan?.permissions.canEdit)
+        void update((current) =>
+          current.basePlanVersion === plan.planVersion
+            ? movePlanDraftActivity(current, move)
+            : null,
+        );
     },
     async edit(edit: PlanDraftEdit, expected: PlanDraftActivity) {
-      if (!plan) return false;
+      if (!plan?.permissions.canEdit) return false;
       return update((current) => {
+        if (current.basePlanVersion !== plan.planVersion) return null;
         const latest = current.activities.find((activity) => activity.id === edit.activityId);
         if (JSON.stringify(latest) !== JSON.stringify(expected)) return null;
         return editPlanDraftActivity(current, edit);

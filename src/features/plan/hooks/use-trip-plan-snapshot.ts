@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { DomainError } from '../../../shared/types/result';
 import { useTripRepository } from '../../trips/repositories/repository-context';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
@@ -38,6 +39,18 @@ export function useTripPlanSnapshot(
   scenario: PlanScenario,
   tripScenario: TripDetailScenario = 'success',
 ) {
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
+  const lastReady = useRef<Extract<TripPlanSnapshotState, { status: 'ready' }> | null>(null);
+  const generation = useRef(0);
+  useEffect(() => {
+    generation.current += 1;
+    setRefreshing(false);
+    setRefreshFailed(false);
+    return () => {
+      generation.current += 1;
+    };
+  }, [tripId, scenario, tripScenario]);
   const tripRepository = useTripRepository();
   const planRepository = usePlanRepository();
   const tripQuery = useQuery({
@@ -100,11 +113,54 @@ export function useTripPlanSnapshot(
     state = { status: 'empty' };
   }
 
-  return {
-    state,
-    retry() {
-      void tripQuery.refetch();
-      if (allowed) void planQuery.refetch();
-    },
-  };
+  if (state.status === 'ready') lastReady.current = state;
+  // A pair of independently finishing reads must not temporarily unmount editors.
+  if (
+    lastReady.current?.trip.id === tripId &&
+    ((refreshing && state.status === 'loading') ||
+      ((refreshing || refreshFailed) &&
+        state.status === 'error' &&
+        (state.error.code === 'SERVICE_UNAVAILABLE' || state.error.code === 'VERSION_CONFLICT')))
+  ) {
+    state = lastReady.current;
+  }
+  const refetchTrip = tripQuery.refetch;
+  const refetchPlan = planQuery.refetch;
+  const retry = useCallback(async (): Promise<boolean> => {
+    const token = generation.current;
+    setRefreshing(true);
+    let ready = false;
+    try {
+      const [nextTrip, nextPlan] = await Promise.all([refetchTrip(), refetchPlan()]);
+      if (
+        token !== generation.current ||
+        nextTrip.isError ||
+        nextPlan.isError ||
+        nextTrip.data?.status !== 'ready' ||
+        nextPlan.data?.status !== 'ready'
+      )
+        return false;
+      const t = nextTrip.data.data;
+      const p = nextPlan.data.data;
+      ready =
+        t.id === tripId &&
+        p.tripId === tripId &&
+        t.permissions.canRead &&
+        t.currentMembership.leftAt === null &&
+        t.currentMembership.tripId === tripId &&
+        p.permissions.canRead &&
+        t.planVersion === p.planVersion &&
+        t.exportRevision === p.exportRevision &&
+        projectionMatches(p);
+      return ready;
+    } catch {
+      return false;
+    } finally {
+      if (token === generation.current) {
+        setRefreshFailed(!ready);
+        setRefreshing(false);
+      }
+    }
+  }, [tripId, refetchTrip, refetchPlan]);
+  return { state, retry, refreshing, refreshFailed };
 }

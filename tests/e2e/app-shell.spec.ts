@@ -37,9 +37,13 @@ async function expectRouteContent(page: Page, route: string) {
     ).toBeVisible();
   else if (route === '/profile')
     await expect(page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' })).toBeVisible();
-  else if (route.endsWith('/plan'))
+  else if (route.endsWith('/plan')) {
     await expect(page.locator('[data-flow="plan-preview"]')).toBeVisible();
-  else if (route.endsWith('/members'))
+    await expect(
+      page.locator('main').getByRole('heading', { name: 'Lịch trình', exact: true }),
+    ).toBeVisible();
+    await expect(page.getByRole('list', { name: 'Các hoạt động trong ngày' })).toBeVisible();
+  } else if (route.endsWith('/members'))
     await expect(page.locator('[data-flow="members-preview"]')).toBeVisible();
   else if (/^\/trips\/[^/]+$/.test(route))
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
@@ -210,6 +214,11 @@ for (const size of sizes)
       await drawer.getByRole('link', { name: 'Lịch trình', exact: true }).click();
       await expect(page).toHaveURL(tripPath + '/plan');
       await expect(drawer).not.toBeVisible();
+      // Drawer focus and URL changes precede the lazy route's commit. Wait for
+      // Plan content before appending the probe, otherwise navigation resets
+      // the scroll after the probe has already been clicked.
+      await expectRouteContent(page, tripPath + '/plan');
+      await loadedAssets(page);
       await expect(page.locator('main')).toBeFocused();
       await page.screenshot({ path: info.outputPath('mobile.png') });
       await fillMain(page);
@@ -259,6 +268,47 @@ for (const size of sizes)
     await page.goto('/trips/22222222-2222-4222-8222-222222222222');
     await expect(page.getByText('Không tìm thấy nội dung', { exact: true })).toBeVisible();
   });
+
+test('mobile scroll waits for the lazy Plan route after drawer navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  let releasePlan!: () => void;
+  const planGate = new Promise<void>((resolve) => {
+    releasePlan = resolve;
+  });
+  await page.route('**/src/features/plan/PlanPage.tsx*', async (route) => {
+    await planGate;
+    await route.continue();
+  });
+  try {
+    await page.goto(tripPath);
+    await expectRouteContent(page, tripPath);
+    await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
+    const planRequest = page.waitForRequest(
+      (request) => new URL(request.url()).pathname === '/src/features/plan/PlanPage.tsx',
+    );
+    await drawer.getByRole('link', { name: 'Lịch trình', exact: true }).click();
+    await planRequest;
+    await expect(drawer).not.toBeVisible();
+    // Reproduce the failed CI screenshot: the drawer is gone, but the old
+    // Overview still renders while the Plan module is in flight.
+    await expectRouteContent(page, tripPath);
+    releasePlan();
+    await expectRouteContent(page, tripPath + '/plan');
+    await loadedAssets(page);
+    await expect(page.locator('main')).toBeFocused();
+    await fillMain(page);
+    const end = page.getByRole('button', { name: 'Acceptance content end' });
+    await end.click();
+    await expect(end).toBeInViewport();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.body).overflow))
+      .not.toContain('hidden');
+  } finally {
+    releasePlan();
+  }
+});
 
 test('drawer traps focus, closes with Escape/backdrop, and keeps background scroll locked', async ({
   page,

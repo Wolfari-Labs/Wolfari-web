@@ -23,6 +23,14 @@ already wired into the browser runtime.
 | Plan/Activity      | `GET /trips/:id/plan`, activity POST/PATCH/DELETE/order PUT                    | runtime           | `feat/8`                               | expected plan version + idempotency on writes                                                                                                                           |
 | Finance/Fund       | none in Gateway                                                                | blocker           | unavailable                            | fixture/unavailable only                                                                                                                                                |
 
+## Feature #8 delivery boundary
+
+The Web Plan server panel invokes Activity create/update/delete/completion and
+full-list reorder with revision/idempotency protection. Trip and Plan refresh
+together after confirmed writes. Date-only scheduling and cascading time resets
+remain a separately labelled local draft; they are not Gateway-complete. See
+[Plan/Activity evidence](plan-activity-evidence-2026-10-23.md).
+
 ## Feature #2 boundary
 
 Feature #2 provides the shared HTTP transport, normalized domain errors, the

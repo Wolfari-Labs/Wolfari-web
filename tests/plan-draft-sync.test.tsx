@@ -47,6 +47,53 @@ const edit = (activity: PlanDraftActivity, title: string) => ({
 });
 
 describe('Plan draft synchronization', () => {
+  it('blocks an open editor and moves after permission is revoked without a version change', async () => {
+    const { props, key, draft } = await setup('permission-downgrade-reader');
+    const raw = JSON.stringify(draft);
+    localStorage.setItem(key, raw);
+    const { result, rerender } = renderHook((input) => usePlanDraft(input), { initialProps: props });
+    const opened = result.current.activities[0]!;
+    rerender({ ...props, plan: { ...props.plan, permissions: { ...props.plan.permissions, canEdit: false } } });
+    await act(async () => {
+      expect(await result.current.edit(edit(opened, 'Forbidden local edit'), opened)).toBe(false);
+      result.current.move({ activityId: opened.id, target: { type: 'POOL' } });
+    });
+    expect(result.current.needsReview).toBe(false);
+    expect(localStorage.getItem(key)).toBe(raw);
+    expect(result.current.activities[0]).toEqual(opened);
+    await act(async () => {
+      expect(await result.current.resetToServer()).toBe(true);
+    });
+  });
+
+  it('preserves draft on a newer server snapshot and blocks writes until an explicit reset', async () => {
+    const { props, key, draft } = await setup('server-conflict-reader');
+    const pending = editPlanDraftActivity(draft, edit(draft.activities[0]!, 'Unsaved intent'));
+    const raw = JSON.stringify(pending);
+    localStorage.setItem(key, raw);
+    const { result, rerender } = renderHook((input) => usePlanDraft(input), {
+      initialProps: props,
+    });
+    expect(result.current.needsReview).toBe(false);
+    const newer = { ...props, plan: { ...props.plan, planVersion: props.plan.planVersion + 1 } };
+    rerender(newer);
+    expect(result.current.needsReview).toBe(true);
+    expect(result.current.activities[0]!.title).toBe('Unsaved intent');
+    expect(localStorage.getItem(key)).toBe(raw);
+    const stale = result.current.activities[0]!;
+    await act(async () => {
+      expect(await result.current.edit(edit(stale, 'Blocked edit'), stale)).toBe(false);
+      result.current.move({ activityId: stale.id, target: { type: 'POOL' } });
+    });
+    expect(localStorage.getItem(key)).toBe(raw);
+    await act(async () => {
+      expect(await result.current.resetToServer()).toBe(true);
+    });
+    expect(result.current.needsReview).toBe(false);
+    expect(result.current.activities[0]!.title).toBe(draft.activities[0]!.title);
+    expect(JSON.parse(localStorage.getItem(key)!).basePlanVersion).toBe(newer.plan.planVersion);
+  });
+
   it('reads the latest snapshot before editing a different activity, even before a storage event', async () => {
     const { props, key, draft } = await setup('latest-reader');
     const { result } = renderHook(() => usePlanDraft(props));
