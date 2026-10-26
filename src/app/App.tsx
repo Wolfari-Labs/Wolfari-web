@@ -1,4 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  captureInvitationToken,
+  invitationResponseAttempt,
+} from '../features/members/invitation-token';
+import { invitationManagementAttempt } from '../features/members/invitation-management-attempt';
 import { Link, useLocation, useNavigate, useParams, useMatches, Outlet } from 'react-router';
 import {
   scenarios,
@@ -16,6 +21,11 @@ import { Alert } from '../shared/components/Alert';
 import { Button } from '../shared/components/Button';
 import type { DemoAccess } from '../features/auth/model/demo-access';
 import type { RouteContext } from './route-context';
+import { useOptionalSessionManager } from './session-context';
+import { safeReturnTo } from './safe-return-to';
+
+const noSessionSubscription = () => () => undefined;
+const unknownSession = () => 'unknown';
 
 export function App({
   previewTripPath,
@@ -25,8 +35,16 @@ export function App({
   demoAccess?: DemoAccess;
 }) {
   const { tripId } = useParams();
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname, search, hash } = location;
+  useLayoutEffect(() => {
+    captureInvitationToken();
+    const sync = () => captureInvitationToken();
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, [pathname, search, hash, location.key]);
   const navigate = useNavigate();
+  const sessionManager = useOptionalSessionManager();
   const matches = useMatches();
   const handle = matches.at(-1)?.handle as
     | {
@@ -52,10 +70,79 @@ export function App({
     [paths.home, paths.login, paths.register].includes(policyPath) ? 'guest' : 'success',
   );
   const [demoActive, setDemoActive] = useState(false);
-  const query = useShell(tripId ?? null, scenario);
+  const sessionStatus = useSyncExternalStore(
+    sessionManager?.subscribe ?? noSessionSubscription,
+    sessionManager?.status ?? unknownSession,
+  );
+  const previousSessionStatus = useRef(sessionStatus);
+  useEffect(() => {
+    if (
+      sessionStatus === 'anonymous' ||
+      sessionStatus === 'expired' ||
+      (sessionStatus === 'unknown' && previousSessionStatus.current === 'authenticated')
+    ) {
+      invitationResponseAttempt.clear();
+      invitationManagementAttempt.clear();
+    }
+    previousSessionStatus.current = sessionStatus;
+  }, [sessionStatus]);
+  const privateSessionBlocked =
+    !!sessionManager &&
+    requiresViewer &&
+    (sessionStatus === 'unknown' || sessionStatus === 'anonymous' || sessionStatus === 'expired');
+  const standaloneAuthRoute =
+    !!sessionManager &&
+    [
+      paths.login,
+      paths.register,
+      paths.forgotPassword,
+      paths.verifyEmail,
+      paths.resetPassword,
+      paths.invitations,
+      '/invitations/local',
+    ].includes(policyPath);
+  const shellQueryEnabled = !privateSessionBlocked && !standaloneAuthRoute;
+  const query = useShell(tripId ?? null, scenario, shellQueryEnabled);
   const result = query.data;
-  const snapshot = result?.status === 'ready' ? result.data : null;
+  const snapshot =
+    sessionManager && sessionStatus !== 'authenticated'
+      ? null
+      : result?.status === 'ready'
+        ? result.data
+        : null;
   const effectiveSection = handle?.section ?? 'overview';
+  useEffect(() => {
+    if (sessionStatus === 'authenticated') setScenario('success');
+    if (
+      sessionStatus === 'anonymous' &&
+      [paths.home, paths.login, paths.register].includes(policyPath)
+    )
+      setScenario('guest');
+  }, [policyPath, sessionStatus]);
+  useEffect(() => {
+    if (
+      (sessionStatus === 'anonymous' || sessionStatus === 'expired') &&
+      requiresViewer &&
+      policyPath !== paths.login &&
+      policyPath !== paths.register
+    ) {
+      navigate(`${paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname + search))}`, {
+        replace: true,
+      });
+      return;
+    }
+    if (
+      result?.status === 'error' &&
+      result.error.code === 'UNAUTHENTICATED' &&
+      requiresViewer &&
+      policyPath !== paths.login &&
+      policyPath !== paths.register
+    ) {
+      navigate(`${paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname + search))}`, {
+        replace: true,
+      });
+    }
+  }, [navigate, pathname, search, policyPath, requiresViewer, result, sessionStatus]);
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
     : tripId
@@ -207,6 +294,10 @@ export function App({
       )}
       {!ownContentTitle && previewControls}
       {handle?.notFound ? (
+        <Outlet context={routeContext} />
+      ) : privateSessionBlocked ? (
+        <ContentState state="loading" headingLevel={2} />
+      ) : standaloneAuthRoute ? (
         <Outlet context={routeContext} />
       ) : query.isPending ? (
         <ContentState state="loading" headingLevel={2} />

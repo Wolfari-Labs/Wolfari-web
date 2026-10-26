@@ -7,10 +7,16 @@ export function createFixtureTripStore(seed: readonly TripListItem[] = fixtureTr
   const descriptions = new Map<string, string | null>([
     [previewTripId, 'Khám phá Đà Nẵng – thành phố biển xinh đẹp với những người bạn đồng hành.'],
   ]);
+  const publicDescriptions = new Map<string, string | null>();
   return {
     readTrips: () => structuredClone(records),
     readDescription: (tripId: string) => descriptions.get(tripId) ?? null,
-    saveTrip(trip: TripListItem, description: string | null) {
+    readPublicDescription: (tripId: string) => publicDescriptions.get(tripId) ?? null,
+    saveTrip(
+      trip: TripListItem,
+      description: string | null,
+      publicDescription: string | null = null,
+    ) {
       const index = records.findIndex((record) => record.id === trip.id);
       if (index < 0) records = [...records, structuredClone(trip)];
       else
@@ -18,6 +24,7 @@ export function createFixtureTripStore(seed: readonly TripListItem[] = fixtureTr
           position === index ? structuredClone(trip) : record,
         );
       descriptions.set(trip.id, description);
+      publicDescriptions.set(trip.id, publicDescription);
     },
   };
 }

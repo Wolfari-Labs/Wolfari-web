@@ -159,6 +159,13 @@
 .feedback {
   margin-top: 16px;
 }
+.forgotLink {
+  min-width: 0 !important;
+  padding-inline: 0 !important;
+  border: 0 !important;
+  color: #044791;
+  font-size: 12px;
+}
 .consent {
   display: flex;
   align-items: center;

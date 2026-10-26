@@ -2,7 +2,7 @@ name: Web checks
 
 on:
   push:
-    branches: [main, develop, 'ui/**', 'feature/**']
+    branches: [main, develop, 'ui/**', 'feature/**', 'feat/**']
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
@@ -38,6 +38,8 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Run browser and visual regression
         run: pnpm test:e2e
+      - name: Run Gateway-mode browser contracts (mocked HTTP)
+        run: pnpm test:e2e:gateway
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v6

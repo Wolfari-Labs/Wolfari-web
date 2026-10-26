@@ -15,3 +15,6 @@ export function useIdentityRepository() {
   if (!repository) throw new Error('Identity repository provider missing');
   return repository;
 }
+export function useOptionalIdentityRepository() {
+  return useContext(Context);
+}

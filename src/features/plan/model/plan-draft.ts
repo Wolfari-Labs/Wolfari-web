@@ -1,8 +1,4 @@
-import type {
-  ActivityViewModel,
-  PlanViewModel,
-  SelectedLocationViewModel,
-} from './plan';
+import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from './plan';
 import { localDate } from './plan-presentation';
 
 export const PLAN_DRAFT_VERSION = 1;
@@ -30,7 +26,9 @@ export interface PlanDraftState {
 
 export type PlanDraftMove = {
   readonly activityId: string;
-  readonly target: { readonly type: 'POOL'; readonly index?: number } | { readonly type: 'DAY'; readonly day: string; readonly index: number };
+  readonly target:
+    | { readonly type: 'POOL'; readonly index?: number }
+    | { readonly type: 'DAY'; readonly day: string; readonly index: number };
 };
 
 export type PlanDraftEdit = {
@@ -53,7 +51,8 @@ function activityType(location: SelectedLocationViewModel) {
       : Array.isArray(location.metadata.types)
         ? location.metadata.types.find((value): value is string => typeof value === 'string')
         : null;
-  if (category === 'restaurant' || category === 'cafe' || category === 'meal_takeaway') return 'MEAL';
+  if (category === 'restaurant' || category === 'cafe' || category === 'meal_takeaway')
+    return 'MEAL';
   if (category === 'beach') return 'BEACH';
   if (category === 'park' || category === 'hiking_area') return 'WALK';
   return 'SIGHTSEEING';
@@ -196,8 +195,9 @@ export function reconcilePlanDraft(
   timezone: string,
   now = Date.now(),
 ) {
-  if (!stored || stored.basePlanVersion !== plan.planVersion)
-    return createPlanDraft(plan, locations, userId, timezone, now);
+  if (!stored) return createPlanDraft(plan, locations, userId, timezone, now);
+  // A newer snapshot must never silently discard the user's unsaved intent.
+  if (stored.basePlanVersion !== plan.planVersion) return stored;
 
   const selectedIds = new Set(locations.map((location) => location.id));
   const planIds = new Set(plan.activities.map((activity) => activity.id));
@@ -228,10 +228,7 @@ function orderedForDay(activities: readonly PlanDraftActivity[], day: string) {
     .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id));
 }
 
-export function draftActivitiesForDay(
-  activities: readonly PlanDraftActivity[],
-  day: string,
-) {
+export function draftActivitiesForDay(activities: readonly PlanDraftActivity[], day: string) {
   return orderedForDay(activities, day);
 }
 
@@ -252,6 +249,7 @@ export function movePlanDraftActivity(
   if (move.target.type === 'POOL') {
     const pool = unscheduledDraftActivities(activities).filter((item) => item.id !== selected.id);
     const index = Math.max(0, Math.min(move.target.index ?? pool.length, pool.length));
+    if (selected.scheduledDate === null && selected.position === index) return current;
     pool.splice(index, 0, {
       ...selected,
       scheduledDate: null,
@@ -268,6 +266,7 @@ export function movePlanDraftActivity(
     (activity) => activity.id !== selected.id,
   );
   const index = Math.max(0, Math.min(move.target.index, target.length));
+  if (selected.scheduledDate === targetDay && selected.position === index) return current;
   target.splice(index, 0, selected);
   const changes = new Map(
     target.map((activity, position) => [
@@ -313,7 +312,13 @@ export function localTimeToIso(day: string, time: string, timezone: string) {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const actual = timezoneParts(instant, timezone);
     const wanted = Date.UTC(year!, month! - 1, date!, hour!, minute!);
-    const observed = Date.UTC(actual.year, actual.month - 1, actual.day, actual.hour, actual.minute);
+    const observed = Date.UTC(
+      actual.year,
+      actual.month - 1,
+      actual.day,
+      actual.hour,
+      actual.minute,
+    );
     instant = new Date(instant.getTime() + wanted - observed);
   }
   return instant.toISOString();
@@ -327,28 +332,43 @@ export function editPlanDraftActivity(
   const selected = current.activities.find((activity) => activity.id === edit.activityId);
   if (!selected) return current;
   const changedDay = selected.scheduledDate !== edit.day;
-  const targetPosition = changedDay ? orderedForDay(current.activities, edit.day).length : selected.position;
+  if (changedDay) {
+    const moved = movePlanDraftActivity(
+      current,
+      {
+        activityId: selected.id,
+        target: {
+          type: 'DAY',
+          day: edit.day,
+          index: orderedForDay(current.activities, edit.day).length,
+        },
+      },
+      now,
+    );
+    return payload(
+      current.basePlanVersion,
+      moved.activities.map((activity) =>
+        activity.id === selected.id ? { ...activity, title: edit.title.trim() } : activity,
+      ),
+      now,
+    );
+  }
   const hasTimes = Boolean(edit.startTime && edit.endTime);
   const startsAt = hasTimes ? localTimeToIso(edit.day, edit.startTime, edit.timezone) : null;
   const endsAt = hasTimes ? localTimeToIso(edit.day, edit.endTime, edit.timezone) : null;
-  const sourceItems = changedDay && selected.scheduledDate
-    ? orderedForDay(current.activities, selected.scheduledDate).filter((item) => item.id !== selected.id)
-    : [];
-  const sourcePositions = new Map(sourceItems.map((item, position) => [item.id, position]));
   return payload(
     current.basePlanVersion,
     current.activities.map((activity) => {
       if (activity.id === selected.id)
         return {
-            ...activity,
-            title: edit.title.trim(),
-            scheduledDate: edit.day,
-            startsAt,
-            endsAt,
-            position: targetPosition,
-          };
-      const position = sourcePositions.get(activity.id);
-      return position === undefined ? activity : { ...activity, position };
+          ...activity,
+          title: edit.title.trim(),
+          scheduledDate: edit.day,
+          startsAt,
+          endsAt,
+          position: selected.position,
+        };
+      return activity;
     }),
     now,
   );

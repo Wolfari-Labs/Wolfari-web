@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 import './shared/styles/fonts.css';
 import './shared/styles/global.css';
 import { Providers } from './app/providers';
@@ -26,6 +26,8 @@ import type { MembershipRepository, InvitationRepository } from './features/memb
 import { selectMembersRepositories } from './infrastructure/repositories/select-members-repositories';
 import type { DemoAccess } from './features/auth/model/demo-access';
 import { createGatewayHttpClient } from './infrastructure/http/http-client';
+import { createAccessTokenStore } from './infrastructure/session/access-token-store';
+import { createSessionManager } from './infrastructure/session/session-manager';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -35,7 +37,16 @@ if (!element) throw new Error('Root element missing');
 const root = createRoot(element);
 async function start() {
   try {
-    const gatewayHttpClient = createGatewayHttpClient();
+    const accessTokenStore = createAccessTokenStore();
+    async function refreshSession() {
+      return (await sessionManager.bootstrap()) === 'authenticated';
+    }
+    const gatewayHttpClient = createGatewayHttpClient({
+      getAccessToken: accessTokenStore.get,
+      onUnauthorized: refreshSession,
+    });
+    const sessionManager = createSessionManager(gatewayHttpClient, accessTokenStore);
+    if (!fixtureSelected) void sessionManager.bootstrap().catch(() => undefined);
     let previewTripPath: string | null = null;
     let demoAccess: DemoAccess | undefined;
     let fixtureFactory: (() => ShellRepository) | undefined;
@@ -102,6 +113,8 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       identityFixtureFactory,
+      gatewayHttpClient,
+      sessionManager,
     );
     const homeRepository = selectHomeRepository(
       import.meta.env.VITE_DATA_MODE,
@@ -128,6 +141,7 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       membersFixtureFactory,
+      gatewayHttpClient,
     );
     root.render(
       <StrictMode>
@@ -141,6 +155,7 @@ async function start() {
             fundRepository={fundRepository}
             priceWatchRepository={priceWatchRepository}
             membersRepositories={membersRepositories}
+            {...(!fixtureSelected ? { sessionManager } : {})}
           >
             <RouterProvider router={createRouter(previewTripPath, demoAccess)} />
           </Providers>

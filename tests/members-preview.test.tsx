@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { App } from '../src/app/App';
@@ -19,6 +19,7 @@ import { createGatewayMembershipRepository } from '../src/infrastructure/reposit
 import { createGatewayInvitationRepository } from '../src/infrastructure/repositories/invitation.gateway-repository';
 import { selectMembersRepositories } from '../src/infrastructure/repositories/select-members-repositories';
 import { previewTripId, fixtureTripCatalog } from '../src/infrastructure/fixtures/trip-catalog';
+import type { PlanEditPolicy, TripRepository, UpdatePlanPolicyResult } from '../src/features/trips/repositories/trip.repository';
 const req = (
   scenario: (typeof membershipScenarios)[number] = 'success',
   tripId = previewTripId,
@@ -145,11 +146,13 @@ describe('Members/Invitation read boundary', () => {
 });
 function mount({
   guest = false,
+  preview = true,
   tripId = previewTripId,
   membership = createFixtureMembershipRepository(),
   trip = createFixtureTripRepository(),
 }: {
   guest?: boolean;
+  preview?: boolean;
   tripId?: string;
   membership?: MembershipRepository;
   trip?: ReturnType<typeof createFixtureTripRepository>;
@@ -162,7 +165,7 @@ function mount({
   const router = createMemoryRouter(
     [
       {
-        element: <App previewTripPath={'/trips/' + previewTripId} />,
+        element: <App previewTripPath={preview ? '/trips/' + previewTripId : null} />,
         children: [
           {
             path: '/trips/:tripId/members',
@@ -190,7 +193,7 @@ function mount({
 it('renders nullable identity and keeps invitation draft through errors without write success', async () => {
   const { listInvitations } = mount();
   const region = await screen.findByRole('region', { name: 'Danh sách thành viên' });
-  await within(region).findByText('Thành viên 1');
+  await within(region).findByText(/^User aaaaaaaa/);
   expect(
     within(region).queryByText(/Trang Nguyễn|Hà Nguyễn|Quyên Trần|Tân Lê/),
   ).not.toBeInTheDocument();
@@ -215,7 +218,7 @@ it('renders nullable identity and keeps invitation draft through errors without 
 });
 it('Member cannot read Owner invitation projection and Guest performs no private reads', async () => {
   const { listInvitations } = mount({ tripId: '33333333-3333-4333-8333-333333333333' });
-  await screen.findByText('Thành viên 1');
+  await screen.findByText(/^User aaaaaaaa/);
   expect(screen.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
   expect(listInvitations).not.toHaveBeenCalled();
 });
@@ -265,5 +268,209 @@ it('filters out members from another Trip instead of displaying a foreign projec
     },
   });
   await screen.findByText('Chưa có nội dung');
-  expect(screen.queryByText('Thành viên 1')).not.toBeInTheDocument();
+  expect(screen.queryByText(/^User aaaaaaaa/)).not.toBeInTheDocument();
+});
+
+it('loads opaque member pages, deduplicates IDs, and resets pagination when showing departed members', async () => {
+  const fixture = createFixtureMembershipRepository();
+  const initial = await fixture.listMembers(req());
+  if (initial.status !== 'ready') throw Error('Missing member fixture');
+  const [owner, member, another] = initial.data.items;
+  if (!owner || !member || !another) throw Error('Expected fixture members');
+  const departed = { ...another, leftAt: '2026-09-01T00:00:00Z' };
+  const listMembers = vi.fn(async (request: Parameters<MembershipRepository['listMembers']>[0]) => {
+    if (request.cursor) {
+      expect(request.cursor).toBe('next/+==');
+      return { status: 'ready' as const, data: { items: [owner, member], nextCursor: null } };
+    }
+    return {
+      status: 'ready' as const,
+      data: request.includeLeft
+        ? { items: [owner, member, departed], nextCursor: null }
+        : { items: [owner], nextCursor: 'next/+==' },
+    };
+  });
+  mount({ membership: { listMembers } });
+  const region = await screen.findByRole('region', { name: 'Danh sách thành viên' });
+  expect(listMembers).toHaveBeenCalledWith(expect.objectContaining({ limit: 100, includeLeft: false }));
+  await userEvent.click(within(region).getByRole('button', { name: 'Tải thêm thành viên' }));
+  await within(region).findByText('2 thành viên đã tải');
+  expect(listMembers.mock.calls[1]?.[0]).toMatchObject({ cursor: 'next/+==', limit: 100 });
+  expect(within(region).getAllByText(/^User aaaaaaaa/)).toHaveLength(1);
+  await userEvent.click(within(region).getByLabelText('Hiển thị người đã rời'));
+  await within(region).findByText('3 thành viên đã tải');
+  expect(listMembers.mock.calls.at(-1)?.[0]).toMatchObject({ includeLeft: true, limit: 100 });
+  expect(within(region).getByText(/Đã rời/)).toBeInTheDocument();
+});
+
+it('retains loaded members after a next-page error and retries the same opaque cursor', async () => {
+  const fixture = createFixtureMembershipRepository();
+  const initial = await fixture.listMembers(req());
+  if (initial.status !== 'ready') throw Error('Missing member fixture');
+  const [owner, member] = initial.data.items;
+  if (!owner || !member) throw Error('Expected fixture members');
+  const memberLabel = `User ${member.userId.slice(0, 8)}…${member.userId.slice(-4)}`;
+  const listMembers = vi.fn(async (request: Parameters<MembershipRepository['listMembers']>[0]) => {
+    if (!request.cursor) {
+      return { status: 'ready' as const, data: { items: [owner], nextCursor: 'retry/+==' } };
+    }
+    if (listMembers.mock.calls.length === 2) {
+      return {
+        status: 'error' as const,
+        error: {
+          code: 'SERVICE_UNAVAILABLE' as const,
+          correlationId: 'next-page-error',
+          retryable: true,
+        },
+      };
+    }
+    return { status: 'ready' as const, data: { items: [member], nextCursor: null } };
+  });
+  mount({ membership: { listMembers } });
+  const region = await screen.findByRole('region', { name: 'Danh sách thành viên' });
+  await userEvent.click(within(region).getByRole('button', { name: 'Tải thêm thành viên' }));
+  expect(await within(region).findByText(/Chưa tải được trang tiếp theo/)).toBeInTheDocument();
+  expect(within(region).getByText(/^User aaaaaaaa/)).toBeInTheDocument();
+  expect(within(region).queryByText(memberLabel, { exact: true })).not.toBeInTheDocument();
+  await userEvent.click(within(region).getByRole('button', { name: 'Thử lại trang này' }));
+  await within(region).findByText('2 thành viên đã tải');
+  expect(listMembers.mock.calls[1]?.[0].cursor).toBe('retry/+==');
+  expect(listMembers.mock.calls[2]?.[0].cursor).toBe('retry/+==');
+});
+
+it('keeps fixture policy controls unavailable and gates the real policy tab by active Owner capability', async () => {
+  const base = createFixtureTripRepository();
+  const writer: NonNullable<TripRepository['updatePlanPolicy']> = async () => ({
+    status: 'error',
+    error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false },
+  });
+  const withWriter = { ...base, updatePlanPolicy: vi.fn(writer) };
+
+  mount({ trip: withWriter });
+  await screen.findByText(/^User aaaaaaaa/);
+  expect(screen.getByRole('button', { name: 'Quyền sửa lịch trình' })).toBeDisabled();
+  cleanup();
+
+  mount({ preview: false, trip: withWriter, tripId: '33333333-3333-4333-8333-333333333333' });
+  expect(await screen.findByRole('button', { name: 'Quyền sửa lịch trình' })).toBeDisabled();
+  expect(withWriter.updatePlanPolicy).not.toHaveBeenCalled();
+  cleanup();
+
+  const ownerId = '11111111-1111-4111-8111-111111111111';
+  const selectedTrip: typeof withWriter = {
+    ...withWriter,
+    getTrip: async (request) => {
+      const result = await base.getTrip(request);
+      return result.status === 'ready'
+        ? { ...result, data: { ...result.data, planEditPolicy: 'SELECTED_MEMBERS' } }
+        : result;
+    },
+  };
+  mount({ preview: false, trip: selectedTrip, tripId: ownerId });
+  const policyTab = await screen.findByRole('button', { name: 'Quyền sửa lịch trình' });
+  expect(policyTab).toBeEnabled();
+  await userEvent.click(policyTab);
+  expect(screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })).toHaveValue(
+    'SELECTED_MEMBERS',
+  );
+  expect(screen.getByRole('option', { name: /thành viên được chọn · chưa thể chỉnh sửa/i })).toBeDisabled();
+  expect(screen.getByText(/Backend chưa cung cấp projection/)).toBeInTheDocument();
+  expect(withWriter.updatePlanPolicy).not.toHaveBeenCalled();
+});
+
+it('keeps unknown policy writes unresolved and retries the same intent only after an explicit action', async () => {
+  const base = createFixtureTripRepository();
+  let savedPolicy: PlanEditPolicy = 'OWNER_ONLY';
+  let revision = 1;
+  let releaseFirst: ((result: UpdatePlanPolicyResult) => void) | undefined;
+  const getTrip = vi.fn(async (request: Parameters<TripRepository['getTrip']>[0]) => {
+    const result = await base.getTrip(request);
+    return result.status === 'ready'
+      ? { ...result, data: { ...result.data, planEditPolicy: savedPolicy, membershipRevision: revision } }
+      : result;
+  });
+  const updatePlanPolicy = vi.fn<NonNullable<TripRepository['updatePlanPolicy']>>((intent) => {
+    if (updatePlanPolicy.mock.calls.length === 1) {
+      return new Promise((resolve) => {
+        releaseFirst = resolve;
+      });
+    }
+    savedPolicy = intent.policy;
+    revision += 1;
+    return Promise.resolve({
+      status: 'updated',
+      data: { policy: savedPolicy, editorMemberIds: [], membershipRevision: revision },
+      correlationId: 'policy-confirmed',
+    });
+  });
+  mount({ preview: false, trip: { ...base, getTrip, updatePlanPolicy } });
+  await userEvent.click(await screen.findByRole('button', { name: 'Quyền sửa lịch trình' }));
+  await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }), 'ALL_MEMBERS');
+  await userEvent.click(screen.getByRole('button', { name: 'Lưu quyền' }));
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Đang lưu' })).toBeDisabled());
+  expect(updatePlanPolicy).toHaveBeenCalledTimes(1);
+  const firstIntent = updatePlanPolicy.mock.calls[0]![0];
+  savedPolicy = 'ALL_MEMBERS';
+  revision = 2;
+  releaseFirst?.({
+    status: 'unknown',
+    error: { code: 'SERVICE_UNAVAILABLE', correlationId: 'write-timeout', retryable: true },
+  });
+  expect(await screen.findByText(/Chưa xác định được kết quả/)).toBeInTheDocument();
+  expect(screen.queryByText(/Đã xác nhận quyền mới/)).not.toBeInTheDocument();
+  expect(getTrip.mock.calls.length).toBeGreaterThan(1);
+  await userEvent.click(screen.getByRole('button', { name: 'Thử lại cùng yêu cầu' }));
+  await screen.findByText('Đã xác nhận quyền mới từ dữ liệu chuyến đi.');
+  expect(updatePlanPolicy).toHaveBeenCalledTimes(2);
+  expect(updatePlanPolicy.mock.calls[1]?.[0]).toMatchObject({
+    policy: firstIntent.policy,
+    expectedMembershipRevision: firstIntent.expectedMembershipRevision,
+    idempotencyKey: firstIntent.idempotencyKey,
+    editorMemberIds: [],
+  });
+});
+
+it('retains the policy draft after conflict, refetches revision, and requires an explicit new submission', async () => {
+  const base = createFixtureTripRepository();
+  let savedPolicy: PlanEditPolicy = 'OWNER_ONLY';
+  let revision = 1;
+  let conflicted = false;
+  const getTrip = vi.fn(async (request: Parameters<TripRepository['getTrip']>[0]) => {
+    const result = await base.getTrip(request);
+    return result.status === 'ready'
+      ? { ...result, data: { ...result.data, planEditPolicy: savedPolicy, membershipRevision: revision } }
+      : result;
+  });
+  const updatePlanPolicy = vi.fn<NonNullable<TripRepository['updatePlanPolicy']>>(async (intent) => {
+    if (!conflicted) {
+      conflicted = true;
+      savedPolicy = intent.policy;
+      revision += 1;
+      return {
+        status: 'error',
+        error: { code: 'STATE_CONFLICT', correlationId: 'policy-conflict', retryable: false },
+      };
+    }
+    savedPolicy = intent.policy;
+    revision += 1;
+    return {
+      status: 'updated',
+      data: { policy: savedPolicy, editorMemberIds: [], membershipRevision: revision },
+      correlationId: 'policy-confirmed',
+    };
+  });
+  mount({ preview: false, trip: { ...base, getTrip, updatePlanPolicy } });
+  await userEvent.click(await screen.findByRole('button', { name: 'Quyền sửa lịch trình' }));
+  const select = screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' });
+  await userEvent.selectOptions(select, 'ALL_MEMBERS');
+  await userEvent.click(screen.getByRole('button', { name: 'Lưu quyền' }));
+  expect(await screen.findByText(/Quyền chuyến đi đã thay đổi/)).toBeInTheDocument();
+  expect(select).toHaveValue('ALL_MEMBERS');
+  expect(updatePlanPolicy).toHaveBeenCalledTimes(1);
+  const firstIntent = updatePlanPolicy.mock.calls[0]![0];
+  await userEvent.click(screen.getByRole('button', { name: 'Lưu quyền' }));
+  await screen.findByText('Đã xác nhận quyền mới từ dữ liệu chuyến đi.');
+  const secondIntent = updatePlanPolicy.mock.calls[1]![0];
+  expect(secondIntent.expectedMembershipRevision).toBe(firstIntent.expectedMembershipRevision + 1);
+  expect(secondIntent.idempotencyKey).not.toBe(firstIntent.idempotencyKey);
 });

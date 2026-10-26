@@ -40,6 +40,11 @@ The list preview controls at the end of the content select read states independe
 
 Browser verification: `corepack pnpm test:e2e` uses the installed Playwright Chromium binary. Install it with `corepack pnpm exec playwright install chromium` if needed.
 
+Gateway-mode Identity/Profile/Sessions verification: `corepack pnpm test:e2e:gateway`
+runs a separate server on port 5174 with the real Web adapters and session manager,
+but mocks all API traffic (no Backend calls and no `.env` edits). Both browser suites
+run in PR CI. See [Issue #4 integration evidence and remaining dependencies](docs/profile-sessions-evidence-2026-10-22.md).
+
 ### Demo login (fixture only)
 
 Open `/login` in `corepack pnpm dev` or an explicit `build:preview` build. Use email **`trang.nguyen@example.com`** and password **`WolfariDemo2026!`**, or click “Điền tài khoản demo”, then “Đăng nhập”. This opens User Home with a visible demo banner. “Thoát phiên demo” returns to Guest; reloading Home also resets the demo. These are public sample credentials, checked locally without Backend authentication, tokens, cookies or persistent storage. Registration remains unavailable. Production/Gateway does not include this account or demo capability.
