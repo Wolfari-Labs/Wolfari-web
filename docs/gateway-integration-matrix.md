@@ -15,13 +15,16 @@ already wired into the browser runtime.
 | Self profile       | `GET/PATCH /me`                                                                | runtime           | `feat/4` runtime                       | `expected_version` on PATCH                                                                                                                                             |
 | Avatar             | `POST /me/avatar`, `GET /me/avatar`                                            | runtime           | `feat/4` runtime                       | multipart upload; private binary download                                                                                                                               |
 | Password change    | `POST /me/password-change`                                                     | runtime           | `feat/4` runtime                       | clears the memory token and requires login again                                                                                                                        |
-| Sessions           | `GET /me/sessions`, `DELETE /me/sessions/:id`                                  | runtime           | `feat/4` runtime                       | `204` revoke; current-session logout needs session-id contract                                                                                                          |
+| Sessions           | `GET /me/sessions`, `DELETE /me/sessions/:id`                                  | runtime           | `feat/4` runtime                       | `204` revoke; logout dùng `session_id` từ login/refresh, đã nối API                                                                                                     |
 | Trips              | `GET/POST /trips`, `GET/PATCH /trips/:id`                                      | runtime           | `feat/5`                               | create uses `client_request_id`; PATCH uses revisions + idempotency                                                                                                     |
 | Plan policy        | `PUT /trips/:id/plan-policy`                                                   | partial           | `feat/6` basic policy writer           | Owner + active + `can_update` + unarchived; empty editor IDs for basic policies; revision + idempotency; Trip GET confirms state; Selected editor IDs remain unreadable |
 | Members            | `GET /trips/:id/members`                                                       | runtime           | `feat/6` paginated read                | `limit=100`, opaque cursor, `include_left`, dedupe/retain/retry; IDs/roles/timestamps only; lifecycle writes disabled                                                   |
 | Invitations        | `GET/POST /trips/:id/invitations`, token preview/accept/decline, revoke/resend | runtime           | `feat/7` management + response runtime | cursor/version/revision + stable mutation intent; one-time token/link is memory-only                                                                                    |
 | Plan/Activity      | `GET /trips/:id/plan`, activity POST/PATCH/DELETE/order PUT                    | runtime           | `feat/8`                               | expected plan version + idempotency on writes                                                                                                                           |
-| Finance/Fund       | none in Gateway                                                                | blocker           | unavailable                            | fixture/unavailable only                                                                                                                                                |
+| Finance/Fund | API070–125 through Gateway | runtime | unavailable in Web | Backend API demo and isolated integration harness; Web adapter remains unavailable |
+| Notification | API126–131 through Gateway | runtime | unavailable in Web | Preferences/devices/inbox/read; no push sender |
+| Price Watch | API133–139 through Gateway | runtime with MOCK_FLIGHT | unavailable in Web | Local mock provider only, not live fares |
+| Logout | `POST /auth/logout` | runtime | connected | Current session_id from login/refresh; fresh CSRF, family revoke and private cache clear |
 
 ## Feature #8 delivery boundary
 
@@ -63,11 +66,13 @@ analytics. Recovery and verification routes use the existing Auth layout and rem
 the address bar with navigation replacement before submission; the document also sends
 `Referrer-Policy: no-referrer`.
 
-Backend email links currently open `/api/v1/auth/local/verify` or
-`/api/v1/auth/local/reset`, so those links still need a Backend contract or configuration change
-to land directly on the Web routes. Logout remains visibly blocked because the current Web
-contract requires a `session_id` that is not exposed for the HttpOnly refresh cookie; the Web
-does not fake logout or revoke every session.
+Backend keeps its original local-helper paths by default. The independent demo config sets
+`IDENTITY_VERIFY_LINK_PATH=/verify-email` and `IDENTITY_RESET_LINK_PATH=/reset-password`.
+Login/refresh now expose the current refresh row `session_id` (not JWT sid/family ID).
+Web uses it for logout with a freshly fetched CSRF token. A successful response clears the
+cookie, memory credentials and private caches; network failures remain explicit.
+See the [local demo runbook](../../Wolfari-backend/docs/architecture/local-demo.md) and
+[acceptance report](../../Wolfari-backend/docs/architecture/local-demo-acceptance.md).
 
 ## Invitations acceptance boundary (Issue #7)
 

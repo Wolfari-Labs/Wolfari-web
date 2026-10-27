@@ -17,6 +17,52 @@ beforeEach(() => {
 });
 
 describe('session manager', () => {
+  it('logs out the rotated session with a fresh CSRF and clears memory', async () => {
+    const client = createClient();
+    client.write.mockResolvedValueOnce({ data: { access_token: 'login', session_id: 'first' }, correlationId: null });
+    client.read.mockResolvedValueOnce({ data: { csrf_token: 'before-rotation-csrf' }, correlationId: null });
+    client.write.mockResolvedValueOnce({ data: { access_token: 'rotated', session_id: 'second' }, correlationId: null });
+    client.read.mockResolvedValueOnce({ data: { csrf_token: 'after-rotation-csrf' }, correlationId: null });
+    client.write.mockResolvedValueOnce({ data: null, correlationId: null, status: 204 });
+    const manager = createSessionManager(client, createAccessTokenStore());
+    await manager.login('user@example.test', 'password');
+    await manager.bootstrap();
+    await manager.logout();
+    expect(client.write).toHaveBeenLastCalledWith('/api/v1/auth/logout', expect.objectContaining({ body: { session_id: 'second' }, csrfToken: 'after-rotation-csrf', responseType: 'empty' }));
+    expect(manager.status()).toBe('anonymous');
+    expect(manager.getAccessToken()).toBeNull();
+    expect(localStorage.length).toBe(0);
+    expect(sessionStorage.length).toBe(0);
+  });
+  it('does not fake successful logout on a network error or retry the mutation', async () => {
+    const client = createClient();
+    client.write.mockResolvedValueOnce({ data: { access_token: 'access', session_id: 'session' }, correlationId: null });
+    client.read.mockResolvedValue({ data: { csrf_token: 'csrf-long-enough' }, correlationId: null });
+    client.write.mockRejectedValueOnce(new Error('network'));
+    const manager = createSessionManager(client, createAccessTokenStore());
+    await manager.login('user@example.test', 'password');
+    await expect(manager.logout()).rejects.toThrow('network');
+    expect(manager.status()).toBe('authenticated');
+    expect(client.write).toHaveBeenCalledTimes(2);
+  });
+  it('serializes logout behind an in-flight refresh and blocks new bootstrap', async () => {
+    const client = createClient();
+    client.write.mockResolvedValueOnce({ data: { access_token: 'access', session_id: 'first' }, correlationId: null });
+    client.read.mockResolvedValue({ data: { csrf_token: 'csrf-long-enough' }, correlationId: null });
+    const manager = createSessionManager(client, createAccessTokenStore());
+    await manager.login('user@example.test', 'password');
+    let complete!: (value: GatewayRead) => void;
+    client.write.mockImplementationOnce(() => new Promise(resolve => { complete = resolve; }));
+    const refresh = manager.bootstrap();
+    await vi.waitFor(() => expect(client.write).toHaveBeenCalledTimes(2));
+    client.write.mockResolvedValueOnce({ data: null, status: 204, correlationId: null });
+    const logout = manager.logout();
+    const bootstrap = manager.bootstrap();
+    complete({ data: { access_token: 'rotated', session_id: 'second' }, correlationId: null });
+    await Promise.all([refresh, logout, bootstrap]);
+    expect(manager.status()).toBe('anonymous');
+    expect(client.write).toHaveBeenCalledTimes(3);
+  });
   it.each(['clear', 'login', 'register'] as const)(
     'does not restore an obsolete refresh after %s',
     async (action) => {

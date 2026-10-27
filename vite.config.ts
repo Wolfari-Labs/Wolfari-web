@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     strictPort: true,
     proxy: {
       '/api/v1': {
-        target: loadEnv(mode, process.cwd(), '').VITE_GATEWAY_PROXY_TARGET ?? 'http://127.0.0.1:3000',
+        target: process.env.VITE_GATEWAY_PROXY_TARGET ?? loadEnv(mode, process.cwd(), '').VITE_GATEWAY_PROXY_TARGET ?? 'http://127.0.0.1:3000',
         changeOrigin: true,
       },
     },

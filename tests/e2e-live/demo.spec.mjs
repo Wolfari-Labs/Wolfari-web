@@ -1,0 +1,197 @@
+import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
+import { api, login as apiLogin, mailLink } from '../../../Wolfari-backend/scripts/demo-scenarios.mjs';
+
+const seed = JSON.parse(await readFile(new URL('../../../Wolfari-backend/.local/demo/seed.json', import.meta.url), 'utf8'));
+async function login(page, account, returnTo = '/profile') {
+  await page.goto('/login?returnTo=' + encodeURIComponent(returnTo));
+  await page.getByLabel('Email', { exact: true }).fill(account.email);
+  await page.getByLabel('Mật khẩu', { exact: true }).fill(account.password);
+  await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(returnTo + '$'));
+}
+async function createTrip(owner, name) {
+  const key = randomUUID();
+  const start = new Date(Date.now() + 7 * 86400000);
+  return (await api('/api/v1/trips', 'POST', { name, start_at: start.toISOString(), end_at: new Date(+start + 3 * 86400000).toISOString(), client_request_id: key }, owner, key, [201])).data;
+}
+test('REAL: registration, Mailpit verification, recovery, profile, refresh and logout', async ({ page }) => {
+  const account = { email: `live-${randomUUID()}@wolfari.test`, password: `Live-${randomUUID()}-9!` };
+  await page.goto('/register');
+  await page.getByLabel('Họ và tên').fill('Live Acceptance');
+  await page.getByLabel('Email', { exact: true }).fill(account.email);
+  await page.getByLabel('Mật khẩu', { exact: true }).fill(account.password);
+  await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill(account.password);
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Tạo tài khoản', exact: true }).click();
+  const verification = await mailLink(account.email, 'Xác minh');
+  await page.goto(verification);
+  await expect(page).toHaveURL(/\/verify-email$/);
+  await page.getByRole('button', { name: 'Xác minh email', exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  await login(page, account);
+  await page.getByLabel('Tên hiển thị').fill('Live Updated Profile');
+  await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
+  await expect(page.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
+  const require = createRequire(new URL('../../../Wolfari-backend/apps/identity-service/package.json', import.meta.url));
+  const avatar = await require('sharp')({ create: { width: 16, height: 16, channels: 3, background: '#23614d' } }).png().toBuffer();
+  await page.getByLabel('Chọn ảnh đại diện').setInputFiles({ name: 'live.png', mimeType: 'image/png', buffer: avatar });
+  await expect(page.getByText('Đã cập nhật ảnh đại diện.')).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Live Updated Profile');
+  await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  await page.goto('/profile');
+  await expect(page).toHaveURL(/\/login\?/);
+  const after = Date.now() - 1000;
+  await page.goto('/forgot-password');
+  await page.getByLabel('Email', { exact: true }).fill(account.email);
+  await page.getByRole('button', { name: 'Gửi hướng dẫn' }).click();
+  const recovery = await mailLink(account.email, 'Đặt lại', after);
+  await page.goto(recovery);
+  await expect(page).toHaveURL(/\/reset-password$/);
+  account.password = `Reset-${randomUUID()}-9!`;
+  await page.getByLabel('Mật khẩu mới', { exact: true }).fill(account.password);
+  await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill(account.password);
+  await page.getByRole('button', { name: 'Đặt lại mật khẩu', exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  await login(page, account);
+  const otherSession = await apiLogin(account);
+  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(2);
+  const sessions = (await api('/api/v1/me/sessions', 'GET', undefined, otherSession)).data;
+  expect(sessions.items[0].id).toBe(otherSession.sessionId);
+  await page.getByRole('button', { name: 'Thu hồi phiên' }).first().click();
+  await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(1);
+  await api('/api/v1/me', 'GET', undefined, otherSession, undefined, [401]);
+  const passwordForm = page.getByRole('form', { name: 'Đổi mật khẩu' });
+  await passwordForm.getByLabel('Mật khẩu hiện tại', { exact: true }).fill(account.password);
+  const changedPassword = `Changed-${randomUUID()}-9!`;
+  await passwordForm.getByLabel('Mật khẩu mới', { exact: true }).fill(changedPassword);
+  await passwordForm.getByLabel('Nhập lại mật khẩu mới', { exact: true }).fill(changedPassword);
+  await passwordForm.getByRole('button', { name: 'Đổi mật khẩu', exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  await login(page, { ...account, password: changedPassword });
+  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+});
+
+test('REAL: Owner resends/revokes EMAIL; anonymous LINK login/decline and acceptance', async ({ page, browser }) => {
+  const owner = await apiLogin(seed.accounts.owner);
+  const trip = await createTrip(owner, `Live Invitation Management ${randomUUID().slice(0, 8)}`);
+  await login(page, seed.accounts.owner, `/trips/${trip.id}/members`);
+  await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
+  await page.getByLabel('Email người nhận').fill(seed.accounts.outsider.email);
+  await page.getByRole('button', { name: 'Gửi lời mời', exact: true }).click();
+  await expect(page.getByText(/Yêu cầu gửi lời mời đã được tiếp nhận/)).toBeVisible();
+  const row = page.getByRole('listitem').filter({ hasText: seed.accounts.outsider.email });
+  await row.getByRole('button', { name: 'Gửi lại' }).click();
+  await expect(page.getByText(/Yêu cầu gửi lại đã được tiếp nhận/)).toBeVisible();
+  await row.getByRole('button', { name: 'Thu hồi', exact: true }).click();
+  await row.getByRole('button', { name: 'Xác nhận thu hồi' }).click();
+  await expect(page.getByText('Đã thu hồi lời mời.')).toBeVisible();
+  await page.getByLabel('Loại lời mời').selectOption('LINK');
+  await page.getByRole('button', { name: 'Tạo liên kết' }).click();
+  const region = page.getByRole('region', { name: 'Liên kết một lần' });
+  await expect(region).toBeVisible();
+  const link = await region.locator('p').innerText();
+  await page.getByRole('button', { name: 'Đóng liên kết' }).click();
+  const context = await browser.newContext({ baseURL: 'http://localhost:5273' });
+  try {
+    const guest = await context.newPage();
+    await guest.goto(link);
+    await expect(guest).toHaveURL(/\/invitations\/local$/);
+    await guest.getByRole('link', { name: 'Đăng nhập', exact: true }).click();
+    await guest.getByLabel('Email', { exact: true }).fill(seed.accounts.outsider.email);
+    await guest.getByLabel('Mật khẩu', { exact: true }).fill(seed.accounts.outsider.password);
+    await guest.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
+    await guest.getByRole('button', { name: 'Từ chối', exact: true }).click();
+    await expect(guest.getByRole('heading', { name: 'Đã từ chối lời mời' })).toBeVisible();
+    await page.getByRole('button', { name: 'Tạo liên kết' }).click();
+    await expect(region).toBeVisible();
+    const nextLink = await region.locator('p').innerText();
+    await page.getByRole('button', { name: 'Đóng liên kết' }).click();
+    await guest.goto(nextLink);
+    await guest.getByRole('button', { name: 'Chấp nhận', exact: true }).click();
+    await expect(guest).toHaveURL(`/trips/${trip.id}`);
+    await guest.goto(`/trips/${trip.id}/plan`);
+    await expect(guest.getByRole('heading', { name: 'Hoạt động trên server' })).toBeVisible();
+    await expect(guest.getByRole('button', { name: 'Tạo hoạt động trên server' })).toHaveCount(0);
+  } finally { await context.close(); }
+});
+
+test('REAL: Trip create/settings and Activity CRUD/order/completion persist on reload', async ({ page }) => {
+  await login(page, seed.accounts.owner, '/trips');
+  await page.goto('/trips/new');
+  const name = `Live Trip ${randomUUID().slice(0, 8)}`;
+  const day = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+  const end = new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10);
+  await page.getByLabel('Tên chuyến đi').fill(name);
+  await page.getByLabel('Điểm đến chính').fill('Đà Nẵng');
+  await page.getByLabel('Ngày đi').fill(day);
+  await page.getByLabel('Ngày về').fill(end);
+  await page.getByRole('button', { name: 'Tạo chuyến đi', exact: true }).click();
+  const success = page.getByRole('dialog', { name: 'Chuyến đi đã sẵn sàng' });
+  await expect(success).toBeVisible();
+  await success.getByRole('link', { name: /Mở chuyến đi/ }).click();
+  const path = new URL(page.url()).pathname;
+  await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+  await page.goto(path + '/settings');
+  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+  await page.getByRole('textbox', { name: 'Mô tả công khai' }).fill('Live backend description');
+  await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
+  await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('Live backend description')).toBeVisible();
+  await page.goto(path + '/plan');
+  for (const title of ['Live Activity One', 'Live Activity Two']) {
+    await page.getByRole('button', { name: 'Tạo hoạt động trên server' }).click();
+    await page.getByLabel('Tên hoạt động', { exact: true }).fill(title);
+    await page.getByLabel('Loại hoạt động', { exact: true }).fill('OTHER');
+    await page.getByRole('button', { name: 'Lưu trên server' }).click();
+    await expect(page.getByRole('listitem', { name: title, exact: true })).toBeVisible();
+  }
+  const second = page.getByRole('listitem', { name: 'Live Activity Two', exact: true });
+  await second.getByRole('button', { name: 'Hoàn tất', exact: true }).click();
+  await expect(second.getByRole('button', { name: 'Mở lại', exact: true })).toBeVisible();
+  await second.getByRole('button', { name: 'Đưa lên' }).click();
+  await expect(second.getByRole('button', { name: 'Đưa lên' })).toBeDisabled();
+  await second.getByRole('button', { name: 'Sửa trên server' }).click();
+  await page.getByLabel('Tên hoạt động', { exact: true }).fill('Live Activity Edited');
+  await page.getByRole('button', { name: 'Lưu trên server' }).click();
+  const edited = page.getByRole('listitem', { name: 'Live Activity Edited', exact: true });
+  await expect(edited).toBeVisible(); await page.reload(); await expect(edited).toBeVisible();
+  await edited.getByRole('button', { name: 'Xóa trên server' }).click();
+  await page.getByRole('button', { name: 'Xác nhận xóa trên server' }).click();
+  await expect(edited).toHaveCount(0); await page.reload(); await expect(edited).toHaveCount(0);
+});
+
+test('REAL: invitations, membership projection and plan policy use real services', async ({ page, browser }) => {
+  const owner = await apiLogin(seed.accounts.owner);
+  const trip = await createTrip(owner, `Live Members ${randomUUID().slice(0, 8)}`);
+  const path = `/trips/${trip.id}`;
+  await login(page, seed.accounts.owner, path + '/members');
+  await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
+  const after = Date.now() - 1000;
+  await page.getByLabel('Email người nhận').fill(seed.accounts.member.email);
+  await page.getByRole('button', { name: 'Gửi lời mời', exact: true }).click();
+  await expect(page.getByText(/Yêu cầu gửi lời mời đã được tiếp nhận/)).toBeVisible();
+  const link = await mailLink(seed.accounts.member.email, 'Lời mời', after);
+  const context = await browser.newContext({ baseURL: 'http://localhost:5273' });
+  try {
+    const memberPage = await context.newPage();
+    await login(memberPage, seed.accounts.member);
+    await memberPage.goto(link);
+    await memberPage.getByRole('button', { name: 'Chấp nhận', exact: true }).click();
+    await expect(memberPage).toHaveURL(path);
+    await page.goto(path + '/members');
+    await expect(page.getByRole('region', { name: 'Danh sách thành viên' }).locator('ul > li')).toHaveCount(2);
+    await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
+    await page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }).selectOption('ALL_MEMBERS');
+    await page.getByRole('button', { name: 'Lưu quyền' }).click();
+    await expect(page.getByText('Đã xác nhận quyền mới từ dữ liệu chuyến đi.')).toBeVisible();
+    await memberPage.goto(path + '/plan');
+    await expect(memberPage.getByRole('button', { name: 'Tạo hoạt động trên server' })).toBeEnabled();
+  } finally { await context.close(); }
+});

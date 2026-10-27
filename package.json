@@ -8,6 +8,10 @@
     "node": ">=24 <25"
   },
   "scripts": {
+    "demo:dev": "node scripts/demo.mjs dev",
+    "demo:build": "node scripts/demo.mjs build",
+    "demo:preview": "node scripts/demo.mjs preview",
+    "test:e2e:live": "node scripts/demo.mjs test",
     "dev": "vite",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

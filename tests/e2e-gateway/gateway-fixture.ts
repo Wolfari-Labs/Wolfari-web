@@ -197,13 +197,13 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path === '/api/v1/auth/refresh') {
         expect(request.headers()['x-csrf-token']).toBe('e2e-csrf-token-long-enough');
         return model.authenticated
-          ? json(route, { access_token: 'e2e-memory-token' })
+            ? json(route, { access_token: 'e2e-memory-token', session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' })
           : error(route, 401);
       }
       if (method !== 'GET') await model.writeGate;
       if (path === '/api/v1/auth/login') {
         model.authenticated = true;
-        return json(route, { access_token: 'e2e-memory-token', profile: model.profile });
+          return json(route, { access_token: 'e2e-memory-token', session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', profile: model.profile });
       }
       if (path === '/api/v1/auth/register' || path === '/api/v1/auth/password-reset-requests')
         return json(route, { message_code: 'REQUEST_ACCEPTED' }, 202);

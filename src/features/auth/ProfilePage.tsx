@@ -424,10 +424,15 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
             <Button
               variant="outline"
               className={styles.logout}
-              disabled
-              title="Backend chưa cung cấp session_id của phiên hiện tại"
+              type="button"
+              disabled={busy || !sessionManager?.logout}
+              loading={pending === 'logout'}
+              onClick={() => void run('logout', async (signal) => {
+                await sessionManager?.logout?.(signal);
+                navigate('/login', { replace: true });
+              }, () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'))}
             >
-              Đăng xuất (chưa khả dụng)
+              {sessionManager?.logout ? 'Đăng xuất' : 'Đăng xuất (chưa khả dụng)'}
             </Button>
           </form>
           <section className={styles.panel} aria-labelledby="profile-notifications">

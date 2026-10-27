@@ -5,6 +5,7 @@ export interface SessionManagerLike {
   status(): string;
   subscribe(listener: () => void): () => void;
   clear?(): void;
+  logout?(signal?: AbortSignal): Promise<void>;
 }
 
 const Context = createContext<SessionManagerLike | null>(null);

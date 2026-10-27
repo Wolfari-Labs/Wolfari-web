@@ -33,7 +33,7 @@ test('login, profile save, private avatar replacement and paginated session revo
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(2);
   await page.getByRole('button', { name: 'Thu hồi phiên' }).first().click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Đăng xuất (chưa khả dụng)' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Đăng xuất', exact: true })).toBeEnabled();
   expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
 });
 

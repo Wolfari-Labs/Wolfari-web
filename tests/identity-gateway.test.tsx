@@ -196,6 +196,7 @@ describe('Identity Gateway adapter', () => {
       subscribe: () => () => undefined,
       bootstrap: async () => 'anonymous' as const,
       clear: vi.fn(),
+      logout: vi.fn(),
     };
     const repo = createGatewayIdentityRepository(undefined, { read, write }, session);
     await repo.updateProfile!({

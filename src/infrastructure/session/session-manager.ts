@@ -11,6 +11,7 @@ export interface SessionManager {
   readonly getCsrfToken: () => string | null;
   readonly subscribe: (listener: () => void) => () => void;
   readonly bootstrap: (signal?: AbortSignal) => Promise<SessionStatus>;
+  readonly logout: (signal?: AbortSignal) => Promise<void>;
   readonly login: (
     email: string,
     password: string,
@@ -32,6 +33,8 @@ export function createSessionManager(
   let csrfToken: string | null = null;
   let current: SessionStatus = 'unknown';
   let refreshFlight: Promise<SessionStatus> | null = null;
+  let logoutFlight: Promise<void> | null = null;
+  let sessionId: string | null = null;
   let generation = 0;
   const listeners = new Set<() => void>();
   const emit = () => listeners.forEach((listener) => listener());
@@ -45,6 +48,7 @@ export function createSessionManager(
     refreshFlight = null;
     token.clear();
     csrfToken = null;
+    sessionId = null;
     current = next;
     // Also notify for same-status account changes so private caches are cleared.
     emit();
@@ -71,6 +75,7 @@ export function createSessionManager(
   }
 
   async function refresh(signal?: AbortSignal): Promise<SessionStatus> {
+    if (logoutFlight) { await logoutFlight; return current; }
     if (!refreshFlight) {
       const started = generation;
       refreshFlight = (async () => {
@@ -86,7 +91,7 @@ export function createSessionManager(
           });
           if (started !== generation) return current;
           signal?.throwIfAborted();
-          const data = response.data as { access_token?: unknown };
+          const data = response.data as { access_token?: unknown; session_id?: unknown };
           if (typeof data.access_token !== 'string' || !data.access_token)
             throw new ApiError(
               'Invalid session response',
@@ -97,6 +102,7 @@ export function createSessionManager(
               false,
             );
           token.set(data.access_token);
+          sessionId = typeof data.session_id === 'string' ? data.session_id : null;
           csrfToken = csrfValue;
           setStatus('authenticated');
           return 'authenticated';
@@ -104,6 +110,7 @@ export function createSessionManager(
           if (started !== generation) return current;
           token.clear();
           csrfToken = null;
+          sessionId = null;
           if (error instanceof ApiError && error.status === 401) {
             setStatus('anonymous');
             return 'anonymous';
@@ -127,7 +134,33 @@ export function createSessionManager(
       return () => listeners.delete(listener);
     },
     bootstrap: (signal) => refresh(signal),
+    logout: (signal) => {
+      if (logoutFlight) return logoutFlight;
+      const started = generation;
+      const pendingRefresh = refreshFlight;
+      logoutFlight = (async () => {
+        await Promise.resolve();
+        try {
+          if (pendingRefresh) await pendingRefresh;
+          if (generation !== started) throw new DOMException('Session superseded', 'AbortError');
+          if (!token.get()) { invalidate(); return; }
+          if (!sessionId) throw new Error('Current session ID unavailable; sign in again.');
+          const csrfValue = await csrf(signal);
+          if (generation !== started) throw new DOMException('Session superseded', 'AbortError');
+          await client.write('/api/v1/auth/logout', {
+            method: 'POST', body: { session_id: sessionId }, includeCredentials: true,
+            csrfToken: csrfValue, responseType: 'empty', ...(signal ? { signal } : {}),
+          });
+          if (generation === started) invalidate();
+        } catch (error) {
+          if (generation === started && error instanceof ApiError && error.status === 401) { invalidate('expired'); return; }
+          throw error;
+        } finally { logoutFlight = null; }
+      })();
+      return logoutFlight;
+    },
     login: async (email, password, signal) => {
+      if (logoutFlight) await logoutFlight;
       const started = invalidate('unknown');
       try {
         const response = await client.write('/api/v1/auth/login', {
@@ -138,7 +171,7 @@ export function createSessionManager(
         });
         if (started !== generation) throw new DOMException('Session superseded', 'AbortError');
         signal?.throwIfAborted();
-        const data = response.data as { access_token?: unknown };
+        const data = response.data as { access_token?: unknown; session_id?: unknown };
         if (typeof data.access_token !== 'string' || !data.access_token)
           throw new ApiError(
             'Invalid session response',
@@ -149,6 +182,7 @@ export function createSessionManager(
             false,
           );
         token.set(data.access_token);
+        sessionId = typeof data.session_id === 'string' ? data.session_id : null;
         setStatus('authenticated');
         return { data: response.data, correlationId: response.correlationId };
       } catch (error) {
@@ -157,6 +191,7 @@ export function createSessionManager(
       }
     },
     register: async (email, password, fullName, signal) => {
+      if (logoutFlight) await logoutFlight;
       const started = invalidate();
       const response = await client.write('/api/v1/auth/register', {
         method: 'POST',
