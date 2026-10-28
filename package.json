@@ -12,6 +12,7 @@
     "demo:build": "node scripts/demo.mjs build",
     "demo:preview": "node scripts/demo.mjs preview",
     "test:e2e:live": "node scripts/demo.mjs test",
+    "test:e2e:demo1": "node scripts/demo1-e2e.mjs",
     "dev": "vite",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

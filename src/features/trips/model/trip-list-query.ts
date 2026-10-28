@@ -55,7 +55,7 @@ export function tripDateLabel(item: Pick<TripListItem, 'startAt' | 'endAt' | 'ti
     timeZone: item.timezone,
   });
   const startDate = new Date(item.startAt);
-  const endDate = new Date(item.endAt);
+  const endDate = new Date(Date.parse(item.endAt) - 1);
   const start = date.format(startDate);
   const end = date.format(endDate);
   if (start === end) return start;

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
-import { Link } from 'react-router';
+import { Link, useOutletContext } from 'react-router';
+import type { RouteContext } from '../../../app/route-context';
+import { GatewayCreateTripPage } from './GatewayCreateTripPage';
 import { paths } from '../../../app/route-paths';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
@@ -56,14 +58,19 @@ const styleOptions: ReadonlyArray<{ value: TripStyle; label: string; icon: strin
   { value: 'culture', label: 'Văn hóa', icon: styleCulture },
 ];
 
-const coverOptions: ReadonlyArray<{ value: Exclude<TripCover, 'custom'>; image: string; label: string }> = [
+const coverOptions: ReadonlyArray<{
+  value: Exclude<TripCover, 'custom'>;
+  image: string;
+  label: string;
+}> = [
   { value: 'cover-1', image: cover1, label: 'Bầu trời xanh' },
   { value: 'cover-2', image: cover2, label: 'Hoàng hôn' },
   { value: 'cover-3', image: cover3, label: 'Thiên nhiên' },
 ];
 
 const resultMessages: Partial<Record<CreateTripResult['status'], string>> = {
-  unavailable: 'Dịch vụ tạo chuyến đi hiện chưa khả dụng. Bản nháp vẫn được giữ để bạn thử lại sau.',
+  unavailable:
+    'Dịch vụ tạo chuyến đi hiện chưa khả dụng. Bản nháp vẫn được giữ để bạn thử lại sau.',
   forbidden: 'Bạn không có quyền tạo chuyến đi. Bản nháp vẫn được giữ nguyên.',
   conflict: 'Yêu cầu này đang bị trùng hoặc xung đột. Hãy kiểm tra lại trước khi thử lại.',
   error: 'Không thể tạo chuyến đi lúc này. Bản nháp vẫn được giữ để bạn thử lại.',
@@ -71,6 +78,16 @@ const resultMessages: Partial<Record<CreateTripResult['status'], string>> = {
 };
 
 export function CreateTripPage() {
+  const context = useOutletContext<RouteContext | undefined>();
+  if (context && !context.previewEnabled)
+    return context.viewer?.id ? (
+      <GatewayCreateTripPage key={context.viewer.id} actorId={context.viewer.id} />
+    ) : (
+      <Alert>Đang xác định tài khoản. Vui lòng tải lại nếu phiên đã hết hạn.</Alert>
+    );
+  return <PreviewCreateTripPage />;
+}
+function PreviewCreateTripPage() {
   const repository = useTripRepository();
   const restored = useRef(readCreateTripDraft(storage()));
   const [draft, setDraft] = useState<CreateTripDraftV2>(restored.current ?? emptyCreateTripDraft());
@@ -90,10 +107,13 @@ export function CreateTripPage() {
     setStorageStatus(writeCreateTripDraft(storage(), draft));
   }, [draft]);
 
-  useEffect(() => () => {
-    activeRequest.current?.abort();
-    if (customCover) URL.revokeObjectURL(customCover);
-  }, [customCover]);
+  useEffect(
+    () => () => {
+      activeRequest.current?.abort();
+      if (customCover) URL.revokeObjectURL(customCover);
+    },
+    [customCover],
+  );
 
   const selectedDestination = destinations.find((item) => item.name === draft.destination);
   const selectedPhoto = selectedDestination?.image ?? destinationPhoto;
@@ -117,7 +137,9 @@ export function CreateTripPage() {
   };
 
   const focusFirstError = (nextErrors: CreateTripErrors) => {
-    const first = (['name', 'destination', 'startDate', 'endDate'] as const).find((field) => nextErrors[field]);
+    const first = (['name', 'destination', 'startDate', 'endDate'] as const).find(
+      (field) => nextErrors[field],
+    );
     if (first) document.getElementById(`create-trip-${first}`)?.focus();
   };
 
@@ -200,7 +222,9 @@ export function CreateTripPage() {
           ...(result.fieldErrors.endAt ? { endDate: result.fieldErrors.endAt } : {}),
         }));
         setMobileStep(1);
-        setRequestMessage('Máy chủ chưa chấp nhận một số thông tin. Vui lòng kiểm tra lại các trường được đánh dấu.');
+        setRequestMessage(
+          'Máy chủ chưa chấp nhận một số thông tin. Vui lòng kiểm tra lại các trường được đánh dấu.',
+        );
       } else {
         setRequestMessage(resultMessages[result.status] ?? resultMessages.unknown!);
       }
@@ -215,7 +239,9 @@ export function CreateTripPage() {
     }
   };
 
-  const errorEntries = Object.entries(errors).filter((entry): entry is [CreateTripDraftField, string] => Boolean(entry[1]));
+  const errorEntries = Object.entries(errors).filter(
+    (entry): entry is [CreateTripDraftField, string] => Boolean(entry[1]),
+  );
 
   return (
     <main className={styles.page} data-flow="create-trip" data-mobile-step={mobileStep}>
@@ -226,21 +252,42 @@ export function CreateTripPage() {
           <h1>Tạo chuyến đi mới</h1>
           <p>Lên kế hoạch cho hành trình tiếp theo và khám phá thế giới cùng Wolfari!</p>
         </div>
-        <Link className={styles.backLink} to={paths.trips}>← Chuyến đi của tôi</Link>
+        <Link className={styles.backLink} to={paths.trips}>
+          ← Chuyến đi của tôi
+        </Link>
       </header>
 
       <nav className={styles.stepper} aria-label="Các bước tạo chuyến đi">
-        <button type="button" className={mobileStep === 1 ? styles.activeStep : ''} onClick={() => setMobileStep(1)}>
+        <button
+          type="button"
+          className={mobileStep === 1 ? styles.activeStep : ''}
+          onClick={() => setMobileStep(1)}
+        >
           <span>1</span> Thông tin cơ bản
         </button>
         <i aria-hidden="true" />
-        <button type="button" className={mobileStep === 2 ? styles.activeStep : ''} onClick={continueToDetails}>
+        <button
+          type="button"
+          className={mobileStep === 2 ? styles.activeStep : ''}
+          onClick={continueToDetails}
+        >
           <span>2</span> Cá nhân hóa
         </button>
       </nav>
 
-      {showRestored && <div className={styles.topAlert}><Alert live>Bản nháp trong tab này đã được khôi phục.</Alert></div>}
-      {storageStatus === 'memory' && <div className={styles.topAlert}><Alert tone="warning" live>Không thể lưu vào trình duyệt. Bản nháp chỉ được giữ trong bộ nhớ của tab này và sẽ mất khi tải lại hoặc đóng tab.</Alert></div>}
+      {showRestored && (
+        <div className={styles.topAlert}>
+          <Alert live>Bản nháp trong tab này đã được khôi phục.</Alert>
+        </div>
+      )}
+      {storageStatus === 'memory' && (
+        <div className={styles.topAlert}>
+          <Alert tone="warning" live>
+            Không thể lưu vào trình duyệt. Bản nháp chỉ được giữ trong bộ nhớ của tab này và sẽ mất
+            khi tải lại hoặc đóng tab.
+          </Alert>
+        </div>
+      )}
 
       <form onSubmit={submit} noValidate>
         <div className={styles.layout}>
@@ -248,7 +295,13 @@ export function CreateTripPage() {
             {errorEntries.length > 0 && (
               <div className={styles.errorSummary} role="alert" tabIndex={-1}>
                 <strong>Vui lòng kiểm tra lại thông tin:</strong>
-                <ul>{errorEntries.map(([field, message]) => <li key={field}><a href={`#create-trip-${field}`}>{message}</a></li>)}</ul>
+                <ul>
+                  {errorEntries.map(([field, message]) => (
+                    <li key={field}>
+                      <a href={`#create-trip-${field}`}>{message}</a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
@@ -273,45 +326,84 @@ export function CreateTripPage() {
 
               <div className={styles.destinationField}>
                 <label htmlFor="create-trip-destination">Điểm đến chính</label>
-                <div className={`${styles.destinationInput} ${errors.destination ? styles.invalid : ''}`}>
+                <div
+                  className={`${styles.destinationInput} ${errors.destination ? styles.invalid : ''}`}
+                >
                   <span aria-hidden="true">⌖</span>
                   <input
                     id="create-trip-destination"
                     value={draft.destination}
                     placeholder="Bạn muốn đi đâu?"
                     aria-invalid={Boolean(errors.destination)}
-                    aria-describedby={errors.destination ? 'create-trip-destination-error' : undefined}
+                    aria-describedby={
+                      errors.destination ? 'create-trip-destination-error' : undefined
+                    }
                     onChange={(event) => update('destination', event.target.value)}
                   />
                 </div>
-                {errors.destination && <span id="create-trip-destination-error" className={styles.fieldError}>{errors.destination}</span>}
+                {errors.destination && (
+                  <span id="create-trip-destination-error" className={styles.fieldError}>
+                    {errors.destination}
+                  </span>
+                )}
               </div>
 
               <div className={styles.dates}>
-                <Input id="create-trip-startDate" label="Ngày đi" type="date" value={draft.startDate} required error={errors.startDate} onChange={(event) => update('startDate', event.target.value)} />
-                <Input id="create-trip-endDate" label="Ngày về" type="date" min={draft.startDate || undefined} value={draft.endDate} required error={errors.endDate} onChange={(event) => update('endDate', event.target.value)} />
+                <Input
+                  id="create-trip-startDate"
+                  label="Ngày đi"
+                  type="date"
+                  value={draft.startDate}
+                  required
+                  error={errors.startDate}
+                  onChange={(event) => update('startDate', event.target.value)}
+                />
+                <Input
+                  id="create-trip-endDate"
+                  label="Ngày về"
+                  type="date"
+                  min={draft.startDate || undefined}
+                  value={draft.endDate}
+                  required
+                  error={errors.endDate}
+                  onChange={(event) => update('endDate', event.target.value)}
+                />
               </div>
 
               <fieldset className={styles.memberField}>
                 <legend>Số thành viên dự kiến</legend>
-                <div>{[1, 2, 3, 4, 5, 6].map((count) => (
-                  <button
-                    key={count}
-                    type="button"
-                    aria-label={`${count} thành viên`}
-                    aria-pressed={draft.expectedMembers === count}
-                    onClick={() => update('expectedMembers', count)}
-                  >{count === 6 ? '6+' : count}</button>
-                ))}</div>
+                <div>
+                  {[1, 2, 3, 4, 5, 6].map((count) => (
+                    <button
+                      key={count}
+                      type="button"
+                      aria-label={`${count} thành viên`}
+                      aria-pressed={draft.expectedMembers === count}
+                      onClick={() => update('expectedMembers', count)}
+                    >
+                      {count === 6 ? '6+' : count}
+                    </button>
+                  ))}
+                </div>
               </fieldset>
 
               <div className={styles.mobileDestinationPreview}>
-                <img src={selectedPhoto} alt={draft.destination ? `Điểm đến ${draft.destination}` : 'Gợi ý điểm đến Đà Nẵng'} />
-                <div><strong>{draft.destination || 'Đà Nẵng'}</strong><span>{selectedDestination?.caption ?? 'Thành phố đáng sống'}</span></div>
+                <img
+                  src={selectedPhoto}
+                  alt={
+                    draft.destination ? `Điểm đến ${draft.destination}` : 'Gợi ý điểm đến Đà Nẵng'
+                  }
+                />
+                <div>
+                  <strong>{draft.destination || 'Đà Nẵng'}</strong>
+                  <span>{selectedDestination?.caption ?? 'Thành phố đáng sống'}</span>
+                </div>
               </div>
 
               <div className={styles.mobileActions}>
-                <Button type="button" onClick={continueToDetails}>Tiếp tục <span aria-hidden="true">→</span></Button>
+                <Button type="button" onClick={continueToDetails}>
+                  Tiếp tục <span aria-hidden="true">→</span>
+                </Button>
               </div>
             </div>
 
@@ -324,11 +416,19 @@ export function CreateTripPage() {
 
               <fieldset className={styles.choiceField}>
                 <legend>Phong cách chuyến đi</legend>
-                <div className={styles.styleChoices}>{styleOptions.map((option) => (
-                  <button key={option.value} type="button" aria-pressed={draft.style === option.value} onClick={() => update('style', option.value)}>
-                    <img src={option.icon} alt="" /><span>{option.label}</span>
-                  </button>
-                ))}</div>
+                <div className={styles.styleChoices}>
+                  {styleOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      aria-pressed={draft.style === option.value}
+                      onClick={() => update('style', option.value)}
+                    >
+                      <img src={option.icon} alt="" />
+                      <span>{option.label}</span>
+                    </button>
+                  ))}
+                </div>
               </fieldset>
 
               <div className={styles.budgetField}>
@@ -347,29 +447,66 @@ export function CreateTripPage() {
               <fieldset className={styles.templateField}>
                 <legend>Mẫu chuyến đi</legend>
                 <div>
-                  {([
-                    ['blank', 'Trang trắng', 'Tự do lên kế hoạch'],
-                    ['balanced', 'Cân bằng', 'Khám phá và nghỉ ngơi'],
-                    ['discovery', 'Khám phá', 'Tận dụng từng khoảnh khắc'],
-                  ] as const).map(([value, title, note]) => (
-                    <button key={value} type="button" aria-pressed={draft.template === value} onClick={() => update('template', value as TripTemplate)}>
-                      <span aria-hidden="true">{value === 'blank' ? '○' : value === 'balanced' ? '◒' : '✦'}</span><strong>{title}</strong><small>{note}</small>
+                  {(
+                    [
+                      ['blank', 'Trang trắng', 'Tự do lên kế hoạch'],
+                      ['balanced', 'Cân bằng', 'Khám phá và nghỉ ngơi'],
+                      ['discovery', 'Khám phá', 'Tận dụng từng khoảnh khắc'],
+                    ] as const
+                  ).map(([value, title, note]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={draft.template === value}
+                      onClick={() => update('template', value as TripTemplate)}
+                    >
+                      <span aria-hidden="true">
+                        {value === 'blank' ? '○' : value === 'balanced' ? '◒' : '✦'}
+                      </span>
+                      <strong>{title}</strong>
+                      <small>{note}</small>
                     </button>
                   ))}
                 </div>
               </fieldset>
 
-              <Textarea id="create-trip-description" label="Mô tả ngắn" hint="Không bắt buộc" placeholder="Bạn mong chờ điều gì ở chuyến đi này?" value={draft.description} rows={4} maxLength={500} onChange={(event) => update('description', event.target.value)} />
+              <Textarea
+                id="create-trip-description"
+                label="Mô tả ngắn"
+                hint="Không bắt buộc"
+                placeholder="Bạn mong chờ điều gì ở chuyến đi này?"
+                value={draft.description}
+                rows={4}
+                maxLength={500}
+                onChange={(event) => update('description', event.target.value)}
+              />
 
               <fieldset className={styles.coverField}>
                 <legend>Ảnh bìa chuyến đi</legend>
                 <div className={styles.coverChoices}>
-                  <label className={`${styles.uploadCover} ${draft.cover === 'custom' ? styles.selectedCover : ''}`}>
+                  <label
+                    className={`${styles.uploadCover} ${draft.cover === 'custom' ? styles.selectedCover : ''}`}
+                  >
                     <input type="file" accept="image/*" onChange={uploadCover} />
-                    {customCover ? <img src={customCover} alt="Ảnh bìa đã tải lên" /> : <><span aria-hidden="true">＋</span><strong>Tải ảnh lên</strong><small>PNG, JPG · Tối đa 5 MB</small></>}
+                    {customCover ? (
+                      <img src={customCover} alt="Ảnh bìa đã tải lên" />
+                    ) : (
+                      <>
+                        <span aria-hidden="true">＋</span>
+                        <strong>Tải ảnh lên</strong>
+                        <small>PNG, JPG · Tối đa 5 MB</small>
+                      </>
+                    )}
                   </label>
                   {coverOptions.map((option) => (
-                    <button key={option.value} type="button" className={draft.cover === option.value ? styles.selectedCover : ''} aria-label={`Chọn ảnh bìa ${option.label}`} aria-pressed={draft.cover === option.value} onClick={() => update('cover', option.value)}>
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={draft.cover === option.value ? styles.selectedCover : ''}
+                      aria-label={`Chọn ảnh bìa ${option.label}`}
+                      aria-pressed={draft.cover === option.value}
+                      onClick={() => update('cover', option.value)}
+                    >
                       <img src={option.image} alt="" />
                     </button>
                   ))}
@@ -377,13 +514,20 @@ export function CreateTripPage() {
                 {coverError && <span className={styles.fieldError}>{coverError}</span>}
               </fieldset>
 
-              <p className={styles.draftNote}>Điểm đến, thành viên, phong cách, ngân sách, mẫu và ảnh bìa đang được giữ trong bản nháp trên thiết bị này; máy chủ hiện chỉ lưu thông tin chuyến đi cơ bản.</p>
+              <p className={styles.draftNote}>
+                Điểm đến, thành viên, phong cách, ngân sách, mẫu và ảnh bìa đang được giữ trong bản
+                nháp trên thiết bị này; máy chủ hiện chỉ lưu thông tin chuyến đi cơ bản.
+              </p>
               {requestMessage && <Alert live>{requestMessage}</Alert>}
 
               <div className={styles.actions}>
-                <Button type="button" variant="plain" onClick={discard}>Bỏ bản nháp</Button>
+                <Button type="button" variant="plain" onClick={discard}>
+                  Bỏ bản nháp
+                </Button>
                 <Link to={paths.trips}>Hủy</Link>
-                <Button type="submit" loading={pending}>Tạo chuyến đi</Button>
+                <Button type="submit" loading={pending}>
+                  Tạo chuyến đi
+                </Button>
               </div>
             </div>
           </section>
@@ -395,21 +539,38 @@ export function CreateTripPage() {
             </div>
             <div className={styles.selectedDestination}>
               <img src={selectedPhoto} alt="" />
-              <div><small>ĐIỂM ĐẾN ĐÃ CHỌN</small><strong>{draft.destination || 'Chưa chọn điểm đến'}</strong><span>{selectedDestination?.caption ?? 'Chọn từ danh sách gợi ý bên dưới'}</span></div>
+              <div>
+                <small>ĐIỂM ĐẾN ĐÃ CHỌN</small>
+                <strong>{draft.destination || 'Chưa chọn điểm đến'}</strong>
+                <span>{selectedDestination?.caption ?? 'Chọn từ danh sách gợi ý bên dưới'}</span>
+              </div>
             </div>
             <div className={styles.suggestions}>
               <h2>Điểm đến phổ biến</h2>
-              <div>{destinations.map((destination) => (
-                <button key={destination.name} type="button" aria-pressed={draft.destination === destination.name} onClick={() => selectDestination(destination.name)}>
-                  <img src={destination.image} alt="" /><span><strong>{destination.name}</strong><small>{destination.caption}</small></span>
-                </button>
-              ))}</div>
+              <div>
+                {destinations.map((destination) => (
+                  <button
+                    key={destination.name}
+                    type="button"
+                    aria-pressed={draft.destination === destination.name}
+                    onClick={() => selectDestination(destination.name)}
+                  >
+                    <img src={destination.image} alt="" />
+                    <span>
+                      <strong>{destination.name}</strong>
+                      <small>{destination.caption}</small>
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </aside>
         </div>
       </form>
 
-      {createdTripId && <CreateTripSuccess tripId={createdTripId} onContinue={() => setCreatedTripId(null)} />}
+      {createdTripId && (
+        <CreateTripSuccess tripId={createdTripId} onContinue={() => setCreatedTripId(null)} />
+      )}
     </main>
   );
 }

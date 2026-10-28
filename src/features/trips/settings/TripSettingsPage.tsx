@@ -18,9 +18,10 @@ import { useTripRepository } from '../repositories/repository-context';
 import type { UpdateTripIntent, UpdateTripResult } from '../repositories/trip.repository';
 import coverFallback from '../../../shared/assets/figma/bd989.svg';
 import styles from './TripSettingsPage.module.css';
+import { calendarDate } from '../../../shared/lib/calendar';
 
-function displayDate(value: string) {
-  const date = value.slice(0, 10).split('-');
+function displayDate(value: string, timezone: string, exclusive = false) {
+  const date = calendarDate(Date.parse(value) - (exclusive ? 1 : 0), timezone).split('-');
   return date.length === 3 ? `${date[2]}/${date[1]}/${date[0]}` : value;
 }
 
@@ -121,7 +122,8 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
         <div>
           <dt>Thời gian</dt>
           <dd>
-            {displayDate(trip.startAt)} → {displayDate(trip.endAt)}
+            {displayDate(trip.startAt, trip.timezone)} →{' '}
+            {displayDate(trip.endAt, trip.timezone, true)}
           </dd>
         </div>
         <div>
@@ -275,8 +277,8 @@ function TripInformationForm({
         />
         <LockedField label="Điểm đến" value="Chưa có dữ liệu" />
         <div className={styles.formColumns}>
-          <LockedField label="Ngày bắt đầu" value={displayDate(trip.startAt)} />
-          <LockedField label="Ngày kết thúc" value={displayDate(trip.endAt)} />
+          <LockedField label="Ngày bắt đầu" value={displayDate(trip.startAt, trip.timezone)} />
+          <LockedField label="Ngày kết thúc" value={displayDate(trip.endAt, trip.timezone, true)} />
         </div>
         <LockedField label="Ngân sách dự kiến" value="Chưa có dữ liệu" />
         <Textarea

@@ -1,5 +1,32 @@
 # Wolfari Web — Screen Inventory
 
+## Inventory Gateway demo1 hiện hành — 28/10/2026
+
+Danh mục này thay thế trạng thái route trong các phase lịch sử bên dưới. “Có runtime” là đã có implementation; gate nghiệm thu tách riêng tại [validation](demo-1-web-validation.md).
+
+| Route | Implementation thực tế | Giới hạn/capability |
+| --- | --- | --- |
+| `/`, `/trips` | Guest entry; authenticated list/create navigation | Không dùng featured/overview fixture làm dữ liệu account |
+| `/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password` | Identity thật; CSRF/cookie coordination; one-time token memory | HTTPS hoặc localhost; token link không phục hồi từ storage |
+| `/profile` | Profile/avatar/password/sessions/revoke/logout thật | MinIO lỗi không làm mất profile; không báo logout server thành công khi chưa xác nhận |
+| `/trips/new` | Form server-supported, actor draft, create/recovery | Không destination/style/template/budget giả |
+| `/trips/:tripId` | Overview tổng hợp read APIs, lỗi độc lập | Không fake member count/budget/balance hoặc tổng một trang |
+| `/trips/:tripId/settings` | Tên/mô tả thật; đọc interval/timezone | Đổi toàn khoảng ngày/lifecycle/Owner transfer hoãn; PATCH metadata giữ instant |
+| `/trips/:tripId/plan` | Timeline + drawer server, CRUD/schedule/reorder/completion | Quyền edit/completion riêng; 409 không ghi đè; draft fixture không tự publish |
+| `/trips/:tripId/members` | Tên thật, paging, policy, invitations, leave/remove | SELECTED dùng membership IDs; operation sau leave vẫn kiểm tra được |
+| `/invitations`, `/invitations/local` | Preview/login/register/accept/decline | Sai account/hết hạn/revoke không cấp quyền |
+| `/trips/:tripId/fund` | Quỹ TEST VND, Holder/consent/budget/destination, requests/report/reject/confirm/ledger | Owner và Holder độc lập; không tiền thật; expense/refund/closure writers hoãn |
+| `/trips/:tripId/map`, `dress-code`, `packing` | Projection server read-only | Không ghép draft local, không writer/toast giả |
+| `/trips/:tripId/price-watch` | Boundary/runtime theo adapter riêng | Ngoài acceptance demo1; không gọi provider thật đã nghiệm thu |
+| `/admin`, Share/Export/DSS | Placeholder/disabled có lý do, không flow được hỗ trợ | Sau demo; không mở quyền Trip qua system role |
+
+Entry points và sidebar hiện hữu trong `src/app/router.tsx`, `HomeRoute.tsx`, `Shell`. Danh mục contract chi tiết: [matrix](gateway-integration-matrix.md), [screen contracts](screen-contracts.md), [runbook](../HUONG_DAN_BUILD_VA_CHAY_DEMO_1.md).
+
+## Lịch sử thiết kế và phase triển khai trước demo1
+
+Giữ nguyên nội dung/nhãn/đếm test phía dưới như lịch sử. Các bảng “Route hiện có” hoặc khẳng định chưa có route là snapshot thời điểm phase gốc, **không còn mô tả implementation ngày28/10/2026**.
+
+
 > Tài liệu này là danh mục màn hình và phạm vi triển khai của Web. Figma mô tả hình ảnh và ý định UX; route/code hiện tại và Backend runtime quyết định trạng thái triển khai thực tế.
 
 ## Quy ước trạng thái

@@ -27,6 +27,7 @@ import { ContentState } from '../../shared/components/ContentState';
 import userIcon from '../../shared/assets/figma/2e748.svg';
 import styles from './MembersPage.module.css';
 import { InvitationManagement } from './InvitationManagement';
+import { GatewayMembersPage } from './GatewayMembersPage';
 type Snapshot<T> = ReadResult<T> | { status: 'loading' };
 function ReadPanel<T>({
   result,
@@ -525,6 +526,10 @@ export function MembersView({
   );
 }
 export function MembersPage() {
+  const { membership } = useMembersRepositories();
+  return membership.commands ? <GatewayMembersPage commands={membership.commands} /> : <PreviewMembersPage />;
+}
+function PreviewMembersPage() {
   const { tripId = '' } = useParams(),
     { previewEnabled } = useOutletContext<RouteContext>();
   const tripRepository = useTripRepository(),

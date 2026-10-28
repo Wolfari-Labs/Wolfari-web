@@ -91,6 +91,7 @@ export interface GatewayModel {
   planPolicyConflictOnce: boolean;
   planPolicyUnknownOnce: boolean;
   planPolicyReceipts: Map<string, { fingerprint: string; data: unknown }>;
+  editorAssignments: Map<string, string[]>;
   invitations: Array<{
     id: string;
     trip_id: string;
@@ -117,6 +118,7 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       planPolicyConflictOnce: false,
       planPolicyUnknownOnce: false,
       planPolicyReceipts: new Map(),
+      editorAssignments: new Map(),
       invitations: [
         {
           id: '77777777-7777-4777-8777-777777777777',
@@ -433,22 +435,25 @@ export const test = base.extend<{ gateway: GatewayModel }>({
             role: current.current_membership.role,
             joined_at: current.current_membership.joined_at,
             left_at: null,
+            display_name: 'Trang Gateway',
           };
           const member = {
-            id: `membership-member-${tripId.slice(0, 8)}`,
+            id: `b${tripId.slice(1)}`,
             trip_id: tripId,
             user_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
             role: current.current_membership.role === 'OWNER' ? 'MEMBER' : 'OWNER',
             joined_at: '2026-10-02T00:00:00Z',
             left_at: null,
+            display_name: 'Member Gateway',
           };
           const departed = {
-            id: `membership-left-${tripId.slice(0, 8)}`,
+            id: `c${tripId.slice(1)}`,
             trip_id: tripId,
             user_id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
             role: 'MEMBER',
             joined_at: '2026-10-03T00:00:00Z',
             left_at: '2026-10-10T00:00:00Z',
+            display_name: null,
           };
           const cursor = url.searchParams.get('cursor');
           if (cursor === null) {
@@ -461,6 +466,11 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           });
         }
         const policyMatch = /^\/api\/v1\/trips\/([^/]+)\/plan-policy$/.exec(path);
+        if (policyMatch && method === 'GET') {
+          const current = model.trips.find(item => item.id === policyMatch[1]);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          return json(route, { policy: current.plan_edit_policy, editor_member_ids: model.editorAssignments.get(current.id) ?? [], membership_revision: current.membership_revision });
+        }
         if (policyMatch && method === 'PUT') {
           const tripId = decodeURIComponent(policyMatch[1]!);
           const current = model.trips.find((item) => item.id === tripId);
@@ -472,8 +482,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           };
           const key = request.headers()['idempotency-key'];
           expect(key).toBeTruthy();
-          expect(data.policy).toMatch(/^(OWNER_ONLY|ALL_MEMBERS)$/);
-          expect(data.editor_member_ids).toEqual([]);
+          expect(data.policy).toMatch(/^(OWNER_ONLY|ALL_MEMBERS|SELECTED_MEMBERS)$/);
+          if (data.policy !== 'SELECTED_MEMBERS') expect(data.editor_member_ids).toEqual([]);
           const fingerprint = JSON.stringify(data);
           const receipt = model.planPolicyReceipts.get(key!);
           if (receipt) {
@@ -495,9 +505,10 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
           current.plan_edit_policy = data.policy;
           current.membership_revision += 1;
+          if (data.policy === 'SELECTED_MEMBERS') model.editorAssignments.set(tripId, [...data.editor_member_ids]);
           const projection = {
             policy: current.plan_edit_policy,
-            editor_member_ids: [],
+            editor_member_ids: model.editorAssignments.get(tripId) ?? [],
             membership_revision: current.membership_revision,
           };
           model.planPolicyReceipts.set(key!, { fingerprint, data: projection });
@@ -507,6 +518,7 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
           return json(route, projection);
         }
+        if (/^\/api\/v1\/trips\/[^/]+\/fund$/.test(path) && method === 'GET') return error(route, 404, 'RESOURCE_NOT_FOUND');
         const planMatch = /^\/api\/v1\/trips\/([^/]+)\/plan$/.exec(path);
         if (planMatch && method === 'GET') {
           const tripId = decodeURIComponent(planMatch[1]!);

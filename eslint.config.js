@@ -7,6 +7,8 @@ export default tseslint.config(
     ignores: [
       'dist/**',
       'dist-demo/**',
+      'dist-demo1/**',
+      '.local/demo1/**',
       'node_modules/**',
       'coverage/**',
       'playwright-report/**',

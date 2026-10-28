@@ -19,8 +19,13 @@ import { mapLocationPresentations, normalizedPlaceText, placeDiscoveryCenter, pl
 import { hideSavedLocation, mergePlaceSelections, removePlaceSelection, savePlaceSelection, usePlaceSelection, usePlaceSelectionStorageStatus, type LocalPlaceSelection } from './place-selection-store';
 import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
 import styles from './TripMapPage.module.css';
+import { DeferredReadPage } from '../plan/components/DeferredReadPage';
 
 export function TripMapPage() {
+  const { previewEnabled } = useOutletContext<RouteContext>();
+  return previewEnabled ? <PreviewMapPage /> : <DeferredReadPage kind="map" />;
+}
+function PreviewMapPage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
   const [scenario, setScenario] = useState<PlanScenario>('success');

@@ -1,0 +1,17 @@
+.page { padding: 18px; max-width: 1220px; margin-inline: auto; color: var(--color-ink); min-width: 0; }
+.panel { padding: 18px; border: 1px solid var(--color-line); border-radius: 14px; background: white; margin-block: 16px; min-width: 0; overflow-wrap: anywhere; }
+.panel h2 { margin-top: 0; font-size: 22px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-block: 12px; }
+.form { display: grid; gap: 14px; min-width: 0; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.list { list-style: none; padding: 0; margin: 0; }
+.list > li { padding: 14px 10px; border-bottom: 1px solid var(--color-line); overflow-wrap: anywhere; }
+.list > li:nth-child(odd) { background: var(--color-pale); border-radius: 10px; }
+.metadata { color: var(--color-muted); font-size: 13px; }
+.money { overflow-wrap: anywhere; font-size: clamp(20px, 3vw, 30px); }
+.checks { display: grid; gap: 12px; }
+.checks label { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.form fieldset { min-width: 0; border: 1px solid var(--color-line); border-radius: 10px; padding: 12px; }
+.page :global(.demo-actions) { display:flex;flex-wrap:wrap;gap:10px;margin-block:10px; }
+.page details p { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .page { padding: 10px; }.grid { grid-template-columns: 1fr; }.panel { padding: 12px; }.actions > button { max-width: 100%; white-space: normal; } }

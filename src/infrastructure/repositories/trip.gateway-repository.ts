@@ -28,12 +28,69 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
   const t = record(raw);
   const membership = record(t.current_membership);
   const permissions = record(t.permissions);
+  const uuid = (value: unknown) =>
+    typeof value === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  const instant = (value: unknown) =>
+    typeof value === 'string' &&
+    /T.*(?:Z|[+-]\d{2}:\d{2})$/.test(value) &&
+    Number.isFinite(Date.parse(value));
+  const revision = (value: unknown) =>
+    Number.isInteger(value) && Number(value) > 0 && Number(value) <= 2147483647;
+  let timezoneValid = false;
+  try {
+    if (typeof t.timezone === 'string' && t.timezone) {
+      new Intl.DateTimeFormat('en', { timeZone: t.timezone });
+      timezoneValid = true;
+    }
+  } catch {
+    /* invalid timezone */
+  }
+  if (
+    !uuid(t.id) ||
+    !uuid(membership.id) ||
+    !uuid(membership.user_id) ||
+    membership.trip_id !== t.id ||
+    typeof t.name !== 'string' ||
+    !t.name.trim() ||
+    !instant(t.start_at) ||
+    !instant(t.end_at) ||
+    Date.parse(String(t.end_at)) <= Date.parse(String(t.start_at)) ||
+    !timezoneValid ||
+    !['UPCOMING', 'ONGOING', 'COMPLETED', 'ARCHIVED'].includes(String(t.lifecycle)) ||
+    ![t.plan_version, t.membership_revision, t.export_revision].every(revision) ||
+    !['OWNER', 'MEMBER'].includes(String(membership.role)) ||
+    !instant(membership.joined_at) ||
+    (membership.left_at !== null && !instant(membership.left_at)) ||
+    typeof permissions.can_read !== 'boolean' ||
+    typeof permissions.can_update !== 'boolean' ||
+    ![t.description, t.public_description].every(
+      (value) => value === null || typeof value === 'string',
+    ) ||
+    (t.archived_at !== null && !instant(t.archived_at))
+  ) {
+    throw new ApiError(
+      'Invalid Trip response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
+  }
   if (
     t.plan_edit_policy !== 'OWNER_ONLY' &&
     t.plan_edit_policy !== 'SELECTED_MEMBERS' &&
     t.plan_edit_policy !== 'ALL_MEMBERS'
   ) {
-    throw new ApiError('Invalid Trip response', 'invalid-response', 200, null, correlationId, false);
+    throw new ApiError(
+      'Invalid Trip response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
   }
   const planEditPolicy: PlanEditPolicy = t.plan_edit_policy;
   return {
@@ -144,30 +201,54 @@ function updateError(error: unknown): UpdateTripResult {
 function planPolicyError(error: unknown): UpdatePlanPolicyResult {
   const api = error instanceof ApiError ? error : null;
   const domain = domainError(error);
-  if (api?.kind === 'network' || api?.kind === 'timeout' || api?.kind === 'invalid-response' || (api?.status !== null && api?.status !== undefined && api.status >= 500)) {
+  if (
+    api?.kind === 'network' ||
+    api?.kind === 'timeout' ||
+    api?.kind === 'invalid-response' ||
+    (api?.status !== null && api?.status !== undefined && api.status >= 500)
+  ) {
     return { status: 'unknown', error: domain };
   }
   return { status: 'error', error: domain };
 }
 
-function planPolicy(value: unknown, correlationId: string | null): {
+function planPolicy(
+  value: unknown,
+  correlationId: string | null,
+): {
   policy: PlanEditPolicy;
   editorMemberIds: readonly string[];
   membershipRevision: number;
 } {
   const data = record(value);
   if (
-    (data.policy !== 'ALL_MEMBERS' && data.policy !== 'OWNER_ONLY' && data.policy !== 'SELECTED_MEMBERS') ||
+    (data.policy !== 'ALL_MEMBERS' &&
+      data.policy !== 'OWNER_ONLY' &&
+      data.policy !== 'SELECTED_MEMBERS') ||
     !Array.isArray(data.editor_member_ids) ||
     !data.editor_member_ids.every((id) => typeof id === 'string' && id.trim() !== '') ||
     !Number.isSafeInteger(data.membership_revision) ||
     Number(data.membership_revision) < 1
   ) {
-    throw new ApiError('Invalid plan policy response', 'invalid-response', 200, null, correlationId, false);
+    throw new ApiError(
+      'Invalid plan policy response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
   }
   const editorMemberIds = data.editor_member_ids as string[];
   if (new Set(editorMemberIds).size !== editorMemberIds.length) {
-    throw new ApiError('Invalid plan policy response', 'invalid-response', 200, null, correlationId, false);
+    throw new ApiError(
+      'Invalid plan policy response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
   }
   return {
     policy: data.policy,
@@ -185,6 +266,12 @@ export function createGatewayTripRepository(
   client?: GatewayHttpClient,
 ): TripRepository {
   const repository: TripRepository = {
+    ...(client ? { getPlanPolicy: async ({ tripId, signal }: { tripId: string; signal: AbortSignal }) => {
+      try {
+        const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`, { signal, includeCredentials: true });
+        return { status: 'ready' as const, data: planPolicy(result.data, result.correlationId) };
+      } catch (error) { if (signal.aborted) throw signal.reason; return { status: 'error' as const, error: domainError(error) }; }
+    } } : {}),
     createTrip: async ({ intent, signal }) => {
       signal.throwIfAborted();
       if (client) {
@@ -278,7 +365,7 @@ export function createGatewayTripRepository(
         );
         return {
           status: 'updated',
-            data: planPolicy(result.data, result.correlationId),
+          data: planPolicy(result.data, result.correlationId),
           correlationId: result.correlationId,
         };
       } catch (error) {
@@ -296,7 +383,17 @@ export function createGatewayTripRepository(
               signal,
               includeCredentials: true,
             });
-            return { status: 'ready' as const, data: mapTrip(result.data, result.correlationId) };
+            const trip = mapTrip(result.data, result.correlationId);
+            if (trip.id !== tripId)
+              throw new ApiError(
+                'Trip scope mismatch',
+                'invalid-response',
+                200,
+                null,
+                result.correlationId,
+                false,
+              );
+            return { status: 'ready' as const, data: trip };
           } catch (error) {
             if (signal.aborted) throw signal.reason;
             return { status: 'error' as const, error: domainError(error) };
@@ -320,10 +417,26 @@ export function createGatewayTripRepository(
               includeCredentials: true,
             });
             const data = result.data as { items?: unknown[]; next_cursor?: string | null };
+            if (
+              !data ||
+              !Array.isArray(data.items) ||
+              !(
+                data.next_cursor === null ||
+                (typeof data.next_cursor === 'string' && data.next_cursor.length > 0)
+              )
+            )
+              throw new ApiError(
+                'Invalid Trip page',
+                'invalid-response',
+                200,
+                null,
+                result.correlationId,
+                false,
+              );
             const projection: TripListViewModel = {
-            items: Array.isArray(data.items)
-              ? data.items.map((item) => mapTrip(item, result.correlationId))
-              : [],
+              items: Array.isArray(data.items)
+                ? data.items.map((item) => mapTrip(item, result.correlationId))
+                : [],
               nextCursor: data.next_cursor ?? null,
             };
             return { status: 'ready' as const, data: projection };

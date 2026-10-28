@@ -1,24 +1,10 @@
 import type { ActivityViewModel } from './plan';
+import { calendarDate, tripCalendarDays } from '../../../shared/lib/calendar';
 export function localDate(instant: string, timezone: string) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    timeZone: timezone,
-  }).formatToParts(new Date(instant));
-  const field = (type: string) => parts.find((p) => p.type === type)!.value;
-  return `${field('year')}-${field('month')}-${field('day')}`;
+  return calendarDate(instant, timezone);
 }
 export function planDays(startAt: string, endAt: string, timezone: string) {
-  const start = localDate(startAt, timezone),
-    end = localDate(endAt, timezone),
-    days: string[] = [];
-  const cursor = new Date(start + 'T00:00:00Z');
-  while (cursor.toISOString().slice(0, 10) <= end) {
-    days.push(cursor.toISOString().slice(0, 10));
-    cursor.setUTCDate(cursor.getUTCDate() + 1);
-  }
-  return days;
+  return tripCalendarDays(startAt, endAt, timezone);
 }
 export function activitiesForDay(
   items: readonly ActivityViewModel[],
@@ -26,7 +12,9 @@ export function activitiesForDay(
   timezone: string,
 ) {
   return items
-    .filter((a) => a.startsAt !== null && localDate(a.startsAt, timezone) === day)
+    .filter((a) =>
+      a.startsAt !== null ? localDate(a.startsAt, timezone) === day : a.scheduledDate === day,
+    )
     .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id));
 }
 export function activityTime(value: string | null, timezone: string) {

@@ -40,7 +40,7 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
 
   await page.goto('/trips/new');
   await page.getByLabel('Tên chuyến đi').fill('Huế Gateway mới');
-  await page.getByLabel('Điểm đến chính').fill('Huế');
+  await expect(page.getByLabel('Điểm đến chính')).toHaveCount(0);
   await page.getByLabel('Ngày đi').fill('2026-12-10');
   await page.getByLabel('Ngày về').fill('2026-12-12');
   await page.getByRole('button', { name: 'Tạo chuyến đi', exact: true }).click();
@@ -53,8 +53,8 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   expect(createCall).toBeDefined();
   expect(createCall!.body).toEqual({
     name: 'Huế Gateway mới',
-    start_at: '2026-12-10T00:00:00+07:00',
-    end_at: '2026-12-13T00:00:00+07:00',
+    start_at: '2026-12-09T17:00:00.000Z',
+    end_at: '2026-12-12T17:00:00.000Z',
     timezone: 'Asia/Ho_Chi_Minh',
     client_request_id: createCall!.idempotencyKey,
   });

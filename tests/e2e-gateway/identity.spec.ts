@@ -1,5 +1,12 @@
 import { test, expect, login, avatarPng } from './gateway-fixture';
 
+async function expectOnlySessionBoundary(page: Parameters<typeof login>[0]) {
+  const values = await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }));
+  expect(Object.keys(values.local)).toEqual(['wolfari:session-boundary:v1']);
+  expect(values.local['wolfari:session-boundary:v1']).toMatch(/^[0-9a-f-]{36}$/);
+  expect(values.session).toEqual({}); // No access token, CSRF, cookie or credential payload.
+}
+
 test('login, profile save, private avatar replacement and paginated session revoke', async ({
   page,
   gateway,
@@ -34,7 +41,7 @@ test('login, profile save, private avatar replacement and paginated session revo
   await page.getByRole('button', { name: 'Thu hồi phiên' }).first().click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Đăng xuất', exact: true })).toBeEnabled();
-  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+  await expectOnlySessionBoundary(page);
 });
 
 test('profile conflict retains draft and uses refreshed version only on explicit retry', async ({
@@ -95,7 +102,7 @@ test('password change rejects bad credentials, then clears the session on succes
     gateway.calls.filter((call) => call.path.endsWith('/password-change')).at(-1)?.body,
   ).toEqual({ current_password: ' old password ', new_password: ' new password long ' });
   await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
-  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+  await expectOnlySessionBoundary(page);
   // Stay in the same SPA instance: a reload would hide leaked in-memory caches.
   gateway.profile = {
     ...gateway.profile,
@@ -227,7 +234,7 @@ test('password recovery uses a generic notice, reset token is scrubbed and login
     token: 'e2e-reset-token',
     new_password: ' new password long ',
   });
-  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+  await expectOnlySessionBoundary(page);
 });
 
 for (const status of [400, 429, 503]) {

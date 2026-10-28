@@ -29,6 +29,7 @@ function fields(value: unknown, create: boolean): ActivityUpdateFields | null {
       'selectedLocationId',
       'startsAt',
       'endsAt',
+      'scheduledDate',
       'position',
     ])
   )

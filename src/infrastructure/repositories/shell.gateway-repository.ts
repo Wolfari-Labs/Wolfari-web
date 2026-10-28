@@ -32,7 +32,8 @@ function mapViewer(raw: unknown): ShellSnapshot['viewer'] {
   ) {
     throw new Error('Invalid Gateway profile projection');
   }
-  return { fullName, version, systemRole };
+  if (typeof profile?.id !== 'string' || !profile.id) throw new Error('Missing actor ID');
+  return { id: profile.id, fullName, version, systemRole };
 }
 
 function mapTrip(raw: unknown): NonNullable<ShellSnapshot['trip']> {
@@ -93,7 +94,7 @@ export function createGatewayShellRepository(
           const trip = tripId
             ? await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}`, {
                 signal,
-              includeCredentials: true,
+                includeCredentials: true,
               })
             : null;
           return {

@@ -7,6 +7,7 @@ import { ApiError } from '../http/api-error';
 import type { DomainError } from '../../shared/types/result';
 import type { GatewayHttpClient } from '../http/http-client';
 import { toDomainError } from '../http/domain-error';
+import { validCalendarDate } from '../../shared/lib/calendar';
 
 function domainError(error: unknown): DomainError {
   return toDomainError(error);
@@ -17,6 +18,21 @@ function invalid(): never {
 }
 function requiredText(value: unknown): string {
   return typeof value === 'string' && value.trim() ? value : invalid();
+}
+function uuid(value: unknown): string {
+  return typeof value === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+    ? value
+    : invalid();
+}
+const nullableId = (value: unknown) => (value === null ? null : uuid(value));
+function instant(value: unknown): string | null {
+  if (value === null) return null;
+  const s = requiredText(value);
+  return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(s) &&
+    Number.isFinite(Date.parse(s))
+    ? s
+    : invalid();
 }
 function text(value: unknown): string | null {
   return value === null ? null : typeof value === 'string' ? value : invalid();
@@ -57,6 +73,7 @@ function activityFields(fields: ActivityUpdateFields): Record<string, unknown> {
     selectedLocationId: 'selected_location_id',
     startsAt: 'starts_at',
     endsAt: 'ends_at',
+    scheduledDate: 'scheduled_date',
     position: 'position',
   } as const;
   for (const key of Object.keys(keys) as (keyof typeof keys)[]) {
@@ -67,23 +84,37 @@ function activityFields(fields: ActivityUpdateFields): Record<string, unknown> {
 
 function mapActivity(raw: unknown): PlanViewModel['activities'][number] {
   const activity = record(raw);
+  const scheduledDate =
+    activity.scheduled_date === undefined ? null : text(activity.scheduled_date);
+  if (
+    scheduledDate !== null &&
+    (!validCalendarDate(scheduledDate) || activity.starts_at !== null || activity.ends_at !== null)
+  )
+    invalid();
+  if ((activity.starts_at === null) !== (activity.ends_at === null)) invalid();
+  if (
+    activity.starts_at !== null &&
+    !(Date.parse(requiredText(activity.ends_at)) > Date.parse(requiredText(activity.starts_at)))
+  )
+    invalid();
   return {
-    id: requiredText(activity.id),
-    tripId: requiredText(activity.trip_id),
+    id: uuid(activity.id),
+    tripId: uuid(activity.trip_id),
     title: requiredText(activity.title),
     description: text(activity.description),
     publicDescription: text(activity.public_description),
     activityType: requiredText(activity.activity_type),
-    selectedLocationId: text(activity.selected_location_id),
-    startsAt: text(activity.starts_at),
-    endsAt: text(activity.ends_at),
+    selectedLocationId: nullableId(activity.selected_location_id),
+    startsAt: instant(activity.starts_at),
+    endsAt: instant(activity.ends_at),
+    scheduledDate,
     position: number(activity.position, 0),
     status: status(activity.status),
     source: source(activity.source),
     planVersion: number(activity.plan_version),
-    createdByUserId: requiredText(activity.created_by_user_id),
-    completedByUserId: text(activity.completed_by_user_id),
-    completedAt: text(activity.completed_at),
+    createdByUserId: uuid(activity.created_by_user_id),
+    completedByUserId: nullableId(activity.completed_by_user_id),
+    completedAt: instant(activity.completed_at),
     presentation: { cover: null },
   };
 }
@@ -91,6 +122,12 @@ function mapActivity(raw: unknown): PlanViewModel['activities'][number] {
 function mapPlanVersion(raw: unknown): { planVersion: number; exportRevision: number } {
   const data = record(raw);
   return { planVersion: number(data.plan_version), exportRevision: number(data.export_revision) };
+}
+
+function activityReceipt(raw: unknown, tripId: string, activityId?: string) {
+  const result = mapActivity(raw);
+  if (result.tripId !== tripId || (activityId !== undefined && result.id !== activityId)) invalid();
+  return result;
 }
 
 function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
@@ -105,14 +142,14 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
     const ids = new Set<string>();
     for (const item of items) {
       const row = record(item);
-      const id = requiredText(row.id);
+      const id = uuid(row.id);
       if (row.trip_id !== expectedTripId || row.plan_version !== data.plan_version || ids.has(id))
         invalid();
       ids.add(id);
     }
   }
   return {
-    tripId: requiredText(data.trip_id),
+    tripId: uuid(data.trip_id),
     planVersion: number(data.plan_version),
     exportRevision: number(data.export_revision),
     activities: activities.map((value) => {
@@ -121,8 +158,8 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
     selectedLocations: locations.map((value) => {
       const location = record(value);
       return {
-        id: requiredText(location.id),
-        tripId: requiredText(location.trip_id),
+        id: uuid(location.id),
+        tripId: uuid(location.trip_id),
         name: requiredText(location.name),
         address: text(location.address),
         latitude: text(location.latitude),
@@ -131,7 +168,7 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
         providerPlaceId: text(location.provider_place_id),
         source: source(location.source),
         openingHours: location.opening_hours ?? null,
-        fetchedAt: text(location.fetched_at),
+        fetchedAt: instant(location.fetched_at),
         metadata: record(location.metadata),
         planVersion: number(location.plan_version),
       };
@@ -145,11 +182,11 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
             ? 'TRIP'
             : invalid();
       return {
-        id: requiredText(dressCode.id),
-        tripId: requiredText(dressCode.trip_id),
+        id: uuid(dressCode.id),
+        tripId: uuid(dressCode.trip_id),
         scopeType,
         planDate: text(dressCode.plan_date),
-        activityId: text(dressCode.activity_id),
+        activityId: nullableId(dressCode.activity_id),
         label: requiredText(dressCode.label),
         description: text(dressCode.description),
         publicDescription: text(dressCode.public_description),
@@ -160,19 +197,19 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
     packingItems: packingItems.map((value) => {
       const packingItem = record(value);
       return {
-        id: requiredText(packingItem.id),
-        tripId: requiredText(packingItem.trip_id),
+        id: uuid(packingItem.id),
+        tripId: uuid(packingItem.trip_id),
         name: requiredText(packingItem.name),
         quantity: requiredText(packingItem.quantity),
         unit: text(packingItem.unit),
         note: text(packingItem.note),
         category: text(packingItem.category),
-        assignedMemberId: text(packingItem.assigned_member_id),
-        dueAt: text(packingItem.due_at),
+        assignedMemberId: nullableId(packingItem.assigned_member_id),
+        dueAt: instant(packingItem.due_at),
         status: status(packingItem.status),
         source: source(packingItem.source),
-        completedByUserId: text(packingItem.completed_by_user_id),
-        completedAt: text(packingItem.completed_at),
+        completedByUserId: nullableId(packingItem.completed_by_user_id),
+        completedAt: instant(packingItem.completed_at),
         planVersion: number(packingItem.plan_version),
       };
     }),
@@ -247,7 +284,7 @@ export function createGatewayPlanRepository(
       { expected_plan_version: expectedPlanVersion, ...activityFields(activity) },
       idempotencyKey,
       signal,
-      mapActivity,
+      (raw) => activityReceipt(raw, tripId),
     );
   repository.updateActivity = ({
     tripId,
@@ -263,7 +300,7 @@ export function createGatewayPlanRepository(
       { expected_plan_version: expectedPlanVersion, ...activityFields(fields) },
       idempotencyKey,
       signal,
-      mapActivity,
+      (raw) => activityReceipt(raw, tripId, activityId),
     );
   repository.setActivityCompletion = ({
     tripId,
@@ -279,7 +316,7 @@ export function createGatewayPlanRepository(
       { expected_plan_version: expectedPlanVersion, status },
       idempotencyKey,
       signal,
-      mapActivity,
+      (raw) => activityReceipt(raw, tripId, activityId),
     );
   repository.deleteActivity = ({
     tripId,

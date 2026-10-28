@@ -1,5 +1,36 @@
 # Wolfari Web — Flow Map
 
+## Luồng Gateway demo1 hiện hành — 28/10/2026
+
+Phần này thay thế các mô tả implementation cũ ở phía dưới. Nguồn hiện hành: [integration matrix](gateway-integration-matrix.md), [phụ lục 49 tác vụ](demo-1-web-addendum-v1.0.md), [bằng chứng theo lớp](demo-1-web-validation.md). Fixture preview vẫn độc lập, không phải dữ liệu server.
+
+```text
+Guest → Register → Mailpit verify → Login → Home/Trip list → Create Trip
+Owner → Members → EMAIL/LINK invitation → người nhận login/register/verify → mở lại link → accept
+Owner → GET policy → SELECTED_MEMBERS (membership IDs, revision) → PUT → GET xác nhận
+Member → Plan server → drawer (pool / ngày-only / cặp giờ, qua đêm)
+       → command(key, expected_plan_version) → refetch → reload/actor khác thấy cùng dữ liệu
+Owner → bật Fund TEST + Holder + budget + destination
+Holder → xác nhận destination version
+Owner/Holder theo capability → đợt thu C200000 + D300000
+Member → report → Holder reject(reason) → Member report lại → Holder confirm
+       → balance500000 / 2 ledger IN → restart không reset → đọc lại
+Member/Owner → leave/remove → operation → terminal success → refetch membership
+```
+
+- Web chỉ gọi Gateway relative `/api/v1`; service RPC/SQL không ra browser. Production HTTPS, local dùng localhost.
+- Session: Web Locks tuần tự hóa cookie/CSRF/refresh/login/logout; BroadcastChannel/localStorage chỉ chứa epoch không bí mật. Access token trong memory; đổi actor hủy query/cache riêng.
+- Create Trip chỉ lưu tên/mô tả/ngày/timezone; interval `[start_at,end_at)`. Timeout giữ immutable snapshot/key qua reload, không lấy body từ draft đã sửa.
+- Plan dùng một timeline server. Ngày-only là `scheduled_date`, không bịa00:00. Reorder không sửa giờ. 409 giữ draft, đối chiếu trong drawer, người dùng xác nhận trước khi ghi version mới.
+- Finance/membership: journal actor-scoped → poll có giới hạn → `PROCESSING/PENDING_RECOVERY/SUCCEEDED/FAILED/NEEDS_REVIEW`. 202 không báo xong; replay đúng ý định, không key mới. Destination payload có ngân hàng chỉ ở memory.
+- Invitation token/verify/reset token không lưu để reload; mở lại link thư gốc. “Tiếp nhận gửi” không đồng nghĩa delivered.
+- Map/Dress/Packing Gateway chỉ đọc; expense/refund/closure/payment/provider/DSS/export/admin writer sau demo. Không dẫn người dùng tới thao tác giả thành công.
+
+## Lưu trữ thiết kế và lịch sử (không phải trạng thái Gateway hiện hành)
+
+Các phần từ đây giữ nguyên ngày/phase và số liệu cũ để truy vết. Khi mâu thuẫn, dùng phần demo1 và nguồn liên kết trên; không dùng “unavailable” của Create Trip hoặc “fixture-only” cũ để mô tả runtime mới.
+
+
 ## Nguyên tắc flow
 
 ```text

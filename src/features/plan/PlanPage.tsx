@@ -988,6 +988,39 @@ export function PlanView({
 }
 
 export function PlanPage() {
+  const repository = usePlanRepository();
+  return repository.createActivity ? <GatewayPlanPage /> : <PreviewPlanPage />;
+}
+function GatewayPlanPage() {
+  const { tripId = '' } = useParams();
+  const snapshot = useTripPlanSnapshot(tripId, 'success');
+  return (
+    <section className={styles.page} data-flow="plan-server">
+      <div className={styles.breadcrumb}>
+        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
+        <span>›</span>
+        <h1>Lịch trình</h1>
+      </div>
+      {snapshot.state.status === 'ready' ? (
+        <>
+          <TripHero trip={snapshot.state.trip} compact variant="landscape" />
+          <GatewayPlanPanel
+            key={`${tripId}:${snapshot.state.trip.currentMembership.id}`}
+            trip={snapshot.state.trip}
+            plan={snapshot.state.plan}
+            refresh={snapshot.retry}
+            onBusyChange={() => undefined}
+          />
+        </>
+      ) : snapshot.state.status === 'error' ? (
+        <ContentState state="error" error={snapshot.state.error} onRetry={snapshot.retry} />
+      ) : (
+        <ContentState state={snapshot.state.status === 'loading' ? 'loading' : 'empty'} />
+      )}
+    </section>
+  );
+}
+function PreviewPlanPage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
   const [scenario, setScenario] = useState<PlanScenario>('success');

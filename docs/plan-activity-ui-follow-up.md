@@ -1,38 +1,18 @@
-# Plan activity UI — Web-only delivery
+# Plan/Activity — Web demo1
 
-## Context
+28/10/2026. Thay mô tả cũ rằng Backend chưa lưu ngày-only; [evidence23/10](plan-activity-evidence-2026-10-23.md) giữ như lịch sử.
 
-The Plan page separates **Dữ liệu trên server** from **Bản nháp trên thiết bị**.
-The server panel calls create, typed update, confirmed delete, completion/reopen,
-and complete-list reorder with `expected_plan_version` and `Idempotency-Key`.
+Gateway chỉ mount một timeline server trong GatewayPlanPanel, form Drawer; editor local cũ chỉ fixture. Không auto publish draft hoặc gửi locationID local.
 
-## Scope
+- Pool: scheduled_date/starts_at/ends_at null.
+- Ngày-only: calendar string, giờ null; không 00:00 giả.
+- Timed: hai instant theo Trip timezone, scheduled_date null; end date riêng cho qua đêm.
+- PATCH giữ omission/null; move một command; reorder permutation đầy đủ giữ giờ, không cascade.
+- Kéo item có giờ sang ngày khác mở form xác nhận. Bàn phím dùng Sửa/Đưa lên/xuống; filter ngày không ghi.
+- Completion quyền riêng; Holder không tự sửa cấu trúc. 409 giữ draft, đối chiếu ngay trong drawer rồi xác nhận input trước khi lưu.
+- Unknown giữ key/body/version actor/Trip qua sessionStorage; không lưu được journal thì chặn ghi. Refetch không tự chứng minh mutation commit.
+- Thu hồi Editor khi form mở: server từ chối; không tự áp draft lên version/quyền mới.
 
-- Only server-selected location IDs can be linked. Pure reorder preserves times.
-- One write per trip at a time in the tab; no automatic write retry/version increment.
-- Pending/unknown outcomes retain the exact intent, revision and key in session
-  storage scoped to actor/trip, including route changes and reload in that session.
-  Explicit reconciliation and explicit replay are required to retry. Failure to
-  persist a recoverable intent prevents its write from being sent.
-- Refresh both Trip and Plan after success; retain form content on conflict.
-- Draft version mismatch preserves the draft and locks it for explicit review/reset.
+Nguồn: [Plan OpenAPI](../../Wolfari-backend/docs/api/plan.openapi.json), Trip V003 và Protobuf scheduled_date đã có ở Backend. Không thêm migration trong đợt Web.
 
-## Dependency
-
-The current Backend cannot store a day independently from activity timestamps.
-Dragging and changing day remain local: retain the date and clear times on the
-moved activity and target-day suffix. Source-day remaining times are unchanged;
-pool moves clear only the moved activity, and same-slot drops do nothing.
-
-Drafts are never partially published via multiple PATCHes. Server editing supports
-existing times; changing day uses the local editor. No fake midnight timestamps or
-local map IDs are sent to Gateway. Backend/API/protobuf/database are unchanged.
-
-## Completion
-
-Gateway commands are connected and have adapter/component/HTTP-mock browser
-coverage. Shared date-only scheduling remains an explicit contract limitation;
-do not mark that flow as Gateway-complete. Recovery survives reload within the
-browser session, not storage deletion, a closed session or a different device.
-
-See [implementation evidence](plan-activity-evidence-2026-10-23.md).
+Test: plan-gateway, plan-commands, gateway-plan-panel, HTTP mock plan.spec, real e2e-demo1. Xem [validation](demo-1-web-validation.md) và [addendum](demo-1-web-addendum-v1.0.md).

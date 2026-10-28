@@ -56,6 +56,8 @@ describe('unconnected Gateway transport foundation', () => {
     expect(await client.read('/api/v1/me')).toEqual({
       data: { id: 'fixture-http-only' },
       correlationId: 'correlation-test',
+      status: 200,
+      metadata: {},
     });
     const [path, request] = transport.mock.calls[0]!;
     expect(path).toBe('/api/v1/me');

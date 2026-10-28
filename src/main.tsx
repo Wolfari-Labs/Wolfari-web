@@ -28,6 +28,9 @@ import type { DemoAccess } from './features/auth/model/demo-access';
 import { createGatewayHttpClient } from './infrastructure/http/http-client';
 import { createAccessTokenStore } from './infrastructure/session/access-token-store';
 import { createSessionManager } from './infrastructure/session/session-manager';
+import { coordinateBrowserSession } from './infrastructure/session/coordinated-session';
+import { createCommandCoordinator } from './infrastructure/operations/command-coordinator';
+import { decodeFinanceReceipt } from './infrastructure/repositories/finance-decoders';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -45,7 +48,12 @@ async function start() {
       getAccessToken: accessTokenStore.get,
       onUnauthorized: refreshSession,
     });
-    const sessionManager = createSessionManager(gatewayHttpClient, accessTokenStore);
+    const localManager = createSessionManager(gatewayHttpClient, accessTokenStore);
+    const sessionManager = fixtureSelected ? localManager : coordinateBrowserSession(localManager);
+    let journal: Storage | undefined;
+    try { journal = window.sessionStorage; } catch { /* Memory-only recovery when storage is blocked. */ }
+    const commands = createCommandCoordinator(gatewayHttpClient, decodeFinanceReceipt, journal);
+    sessionManager.subscribe(() => { if (sessionManager.status() !== 'authenticated') commands.invalidate(); });
     if (!fixtureSelected) void sessionManager.bootstrap().catch(() => undefined);
     let previewTripPath: string | null = null;
     let demoAccess: DemoAccess | undefined;
@@ -131,6 +139,8 @@ async function start() {
       import.meta.env.VITE_DATA_MODE,
       previewAllowed,
       fundFixtureFactory,
+      gatewayHttpClient,
+      commands,
     );
     const priceWatchRepository = selectPriceWatchRepository(
       import.meta.env.VITE_DATA_MODE,
@@ -142,6 +152,7 @@ async function start() {
       previewAllowed,
       membersFixtureFactory,
       gatewayHttpClient,
+      commands,
     );
     root.render(
       <StrictMode>
@@ -162,12 +173,19 @@ async function start() {
         </ErrorBoundary>
       </StrictMode>,
     );
-  } catch {
+  } catch (error) {
     root.render(
-      <ContentState
-        state="error"
-        error={{ code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false }}
-      />,
+      error instanceof Error && error.message.startsWith('Demo 1 cần') ? (
+        <main>
+          <h1>Trình duyệt chưa được hỗ trợ</h1>
+          <p>{error.message}</p>
+        </main>
+      ) : (
+        <ContentState
+          state="error"
+          error={{ code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: false }}
+        />
+      ),
     );
   }
 }

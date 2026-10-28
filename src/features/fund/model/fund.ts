@@ -224,6 +224,7 @@ export interface FundViewModel {
 }
 
 export interface FundRepository {
+  readonly runtime?: import('./runtime-fund').FundRuntime;
   getFund(request: {
     readonly tripId: string;
     readonly scenario: FundScenario;

@@ -21,9 +21,30 @@
 .list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 1.25rem;
   display: grid;
   gap: 0.75rem;
+  border-left: 2px solid var(--color-border, #ddd);
+}
+.item {
+  position: relative;
+}
+.item::before {
+  content: '';
+  position: absolute;
+  left: -1.7rem;
+  top: 1.3rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--color-primary, #216e56);
+  border: 2px solid var(--color-surface, #fff);
+}
+.schedule {
+  font-weight: 600;
+  color: var(--color-text, #163c32);
+  padding-block: 0.4rem;
+  border-block: 1px solid var(--color-border, #ddd);
 }
 .item,
 .form {

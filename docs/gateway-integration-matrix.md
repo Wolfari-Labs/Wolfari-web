@@ -1,152 +1,39 @@
-# Gateway Integration Matrix
+# Gateway integration matrix — demo1
 
-The browser talks only to `/api/v1` through the Gateway. Service ports and fixture
-mutations are never production dependencies. This matrix deliberately separates
-Gateway route readiness from Web integration so a backend route is not reported as
-already wired into the browser runtime.
+Cập nhật 28/10/2026, thay trạng thái Feature #2–#8 cũ. Browser chỉ gọi relative /api/v1; không RPC/database/service secret.
 
-| Capability         | Gateway route                                                                  | Gateway readiness | Web integration slice                  | Concurrency/security                                                                                                                                                    |
-| ------------------ | ------------------------------------------------------------------------------ | ----------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Register           | `POST /auth/register`                                                          | runtime           | `feat/3` runtime                       | `202`; no automatic login                                                                                                                                               |
-| Login              | `POST /auth/login`                                                             | runtime           | `feat/3` runtime                       | refresh cookie; access token memory-only                                                                                                                                |
-| Refresh            | `GET /auth/csrf`, `POST /auth/refresh`                                         | runtime           | `feat/2` foundation; `feat/3` runtime  | cookie + Origin + CSRF; single-flight per tab                                                                                                                           |
-| Email verification | `POST /auth/email-verifications`, `POST /auth/email-verifications/confirm`     | runtime           | `feat/4` runtime                       | authenticated resend; one-time URL token is scrubbed; successful confirmation shows registration success and redirects to login                                         |
-| Password recovery  | `POST /auth/password-reset-requests`, `POST /auth/password-resets`             | runtime           | `feat/4` runtime                       | generic `202`; one-time URL token is scrubbed                                                                                                                           |
-| Self profile       | `GET/PATCH /me`                                                                | runtime           | `feat/4` runtime                       | `expected_version` on PATCH                                                                                                                                             |
-| Avatar             | `POST /me/avatar`, `GET /me/avatar`                                            | runtime           | `feat/4` runtime                       | multipart upload; private binary download                                                                                                                               |
-| Password change    | `POST /me/password-change`                                                     | runtime           | `feat/4` runtime                       | clears the memory token and requires login again                                                                                                                        |
-| Sessions           | `GET /me/sessions`, `DELETE /me/sessions/:id`                                  | runtime           | `feat/4` runtime                       | `204` revoke; logout dùng `session_id` từ login/refresh, đã nối API                                                                                                     |
-| Trips              | `GET/POST /trips`, `GET/PATCH /trips/:id`                                      | runtime           | `feat/5`                               | create uses `client_request_id`; PATCH uses revisions + idempotency                                                                                                     |
-| Plan policy        | `PUT /trips/:id/plan-policy`                                                   | partial           | `feat/6` basic policy writer           | Owner + active + `can_update` + unarchived; empty editor IDs for basic policies; revision + idempotency; Trip GET confirms state; Selected editor IDs remain unreadable |
-| Members            | `GET /trips/:id/members`                                                       | runtime           | `feat/6` paginated read                | `limit=100`, opaque cursor, `include_left`, dedupe/retain/retry; IDs/roles/timestamps only; lifecycle writes disabled                                                   |
-| Invitations        | `GET/POST /trips/:id/invitations`, token preview/accept/decline, revoke/resend | runtime           | `feat/7` management + response runtime | cursor/version/revision + stable mutation intent; one-time token/link is memory-only                                                                                    |
-| Plan/Activity      | `GET /trips/:id/plan`, activity POST/PATCH/DELETE/order PUT                    | runtime           | `feat/8`                               | expected plan version + idempotency on writes                                                                                                                           |
-| Finance/Fund | API070–125 through Gateway | runtime | unavailable in Web | Backend API demo and isolated integration harness; Web adapter remains unavailable |
-| Notification | API126–131 through Gateway | runtime | unavailable in Web | Preferences/devices/inbox/read; no push sender |
-| Price Watch | API133–139 through Gateway | runtime with MOCK_FLIGHT | unavailable in Web | Local mock provider only, not live fares |
-| Logout | `POST /auth/logout` | runtime | connected | Current session_id from login/refresh; fresh CSRF, family revoke and private cache clear |
+| Năng lực | Gateway (bỏ prefix /api/v1) | Web / giới hạn |
+| --- | --- | --- |
+| Auth | /auth/register, login, csrf, refresh, logout | HTTP thật; register202 không login; Web Locks; token memory; epoch không nhạy cảm |
+| Verify/reset | /auth/email-verifications, confirm, password-reset-requests, password-resets | Token scrub khỏi URL/storage; mở lại thư sau reload; send accepted không phải delivered |
+| Profile/avatar/sessions | /me, /me/avatar, /me/password-change, /me/sessions | PATCH version; binary private; upload và attach hai bước; revoke204 |
+| Trips | /trips; /trips/:id | Chỉ field lưu thật; actor draft/intent; [start,end), timezone; metadata PATCH giữ instant cũ |
+| Plan | /trips/:id/plan; activities CRUD/order/completion | Một timeline server + drawer; day-only/overnight; full permutation giữ giờ; 409 giữ draft, đối chiếu trong drawer |
+| Policy | GET/PUT /trips/:id/plan-policy | Owner, 3mode, membership ID/revision; non-SELECTED request[] nhưng saved assignments còn inert |
+| Members | /trips/:id/members | Tên nullable, include_left/cursor; không suy email/avatar; lỗi trang sau giữ trang trước |
+| Invitations | /trips/:id/invitations, revoke/resend; token preview/accept/decline | EMAIL/LINK, version/key; link memory-only; error không tiết lộ wrong-account/expired |
+| Leave/remove | /trips/:id/leave; /trips/:id/members/:id | Operation/Finance nghĩa vụ; terminal mới rời; recovery screen sau mất quyền Trip |
+| Fund | /trips/:id/fund; /funds/:id/budget | GET/setup/budget VND TEST;403/503 không thành0; Owner/Holder độc lập |
+| Destination | /funds/:id/destinations; :id/confirm | Owner config, Holder consent version (kể cả cùng người); bank memory-only |
+| Requests/contributions | /funds/:id/contribution-requests, contributions; /contributions/:id | Create/read/edit/amount/waive/cancel; cursor, version; metadata không tạo tiền |
+| Manual | /contributions/:id/report-transfer, reject-transfer, confirm-received, vietqr | Self report, Holder reject/confirm; lý do gần nhất; text TEST, không fetch QR ngoài |
+| Ledger | /funds/:id/transactions | Int64/sequence chuỗi; balance server, không tổng một trang |
+| Operation | /operations/:id | PROCESSING/PENDING_RECOVERY/SUCCEEDED/FAILED/NEEDS_REVIEW; poll backoff hữu hạn, explicit retry đúng intent |
+| Packing/Map/Dress | Plan read projection | Chỉ đọc Gateway; writer/local draft nằm ngoài demo |
+| Finance nâng cao | Expense/receipt/note/refund/reversal/closure/payment API | Backend có phần runtime; Web writers sau demo |
+| Notification/Price Watch | Runtime Backend, MOCK_FLIGHT | Web chưa mở; không gọi mô phỏng là delivery/giá thật |
+| Travel/DSS/Export/Share/Admin | Chưa nghiệm thu trọn luồng | Hoãn, không fake success |
 
-## Feature #8 delivery boundary
+Nguồn chuẩn Backend: [Trip/policy](../../Wolfari-backend/docs/api/trip-core.openapi.yaml), [Plan](../../Wolfari-backend/docs/api/plan.openapi.json), [Members](../../Wolfari-backend/docs/api/trip-member-lifecycle.openapi.json), [Fund](../../Wolfari-backend/docs/api/finance-fund.openapi.json), [Contributions](../../Wolfari-backend/docs/api/finance-contributions.openapi.json), [inventory](../../Wolfari-backend/docs/api/runtime-inventory.json). Không tạo OpenAPI cạnh tranh ở Web.
 
-The Web Plan server panel invokes Activity create/update/delete/completion and
-full-list reorder with revision/idempotency protection. Trip and Plan refresh
-together after confirmed writes. Date-only scheduling and cascading time resets
-remain a separately labelled local draft; they are not Gateway-complete. See
-[Plan/Activity evidence](plan-activity-evidence-2026-10-23.md).
+## Transport, recovery, privacy
 
-## Feature #2 boundary
+HTTP giữ status/correlation/details/meta.export_revision; decoder sai kiểu/scope/enum/version không dựng quyền hoặc empty giả. Transport không retry mutation;204 không parse JSON;202 không receipt hoàn tất.
 
-Feature #2 provides the shared HTTP transport, normalized domain errors, the
-memory-only token store, and the session manager. It intentionally does not select
-feature repositories or mount authenticated UI. Those runtime adapters are delivered
-by the numbered slices in the table, beginning with `feat/3`.
+Finance/membership journal sessionStorage theo actor/Trip được kiểm định. Bank input chỉ memory; reload poll/refetch, cần replay thì nhập lại so fingerprint. Không lưu được journal thì chặn ghi. Không đổi key khi unknown/409/NEEDS_REVIEW. Finance operation không trả resourceID; success lấy lại receipt đúng request nếu có body rồi refetch.
 
-The transport supports GET/POST/PUT/PATCH/DELETE, JSON, `FormData`, binary responses,
-and `204` responses. It preserves Gateway error codes, correlation IDs, retryability,
-details, and revision evidence. It retries only safe reads after one successful refresh
-attempt; mutations are never retried automatically.
+Policy read-back so với receipt thay vì request[]; saved assignments không đồng nghĩa quyền. Recovery route sau leave chỉ cho actor xem kết quả thao tác, không bypass guard dữ liệu Trip.
 
-## Configuration contract
+Demo localhost5273 proxy Gateway13000; production HTTPS cùng origin, không secrets VITE_*. [Runbook](../HUONG_DAN_BUILD_VA_CHAY_DEMO_1.md).
 
-- Local Vite development proxies `/api/v1` to `VITE_GATEWAY_PROXY_TARGET`, defaulting
-  to `http://127.0.0.1:3000`.
-- The backend `WEB_ORIGIN` must exactly match the browser origin, normally
-  `http://127.0.0.1:5173` for local development.
-- Production must expose the SPA and `/api/v1` through the same HTTPS origin. No
-  secret or internal service address belongs in a `VITE_*` variable.
-- `TRIP_INVITATION_LINK_BASE_URL` belongs to the Backend deployment and must point to
-  the public Web origin. Backend emits `<base>/invitations/local#token=...`; the SPA
-  supports that compatibility route and canonical `/invitations`. If the value still
-  points at the Gateway origin, the Gateway local helper opens instead of this Web flow.
-
-## Identity security boundary
-
-Identity tokens are never written to `localStorage`, `sessionStorage`, query caches, logs, or
-analytics. Recovery and verification routes use the existing Auth layout and remove `token` from
-the address bar with navigation replacement before submission; the document also sends
-`Referrer-Policy: no-referrer`.
-
-Backend keeps its original local-helper paths by default. The independent demo config sets
-`IDENTITY_VERIFY_LINK_PATH=/verify-email` and `IDENTITY_RESET_LINK_PATH=/reset-password`.
-Login/refresh now expose the current refresh row `session_id` (not JWT sid/family ID).
-Web uses it for logout with a freshly fetched CSRF token. A successful response clears the
-cookie, memory credentials and private caches; network failures remain explicit.
-See the [local demo runbook](../../Wolfari-backend/docs/architecture/local-demo.md) and
-[acceptance report](../../Wolfari-backend/docs/architecture/local-demo-acceptance.md).
-
-## Invitations acceptance boundary (Issue #7)
-
-- Active Owners list/filter/page invitations and create EMAIL or LINK invitations from
-  Members. Create carries `expected_membership_revision`; resend/revoke carry the row's
-  `expected_version`; every write has a stable idempotency key and duplicate actions are locked.
-- EMAIL success means the delivery request was accepted, not that mail arrived. LINK creation
-  exposes `one_time_link` only in component memory. Closing or leaving the flow discards it; a
-  replay receipt without the link explicitly says it cannot be recovered and never creates a
-  replacement automatically.
-- `/invitations` and `/invitations/local` consume exactly one valid fragment token before React
-  renders, preserve router history state, and immediately scrub the fragment. The token stays in
-  a module-memory handoff—not URL navigation, Web Storage, logs, analytics, or React Query keys/data.
-- A recipient token can remain in that memory handoff across an SPA unmount only while its
-  unresolved accept/decline intent is retryable; terminal success, account switch/logout, token
-  replacement, reload, or explicit discard clears it. Owner one-time LINK values are shorter-lived
-  and are removed when the Invitations tab is left.
-- Anonymous viewers return through login/register with only `/invitations` in `returnTo`.
-  Preview starts after session bootstrap. Account/session/token changes cancel the old request and
-  discard stale results. Reload intentionally loses the token and asks the user to reopen the link.
-- Preview sends no idempotency key. Accept/decline keep the same key and token when retrying an
-  unknown transport outcome, block the opposite action, and treat their mutation receipt as final.
-  Successful accept navigates using `membership.trip_id`; neither success re-previews a consumed token.
-- `404` and state conflicts use neutral copy because Web cannot safely distinguish wrong account,
-  expired, revoked, or already-used tokens. Invalid DTO fields are contract errors rather than
-  coerced IDs, versions, timestamps, roles, or `PENDING` status.
-
-## Profile/Sessions acceptance boundary (Issue #4)
-
-- Self/session projections are validated before creating view models. Missing fields,
-  non-integer versions and unparseable timestamps become contract errors with the
-  response correlation ID; they are not coerced into display data.
-- PATCH always carries the confirmed `expected_version`. `fullName` is optional in
-  the Web intent so avatar-only attachment cannot resend a stale name. A confirmed
-  response replaces the profile and invalidates shell data; conflict retains the
-  draft, refetches the version, and requires an explicit resubmission. Writes are
-  serialized and never automatically retried.
-- Avatar accepts nonempty PNG/JPEG up to 10 MB. Multipart upload and attachment are
-  separate operations; an attachment failure is not reported as a changed avatar.
-  Downloads use the authenticated HTTP client and Blob URLs, keyed by profile
-  version, with cancellation and URL revocation on replacement/unmount.
-- Sessions use cursor-based infinite queries, deduplicate IDs across pages, retain
-  loaded items after later-page errors, and reset to page one after a successful
-  `204` revoke. Device/IP/current-session metadata is not invented.
-- Password change validates current password, 15–128 Unicode code points for the
-  new password, and confirmation, without trimming passwords. Successful change
-  or reset clears the local session/private cache and redirects to login; failed
-  writes do not claim success or clear a session solely because of a mutation `401`.
-- Private children cannot mount while bootstrap is unknown/anonymous. Session
-  changes cancel/remove query data before another account signs in. An obsolete
-  refresh/login result cannot restore a cleared or replaced access token.
-- Verification/reset tokens stay in component memory, are removed from the URL
-  before submission and discarded after success/unmount. Pending actions are
-  cancellable and duplicate submissions are locked; redirect timers are cleaned up.
-
-`corepack pnpm test:e2e:gateway` uses the real Web adapters/session manager with
-Playwright-intercepted HTTP on port **5174**, with `VITE_DATA_MODE=gateway` supplied
-through the server process. Every API request is fulfilled or rejected by the test
-harness, never forwarded to Backend. CI runs this separately from fixture E2E.
-This proves the mocked browser contract, **not a live Backend/email/storage integration**.
-See [Issue #4 evidence](profile-sessions-evidence-2026-10-22.md).
-
-## Feature #6 Members / Plan policy boundary
-
-- Members reads validate the complete page projection and requested Trip scope, preserve the
-  opaque Gateway cursor, correlation ID, error and cancellation behavior, and use
-  `include_left` only for the opt-in departed-members view. The browser harness mocks every
-  request; it does not contact a live Gateway or Backend.
-- The policy writer supports only `OWNER_ONLY` and `ALL_MEMBERS` with an empty editor ID list.
-  A `SELECTED_MEMBERS` value remains visible but read-only until a server projection exposes its
-  selected membership IDs. Fixture mode has no writer and must not produce a successful mutation.
-- A policy intent carries `expected_membership_revision` and a fixed idempotency key. Conflict
-  requires a fresh explicit submission; ambiguous post-send outcomes remain unknown and only
-  retry on explicit user action with the same intent. The refreshed Trip GET, not the PUT body,
-  is the saved-state authority. Plan, Trip detail, Members, shell and Trip-list caches are
-  refreshed because this policy changes membership revision rather than plan version.
-- Leave/remove/transfer, invitation mutations and Plan/Activity operations remain outside `feat/6`.
+Fixture/mock/live là ba lớp riêng: xem [validation](demo-1-web-validation.md), [49task/addendum](demo-1-web-addendum-v1.0.md). Health PASS không thay nghiệp vụ. Evidence cũ giữ ngày trong các báo cáo phase.

@@ -170,15 +170,60 @@ describe('Gateway Plan controls', () => {
     expect(create).not.toHaveBeenCalled();
     expect(screen.getByRole('form', { name: 'Tạo hoạt động trên server' })).toBeInTheDocument();
   });
-  it('rejects a date without both times instead of inventing timestamps', async () => {
+  it('rejects a day outside the Trip even without times', async () => {
     const { user, create } = await setup();
     await user.click(add());
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Lunch');
-    fireEvent.change(screen.getByLabelText('Ngày có giờ trên server'), {
+    fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
       target: { value: '2026-10-01' },
     });
     await user.click(save());
     expect(create).not.toHaveBeenCalled();
+  });
+  it('saves a day-only activity with null timestamps', async () => {
+    const { user, create } = await setup();
+    await user.click(add());
+    await user.type(screen.getByLabelText('Tên hoạt động'), 'Lịch chưa giờ');
+    fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
+      target: { value: '2026-09-22' },
+    });
+    await user.click(save());
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activity: expect.objectContaining({
+          scheduledDate: '2026-09-22',
+          startsAt: null,
+          endsAt: null,
+        }),
+      }),
+    );
+  });
+  it('schedules a previously unscheduled activity overnight', async () => {
+    const { user, update } = await setup();
+    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa trên server' }));
+    fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
+      target: { value: '2026-09-22' },
+    });
+    fireEvent.change(screen.getByLabelText('Ngày kết thúc (nếu có giờ)'), {
+      target: { value: '2026-09-23' },
+    });
+    fireEvent.change(screen.getByLabelText('Giờ bắt đầu trên server'), {
+      target: { value: '23:00' },
+    });
+    fireEvent.change(screen.getByLabelText('Giờ kết thúc trên server'), {
+      target: { value: '01:00' },
+    });
+    await user.click(save());
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activityId: 'todo',
+        fields: expect.objectContaining({
+          scheduledDate: null,
+          startsAt: '2026-09-22T16:00:00.000Z',
+          endsAt: '2026-09-22T18:00:00.000Z',
+        }),
+      }),
+    );
   });
   it('creates unscheduled activities and offers only server selected locations', async () => {
     const { user, create, plan, refresh } = await setup();
@@ -208,7 +253,7 @@ describe('Gateway Plan controls', () => {
     await user.clear(screen.getByLabelText('Tên hoạt động'));
     await user.click(save());
     expect(update).not.toHaveBeenCalled();
-    expect(screen.getByLabelText('Ngày có giờ trên server')).toBeDisabled();
+    expect(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ')).toBeEnabled();
   });
   it('requires explicit delete confirmation and supports cancellation', async () => {
     const { user, remove } = await setup();

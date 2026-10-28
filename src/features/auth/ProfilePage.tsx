@@ -471,7 +471,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                   )}
                   <ul>
                     {sessionItems.map((session, index) => (
-                      <li key={session.id}>
+                      <li key={session.id} data-session-id={session.id}>
                         <strong>Phiên đăng nhập {index + 1}</strong>
                         <span>Tạo: {formatDate(session.createdAt)}</span>
                         <span>

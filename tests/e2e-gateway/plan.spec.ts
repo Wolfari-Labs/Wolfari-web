@@ -13,12 +13,12 @@ async function mockPlan(page: Page, gateway: GatewayModel) {
     plan_version: trip.plan_version, created_by_user_id: gateway.profile.id,
     completed_by_user_id: null as string | null, completed_at: null as string | null,
   });
-  let activities = [activity('activity-one', 'Đi dạo', 0), activity('activity-two', 'Ăn sáng', 1)];
+  let activities = [activity('55555555-1111-4111-8111-111111111111', 'Đi dạo', 0), activity('55555555-2222-4222-8222-222222222222', 'Ăn sáng', 1)];
   const writes: { method: string; body: Record<string, unknown>; key: string }[] = [];
   await page.route(`**/api/v1/trips/${tripId}/**`, async (route) => {
     const request = route.request();
     const path = new URL(request.url()).pathname;
-    const respond = (data: unknown) => route.fulfill({ json: { data, meta: { correlation_id: 'plan-e2e' } } });
+    const respond = (data: unknown) => route.fulfill({ json: { data, meta: { correlation_id: 'plan-e2e', export_revision: trip.export_revision } } });
     if (path.endsWith('/plan')) return respond({
       trip_id: tripId, plan_version: trip.plan_version, export_revision: trip.export_revision,
       activities, selected_locations: [], dress_codes: [], packing_items: [],
@@ -35,7 +35,7 @@ async function mockPlan(page: Page, gateway: GatewayModel) {
     trip.export_revision++;
     const id = path.split('/').at(-1)!;
     if (request.method() === 'POST') {
-      activities.push({ ...activity('activity-created', String(body.title), Number(body.position)), activity_type: String(body.activity_type) });
+      activities.push({ ...activity('55555555-3333-4333-8333-333333333333', String(body.title), Number(body.position)), activity_type: String(body.activity_type) });
     } else if (id === 'order') {
       const ids = body.activity_ids as string[];
       expect([...ids].sort()).toEqual(activities.map((item) => item.id).sort());
@@ -66,7 +66,7 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 900 }, { name: '
     const mock = await mockPlan(page, gateway);
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
-    await expect(page.getByRole('heading', { name: 'Hoạt động trên server' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
     await page.getByRole('button', { name: 'Tạo hoạt động trên server' }).click();
     await page.getByLabel('Tên hoạt động', { exact: true }).fill('Tham quan bảo tàng');
     await page.getByLabel('Loại hoạt động', { exact: true }).fill('SIGHTSEEING');
@@ -89,19 +89,36 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 900 }, { name: '
     expect(mock.writes.map((write) => write.body.expected_plan_version)).toEqual([1, 2, 3, 4, 5]);
     expect(new Set(mock.writes.map((write) => write.key)).size).toBe(5);
     await page.reload();
-    await expect(page.getByRole('heading', { name: 'Hoạt động trên server' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
     await expect(page.getByRole('listitem', { name: 'Bảo tàng lịch sử', exact: true })).toHaveCount(0);
   });
 }
 
-test('HTTP mock: local draft changes do not send activity mutations', async ({ page, gateway }) => {
+test('HTTP mock: Gateway exposes only the shared server Plan, never a competing local draft editor', async ({ page, gateway }) => {
   const mock = await mockPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
-  await page.getByRole('button', { name: 'Bản nháp trên thiết bị' }).click();
-  await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
-  await page.getByRole('button', { name: 'Kéo hoạt động Đi dạo', exact: true }).press('ArrowRight');
-  await page.getByLabel('Xem hoạt động Đi dạo', { exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Chỉnh sửa hoạt động' }).first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Bản nháp trên thiết bị' })).toHaveCount(0);
+  await expect(page.locator('[data-preview]')).toHaveCount(0);
   expect(mock.writes).toEqual([]);
+});
+
+test('HTTP mock: Plan drawer remains scrollable at 2x document zoom and returns keyboard focus', async ({ page, gateway }) => {
+  await mockPlan(page, gateway);
+  await login(page);
+  await page.goto(`/trips/${tripId}/plan`);
+  const trigger = page.getByRole('button', { name: 'Tạo hoạt động trên server', exact: true });
+  await expect(trigger).toBeVisible();
+  await page.evaluate(() => { document.documentElement.style.zoom = '2'; });
+  await trigger.click();
+  const drawer = page.getByRole('dialog', { name: 'Chỉnh sửa lịch trình' });
+  await expect(drawer.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
+  const save = drawer.getByRole('button', { name: 'Lưu trên server', exact: true });
+  await save.scrollIntoViewIfNeeded();
+  await expect(save).toBeInViewport();
+  await page.keyboard.press('Escape');
+  await expect(drawer).not.toBeVisible();
+  await expect(trigger).toBeFocused();
 });

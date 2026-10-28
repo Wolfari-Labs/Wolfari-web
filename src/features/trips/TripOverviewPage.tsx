@@ -20,6 +20,7 @@ import weatherIcon from '../../shared/assets/figma/a5eea.svg';
 import fundIcon from '../../shared/assets/figma/d6d19.svg';
 import packingIcon from '../../shared/assets/figma/000f9.svg';
 import styles from './TripOverviewPage.module.css';
+import { GatewayOverview } from './GatewayOverview';
 
 function Unavailable({
   title,
@@ -101,6 +102,10 @@ export function TripOverview({
   );
 }
 export function TripOverviewPage() {
+  const { previewEnabled } = useOutletContext<RouteContext>();
+  return previewEnabled ? <PreviewOverviewPage /> : <GatewayOverview />;
+}
+function PreviewOverviewPage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
   const [scenario, setScenario] = useState<TripDetailScenario>('success');
