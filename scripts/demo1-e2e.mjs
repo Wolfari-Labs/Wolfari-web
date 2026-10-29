@@ -17,6 +17,11 @@ const project = 'wolfari-web-demo1-' + runId;
 const directory = resolve(web, '.local/demo1', runId);
 const artifactDir = resolve(web, 'test-results/demo1', runId);
 const label = 'io.wolfari.demo1.run';
+const runtimeArg = process.argv.find(arg => arg.startsWith('--runtime='))?.slice('--runtime='.length);
+if (runtimeArg && !['dev', 'preview'].includes(runtimeArg)) throw Error('INVALID_RUNTIME');
+// Run one runtime in a fresh isolated stack on memory-constrained machines.
+// The default still accepts both; all business assertions remain identical.
+const runtimes = runtimeArg ? [runtimeArg] : ['dev', 'preview'];
 const port = createTestPortAllocator(), appValues = {}, children = new Map();
 let infra, manifest, created = false, control, stopping = false;
 const controlToken = randomBytes(32).toString('hex');
@@ -90,7 +95,7 @@ async function main() {
   await initEnvironment(backend, { target: directory, rootOverrides: ports, appOverrides: overrides });
   infra = await readEnv(resolve(directory, '.env'));
   for (const app of apps) appValues[app.name] = await readEnv(resolve(directory, 'apps', app.name, '.env'));
-  manifest = { runId, project, directory, webUrl, gatewayUrl, mailpitUrl: 'http://127.0.0.1:' + ports.MAILPIT_UI_PORT, controlUrl: 'http://127.0.0.1:' + controlPort, artifactDir, at: new Date().toISOString(), web: snapshot(web), backend: snapshot(backend) };
+  manifest = { runId, project, directory, webUrl, gatewayUrl, mailpitUrl: 'http://127.0.0.1:' + ports.MAILPIT_UI_PORT, controlUrl: 'http://127.0.0.1:' + controlPort, artifactDir, runtimes, at: new Date().toISOString(), web: snapshot(web), backend: snapshot(backend) };
   await writeFile(resolve(directory, 'manifest.json'), JSON.stringify(manifest, null, 2));
   await writeFile(resolve(artifactDir, 'snapshot.json'), JSON.stringify(manifest, null, 2));
   const labels = { [label]: runId };
@@ -124,11 +129,11 @@ async function main() {
   // Suppress that snapshot so an open destination/password form never enters artifacts.
   const env = { PLAYWRIGHT_NO_COPY_PROMPT: '1', VITE_DATA_MODE: 'gateway', VITE_GATEWAY_PROXY_TARGET: gatewayUrl, WOLFARI_DEMO1_MANIFEST: resolve(directory, 'manifest.json'), WOLFARI_DEMO1_CONTROL_TOKEN: controlToken };
   await run(resolve(web, 'node_modules/vite/bin/vite.js'), ['build','--mode','demo','--outDir','dist-demo1'], env);
-  for (const runtime of ['dev','preview']) await run(resolve(web, 'node_modules/@playwright/test/cli.js'), ['test','--config','playwright.demo1.config.ts'], { ...env, WOLFARI_DEMO1_RUNTIME: runtime });
+  for (const runtime of runtimes) await run(resolve(web, 'node_modules/@playwright/test/cli.js'), ['test','--config','playwright.demo1.config.ts'], { ...env, WOLFARI_DEMO1_RUNTIME: runtime });
   const finalSource = { at: new Date().toISOString(), web: snapshot(web), backend: snapshot(backend) };
   await writeFile(resolve(artifactDir, 'final-source.json'), JSON.stringify(finalSource, null, 2));
   if (finalSource.web.implementationSha256 !== manifest.web.implementationSha256 || finalSource.backend.treeSha256 !== manifest.backend.treeSha256) throw Error('SOURCE_CHANGED_DURING_RUN');
-  console.log('PASS isolated browser acceptance dev + preview. Run: ' + runId);
+  console.log('PASS isolated browser acceptance ' + runtimes.join(' + ') + '. Run: ' + runId);
 }
 try { await main(); }
 catch (error) { console.error('FAIL demo1 harness: ' + (String(error.message).match(/^[A-Z_0-9]+$/)?.[0] ?? 'CHECK_TEST_RESULTS')); process.exitCode = 1; }

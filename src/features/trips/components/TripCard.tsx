@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import type { TripLifecycle, TripListItem } from '../model/trip-list';
 import { tripDateLabel } from '../model/trip-list-query';
@@ -9,7 +9,7 @@ import member from '../../../shared/assets/figma/fb720.svg';
 import ongoing from '../../../shared/assets/figma/638e7.svg';
 import upcoming from '../../../shared/assets/figma/5c5e5.svg';
 import completed from '../../../shared/assets/figma/58ea2.svg';
-import more from '../../../shared/assets/figma/627d1.svg';
+import { ActionMenu } from '../../../shared/components/Ui';
 import arrow from '../../../shared/assets/figma/04603.svg';
 import styles from './TripCard.module.css';
 
@@ -21,6 +21,7 @@ const lifecycle: Record<TripLifecycle, { label: string; icon: string | null }> =
 };
 
 export function TripCard({ trip, featured }: { trip: TripListItem; featured: boolean }) {
+  const navigate = useNavigate();
   const status = lifecycle[trip.lifecycle];
   const cover = trip.presentation.cover;
   const owner = trip.currentMembership.role === 'OWNER';
@@ -66,14 +67,15 @@ export function TripCard({ trip, featured }: { trip: TripListItem; featured: boo
           <img src={arrow} alt="" />
         </span>
       </Link>
-      <button
-        className={styles.more}
-        disabled
-        aria-label={`Thao tác ${trip.name} · Chưa triển khai`}
-        title="Sửa, lưu trữ và xóa chuyến đi chưa khả dụng"
-      >
-        <img src={more} alt="" />
-      </button>
+      <div className={styles.more}>
+        <ActionMenu
+          label={`Thao tác ${trip.name}`}
+          items={[
+            { label: 'Xem chuyến đi', action: () => navigate(paths.trip(trip.id)) },
+            { label: 'Cài đặt chuyến đi', action: () => navigate(paths.settings(trip.id)) },
+          ]}
+        />
+      </div>
     </article>
   );
 }

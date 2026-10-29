@@ -54,7 +54,7 @@
   width: 250px;
   color: #087cbc;
   font:
-    700 16px/20px 'Kalam',
+    400 16px/20px 'Patrick Hand',
     cursive;
 }
 .flightPath {
@@ -81,7 +81,7 @@
 .copy h1 {
   margin: 0;
   font:
-    700 49px/58px 'Kalam',
+    400 49px/58px 'Patrick Hand',
     cursive;
   color: #008f9d;
 }

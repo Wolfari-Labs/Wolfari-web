@@ -16,6 +16,9 @@ import { unresolved } from '../../shared/types/operations';
 import { useCommandSession, OperationStatus } from '../../shared/components/OperationStatus';
 import { InvitationManagement } from './InvitationManagement';
 import { TripHero } from '../trips/components/TripHero';
+import { Avatar } from '../../shared/components/Avatar';
+import { Badge } from '../../shared/components/Ui';
+import { Icon } from '../../shared/components/Icon';
 import { Button } from '../../shared/components/Button';
 import { Select } from '../../shared/components/Select';
 import { Input } from '../../shared/components/Input';
@@ -159,7 +162,7 @@ function Workspace({
       if (result.status === 'unknown') {
         setPolicyUnknown(true);
         setPolicyError(result.error);
-        setFeedback('Chưa rõ kết quả. Thử lại giữ nguyên key và danh sách đã chọn.');
+        setFeedback('Chưa rõ kết quả. Thử lại cùng yêu cầu và danh sách đã chọn.');
       } else if (result.status === 'error') {
         if (!savePolicyJournal(null)) return;
         policyIntent.current = null;
@@ -186,12 +189,12 @@ function Workspace({
           policyIntent.current = null;
           setPolicyUnknown(false);
           setDraft(null);
-          setFeedback('Đã xác nhận quyền và danh sách Editor từ server.');
+          setFeedback('Đã lưu quyền sửa lịch trình.');
           refresh();
         } else {
           setPolicyUnknown(true);
           setFeedback(
-            'Đã có response nhưng chưa xác nhận được snapshot hiện hành. Giữ yêu cầu để kiểm tra lại.',
+            'Đã nhận phản hồi nhưng chưa xác nhận được quyền hiện tại. Giữ yêu cầu để kiểm tra lại.',
           );
         }
       }
@@ -240,15 +243,27 @@ function Workspace({
         <>
           <TripHero trip={trip} compact variant="landscape" />
           <div className={styles.actions} role="group" aria-label="Nội dung thành viên">
-            <Button variant="outline" onClick={() => setTab('members')}>
+            <Button
+              variant={tab === 'members' ? 'secondary' : 'outline'}
+              aria-pressed={tab === 'members'}
+              onClick={() => setTab('members')}
+            >
               Thành viên
             </Button>
             {owner && (
               <>
-                <Button variant="outline" onClick={() => setTab('invitations')}>
+                <Button
+                  variant={tab === 'invitations' ? 'secondary' : 'outline'}
+                  aria-pressed={tab === 'invitations'}
+                  onClick={() => setTab('invitations')}
+                >
                   Lời mời
                 </Button>
-                <Button variant="outline" onClick={() => setTab('policy')}>
+                <Button
+                  variant={tab === 'policy' ? 'secondary' : 'outline'}
+                  aria-pressed={tab === 'policy'}
+                  onClick={() => setTab('policy')}
+                >
                   Quyền sửa lịch trình
                 </Button>
               </>
@@ -263,8 +278,8 @@ function Workspace({
             <section className={styles.panel}>
               <h2>Quyền sửa lịch trình</h2>
               <p>
-                Holder không tự có quyền sửa Plan. Danh sách dùng membership ID, không dùng user ID;
-                rejoin cần cấp lại quyền.
+                Chọn người được sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp quyền
+                lại.
               </p>
               {policyQuery.data?.status === 'error' ? (
                 <ContentState
@@ -276,14 +291,14 @@ function Workspace({
                 <form className={styles.form} onSubmit={(e) => void savePolicy(e)}>
                   {policyStorageBlocked && (
                     <Alert tone="error">
-                      Không đọc/ghi được nhật ký quyền hoặc dữ liệu phục hồi không hợp lệ. Tạm chặn
-                      ghi; kiểm tra dữ liệu server và liên hệ người vận hành trước khi xóa journal.
+                      Chưa thể phục hồi yêu cầu trước. Tạm khóa thay đổi để tránh gửi trùng; vui
+                      lòng liên hệ hỗ trợ.
                     </Alert>
                   )}
                   {policyUnknown && !feedback && (
                     <Alert tone="warning">
-                      Chưa rõ kết quả yêu cầu quyền trước đó. Giữ nguyên key, danh sách và revision
-                      để kiểm tra bằng cách gửi lại đúng yêu cầu.
+                      Chưa xác nhận được thay đổi trước đó. Thử lại đúng yêu cầu để kiểm tra kết
+                      quả.
                     </Alert>
                   )}
                   {feedback && (
@@ -305,7 +320,7 @@ function Workspace({
                   </Select>
                   {selected.policy === 'SELECTED_MEMBERS' && (
                     <fieldset className={styles.checks}>
-                      <legend>Editor được chọn</legend>
+                      <legend>Thành viên được cấp quyền</legend>
                       {items
                         .filter((m) => !m.leftAt && m.role !== 'OWNER')
                         .map((m) => (
@@ -326,13 +341,12 @@ function Workspace({
                             {m.presentation.displayName ?? `User ${m.userId.slice(0, 8)}`}
                           </label>
                         ))}
-                      <p>Giữ nguyên assignment ở các trang chưa tải; không ngầm xóa chúng.</p>
                     </fieldset>
                   )}
                   {selected.policy !== 'SELECTED_MEMBERS' && (
                     <p>
-                      Danh sách Editor đã lưu vẫn được giữ nhưng không cấp quyền theo danh sách
-                      trong chế độ này. Chỉ bật lại khi Owner chọn “Thành viên được chọn”.
+                      Lựa chọn từng thành viên được giữ lại và chỉ áp dụng khi chọn “Thành viên được
+                      chọn”.
                     </p>
                   )}
                   {members.hasNextPage && (
@@ -362,7 +376,10 @@ function Workspace({
             </section>
           ) : (
             <section className={styles.panel} aria-label="Danh sách thành viên">
-              <h2>Thành viên chuyến đi</h2>
+              <h2>
+                <Icon name="members" />
+                Thành viên chuyến đi
+              </h2>
               <label>
                 <input
                   type="checkbox"
@@ -394,12 +411,22 @@ function Workspace({
               <ul className={styles.list}>
                 {items.map((m) => (
                   <li key={m.id}>
-                    <strong>{m.presentation.displayName ?? `User ${m.userId.slice(0, 8)}`}</strong>{' '}
-                    · {m.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
-                    {m.userId === actorId ? ' · Bạn' : ''}
-                    {m.leftAt ? ' · Đã rời' : ''}
+                    <div className={styles.memberIdentity}>
+                      <Avatar
+                        name={m.presentation.displayName ?? m.userId.slice(0, 8)}
+                        image={m.presentation.avatar}
+                      />
+                      <strong>
+                        {m.presentation.displayName ?? `User ${m.userId.slice(0, 8)}`}
+                      </strong>
+                      <Badge tone={m.role === 'OWNER' ? 'success' : 'neutral'}>
+                        {m.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
+                      </Badge>
+                      {m.userId === actorId && <Badge>Bạn</Badge>}
+                      {m.leftAt && <Badge tone="warning">· Đã rời</Badge>}
+                    </div>
                     <details>
-                      <summary>Định danh</summary>
+                      <summary>Chi tiết hỗ trợ</summary>
                       <p>
                         Membership: {m.id}
                         <br />
@@ -422,17 +449,12 @@ function Workspace({
                   Tải thêm thành viên
                 </Button>
               )}
-              <Alert tone="warning">
-                Rời/xóa thành viên cần kiểm tra nghĩa vụ Finance. Đang báo chuyển, khoản cần xử lý
-                hoặc trách nhiệm Holder có thể chặn thao tác. Chưa hoàn tất khi server chỉ trả “đang
-                xử lý”.
-              </Alert>
+
               {!owner && (
                 <Button variant="outline" disabled={blocked} onClick={() => setTarget('self')}>
                   Rời chuyến đi
                 </Button>
               )}
-              <p className={styles.metadata}>Chuyển Owner là chức năng sau demo1.</p>
             </section>
           )}
         </>
@@ -445,8 +467,8 @@ function Workspace({
       >
         <form className={styles.form} onSubmit={(e) => void submitLifecycle(e)}>
           <Alert tone="warning">
-            Server kiểm tra nghĩa vụ quỹ trước khi hoàn tất. Khoản đã xác nhận không bị xóa. Người
-            quay lại không tự nhận Editor cũ.
+            Cần giải quyết trách nhiệm và khoản đóng góp còn chờ trước khi rời chuyến. Khoản đã xác
+            nhận vẫn được giữ; quyền sửa lịch trình sẽ cần cấp lại khi tham gia lại.
           </Alert>
           <Input
             label="Lý do rời/xóa"

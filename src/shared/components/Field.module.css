@@ -6,6 +6,17 @@
   font-size: var(--font-size-label);
   line-height: var(--line-label);
 }
+.hiddenLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .field label {
   font-weight: var(--weight-medium);
   color: var(--color-ink);
@@ -15,7 +26,7 @@
 .select {
   background: var(--color-white);
   border: 1px solid var(--color-field-line);
-  border-radius: var(--radius-10);
+  border-radius: var(--radius-control);
   min-height: var(--control-height);
   width: 100%;
   min-width: 0;
@@ -28,6 +39,9 @@
   align-items: center;
   gap: var(--space-8);
   padding-inline: var(--space-14);
+  transition:
+    box-shadow 160ms ease,
+    background-color 160ms ease;
 }
 .input {
   border: 0;
@@ -44,13 +58,18 @@
   color: var(--color-note-text);
   opacity: 1;
 }
+.input:focus,
+.input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
 .textarea {
   width: 100%;
   min-height: 112px;
   resize: vertical;
   padding: 12px 14px;
   border: 1px solid var(--color-field-line);
-  border-radius: var(--radius-10);
+  border-radius: var(--radius-control);
   background: var(--color-white);
   color: var(--color-ink);
   font: inherit;
@@ -71,15 +90,20 @@
   flex-shrink: 0;
   border: 0;
   background: transparent;
-  color: var(--color-blue);
+  color: var(--color-muted);
   cursor: pointer;
   min-height: 44px;
+  min-width: 44px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
   padding: 0 var(--space-4);
   font: inherit;
   font-weight: var(--weight-medium);
 }
 .passwordToggle:hover:not(:disabled) {
-  text-decoration: underline;
+  background: var(--color-selected);
+  color: var(--color-ink);
 }
 .passwordToggle:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
@@ -95,10 +119,27 @@
   color: var(--color-ink);
   padding: 10px 40px 10px var(--space-14);
   appearance: none;
-  background-image: url('../assets/figma/9c529.svg');
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px 16px;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.selectWrap {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+}
+.selectChevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-muted);
+  pointer-events: none;
+}
+.select:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
 }
 .select[multiple],
 .select[size]:not([size='1']) {
@@ -107,8 +148,10 @@
   padding-right: var(--space-14);
 }
 .inputRow:focus-within {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
+  --field-border: var(--color-action-primary);
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: -2px;
+  box-shadow: none;
 }
 .invalid {
   border-color: var(--ios-error);

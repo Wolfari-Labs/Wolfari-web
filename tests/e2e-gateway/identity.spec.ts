@@ -1,7 +1,10 @@
 import { test, expect, login, avatarPng } from './gateway-fixture';
 
 async function expectOnlySessionBoundary(page: Parameters<typeof login>[0]) {
-  const values = await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }));
+  const values = await page.evaluate(() => ({
+    local: { ...localStorage },
+    session: { ...sessionStorage },
+  }));
   expect(Object.keys(values.local)).toEqual(['wolfari:session-boundary:v1']);
   expect(values.local['wolfari:session-boundary:v1']).toMatch(/^[0-9a-f-]{36}$/);
   expect(values.session).toEqual({}); // No access token, CSRF, cookie or credential payload.
@@ -267,7 +270,7 @@ test('registration accepted does not authenticate and runtime pending is truthfu
   await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill(' new password long ');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-  await expect(page.getByText('Đang gửi yêu cầu tới Identity…')).toBeVisible();
+  await expect(page.getByText('Đang xử lý…')).toBeVisible();
   await expect(page.getByText(/Không có request đang gửi/)).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Tạo tài khoản' })).toBeDisabled();
   release();

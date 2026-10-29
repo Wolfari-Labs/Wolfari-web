@@ -315,7 +315,12 @@ export function InvitationManagement({
         {error && (
           <Alert tone="warning" live>
             {invitationErrorMessage(error)}
-            {error.correlationId && <small> Mã tra cứu: {error.correlationId}</small>}
+            {error.correlationId && (
+              <details>
+                <summary>Chi tiết hỗ trợ</summary>
+                <small>Mã tra cứu: {error.correlationId}</small>
+              </details>
+            )}
           </Alert>
         )}
         {attempt && !pending && (

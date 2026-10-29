@@ -273,13 +273,19 @@ for (const width of [1440, 402]) {
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     if (width > 768) {
-      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute('href', '/trips/new');
+      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute(
+        'href',
+        '/trips/new',
+      );
       for (const label of ['Vai trò: Tất cả', 'Thời gian', 'Bộ lọc'])
         await expect(page.getByRole('button', { name: label, exact: true })).toBeDisabled();
       for (const action of await articles(page).getByRole('button').all())
-        await expect(action).toBeDisabled();
+        await expect(action).toBeEnabled();
     } else
-      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute('href', '/trips/new');
+      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute(
+        'href',
+        '/trips/new',
+      );
     await expectNoTransport(page, apiCalls);
   });
 
@@ -403,15 +409,19 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   expect(box.x).toBe(0);
   expect(box.width).toBeLessThanOrEqual(280);
   await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chính' })).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   for (let index = 0; index < 8; index++) {
     await page.keyboard.press('Tab');
-    expect(await page.evaluate(() => !!document.activeElement?.closest('dialog[open]'))).toBe(true);
+    expect(
+      await page.evaluate(
+        () => !!document.activeElement?.closest('[role="dialog"][data-state="open"]'),
+      ),
+    ).toBe(true);
   }
   await page.keyboard.press('Escape');
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await menu.click();
   await page.mouse.click(390, 200);
   await expect(drawer).not.toBeVisible();

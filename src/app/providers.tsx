@@ -19,6 +19,8 @@ import type { PriceWatchRepository } from '../features/price-watch/model/price-w
 import { PriceWatchRepositoryProvider } from '../features/price-watch/repositories/price-watch-context';
 import type { SessionManagerLike } from './session-context';
 import { SessionManagerProvider } from './session-context';
+import { GatewayContext } from './gateway-context';
+import type { RuntimeServices } from '../shared/types/runtime-services';
 
 export function Providers({
   repository,
@@ -30,6 +32,7 @@ export function Providers({
   fundRepository,
   priceWatchRepository,
   sessionManager,
+  runtimeServices,
   children,
 }: {
   repository: ShellRepository;
@@ -41,6 +44,7 @@ export function Providers({
   fundRepository?: FundRepository;
   priceWatchRepository?: PriceWatchRepository;
   sessionManager?: SessionManagerLike;
+  runtimeServices?: RuntimeServices;
   children: ReactNode;
 }) {
   const [client] = useState(createQueryClient);
@@ -55,7 +59,9 @@ export function Providers({
     membersContent
   );
   const priceWatchContent = priceWatchRepository ? (
-    <PriceWatchRepositoryProvider repository={priceWatchRepository}>{fundContent}</PriceWatchRepositoryProvider>
+    <PriceWatchRepositoryProvider repository={priceWatchRepository}>
+      {fundContent}
+    </PriceWatchRepositoryProvider>
   ) : (
     fundContent
   );
@@ -78,16 +84,22 @@ export function Providers({
   );
   const sessionContent = sessionManager ? (
     <SessionManagerProvider manager={sessionManager}>{content}</SessionManagerProvider>
-  ) : content;
+  ) : (
+    content
+  );
   return (
-    <QueryClientProvider client={client}>
-      <ShellRepositoryProvider repository={repository}>
-        {tripRepository ? (
-          <TripRepositoryProvider repository={tripRepository}>{sessionContent}</TripRepositoryProvider>
-        ) : (
-          sessionContent
-        )}
-      </ShellRepositoryProvider>
-    </QueryClientProvider>
+    <GatewayContext.Provider value={runtimeServices ?? null}>
+      <QueryClientProvider client={client}>
+        <ShellRepositoryProvider repository={repository}>
+          {tripRepository ? (
+            <TripRepositoryProvider repository={tripRepository}>
+              {sessionContent}
+            </TripRepositoryProvider>
+          ) : (
+            sessionContent
+          )}
+        </ShellRepositoryProvider>
+      </QueryClientProvider>
+    </GatewayContext.Provider>
   );
 }

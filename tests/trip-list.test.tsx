@@ -73,7 +73,7 @@ function statusButton(label: string) {
 }
 
 describe('Trip List route slice', () => {
-  it('renders six permitted card links with disabled writes and unresolved filters, without HTTP', async () => {
+  it('renders six permitted card links with navigation menus and disabled unresolved filters, without HTTP', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     mount();
     await loaded();
@@ -91,7 +91,13 @@ describe('Trip List route slice', () => {
     );
     const moreActions = screen.getAllByRole('button', { name: /^Thao tác / });
     expect(moreActions).toHaveLength(6);
-    moreActions.forEach((button) => expect(button).toBeDisabled());
+    moreActions.forEach((button) => expect(button).toBeEnabled());
+    await userEvent.click(moreActions[0]!);
+    expect(screen.getAllByRole('menuitem').map((item) => item.textContent)).toEqual([
+      'Xem chuyến đi',
+      'Cài đặt chuyến đi',
+    ]);
+    await userEvent.keyboard('{Escape}');
     for (const name of [/^Vai trò:/, /^Thời gian/, /^Bộ lọc$/])
       expect(screen.getByRole('button', { name })).toBeDisabled();
     expect(fetchSpy).not.toHaveBeenCalled();

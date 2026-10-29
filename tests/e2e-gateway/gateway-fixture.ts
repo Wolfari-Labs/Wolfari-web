@@ -199,13 +199,20 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path === '/api/v1/auth/refresh') {
         expect(request.headers()['x-csrf-token']).toBe('e2e-csrf-token-long-enough');
         return model.authenticated
-            ? json(route, { access_token: 'e2e-memory-token', session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' })
+          ? json(route, {
+              access_token: 'e2e-memory-token',
+              session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+            })
           : error(route, 401);
       }
       if (method !== 'GET') await model.writeGate;
       if (path === '/api/v1/auth/login') {
         model.authenticated = true;
-          return json(route, { access_token: 'e2e-memory-token', session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', profile: model.profile });
+        return json(route, {
+          access_token: 'e2e-memory-token',
+          session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          profile: model.profile,
+        });
       }
       if (path === '/api/v1/auth/register' || path === '/api/v1/auth/password-reset-requests')
         return json(route, { message_code: 'REQUEST_ACCEPTED' }, 202);
@@ -218,6 +225,17 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path.startsWith('/api/v1/me') || path === '/api/v1/auth/email-verifications') {
         if (!model.authenticated) return error(route, 401);
         expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        if (path === '/api/v1/me/notifications' && method === 'GET')
+          return route.fulfill({
+            json: { data: [], meta: { correlation_id: 'gateway-e2e', next_cursor: null } },
+          });
+        if (path === '/api/v1/me/notification-preferences' && method === 'GET')
+          return json(route, {
+            push_enabled: false,
+            email_enabled: true,
+            group_overrides: {},
+            version: 1,
+          });
         if (path === '/api/v1/auth/email-verifications')
           return json(route, { message_code: 'REQUEST_ACCEPTED' }, 202);
         if (path === '/api/v1/me' && method === 'GET') return json(route, model.profile);
@@ -467,9 +485,13 @@ export const test = base.extend<{ gateway: GatewayModel }>({
         }
         const policyMatch = /^\/api\/v1\/trips\/([^/]+)\/plan-policy$/.exec(path);
         if (policyMatch && method === 'GET') {
-          const current = model.trips.find(item => item.id === policyMatch[1]);
+          const current = model.trips.find((item) => item.id === policyMatch[1]);
           if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
-          return json(route, { policy: current.plan_edit_policy, editor_member_ids: model.editorAssignments.get(current.id) ?? [], membership_revision: current.membership_revision });
+          return json(route, {
+            policy: current.plan_edit_policy,
+            editor_member_ids: model.editorAssignments.get(current.id) ?? [],
+            membership_revision: current.membership_revision,
+          });
         }
         if (policyMatch && method === 'PUT') {
           const tripId = decodeURIComponent(policyMatch[1]!);
@@ -505,7 +527,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
           current.plan_edit_policy = data.policy;
           current.membership_revision += 1;
-          if (data.policy === 'SELECTED_MEMBERS') model.editorAssignments.set(tripId, [...data.editor_member_ids]);
+          if (data.policy === 'SELECTED_MEMBERS')
+            model.editorAssignments.set(tripId, [...data.editor_member_ids]);
           const projection = {
             policy: current.plan_edit_policy,
             editor_member_ids: model.editorAssignments.get(tripId) ?? [],
@@ -518,7 +541,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
           return json(route, projection);
         }
-        if (/^\/api\/v1\/trips\/[^/]+\/fund$/.test(path) && method === 'GET') return error(route, 404, 'RESOURCE_NOT_FOUND');
+        if (/^\/api\/v1\/trips\/[^/]+\/fund$/.test(path) && method === 'GET')
+          return error(route, 404, 'RESOURCE_NOT_FOUND');
         const planMatch = /^\/api\/v1\/trips\/([^/]+)\/plan$/.exec(path);
         if (planMatch && method === 'GET') {
           const tripId = decodeURIComponent(planMatch[1]!);

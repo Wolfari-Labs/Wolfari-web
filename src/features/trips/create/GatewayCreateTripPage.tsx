@@ -175,17 +175,20 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
     }
   };
   return (
-    <main className={styles.page} data-flow="create-trip">
+    <section className={`${styles.page} ${styles.gatewayPage}`} data-flow="create-trip">
       <img className={styles.banner} src={banner} alt="" />
       <header className={styles.pageHeader}>
         <div>
           <p className={styles.eyebrow}>CHUYẾN ĐI MỚI</p>
           <h1>Tạo chuyến đi mới</h1>
-          <p>Thông tin dưới đây được lưu lên máy chủ.</p>
+          <p>Chọn điểm bắt đầu cho hành trình cùng nhau.</p>
         </div>
         <Link to="/trips">Chuyến đi của tôi</Link>
       </header>
-      <form onSubmit={(event) => void submit(event)} className={styles.formCard}>
+      <form
+        onSubmit={(event) => void submit(event)}
+        className={`${styles.formCard} ${styles.gatewayForm}`}
+      >
         {message && <Alert live>{message}</Alert>}
         {memoryOnly && (
           <Alert tone="warning">
@@ -223,7 +226,8 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
             />
           </div>
           <Input
-            label="Múi giờ IANA"
+            label="Múi giờ"
+            hint="Ví dụ: Asia/Ho_Chi_Minh"
             value={draft.timezone}
             required
             onChange={(e) => edit('timezone', e.target.value)}
@@ -235,10 +239,7 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
             onChange={(e) => edit('description', e.target.value)}
           />
         </fieldset>
-        <p>
-          Ảnh bìa mặc định chỉ minh họa. Ngân sách được cấu hình tại Quỹ sau khi tạo chuyến đi. Bản
-          nháp cũ không xác định tài khoản không được tự nhập.
-        </p>
+        <p>Bạn có thể thiết lập ngân sách trong Quỹ nhóm sau khi tạo chuyến đi.</p>
         <div className={styles.actions}>
           <Link to="/trips">Xem danh sách chuyến đi</Link>
           <Button type="submit" loading={busy} disabled={initial.current.invalid || !!created}>
@@ -247,6 +248,6 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
         </div>
       </form>
       {created && <CreateTripSuccess tripId={created} onContinue={() => setCreated(null)} />}
-    </main>
+    </section>
   );
 }

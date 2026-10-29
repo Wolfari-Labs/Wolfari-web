@@ -1,9 +1,25 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSection, ShellSnapshot } from '../model/shell';
-import { assets } from '../../../shared/assets/asset-map';
+import type { assets } from '../../../shared/assets/asset-map';
+import logo from '../../../shared/assets/figma/44363.png';
+import routeDecoration from '../../../shared/assets/figma/0d2a5.svg';
+import mascot from '../../../shared/assets/figma/4ff86.png';
 import styles from './AppShell.module.css';
+import { Icon as UiIcon, type IconName } from '../../../shared/components/Icon';
+import { Avatar } from '../../../shared/components/Avatar';
+import { useAnimate } from 'motion/react-mini';
+
+const Notifications = lazy(() =>
+  import('../../notifications/Notifications').then((module) => ({ default: module.Notifications })),
+);
+const AccountMenu = lazy(() =>
+  import('./AccountMenu').then((module) => ({ default: module.AccountMenu })),
+);
+const NavigationDrawer = lazy(() =>
+  import('../../../shared/components/Drawer').then((module) => ({ default: module.Drawer })),
+);
 
 const sections: { id: ShellSection; label: string; icon: keyof typeof assets }[] = [
   { id: 'overview', label: 'Tổng quan chuyến đi', icon: '4151c.svg' },
@@ -17,10 +33,31 @@ const sections: { id: ShellSection; label: string; icon: keyof typeof assets }[]
   { id: 'settings', label: 'Cài đặt', icon: 'd379f.svg' },
 ];
 function Icon({ file, className }: { file: keyof typeof assets; className?: string | undefined }) {
-  return <img className={className} src={assets[file]} alt="" />;
+  const names: Partial<Record<keyof typeof assets, IconName>> = {
+    '4151c.svg': 'home',
+    'f892f.svg': 'map',
+    'ea811.svg': 'plan',
+    '87597.svg': 'dress',
+    '462bc.svg': 'packing',
+    '46522.svg': 'members',
+    '431b0.svg': 'fund',
+    'b7793.svg': 'price',
+    'd379f.svg': 'settings',
+    'd4edd.svg': 'home',
+    '92234.svg': 'home',
+    '5290c.svg': 'plan',
+    'ff747.svg': 'plan',
+    '28f71.svg': 'plan',
+    '89e09.svg': 'plan',
+    'ac8db.svg': 'price',
+    '2e748.svg': 'user',
+    'cea87.svg': 'expand',
+    '0e16c.svg': 'bell',
+  };
+  const name = names[file];
+  return <UiIcon name={name ?? 'info'} {...(className ? { className } : {})} />;
 }
 
-import { Drawer } from '../../../shared/components/Drawer';
 import { NavigationButton } from '../../../shared/components/NavigationButton';
 import { desktopMediaQuery } from '../../../shared/styles/breakpoints';
 import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
@@ -51,9 +88,33 @@ export function AppShell({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerLoaded, setDrawerLoaded] = useState(false);
+  const menuTrigger = useRef<HTMLButtonElement>(null);
+  const [contentScope, animateContent] = useAnimate<HTMLElement>();
+  const animatedPath = useRef(currentPath);
+  useEffect(() => {
+    // Initial content is visible immediately; animate only subsequent navigation.
+    if (animatedPath.current === currentPath) return;
+    animatedPath.current = currentPath;
+    if (
+      !contentScope.current ||
+      typeof window.matchMedia !== 'function' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+      return;
+    const animation = animateContent(
+      contentScope.current,
+      { opacity: [0.8, 1], transform: ['translateY(5px)', 'none'] },
+      { duration: 0.16, ease: 'easeOut' },
+    );
+    return () => animation.stop();
+  }, [currentPath, animateContent, contentScope]);
   const focusContentAfterClose = useRef(false);
   const viewer = snapshot?.viewer;
-  const guest = snapshot !== null && viewer === null;
+  // Public flows should never render a disabled placeholder while the session
+  // check is still settling. Treat the shell as guest until a real viewer is
+  // available; private routes are guarded by App before their content mounts.
+  const guest = !viewer && !tripLayout && !adminLayout;
   const canReadTrip = snapshot?.trip?.permissions.canRead === true;
   const canReadAdmin = viewer?.systemRole === 'ADMIN';
   const home = currentPath === paths.home;
@@ -200,7 +261,7 @@ export function AppShell({
         <>
           <header className={styles.desktopHeader} data-node-id="135:483">
             <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
-              <img src={assets['44363.png']} alt="Wolfari" />
+              <img src={logo} alt="Wolfari" />
             </Link>
             <nav aria-label="Điều hướng chính" className={styles.headerNav}>
               <NavLink end to={paths.home}>
@@ -231,7 +292,7 @@ export function AppShell({
                 </Link>
               ) : guest ? (
                 <a href={`${paths.home}#home-about`}>
-                  <Icon file="89e09.svg" />
+                  <UiIcon name="info" />
                   Về Wolfari
                 </a>
               ) : (
@@ -244,19 +305,25 @@ export function AppShell({
             <div className={styles.account}>
               {viewer ? (
                 <>
-                  <button className={styles.bell} disabled aria-label="Thông báo · Chưa triển khai">
-                    <Icon file="0e16c.svg" />
-                  </button>
-                  <Link
-                    to={paths.profile}
-                    className={styles.profile}
-                    aria-label={'Hồ sơ cá nhân · ' + viewer.fullName}
+                  <Suspense
+                    fallback={<span className={styles.bellPlaceholder} aria-hidden="true" />}
                   >
-                    <span className={styles.avatar}>
-                      <img src={assets['24d7e.png']} alt="" />
-                    </span>
-                    <span>{viewer.fullName} ⌄</span>
-                  </Link>
+                    <Notifications key={viewer.id ?? 'preview'} actor={viewer.id ?? 'preview'} />
+                  </Suspense>
+                  <Suspense
+                    fallback={
+                      <Link
+                        to={paths.profile}
+                        className={styles.profile}
+                        aria-label={'Hồ sơ cá nhân · ' + viewer.fullName}
+                      >
+                        <Avatar name={viewer.fullName} />
+                        <span className={styles.accountName}>{viewer.fullName}</span>
+                      </Link>
+                    }
+                  >
+                    <AccountMenu name={viewer.fullName} />
+                  </Suspense>
                 </>
               ) : guest ? (
                 <>
@@ -277,27 +344,34 @@ export function AppShell({
       )}
       <header className={styles.mobileHeader} data-node-id={tripLayout ? '325:2266' : '322:2268'}>
         <button
+          ref={menuTrigger}
           className={styles.mobileMenuButton}
           aria-label={'Mở ' + drawerLabel.toLocaleLowerCase('vi')}
           aria-expanded={drawerOpen}
           aria-haspopup="dialog"
-          onClick={() => setDrawerOpen(true)}
+          onClick={() => {
+            setDrawerLoaded(true);
+            setDrawerOpen(true);
+          }}
         >
-          <span aria-hidden="true">☰</span>
+          <UiIcon name="menu" />
         </button>
         <Link to={paths.home} className={styles.mobileLogo} aria-label="Wolfari · Trang chủ">
-          <img src={assets['44363.png']} alt="Wolfari" />
+          <img src={logo} alt="Wolfari" />
         </Link>
         {viewer ? (
-          <Link
-            className={styles.mobileAccount}
-            to={paths.profile}
-            aria-label={'Hồ sơ cá nhân · ' + viewer.fullName}
-          >
-            <span className={styles.avatar}>
-              <img src={assets['24d7e.png']} alt="" />
-            </span>
-          </Link>
+          <div className={styles.mobileAccountActions}>
+            <Suspense fallback={<span className={styles.bellPlaceholder} aria-hidden="true" />}>
+              <Notifications key={viewer.id ?? 'preview'} actor={viewer.id ?? 'preview'} />
+            </Suspense>
+            <Link
+              className={styles.mobileAccount}
+              to={paths.profile}
+              aria-label={'Hồ sơ cá nhân · ' + viewer.fullName}
+            >
+              <Avatar name={viewer.fullName} />
+            </Link>
+          </div>
         ) : guest ? (
           <Link className={styles.mobileAccount} to={paths.login} aria-label="Đăng nhập">
             <Icon file="2e748.svg" />
@@ -330,8 +404,8 @@ export function AppShell({
                   <br />
                   đi xa hơn!
                 </p>
-                <img className={styles.routeDecoration} src={assets['0d2a5.svg']} alt="" />
-                <img className={styles.readingMascot} src={assets['4ff86.png']} alt="" />
+                <img className={styles.routeDecoration} src={routeDecoration} alt="" />
+                <img className={styles.readingMascot} src={mascot} alt="" />
               </div>
             )}
             <button
@@ -344,7 +418,7 @@ export function AppShell({
                 <Icon file="cea87.svg" className={styles.collapseIconReversed} />
               ) : (
                 <>
-                  <strong>«</strong>
+                  <UiIcon name="collapse" />
                   <span>Thu gọn</span>
                 </>
               )}
@@ -352,6 +426,7 @@ export function AppShell({
           </aside>
         ) : null}
         <main
+          ref={contentScope}
           id="main-content"
           tabIndex={-1}
           className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout || fullBleed ? styles.listMain : ''}`}
@@ -359,9 +434,18 @@ export function AppShell({
           {children}
         </main>
       </div>
-      <Drawer open={drawerOpen} label={drawerLabel} onDismiss={() => setDrawerOpen(false)}>
-        {adminLayout ? adminNavigation : tripLayout ? tripNavigation : publicNavigation}
-      </Drawer>
+      {drawerLoaded && (
+        <Suspense fallback={null}>
+          <NavigationDrawer
+            open={drawerOpen}
+            label={drawerLabel}
+            returnFocusRef={menuTrigger}
+            onDismiss={() => setDrawerOpen(false)}
+          >
+            {adminLayout ? adminNavigation : tripLayout ? tripNavigation : publicNavigation}
+          </NavigationDrawer>
+        </Suspense>
+      )}
     </div>
   );
 }

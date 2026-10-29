@@ -39,7 +39,7 @@ for (const viewport of [
       expect(control.height, control.name ?? 'control').toBeGreaterThanOrEqual(44);
     }
     const button = page.getByRole('button', { name: 'Thao tác minh họa', exact: true });
-    expect(Math.round((await button.boundingBox())!.height)).toBe(viewport.width <= 768 ? 52 : 44);
+    expect(Math.round((await button.boundingBox())!.height)).toBe(viewport.width <= 768 ? 48 : 44);
     await button.focus();
     await expect(button).toBeFocused();
     expect(await button.evaluate((element) => getComputedStyle(element).outlineStyle)).toBe(
@@ -74,8 +74,8 @@ for (const viewport of [
     await expect(field).toHaveAttribute('aria-invalid', 'true');
     await expect(field).toHaveValue('Bản nháp được giữ lại');
     await expect(field).toHaveAccessibleDescription(/Lỗi minh họa/);
-    await page.getByLabel('Lựa chọn minh họa').selectOption('other');
-    await expect(page.getByLabel('Lựa chọn minh họa')).toHaveValue('other');
+    await page.getByLabel('Lựa chọn minh họa', { exact: true }).selectOption('other');
+    await expect(page.getByLabel('Lựa chọn minh họa', { exact: true })).toHaveValue('other');
     await page.getByRole('button', { name: 'Bật/tắt loading' }).click();
     await expect(
       page.getByRole('button', { name: 'Loading minh họa', exact: true }),
@@ -107,7 +107,7 @@ test('shared drawer keyboard, backdrop, scrolling and focus return', async ({ pa
   await expect(drawer).toBeVisible();
   const close = drawer.getByRole('button', { name: 'Đóng điều hướng minh họa' });
   await expect(close).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   await page.keyboard.press('Shift+Tab');
   await expect(drawer.getByRole('button', { name: 'Mục minh họa 12', exact: true })).toBeFocused();
   await page.keyboard.press('Tab');
@@ -119,7 +119,7 @@ test('shared drawer keyboard, backdrop, scrolling and focus return', async ({ pa
   await page.keyboard.press('Escape');
   await expect(drawer).not.toBeVisible();
   await expect(trigger).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await trigger.click();
   await page.mouse.click(390, 120);
   await expect(drawer).not.toBeVisible();
@@ -128,12 +128,12 @@ test('shared drawer keyboard, backdrop, scrolling and focus return', async ({ pa
 
 test('native Select keyboard and field focus survive errors', async ({ page }) => {
   await page.goto('/design-system.html');
-  const select = page.getByLabel('Lựa chọn minh họa');
+  const select = page.getByLabel('Lựa chọn minh họa', { exact: true });
   await select.focus();
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect(select).toHaveValue('other');
-  const input = page.getByLabel('Nội dung minh họa');
+  const input = page.getByRole('textbox', { name: 'Nội dung minh họa' });
   const icon = input.locator('..').locator('img');
   const restingAsset = await icon.getAttribute('src');
   await input.focus();
@@ -158,7 +158,7 @@ test('hover and pressed variants preserve focus, disabled controls and field err
   const bounds = (await outline.boundingBox())!;
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
   await page.mouse.down();
-  await expect(outline).toHaveCSS('opacity', '0.88');
+  await expect(outline).toHaveCSS('transform', 'matrix(0.97, 0, 0, 0.97, 0, 0)');
   await page.mouse.up();
   const field = page.getByRole('textbox', { name: 'Nội dung minh họa' });
   await field.hover();
@@ -169,3 +169,30 @@ test('hover and pressed variants preserve focus, disabled controls and field err
   await expect(page.getByRole('button', { name: 'Disabled', exact: true })).toBeDisabled();
   await expect(page.getByLabel('Select disabled')).toBeDisabled();
 });
+for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+  test('nested popup restores focus and scroll with motion ' + reducedMotion, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion });
+    await page.setViewportSize({ width: 402, height: 520 });
+    await page.goto('/design-system.html');
+    const trigger = page.getByRole('button', { name: 'Mở popup lồng nhau' });
+    await trigger.click();
+    const dialog = page.getByRole('dialog', { name: 'Popup minh họa' });
+    await dialog.getByRole('button', { name: 'Mở xác nhận' }).click();
+    const alert = page.getByRole('alertdialog', { name: 'Xác nhận minh họa?' });
+    await expect(alert.getByRole('button', { name: 'Hủy' })).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(alert.getByRole('button', { name: 'Xác nhận', exact: true })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(alert).not.toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Mở xác nhận' })).toBeFocused();
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.body).overflow))
+      .toBe('hidden');
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.body).overflow))
+      .not.toBe('hidden');
+  });
+}

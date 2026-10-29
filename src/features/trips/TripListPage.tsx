@@ -12,6 +12,7 @@ import { TripCard } from './components/TripCard';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
+import { Icon } from '../../shared/components/Icon';
 import { ContentState } from '../../shared/components/ContentState';
 import { uiAssets } from '../../shared/assets/asset-map';
 import roleIcon from '../../shared/assets/figma/2fa29.svg';
@@ -96,36 +97,39 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
               leadingIcon={<img src={uiAssets.search} alt="" />}
             />
           </div>
-          <div className={styles.unavailableFilters}>
-            <button
-              disabled
-              title="Lọc vai trò chưa có interaction contract"
-              aria-describedby="trip-filter-capability-note"
-            >
-              <img src={roleIcon} alt="" />
-              Vai trò: Tất cả<span aria-hidden="true">⌄</span>
-            </button>
-            <button
-              disabled
-              title="Lọc thời gian chưa có interaction contract"
-              aria-describedby="trip-filter-capability-note"
-            >
-              <img src={timeIcon} alt="" />
-              Thời gian<span aria-hidden="true">⌄</span>
-            </button>
-            <button
-              disabled
-              title="Bộ lọc nâng cao chưa có interaction contract"
-              aria-describedby="trip-filter-capability-note"
-            >
-              <img src={filterIcon} alt="" />
-              Bộ lọc
-            </button>
-            <span id="trip-filter-capability-note" className={styles.srOnly}>
-              Bộ lọc vai trò, thời gian và nâng cao sẽ chỉ xuất hiện khi Gateway cung cấp dữ liệu
-              tương ứng.
-            </span>
-          </div>
+          {previewEnabled && (
+            <div className={styles.unavailableFilters}>
+              <button
+                disabled
+                title="Lọc theo vai trò chưa khả dụng"
+                aria-describedby="trip-filter-capability-note"
+              >
+                <img src={roleIcon} alt="" />
+                Vai trò: Tất cả
+                <Icon name="chevron" size={16} />
+              </button>
+              <button
+                disabled
+                title="Lọc theo thời gian chưa khả dụng"
+                aria-describedby="trip-filter-capability-note"
+              >
+                <img src={timeIcon} alt="" />
+                Thời gian
+                <Icon name="chevron" size={16} />
+              </button>
+              <button
+                disabled
+                title="Bộ lọc nâng cao chưa khả dụng"
+                aria-describedby="trip-filter-capability-note"
+              >
+                <img src={filterIcon} alt="" />
+                Bộ lọc
+              </button>
+              <span id="trip-filter-capability-note" className={styles.srOnly}>
+                Các bộ lọc này hiện chưa khả dụng.
+              </span>
+            </div>
+          )}
         </div>
         <div className={styles.toolbar}>
           <div className={styles.statuses} role="group" aria-label="Trạng thái chuyến đi">

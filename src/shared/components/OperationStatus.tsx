@@ -40,18 +40,17 @@ export function OperationStatus({
     return (
       <Alert tone="error">
         Nhật ký phục hồi không khả dụng hoặc không hợp lệ. Đã chặn giao dịch mới để tránh gửi lặp.
-        Giữ nguyên journal và liên hệ người vận hành để đối chiếu; không xóa dữ liệu trình duyệt để
-        vượt chặn.
+        Liên hệ hỗ trợ để đối chiếu; không xóa dữ liệu trình duyệt để vượt chặn.
       </Alert>
     );
   if (!s.intent) return null;
   const messages = {
     IDLE: '',
-    PROCESSING: 'Đang xử lý trên server. Chưa xác nhận hoàn tất.',
-    PENDING_RECOVERY: 'Server đang chờ phục hồi. Không tạo lại giao dịch mới.',
-    UNKNOWN: 'Chưa rõ kết quả ghi. Giữ nguyên yêu cầu; kiểm tra lại hoặc gửi lại đúng yêu cầu cũ.',
-    SUCCEEDED: 'Server đã xác nhận hoàn tất. Dữ liệu đang được đọc lại.',
-    FAILED: 'Server từ chối thao tác. Kiểm tra dữ liệu và quyền trước khi tạo yêu cầu mới.',
+    PROCESSING: 'Đang xử lý. Vui lòng chờ xác nhận.',
+    PENDING_RECOVERY: 'Đang chờ kết nối phục hồi. Không tạo giao dịch thay thế.',
+    UNKNOWN: 'Chưa xác nhận được kết quả. Kiểm tra lại hoặc gửi lại đúng yêu cầu.',
+    SUCCEEDED: 'Đã hoàn tất thao tác.',
+    FAILED: 'Không thể hoàn tất. Kiểm tra thông tin và quyền thao tác.',
     NEEDS_REVIEW:
       'Thao tác cần đối soát. Không tự gửi lại hoặc tạo giao dịch thay thế; liên hệ người vận hành với mã thao tác.',
   };
@@ -64,9 +63,8 @@ export function OperationStatus({
         {messages[s.state]}
         {s.error?.code === 'FINANCE_OBLIGATION_BLOCKED' && (
           <p>
-            Nghĩa vụ hoặc trách nhiệm quỹ chưa được giải quyết. Holder không thể rời quỹ đang mở;
-            kiểm tra khoản đang báo chuyển và các nghĩa vụ khác. Server không cung cấp ID khoản nợ
-            trong lỗi này.
+            Nghĩa vụ hoặc trách nhiệm quỹ chưa được giải quyết. Người giữ quỹ không thể rời quỹ đang
+            mở; kiểm tra các khoản đóng góp còn chờ xử lý.
           </p>
         )}
         {(s.error?.code === 'STATE_CONFLICT' || s.error?.code === 'VERSION_CONFLICT') && (

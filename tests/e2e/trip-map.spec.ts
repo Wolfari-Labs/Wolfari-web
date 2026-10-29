@@ -39,14 +39,20 @@ async function installPlacesMock(page: Page) {
 }
 
 for (const viewport of viewports) {
-  test(`Map layout and place scrolling fit ${viewport.width}x${viewport.height}`, async ({ page }) => {
+  test(`Map layout and place scrolling fit ${viewport.width}x${viewport.height}`, async ({
+    page,
+  }) => {
     await page.setViewportSize(viewport);
     await installPlacesMock(page);
     await page.goto(tripMap);
 
     const list = page.locator('[data-region="place-list"]');
     await expect(list.getByText('Gợi ý Đà Nẵng 35')).toHaveCount(1);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: test.info().outputPath('map.png'), fullPage: true });
+    await page.screenshot({ path: test.info().outputPath('map-viewport.png') });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
 
     const listMetrics = await list.evaluate((element) => ({
       overflowY: getComputedStyle(element).overflowY,
@@ -75,8 +81,8 @@ test('Collapsed sidebar icon points toward the content', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(tripMap);
   await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
-  const icon = page.getByRole('button', { name: 'Mở rộng thanh điều hướng' }).locator('img');
-  await expect(icon).toHaveCSS('transform', 'matrix(-1, 0, 0, 1, 0, 0)');
+  const icon = page.getByRole('button', { name: 'Mở rộng thanh điều hướng' }).locator('svg');
+  await expect(icon).toHaveCSS('transform', 'none');
 });
 
 test('Map filters use semantic status colors and accessible targets', async ({ page }) => {

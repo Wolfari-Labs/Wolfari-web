@@ -293,9 +293,11 @@ export function App({
           </Button>
         </Alert>
       )}
-      {!handle?.notFound && !membershipRecoveryRoute && (!ownContentTitle || !snapshot || denied) && (
-        <h1 className="screen-title">{title}</h1>
-      )}
+      {!handle?.notFound &&
+        !membershipRecoveryRoute &&
+        (!ownContentTitle || (!snapshot && !!requiresViewer) || denied) && (
+          <h1 className="screen-title">{title}</h1>
+        )}
       {!ownContentTitle && previewControls}
       {handle?.notFound ? (
         <Outlet context={routeContext} />

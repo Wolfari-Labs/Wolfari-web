@@ -8,10 +8,14 @@ import { localTimeToIso } from '../model/plan-draft';
 import { localDate, planDays } from '../model/plan-presentation';
 import { lastTripDate } from '../../../shared/lib/calendar';
 import { Button } from '../../../shared/components/Button';
+import { Select } from '../../../shared/components/Select';
 import { Input } from '../../../shared/components/Input';
 import { Alert } from '../../../shared/components/Alert';
 import styles from './GatewayPlanPanel.module.css';
 import { Drawer } from '../../../shared/components/Drawer';
+import { RuntimeTimeline } from './RuntimeTimeline';
+import { ConfirmDialog } from '../../../shared/components/Ui';
+import { Icon } from '../../../shared/components/Icon';
 
 function clock(value: string | null, timezone: string) {
   return value
@@ -53,10 +57,14 @@ function ActivityForm({
         : (activity?.scheduledDate ?? '')),
   );
   const [endDay, setEndDay] = useState(
-    activity?.endsAt ? localDate(activity.endsAt, trip.timezone) : '',
+    targetDay === '' ? '' : activity?.endsAt ? localDate(activity.endsAt, trip.timezone) : '',
   );
-  const [start, setStart] = useState(clock(activity?.startsAt ?? null, trip.timezone));
-  const [end, setEnd] = useState(clock(activity?.endsAt ?? null, trip.timezone));
+  const [start, setStart] = useState(
+    targetDay === '' ? '' : clock(activity?.startsAt ?? null, trip.timezone),
+  );
+  const [end, setEnd] = useState(
+    targetDay === '' ? '' : clock(activity?.endsAt ?? null, trip.timezone),
+  );
   const [error, setError] = useState('');
   const titleRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -99,7 +107,7 @@ function ActivityForm({
       }
     }
     if (location && !plan.selectedLocations.some((item) => item.id === location)) {
-      setError('Địa điểm không còn tồn tại trên server.');
+      setError('Địa điểm này không còn tồn tại.');
       return;
     }
     setError('');
@@ -119,10 +127,10 @@ function ActivityForm({
     <form
       className={styles.form}
       onSubmit={(event) => void submit(event)}
-      aria-label={activity ? 'Sửa hoạt động trên server' : 'Tạo hoạt động trên server'}
+      aria-label={activity ? 'Sửa hoạt động' : 'Thêm hoạt động'}
       noValidate
     >
-      <h3>{activity ? 'Sửa hoạt động trên server' : 'Tạo hoạt động trên server'}</h3>
+      <h3>{activity ? 'Sửa hoạt động' : 'Thêm hoạt động'}</h3>
       {error && <Alert tone="error">{error}</Alert>}
       <fieldset disabled={disabled}>
         <Input
@@ -150,17 +158,18 @@ function ActivityForm({
           value={publicDescription}
           onChange={(event) => setPublicDescription(event.target.value)}
         />
-        <label>
-          Địa điểm trên server
-          <select value={location} onChange={(event) => setLocation(event.target.value)}>
-            <option value="">Không liên kết địa điểm</option>
-            {plan.selectedLocations.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <Select
+          label="Địa điểm"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+        >
+          <option value="">Không liên kết địa điểm</option>
+          {plan.selectedLocations.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </Select>
         <p>
           Chọn ngày không cần giờ; có thể đặt giờ kết thúc vào ngày tiếp theo. Mọi thay đổi chỉ áp
           dụng cho hoạt động này.
@@ -186,7 +195,7 @@ function ActivityForm({
           </Button>
         )}
         <Input
-          label="Giờ bắt đầu trên server"
+          label="Giờ bắt đầu"
           type="time"
           value={start}
           onChange={(event) => setStart(event.target.value)}
@@ -200,7 +209,7 @@ function ActivityForm({
           onChange={(event) => setEndDay(event.target.value)}
         />
         <Input
-          label="Giờ kết thúc trên server"
+          label="Giờ kết thúc"
           type="time"
           value={end}
           onChange={(event) => setEnd(event.target.value)}
@@ -215,11 +224,11 @@ function ActivityForm({
               setEndDay('');
             }}
           >
-            Bỏ lịch trên server
+            Bỏ ngày và giờ
           </Button>
         )}
         <div className={styles.actions}>
-          <Button type="submit">Lưu trên server</Button>
+          <Button type="submit">Lưu</Button>
           <Button variant="outline" onClick={onCancel}>
             Hủy chỉnh sửa
           </Button>
@@ -263,9 +272,6 @@ export function GatewayPlanPanel({
   } | null>(null);
   const [confirm, setConfirm] = useState<ActivityViewModel | null>(null);
   const [confirmVersion, setConfirmVersion] = useState(0);
-  const [selectedDay, setSelectedDay] = useState('ALL');
-  const days = planDays(trip.startAt, trip.endAt, trip.timezone);
-  const dragId = useRef<string | null>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const alive =
@@ -281,7 +287,6 @@ export function GatewayPlanPanel({
   const close = () => {
     setEditing(null);
     setConfirm(null);
-    (trigger.current ?? addRef.current)?.focus();
   };
   const items = [...plan.activities].sort(
     (a, b) => a.position - b.position || a.id.localeCompare(b.id),
@@ -309,13 +314,17 @@ export function GatewayPlanPanel({
     await execute({ kind: 'reorder', activityIds: ids });
   };
   return (
-    <section className={styles.panel} aria-label="Hoạt động trên server">
+    <section className={styles.panel} aria-label="Hoạt động trong lịch trình">
       <header>
         <h2>Lịch trình chung</h2>
-        <p>
-          Dữ liệu máy chủ · Phiên bản {plan.planVersion}. Đổi thứ tự giữ nguyên giờ. Ngày chưa có
-          giờ cũng được lưu và chia sẻ với thành viên.
-        </p>
+        <p>Cùng nhau tạo nên một hành trình đáng nhớ.</p>
+        <details>
+          <summary>Chi tiết đồng bộ</summary>
+          <p>
+            Phiên bản {plan.planVersion}. Đổi thứ tự giữ nguyên giờ. Ngày chưa có giờ cũng được lưu
+            và chia sẻ với thành viên.
+          </p>
+        </details>
       </header>
       {!canEdit && (
         <Alert>
@@ -326,8 +335,8 @@ export function GatewayPlanPanel({
           .
         </Alert>
       )}
-      {commands.status === 'success' && <Alert tone="success">Đã lưu trên server.</Alert>}
-      {commands.pending && <Alert>Đang xử lý, vui lòng chờ xác nhận từ server.</Alert>}
+      {commands.status === 'success' && <Alert tone="success">Đã lưu thay đổi.</Alert>}
+      {commands.pending && <Alert>Đang lưu thay đổi…</Alert>}
       {!commands.recoveryAvailable && (
         <Alert tone="error">
           Không thể lưu yêu cầu để phục hồi an toàn trong phiên này. Hãy bật bộ nhớ phiên rồi tải
@@ -338,7 +347,9 @@ export function GatewayPlanPanel({
         <Alert tone="error">
           {messages[commands.error.code]}
           {commands.error.correlationId && (
-            <span> Mã đối chiếu: {commands.error.correlationId}</span>
+            <details>
+              <summary>Chi tiết hỗ trợ</summary>Mã đối chiếu: {commands.error.correlationId}
+            </details>
           )}
         </Alert>
       )}
@@ -364,6 +375,7 @@ export function GatewayPlanPanel({
         )}
         {canEdit && repository.createActivity && (
           <Button
+            icon={<Icon name="plus" />}
             ref={addRef}
             disabled={locked || !!editing || !!confirm}
             onClick={(event) => {
@@ -371,11 +383,17 @@ export function GatewayPlanPanel({
               setEditing({ activity: null, version: plan.planVersion });
             }}
           >
-            Tạo hoạt động trên server
+            Thêm hoạt động
           </Button>
         )}
       </div>
-      <Drawer open={!!editing} label="Chỉnh sửa lịch trình" side="right" onDismiss={close}>
+      <Drawer
+        returnFocusRef={trigger}
+        open={!!editing}
+        label="Chỉnh sửa lịch trình"
+        side="right"
+        onDismiss={close}
+      >
         {editing && (
           <>
             {commands.error && (
@@ -408,7 +426,7 @@ export function GatewayPlanPanel({
             )}
             {editing.version !== plan.planVersion && (
               <Alert tone="warning">
-                Dữ liệu server đã đổi. Nội dung bạn nhập vẫn được giữ. Xem danh sách mới trước khi
+                Lịch trình đã thay đổi. Nội dung bạn nhập vẫn được giữ. Xem danh sách mới trước khi
                 xác nhận lưu lại.
               </Alert>
             )}
@@ -425,7 +443,7 @@ export function GatewayPlanPanel({
               activity={editing.activity}
               trip={trip}
               plan={plan}
-              {...(editing.targetDay ? { targetDay: editing.targetDay } : {})}
+              {...(editing.targetDay !== undefined ? { targetDay: editing.targetDay } : {})}
               disabled={locked || !canEdit || editing.version !== plan.planVersion}
               onCancel={close}
               onSubmit={async (fields) => {
@@ -453,181 +471,64 @@ export function GatewayPlanPanel({
           </>
         )}
       </Drawer>
-      {confirm && (
-        <div className={styles.form} role="group" aria-label="Xác nhận xóa hoạt động">
-          <p>Xóa “{confirm.title}” trên server? Dress code gắn với hoạt động cũng có thể bị xóa.</p>
-          {confirmVersion !== plan.planVersion && (
-            <Alert tone="warning">
-              Dữ liệu đã đổi. Hủy và chọn lại hoạt động sau khi đối chiếu để xác nhận xóa.
-            </Alert>
-          )}
-          <Button
-            disabled={locked || !canEdit || confirmVersion !== plan.planVersion}
-            onClick={async () => {
-              if (await execute({ kind: 'delete', activityId: confirm.id })) close();
-            }}
-          >
-            Xác nhận xóa trên server
-          </Button>
-          <Button variant="outline" disabled={commands.pending} onClick={close}>
-            Hủy xóa
-          </Button>
-        </div>
-      )}
-      <div className={styles.actions} role="group" aria-label="Ngày trong lịch trình">
-        {['ALL', 'POOL', ...days].map((day) => (
-          <Button
-            key={day}
-            variant={selectedDay === day ? 'primary' : 'outline'}
-            aria-pressed={selectedDay === day}
-            onClick={() => setSelectedDay(day)}
-            onDragOver={(event) => {
-              if (canEdit && !locked && day !== 'ALL') event.preventDefault();
-            }}
-            onDrop={(event) => {
-              event.preventDefault();
-              const activity = items.find((item) => item.id === dragId.current);
-              dragId.current = null;
-              if (!activity || !canEdit || locked || day === 'ALL') return;
-              if (activity.startsAt && day !== 'POOL') {
-                setEditing({ activity, targetDay: day, version: plan.planVersion });
-              } else
-                void execute({
-                  kind: 'update',
-                  activityId: activity.id,
-                  fields: {
-                    startsAt: null,
-                    endsAt: null,
-                    scheduledDate: day === 'POOL' ? null : day,
-                  },
-                });
-            }}
-          >
-            {day === 'ALL' ? 'Tất cả' : day === 'POOL' ? 'Chưa chọn ngày' : day}
-          </Button>
-        ))}
-      </div>
-      <p>
-        Kéo vào ngày để chuyển lịch; hoạt động có giờ cần xác nhận lại trong form. Dùng nút Sửa để
-        thực hiện bằng bàn phím hoặc màn hình cảm ứng. Không tự xuất bản bản nháp cũ.
-      </p>
-      <ol className={styles.list}>
-        {items
-          .filter(
-            (a) =>
-              selectedDay === 'ALL' ||
-              (a.startsAt ? localDate(a.startsAt, trip.timezone) : (a.scheduledDate ?? 'POOL')) ===
-                selectedDay,
-          )
-          .map((activity) => {
-            const index = items.indexOf(activity);
-            const canComplete =
-              alive &&
-              plan.permissions.canComplete &&
-              (activity.status === 'TODO' ||
-                canEdit ||
-                activity.completedByUserId === trip.currentMembership.userId);
-            return (
-              <li
-                key={activity.id}
-                aria-label={activity.title}
-                className={styles.item}
-                draggable={canEdit && !locked && !editing}
-                onDragStart={() => {
-                  dragId.current = activity.id;
-                }}
-                onDragEnd={() => {
-                  dragId.current = null;
-                }}
-                onDragOver={(event) => {
-                  if (canEdit && !locked) event.preventDefault();
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  const ids = items.map((item) => item.id);
-                  const from = ids.indexOf(dragId.current ?? '');
-                  dragId.current = null;
-                  if (!canEdit || locked || from < 0 || from === index) return;
-                  const moved = ids.splice(from, 1)[0]!;
-                  ids.splice(index, 0, moved);
-                  void execute({ kind: 'reorder', activityIds: ids });
-                }}
-              >
-                <h3>{activity.title}</h3>
-                <p>
-                  {activity.activityType} ·{' '}
-                  {activity.status === 'COMPLETED' ? 'Đã hoàn tất' : 'Chưa hoàn tất'}
-                </p>
-                <p className={styles.schedule}>
-                  {activity.startsAt
-                    ? `${localDate(activity.startsAt, trip.timezone)} · ${clock(activity.startsAt, trip.timezone)} – ${activity.endsAt && localDate(activity.endsAt, trip.timezone) !== localDate(activity.startsAt, trip.timezone) ? localDate(activity.endsAt, trip.timezone) + ' · ' : ''}${clock(activity.endsAt, trip.timezone)}`
-                    : activity.scheduledDate
-                      ? `${activity.scheduledDate} · Chưa xếp giờ`
-                      : 'Chưa xếp lịch trên server'}
-                </p>
-                {activity.description && <p>{activity.description}</p>}
-                <div className={styles.actions}>
-                  {canEdit && repository.updateActivity && (
-                    <Button
-                      variant="outline"
-                      disabled={locked || !!editing || !!confirm}
-                      onClick={(event) => {
-                        trigger.current = event.currentTarget;
-                        setEditing({ activity, version: plan.planVersion });
-                      }}
-                    >
-                      Sửa trên server
-                    </Button>
-                  )}
-                  {canEdit && repository.deleteActivity && (
-                    <Button
-                      variant="outline"
-                      disabled={locked || !!editing || !!confirm}
-                      onClick={(event) => {
-                        trigger.current = event.currentTarget;
-                        setConfirm(activity);
-                        setConfirmVersion(plan.planVersion);
-                      }}
-                    >
-                      Xóa trên server
-                    </Button>
-                  )}
-                  {canComplete && repository.setActivityCompletion && (
-                    <Button
-                      variant="outline"
-                      disabled={locked || !!editing || !!confirm}
-                      onClick={() => {
-                        const status = activity.status === 'TODO' ? 'COMPLETED' : 'TODO';
-                        void execute({ kind: 'completion', activityId: activity.id, status });
-                      }}
-                    >
-                      {activity.status === 'TODO' ? 'Hoàn tất' : 'Mở lại'}
-                    </Button>
-                  )}
-                  {canEdit && repository.reorderActivities && (
-                    <>
-                      <Button
-                        variant="plain"
-                        disabled={locked || !!editing || !!confirm || index === 0}
-                        onClick={() => void move(activity.id, -1)}
-                      >
-                        Đưa lên
-                      </Button>
-                      <Button
-                        variant="plain"
-                        disabled={locked || !!editing || !!confirm || index === items.length - 1}
-                        onClick={() => void move(activity.id, 1)}
-                      >
-                        Đưa xuống
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-      </ol>
-      {items.length === 0 && <p>Chưa có hoạt động trên server.</p>}
+      <ConfirmDialog
+        open={!!confirm}
+        title="Xóa hoạt động?"
+        description={
+          confirmVersion !== plan.planVersion
+            ? 'Dữ liệu đã thay đổi. Hủy và chọn lại hoạt động sau khi đối chiếu.'
+            : `Xóa “${confirm?.title ?? ''}”? Dress Code gắn với hoạt động cũng có thể bị xóa.`
+        }
+        confirmLabel="Xác nhận xóa"
+        busy={commands.pending}
+        onCancel={close}
+        onConfirm={() => {
+          if (confirm && !locked && canEdit && confirmVersion === plan.planVersion)
+            void execute({ kind: 'delete', activityId: confirm.id }).then((ok) => {
+              if (ok) close();
+            });
+        }}
+      />
+      <RuntimeTimeline
+        trip={trip}
+        plan={plan}
+        disabled={locked || !!editing || !!confirm}
+        canEdit={canEdit}
+        onEdit={(activity) => {
+          trigger.current = document.activeElement as HTMLElement;
+          setEditing({ activity, version: plan.planVersion });
+        }}
+        onDelete={(activity) => {
+          trigger.current = document.activeElement as HTMLElement;
+          setConfirm(activity);
+          setConfirmVersion(plan.planVersion);
+        }}
+        onComplete={(activity) => {
+          void execute({
+            kind: 'completion',
+            activityId: activity.id,
+            status: activity.status === 'TODO' ? 'COMPLETED' : 'TODO',
+          });
+        }}
+        onMove={(id, offset) => void move(id, offset)}
+        onReorder={(activityIds) => {
+          void execute({ kind: 'reorder', activityIds });
+        }}
+        onDay={(activity, day) => {
+          if (activity.startsAt) {
+            setEditing({
+              activity,
+              targetDay: day === 'POOL' ? '' : day,
+              version: plan.planVersion,
+            });
+          } else
+            void execute({
+              kind: 'update',
+              activityId: activity.id,
+              fields: { startsAt: null, endsAt: null, scheduledDate: day === 'POOL' ? null : day },
+            });
+        }}
+      />
     </section>
   );
 }

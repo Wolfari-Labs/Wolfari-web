@@ -1,4 +1,4 @@
-import { Link, useOutletContext } from 'react-router';
+import { useOutletContext } from 'react-router';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from './route-context';
@@ -6,6 +6,7 @@ import { HomePage } from '../features/home/HomePage';
 import { homeScenarios, type HomeScenario, type HomeViewModel } from '../features/home/model/home';
 import { useHomeRepository } from '../features/home/repositories/home-context';
 import { Select } from '../shared/components/Select';
+import { editorialLanding } from '../features/home/editorial-landing';
 export function HomeRoute() {
   const { viewer, previewEnabled } = useOutletContext<RouteContext>();
   const repository = useHomeRepository();
@@ -25,34 +26,15 @@ export function HomeRoute() {
       : (landingQuery.data ?? { status: 'empty' });
   return (
     <>
-      {!previewEnabled && (
-        <section>
-          <h1>{viewer ? `Chào ${viewer.fullName}` : 'Cùng lên kế hoạch với Wolfari'}</h1>
-          <p>Lịch trình cộng tác và quỹ đóng góp thủ công cho chuyến đi của bạn.</p>
-          <Link to={viewer ? '/trips' : '/login'}>
-            {viewer ? 'Chuyến đi của tôi' : 'Đăng nhập'}
-          </Link>
-          {viewer ? (
-            <p>
-              <Link to="/trips/new">Tạo chuyến đi</Link>
-            </p>
-          ) : (
-            <p>
-              <Link to="/register">Tạo tài khoản</Link>
-            </p>
-          )}
-        </section>
-      )}
-      {previewEnabled && (
-        <>
-          <HomePage
-            model={{ viewerName: viewer?.fullName ?? null, landing }}
-            onRetry={() => {
-              void landingQuery.refetch();
-            }}
-          />
-        </>
-      )}
+      <HomePage
+        model={{
+          viewerName: viewer?.fullName ?? null,
+          landing: previewEnabled ? landing : { status: 'ready', data: editorialLanding },
+        }}
+        onRetry={() => {
+          if (previewEnabled) void landingQuery.refetch();
+        }}
+      />
       {previewEnabled && (
         <details className="preview" data-preview="home">
           <summary>Home preview · Dữ liệu minh họa</summary>

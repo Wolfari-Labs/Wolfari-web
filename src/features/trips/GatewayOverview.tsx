@@ -9,8 +9,8 @@ import { PlanSummary } from '../plan/components/PlanSummary';
 import { ContentState } from '../../shared/components/ContentState';
 import { paths } from '../../app/route-paths';
 import { formatVnd, QueryError } from '../fund/GatewayFundPage';
-import { Button } from '../../shared/components/Button';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
+import { Icon } from '../../shared/components/Icon';
 
 export function GatewayOverview() {
   const { tripId = '' } = useParams(),
@@ -65,7 +65,9 @@ export function GatewayOverview() {
           <p>{trip.description}</p>
           <div className={styles.grid}>
             <section className={styles.panel}>
-              <h2>Lịch trình</h2>
+              <h2>
+                <Icon name="plan" /> Lịch trình
+              </h2>
               <PlanSummary
                 trip={trip}
                 result={
@@ -86,14 +88,23 @@ export function GatewayOverview() {
               <Link to={paths.plan(tripId)}>Mở lịch trình chung</Link>
             </section>
             <section className={styles.panel}>
-              <h2>Ngân sách / Quỹ nhóm</h2>
+              <h2>
+                <Icon name="fund" /> Ngân sách / Quỹ nhóm
+              </h2>
               {fundQuery.isError ? (
                 <QueryError error={fundQuery.error} retry={() => void fundQuery.refetch()} />
               ) : fundQuery.isPending ? (
                 <ContentState state="loading" />
               ) : fundQuery.data ? (
                 <>
-                  <p>TEST · {fundQuery.data.status}</p>
+                  <p>
+                    TEST ·{' '}
+                    {
+                      { OPEN: 'Đang mở', CLOSING: 'Đang chốt', CLOSED: 'Đã đóng' }[
+                        fundQuery.data.status
+                      ]
+                    }
+                  </p>
                   <p>Ngân sách: {formatVnd(fundQuery.data.budget_amount)}</p>
                   <p>Số dư ghi sổ: {formatVnd(fundQuery.data.current_balance)}</p>
                   <p>Khả dụng: {formatVnd(fundQuery.data.available_balance)}</p>
@@ -104,12 +115,14 @@ export function GatewayOverview() {
               <Link to={paths.fund(tripId)}>Mở quỹ nhóm</Link>
             </section>
             <section className={styles.panel}>
-              <h2>Thành viên</h2>
+              <h2>
+                <Icon name="members" /> Thành viên
+              </h2>
               {memberQuery.data?.status === 'ready' ? (
                 <p>
                   {memberQuery.data.data.items.length} thành viên
                   {memberQuery.data.data.nextCursor
-                    ? ' đã tải, còn trang tiếp theo — chưa phải tổng'
+                    ? ' đã tải · Xem danh sách đầy đủ bên dưới'
                     : ' đang hoạt động'}
                 </p>
               ) : memberQuery.data?.status === 'error' ? (
@@ -124,28 +137,27 @@ export function GatewayOverview() {
               <Link to={paths.members(tripId)}>Thành viên, quyền và lời mời</Link>
             </section>
             <section className={styles.panel}>
-              <h2>Packing list</h2>
+              <h2>
+                <Icon name="packing" /> Packing list
+              </h2>
               {plan ? (
                 <p>
                   {plan.packingItems.filter((i) => i.status === 'COMPLETED').length}/
-                  {plan.packingItems.length} mục đã hoàn tất · chỉ đọc, writer sau demo1.
+                  {plan.packingItems.length} mục đã hoàn tất · hiện chỉ xem.
                 </p>
               ) : (
-                <p>Chưa đọc được dữ liệu Plan. Không suy thành 0.</p>
+                <p>Chưa tải được danh sách hành lý.</p>
               )}
               <Link to={paths.packing(tripId)}>Xem danh sách</Link>
             </section>
           </div>
-          <section className={styles.panel}>
-            <h2>Phạm vi demo1</h2>
+          <details className={styles.panel}>
+            <summary>Các tính năng chưa khả dụng</summary>
             <p>
-              Thời tiết, DSS/provider, Export/Share, Admin và thanh toán thật chưa mở. Map/Locations
-              và Dress Code chỉ đọc dữ liệu server; không tự xuất bản bản nháp cũ.
+              Thời tiết và chia sẻ công khai chưa khả dụng. Địa điểm, trang phục và hành lý hiện chỉ
+              hỗ trợ xem.
             </p>
-            <Button variant="outline" disabled title="Sau demo1">
-              Export / Chia sẻ công khai — sau demo1
-            </Button>
-          </section>
+          </details>
         </>
       )}
     </section>

@@ -1,6 +1,7 @@
 import type { PriceWatchRepository } from '../../features/price-watch/model/price-watch';
 
-/** Price Watch has no public Web contract yet; keep the production adapter unavailable. */
+/** Legacy read-model boundary. Production uses runtime-price-watch.gateway-repository;
+ * never substitute preview fixtures when the runtime service is unavailable. */
 export function createGatewayPriceWatchRepository(
   reader?: PriceWatchRepository['getPriceWatch'],
 ): PriceWatchRepository {

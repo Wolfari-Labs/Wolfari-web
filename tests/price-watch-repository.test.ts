@@ -3,7 +3,9 @@ import { createFixturePriceWatchRepository } from '../src/infrastructure/fixture
 import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
 
 const request = (
-  scenario: Parameters<ReturnType<typeof createFixturePriceWatchRepository>['getPriceWatch']>[0]['scenario'] = 'success',
+  scenario: Parameters<
+    ReturnType<typeof createFixturePriceWatchRepository>['getPriceWatch']
+  >[0]['scenario'] = 'success',
 ) => ({ tripId: previewTripId, scenario, signal: new AbortController().signal });
 
 describe('PriceWatch fixture repository', () => {
@@ -19,10 +21,14 @@ describe('PriceWatch fixture repository', () => {
   });
 
   it('keeps the last price when the provider fails', async () => {
-    const result = await createFixturePriceWatchRepository().getPriceWatch(request('provider-error'));
+    const result = await createFixturePriceWatchRepository().getPriceWatch(
+      request('provider-error'),
+    );
     expect(result.status).toBe('ready');
     if (result.status !== 'ready') return;
-    expect(result.data.watches[0]?.status).toBe('PROVIDER_ERROR');
+    expect(result.data.watches[0]?.status).toBe('ACTIVE');
+    expect(result.data.watches[0]?.dataQuality).toBe('PROVIDER_ERROR');
+    expect(result.data.watches[0]?.passengers).toEqual({ adults: 1, children: 0, infants: 0 });
     expect(result.data.watches[0]?.latestPriceVnd).toBe('2350000');
     expect(result.data.watches[0]?.observedAt).toBe('2026-09-03T10:00:00+07:00');
     expect(result.data.watches[0]?.observations.at(-1)?.priceVnd).toBeNull();

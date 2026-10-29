@@ -1,3 +1,9 @@
+.bellPlaceholder {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
 .shell {
   min-height: 100dvh;
   --desktop-header-height: var(--header-height);
@@ -85,7 +91,7 @@
   height: 20px;
 }
 .headerNav a[aria-current='page'] {
-  color: #079fc5;
+  color: var(--color-action-primary);
 }
 .headerNav a[aria-current='page']::after {
   content: '';
@@ -99,6 +105,11 @@
 }
 .account,
 .profile {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 14px;
+  padding: 4px 8px;
+  transition: background-color 160ms ease;
   min-height: var(--target-min);
   display: flex;
   align-items: center;
@@ -116,6 +127,38 @@
   font-weight: 600;
   color: #075495;
   white-space: nowrap;
+}
+.profileGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--target-min);
+}
+.profileChevron {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #075495;
+}
+.profileChevron:hover,
+.profileChevron[data-state='open'] {
+  background: var(--color-pale);
+}
+.profileChevron[data-state='open'] svg {
+  transform: rotate(180deg);
+}
+.profile:hover,
+.profile[data-state='open'] {
+  background: var(--color-pale);
+}
+.accountName {
+  max-width: 145px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .bell {
   min-width: var(--target-min);
@@ -245,7 +288,7 @@
 .sidebar nav .selectedSection,
 .collapsed nav .selectedSection {
   background: #e8f7fa;
-  color: #079fc5;
+  color: var(--color-action-primary);
 }
 .selectedSection::before {
   position: absolute;
@@ -296,7 +339,7 @@
   margin-top: auto;
   border: 0;
   background: white;
-  color: #6c8bb2;
+  color: var(--color-muted);
   padding: 0;
   min-height: 60px;
   font-size: 13px;
@@ -319,7 +362,7 @@
 }
 
 .collapseIconReversed {
-  transform: scaleX(-1);
+  transform: none;
 }
 .main {
   flex: 1;
@@ -532,4 +575,26 @@
 .listMain > :global(.preview),
 .listMain > h1 {
   margin: 24px;
+}
+.mobileAccountActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  justify-self: end;
+}
+.sidebar nav svg,
+.collapsed nav svg,
+.headerNav svg {
+  flex-shrink: 0;
+}
+.sidebar nav a,
+.collapsed nav a {
+  transition:
+    background 160ms,
+    box-shadow 160ms;
+}
+.sidebar nav a:hover,
+.collapsed nav a:hover {
+  background: var(--color-pale);
+  box-shadow: var(--shadow-selection);
 }

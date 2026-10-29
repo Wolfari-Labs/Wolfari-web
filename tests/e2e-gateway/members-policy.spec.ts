@@ -6,8 +6,9 @@ const memberTripId = '33333333-3333-4333-8333-333333333333';
 async function openOwnerMembers(page: Parameters<typeof login>[0]) {
   await login(page);
   await page.goto(`/trips/${ownerTripId}/members`);
-  await expect(page.getByText('Trang Gateway', { exact: true })).toBeVisible();
-  return page.getByRole('region', { name: 'Danh sách thành viên' });
+  const region = page.getByRole('region', { name: 'Danh sách thành viên' });
+  await expect(region.getByText('Trang Gateway', { exact: true })).toBeVisible();
+  return region;
 }
 
 test('HTTP mock: Members pagination preserves opaque cursors, deduplicates IDs, and reveals departed rows only on request', async ({
@@ -15,7 +16,9 @@ test('HTTP mock: Members pagination preserves opaque cursors, deduplicates IDs, 
   gateway,
 }) => {
   const region = await openOwnerMembers(page);
-  const first = gateway.calls.find((call) => call.method === 'GET' && call.path.endsWith('/members'))!;
+  const first = gateway.calls.find(
+    (call) => call.method === 'GET' && call.path.endsWith('/members'),
+  )!;
   const firstQuery = new URLSearchParams(first.query);
   expect(firstQuery.get('limit')).toBe('100');
   expect(firstQuery.get('include_left')).toBe('false');
@@ -23,7 +26,9 @@ test('HTTP mock: Members pagination preserves opaque cursors, deduplicates IDs, 
 
   await region.getByRole('button', { name: 'Tải thêm thành viên' }).click();
   await expect(region.getByText('2 thành viên đã tải')).toBeVisible();
-  const memberReads = gateway.calls.filter((call) => call.method === 'GET' && call.path.endsWith('/members'));
+  const memberReads = gateway.calls.filter(
+    (call) => call.method === 'GET' && call.path.endsWith('/members'),
+  );
   expect(new URLSearchParams(memberReads[1]!.query).get('cursor')).toBe('member-page/+==');
   await expect(region.locator('ul > li')).toHaveCount(2);
   await expect(region.getByText('Trang Gateway', { exact: true })).toHaveCount(1);
@@ -69,9 +74,11 @@ test('HTTP mock: active Owner saves basic policy and confirms it from the refres
 }) => {
   await openOwnerMembers(page);
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
-  await page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }).selectOption('ALL_MEMBERS');
+  await page
+    .getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })
+    .selectOption('ALL_MEMBERS');
   await page.getByRole('button', { name: 'Lưu quyền' }).click();
-  await expect(page.getByText('Đã xác nhận quyền và danh sách Editor từ server.')).toBeVisible();
+  await expect(page.getByText('Đã lưu quyền sửa lịch trình.')).toBeVisible();
 
   const writes = gateway.calls.filter(
     (call) => call.method === 'PUT' && call.path === `/api/v1/trips/${ownerTripId}/plan-policy`,
@@ -83,7 +90,9 @@ test('HTTP mock: active Owner saves basic policy and confirms it from the refres
     expected_membership_revision: 1,
   });
   expect(writes[0]!.idempotencyKey).toBeTruthy();
-  expect(gateway.trips.find((trip) => trip.id === ownerTripId)?.plan_edit_policy).toBe('ALL_MEMBERS');
+  expect(gateway.trips.find((trip) => trip.id === ownerTripId)?.plan_edit_policy).toBe(
+    'ALL_MEMBERS',
+  );
   expect(
     gateway.calls.filter(
       (call) => call.method === 'GET' && call.path === `/api/v1/trips/${ownerTripId}`,
@@ -103,7 +112,9 @@ test('HTTP mock: policy conflict refetches membership revision and requires a ne
   await openOwnerMembers(page);
   gateway.planPolicyConflictOnce = true;
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
-  await page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }).selectOption('ALL_MEMBERS');
+  await page
+    .getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })
+    .selectOption('ALL_MEMBERS');
   await page.getByRole('button', { name: 'Lưu quyền' }).click();
   await expect(page.getByText(/Quyền chuyến đi đã thay đổi/)).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })).toHaveValue(
@@ -113,15 +124,19 @@ test('HTTP mock: policy conflict refetches membership revision and requires a ne
     (call) => call.method === 'PUT' && call.path === `/api/v1/trips/${ownerTripId}/plan-policy`,
   );
   expect(writes).toHaveLength(1);
-  expect((writes[0]!.body as { expected_membership_revision: number }).expected_membership_revision).toBe(1);
+  expect(
+    (writes[0]!.body as { expected_membership_revision: number }).expected_membership_revision,
+  ).toBe(1);
 
   await page.getByRole('button', { name: 'Lưu quyền' }).click();
-  await expect(page.getByText('Đã xác nhận quyền và danh sách Editor từ server.')).toBeVisible();
+  await expect(page.getByText('Đã lưu quyền sửa lịch trình.')).toBeVisible();
   writes = gateway.calls.filter(
     (call) => call.method === 'PUT' && call.path === `/api/v1/trips/${ownerTripId}/plan-policy`,
   );
   expect(writes).toHaveLength(2);
-  expect((writes[1]!.body as { expected_membership_revision: number }).expected_membership_revision).toBe(2);
+  expect(
+    (writes[1]!.body as { expected_membership_revision: number }).expected_membership_revision,
+  ).toBe(2);
   expect(writes[1]!.idempotencyKey).not.toBe(writes[0]!.idempotencyKey);
 });
 
@@ -132,7 +147,9 @@ test('HTTP mock: unknown policy outcome is not called saved and retry reuses the
   await openOwnerMembers(page);
   gateway.planPolicyUnknownOnce = true;
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
-  await page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }).selectOption('ALL_MEMBERS');
+  await page
+    .getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })
+    .selectOption('ALL_MEMBERS');
   await page.getByRole('button', { name: 'Lưu quyền' }).click();
   await expect(page.getByText(/Chưa rõ kết quả/)).toBeVisible();
   await expect(page.getByText(/Đã xác nhận quyền mới/)).toHaveCount(0);
@@ -140,9 +157,11 @@ test('HTTP mock: unknown policy outcome is not called saved and retry reuses the
   await page.reload();
   await page.getByRole('button', { name: 'Quyền sửa lịch trình', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })).toBeDisabled();
-  await expect(page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })).toHaveValue('ALL_MEMBERS');
+  await expect(page.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })).toHaveValue(
+    'ALL_MEMBERS',
+  );
   await page.getByRole('button', { name: 'Thử lại cùng yêu cầu quyền' }).click();
-  await expect(page.getByText('Đã xác nhận quyền và danh sách Editor từ server.')).toBeVisible();
+  await expect(page.getByText('Đã lưu quyền sửa lịch trình.')).toBeVisible();
   const writes = gateway.calls.filter(
     (call) => call.method === 'PUT' && call.path === `/api/v1/trips/${ownerTripId}/plan-policy`,
   );
@@ -170,15 +189,19 @@ test('HTTP mock: SELECTED uses membership IDs; OWNER_ONLY preserves inactive ass
   );
   await page.getByRole('checkbox', { name: 'Member Gateway', exact: true }).check();
   await page.getByRole('button', { name: 'Lưu quyền' }).click();
-  await expect(page.getByText('Đã xác nhận quyền và danh sách Editor từ server.')).toBeVisible();
+  await expect(page.getByText('Đã lưu quyền sửa lịch trình.')).toBeVisible();
   const memberId = 'b1111111-1111-4111-8111-111111111111';
   expect(gateway.editorAssignments.get(ownerTripId)).toEqual([memberId]);
   await page.getByLabel('Ai có thể sửa lịch trình').selectOption('OWNER_ONLY');
   await page.getByRole('button', { name: 'Lưu quyền' }).click();
-  await expect(page.getByText('Đã xác nhận quyền và danh sách Editor từ server.')).toBeVisible();
+  await expect(page.getByText('Đã lưu quyền sửa lịch trình.')).toBeVisible();
   expect(gateway.editorAssignments.get(ownerTripId)).toEqual([memberId]);
-  const writes = gateway.calls.filter(call => call.method === 'PUT' && call.path.endsWith('/plan-policy'));
-  expect(writes.map(call => (call.body as { editor_member_ids: string[] }).editor_member_ids)).toEqual([[memberId], []]);
+  const writes = gateway.calls.filter(
+    (call) => call.method === 'PUT' && call.path.endsWith('/plan-policy'),
+  );
+  expect(
+    writes.map((call) => (call.body as { editor_member_ids: string[] }).editor_member_ids),
+  ).toEqual([[memberId], []]);
   await page.reload();
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
   await page.getByLabel('Ai có thể sửa lịch trình').selectOption('SELECTED_MEMBERS');

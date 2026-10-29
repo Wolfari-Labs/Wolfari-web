@@ -344,7 +344,7 @@ function ManagementCard({
       <div className={styles.memberHeading}>
         <div>
           <h2 id="management-heading">Thành viên &amp; nhắc nhở</h2>
-          <p>Chủ sở hữu (Owner): {owner ?? 'Xem trong danh sách thành viên'}</p>
+          <p>Chủ chuyến: {owner ?? 'Xem trong danh sách thành viên'}</p>
         </div>
         <ButtonLink variant="outline" to={paths.members(trip.id)}>
           Quản lý thành viên
@@ -352,47 +352,23 @@ function ManagementCard({
       </div>
       <div className={styles.separator} />
       <section className={styles.settingSection} aria-labelledby="reminders-heading">
-        <h3 id="reminders-heading">Cài đặt nhắc nhở</h3>
-        {[
-          ['Nhắc nhở trước chuyến đi', '1 ngày trước'],
-          ['Nhắc lịch trình trong ngày', 'Buổi sáng 08:00'],
-          ['Thông báo khi có thay đổi', 'Bật'],
-        ].map(([label, value]) => (
-          <div className={styles.reminderRow} key={label}>
-            <span className={styles.disabledCheck} aria-hidden="true">
-              ✓
-            </span>
-            <span>{label}</span>
-            <button disabled title="Cài đặt nhắc nhở chưa được hỗ trợ">
-              {value}
-            </button>
-          </div>
-        ))}
-        <p className={styles.capabilityNote}>Nhắc nhở chưa hỗ trợ cấu hình trên Web.</p>
+        <h3 id="reminders-heading">Tùy chọn thông báo</h3>
+        <p className={styles.capabilityNote}>
+          Chọn kênh nhận và loại thông báo trong hồ sơ của bạn.
+        </p>
+        <ButtonLink variant="outline" to={`${paths.profile}#notifications`}>
+          Mở tùy chọn thông báo
+        </ButtonLink>
       </section>
       <div className={styles.separator} />
       <section className={styles.settingSection} aria-labelledby="trip-management-heading">
         <h3 id="trip-management-heading">Quản lý chuyến đi</h3>
-        <div className={styles.managementGrid}>
-          <div>
-            <button disabled title="Lưu trữ chuyến đi chưa được hỗ trợ">
-              Lưu trữ chuyến đi
-            </button>
-            <p>Chưa hỗ trợ trong phiên bản này.</p>
-          </div>
-          <div>
-            <button disabled title="Chuyển quyền Owner chưa được hỗ trợ">
-              Chuyển quyền Owner
-            </button>
-            <p>Chưa hỗ trợ trong phiên bản này.</p>
-          </div>
-          <div className={styles.dangerCard}>
-            <button disabled title="Xóa chuyến đi chưa được hỗ trợ">
-              Xóa chuyến đi
-            </button>
-            <p>Chưa hỗ trợ trong phiên bản này.</p>
-          </div>
-        </div>
+        <details>
+          <summary>Tác vụ chưa khả dụng</summary>
+          <p className={styles.capabilityNote}>
+            Lưu trữ, chuyển chủ chuyến và xóa chuyến đi chưa được hỗ trợ.
+          </p>
+        </details>
         <div className={styles.fundNote}>
           <strong>Quỹ nhóm được quản lý riêng</strong>
           <span>Kiểm tra trạng thái quỹ trước khi thay đổi vòng đời chuyến đi.</span>

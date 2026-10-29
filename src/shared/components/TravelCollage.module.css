@@ -47,7 +47,7 @@
   background: #fff7cc;
   color: #008ca9;
   font:
-    400 3.85cqw/1.56 'Kalam',
+    400 3.85cqw/1.56 'Patrick Hand',
     cursive;
   transform: rotate(-8deg);
   box-shadow: 0 5px 5px #05458c1a;
@@ -75,7 +75,7 @@
   text-align: center;
   color: #0089c5;
   font:
-    700 2.77cqw/1.3 'Kalam',
+    400 2.77cqw/1.3 'Patrick Hand',
     cursive;
 }
 .daLat {

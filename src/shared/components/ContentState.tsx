@@ -28,9 +28,9 @@ export function ContentState({
 }) {
   const [title, description] =
     state === 'unavailable'
-      ? ['Chức năng chưa khả dụng', 'Phần này chưa được tích hợp.']
+      ? ['Chức năng chưa khả dụng', 'Bạn có thể tiếp tục ở những mục khác của chuyến đi.']
       : error
-        ? messages[error.code as keyof typeof messages] ?? messages.SERVICE_UNAVAILABLE
+        ? (messages[error.code as keyof typeof messages] ?? messages.SERVICE_UNAVAILABLE)
         : state === 'error'
           ? messages.SERVICE_UNAVAILABLE
           : state === 'loading'
@@ -39,7 +39,7 @@ export function ContentState({
               ? ['Chưa có nội dung', 'Nội dung sẽ xuất hiện tại đây khi có dữ liệu.']
               : state === 'not-found'
                 ? ['Không tìm thấy trang', 'Chọn một mục trong thanh điều hướng để tiếp tục.']
-                : ['Không gian làm việc', 'Nội dung màn hình sẽ được triển khai ở flow tiếp theo.'];
+                : ['Không gian làm việc', 'Chọn một mục trong thanh điều hướng để bắt đầu.'];
   const Heading = headingLevel === 1 ? 'h1' : 'h2';
   return (
     <section
@@ -50,7 +50,12 @@ export function ContentState({
       {state === 'loading' && <Skeleton className={styles.skeleton} />}
       <Heading>{title}</Heading>
       <p>{description}</p>
-      {error?.correlationId && <small>Mã đối chiếu: {error.correlationId}</small>}
+      {error?.correlationId && (
+        <details>
+          <summary>Chi tiết hỗ trợ</summary>
+          <small>Mã đối chiếu: {error.correlationId}</small>
+        </details>
+      )}
       {onRetry && (error?.retryable || error?.code === 'VERSION_CONFLICT') && (
         <Button variant="outline" onClick={onRetry}>
           Tải lại

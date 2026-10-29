@@ -2,7 +2,8 @@ import { Link } from 'react-router';
 import type { ReactNode } from 'react';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSnapshot } from '../model/shell';
-import { assets } from '../../../shared/assets/asset-map';
+import logo from '../../../shared/assets/figma/44363.png';
+import adminMascot from '../../../shared/assets/figma/24d7e.png';
 import { NavigationButton } from '../../../shared/components/NavigationButton';
 import styles from './AdminChrome.module.css';
 import adminBell from '../../../shared/assets/figma/06423.svg';
@@ -48,7 +49,7 @@ export function AdminSidebar({ children }: { children: ReactNode }) {
     <div className={styles.sidebar} data-node-id="197:1074">
       <div className={styles.brand}>
         <Link to={paths.home} aria-label="Wolfari · Trang chủ">
-          <img src={assets['44363.png']} alt="Wolfari" />
+          <img src={logo} alt="Wolfari" />
         </Link>
         <span>
           TRUNG TÂM
@@ -58,7 +59,7 @@ export function AdminSidebar({ children }: { children: ReactNode }) {
       </div>
       {children}
       <div className={styles.reminder}>
-        <img src={assets['24d7e.png']} alt="" />
+        <img src={adminMascot} alt="" />
         <p>
           Quản trị hệ thống
           <br />

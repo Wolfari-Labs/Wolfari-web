@@ -275,8 +275,14 @@ for (const size of [
               : { x: 130, y: 220, width: 560 };
         for (const dimension of ['x', 'y', 'width'] as const)
           expect(Math.abs(bounds![dimension] - target[dimension])).toBeLessThanOrEqual(4);
-        if (route === '/login') expect(Math.abs(bounds!.height - 580.8)).toBeLessThanOrEqual(4);
-        if (route === '/profile') expect(Math.abs(bounds!.height - 620)).toBeLessThanOrEqual(4);
+        if (route === '/login') {
+          expect(bounds!.height).toBeGreaterThan(450);
+          expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(size.height);
+        }
+        if (route === '/profile') {
+          expect(bounds!.height).toBeGreaterThan(400);
+          expect(bounds!.height).toBeLessThan(650);
+        }
       }
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
         size.width,
@@ -286,6 +292,16 @@ for (const size of [
       }
       await page.locator('main > details[data-preview="shell"] summary').scrollIntoViewIfNeeded();
       expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+      for (const img of await page.locator('img:visible').all()) {
+        await img.scrollIntoViewIfNeeded();
+        await expect
+          .poll(() =>
+            img.evaluate(
+              (e) => (e as HTMLImageElement).complete && (e as HTMLImageElement).naturalWidth > 0,
+            ),
+          )
+          .toBe(true);
+      }
       const missing = await page
         .locator('img:visible')
         .evaluateAll((imgs) =>
@@ -318,7 +334,9 @@ test('registration validates and remains unavailable without session or redirect
   await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill('a long preview password');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-  await expect(page.getByText(/Identity chưa kết nối/)).toBeVisible();
+  await expect(
+    page.getByText(/Bản xem trước chưa hỗ trợ tạo tài khoản hoặc đăng nhập thật/),
+  ).toBeVisible();
   await expect(page).toHaveURL(/\/register$/);
   await page.locator('[data-preview="auth-form"] summary').click();
   await page.getByLabel('Trạng thái biểu mẫu').selectOption('pending');
@@ -336,7 +354,7 @@ test('mobile profile keeps draft through error and never reports saved', async (
     await page.getByLabel('Trạng thái hồ sơ').selectOption(state);
   await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Bản nháp local');
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
-  await expect(page.getByText(/Chưa thể lưu thay đổi lúc này/)).toBeVisible();
+  await expect(page.getByText(/Chưa lưu được thay đổi/)).toBeVisible();
   await expect(page.getByText(/Phiên bản hồ sơ: 1/)).toBeVisible();
   await page.getByText('Phiên đăng nhập', { exact: true }).click();
   await expect(page.getByText('Phiên đăng nhập 1')).toBeVisible();

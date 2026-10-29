@@ -15,6 +15,8 @@ import { useTripRepository } from '../trips/repositories/repository-context';
 import { useMembersRepositories } from '../members/repositories/members-context';
 import { TripHero } from '../trips/components/TripHero';
 import { paths } from '../../app/route-paths';
+import { Icon } from '../../shared/components/Icon';
+import { Badge } from '../../shared/components/Ui';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
@@ -236,7 +238,7 @@ function FundCommandForm({
             maxLength={30}
             onChange={(e) => setBank(e.target.value)}
             required
-            hint="Ví dụ VCB; dùng dữ liệu TEST, không tải QR bên ngoài."
+            hint="Ví dụ: VCB. Chỉ dùng dữ liệu thử nghiệm."
           />
           <Input
             label="Số tài khoản TEST"
@@ -265,10 +267,7 @@ function FundCommandForm({
             />{' '}
             Đích mặc định
           </label>
-          <p>
-            Holder phải xác nhận phiên bản này trước khi tạo đợt thu, kể cả khi Owner và Holder là
-            một người.
-          </p>
+          <p>Người giữ quỹ cần xác nhận thông tin nhận tiền trước khi tạo đợt thu.</p>
         </>
       )}
       {(kind === 'request-create' || kind === 'request-edit') && (
@@ -293,7 +292,7 @@ function FundCommandForm({
             onChange={(e) => setDue(e.target.value)}
             hint={
               request?.due_at
-                ? `Đang lưu: ${new Date(request.due_at).toLocaleString('vi-VN', { timeZone: trip.timezone })}. Để trống giữ nguyên; API chưa hỗ trợ xóa hạn.`
+                ? `Đang lưu: ${new Date(request.due_at).toLocaleString('vi-VN', { timeZone: trip.timezone })}. Để trống để giữ nguyên hạn thu.`
                 : 'Không bắt buộc.'
             }
           />
@@ -312,7 +311,7 @@ function FundCommandForm({
                   )
                   .map((d) => (
                     <option key={d.id} value={d.id}>
-                      {d.account_name ?? d.id.slice(0, 8)} · v{d.version}
+                      {d.account_name ?? 'Tài khoản nhận'} · {d.bank_code} · {d.account_number}
                     </option>
                   ))}
               </Select>
@@ -360,8 +359,8 @@ function FundCommandForm({
       )}
       {kind === 'destination-confirm' && (
         <p>
-          Xác nhận trách nhiệm với đúng phiên bản đích nhận v{resource?.version}. Đây không phải xác
-          minh ngân hàng.
+          Xác nhận trách nhiệm với thông tin nhận tiền này. Thao tác không xác minh tài khoản ngân
+          hàng.
         </p>
       )}
       <Button type="submit" loading={pending} disabled={pending}>
@@ -497,10 +496,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       ) : !fund ? (
         <section className={styles.panel}>
           <h2>Chuyến đi chưa bật quỹ</h2>
-          <p>
-            Quyền đọc chuyến đi đã được xác nhận. Owner chọn một Holder đang hoạt động và nhập đích
-            nhận TEST.
-          </p>
+          <p>Chủ chuyến có thể chọn người giữ quỹ và thêm thông tin nhận tiền thử nghiệm.</p>
           {owner && (
             <Button disabled={blocked || !members.length} onClick={() => open('enable')}>
               Bật quỹ TEST
@@ -509,17 +505,28 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
         </section>
       ) : (
         <>
-          <section className={styles.panel} aria-label="Trạng thái quỹ thật">
-            <h2>Quỹ nhóm · {fund.status}</h2>
-            <p>TEST · Chỉ ghi nhận thủ công, không chuyển tiền thật.</p>
+          <section className={styles.panel} aria-label="Trạng thái quỹ">
+            <h2>
+              <Icon name="fund" />
+              Quỹ nhóm{' '}
+              <Badge>
+                {(
+                  { OPEN: 'Đang mở', CLOSED: 'Đã đóng', CLOSING: 'Đang chốt' } as Record<
+                    string,
+                    string
+                  >
+                )[fund.status] ?? fund.status}
+              </Badge>
+            </h2>
             <p>
-              Holder: {name(fund.holder_user_id)} · {owner ? 'Bạn là Owner. ' : ''}
-              {holder ? 'Bạn là Holder.' : ''} · Finance v{fund.finance_version}
+              <Badge tone="warning">TEST</Badge> · Chỉ ghi nhận thủ công, không chuyển tiền thật.
+            </p>
+            <p>
+              Người giữ quỹ: {name(fund.holder_user_id)} · {owner ? 'Bạn là chủ chuyến. ' : ''}
+              {holder ? 'Bạn là người giữ quỹ.' : ''}
             </p>
             {fund.status !== 'OPEN' && (
-              <Alert>
-                Quỹ đang đóng/đã đóng: chỉ đọc. Writer closure, refund và expense nằm sau demo1.
-              </Alert>
+              <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
             )}
             <div className={styles.grid}>
               {[
@@ -528,7 +535,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 ['Đang giữ cho hoàn dư', fund.reserved_refund],
                 ['Số dư khả dụng', fund.available_balance],
               ].map(([label, value]) => (
-                <div key={label}>
+                <div key={label} className={styles.stat}>
                   <p>{label}</p>
                   <strong className={styles.money}>{formatVnd(value ?? null)}</strong>
                 </div>
@@ -544,6 +551,12 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 </Button>
               </div>
             )}
+            <details>
+              <summary>Chi tiết hỗ trợ</summary>
+              <p>
+                Mã quỹ: {fund.id} · Finance version: {fund.finance_version}
+              </p>
+            </details>
           </section>
           <section className={styles.panel} aria-label="Đích nhận">
             <h2>Đích nhận TEST</h2>
@@ -556,12 +569,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 {destinations.data.map((d) => (
                   <li key={d.id}>
                     <strong>
-                      {d.destination_type} · v{d.version} · {d.active ? 'Đang hoạt động' : 'Đã tắt'}
+                      {d.destination_type === 'VIETQR' ? 'Tài khoản ngân hàng' : 'MOMO SANDBOX'} ·{' '}
+                      {d.active ? 'Đang hoạt động' : 'Đã tắt'}
                     </strong>
                     <p>
                       {d.confirmed_by_holder_at
-                        ? 'Holder đã xác nhận phiên bản này'
-                        : 'Chưa được Holder xác nhận'}
+                        ? 'Người giữ quỹ đã xác nhận'
+                        : 'Chờ người giữ quỹ xác nhận'}
                     </p>
                     {d.account_name && (
                       <p>
@@ -591,7 +605,10 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             )}
           </section>
           <section className={styles.panel} aria-label="Đợt thu">
-            <h2>Đợt thu</h2>
+            <h2>
+              <Icon name="plan" />
+              Đợt thu
+            </h2>
             {owner && (
               <Button
                 disabled={
@@ -605,14 +622,28 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 Tạo đợt thu
               </Button>
             )}
+            {requests.isPending && <ContentState state="loading" />}
+            {requests.isSuccess && !data(requests.data?.pages).length && <p>Chưa có đợt thu.</p>}
             {requests.isError && (
-              <QueryError error={requests.error} retry={() => void requests.refetch()} />
+              <QueryError
+                error={requests.error}
+                retry={() =>
+                  void (requests.isFetchNextPageError
+                    ? requests.fetchNextPage()
+                    : requests.refetch())
+                }
+              />
             )}
             <ul className={styles.list}>
               {data(requests.data?.pages).map((r) => (
                 <li key={r.id}>
                   <strong>
-                    {r.title} · {r.status}
+                    {r.title} ·{' '}
+                    {r.status === 'OPEN'
+                      ? 'Đang thu'
+                      : r.status === 'CANCELLED'
+                        ? 'Đã hủy'
+                        : 'Đã đóng'}
                   </strong>
                   <p>
                     {r.note ?? 'Không có ghi chú'} · {r.contributions.length} khoản trong đợt
@@ -637,7 +668,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             </ul>
             {requests.hasNextPage && (
               <Button
-                disabled={requests.isFetchingNextPage}
+                loading={requests.isFetchingNextPage}
                 onClick={() => void requests.fetchNextPage()}
               >
                 Tải thêm đợt thu
@@ -645,9 +676,23 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             )}
           </section>
           <section className={styles.panel} aria-label="Các khoản đóng góp">
-            <h2>Các khoản đóng góp</h2>
+            <h2>
+              <Icon name="members" />
+              Các khoản đóng góp
+            </h2>
+            {contributions.isPending && <ContentState state="loading" />}
+            {contributions.isSuccess && !data(contributions.data?.pages).length && (
+              <p>Chưa có khoản đóng góp.</p>
+            )}
             {contributions.isError && (
-              <QueryError error={contributions.error} retry={() => void contributions.refetch()} />
+              <QueryError
+                error={contributions.error}
+                retry={() =>
+                  void (contributions.isFetchNextPageError
+                    ? contributions.fetchNextPage()
+                    : contributions.refetch())
+                }
+              />
             )}
             <ul className={styles.list}>
               {data(contributions.data?.pages).map((c) => (
@@ -655,9 +700,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   <strong>
                     {name(c.member_user_id)} · {formatVnd(c.amount)}
                   </strong>
-                  <p>
-                    {statusLabels[c.status]} · v{c.version}
-                  </p>
+                  <p>{statusLabels[c.status]}</p>
                   {c.rejected_reason && <p>Lý do từ chối gần nhất: {c.rejected_reason}</p>}
                   {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
                   {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
@@ -721,27 +764,44 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             </ul>
             {contributions.hasNextPage && (
               <Button
-                disabled={contributions.isFetchingNextPage}
+                loading={contributions.isFetchingNextPage}
                 onClick={() => void contributions.fetchNextPage()}
               >
                 Tải thêm khoản đóng
               </Button>
             )}
-            <p className={styles.metadata}>
-              Danh sách có phân trang. Không suy tổng quỹ từ các khoản đã tải. Owner không có quyền
-              báo chuyển hoặc xác nhận thay người khác.
-            </p>
           </section>
-          <section className={styles.panel} aria-label="Ledger">
-            <h2>Sổ quỹ (ledger)</h2>
+          <section className={styles.panel} aria-label="Lịch sử quỹ">
+            <h2>
+              <Icon name="fund" />
+              Lịch sử quỹ
+            </h2>
+            {ledger.isPending && <ContentState state="loading" />}
+            {ledger.isSuccess && !data(ledger.data?.pages).length && (
+              <p>Chưa có giao dịch được ghi nhận.</p>
+            )}
             {ledger.isError && (
-              <QueryError error={ledger.error} retry={() => void ledger.refetch()} />
+              <QueryError
+                error={ledger.error}
+                retry={() =>
+                  void (ledger.isFetchNextPageError ? ledger.fetchNextPage() : ledger.refetch())
+                }
+              />
             )}
             <ul className={styles.list}>
               {data(ledger.data?.pages).map((row) => (
                 <li key={row.id}>
                   <strong>
-                    #{row.sequence} · {row.direction} · {row.transaction_type} ·{' '}
+                    #{row.sequence} ·{' '}
+                    {
+                      {
+                        CONTRIBUTION: 'Đóng góp',
+                        EXPENSE: 'Chi quỹ',
+                        REFUND: 'Hoàn tiền',
+                        REVERSAL: 'Điều chỉnh',
+                      }[row.transaction_type]
+                    }{' '}
+                    · {row.direction === 'IN' ? '+ ' : '− '}
                     {formatVnd(row.amount)}
                   </strong>
                   <p>Số dư sau bút toán: {formatVnd(row.balance_after)}</p>
@@ -750,16 +810,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             </ul>
             {ledger.hasNextPage && (
               <Button
-                disabled={ledger.isFetchingNextPage}
+                loading={ledger.isFetchingNextPage}
                 onClick={() => void ledger.fetchNextPage()}
               >
-                Tải thêm ledger
+                Tải thêm lịch sử
               </Button>
             )}
-            <p>
-              Chỉ đọc ledger đã ghi trên server. Chi quỹ, hoàn dư, đảo bút toán và đóng quỹ chưa mở
-              trên Web demo1.
-            </p>
+            <p>Lịch sử ghi nhận của quỹ. Các nghiệp vụ chi, hoàn dư và đóng quỹ chưa khả dụng.</p>
           </section>
         </>
       )}

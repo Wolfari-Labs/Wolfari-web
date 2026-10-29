@@ -25,7 +25,7 @@ function observation(
     observedAt,
     priceVnd,
     status,
-    provider: 'Fixture Air Search',
+    provider: 'MOCK_FLIGHT · Minh họa',
     note,
   };
 }
@@ -51,9 +51,9 @@ function watch({
 }): PriceWatchItem {
   const journeyType: JourneyType = id.endsWith('2') ? 'ROUND_TRIP' : 'ONE_WAY';
   const cabin: CabinClass = id.endsWith('2') ? 'PREMIUM_ECONOMY' : 'ECONOMY';
-  const latestObservedAt = [...observations].reverse().find(
-    (item) => item.status !== 'PROVIDER_ERROR' && item.priceVnd !== null,
-  )?.observedAt;
+  const latestObservedAt = [...observations]
+    .reverse()
+    .find((item) => item.status !== 'PROVIDER_ERROR' && item.priceVnd !== null)?.observedAt;
   return {
     id,
     tripId,
@@ -64,16 +64,22 @@ function watch({
     journeyType,
     departureDate: id.endsWith('2') ? '2026-10-16' : '2026-09-22',
     returnDate: journeyType === 'ROUND_TRIP' ? '2026-10-19' : null,
-    passengers: id.endsWith('2') ? 2 : 1,
+    passengers: { adults: id.endsWith('2') ? 2 : 1, children: 0, infants: 0 },
     cabin,
     thresholdVnd: id.endsWith('2') ? '2800000' : '2500000',
     latestPriceVnd,
     currency: 'VND',
-    provider: 'Fixture Air Search',
+    provider: 'MOCK_FLIGHT · Minh họa',
     // A failed provider attempt updates the watch status, but it must not look
     // like a fresh fare observation. Keep the time of the last real price.
     observedAt: latestObservedAt ?? null,
     status,
+    dataQuality:
+      observations.at(-1)?.status === 'PROVIDER_ERROR'
+        ? 'PROVIDER_ERROR'
+        : observations.at(-1)?.status === 'STALE'
+          ? 'STALE'
+          : 'CURRENT',
     version: 4,
     createdAt: '2026-09-01T08:00:00+07:00',
     updatedAt: observations.at(-1)?.observedAt ?? '2026-09-01T08:00:00+07:00',
@@ -89,10 +95,10 @@ function permissions(readOnly: boolean): PriceWatchPermissions {
     canEditOwn: !readOnly,
     canPauseOwn: !readOnly,
     canResumeOwn: !readOnly,
-    canDeleteOwn: !readOnly,
+    canStopOwn: !readOnly,
     // Fixture viewer is Owner of the preview trip, so this is intentionally
-    // true to show the separate “delete another member's watch” rule.
-    canDeleteAny: !readOnly,
+    // true to show the separate “stop another member's watch” rule.
+    canStopAny: !readOnly,
   };
 }
 
@@ -105,14 +111,7 @@ function ready(
   >,
 ): PriceWatchViewModel {
   const readOnly = scenario === 'read-only';
-  const selfStatus: WatchStatus =
-    scenario === 'paused'
-      ? 'PAUSED'
-      : scenario === 'stale'
-        ? 'STALE'
-        : scenario === 'provider-error'
-          ? 'PROVIDER_ERROR'
-          : 'ACTIVE';
+  const selfStatus: WatchStatus = scenario === 'paused' ? 'PAUSED' : 'ACTIVE';
   const selfObservations =
     scenario === 'provider-error'
       ? [
@@ -188,7 +187,9 @@ function errorFor(scenario: PriceWatchScenario) {
   };
 }
 
-export function createFixturePriceWatchRepository(options: { viewerId?: string } = {}): PriceWatchRepository {
+export function createFixturePriceWatchRepository(
+  options: { viewerId?: string } = {},
+): PriceWatchRepository {
   const viewerId = options.viewerId ?? fixtureViewerId;
   const trips = readableFixtureTrips(viewerId);
   return {
@@ -203,9 +204,7 @@ export function createFixturePriceWatchRepository(options: { viewerId?: string }
       if (!trip || scenario === 'not-found') return errorFor('not-found');
       if (scenario === 'forbidden') return errorFor('forbidden');
       if (
-        !['success', 'created', 'paused', 'stale', 'provider-error', 'read-only'].includes(
-          scenario,
-        )
+        !['success', 'created', 'paused', 'stale', 'provider-error', 'read-only'].includes(scenario)
       )
         return errorFor(scenario);
       return {

@@ -12,9 +12,23 @@
   margin-bottom: 8px;
   font-size: 13px;
 }
-.breadcrumb h1 { font-size: 13px; font-weight: 400; margin: 0; }
-.breadcrumb a { color: var(--color-active); min-height: 22px; display: inline-flex; align-items: center; }
-.days { display: flex; gap: 12px; margin: 16px 0 14px; overflow-x: auto; }
+.breadcrumb h1 {
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0;
+}
+.breadcrumb a {
+  color: var(--color-active);
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+}
+.days {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0 14px;
+  overflow-x: auto;
+}
 .days > button {
   min-width: 128px;
   min-height: 54px;
@@ -27,8 +41,15 @@
   cursor: pointer;
   flex-shrink: 0;
 }
-.days > button small { display: block; font-size: 12px; margin-top: 3px; }
-.days > button[aria-pressed='true'] { background: var(--color-active); color: white; }
+.days > button small {
+  display: block;
+  font-size: 13px;
+  margin-top: 3px;
+}
+.days > button[aria-pressed='true'] {
+  background: var(--color-active);
+  color: white;
+}
 .metrics {
   border: 1px solid var(--color-line);
   border-radius: 8px;
@@ -40,131 +61,633 @@
   align-items: center;
   font-size: 13px;
 }
-.metrics > div { display: flex; align-items: center; gap: 12px; min-width: 0; padding-inline: 12px; border-left: 1px solid var(--color-line); }
-.metrics > div:first-child { border-left: 0; padding-left: 0; }
-.metricIcon { display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; background: #e6faf8; border-radius: 50%; }
-.metrics > div:nth-child(2) .metricIcon { background: #fff0f2; }
-.metrics > div:nth-child(3) .metricIcon { background: #fff6df; }
-.metrics > div:nth-child(4) .metricIcon { background: #e7f6ff; }
-.metricIcon img { display: block; }
-.metrics strong { font-size: 18px; color: var(--color-active); display: block; margin-bottom: 4px; }
-.columns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 14px; }
-.columns.withPlanner { grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); align-items: stretch; }
-.timeline, .pool { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: white; border: 1px solid var(--color-line); border-radius: 8px; }
-.toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 68px; flex-wrap: wrap; }
-.toolbar h2 { font-size: 24px; line-height: 32px; margin: 0 auto 0 0; }
-.timelineViewport { flex: 1 1 auto; min-height: 0; margin: 0; padding: 2px 30px 18px 42px; list-style: none; max-height: 414px; overflow-y: auto; overscroll-behavior: contain; transition: background-color 120ms ease; }
-.activity { position: relative; padding: 0 0 32px 34px; border-left: 2px solid var(--color-active); }
-.activity:last-of-type { padding-bottom: 0; }
-.activity[data-dragging='true'], .poolCard[data-dragging='true'] { opacity: .45; }
-.activity[data-drop-target='true'] .card, .poolCard[data-drop-target='true'] { border-color: var(--color-active); box-shadow: 0 0 0 2px #00a0ae22; }
-.step { position: absolute; left: -20px; top: 20px; border-radius: 50%; width: 38px; height: 38px; display: grid; place-items: center; background: #00a0ae; color: white; font-size: 14px; }
-.card { display: flex; gap: 18px; align-items: center; border: 1px solid var(--color-line); border-radius: 8px; min-height: 78px; padding: 12px; background: white; }
-.time { font-size: 14px; line-height: 22px; white-space: nowrap; }
-.unscheduledTime { display: inline-flex; padding: 3px 8px; border-radius: 999px; background: #fff7de; color: #986000; font-size: 12px; font-weight: 600; }
-.icon { display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 46px; }
-.icon img { display: block; max-width: 46px; max-height: 46px; }
-.activityPreview { flex: 1; min-width: 0; }
-.activityPreview summary { list-style: none; cursor: pointer; min-height: 46px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
-.activityPreview strong { font-size: 15px; line-height: 22px; }
-.activityPreview small { font-size: 12px; color: var(--color-muted); }
-.activityPreview dl { font-size: 13px; line-height: 22px; }
-.activityPreview dd { margin: 0 0 10px; }
-.activityPreview p { font-size: 12px; color: var(--color-muted); }
-.cover { width: 140px; height: 58px; object-fit: cover; flex-shrink: 0; }
-.card:has(details[open]) { flex-wrap: wrap; }
-.activityPreview[open] { min-width: 200px; }
-.dragHandle { width: 44px; height: 44px; flex: 0 0 44px; border: 1px solid var(--color-line); border-radius: 8px; background: white; color: var(--color-muted); cursor: grab; touch-action: none; font-size: 22px; }
-.dragHandle:active { cursor: grabbing; }
-.dropTarget { background: #e8fbf9; outline: 2px dashed var(--color-active); outline-offset: -5px; }
-.emptyDrop, .endDrop { border: 2px dashed #9adbd7; border-radius: 8px; padding: 24px 12px; text-align: center; color: var(--color-muted); font-size: 13px; }
-.endDrop { margin: 12px 0 0 34px; padding: 10px; }
-.pool { padding: 0 16px 16px; }
-.poolHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 68px; }
-.poolHeader h2 { margin: 0; font-size: 18px; }
-.poolHeader p { margin: 4px 0 0; color: var(--color-muted); font-size: 12px; }
-.poolHeader > button, .dialogHeader > button { width: 44px; height: 44px; border: 1px solid var(--color-line); border-radius: 8px; background: white; font-size: 24px; cursor: pointer; }
-.localNotice { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: #eefafa; color: #286c70; font-size: 12px; line-height: 18px; }
-.poolList { flex: 1 1 auto; min-height: 0; list-style: none; margin: 14px 0 0; padding: 4px; max-height: none; overflow: auto; border-radius: 8px; }
-.poolCard { display: grid; grid-template-columns: 46px minmax(0, 1fr) 44px; align-items: center; gap: 10px; padding: 12px; margin-bottom: 10px; border: 1px solid #f4cf82; border-radius: 8px; background: #fffdf8; }
-.poolCard > span:nth-child(2) { min-width: 0; }
-.poolCard strong, .poolCard small { display: block; overflow: hidden; text-overflow: ellipsis; }
-.poolCard small { margin-top: 5px; color: var(--color-muted); font-size: 11px; white-space: nowrap; }
-.poolIcon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: #fff4d9; }
-.poolIcon img { max-width: 40px; max-height: 40px; }
-.poolEmpty { min-height: 124px; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 18px; border: 2px dashed var(--color-line); border-radius: 8px; text-align: center; color: var(--color-muted); font-size: 12px; }
-.poolEmpty strong { color: var(--color-ink); font-size: 14px; }
-.plannerDialog, .editorDialog { color: var(--color-ink); background: white; }
-.plannerDialog:not([open]), .plannerDialog[hidden], .editorDialog:not([open]), .editorDialog[hidden] { display: none; }
-.plannerDialog::backdrop, .editorDialog::backdrop { background: rgb(15 31 36 / 55%); }
-.plannerDialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; border: 0; padding: 0; overflow: hidden; }
-.plannerDialogHeader { padding: 14px 20px 0; border-bottom: 1px solid var(--color-line); }
-.plannerDialogHeader p, .dialogHeader p { margin: 0 0 4px; color: #286c70; font-size: 12px; font-weight: 600; }
-.plannerDialogHeader h2, .dialogHeader h2 { margin: 0 0 14px; font-size: 22px; }
-.plannerDialogBody { height: calc(100dvh - 76px); padding: 14px; display: grid; grid-template-columns: minmax(280px, .9fr) minmax(0, 1.5fr); gap: 12px; overflow: hidden; }
-.plannerDialogBody > .pool, .plannerDialogBody > .timeline { min-height: 0; overflow: auto; }
-.plannerDialogBody .timelineViewport, .plannerDialogBody .poolList { max-height: none; }
-.editorDialog { width: min(620px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: 12px; box-shadow: 0 24px 80px rgb(0 0 0 / 24%); }
-.editorDialog form { display: flex; flex-direction: column; max-height: calc(100dvh - 32px); }
-.dialogHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 22px 10px; border-bottom: 1px solid var(--color-line); }
-.editorFields { display: grid; gap: 16px; padding: 20px 22px; overflow: auto; }
-.nativeField { display: grid; gap: 7px; font-size: 13px; font-weight: 600; }
-.nativeField select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--color-line); border-radius: 8px; background: white; color: inherit; font: inherit; }
-.timeFields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.dialogActions { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 22px 20px; border-top: 1px solid var(--color-line); }
-.revisions { font-size: 12px; line-height: 20px; color: var(--color-muted); overflow-wrap: anywhere; }
-.page > :global(.preview) { margin-top: 20px; }
+.metrics > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding-inline: 12px;
+  border-left: 1px solid var(--color-line);
+}
+.metrics > div:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+.metricIcon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  background: #e6faf8;
+  border-radius: 50%;
+}
+.metrics > div:nth-child(2) .metricIcon {
+  background: #fff0f2;
+}
+.metrics > div:nth-child(3) .metricIcon {
+  background: #fff6df;
+}
+.metrics > div:nth-child(4) .metricIcon {
+  background: #e7f6ff;
+}
+.metricIcon img {
+  display: block;
+}
+.metrics strong {
+  font-size: 18px;
+  color: var(--color-active);
+  display: block;
+  margin-bottom: 4px;
+}
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.columns.withPlanner {
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+  align-items: stretch;
+}
+.timeline,
+.pool {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  min-height: 68px;
+  flex-wrap: wrap;
+}
+.toolbar h2 {
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0 auto 0 0;
+}
+.timelineViewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 2px 30px 18px 42px;
+  list-style: none;
+  max-height: 414px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: background-color 120ms ease;
+}
+.activity {
+  position: relative;
+  padding: 0 0 32px 34px;
+  border-left: 2px solid var(--color-active);
+}
+.activity:last-of-type {
+  padding-bottom: 0;
+}
+.activity[data-dragging='true'],
+.poolCard[data-dragging='true'] {
+  opacity: 0.45;
+}
+.activity[data-drop-target='true'] .card,
+.poolCard[data-drop-target='true'] {
+  border-color: var(--color-active);
+  box-shadow: 0 0 0 2px #00a0ae22;
+}
+.step {
+  position: absolute;
+  left: -20px;
+  top: 20px;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: #00a0ae;
+  color: white;
+  font-size: 14px;
+}
+.card {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  min-height: 78px;
+  padding: 12px;
+  background: white;
+}
+.time {
+  font-size: 14px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+.unscheduledTime {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fff7de;
+  color: #986000;
+  font-size: 13px;
+  font-weight: 600;
+}
+.icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+}
+.icon img {
+  display: block;
+  max-width: 46px;
+  max-height: 46px;
+}
+.activityPreview {
+  flex: 1;
+  min-width: 0;
+}
+.activityPreview summary {
+  list-style: none;
+  cursor: pointer;
+  min-height: 46px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.activityPreview strong {
+  font-size: 15px;
+  line-height: 22px;
+}
+.activityPreview small {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+.activityPreview dl {
+  font-size: 13px;
+  line-height: 22px;
+}
+.activityPreview dd {
+  margin: 0 0 10px;
+}
+.activityPreview p {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+.cover {
+  width: 140px;
+  height: 58px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.card:has(details[open]) {
+  flex-wrap: wrap;
+}
+.activityPreview[open] {
+  min-width: 200px;
+}
+.dragHandle {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: white;
+  color: var(--color-muted);
+  cursor: grab;
+  touch-action: none;
+  font-size: 22px;
+}
+.dragHandle:active {
+  cursor: grabbing;
+}
+.dropTarget {
+  background: #e8fbf9;
+  outline: 2px dashed var(--color-active);
+  outline-offset: -5px;
+}
+.emptyDrop,
+.endDrop {
+  border: 2px dashed #9adbd7;
+  border-radius: 8px;
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.endDrop {
+  margin: 12px 0 0 34px;
+  padding: 10px;
+}
+.pool {
+  padding: 0 16px 16px;
+}
+.poolHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 68px;
+}
+.poolHeader h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.poolHeader p {
+  margin: 4px 0 0;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.poolHeader > button,
+.dialogHeader > button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+.localNotice {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #eefafa;
+  color: #286c70;
+  font-size: 13px;
+  line-height: 18px;
+}
+.poolList {
+  flex: 1 1 auto;
+  min-height: 0;
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 4px;
+  max-height: none;
+  overflow: auto;
+  border-radius: 8px;
+}
+.poolCard {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #f4cf82;
+  border-radius: 8px;
+  background: #fffdf8;
+}
+.poolCard > span:nth-child(2) {
+  min-width: 0;
+}
+.poolCard strong,
+.poolCard small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.poolCard small {
+  margin-top: 5px;
+  color: var(--color-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.poolIcon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff4d9;
+}
+.poolIcon img {
+  max-width: 40px;
+  max-height: 40px;
+}
+.poolEmpty {
+  min-height: 124px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px;
+  border: 2px dashed var(--color-line);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.poolEmpty strong {
+  color: var(--color-ink);
+  font-size: 14px;
+}
+.plannerDialog,
+.editorDialog {
+  color: var(--color-ink);
+  background: white;
+}
+.plannerDialog::backdrop,
+.editorDialog::backdrop {
+  background: rgb(15 31 36 / 55%);
+}
+.plannerDialog {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.plannerDialogHeader {
+  padding: 14px 20px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.plannerDialogHeader p,
+.dialogHeader p {
+  margin: 0 0 4px;
+  color: #286c70;
+  font-size: 13px;
+  font-weight: 600;
+}
+.plannerDialogHeader h2,
+.dialogHeader h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+}
+.plannerDialogBody {
+  height: calc(100dvh - 76px);
+  padding: 14px;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.5fr);
+  gap: 12px;
+  overflow: hidden;
+}
+.plannerDialogBody > .pool,
+.plannerDialogBody > .timeline {
+  min-height: 0;
+  overflow: auto;
+}
+.plannerDialogBody .timelineViewport,
+.plannerDialogBody .poolList {
+  max-height: none;
+}
+.editorDialog {
+  width: min(620px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgb(0 0 0 / 24%);
+}
+.editorDialog form {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 32px);
+}
+.dialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px 10px;
+  border-bottom: 1px solid var(--color-line);
+}
+.editorFields {
+  display: grid;
+  gap: 16px;
+  padding: 20px 22px;
+  overflow: auto;
+}
+.nativeField {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.nativeField select {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: white;
+  color: inherit;
+  font: inherit;
+}
+.timeFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 22px 20px;
+  border-top: 1px solid var(--color-line);
+}
+.revisions {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+.page > :global(.preview) {
+  margin-top: 20px;
+}
 
 @media (max-width: 1200px) {
-  .cover { display: none; }
-  .card { gap: 12px; }
+  .cover {
+    display: none;
+  }
+  .card {
+    gap: 12px;
+  }
 }
 @media (max-width: 900px) {
-  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 8px; }
-  .metrics > div:nth-child(3) { border-left: 0; }
-  .toolbar { gap: 8px; }
-  .toolbar h2 { font-size: 22px; }
-  .plannerDialogBody { grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr); }
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 8px;
+  }
+  .metrics > div:nth-child(3) {
+    border-left: 0;
+  }
+  .toolbar {
+    gap: 8px;
+  }
+  .toolbar h2 {
+    font-size: 22px;
+  }
+  .plannerDialogBody {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
+  }
 }
 @media (max-width: 768px) {
-  .page { padding: 12px 20px 24px; }
-  .breadcrumb { flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-  .days { margin: 16px 0; gap: 8px; }
-  .days > button { min-width: 108px; }
-  .metrics { padding: 12px; font-size: 11px; gap: 16px 4px; }
-  .metrics strong { font-size: 17px; }
-  .metrics > div { gap: 8px; padding-inline: 4px; }
-  .metricIcon { width: 36px; height: 36px; }
-  .toolbar { padding: 16px 12px; }
-  .toolbar h2 { width: 100%; font-size: 20px; line-height: 28px; }
-  .toolbar > button { flex: 1; font-size: 12px; padding-inline: 8px; }
-  .timelineViewport { max-height: none; padding: 4px 12px 20px 20px; }
-  .activity { padding-left: 24px; padding-bottom: 20px; }
-  .step { width: 28px; height: 28px; left: -15px; top: 18px; font-size: 12px; }
-  .card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px 10px; padding: 12px; }
-  .time { grid-column: 1 / -1; font-size: 12px; }
-  .activityPreview strong { font-size: 14px; line-height: 22px; }
-  .activityPreview small { font-size: 11px; }
-  .activityPreview[open] { min-width: 0; }
-  .cover { display: none; }
-  .plannerDialogHeader { display: none; }
-  .plannerDialogBody { height: 100dvh; padding: 10px; grid-template-columns: 1fr; grid-template-rows: minmax(250px, .8fr) minmax(320px, 1.2fr); overflow: auto; }
-  .plannerDialogBody > .pool, .plannerDialogBody > .timeline { overflow: visible; }
-  .plannerDialogBody .poolList { max-height: 280px; }
-  .plannerDialogBody .timelineViewport { overflow: visible; }
+  .page {
+    padding: 12px 20px 24px;
+  }
+  .breadcrumb {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .days {
+    margin: 16px 0;
+    gap: 8px;
+  }
+  .days > button {
+    min-width: 108px;
+  }
+  .metrics {
+    padding: 12px;
+    font-size: 13px;
+    gap: 16px 4px;
+  }
+  .metrics strong {
+    font-size: 17px;
+  }
+  .metrics > div {
+    gap: 8px;
+    padding-inline: 4px;
+  }
+  .metricIcon {
+    width: 36px;
+    height: 36px;
+  }
+  .toolbar {
+    padding: 16px 12px;
+  }
+  .toolbar h2 {
+    width: 100%;
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .toolbar > button {
+    flex: 1;
+    font-size: 13px;
+    padding-inline: 8px;
+  }
+  .timelineViewport {
+    max-height: none;
+    padding: 4px 12px 20px 20px;
+  }
+  .activity {
+    padding-left: 24px;
+    padding-bottom: 20px;
+  }
+  .step {
+    width: 28px;
+    height: 28px;
+    left: -15px;
+    top: 18px;
+    font-size: 13px;
+  }
+  .card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 10px;
+    padding: 12px;
+  }
+  .time {
+    grid-column: 1 / -1;
+    font-size: 13px;
+  }
+  .activityPreview strong {
+    font-size: 14px;
+    line-height: 22px;
+  }
+  .activityPreview small {
+    font-size: 13px;
+  }
+  .activityPreview[open] {
+    min-width: 0;
+  }
+  .cover {
+    display: none;
+  }
+  .plannerDialogHeader {
+    display: none;
+  }
+  .plannerDialogBody {
+    height: 100dvh;
+    padding: 10px;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(250px, 0.8fr) minmax(320px, 1.2fr);
+    overflow: auto;
+  }
+  .plannerDialogBody > .pool,
+  .plannerDialogBody > .timeline {
+    overflow: visible;
+  }
+  .plannerDialogBody .poolList {
+    max-height: 280px;
+  }
+  .plannerDialogBody .timelineViewport {
+    overflow: visible;
+  }
 }
 @media (max-width: 480px) {
-  .page { padding-inline: 14px; }
-  .metrics { grid-template-columns: minmax(0, 1fr); }
-  .metrics > div { border-left: 0; }
-  .plannerDialogBody { padding: 0; display: block; }
-  .plannerDialogBody .pool, .plannerDialogBody .timeline { border-radius: 0; border-inline: 0; }
-  .plannerDialogBody .poolList { max-height: 38dvh; }
-  .pool { padding-inline: 12px; }
-  .poolCard { grid-template-columns: 40px minmax(0, 1fr) 44px; }
-  .poolIcon { width: 40px; height: 40px; }
-  .timeFields { grid-template-columns: 1fr; }
-  .editorDialog { width: 100vw; max-height: 100dvh; height: 100dvh; border-radius: 0; }
-  .editorDialog form { max-height: 100dvh; height: 100%; }
-  .dialogActions > button { flex: 1; }
+  .page {
+    padding-inline: 14px;
+  }
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .metrics > div {
+    border-left: 0;
+  }
+  .plannerDialogBody {
+    padding: 0;
+    display: block;
+  }
+  .plannerDialogBody .pool,
+  .plannerDialogBody .timeline {
+    border-radius: 0;
+    border-inline: 0;
+  }
+  .plannerDialogBody .poolList {
+    max-height: 38dvh;
+  }
+  .pool {
+    padding-inline: 12px;
+  }
+  .poolCard {
+    grid-template-columns: 40px minmax(0, 1fr) 44px;
+  }
+  .poolIcon {
+    width: 40px;
+    height: 40px;
+  }
+  .timeFields {
+    grid-template-columns: 1fr;
+  }
+  .editorDialog {
+    width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .editorDialog form {
+    max-height: 100dvh;
+    height: 100%;
+  }
+  .dialogActions > button {
+    flex: 1;
+  }
 }

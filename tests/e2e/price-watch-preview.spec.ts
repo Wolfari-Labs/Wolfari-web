@@ -20,17 +20,21 @@ for (const size of [
     await page.goto(route);
     await expect(page.getByRole('heading', { name: 'Theo dõi giá vé' }).first()).toBeVisible();
     await expect(page.getByText('2.350.000đ', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText(/Chỉ xem giá tham khảo/)).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(size.width);
+    await expect(page.getByText(/Giá mô phỏng, không phải giá thị trường/)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      size.width,
+    );
     await page.getByRole('button', { name: /Minh Anh/ }).click();
     await expect(page.getByText('Hà Nội → Đà Nẵng', { exact: true }).last()).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Xóa theo dõi này' })).toBeEnabled();
+    await expect(page.getByRole('button', { name: 'Dừng theo dõi này' })).toBeEnabled();
     await page.screenshot({ path: info.outputPath('price-watch.png'), fullPage: true });
     expect(api).toEqual([]);
   });
 }
 
-test('Price Watch preserves an old price when provider fails and keeps commands truthful', async ({ page }) => {
+test('Price Watch preserves an old price when provider fails and keeps commands truthful', async ({
+  page,
+}) => {
   await page.goto(route);
   await page.locator('[data-preview="price-watch"] summary').click();
   const scenario = page.locator('[data-preview="price-watch"] select');
@@ -53,10 +57,12 @@ test('Price Watch preserves an old price when provider fails and keeps commands 
   }
 });
 
-test('Price Watch capability controls explain that preview actions do not mutate data', async ({ page }) => {
+test('Price Watch capability controls explain that preview actions do not mutate data', async ({
+  page,
+}) => {
   await page.goto(route);
   const actions = page.getByLabel('Thao tác theo dõi');
   await actions.getByRole('button', { name: 'Chỉnh sửa' }).click();
   await expect(actions.getByRole('status')).toContainText('Chưa gửi yêu cầu');
-  await expect(page.getByText(/API chỉnh sửa chưa khả dụng/)).toBeVisible();
+  await expect(page.getByText(/Thao tác không gửi yêu cầu/)).toBeVisible();
 });

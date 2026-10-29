@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIdentityRepository } from './repositories/identity-context';
@@ -17,6 +17,7 @@ import { Select } from '../../shared/components/Select';
 import { ContentState } from '../../shared/components/ContentState';
 import { sceneAssets as art } from '../../shared/assets/scene-assets';
 import styles from './ProfilePage.module.css';
+import { NotificationPreferences } from '../notifications/NotificationPreferences';
 
 const unavailable: DomainError = {
   code: 'SERVICE_UNAVAILABLE',
@@ -28,7 +29,7 @@ class SessionReadError extends Error {
     super(domain.code);
   }
 }
-function mutationMessage(error: DomainError): string {
+function mutationMessage(error: DomainError): ReactNode {
   const message =
     error.code === 'VERSION_CONFLICT'
       ? 'Hồ sơ đã thay đổi ở nơi khác. Dữ liệu đã được yêu cầu tải lại; kiểm tra bản nháp rồi lưu lại.'
@@ -39,7 +40,16 @@ function mutationMessage(error: DomainError): string {
           : error.code === 'RESOURCE_EXHAUSTED'
             ? 'Bạn đã thử quá nhiều lần. Vui lòng thử lại sau.'
             : 'Chưa thể hoàn tất lúc này. Vui lòng thử lại sau.';
-  return message + (error.correlationId ? ' Mã hỗ trợ: ' + error.correlationId : '');
+  return (
+    <>
+      {message}
+      {error.correlationId && (
+        <details>
+          <summary>Chi tiết hỗ trợ</summary>Mã tra cứu: {error.correlationId}
+        </details>
+      )}
+    </>
+  );
 }
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat('vi-VN', {
@@ -55,13 +65,13 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const [scenario, setScenario] = useState<IdentityScenario>('success');
   const [draft, setDraft] = useState<string | null>(null);
   const [validation, setValidation] = useState<string | undefined>();
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<ReactNode>(null);
   const [showSessions, setShowSessions] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
   const [password, setPassword] = useState({ current: '', next: '', confirmation: '' });
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [sessionFeedback, setSessionFeedback] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<ReactNode>(null);
+  const [sessionFeedback, setSessionFeedback] = useState<ReactNode>(null);
   const [endingSession, setEndingSession] = useState(false);
   const avatarInput = useRef<HTMLInputElement>(null);
   const { pending, run } = useIdentityTask();
@@ -139,7 +149,12 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     await queryClient.invalidateQueries({ queryKey: ['shell'] });
   };
   const mutationFailed = async (failure: DomainError, prefix = '') => {
-    setFeedback(prefix + mutationMessage(failure));
+    setFeedback(
+      <>
+        {prefix}
+        {mutationMessage(failure)}
+      </>,
+    );
     if (failure.code === 'VERSION_CONFLICT') await query.refetch();
   };
 
@@ -153,7 +168,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
       return;
     }
     if (!repository.updateProfile || !profile) {
-      setFeedback('Chưa thể lưu thay đổi lúc này. Identity chưa kết nối; bản nháp chưa được lưu.');
+      setFeedback('Chưa lưu được thay đổi. Bản nhập của bạn vẫn được giữ.');
       return;
     }
     setValidation(undefined);
@@ -182,7 +197,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const uploadAvatar = (file: File) => {
     if (busy) return;
     if (!repository.uploadAvatar || !repository.updateProfile || !profile) {
-      setFeedback('Identity chưa kết nối; ảnh chưa được tải lên.');
+      setFeedback('Chưa tải được ảnh. Vui lòng thử lại.');
       return;
     }
     if (
@@ -222,7 +237,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     event.preventDefault();
     if (busy) return;
     if (!repository.changePassword) {
-      setPasswordError('Identity chưa kết nối; mật khẩu chưa được đổi.');
+      setPasswordError('Chưa đổi được mật khẩu. Vui lòng thử lại.');
       return;
     }
     const invalid = !password.current
@@ -273,7 +288,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
 
   const resendVerification = () => {
     if (!repository.resendEmailVerification) {
-      setFeedback('Identity chưa kết nối; chưa thể gửi lại email xác minh.');
+      setFeedback('Chưa gửi được email xác minh. Vui lòng thử lại.');
       return;
     }
     void run(
@@ -427,10 +442,16 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
               type="button"
               disabled={busy || !sessionManager?.logout}
               loading={pending === 'logout'}
-              onClick={() => void run('logout', async (signal) => {
-                await sessionManager?.logout?.(signal);
-                navigate('/login', { replace: true });
-              }, () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'))}
+              onClick={() =>
+                void run(
+                  'logout',
+                  async (signal) => {
+                    await sessionManager?.logout?.(signal);
+                    navigate('/login', { replace: true });
+                  },
+                  () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
+                )
+              }
             >
               {sessionManager?.logout ? 'Đăng xuất' : 'Đăng xuất (chưa khả dụng)'}
             </Button>
@@ -438,9 +459,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
           <section className={styles.panel} aria-labelledby="profile-notifications">
             <h2 id="profile-notifications">Thông báo & thiết bị</h2>
             <p className={styles.muted}>Mỗi người tự quản lý kênh nhận thông báo của mình.</p>
-            <Alert live={false}>
-              Cài đặt thông báo và thiết bị chưa có projection Identity khả dụng.
-            </Alert>
+            <NotificationPreferences key={profile.id} actor={profile.id} />
             <details
               onToggle={(event) => setShowSessions(event.currentTarget.open)}
               className={styles.sessions}

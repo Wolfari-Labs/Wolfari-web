@@ -2,7 +2,7 @@
 :root {
   --color-white: #fff;
   --color-ink: #06458b;
-  --color-muted: #6c8bb2;
+  --color-muted: #4f7093;
   --color-line: #cdebf7;
   --color-selected: #e8f7fa;
   --color-blue: #0089c7;
@@ -13,16 +13,16 @@
   --color-active: #079fc5;
   --color-field-line: #bae4f4;
   --color-note: #ecf9fd;
-  --color-note-text: #5980ae;
+  --color-note-text: #4f7093;
   --color-text-muted-on-light: #4f7093;
-  --color-action-primary: #007caa;
+  --color-action-primary: #006b92;
   --color-border-control: #6daac0;
   --color-status-warning: #8a6500;
   --color-status-warning-surface: #fff7df;
   --color-status-danger: #a34b4b;
   --color-status-danger-surface: #fff0f0;
-  --color-gradient-start: #008ac4;
-  --color-gradient-end: #008eaa;
+  --color-gradient-start: #007caa;
+  --color-gradient-end: #007a8d;
   --action-gradient: linear-gradient(
     to right,
     var(--color-gradient-start),
@@ -41,9 +41,9 @@
   --ios-peach: #f8e4d8;
   --font-body: 'Be Vietnam Pro', sans-serif;
   --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
-  --font-handwritten: 'Caveat', cursive;
+  --font-handwritten: 'Patrick Hand', 'Be Vietnam Pro', cursive;
   --font-size-small: 13px;
-  --font-size-label: 15px;
+  --font-size-label: 14px;
   --font-size-body: 16px;
   --font-size-card-title: 20px;
   --font-size-title: 24px;
@@ -74,11 +74,21 @@
   --radius-10: 10px;
   --radius-12: 12px;
   --radius-16: 16px;
-  --radius-button: 18px;
+  --radius-button: 12px;
+  --radius-6: 6px;
+  --radius-control: 12px;
+  --radius-card: 16px;
+  --radius-dialog: 24px;
+  --color-border: var(--color-line);
+  --color-primary: var(--color-action-primary);
+  --color-surface: var(--color-white);
+  --color-text: var(--color-ink);
   --radius-20: 20px;
   --radius-24: 24px;
   --radius-pill: 999px;
   --shadow-soft: 0 8px 24px rgb(5 69 140 / 10%);
+  --shadow-raised: 0 12px 32px rgb(5 69 140 / 13%), 0 2px 6px rgb(5 69 140 / 5%);
+  --shadow-overlay: 0 24px 80px rgb(5 34 61 / 22%);
   --shadow-mobile-surface: 0 4px 16px rgb(23 59 77 / 4.3%);
   --shadow-selection: 0 1px 5px rgb(31 51 61 / 8%);
   --shadow-header: 0 2px 10px rgb(10 87 138 / 5%);
@@ -87,7 +97,7 @@
   --target-min: 44px;
   --target-drawer: 48px;
   --control-height: 44px;
-  --control-height-mobile: 52px;
+  --control-height-mobile: 48px;
   --header-height: 76px;
   --header-height-mobile: 54px;
   --sidebar-width: 220px;

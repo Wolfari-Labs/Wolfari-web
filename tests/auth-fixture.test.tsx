@@ -98,7 +98,9 @@ describe('Auth validation without Identity writes', () => {
       await userEvent.type(screen.getByLabelText('Email'), 'name@example.com');
       await userEvent.type(screen.getByLabelText('Mật khẩu'), 'preview password');
       await userEvent.click(screen.getByRole('button', { name: 'Đăng nhập' }));
-      expect(await screen.findByText(/Identity chưa kết nối/)).toBeInTheDocument();
+      expect(
+        await screen.findByText(/Bản xem trước chưa hỗ trợ tạo tài khoản hoặc đăng nhập thật/),
+      ).toBeInTheDocument();
       expect(screen.getByLabelText('Email')).toHaveValue('name@example.com');
       expect(fetchSpy).not.toHaveBeenCalled();
       expect(localStorage.length + sessionStorage.length).toBe(0);
@@ -311,7 +313,7 @@ describe('Self/profile and Home composition', () => {
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái hồ sơ'), 'success');
     expect(await screen.findByLabelText('Tên hiển thị')).toHaveValue('Tên sửa local');
     await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
-    await screen.findByText(/Chưa thể lưu thay đổi lúc này/);
+    await screen.findByText(/Chưa lưu được thay đổi/);
     expect(screen.getByText(/Phiên bản hồ sơ: 1/)).toBeInTheDocument();
     await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
     await screen.findByText('Phiên đăng nhập 1');

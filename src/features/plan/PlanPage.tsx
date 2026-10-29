@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type RefObject,
 } from 'react';
@@ -37,6 +36,10 @@ import {
   type PlanDraftMove,
 } from './model/plan-draft';
 import { activityTime, planDays } from './model/plan-presentation';
+import { Drawer } from '../../shared/components/Drawer';
+import { Icon } from '../../shared/components/Icon';
+import { TimelineCard } from './components/TimelineCard';
+import { MotionProvider } from '../../shared/components/MotionProvider';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
@@ -91,38 +94,7 @@ function localClock(value: string | null, timezone: string) {
   }).format(new Date(value));
 }
 
-function focusableElements(dialog: HTMLDialogElement) {
-  return Array.from(
-    dialog.querySelectorAll<HTMLElement>(
-      'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    ),
-  ).filter((element) => element.getClientRects().length > 0);
-}
-
-function trapDialogFocus(event: ReactKeyboardEvent<HTMLDialogElement>) {
-  if (event.key !== 'Tab') return;
-  const elements = focusableElements(event.currentTarget);
-  const first = elements[0];
-  const last = elements.at(-1);
-  if (!first || !last) {
-    event.preventDefault();
-    event.currentTarget.focus();
-  } else if (
-    event.shiftKey &&
-    (document.activeElement === first || !event.currentTarget.contains(document.activeElement))
-  ) {
-    event.preventDefault();
-    last.focus();
-  } else if (
-    !event.shiftKey &&
-    (document.activeElement === last || !event.currentTarget.contains(document.activeElement))
-  ) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-function NativeDialog({
+function PlannerDialog({
   open,
   className,
   label,
@@ -137,48 +109,18 @@ function NativeDialog({
   onDismiss: () => void;
   children: ReactNode;
 }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) {
-      dialog.showModal();
-      window.requestAnimationFrame(() => initialFocusRef?.current?.focus());
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [initialFocusRef, open]);
   return (
-    <dialog
-      ref={dialogRef}
-      hidden={!open}
-      className={className}
-      aria-label={label}
-      onCancel={(event) => {
-        event.preventDefault();
-        onDismiss();
-      }}
-      onKeyDown={trapDialogFocus}
-      onClick={(event) => {
-        if (event.target !== event.currentTarget) return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        if (
-          event.clientX < bounds.left ||
-          event.clientX > bounds.right ||
-          event.clientY < bounds.top ||
-          event.clientY > bounds.bottom
-        )
-          onDismiss();
-      }}
+    <Drawer
+      open={open}
+      label={label}
+      onDismiss={onDismiss}
+      side="center"
+      className={className ?? ''}
+      showHeader={false}
+      {...(initialFocusRef ? { initialFocusRef } : {})}
     >
       {children}
-    </dialog>
+    </Drawer>
   );
 }
 
@@ -213,7 +155,7 @@ function DragHandle({
         }
       }}
     >
-      <span aria-hidden="true">⠿</span>
+      <Icon name="grip" />
     </button>
   );
 }
@@ -244,8 +186,9 @@ function TimelineActivityRow({
   dragging?: boolean;
   dropTarget?: boolean;
 }) {
-  const icon = icons[activity.activityType];
-  const hasTime = Boolean(activity.startsAt);
+  const time = activity.startsAt
+    ? `${activityTime(activity.startsAt, timezone)}${activity.endsAt ? ' – ' + activityTime(activity.endsAt, timezone) : ''}`
+    : 'Chưa xếp giờ';
   return (
     <li
       ref={rowRef}
@@ -256,61 +199,41 @@ function TimelineActivityRow({
       <span className={styles.step} aria-hidden="true">
         {index + 1}
       </span>
-      <div className={styles.card}>
-        <time className={styles.time} dateTime={activity.startsAt ?? undefined}>
-          {hasTime ? (
-            <>
-              {activityTime(activity.startsAt, timezone)}
-              {activity.endsAt && <span> – {activityTime(activity.endsAt, timezone)}</span>}
-            </>
-          ) : (
-            <span className={styles.unscheduledTime}>Chưa xếp giờ</span>
-          )}
-        </time>
-        {icon && (
-          <span className={styles.icon}>
-            <img src={icon} alt="" />
-          </span>
-        )}
-        <details className={styles.activityPreview}>
-          <summary aria-label={`Xem hoạt động ${activity.title}`}>
-            <strong>{activity.title}</strong>
-            <small>{activity.description ?? 'Xem hoạt động'}</small>
-          </summary>
-          <dl>
-            <dt>Thời gian</dt>
-            <dd>
-              {hasTime
-                ? `${activityTime(activity.startsAt, timezone)}${activity.endsAt ? ` – ${activityTime(activity.endsAt, timezone)}` : ''}`
-                : 'Chưa xếp giờ'}
-            </dd>
-            <dt>Trạng thái</dt>
-            <dd>{activity.status === 'TODO' ? 'Chưa hoàn tất' : 'Đã hoàn tất'}</dd>
-            <dt>Địa điểm liên kết</dt>
-            <dd>{activity.selectedLocationId ? 'Có địa điểm đã chọn' : 'Chưa có địa điểm'}</dd>
-          </dl>
-          <p>Chỉ lưu trên thiết bị này · Chưa đồng bộ với thành viên khác.</p>
-          {canEdit && (
-            <Button variant="outline" onClick={(event) => onEdit(event.currentTarget)}>
-              Chỉnh sửa hoạt động
-            </Button>
-          )}
-        </details>
-        {activity.presentation.cover && (
-          <img
-            className={styles.cover}
-            src={activity.presentation.cover.src}
-            alt={activity.presentation.cover.alt}
-          />
-        )}
-        {handleRef && (
-          <DragHandle
-            handleRef={handleRef}
-            label={`Kéo hoạt động ${activity.title}`}
-            {...(onKeyMove ? { onKeyMove } : {})}
-          />
-        )}
-      </div>
+      <TimelineCard
+        title={activity.title}
+        time={time}
+        description={activity.description}
+        completed={activity.status === 'COMPLETED'}
+        cover={activity.presentation.cover}
+        handle={
+          handleRef && (
+            <DragHandle
+              handleRef={handleRef}
+              label={`Kéo hoạt động ${activity.title}`}
+              {...(onKeyMove ? { onKeyMove } : {})}
+            />
+          )
+        }
+        actions={
+          <details className={styles.activityPreview}>
+            <summary aria-label={`Xem hoạt động ${activity.title}`}>Chi tiết hoạt động</summary>
+            <dl>
+              <dt>Thời gian</dt>
+              <dd>{time}</dd>
+              <dt>Trạng thái</dt>
+              <dd>{activity.status === 'TODO' ? 'Chưa hoàn tất' : 'Đã hoàn tất'}</dd>
+              <dt>Địa điểm liên kết</dt>
+              <dd>{activity.selectedLocationId ? 'Có địa điểm đã chọn' : 'Chưa có địa điểm'}</dd>
+            </dl>
+            <p>Chỉ lưu trên thiết bị này · Chưa đồng bộ với thành viên khác.</p>
+            {canEdit && (
+              <Button variant="outline" onClick={(event) => onEdit(event.currentTarget)}>
+                Chỉnh sửa hoạt động
+              </Button>
+            )}
+          </details>
+        }
+      />
     </li>
   );
 }
@@ -578,7 +501,7 @@ function ActivityEditor({
     }
   };
   return (
-    <NativeDialog
+    <PlannerDialog
       open
       className={styles.editorDialog}
       label="Chỉnh sửa hoạt động"
@@ -612,16 +535,13 @@ function ActivityEditor({
             onChange={(event) => setTitle(event.target.value)}
             error={error?.startsWith('Tên hoạt động') ? error : undefined}
           />
-          <label className={styles.nativeField}>
-            <span>Ngày</span>
-            <select value={day} onChange={(event) => setDay(event.target.value)}>
-              {days.map((value, index) => (
-                <option key={value} value={value}>
-                  Ngày {index + 1} · {value.slice(8, 10)}/{value.slice(5, 7)}/{value.slice(0, 4)}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Select label="Ngày" value={day} onChange={(event) => setDay(event.target.value)}>
+            {days.map((value, index) => (
+              <option key={value} value={value}>
+                Ngày {index + 1} · {value.slice(8, 10)}/{value.slice(5, 7)}/{value.slice(0, 4)}
+              </option>
+            ))}
+          </Select>
           <div className={styles.timeFields}>
             <Input
               label="Giờ bắt đầu"
@@ -652,7 +572,7 @@ function ActivityEditor({
           </Button>
         </footer>
       </form>
-    </NativeDialog>
+    </PlannerDialog>
   );
 }
 
@@ -726,7 +646,7 @@ function PlannerWorkspace({
       </div>
     );
   return (
-    <NativeDialog
+    <PlannerDialog
       open
       className={styles.plannerDialog}
       label="Thêm hoạt động vào lịch trình"
@@ -743,7 +663,7 @@ function PlannerWorkspace({
         {pool}
         {timeline}
       </div>
-    </NativeDialog>
+    </PlannerDialog>
   );
 }
 
@@ -989,7 +909,11 @@ export function PlanView({
 
 export function PlanPage() {
   const repository = usePlanRepository();
-  return repository.createActivity ? <GatewayPlanPage /> : <PreviewPlanPage />;
+  return (
+    <MotionProvider>
+      {repository.createActivity ? <GatewayPlanPage /> : <PreviewPlanPage />}
+    </MotionProvider>
+  );
 }
 function GatewayPlanPage() {
   const { tripId = '' } = useParams();
@@ -1089,7 +1013,7 @@ function PreviewPlanPage() {
                 disabled={gatewayBusy}
                 onClick={() => setLocalView(false)}
               >
-                Dữ liệu trên server
+                Lịch trình chung
               </Button>
               <Button
                 variant={localView ? 'primary' : 'outline'}
@@ -1115,18 +1039,19 @@ function PreviewPlanPage() {
             <>
               {gateway && (
                 <Alert>
-                  Bản nháp trên thiết bị · Kéo thả giữ ngày, xóa giờ từ vị trí chèn trở xuống. Những
-                  thay đổi này chưa được lưu trên server và không đồng bộ sang thiết bị khác.
+                  Bản nháp chỉ lưu trên thiết bị này, chưa đồng bộ với nhóm. Kéo thả giữ ngày và xóa
+                  giờ từ vị trí chèn trở xuống.
                 </Alert>
               )}
               {draft.needsReview && (
                 <Alert tone="warning">
-                  Server có phiên bản mới. Bản nháp được giữ nguyên để đối chiếu; chưa thể sửa tiếp.
+                  Lịch trình chung đã thay đổi. Bản nháp được giữ nguyên để đối chiếu; chưa thể sửa
+                  tiếp.
                 </Alert>
               )}
               {(gateway || draft.needsReview) && (
                 <Button variant="outline" onClick={() => setConfirmReset(true)}>
-                  Lấy dữ liệu server thay bản nháp
+                  Thay bản nháp bằng lịch trình chung
                 </Button>
               )}
               {confirmReset && (

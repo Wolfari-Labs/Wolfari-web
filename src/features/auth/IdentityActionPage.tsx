@@ -94,12 +94,12 @@ export function IdentityActionPage({ action }: { action: Action }) {
         } catch {
           if (signal.aborted) return;
           failed = true;
-          setError('Identity hiện không khả dụng. Vui lòng thử lại sau.');
+          setError('Chưa thể kết nối. Vui lòng thử lại.');
         }
         signal.throwIfAborted();
         if (failed) return;
         if (!result) {
-          setError('Identity chưa kết nối; chưa có thay đổi nào được xác nhận.');
+          setError('Chưa xác nhận được thay đổi. Vui lòng thử lại.');
         } else if (result.status === 'error') {
           setError(
             result.error.code === 'VALIDATION_FAILED' || result.error.code === 'UNAUTHENTICATED'
@@ -137,7 +137,7 @@ export function IdentityActionPage({ action }: { action: Action }) {
           );
         }
       },
-      () => setError('Identity hiện không khả dụng. Vui lòng thử lại sau.'),
+      () => setError('Chưa thể kết nối. Vui lòng thử lại.'),
     );
   };
 

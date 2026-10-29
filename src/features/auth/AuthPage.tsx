@@ -7,8 +7,7 @@ import { Alert } from '../../shared/components/Alert';
 import { Select } from '../../shared/components/Select';
 import { TravelCollage } from '../../shared/components/TravelCollage';
 import { sceneAssets as art } from '../../shared/assets/scene-assets';
-import loginSubmitIcon from '../../shared/assets/figma/e48f0.svg';
-import registerSubmitIcon from '../../shared/assets/figma/cadd3.svg';
+import { LogIn, UserPlus, Mail, LockKeyhole, UserRound } from 'lucide-react';
 import { validateAuth, type AuthFormValues, type AuthFormErrors } from './model/auth-validation';
 import styles from './AuthPage.module.css';
 import { useOptionalIdentityRepository } from './repositories/identity-context';
@@ -22,7 +21,7 @@ function authErrorMessage(code: string): string {
   if (code === 'UNAUTHENTICATED' || code === 'VALIDATION_FAILED')
     return 'Email hoặc mật khẩu chưa đúng.';
   if (code === 'RESOURCE_EXHAUSTED') return 'Bạn đã thử quá nhiều lần. Vui lòng thử lại sau.';
-  if (code === 'SERVICE_UNAVAILABLE') return 'Identity hiện không khả dụng. Vui lòng thử lại sau.';
+  if (code === 'SERVICE_UNAVAILABLE') return 'Chưa thể kết nối. Vui lòng thử lại.';
   return 'Chưa thể hoàn tất đăng nhập. Vui lòng thử lại sau.';
 }
 
@@ -58,6 +57,11 @@ export function AuthPage({
         ? 'Mật khẩu đã được đặt lại. Vui lòng đăng nhập bằng mật khẩu mới.'
         : null,
   );
+  const [feedbackTone, setFeedbackTone] = useState<'error' | 'success'>('success');
+  const showError = (message: string) => {
+    setFeedbackTone('error');
+    setFeedback(message);
+  };
   const field = (name: keyof AuthFormValues, value: string | boolean) => {
     setDemoError(false);
     setValues((current) => ({ ...current, [name]: value }));
@@ -99,15 +103,16 @@ export function AuthPage({
           } catch {
             if (signal.aborted) return;
             setPreview('idle');
-            setFeedback('Identity hiện không khả dụng. Vui lòng thử lại sau.');
+            showError('Chưa thể kết nối. Vui lòng thử lại.');
             return;
           }
           signal.throwIfAborted();
           if (result.status === 'error') {
             setPreview('idle');
-            setFeedback(authErrorMessage(result.error.code));
+            showError(authErrorMessage(result.error.code));
           } else if (register) {
             setPreview('idle');
+            setFeedbackTone('success');
             setFeedback(
               'Yêu cầu đăng ký đã được tiếp nhận. Nếu email hợp lệ, hãy kiểm tra hộp thư để xác minh tài khoản.',
             );
@@ -116,7 +121,7 @@ export function AuthPage({
             navigate(safeReturnTo(returnTo), { replace: true });
           }
         },
-        () => setFeedback('Identity hiện không khả dụng. Vui lòng thử lại sau.'),
+        () => showError('Chưa thể kết nối. Vui lòng thử lại.'),
       );
     } else setPreview('unavailable');
   };
@@ -173,7 +178,7 @@ export function AuthPage({
                 value={values.fullName}
                 error={errors.fullName}
                 onChange={(e) => field('fullName', e.target.value)}
-                leadingIcon={<img src={art['47e18.svg']} alt="" />}
+                leadingIcon={<UserRound size={18} />}
               />
             )}
             <Input
@@ -186,7 +191,7 @@ export function AuthPage({
               value={values.email}
               error={errors.email}
               onChange={(e) => field('email', e.target.value)}
-              leadingIcon={<img src={art[register ? 'ca40c.svg' : '532c3.svg']} alt="" />}
+              leadingIcon={<Mail size={18} />}
             />
             <Input
               id="auth-password"
@@ -198,7 +203,7 @@ export function AuthPage({
               value={values.password}
               error={errors.password}
               onChange={(e) => field('password', e.target.value)}
-              leadingIcon={<img src={art[register ? '183ec.svg' : 'c2986.svg']} alt="" />}
+              leadingIcon={<LockKeyhole size={18} />}
             />
             {register && (
               <Input
@@ -209,7 +214,7 @@ export function AuthPage({
                 value={values.confirmation}
                 error={errors.confirmation}
                 onChange={(e) => field('confirmation', e.target.value)}
-                leadingIcon={<img src={art['9f11b.svg']} alt="" />}
+                leadingIcon={<LockKeyhole size={18} />}
               />
             )}
           </div>
@@ -224,7 +229,8 @@ export function AuthPage({
                   aria-invalid={!!errors.acceptedTerms}
                   aria-describedby={errors.acceptedTerms ? 'auth-terms-error' : undefined}
                 />
-                Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật (xem trước)
+                Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật
+                {previewEnabled ? ' (xem trước)' : ''}
               </label>
               {errors.acceptedTerms && (
                 <p className={styles.error} role="alert" id="auth-terms-error">
@@ -233,15 +239,17 @@ export function AuthPage({
               )}
             </>
           )}
-          <p className={styles.previewNote}>
-            {previewEnabled
-              ? register
-                ? 'Mật khẩu từ 15–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
-                : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'
-              : register
-                ? 'Mật khẩu cần từ 15 đến 128 ký tự.'
-                : 'Mật khẩu phân biệt chữ hoa, chữ thường và không được gửi vào URL.'}
-          </p>
+          {(previewEnabled || register) && (
+            <p className={styles.previewNote}>
+              {previewEnabled
+                ? register
+                  ? 'Mật khẩu từ 15–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
+                  : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'
+                : register
+                  ? 'Mật khẩu cần từ 15 đến 128 ký tự.'
+                  : 'Mật khẩu phân biệt chữ hoa, chữ thường và không được gửi vào URL.'}
+            </p>
+          )}
           {demoError && (
             <Alert tone="error">
               Email hoặc mật khẩu demo chưa đúng. Dùng tài khoản minh họa trong bảng xem trước.
@@ -251,11 +259,15 @@ export function AuthPage({
             className={styles.submit}
             type="submit"
             loading={preview === 'pending' || !!pending}
-            icon={<img src={register ? registerSubmitIcon : loginSubmitIcon} alt="" />}
+            icon={register ? <UserPlus size={18} /> : <LogIn size={18} />}
           >
             {register ? 'Tạo tài khoản' : 'Đăng nhập'}
           </Button>
-          {pending && <Alert live>Đang gửi yêu cầu tới Identity…</Alert>}
+          {pending && (
+            <span role="status" className={styles.srOnly}>
+              Đang xử lý…
+            </span>
+          )}
           {preview !== 'idle' && (
             <div className={styles.feedback}>
               <Alert tone={preview === 'error' ? 'error' : 'info'} live>
@@ -264,14 +276,14 @@ export function AuthPage({
                   : preview === 'unknown'
                     ? 'Minh họa kết quả chưa xác định. Chưa có tài khoản hoặc phiên nào được xác nhận.'
                     : preview === 'error'
-                      ? 'Chưa thể hoàn tất. Kiểm tra thông tin và thử lại khi Identity khả dụng.'
-                      : 'Dữ liệu đã qua kiểm tra local. Identity chưa kết nối; chưa tạo tài khoản hoặc đăng nhập.'}
+                      ? 'Chưa thể hoàn tất. Kiểm tra thông tin và thử lại.'
+                      : 'Bản xem trước chưa hỗ trợ tạo tài khoản hoặc đăng nhập thật.'}
               </Alert>
             </div>
           )}
           {feedback && (
             <div className={styles.feedback}>
-              <Alert tone="info" live>
+              <Alert tone={feedbackTone} live>
                 {feedback}
               </Alert>
             </div>
@@ -283,16 +295,12 @@ export function AuthPage({
                 Quên mật khẩu?
               </Link>
             )}
-            <Link to={`${register ? '/login' : '/register'}?returnTo=${encodeURIComponent(safeReturnTo(new URLSearchParams(location.search).get('returnTo')))}`}>{register ? 'Đăng nhập' : 'Đăng ký'}</Link>
+            <Link
+              to={`${register ? '/login' : '/register'}?returnTo=${encodeURIComponent(safeReturnTo(new URLSearchParams(location.search).get('returnTo')))}`}
+            >
+              {register ? 'Đăng nhập' : 'Đăng ký'}
+            </Link>
           </div>
-          {!register && (
-            <div className={styles.stateNote}>
-              <Alert live={false}>
-                Nếu thông tin không hợp lệ hoặc tài khoản không được phép sử dụng, hệ thống sẽ hiển
-                thị lỗi phù hợp.
-              </Alert>
-            </div>
-          )}
         </form>
         {previewEnabled && (
           <details className="preview" data-preview="auth-form" open={!!demoLogin}>

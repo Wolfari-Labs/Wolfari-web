@@ -1,4 +1,5 @@
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -15,6 +16,8 @@
   line-height: var(--line-label);
   overflow-wrap: anywhere;
   transition:
+    transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color var(--motion-duration),
     box-shadow var(--motion-duration),
     opacity var(--motion-duration);
 }
@@ -31,22 +34,62 @@
   background: transparent;
   color: var(--color-ink);
 }
+.ghost {
+  background: transparent;
+  color: var(--color-ink);
+}
+.secondary {
+  background: var(--color-selected);
+  color: var(--color-ink);
+  border-color: var(--color-line);
+}
+.destructive {
+  background: var(--color-status-danger);
+  color: white;
+}
+.compact {
+  padding-inline: 12px;
+}
+.button.icon {
+  padding: 10px;
+  width: 44px;
+}
+.contents {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.contents[data-loading] {
+  opacity: 0.85;
+}
+.loadingIndicator {
+  position: absolute;
+  inset: 0 4px 0 auto;
+  width: 16px;
+  display: grid;
+  place-items: center;
+}
+.button.icon[aria-busy='true'] .loadingIndicator {
+  inset: 0;
+  width: 100%;
+}
+.button.icon[aria-busy='true'] .contents {
+  opacity: 0;
+}
 .icon {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
 }
 .spinner {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spin 800ms linear infinite;
-}
-.button:active:not(:disabled) {
-  opacity: 0.88;
 }
 .button:disabled {
   background: var(--color-line);
@@ -61,12 +104,21 @@
 }
 @media (hover: hover) {
   .button:hover:not(:disabled) {
-    box-shadow: var(--shadow-selection);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
   }
   .outline:hover:not(:disabled),
   .plain:hover:not(:disabled) {
     background: var(--color-pale);
   }
+}
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.button[aria-busy='true'] {
+  background: var(--action-gradient);
+  color: white;
+  cursor: progress;
 }
 @media (max-width: 768px) {
   .button {

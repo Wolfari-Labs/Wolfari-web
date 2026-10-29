@@ -20,13 +20,13 @@ export const priceWatchScenarios = [
 ] as const;
 export type PriceWatchScenario = (typeof priceWatchScenarios)[number];
 
-export const watchStatuses = ['ACTIVE', 'PAUSED', 'STALE', 'PROVIDER_ERROR'] as const;
+export const watchStatuses = ['ACTIVE', 'PAUSED', 'EXPIRED', 'STOPPED'] as const;
 export type WatchStatus = (typeof watchStatuses)[number];
 
 export const journeyTypes = ['ONE_WAY', 'ROUND_TRIP'] as const;
 export type JourneyType = (typeof journeyTypes)[number];
 
-export const cabinClasses = ['ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS'] as const;
+export const cabinClasses = ['ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'] as const;
 export type CabinClass = (typeof cabinClasses)[number];
 
 export type ObservationStatus = 'OBSERVED' | 'STALE' | 'PROVIDER_ERROR';
@@ -55,7 +55,11 @@ export interface PriceWatchItem {
   readonly journeyType: JourneyType;
   readonly departureDate: string;
   readonly returnDate: string | null;
-  readonly passengers: number;
+  readonly passengers: {
+    readonly adults: number;
+    readonly children: number;
+    readonly infants: number;
+  };
   readonly cabin: CabinClass;
   readonly thresholdVnd: MoneyVnd;
   /** Retained when a provider fails; never represented as zero. */
@@ -64,6 +68,7 @@ export interface PriceWatchItem {
   readonly provider: string;
   readonly observedAt: string | null;
   readonly status: WatchStatus;
+  readonly dataQuality: 'CURRENT' | 'STALE' | 'PROVIDER_ERROR';
   readonly version: number;
   readonly createdAt: string;
   readonly updatedAt: string;
@@ -77,8 +82,8 @@ export interface PriceWatchPermissions {
   readonly canEditOwn: boolean;
   readonly canPauseOwn: boolean;
   readonly canResumeOwn: boolean;
-  readonly canDeleteOwn: boolean;
-  readonly canDeleteAny: boolean;
+  readonly canStopOwn: boolean;
+  readonly canStopAny: boolean;
 }
 
 export interface PriceWatchViewModel {

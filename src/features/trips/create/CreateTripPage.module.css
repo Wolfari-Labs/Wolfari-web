@@ -36,8 +36,8 @@
 
 .eyebrow {
   margin: 0 0 5px;
-  color: #079fc5;
-  font-size: 11px;
+  color: var(--color-action-primary);
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
@@ -51,7 +51,7 @@
 
 .pageHeader p:last-child {
   margin: 8px 0 0;
-  color: #68839e;
+  color: var(--color-muted);
   font-size: 14px;
 }
 
@@ -89,6 +89,23 @@
 
 .formCard {
   padding: 28px 32px 24px;
+}
+.gatewayForm {
+  width: min(100%, 1240px);
+  margin-inline: auto;
+}
+.gatewayForm > fieldset {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.gatewayForm > p {
+  color: var(--color-muted);
+  font-size: 14px;
+  margin-block: 20px;
 }
 
 .formStep {
@@ -665,6 +682,20 @@
   .pageHeader,
   .destinationPanel {
     display: none;
+  }
+
+  /* Gateway is a single form, unlike the two-step preview with its own title. */
+  .gatewayPage .pageHeader {
+    display: block;
+    margin-block: 16px 24px;
+  }
+
+  .gatewayPage .pageHeader > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 8px;
+    font-size: 14px;
   }
 
   .stepper {

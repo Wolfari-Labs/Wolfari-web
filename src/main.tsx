@@ -31,6 +31,8 @@ import { createSessionManager } from './infrastructure/session/session-manager';
 import { coordinateBrowserSession } from './infrastructure/session/coordinated-session';
 import { createCommandCoordinator } from './infrastructure/operations/command-coordinator';
 import { decodeFinanceReceipt } from './infrastructure/repositories/finance-decoders';
+import { createNotificationRepository } from './infrastructure/repositories/notification.gateway-repository';
+import { createRuntimePriceWatchRepository } from './infrastructure/repositories/runtime-price-watch.gateway-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -51,9 +53,15 @@ async function start() {
     const localManager = createSessionManager(gatewayHttpClient, accessTokenStore);
     const sessionManager = fixtureSelected ? localManager : coordinateBrowserSession(localManager);
     let journal: Storage | undefined;
-    try { journal = window.sessionStorage; } catch { /* Memory-only recovery when storage is blocked. */ }
+    try {
+      journal = window.sessionStorage;
+    } catch {
+      /* Memory-only recovery when storage is blocked. */
+    }
     const commands = createCommandCoordinator(gatewayHttpClient, decodeFinanceReceipt, journal);
-    sessionManager.subscribe(() => { if (sessionManager.status() !== 'authenticated') commands.invalidate(); });
+    sessionManager.subscribe(() => {
+      if (sessionManager.status() !== 'authenticated') commands.invalidate();
+    });
     if (!fixtureSelected) void sessionManager.bootstrap().catch(() => undefined);
     let previewTripPath: string | null = null;
     let demoAccess: DemoAccess | undefined;
@@ -166,7 +174,15 @@ async function start() {
             fundRepository={fundRepository}
             priceWatchRepository={priceWatchRepository}
             membersRepositories={membersRepositories}
-            {...(!fixtureSelected ? { sessionManager } : {})}
+            {...(!fixtureSelected
+              ? {
+                  sessionManager,
+                  runtimeServices: {
+                    notifications: createNotificationRepository(gatewayHttpClient),
+                    priceWatch: createRuntimePriceWatchRepository(gatewayHttpClient),
+                  },
+                }
+              : {})}
           >
             <RouterProvider router={createRouter(previewTripPath, demoAccess)} />
           </Providers>

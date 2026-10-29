@@ -3,6 +3,7 @@ import { App } from './App';
 import { captureInvitationToken } from '../features/members/invitation-token';
 import { ContentState } from '../shared/components/ContentState';
 import { lazy, Suspense, type ReactNode } from 'react';
+import { HomeRoute } from './HomeRoute';
 import type { DemoAccess } from '../features/auth/model/demo-access';
 const TripListPage = lazy(async () => ({
   default: (await import('../features/trips/TripListPage')).TripListPage,
@@ -16,7 +17,6 @@ const IdentityActionPage = lazy(async () => ({
 const ProfilePage = lazy(async () => ({
   default: (await import('../features/auth/ProfilePage')).ProfilePage,
 }));
-const HomeRoute = lazy(async () => ({ default: (await import('./HomeRoute')).HomeRoute }));
 const TripOverviewPage = lazy(async () => ({
   default: (await import('../features/trips/TripOverviewPage')).TripOverviewPage,
 }));

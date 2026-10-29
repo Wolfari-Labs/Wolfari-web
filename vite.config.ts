@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 import { loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => ({
+  // Fixture and Gateway test servers can run together without invalidating
+  // each other's dependency hashes (504 Outdated Optimize Dep).
+  cacheDir: `node_modules/.vite/${mode}-${(process.env.VITE_DATA_MODE ?? loadEnv(mode, process.cwd(), '').VITE_DATA_MODE) === 'gateway' ? 'gateway' : 'fixture'}`,
   define: {},
   plugins: [react()],
   server: {
@@ -11,7 +14,10 @@ export default defineConfig(({ mode }) => ({
     strictPort: true,
     proxy: {
       '/api/v1': {
-        target: process.env.VITE_GATEWAY_PROXY_TARGET ?? loadEnv(mode, process.cwd(), '').VITE_GATEWAY_PROXY_TARGET ?? 'http://127.0.0.1:3000',
+        target:
+          process.env.VITE_GATEWAY_PROXY_TARGET ??
+          loadEnv(mode, process.cwd(), '').VITE_GATEWAY_PROXY_TARGET ??
+          'http://127.0.0.1:3000',
         changeOrigin: true,
       },
     },

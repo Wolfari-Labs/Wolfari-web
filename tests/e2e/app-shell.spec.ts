@@ -59,6 +59,23 @@ async function choose(page: Page, scenario: string) {
 }
 async function loadedAssets(page: Page) {
   await page.evaluate(() => document.fonts.ready);
+  // Below-fold images intentionally lazy-load; inspect each after scrolling it
+  // into view, not merely because it has non-zero layout dimensions.
+  for (const img of await page.locator('img:visible').all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        img.evaluate(
+          (e) => (e as HTMLImageElement).complete && (e as HTMLImageElement).naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
+  }
+  await page.evaluate(() => {
+    scrollTo(0, 0);
+    const main = document.querySelector('main');
+    if (main) main.scrollTop = 0;
+  });
   const images = await page.locator('img:visible').evaluateAll((elements) =>
     elements.map((element) => {
       const image = element as HTMLImageElement,
@@ -327,13 +344,17 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
   await expect(close).toBeFocused();
   for (let i = 0; i < 12; i++) {
     await page.keyboard.press('Tab');
-    expect(await page.evaluate(() => !!document.activeElement?.closest('dialog[open]'))).toBe(true);
+    expect(
+      await page.evaluate(
+        () => !!document.activeElement?.closest('[role="dialog"][data-state="open"]'),
+      ),
+    ).toBe(true);
   }
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   await page.keyboard.press('Escape');
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await menu.click();
   await page.mouse.click(390, 200);
   await expect(drawer).not.toBeVisible();

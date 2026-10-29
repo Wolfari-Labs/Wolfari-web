@@ -203,7 +203,12 @@ function InvitationResponse({
       {visibleError && (
         <Alert tone="warning" live>
           {invitationErrorMessage(visibleError)}
-          {visibleError.correlationId && <small> Mã tra cứu: {visibleError.correlationId}</small>}
+          {visibleError.correlationId && (
+            <details>
+              <summary>Chi tiết hỗ trợ</summary>
+              <small>Mã tra cứu: {visibleError.correlationId}</small>
+            </details>
+          )}
         </Alert>
       )}
       {preview && (
