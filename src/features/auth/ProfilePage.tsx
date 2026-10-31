@@ -162,7 +162,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     event.preventDefault();
     if (busy) return;
     const name = (draft ?? profile?.fullName ?? '').trim();
-    if (!name || Array.from(name).length > 150) {
+    if (!name || name.length > 150) {
       setValidation('Tên hiển thị cần từ 1 đến 150 ký tự.');
       document.getElementById('profile-name')?.focus();
       return;
@@ -398,6 +398,9 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
               <Input
                 id="profile-name"
                 label="Tên hiển thị"
+                name="name"
+                autoComplete="name"
+                required
                 value={draft ?? profile.fullName}
                 disabled={busy}
                 error={validation}
@@ -407,7 +410,13 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                   setFeedback(null);
                 }}
               />
-              <Input label="Email" value={profile.email} readOnly type="email" />
+              <Input
+                label="Email"
+                value={profile.email}
+                readOnly
+                type="email"
+                autoComplete="email"
+              />
             </div>
             {!profile.emailVerifiedAt && (
               <Alert tone="info">
@@ -538,6 +547,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 label="Mật khẩu hiện tại"
                 type="password"
                 autoComplete="current-password"
+                required
                 disabled={busy}
                 value={password.current}
                 onChange={(event) => setPassword({ ...password, current: event.target.value })}
@@ -547,6 +557,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 label="Mật khẩu mới"
                 type="password"
                 autoComplete="new-password"
+                required
                 disabled={busy}
                 value={password.next}
                 onChange={(event) => setPassword({ ...password, next: event.target.value })}
@@ -556,6 +567,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 label="Nhập lại mật khẩu mới"
                 type="password"
                 autoComplete="new-password"
+                required
                 disabled={busy}
                 value={password.confirmation}
                 onChange={(event) => setPassword({ ...password, confirmation: event.target.value })}

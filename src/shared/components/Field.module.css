@@ -24,8 +24,8 @@
 }
 .inputRow,
 .select {
-  background: var(--color-white);
-  border: 1px solid var(--color-field-line);
+  background: var(--field-surface);
+  border: 1px solid var(--field-border-default);
   border-radius: var(--radius-control);
   min-height: var(--control-height);
   width: 100%;
@@ -33,15 +33,15 @@
 }
 .inputRow {
   border: 0;
-  --field-border: var(--color-field-line);
+  --field-border: var(--field-border-default);
   box-shadow: inset 0 0 0 1px var(--field-border);
   display: flex;
   align-items: center;
   gap: var(--space-8);
   padding-inline: var(--space-14);
   transition:
-    box-shadow 160ms ease,
-    background-color 160ms ease;
+    box-shadow var(--motion-control) ease,
+    background-color var(--motion-control) ease;
 }
 .input {
   border: 0;
@@ -51,7 +51,7 @@
   min-width: 0;
   min-height: var(--control-height);
   padding: 0;
-  color: var(--color-ink);
+  color: var(--field-text);
   font: inherit;
 }
 .input::placeholder {
@@ -67,11 +67,11 @@
   width: 100%;
   min-height: 112px;
   resize: vertical;
-  padding: 12px 14px;
-  border: 1px solid var(--color-field-line);
+  padding: var(--space-12) var(--space-14);
+  border: 1px solid var(--field-border-default);
   border-radius: var(--radius-control);
-  background: var(--color-white);
-  color: var(--color-ink);
+  background: var(--field-surface);
+  color: var(--field-text);
   font: inherit;
 }
 .textarea:focus {
@@ -79,7 +79,7 @@
   outline-offset: var(--focus-offset);
 }
 .textarea.invalid {
-  border-color: var(--ios-error);
+  border-color: var(--color-field-error);
 }
 .icon {
   display: inline-flex;
@@ -111,7 +111,7 @@
   border-radius: var(--radius-6);
 }
 .passwordToggle:disabled {
-  color: var(--ios-muted);
+  color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
 .select {
@@ -121,8 +121,8 @@
   appearance: none;
   cursor: pointer;
   transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+    border-color var(--motion-control) ease,
+    box-shadow var(--motion-control) ease;
 }
 .selectWrap {
   position: relative;
@@ -154,8 +154,8 @@
   box-shadow: none;
 }
 .invalid {
-  border-color: var(--ios-error);
-  --field-border: var(--ios-error);
+  border-color: var(--color-field-error);
+  --field-border: var(--color-field-error);
 }
 .hint,
 .error {
@@ -167,15 +167,17 @@
   color: var(--color-note-text);
 }
 .error {
-  color: var(--ios-error);
+  color: var(--color-field-error);
 }
 .inputRow:has(input:disabled),
-.select:disabled {
-  background-color: var(--ios-secondary);
-  color: var(--ios-muted);
+.select:disabled,
+.textarea:disabled {
+  background-color: var(--color-control-disabled-surface);
+  color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
 .input:disabled {
+  color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
 @media (hover: hover) {

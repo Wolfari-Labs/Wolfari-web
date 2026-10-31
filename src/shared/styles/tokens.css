@@ -29,13 +29,13 @@
     var(--color-gradient-end)
   );
   --ios-ink: #21343b;
-  --ios-muted: #64747c;
+  --ios-muted: var(--color-control-disabled-text);
   --ios-teal: #317c89;
-  --ios-secondary: #edf2f3;
+  --ios-secondary: var(--color-control-disabled-surface);
   --ios-background: #f5f7f8;
   --ios-line: #dce4e7;
   --ios-pressed: #245f6a;
-  --ios-error: #955c49;
+  --ios-error: var(--color-field-error);
   --ios-mint: #e8f2ef;
   --ios-amber: #f8f3e8;
   --ios-peach: #f8e4d8;
@@ -109,6 +109,26 @@
   --focus-width: 3px;
   --focus-offset: 4px;
   --motion-duration: 150ms;
+  /* Web semantic roles; preserve legacy aliases and their existing values. */
+  --color-field-error: #955c49;
+  --color-control-disabled-text: #64747c;
+  --color-control-disabled-surface: #edf2f3;
+  --field-surface: var(--color-surface);
+  --field-text: var(--color-text);
+  --field-border-default: var(--color-field-line);
+  --card-padding: var(--space-24);
+  --card-padding-narrow: var(--space-16);
+  --card-surface: var(--color-surface);
+  /* Existing timings, not the unapproved CP02 motion proposals. */
+  --motion-control: 160ms;
+  --motion-control-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-spinner: 800ms;
+  --motion-drawer-enter: 260ms;
+  --motion-overlay-exit: 180ms;
+  --motion-backdrop: 180ms;
+  --motion-menu-enter: 160ms;
+  --motion-menu-exit: 120ms;
+  --motion-dialog-enter: 220ms;
   /* CSS media queries require literals; keep these aligned with breakpoints.ts. */
   --breakpoint-mobile: 768px;
   --breakpoint-narrow: 360px;

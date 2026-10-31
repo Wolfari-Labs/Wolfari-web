@@ -20,7 +20,7 @@
 }
 .breadcrumb a {
   position: relative;
-  color: var(--color-active);
+  color: var(--color-action-primary);
 }
 .breadcrumb a::after {
   content: '';
@@ -156,6 +156,17 @@
   line-height: 20px;
   margin: 12px 0;
 }
+.memberFeedback {
+  margin: 12px 0;
+}
+.memberFeedback > p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+}
+.memberFeedback button {
+  margin-left: 12px;
+}
 .summaries {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -199,6 +210,29 @@
   color: var(--color-muted);
   margin: 12px 0;
 }
+.summaryValue {
+  margin: 0 0 8px;
+  color: var(--color-ink);
+  font-size: clamp(18px, 2vw, 24px) !important;
+  line-height: 30px !important;
+  font-weight: 600;
+}
+.summaryDetail {
+  margin: 0 0 10px;
+  color: var(--color-muted);
+}
+.progressTrack {
+  height: 8px;
+  border-radius: 999px;
+  background: #e7f3f7;
+  overflow: clip;
+  margin-top: 18px;
+}
+.progressTrack span {
+  display: block;
+  height: 100%;
+  background: #19b889;
+}
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 578fr) minmax(0, 314fr) minmax(0, 260fr);
@@ -212,7 +246,7 @@
   align-items: flex-start;
 }
 .workspace a {
-  color: var(--color-active);
+  color: var(--color-action-primary);
   min-height: 44px;
   display: inline-flex;
   align-items: center;

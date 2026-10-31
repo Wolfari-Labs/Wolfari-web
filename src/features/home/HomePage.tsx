@@ -191,7 +191,10 @@ export function HomePage({ model, onRetry }: { model: HomeViewModel; onRetry: ()
               <span>Xem trước</span>
               <span>trải nghiệm của bạn</span>
             </h2>
-            <p>Dù là trên web hay điện thoại, Wolfari luôn đồng hành cùng bạn mọi lúc, mọi nơi.</p>
+            <p>
+              Trên trình duyệt máy tính hoặc điện thoại, bạn có thể cùng nhóm xem và chuẩn bị chuyến
+              đi.
+            </p>
             <ul>
               {[
                 'Giao diện thân thiện, dễ sử dụng',

@@ -9,6 +9,9 @@ export default tseslint.config(
       'dist-demo/**',
       'dist-demo1/**',
       '.local/demo1/**',
+      // Archived build output and Vite cache, not application or evidence scripts.
+      '.local/cp01-baseline/build-production/**',
+      '.local/cp02-review-vite/**',
       'node_modules/**',
       'coverage/**',
       'playwright-report/**',

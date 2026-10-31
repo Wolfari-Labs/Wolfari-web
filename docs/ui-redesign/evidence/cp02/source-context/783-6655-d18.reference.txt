@@ -1,0 +1,123 @@
+Read-only MCP reference 2026-10-30; D18 layouts, not application code. File hdy2sOZk6rfjKXKDJ9HW9y. create_session returned all-zero UUID; rejected by file tool; retry without sessionId per tool error succeeded.
+
+const imgReadingMascot = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialLogo = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconTngQuan = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconBnDDaDim = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconLchTrinh = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconDressCode = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconPackingList = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconThanhVien = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconQuNhom = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconTheoDoiGiaVe = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconCaiDt = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarRouteDeco = "[TEMP_ASSET_URL_REMOVED]";
+
+function LandingMascotReading({ className }: { className?: string }) {
+  return (
+    <div className={className || "overflow-clip relative size-[150px]"} data-node-id="33:502" data-name="Landing/Mascot/Reading">
+      <div className="absolute left-0 size-[150px] top-0" data-node-id="33:503" data-name="Reading mascot">
+        <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgReadingMascot} />
+      </div>
+    </div>
+  );
+}
+
+type ButtonOutlineProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonOutline({ className, label = "Xem chi tiết" }: ButtonOutlineProps) {
+  return (
+    <div className={className || "bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[44px] items-center justify-center relative rounded-[18px] w-[150px]"} data-node-id="11:14" data-name="Button/Outline">
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] whitespace-nowrap" data-node-id="11:15">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+export default function Web402MenuDrawer() {
+  return (
+    <div className="bg-[rgba(5,51,82,0.28)] relative size-full" data-node-id="783:6655" data-name="Web 402 · Menu drawer">
+      <div className="absolute bg-white content-stretch flex flex-col h-[874px] items-start left-0 overflow-clip top-0 w-[300px]" data-node-id="783:6656" data-name="Navigation">
+        <div className="content-stretch flex h-[72px] items-center justify-between overflow-clip px-[16px] relative shrink-0 w-[300px]" data-node-id="783:6657" data-name="Drawer header">
+          <div className="h-[40px] overflow-clip relative shrink-0 w-[120px]" data-node-id="783:6658" data-name="Brand/Logo">
+            <div className="absolute h-[40px] left-0 top-0 w-[120px]" data-node-id="I783:6658;14:3" data-name="Official logo">
+              <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialLogo} />
+            </div>
+          </div>
+          <ButtonOutline className="bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[40px] items-center justify-center relative rounded-[18px] shrink-0 w-[70px]" label="Đóng" />
+        </div>
+        <div className="bg-white h-[802px] relative shrink-0 w-[300px]" data-node-id="783:6724" data-name="Shared/Trip Sidebar">
+          <div className="absolute bg-[#e8f7fa] h-[42px] left-[8px] rounded-[7px] top-[324px] w-[284px]" data-node-id="783:6725" data-name="active nav" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[23px] w-[228px]" data-node-id="783:6727">
+            Tổng quan chuyến đi
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[127px] w-[228px]" data-node-id="783:6729">
+            Lịch trình
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[75px] w-[228px]" data-node-id="783:6731">
+            Bản đồ địa điểm
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[179px] w-[228px]" data-node-id="783:6733">
+            Dress code
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[231px] w-[228px]" data-node-id="783:6735">
+            Packing list
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#079fc5] text-[13px] top-[335px] w-[228px]" data-node-id="783:6737">
+            Quỹ nhóm
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[387px] w-[228px]" data-node-id="783:6739">
+            Theo dõi giá vé
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[283px] w-[228px]" data-node-id="783:6741">
+            Thành viên
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[439px] w-[228px]" data-node-id="783:6745">
+            Cài đặt
+          </p>
+          <LandingMascotReading className="absolute left-[65px] overflow-clip size-[166px] top-[598px]" />
+          <div className="[word-break:break-word] absolute font-['Caveat:Bold'] font-bold h-[48px] leading-[0] left-[74px] text-[#079cc5] text-[18px] top-[518px] w-[150px]" data-node-id="783:6747">
+            <p className="leading-[52px] mb-0">Cùng bạn</p>
+            <p className="leading-[52px]">đi xa hơn!</p>
+          </div>
+          <div className="absolute bg-[#079fc5] h-[42px] left-[8px] rounded-[2px] top-[324px] w-[4px]" data-node-id="783:6750" data-name="Sidebar/Active edge" />
+          <div className="absolute left-[24px] size-[22px] top-[22px]" data-node-id="783:6755" data-name="Sidebar/Icon Tổng quan">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconTngQuan} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[74px]" data-node-id="783:6757" data-name="Sidebar/Icon Bản đồ địa điểm">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconBnDDaDim} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[126px]" data-node-id="783:6760" data-name="Sidebar/Icon Lịch trình">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconLchTrinh} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[178px]" data-node-id="783:6763" data-name="Sidebar/Icon Dress code">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconDressCode} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[230px]" data-node-id="783:6765" data-name="Sidebar/Icon Packing list">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconPackingList} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[282px]" data-node-id="783:6768" data-name="Sidebar/Icon Thành viên">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconThanhVien} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[334px]" data-node-id="783:6772" data-name="Sidebar/Icon Quỹ nhóm">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconQuNhom} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[386px]" data-node-id="783:6775" data-name="Sidebar/Icon Theo dõi giá vé">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconTheoDoiGiaVe} />
+          </div>
+          <div className="absolute left-[24px] size-[22px] top-[438px]" data-node-id="783:6778" data-name="Sidebar/Icon Cài đặt">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconCaiDt} />
+          </div>
+          <div className="absolute bg-[#d7eaf2] h-[884px] left-[299px] top-0 w-px" data-node-id="783:6781" data-name="Sidebar/Divider" />
+          <div className="absolute h-[40px] left-[82px] top-[566px] w-[145px]" data-node-id="783:6782" data-name="Sidebar/Route deco">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarRouteDeco} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -97,6 +97,7 @@ function PreviewCreateTripPage() {
   const [requestMessage, setRequestMessage] = useState('');
   const [pending, setPending] = useState(false);
   const [createdTripId, setCreatedTripId] = useState<string | null>(null);
+  const createActionRef = useRef<HTMLButtonElement>(null);
   const [customCover, setCustomCover] = useState<string | null>(null);
   const [coverError, setCoverError] = useState('');
   const [storageStatus, setStorageStatus] = useState<StorageStatus>('saved');
@@ -525,7 +526,7 @@ function PreviewCreateTripPage() {
                   Bỏ bản nháp
                 </Button>
                 <Link to={paths.trips}>Hủy</Link>
-                <Button type="submit" loading={pending}>
+                <Button ref={createActionRef} type="submit" loading={pending}>
                   Tạo chuyến đi
                 </Button>
               </div>
@@ -569,7 +570,18 @@ function PreviewCreateTripPage() {
       </form>
 
       {createdTripId && (
-        <CreateTripSuccess tripId={createdTripId} onContinue={() => setCreatedTripId(null)} />
+        <CreateTripSuccess
+          tripId={createdTripId}
+          returnFocusRef={createActionRef}
+          onDismiss={() => {
+            setCreatedTripId(null);
+            discard();
+            if (customCover) {
+              URL.revokeObjectURL(customCover);
+              setCustomCover(null);
+            }
+          }}
+        />
       )}
     </main>
   );

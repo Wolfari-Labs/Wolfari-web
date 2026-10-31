@@ -250,6 +250,13 @@ describe('Trip List route slice', () => {
     });
     await loaded();
     expect(tripLinks()).toHaveLength(1);
+    expect(screen.getByText(/Đã tải 1 chuyến đi có thể xem/)).toHaveTextContent(
+      'Tìm kiếm, trạng thái và sắp xếp chỉ áp dụng cho các chuyến đi đã tải',
+    );
+    const search = screen.getByRole('searchbox', { name: 'Tìm chuyến đi theo tên' });
+    await userEvent.type(search, 'phu quoc');
+    expect(screen.getByText('Không có chuyến đi phù hợp trong phần đã tải')).toBeInTheDocument();
+    await userEvent.clear(search);
     expect(listTrips.mock.calls[0]?.[0]).not.toHaveProperty('cursor');
     await userEvent.click(screen.getByRole('button', { name: 'Tải thêm chuyến đi' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Chưa thể tải nội dung');
@@ -270,6 +277,7 @@ describe('Trip List route slice', () => {
       limit: 20,
     });
     expect(screen.queryByRole('button', { name: 'Tải thêm chuyến đi' })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Đã tải \d+ chuyến đi có thể xem/)).not.toBeInTheDocument();
     expect(statusButton('Tất cả')).toHaveAccessibleName('Tất cả · 2');
 
     await userEvent.type(
@@ -278,6 +286,21 @@ describe('Trip List route slice', () => {
     );
     expect(tripLinks()).toHaveLength(1);
     expect(tripLinks()[0]).toHaveAccessibleName(`Mở chuyến đi ${second.name}`);
+  });
+
+  it('does not call an empty first cursor page a globally empty trip list', async () => {
+    const second = fixtureTripCatalog[1]!;
+    const listTrips = vi.fn<TripRepository['listTrips']>(async ({ cursor }) =>
+      cursor === undefined
+        ? { status: 'ready', data: { items: [], nextCursor: 'opaque/next+==' } }
+        : { status: 'ready', data: { items: [second], nextCursor: null } },
+    );
+    mount({ tripRepository: { ...createFixtureTripRepository(), listTrips } });
+    await screen.findByText('Chưa có chuyến đi trong phần đã tải');
+    expect(screen.getByText(/Đã tải 0 chuyến đi có thể xem/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Tải thêm chuyến đi' }));
+    expect(await screen.findByRole('link', { name: `Mở chuyến đi ${second.name}` })).toBeVisible();
+    expect(listTrips.mock.calls[1]?.[0]).toMatchObject({ cursor: 'opaque/next+==' });
   });
 
   it('renders missing enrichment without a fake cover or fabricated member total', async () => {

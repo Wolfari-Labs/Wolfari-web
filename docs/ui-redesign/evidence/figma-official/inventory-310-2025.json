@@ -1,0 +1,1689 @@
+{
+  "page": {
+    "id": "310:2025",
+    "name": "Wolfari · Mobile"
+  },
+  "roots": [
+    {
+      "id": "317:2025",
+      "name": "M01 · Khám phá — Guest",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2026",
+      "name": "M02 · Đăng nhập",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2027",
+      "name": "M03 · Đăng ký",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2028",
+      "name": "M04 · Khám phá — Thành viên",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2029",
+      "name": "M05 · Chuyến đi của tôi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2030",
+      "name": "M06 · Tạo chuyến đi — Thông tin",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2031",
+      "name": "M07 · Tạo chuyến đi — Cá nhân hóa",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2032",
+      "name": "M08 · Tổng quan chuyến đi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2033",
+      "name": "M09 · Lịch trình",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2034",
+      "name": "M10 · Bản đồ & địa điểm",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2035",
+      "name": "M11 · Chi tiết địa điểm",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2036",
+      "name": "M12 · Dress code",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2037",
+      "name": "M13 · Hành lý",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2038",
+      "name": "M14 · Quỹ nhóm",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2039",
+      "name": "M15 · Ghi nhận khoản chi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2040",
+      "name": "M16 · Thành viên",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2041",
+      "name": "M17 · Mời thành viên",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2042",
+      "name": "M18 · Theo dõi giá vé",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2043",
+      "name": "M19 · Xuất & chia sẻ",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2044",
+      "name": "M20 · Cài đặt chuyến đi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2045",
+      "name": "M21 · Chỉnh sửa chuyến đi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2046",
+      "name": "M22 · Tài khoản & thông báo",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2047",
+      "name": "M23 · Trung tâm thông báo",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2048",
+      "name": "M24 · Phản hồi lời mời",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2049",
+      "name": "M25 · Chia sẻ công khai",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2050",
+      "name": "M26 · Nhập mật khẩu chia sẻ",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2051",
+      "name": "M27 · Liên kết không khả dụng",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "328:3072",
+      "name": "Scrollable viewport",
+      "type": "FRAME",
+      "width": 402,
+      "height": 754
+    },
+    {
+      "id": "317:2052",
+      "name": "M28 · Tiện ích chuyến đi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2053",
+      "name": "M29 · Thêm hoạt động",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2054",
+      "name": "M30 · Thêm vật dụng",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "317:2055",
+      "name": "Mobile · Components",
+      "type": "FRAME",
+      "width": 2840,
+      "height": 5567
+    },
+    {
+      "id": "329:3244",
+      "name": "Mobile · Design index",
+      "type": "FRAME",
+      "width": 2840,
+      "height": 121
+    },
+    {
+      "id": "405:3506",
+      "name": "M31 · Thao tác nhanh — Bottom sheet",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "405:3634",
+      "name": "Mobile · Modern component showcase",
+      "type": "FRAME",
+      "width": 1080,
+      "height": 1369
+    },
+    {
+      "id": "424:4048",
+      "name": "M32 · Chỉnh sửa hồ sơ",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "449:4053",
+      "name": "Mobile · Prototype controls",
+      "type": "FRAME",
+      "width": 750,
+      "height": 360
+    },
+    {
+      "id": "450:4374",
+      "name": "P01 · Chuyến đi đã sẵn sàng",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4392",
+      "name": "P02 · Đã lưu hoạt động",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4410",
+      "name": "P03 · Đã lưu vật dụng",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4428",
+      "name": "P04 · Đã lưu khoản chi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4446",
+      "name": "P05 · Lời mời đã sẵn sàng",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4464",
+      "name": "P06 · Đã lưu hồ sơ",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4482",
+      "name": "P07 · Đã lưu cài đặt",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4500",
+      "name": "P08 · Đã lưu chuyến đi",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4518",
+      "name": "P09 · Đã lưu ngưỡng giá",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4533",
+      "name": "P10 · Xuất lịch trình PDF",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4551",
+      "name": "P11 · Liên kết chia sẻ",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4569",
+      "name": "P12 · Đăng xuất khỏi Wolfari?",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4588",
+      "name": "P13 · Lưu trữ chuyến đi?",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "450:4607",
+      "name": "P14 · Thiết bị đang đăng nhập",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "461:5096",
+      "name": "Mobile · Travel journal components",
+      "type": "FRAME",
+      "width": 1174,
+      "height": 1897
+    },
+    {
+      "id": "588:8020",
+      "name": "M33 · Chi tiết hoạt động — Bottom sheet",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "612:8805",
+      "name": "P15 · Hành lý sẵn sàng",
+      "type": "FRAME",
+      "width": 402,
+      "height": 874
+    }
+  ],
+  "components": [
+    {
+      "id": "320:2028",
+      "name": "Mobile/Icon/compass",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2032",
+      "name": "Mobile/Icon/trip",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2036",
+      "name": "Mobile/Icon/user",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2040",
+      "name": "Mobile/Icon/bell",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2043",
+      "name": "Mobile/Icon/back",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2046",
+      "name": "Mobile/Icon/chevron",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2049",
+      "name": "Mobile/Icon/plus",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2052",
+      "name": "Mobile/Icon/search",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2056",
+      "name": "Mobile/Icon/calendar",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2060",
+      "name": "Mobile/Icon/map",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2063",
+      "name": "Mobile/Icon/wallet",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2067",
+      "name": "Mobile/Icon/check",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2070",
+      "name": "Mobile/Icon/close",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2073",
+      "name": "Mobile/Icon/more",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2078",
+      "name": "Mobile/Icon/share",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2081",
+      "name": "Mobile/Icon/shirt",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2084",
+      "name": "Mobile/Icon/bag",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2088",
+      "name": "Mobile/Icon/people",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2092",
+      "name": "Mobile/Icon/plane",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2095",
+      "name": "Mobile/Icon/gear",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2099",
+      "name": "Mobile/Icon/pin",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2103",
+      "name": "Mobile/Icon/clock",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2107",
+      "name": "Mobile/Icon/heart",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2110",
+      "name": "Mobile/Icon/lock",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2114",
+      "name": "Mobile/Icon/mail",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2118",
+      "name": "Mobile/Icon/sun",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2122",
+      "name": "Mobile/Icon/file",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2125",
+      "name": "Mobile/Icon/edit",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2128",
+      "name": "Mobile/Icon/signal",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2131",
+      "name": "Mobile/Icon/wifi",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2134",
+      "name": "Mobile/Icon/battery",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "320:2027",
+      "properties": {}
+    },
+    {
+      "id": "320:2144",
+      "name": "Mobile/Button",
+      "type": "COMPONENT_SET",
+      "width": 1174,
+      "height": 200,
+      "parentId": "317:2055",
+      "properties": {
+        "Label#320:0": {
+          "type": "TEXT",
+          "defaultValue": "Tiếp tục"
+        },
+        "Style": {
+          "type": "VARIANT",
+          "defaultValue": "Primary",
+          "variantOptions": [
+            "Primary",
+            "Secondary"
+          ]
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Default",
+          "variantOptions": [
+            "Default",
+            "Pressed",
+            "Disabled"
+          ]
+        }
+      }
+    },
+    {
+      "id": "320:2138",
+      "name": "Style=Primary, State=Default",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2144"
+    },
+    {
+      "id": "320:2139",
+      "name": "Style=Primary, State=Pressed",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2144"
+    },
+    {
+      "id": "320:2140",
+      "name": "Style=Primary, State=Disabled",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2144"
+    },
+    {
+      "id": "320:2141",
+      "name": "Style=Secondary, State=Default",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2144"
+    },
+    {
+      "id": "320:2142",
+      "name": "Style=Secondary, State=Pressed",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2144"
+    },
+    {
+      "id": "320:2143",
+      "name": "Style=Secondary, State=Disabled",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2144"
+    },
+    {
+      "id": "320:2154",
+      "name": "Mobile/Field",
+      "type": "COMPONENT_SET",
+      "width": 1174,
+      "height": 132,
+      "parentId": "317:2055",
+      "properties": {
+        "Value#320:7": {
+          "type": "TEXT",
+          "defaultValue": "Nhập thông tin"
+        },
+        "Leading icon#460:0": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "320:2125",
+          "preferredValues": []
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Default",
+          "variantOptions": [
+            "Default",
+            "Focus",
+            "Error"
+          ]
+        }
+      }
+    },
+    {
+      "id": "320:2151",
+      "name": "State=Default",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2154"
+    },
+    {
+      "id": "320:2152",
+      "name": "State=Focus",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2154"
+    },
+    {
+      "id": "320:2153",
+      "name": "State=Error",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "320:2154"
+    },
+    {
+      "id": "320:2160",
+      "name": "Mobile/Chip",
+      "type": "COMPONENT_SET",
+      "width": 312,
+      "height": 116,
+      "parentId": "317:2055",
+      "properties": {
+        "Label#320:11": {
+          "type": "TEXT",
+          "defaultValue": "Bộ lọc"
+        },
+        "Selected": {
+          "type": "VARIANT",
+          "defaultValue": "No",
+          "variantOptions": [
+            "No",
+            "Yes"
+          ]
+        }
+      }
+    },
+    {
+      "id": "320:2158",
+      "name": "Selected=No",
+      "type": "COMPONENT",
+      "width": 108,
+      "height": 36,
+      "parentId": "320:2160"
+    },
+    {
+      "id": "320:2159",
+      "name": "Selected=Yes",
+      "type": "COMPONENT",
+      "width": 108,
+      "height": 36,
+      "parentId": "320:2160"
+    },
+    {
+      "id": "320:2163",
+      "name": "Mobile/List row",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 76,
+      "parentId": "317:2055",
+      "properties": {
+        "Icon#320:14": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "320:2056",
+          "preferredValues": []
+        },
+        "Title#320:15": {
+          "type": "TEXT",
+          "defaultValue": "Tên mục"
+        },
+        "Subtitle#320:16": {
+          "type": "TEXT",
+          "defaultValue": "Thông tin bổ sung"
+        },
+        "Value#320:17": {
+          "type": "TEXT",
+          "defaultValue": ""
+        }
+      }
+    },
+    {
+      "id": "320:2178",
+      "name": "Mobile/Tab bar · Liquid glass",
+      "type": "COMPONENT_SET",
+      "width": 1174,
+      "height": 152,
+      "parentId": "317:2055",
+      "properties": {
+        "Active": {
+          "type": "VARIANT",
+          "defaultValue": "Explore",
+          "variantOptions": [
+            "Explore",
+            "Trips",
+            "Account"
+          ]
+        }
+      }
+    },
+    {
+      "id": "320:2175",
+      "name": "Active=Explore",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 64,
+      "parentId": "320:2178"
+    },
+    {
+      "id": "320:2176",
+      "name": "Active=Trips",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 64,
+      "parentId": "320:2178"
+    },
+    {
+      "id": "320:2177",
+      "name": "Active=Account",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 64,
+      "parentId": "320:2178"
+    },
+    {
+      "id": "320:2235",
+      "name": "Mobile/Checklist item",
+      "type": "COMPONENT_SET",
+      "width": 740,
+      "height": 148,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#320:18": {
+          "type": "TEXT",
+          "defaultValue": "Áo khoác mỏng"
+        },
+        "Subtitle#320:21": {
+          "type": "TEXT",
+          "defaultValue": "Trang · 1 chiếc"
+        },
+        "Checked": {
+          "type": "VARIANT",
+          "defaultValue": "No",
+          "variantOptions": [
+            "No",
+            "Yes"
+          ]
+        }
+      }
+    },
+    {
+      "id": "320:2233",
+      "name": "Checked=No",
+      "type": "COMPONENT",
+      "width": 322,
+      "height": 68,
+      "parentId": "320:2235"
+    },
+    {
+      "id": "320:2234",
+      "name": "Checked=Yes",
+      "type": "COMPONENT",
+      "width": 322,
+      "height": 68,
+      "parentId": "320:2235"
+    },
+    {
+      "id": "387:3243",
+      "name": "Mobile/Destination card",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 254,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#387:0": {
+          "type": "TEXT",
+          "defaultValue": "Phú Quốc đầy nắng"
+        },
+        "Subtitle#387:1": {
+          "type": "TEXT",
+          "defaultValue": "Biển xanh · Nghỉ dưỡng · 4 ngày"
+        },
+        "Badge#461:61": {
+          "type": "TEXT",
+          "defaultValue": "Khám phá"
+        },
+        "Cover#603:0": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "599:8097",
+          "preferredValues": []
+        }
+      }
+    },
+    {
+      "id": "387:3248",
+      "name": "Mobile/Activity card",
+      "type": "COMPONENT",
+      "width": 294,
+      "height": 82,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#387:2": {
+          "type": "TEXT",
+          "defaultValue": "Bán đảo Sơn Trà"
+        },
+        "Subtitle#387:3": {
+          "type": "TEXT",
+          "defaultValue": "Ngắm cảnh · 2 giờ 30 phút"
+        },
+        "Icon#588:0": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "320:2099",
+          "preferredValues": []
+        }
+      }
+    },
+    {
+      "id": "403:3254",
+      "name": "Mobile/Segmented control",
+      "type": "COMPONENT_SET",
+      "width": 1150,
+      "height": 104,
+      "parentId": "317:2055",
+      "properties": {
+        "Label 1#403:0": {
+          "type": "TEXT",
+          "defaultValue": "Sắp tới · 2"
+        },
+        "Label 2#403:4": {
+          "type": "TEXT",
+          "defaultValue": "Đang đi"
+        },
+        "Label 3#403:8": {
+          "type": "TEXT",
+          "defaultValue": "Đã đi"
+        },
+        "Active": {
+          "type": "VARIANT",
+          "defaultValue": "First",
+          "variantOptions": [
+            "First",
+            "Second",
+            "Third"
+          ]
+        }
+      }
+    },
+    {
+      "id": "403:3233",
+      "name": "Active=First",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 44,
+      "parentId": "403:3254"
+    },
+    {
+      "id": "403:3240",
+      "name": "Active=Second",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 44,
+      "parentId": "403:3254"
+    },
+    {
+      "id": "403:3247",
+      "name": "Active=Third",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 44,
+      "parentId": "403:3254"
+    },
+    {
+      "id": "403:3282",
+      "name": "Mobile/Search bar",
+      "type": "COMPONENT_SET",
+      "width": 772,
+      "height": 112,
+      "parentId": "317:2055",
+      "properties": {
+        "Value#403:12": {
+          "type": "TEXT",
+          "defaultValue": "Tìm địa điểm, quán ăn…"
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Default",
+          "variantOptions": [
+            "Default",
+            "Focus"
+          ]
+        }
+      }
+    },
+    {
+      "id": "403:3261",
+      "name": "State=Default",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "403:3282"
+    },
+    {
+      "id": "403:3272",
+      "name": "State=Focus",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "403:3282"
+    },
+    {
+      "id": "403:3309",
+      "name": "Mobile/Quick action",
+      "type": "COMPONENT_SET",
+      "width": 1190,
+      "height": 324,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#403:15": {
+          "type": "TEXT",
+          "defaultValue": "Tạo chuyến đi"
+        },
+        "Subtitle#403:18": {
+          "type": "TEXT",
+          "defaultValue": "Một hành trình mới"
+        },
+        "Icon#403:21": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "320:2049",
+          "preferredValues": []
+        },
+        "Tone": {
+          "type": "VARIANT",
+          "defaultValue": "Mint",
+          "variantOptions": [
+            "Mint",
+            "Sky",
+            "Lilac",
+            "Amber",
+            "Rose",
+            "Aqua"
+          ]
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Default",
+          "variantOptions": [
+            "Default",
+            "Pressed"
+          ]
+        }
+      }
+    },
+    {
+      "id": "403:3283",
+      "name": "Tone=Mint, State=Default",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "403:3296",
+      "name": "Tone=Mint, State=Pressed",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4743",
+      "name": "Tone=Sky, State=Default",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4754",
+      "name": "Tone=Sky, State=Pressed",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4769",
+      "name": "Tone=Lilac, State=Default",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4780",
+      "name": "Tone=Lilac, State=Pressed",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4795",
+      "name": "Tone=Amber, State=Default",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4806",
+      "name": "Tone=Amber, State=Pressed",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4821",
+      "name": "Tone=Rose, State=Default",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4832",
+      "name": "Tone=Rose, State=Pressed",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4847",
+      "name": "Tone=Aqua, State=Default",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "461:4858",
+      "name": "Tone=Aqua, State=Pressed",
+      "type": "COMPONENT",
+      "width": 171,
+      "height": 116,
+      "parentId": "403:3309"
+    },
+    {
+      "id": "403:3310",
+      "name": "Mobile/Action row",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 64,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#403:24": {
+          "type": "TEXT",
+          "defaultValue": "Thêm hoạt động"
+        },
+        "Subtitle#403:25": {
+          "type": "TEXT",
+          "defaultValue": "Sắp xếp lịch trình của nhóm"
+        },
+        "Icon#403:26": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "320:2056",
+          "preferredValues": []
+        }
+      }
+    },
+    {
+      "id": "403:3322",
+      "name": "Mobile/Avatar group",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#403:27": {
+          "type": "TEXT",
+          "defaultValue": "4 bạn đồng hành"
+        },
+        "Subtitle#403:28": {
+          "type": "TEXT",
+          "defaultValue": "Cùng nhau lên kế hoạch"
+        }
+      }
+    },
+    {
+      "id": "403:3359",
+      "name": "Mobile/Progress summary",
+      "type": "COMPONENT_SET",
+      "width": 772,
+      "height": 176,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#403:29": {
+          "type": "TEXT",
+          "defaultValue": "Chuẩn bị hành lý"
+        },
+        "Subtitle#403:32": {
+          "type": "TEXT",
+          "defaultValue": "Cùng sẵn sàng cho chuyến đi."
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "In progress",
+          "variantOptions": [
+            "In progress",
+            "Complete"
+          ]
+        }
+      }
+    },
+    {
+      "id": "403:3339",
+      "name": "State=In progress",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 116,
+      "parentId": "403:3359"
+    },
+    {
+      "id": "403:3349",
+      "name": "State=Complete",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 116,
+      "parentId": "403:3359"
+    },
+    {
+      "id": "403:3369",
+      "name": "Mobile/Status badge",
+      "type": "COMPONENT_SET",
+      "width": 490,
+      "height": 90,
+      "parentId": "317:2055",
+      "properties": {
+        "Label#403:35": {
+          "type": "TEXT",
+          "defaultValue": "Trạng thái"
+        },
+        "Tone": {
+          "type": "VARIANT",
+          "defaultValue": "Info",
+          "variantOptions": [
+            "Info",
+            "Success",
+            "Warning"
+          ]
+        }
+      }
+    },
+    {
+      "id": "403:3360",
+      "name": "Tone=Info",
+      "type": "COMPONENT",
+      "width": 134,
+      "height": 30,
+      "parentId": "403:3369"
+    },
+    {
+      "id": "403:3363",
+      "name": "Tone=Success",
+      "type": "COMPONENT",
+      "width": 134,
+      "height": 30,
+      "parentId": "403:3369"
+    },
+    {
+      "id": "403:3366",
+      "name": "Tone=Warning",
+      "type": "COMPONENT",
+      "width": 134,
+      "height": 30,
+      "parentId": "403:3369"
+    },
+    {
+      "id": "403:3370",
+      "name": "Mobile/Quick action sheet",
+      "type": "COMPONENT",
+      "width": 386,
+      "height": 462,
+      "parentId": "317:2055",
+      "properties": {}
+    },
+    {
+      "id": "424:3964",
+      "name": "Mobile/Member row",
+      "type": "COMPONENT",
+      "width": 322,
+      "height": 72,
+      "parentId": "317:2055",
+      "properties": {
+        "Initial#424:4": {
+          "type": "TEXT",
+          "defaultValue": "T"
+        },
+        "Name#424:5": {
+          "type": "TEXT",
+          "defaultValue": "Trang Nguyễn"
+        },
+        "Subtitle#424:6": {
+          "type": "TEXT",
+          "defaultValue": "Bạn · Quản lý quỹ"
+        },
+        "Owner#424:7": {
+          "type": "BOOLEAN",
+          "defaultValue": true
+        }
+      }
+    },
+    {
+      "id": "449:4062",
+      "name": "Mobile/Switch",
+      "type": "COMPONENT_SET",
+      "width": 166,
+      "height": 76,
+      "parentId": "317:2055",
+      "properties": {
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Off",
+          "variantOptions": [
+            "Off",
+            "On"
+          ]
+        }
+      }
+    },
+    {
+      "id": "449:4056",
+      "name": "State=Off",
+      "type": "COMPONENT",
+      "width": 51,
+      "height": 31,
+      "parentId": "449:4062"
+    },
+    {
+      "id": "449:4059",
+      "name": "State=On",
+      "type": "COMPONENT",
+      "width": 51,
+      "height": 31,
+      "parentId": "449:4062"
+    },
+    {
+      "id": "461:5075",
+      "name": "Mobile/Trip stepper",
+      "type": "COMPONENT_SET",
+      "width": 780,
+      "height": 136,
+      "parentId": "317:2055",
+      "properties": {
+        "Label 1#461:62": {
+          "type": "TEXT",
+          "defaultValue": "Thông tin"
+        },
+        "Label 2#461:65": {
+          "type": "TEXT",
+          "defaultValue": "Cá nhân hóa"
+        },
+        "Step": {
+          "type": "VARIANT",
+          "defaultValue": "Information",
+          "variantOptions": [
+            "Information",
+            "Personalize"
+          ]
+        }
+      }
+    },
+    {
+      "id": "461:5053",
+      "name": "Step=Information",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 56,
+      "parentId": "461:5075"
+    },
+    {
+      "id": "461:5063",
+      "name": "Step=Personalize",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 56,
+      "parentId": "461:5075"
+    },
+    {
+      "id": "562:7774",
+      "name": "Mobile/Trip section switcher",
+      "type": "COMPONENT_SET",
+      "width": 1528,
+      "height": 132,
+      "parentId": "317:2055",
+      "properties": {
+        "Active": {
+          "type": "VARIANT",
+          "defaultValue": "Overview",
+          "variantOptions": [
+            "Overview",
+            "Itinerary",
+            "Map",
+            "Tools"
+          ]
+        }
+      }
+    },
+    {
+      "id": "562:7726",
+      "name": "Active=Overview",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "562:7774"
+    },
+    {
+      "id": "562:7738",
+      "name": "Active=Itinerary",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "562:7774"
+    },
+    {
+      "id": "562:7750",
+      "name": "Active=Map",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "562:7774"
+    },
+    {
+      "id": "562:7762",
+      "name": "Active=Tools",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 52,
+      "parentId": "562:7774"
+    },
+    {
+      "id": "570:7784",
+      "name": "Mobile/Trip ticket",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 232,
+      "parentId": "317:2055",
+      "properties": {
+        "Badge#570:0": {
+          "type": "TEXT",
+          "defaultValue": "CHUYẾN ĐI SẮP TỚI"
+        },
+        "Title#570:1": {
+          "type": "TEXT",
+          "defaultValue": "Đà Nẵng 3N2Đ"
+        },
+        "Details#570:2": {
+          "type": "TEXT",
+          "defaultValue": "12–14/10 · 4 bạn đồng hành"
+        }
+      }
+    },
+    {
+      "id": "588:7887",
+      "name": "Mobile/Icon/utensils",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "588:7886",
+      "properties": {}
+    },
+    {
+      "id": "588:7890",
+      "name": "Mobile/Icon/coffee",
+      "type": "COMPONENT",
+      "width": 24,
+      "height": 24,
+      "parentId": "588:7886",
+      "properties": {}
+    },
+    {
+      "id": "588:7977",
+      "name": "Mobile/Travel leg",
+      "type": "COMPONENT",
+      "width": 294,
+      "height": 22,
+      "parentId": "317:2055",
+      "properties": {
+        "Duration#588:1": {
+          "type": "TEXT",
+          "defaultValue": "~20 phút di chuyển"
+        }
+      }
+    },
+    {
+      "id": "588:7988",
+      "name": "Mobile/Activity detail sheet",
+      "type": "COMPONENT",
+      "width": 386,
+      "height": 380,
+      "parentId": "317:2055",
+      "properties": {
+        "Title#588:2": {
+          "type": "TEXT",
+          "defaultValue": "Bán đảo Sơn Trà"
+        },
+        "Date#588:3": {
+          "type": "TEXT",
+          "defaultValue": "Ngày 1 · 12/10/2026"
+        },
+        "Time#588:4": {
+          "type": "TEXT",
+          "defaultValue": "08:00"
+        },
+        "Duration#588:5": {
+          "type": "TEXT",
+          "defaultValue": "2 giờ 30"
+        },
+        "Note#588:6": {
+          "type": "TEXT",
+          "defaultValue": "Ngắm cảnh · Hải Vọng Đài"
+        }
+      }
+    },
+    {
+      "id": "599:8057",
+      "name": "Mobile/Illustration/danang",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 220,
+      "parentId": "595:8018",
+      "properties": {}
+    },
+    {
+      "id": "599:8078",
+      "name": "Mobile/Illustration/dalat",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 220,
+      "parentId": "595:8018",
+      "properties": {}
+    },
+    {
+      "id": "599:8097",
+      "name": "Mobile/Illustration/coast",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 220,
+      "parentId": "595:8018",
+      "properties": {}
+    },
+    {
+      "id": "603:8133",
+      "name": "Mobile/Trip compact",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 116,
+      "parentId": "317:2055",
+      "properties": {
+        "Cover#603:1": {
+          "type": "INSTANCE_SWAP",
+          "defaultValue": "599:8078",
+          "preferredValues": []
+        },
+        "Badge#603:2": {
+          "type": "TEXT",
+          "defaultValue": "Sắp tới"
+        },
+        "Title#603:3": {
+          "type": "TEXT",
+          "defaultValue": "Đà Lạt cuối tuần"
+        },
+        "Subtitle#603:4": {
+          "type": "TEXT",
+          "defaultValue": "07–09/11/2026 · 3 thành viên"
+        }
+      }
+    },
+    {
+      "id": "603:8183",
+      "name": "Mobile/Trip dashboard",
+      "type": "COMPONENT",
+      "width": 354,
+      "height": 168,
+      "parentId": "317:2055",
+      "properties": {
+        "Spent#603:5": {
+          "type": "TEXT",
+          "defaultValue": "6,25"
+        },
+        "Packing#603:6": {
+          "type": "TEXT",
+          "defaultValue": "8 / 12"
+        }
+      }
+    }
+  ],
+  "counts": {
+    "FRAME": 1994,
+    "TEXT": 1187,
+    "INSTANCE": 887,
+    "VECTOR": 818,
+    "RECTANGLE": 228,
+    "COMPONENT": 94,
+    "COMPONENT_SET": 13
+  },
+  "reactionNodeCount": 373
+}

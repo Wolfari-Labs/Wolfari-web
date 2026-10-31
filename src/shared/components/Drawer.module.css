@@ -19,10 +19,10 @@
   flex-direction: column;
   gap: var(--space-16);
   --drawer-direction: -1;
-  animation: drawer-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: drawer-in var(--motion-drawer-enter) var(--motion-control-easing);
 }
 .drawer[data-state='closed'] {
-  animation: drawer-out 180ms ease-in;
+  animation: drawer-out var(--motion-overlay-exit) ease-in;
 }
 .right {
   inset: 0 0 0 auto;
@@ -37,10 +37,10 @@
   z-index: 100;
   background: var(--drawer-backdrop);
   backdrop-filter: blur(6px);
-  animation: backdrop-in 180ms ease-out;
+  animation: backdrop-in var(--motion-backdrop) ease-out;
 }
 .backdrop[data-state='closed'] {
-  animation: backdrop-out 180ms ease-in;
+  animation: backdrop-out var(--motion-backdrop) ease-in;
 }
 .title {
   margin: 0;
@@ -53,7 +53,7 @@
   height: fit-content;
   max-height: calc(100% - 32px);
   max-width: calc(100% - 32px);
-  border-radius: 24px;
+  border-radius: var(--radius-dialog);
   animation-name: backdrop-in;
 }
 .center[data-state='closed'] {

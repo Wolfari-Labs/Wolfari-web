@@ -11,6 +11,7 @@ import { validCalendarDate, nextCalendarDate } from '../../../shared/lib/calenda
 import { localTimeToIso } from '../../plan/model/plan-draft';
 import { CreateTripSuccess } from './CreateTripSuccess';
 import banner from '../../../shared/assets/figma/32882.svg';
+import mapArtwork from '../../../shared/assets/figma/8222b.svg';
 import styles from './CreateTripPage.module.css';
 
 interface Draft {
@@ -20,6 +21,34 @@ interface Draft {
   endDate: string;
   timezone: string;
 }
+type DraftErrors = Partial<Record<keyof Draft, string>>;
+
+function validateDraft(draft: Draft): DraftErrors {
+  const errors: DraftErrors = {};
+  const name = draft.name.trim();
+  if (!name) errors.name = 'Vui lòng nhập tên chuyến đi.';
+  else if (name.length > 200) errors.name = 'Tên chuyến đi không được vượt quá 200 ký tự.';
+  if (draft.description.length > 500)
+    errors.description = 'Mô tả ngắn không được vượt quá 500 ký tự.';
+  if (!validCalendarDate(draft.startDate)) errors.startDate = 'Vui lòng chọn ngày đi hợp lệ.';
+  if (!validCalendarDate(draft.endDate)) errors.endDate = 'Vui lòng chọn ngày về hợp lệ.';
+  else if (validCalendarDate(draft.startDate) && draft.endDate < draft.startDate)
+    errors.endDate = 'Ngày về không thể trước ngày đi.';
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: draft.timezone });
+  } catch {
+    errors.timezone = 'Vui lòng nhập múi giờ IANA hợp lệ.';
+  }
+  return errors;
+}
+
+function focusFirstError(errors: DraftErrors) {
+  const first = (['name', 'startDate', 'endDate', 'timezone', 'description'] as const).find(
+    (field) => errors[field],
+  );
+  if (first) document.getElementById(`gateway-create-trip-${first}`)?.focus();
+}
+
 const empty = (): Draft => ({
   name: '',
   description: '',
@@ -80,7 +109,10 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
   const [busy, setBusy] = useState(false);
   const [created, setCreated] = useState<string | null>(null);
   const [memoryOnly, setMemoryOnly] = useState(false);
+  const [errors, setErrors] = useState<DraftErrors>({});
+  const [focusError, setFocusError] = useState(false);
   const request = useRef<AbortController | null>(null);
+  const createActionRef = useRef<HTMLButtonElement>(null);
   const sending = useRef(false);
   const persist = (nextDraft: Draft, nextIntent: CreateTripIntent | null) => {
     const status = cache.current.write(
@@ -90,6 +122,15 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
     );
     setMemoryOnly(status !== 'saved');
     return status === 'saved';
+  };
+  const dismissSuccess = () => {
+    setCreated(null);
+    setDraft(empty());
+    setIntent(null);
+    setErrors({});
+    setMessage('');
+    setMemoryOnly(false);
+    cache.current.write(browserStorage('sessionStorage'), key, null);
   };
   useEffect(() => {
     const oldKeys = ['wolfari:create-trip:v1', 'wolfari:create-trip:v2'];
@@ -105,10 +146,21 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
       cache.current.clear();
     };
   }, []);
+  useEffect(() => {
+    if (!focusError || busy) return;
+    focusFirstError(errors);
+    setFocusError(false);
+  }, [busy, errors, focusError]);
   const edit = (field: keyof Draft, value: string) => {
     if (busy || intent) return;
     const next = { ...draft, [field]: value };
     setDraft(next);
+    setErrors((current) => {
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+    setMessage('');
     persist(next, null);
   };
   const submit = async (event: FormEvent) => {
@@ -117,15 +169,13 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
     let snapshot = intent;
     try {
       if (!snapshot) {
-        if (
-          !draft.name.trim() ||
-          draft.name.trim().length > 200 ||
-          !validCalendarDate(draft.startDate) ||
-          !validCalendarDate(draft.endDate) ||
-          draft.endDate < draft.startDate
-        )
-          throw Error('Nhập tên và khoảng ngày hợp lệ.');
-        new Intl.DateTimeFormat('en', { timeZone: draft.timezone });
+        const nextErrors = validateDraft(draft);
+        setErrors(nextErrors);
+        if (Object.values(nextErrors).some(Boolean)) {
+          setMessage('Vui lòng kiểm tra các trường được đánh dấu.');
+          setFocusError(true);
+          return;
+        }
         snapshot = {
           name: draft.name.trim(),
           ...(draft.description.trim() ? { description: draft.description.trim() } : {}),
@@ -152,6 +202,17 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
       } else if (result.status === 'validation-error' || result.status === 'forbidden') {
         setIntent(null);
         persist(draft, null);
+        if (result.status === 'validation-error') {
+          const nextErrors: DraftErrors = {};
+          if (result.fieldErrors.name) nextErrors.name = result.fieldErrors.name;
+          if (result.fieldErrors.description)
+            nextErrors.description = result.fieldErrors.description;
+          if (result.fieldErrors.startAt) nextErrors.startDate = result.fieldErrors.startAt;
+          if (result.fieldErrors.endAt) nextErrors.endDate = result.fieldErrors.endAt;
+          if (result.fieldErrors.timezone) nextErrors.timezone = result.fieldErrors.timezone;
+          setErrors(nextErrors);
+          setFocusError(true);
+        }
         setMessage(
           result.status === 'forbidden'
             ? 'Bạn không có quyền tạo chuyến đi.'
@@ -181,73 +242,122 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
         <div>
           <p className={styles.eyebrow}>CHUYẾN ĐI MỚI</p>
           <h1>Tạo chuyến đi mới</h1>
-          <p>Chọn điểm bắt đầu cho hành trình cùng nhau.</p>
+          <p>Lên kế hoạch cho hành trình tiếp theo và khám phá thế giới cùng Wolfari!</p>
         </div>
         <Link to="/trips">Chuyến đi của tôi</Link>
       </header>
-      <form
-        onSubmit={(event) => void submit(event)}
-        className={`${styles.formCard} ${styles.gatewayForm}`}
-      >
-        {message && <Alert live>{message}</Alert>}
-        {memoryOnly && (
-          <Alert tone="warning">
-            Bản nháp chỉ còn trong tab; chưa thể gửi yêu cầu mới an toàn.
-          </Alert>
-        )}
-        {intent && (
-          <Alert tone="warning">
-            Đang giữ yêu cầu đã gửi. Nội dung bị khóa đến khi xác định được kết quả.
-          </Alert>
-        )}
-        <fieldset disabled={busy || !!intent || initial.current.invalid}>
-          <Input
-            label="Tên chuyến đi"
-            value={draft.name}
-            maxLength={200}
-            required
-            onChange={(e) => edit('name', e.target.value)}
-          />
-          <div className={styles.dates}>
-            <Input
-              label="Ngày đi"
-              type="date"
-              value={draft.startDate}
-              required
-              onChange={(e) => edit('startDate', e.target.value)}
-            />
-            <Input
-              label="Ngày về"
-              type="date"
-              value={draft.endDate}
-              min={draft.startDate}
-              required
-              onChange={(e) => edit('endDate', e.target.value)}
-            />
+      <div className={styles.layout}>
+        <form
+          onSubmit={(event) => void submit(event)}
+          className={`${styles.formCard} ${styles.gatewayForm}`}
+          aria-labelledby="gateway-create-trip-title"
+          noValidate
+        >
+          <div className={styles.gatewayIntro}>
+            <h2 id="gateway-create-trip-title">Thông tin cơ bản</h2>
+            <p>Bắt đầu với những thông tin chính về chuyến đi của bạn</p>
           </div>
-          <Input
-            label="Múi giờ"
-            hint="Ví dụ: Asia/Ho_Chi_Minh"
-            value={draft.timezone}
-            required
-            onChange={(e) => edit('timezone', e.target.value)}
-          />
-          <Textarea
-            label="Mô tả ngắn"
-            value={draft.description}
-            maxLength={500}
-            onChange={(e) => edit('description', e.target.value)}
-          />
-        </fieldset>
-        <p>Bạn có thể thiết lập ngân sách trong Quỹ nhóm sau khi tạo chuyến đi.</p>
-        <div className={styles.actions}>
-          <Link to="/trips">Xem danh sách chuyến đi</Link>
-          <Button type="submit" loading={busy} disabled={initial.current.invalid || !!created}>
-            {intent ? 'Thử lại đúng yêu cầu cũ' : 'Tạo chuyến đi'}
-          </Button>
-        </div>
-      </form>
-      {created && <CreateTripSuccess tripId={created} onContinue={() => setCreated(null)} />}
+          {message && <Alert live>{message}</Alert>}
+          {memoryOnly && (
+            <Alert tone="warning">
+              Bản nháp chỉ còn trong tab; chưa thể gửi yêu cầu mới an toàn.
+            </Alert>
+          )}
+          {intent && (
+            <Alert tone="warning">
+              Đang giữ yêu cầu đã gửi. Nội dung bị khóa đến khi xác định được kết quả.
+            </Alert>
+          )}
+          <fieldset disabled={busy || !!intent || !!created || initial.current.invalid}>
+            <Input
+              id="gateway-create-trip-name"
+              label="Tên chuyến đi"
+              value={draft.name}
+              maxLength={200}
+              required
+              error={errors.name}
+              onChange={(e) => edit('name', e.target.value)}
+            />
+            <div className={styles.dates}>
+              <Input
+                id="gateway-create-trip-startDate"
+                label="Ngày đi"
+                type="date"
+                value={draft.startDate}
+                required
+                error={errors.startDate}
+                onChange={(e) => edit('startDate', e.target.value)}
+              />
+              <Input
+                id="gateway-create-trip-endDate"
+                label="Ngày về"
+                type="date"
+                value={draft.endDate}
+                min={draft.startDate}
+                required
+                error={errors.endDate}
+                onChange={(e) => edit('endDate', e.target.value)}
+              />
+            </div>
+            <Input
+              id="gateway-create-trip-timezone"
+              label="Múi giờ"
+              hint="Ví dụ: Asia/Ho_Chi_Minh"
+              value={draft.timezone}
+              required
+              error={errors.timezone}
+              onChange={(e) => edit('timezone', e.target.value)}
+            />
+            <Textarea
+              id="gateway-create-trip-description"
+              label="Mô tả ngắn"
+              value={draft.description}
+              maxLength={500}
+              error={errors.description}
+              onChange={(e) => edit('description', e.target.value)}
+            />
+          </fieldset>
+          <p>Bạn có thể thiết lập ngân sách trong Quỹ nhóm sau khi tạo chuyến đi.</p>
+          <div className={styles.actions}>
+            <Link to="/trips">Xem danh sách chuyến đi</Link>
+            <Button
+              ref={createActionRef}
+              type="submit"
+              loading={busy}
+              disabled={initial.current.invalid || !!created}
+            >
+              {intent ? 'Thử lại đúng yêu cầu cũ' : 'Tạo chuyến đi'}
+            </Button>
+          </div>
+        </form>
+        <aside
+          className={`${styles.destinationPanel} ${styles.gatewayCapability}`}
+          aria-labelledby="gateway-destination-title"
+        >
+          <div className={styles.gatewayCapabilityHeading}>
+            <h2 id="gateway-destination-title">Bản đồ điểm đến</h2>
+            <p>Không cần chọn điểm đến để bắt đầu chuyến đi.</p>
+          </div>
+          <div className={styles.gatewayMapIllustration}>
+            <img src={mapArtwork} alt="" />
+            <span>Hình minh họa · Chưa có dữ liệu điểm đến</span>
+          </div>
+          <div className={styles.gatewayCapabilityBody}>
+            <h3>Chưa hỗ trợ chọn điểm đến khi tạo chuyến đi</h3>
+            <p>
+              Biểu mẫu hiện tại chỉ lưu tên, thời gian, múi giờ và mô tả. Bạn có thể tạo chuyến đi
+              với những thông tin này; bản đồ ở đây chỉ là hình minh họa.
+            </p>
+          </div>
+        </aside>
+      </div>
+      {created && (
+        <CreateTripSuccess
+          tripId={created}
+          onDismiss={dismissSuccess}
+          returnFocusRef={createActionRef}
+        />
+      )}
     </section>
   );
 }

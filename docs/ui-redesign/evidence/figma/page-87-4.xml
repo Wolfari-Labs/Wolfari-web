@@ -1,0 +1,61 @@
+<canvas id="87:4" name="03 — Shells" x="0" y="0" width="0" height="0">
+  <symbol id="87:646" name="Global Header" x="80" y="1980" width="1440" height="68" />
+  <frame id="87:722" name="Trip Sidebar" x="80" y="1020" width="366" height="832">
+    <symbol id="87:657" name="State=Expanded" x="25" y="25" width="212" height="832" />
+    <symbol id="87:697" name="State=Collapsed" x="269" y="25" width="72" height="832" />
+  </frame>
+  <frame id="87:723" name="SHELL / Desktop / Sidebar Expanded" x="80" y="80" width="1440" height="900">
+    <instance id="87:724" name="Global Header" x="0" y="0" width="1440" height="68" />
+    <frame id="87:735" name="Workspace" x="0" y="68" width="1440" height="832">
+      <instance id="87:736" name="Trip Sidebar" x="0" y="0" width="212" height="832" />
+      <frame id="87:776" name="Main Content" x="212" y="0" width="1228" height="832">
+        <text id="87:777" name="Đà Nẵng 3N2Đ" x="28" y="24" width="227" height="39" />
+        <frame id="87:778" name="Trip Hero" x="28" y="83" width="1172" height="180">
+          <text id="87:779" name="Hành trình của bạn" x="522" y="68" width="128" height="17" />
+          <text id="87:780" name="12 – 14/10/2026 · 4 thành viên" x="466.5" y="93" width="239" height="19" />
+        </frame>
+        <frame id="87:781" name="Cards" x="28" y="283" width="1172" height="160">
+          <frame id="87:782" name="Card / Lịch trình hôm nay" x="0" y="0" width="380" height="160">
+            <text id="87:783" name="Lịch trình hôm nay" x="19" y="19" width="143" height="19" />
+            <text id="87:784" name="2 hoạt động" x="19" y="48" width="128" height="27" />
+          </frame>
+          <frame id="87:785" name="Card / Ngân sách / Quỹ nhóm" x="396" y="0" width="380" height="160">
+            <text id="87:786" name="Ngân sách / Quỹ nhóm" x="19" y="19" width="175" height="19" />
+            <text id="87:787" name="6.250.000đ" x="19" y="48" width="129" height="27" />
+          </frame>
+          <frame id="87:788" name="Card / Packing list" x="792" y="0" width="380" height="160">
+            <text id="87:789" name="Packing list" x="19" y="19" width="89" height="19" />
+            <text id="87:790" name="8/12 hoàn thành" x="19" y="48" width="175" height="27" />
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="87:791" name="SHELL / Desktop / Sidebar Collapsed" x="1580" y="80" width="1440" height="900">
+    <instance id="87:792" name="Global Header" x="0" y="0" width="1440" height="68" />
+    <frame id="87:803" name="Workspace" x="0" y="68" width="1440" height="832">
+      <instance id="87:804" name="Trip Sidebar" x="0" y="0" width="72" height="832" />
+      <frame id="87:868" name="Main Content" x="72" y="0" width="1368" height="832">
+        <text id="87:869" name="Đà Nẵng 3N2Đ" x="28" y="24" width="227" height="39" />
+        <frame id="87:870" name="Trip Hero" x="28" y="83" width="1312" height="180">
+          <text id="87:871" name="Hành trình của bạn" x="592" y="68" width="128" height="17" />
+          <text id="87:872" name="12 – 14/10/2026 · 4 thành viên" x="536.5" y="93" width="239" height="19" />
+        </frame>
+        <frame id="87:873" name="Cards" x="28" y="283" width="1312" height="160">
+          <frame id="87:874" name="Card / Lịch trình hôm nay" x="0" y="0" width="426.6666564941406" height="160">
+            <text id="87:875" name="Lịch trình hôm nay" x="19" y="19" width="143" height="19" />
+            <text id="87:876" name="2 hoạt động" x="19" y="48" width="128" height="27" />
+          </frame>
+          <frame id="87:877" name="Card / Ngân sách / Quỹ nhóm" x="442.66668701171875" y="0" width="426.66668701171875" height="160">
+            <text id="87:878" name="Ngân sách / Quỹ nhóm" x="19" y="19" width="175" height="19" />
+            <text id="87:879" name="6.250.000đ" x="19" y="48" width="129" height="27" />
+          </frame>
+          <frame id="87:880" name="Card / Packing list" x="885.3333740234375" y="0" width="426.66668701171875" height="160">
+            <text id="87:881" name="Packing list" x="19" y="19" width="89" height="19" />
+            <text id="87:882" name="8/12 hoàn thành" x="19" y="48" width="175" height="27" />
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+</canvas>

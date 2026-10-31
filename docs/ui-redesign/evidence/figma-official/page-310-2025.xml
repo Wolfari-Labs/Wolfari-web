@@ -1,0 +1,1297 @@
+<canvas id="310:2025" name="Wolfari · Mobile" x="0" y="0" width="0" height="0">
+  <frame id="317:2025" name="M01 · Khám phá — Guest" x="120" y="280" width="402" height="874">
+    <frame id="322:2059" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="322:2060" name="9:41" x="28" y="15" width="264" height="24" />
+      <frame id="322:2061" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="322:2062" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="322:2065" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="322:2068" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="322:2072" name="Navigation header" x="24" y="54" width="354" height="54">
+      <rounded-rectangle id="322:2073" name="Asset / 42e2a0ea" x="0" y="8" width="112" height="38" />
+      <frame id="329:3231" name="Header spacing" x="124" y="26.5" width="94" height="1" />
+      <instance id="329:3232" name="Mobile/Button" x="230" y="5" width="124" height="44" />
+    </frame>
+    <frame id="322:2084" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="322:2085" name="Content" x="24" y="0" width="354" height="1041">
+        <frame id="381:3278" name="Welcome to Wolfari" x="0" y="8" width="354" height="104">
+          <text id="381:3279" name="CÙNG NHAU LÊN ĐƯỜNG" x="0" y="0" width="354" height="18" />
+          <text id="381:3280" name="Cho những
+chuyến đi thật đẹp" x="0" y="24" width="354" height="80" />
+        </frame>
+        <frame id="381:3281" name="Destination cover" x="0" y="136" width="354" height="234">
+          <instance id="603:8327" name="Destination illustration" x="0" y="0" width="354" height="234" />
+          <rounded-rectangle id="381:3283" name="Image contrast" x="0" y="0" width="354" height="234" />
+          <frame id="381:3284" name="Cover title" x="20" y="150" width="314" height="58">
+            <text id="381:3285" name="Xin chào, Đà Nẵng" x="0" y="0" width="314" height="36" />
+            <text id="381:3286" name="Một điểm đến, thật nhiều kỷ niệm." x="0" y="40" width="314" height="18" />
+          </frame>
+          <rounded-rectangle id="381:3287" name="Asset / 564936d9" x="264" y="12" width="78" height="78" />
+        </frame>
+        <text id="381:3288" name="Lên lịch, chuẩn bị hành lý và quản lý quỹ — cả nhóm cùng nhau, tr" x="0" y="394" width="354" height="46" />
+        <instance id="381:3289" name="Mobile/Button" x="0" y="464" width="354" height="52" />
+        <frame id="381:3291" name="Already member" x="0" y="540" width="354" height="23">
+          <text id="381:3292" name="Đã có tài khoản?" x="0" y="0" width="174" height="23" />
+          <text id="381:3293" name="Đăng nhập →" x="182" y="0.5" width="172" height="22" />
+        </frame>
+        <frame id="381:3294" name="Section header" x="0" y="587" width="354" height="28">
+          <text id="381:3295" name="Mọi thứ trong một nơi" x="0" y="0" width="354" height="28" />
+        </frame>
+        <instance id="381:3296" name="Mobile/List row" x="0" y="639" width="354" height="76" />
+        <instance id="381:3308" name="Mobile/List row" x="0" y="739" width="354" height="76" />
+        <instance id="381:3320" name="Mobile/List row" x="0" y="839" width="354" height="76" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="322:2086" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2026" name="M02 · Đăng nhập" x="618" y="280" width="402" height="874">
+    <frame id="322:2152" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="322:2153" name="9:41" x="28" y="15" width="264" height="24" />
+      <frame id="322:2154" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="322:2155" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="322:2158" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="322:2161" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="322:2165" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="322:2166" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8431" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="322:2167" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="322:2170" name="Đăng nhập" x="56" y="15" width="242" height="24" />
+      <frame id="329:3237" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="322:2177" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="322:2178" name="Content" x="24" y="0" width="354" height="836">
+        <rounded-rectangle id="322:2180" name="Asset / 42e2a0ea" x="0" y="8" width="114" height="38" />
+        <frame id="322:2181" name="Welcome back" x="0" y="70" width="354" height="92">
+          <frame id="322:2182" name="Greeting" x="0" y="10" width="250" height="72">
+            <text id="322:2183" name="Chào mừng
+trở lại!" x="0" y="0" width="250" height="72" />
+          </frame>
+          <rounded-rectangle id="322:2184" name="Asset / 564936d9" x="262" y="0" width="92" height="92" />
+        </frame>
+        <text id="322:2185" name="Tiếp tục những hành trình của bạn." x="0" y="186" width="354" height="24" />
+        <frame id="322:2186" name="Field / Email" x="0" y="234" width="354" height="84">
+          <text id="322:2187" name="Email" x="0" y="0" width="354" height="24" />
+          <instance id="322:2188" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2190" name="Field / Mật khẩu" x="0" y="342" width="354" height="84">
+          <text id="322:2191" name="Mật khẩu" x="0" y="0" width="354" height="24" />
+          <instance id="322:2192" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <instance id="322:2194" name="Mobile/Button" x="0" y="450" width="354" height="52" />
+        <frame id="322:2196" name="Sign up prompt" x="0" y="526" width="354" height="24">
+          <text id="322:2197" name="Bạn chưa có tài khoản?" x="0" y="0" width="230" height="24" />
+          <text id="322:2198" name="Đăng ký" x="238" y="0" width="116" height="24" />
+        </frame>
+        <rounded-rectangle id="322:2199" name="Asset / becd309d" x="0" y="574" width="354" height="150" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="322:2179" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2027" name="M03 · Đăng ký" x="1116" y="280" width="402" height="874">
+    <frame id="322:2200" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="322:2201" name="9:41" x="28" y="15" width="264" height="24" />
+      <frame id="322:2202" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="322:2203" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="322:2206" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="322:2209" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="322:2213" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="322:2214" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8434" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="322:2215" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="322:2218" name="Tạo tài khoản" x="56" y="15" width="242" height="24" />
+      <frame id="329:3238" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="322:2225" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="322:2226" name="Content" x="24" y="0" width="354" height="838">
+        <frame id="379:3459" name="Page heading" x="0" y="8" width="354" height="102">
+          <text id="322:2228" name="Cùng Wolfari
+lên đường" x="0" y="0" width="354" height="72" />
+          <text id="322:2229" name="Lưu kế hoạch và kết nối với nhóm bạn." x="0" y="78" width="354" height="24" />
+        </frame>
+        <frame id="322:2230" name="Field / Họ và tên" x="0" y="134" width="354" height="84">
+          <text id="322:2231" name="Họ và tên" x="0" y="0" width="354" height="24" />
+          <instance id="322:2232" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2234" name="Field / Email" x="0" y="242" width="354" height="84">
+          <text id="322:2235" name="Email" x="0" y="0" width="354" height="24" />
+          <instance id="322:2236" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2238" name="Field / Mật khẩu" x="0" y="350" width="354" height="84">
+          <text id="322:2239" name="Mật khẩu" x="0" y="0" width="354" height="24" />
+          <instance id="322:2240" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2242" name="Field / Nhập lại mật khẩu" x="0" y="458" width="354" height="84">
+          <text id="322:2243" name="Nhập lại mật khẩu" x="0" y="0" width="354" height="24" />
+          <instance id="322:2244" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2246" name="Consent" x="0" y="566" width="354" height="36">
+          <frame id="322:2247" name="Agreed" x="0" y="7" width="22" height="22">
+            <instance id="322:2248" name="Mobile/Icon/check" x="0" y="0" width="20" height="20" />
+          </frame>
+          <text id="322:2251" name="Tôi đồng ý với Điều khoản sử dụng
+và Chính sách bảo mật." x="34" y="0" width="320" height="36" />
+        </frame>
+        <instance id="322:2252" name="Mobile/Button" x="0" y="626" width="354" height="52" />
+        <text id="322:2254" name="Đã có tài khoản?  Đăng nhập →" x="0" y="702" width="354" height="24" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="322:2227" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2028" name="M04 · Khám phá — Thành viên" x="1614" y="280" width="402" height="874" />
+  <frame id="317:2029" name="M05 · Chuyến đi của tôi" x="2112" y="280" width="402" height="874" />
+  <frame id="317:2030" name="M06 · Tạo chuyến đi — Thông tin" x="2610" y="280" width="402" height="874">
+    <frame id="322:2403" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="322:2404" name="9:41" x="28" y="15" width="264" height="24" />
+      <frame id="322:2405" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="322:2406" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="322:2409" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="322:2412" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="322:2416" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="322:2417" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8449" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="322:2418" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="322:2421" name="Chuyến đi mới" x="56" y="15" width="242" height="24" />
+      <frame id="329:3239" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="322:2428" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="322:2429" name="Content" x="24" y="0" width="354" height="984">
+        <instance id="461:5076" name="Mobile/Trip stepper" x="0" y="8" width="354" height="56" />
+        <text id="322:2434" name="Hành trình bắt đầu
+từ một ý tưởng" x="0" y="88" width="354" height="72" />
+        <frame id="322:2435" name="Field / Tên chuyến đi" x="0" y="184" width="354" height="84">
+          <text id="322:2436" name="Tên chuyến đi" x="0" y="0" width="354" height="24" />
+          <instance id="322:2437" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2439" name="Field / Điểm đến chính" x="0" y="292" width="354" height="84">
+          <text id="322:2440" name="Điểm đến chính" x="0" y="0" width="354" height="24" />
+          <instance id="322:2441" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2443" name="Travel dates" x="0" y="400" width="354" height="84">
+          <frame id="322:2444" name="Field / Ngày đi" x="0" y="0" width="171" height="84">
+            <text id="322:2445" name="Ngày đi" x="0" y="0" width="171" height="24" />
+            <instance id="322:2446" name="Mobile/Field" x="0" y="32" width="171" height="52" />
+          </frame>
+          <frame id="322:2448" name="Field / Ngày về" x="183" y="0" width="171" height="84">
+            <text id="322:2449" name="Ngày về" x="0" y="0" width="171" height="24" />
+            <instance id="322:2450" name="Mobile/Field" x="0" y="32" width="171" height="52" />
+          </frame>
+        </frame>
+        <frame id="322:2452" name="Field / Số thành viên dự kiến" x="0" y="508" width="354" height="84">
+          <text id="322:2453" name="Số thành viên dự kiến" x="0" y="0" width="354" height="24" />
+          <instance id="322:2454" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2456" name="Destination" x="0" y="616" width="354" height="256">
+          <instance id="603:8348" name="Destination illustration" x="16" y="16" width="322" height="138" />
+          <text id="322:2458" name="Đà Nẵng" x="16" y="166" width="322" height="26" />
+          <text id="322:2459" name="Biển xanh, Sơn Trà và những ngày
+khám phá cùng nhau." x="16" y="204" width="322" height="36" />
+        </frame>
+      </frame>
+    </frame>
+    <rounded-rectangle id="322:2430" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="379:3464" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="322:2460" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2031" name="M07 · Tạo chuyến đi — Cá nhân hóa" x="120" y="1380" width="402" height="874">
+    <frame id="322:2462" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="322:2463" name="9:41" x="28" y="15" width="264" height="24" />
+      <frame id="322:2464" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="322:2465" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="322:2468" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="322:2471" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="322:2475" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="322:2476" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8452" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="322:2477" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="322:2480" name="Chuyến đi mới" x="56" y="15" width="242" height="24" />
+      <frame id="329:3240" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="322:2487" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="322:2488" name="Content" x="24" y="0" width="354" height="938">
+        <instance id="461:5085" name="Mobile/Trip stepper" x="0" y="8" width="354" height="56" />
+        <frame id="379:3465" name="Page heading" x="0" y="88" width="354" height="66">
+          <text id="322:2493" name="Theo cách của bạn" x="0" y="0" width="354" height="36" />
+          <text id="322:2494" name="Chọn phong cách và ngân sách chung." x="0" y="42" width="354" height="24" />
+        </frame>
+        <frame id="322:2495" name="Section header" x="0" y="178" width="354" height="28">
+          <text id="322:2496" name="Phong cách chuyến đi" x="0" y="0" width="354" height="28" />
+        </frame>
+        <frame id="322:2497" name="Travel styles" x="0" y="230" width="354" height="36">
+          <instance id="322:2498" name="Mobile/Chip" x="0" y="0" width="171" height="36" />
+          <instance id="322:2500" name="Mobile/Chip" x="183" y="0" width="171" height="36" />
+        </frame>
+        <frame id="322:2502" name="More styles" x="0" y="290" width="354" height="36">
+          <instance id="322:2503" name="Mobile/Chip" x="0" y="0" width="171" height="36" />
+          <instance id="322:2505" name="Mobile/Chip" x="183" y="0" width="171" height="36" />
+        </frame>
+        <frame id="322:2507" name="Field / Ngân sách dự kiến cả nhóm" x="0" y="350" width="354" height="84">
+          <text id="322:2508" name="Ngân sách dự kiến cả nhóm" x="0" y="0" width="354" height="24" />
+          <instance id="322:2509" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <text id="322:2511" name="Khoảng 2.250.000 ₫ / người · 4 thành viên" x="0" y="458" width="354" height="24" />
+        <frame id="322:2512" name="Field / Mô tả ngắn" x="0" y="506" width="354" height="84">
+          <text id="322:2513" name="Mô tả ngắn" x="0" y="0" width="354" height="24" />
+          <instance id="322:2514" name="Mobile/Field" x="0" y="32" width="354" height="52" />
+        </frame>
+        <frame id="322:2516" name="Section header" x="0" y="614" width="354" height="28">
+          <text id="322:2517" name="Ảnh bìa chuyến đi" x="0" y="0" width="354" height="28" />
+        </frame>
+        <instance id="603:8369" name="Destination illustration" x="0" y="666" width="354" height="160" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="322:2489" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="379:3466" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="322:2519" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2032" name="M08 · Tổng quan chuyến đi" x="618" y="1380" width="402" height="874" />
+  <frame id="317:2033" name="M09 · Lịch trình" x="1116" y="1380" width="402" height="874" />
+  <frame id="317:2034" name="M10 · Bản đồ &amp; địa điểm" x="1614" y="1380" width="402" height="874" />
+  <frame id="317:2035" name="M11 · Chi tiết địa điểm" x="2112" y="1380" width="402" height="874">
+    <frame id="325:2646" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="325:2647" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="325:2648" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="325:2649" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="325:2652" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="325:2655" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="325:2659" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="325:2660" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8473" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="325:2661" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="325:2664" name="Chi tiết địa điểm" x="56" y="16" width="242" height="22" />
+      <frame id="329:3241" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="325:2671" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="325:2672" name="Content" x="24" y="0" width="354" height="1069">
+        <instance id="603:8411" name="Destination illustration" x="0" y="8" width="354" height="228" />
+        <frame id="325:2675" name="Title" x="0" y="260" width="354" height="44">
+          <text id="325:2676" name="Bãi biển Mỹ Khê" x="0" y="4" width="294" height="36" />
+          <frame id="325:2677" name="Action / heart" x="302" y="0" width="44" height="44">
+            <instance id="325:2678" name="Mobile/Icon/heart" x="11" y="11" width="22" height="22" />
+            <instance id="450:4627" name="Saved" x="11" y="11" width="22" height="22" hidden="true" />
+          </frame>
+        </frame>
+        <frame id="325:2681" name="Badge / Đã thêm vào ngày 1" x="0" y="328" width="150" height="34">
+          <text id="325:2682" name="Đã thêm vào ngày 1" x="8" y="8" width="134" height="18" />
+        </frame>
+        <text id="325:2683" name="Võ Nguyên Giáp, Sơn Trà, Đà Nẵng" x="0" y="386" width="354" height="23" />
+        <frame id="325:2684" name="Facts" x="0" y="433" width="354" height="122">
+          <frame id="325:2685" name="Metric / Thời gian gợi ý" x="0" y="0" width="171" height="122">
+            <instance id="325:2686" name="Mobile/Icon/clock" x="16" y="16" width="22" height="22" />
+            <text id="325:2690" name="2 giờ" x="16" y="50" width="139" height="26" />
+            <text id="325:2691" name="Thời gian gợi ý" x="16" y="88" width="139" height="18" />
+          </frame>
+          <frame id="325:2692" name="Metric / Tham quan" x="183" y="0" width="171" height="122">
+            <instance id="325:2693" name="Mobile/Icon/wallet" x="16" y="16" width="22" height="22" />
+            <text id="325:2697" name="Miễn phí" x="16" y="50" width="139" height="26" />
+            <text id="325:2698" name="Tham quan" x="16" y="88" width="139" height="18" />
+          </frame>
+        </frame>
+        <frame id="325:2699" name="Section header" x="0" y="579" width="354" height="28">
+          <text id="325:2700" name="Một chiều bên biển" x="0" y="0" width="354" height="28" />
+        </frame>
+        <text id="325:2701" name="Bãi cát trắng, làn nước trong xanh và không gian thoáng đãng để c" x="0" y="631" width="354" height="46" />
+        <frame id="325:2702" name="Schedule" x="0" y="701" width="354" height="180">
+          <text id="325:2703" name="Trong lịch của bạn" x="0" y="16" width="322" height="26" />
+          <text id="325:2704" name="Ngày 1 · 12/10/2026
+14:00 – 16:00 · Tắm biển, chụp ảnh" x="0" y="54" width="322" height="46" />
+          <instance id="325:2705" name="Mobile/Button" x="0" y="112" width="322" height="52" />
+        </frame>
+        <instance id="325:2707" name="Mobile/Button" x="0" y="905" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="325:2673" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2036" name="M12 · Dress code" x="2610" y="1380" width="402" height="874" />
+  <frame id="317:2037" name="M13 · Hành lý" x="120" y="2480" width="402" height="874" />
+  <frame id="317:2038" name="M14 · Quỹ nhóm" x="618" y="2480" width="402" height="874" />
+  <frame id="317:2039" name="M15 · Ghi nhận khoản chi" x="1116" y="2480" width="402" height="874">
+    <frame id="326:2739" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="326:2740" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="326:2741" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="326:2742" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="326:2745" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="326:2748" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="326:2752" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="326:2753" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8494" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="326:2754" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="326:2757" name="Ghi nhận khoản chi" x="56" y="16" width="242" height="22" />
+      <frame id="329:3242" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="326:2764" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="326:2765" name="Content" x="24" y="0" width="354" height="977">
+        <frame id="379:3477" name="Page heading" x="0" y="8" width="354" height="65">
+          <text id="326:2767" name="Một khoản chi mới" x="0" y="0" width="354" height="36" />
+          <text id="326:2768" name="Khoản chi sẽ được ghi vào quỹ nhóm." x="0" y="42" width="354" height="23" />
+        </frame>
+        <frame id="326:2769" name="Field / Hạng mục" x="0" y="97" width="354" height="82">
+          <text id="326:2770" name="Hạng mục" x="0" y="0" width="354" height="22" />
+          <instance id="326:2771" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="326:2773" name="Field / Số tiền" x="0" y="203" width="354" height="82">
+          <text id="326:2774" name="Số tiền" x="0" y="0" width="354" height="22" />
+          <instance id="326:2775" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="326:2777" name="Date and payer" x="0" y="309" width="354" height="82">
+          <frame id="326:2778" name="Field / Ngày chi" x="0" y="0" width="171" height="82">
+            <text id="326:2779" name="Ngày chi" x="0" y="0" width="171" height="22" />
+            <instance id="326:2780" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+          <frame id="326:2782" name="Field / Người ghi nhận" x="183" y="0" width="171" height="82">
+            <text id="326:2783" name="Người ghi nhận" x="0" y="0" width="171" height="22" />
+            <instance id="326:2784" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+        </frame>
+        <frame id="326:2786" name="Field / Ghi chú" x="0" y="415" width="354" height="82">
+          <text id="326:2787" name="Ghi chú" x="0" y="0" width="354" height="22" />
+          <instance id="326:2788" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="326:2790" name="Upload receipt" x="0" y="521" width="354" height="128">
+          <instance id="326:2791" name="Mobile/Icon/file" x="16" y="16" width="32" height="32" />
+          <text id="326:2794" name="Thêm ảnh hóa đơn" x="16" y="60" width="322" height="22" />
+          <text id="326:2795" name="Không bắt buộc · JPG, PNG" x="16" y="94" width="322" height="18" />
+        </frame>
+        <frame id="326:2796" name="Review expense" x="0" y="673" width="354" height="116">
+          <text id="326:2797" name="Xác nhận trước khi lưu" x="16" y="16" width="322" height="26" />
+          <text id="326:2798" name="Chi từ quỹ nhóm: 350.000 ₫
+Quỹ còn lại sau ghi nhận: 400.000 ₫" x="16" y="54" width="322" height="46" />
+        </frame>
+        <instance id="326:2801" name="Mobile/Button" x="0" y="813" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="326:2766" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="379:3478" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="326:2799" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2040" name="M16 · Thành viên" x="1614" y="2480" width="402" height="874" />
+  <frame id="317:2041" name="M17 · Mời thành viên" x="2112" y="2480" width="402" height="874">
+    <frame id="326:2901" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="326:2902" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="326:2903" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="326:2904" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="326:2907" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="326:2910" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="326:2914" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="326:2915" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8503" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="326:2916" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="326:2919" name="Mời thành viên" x="56" y="16" width="242" height="22" />
+      <frame id="329:3243" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="326:2926" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="326:2927" name="Content" x="24" y="0" width="354" height="747">
+        <frame id="326:2929" name="Invite greeting" x="0" y="8" width="354" height="102">
+          <frame id="326:2930" name="Text" x="0" y="15" width="240" height="72">
+            <text id="326:2931" name="Đi cùng nhau,
+vui hơn nhiều!" x="0" y="0" width="240" height="72" />
+          </frame>
+          <rounded-rectangle id="326:2932" name="Asset / 564936d9" x="252" y="0" width="102" height="102" />
+        </frame>
+        <text id="326:2933" name="Mời bạn bè tham gia Đà Nẵng 3N2Đ." x="0" y="134" width="354" height="23" />
+        <frame id="326:2934" name="Field / Email người được mời" x="0" y="181" width="354" height="82">
+          <text id="326:2935" name="Email người được mời" x="0" y="0" width="354" height="22" />
+          <instance id="326:2936" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="326:2938" name="Invitation access" x="0" y="287" width="354" height="194">
+          <text id="326:2939" name="Quyền khi tham gia" x="0" y="16" width="322" height="26" />
+          <instance id="326:2940" name="Mobile/List row" x="0" y="54" width="322" height="76" />
+          <text id="326:2952" name="Quyền quản lý quỹ được phân công riêng trong cài đặt chuyến đi." x="0" y="142" width="322" height="36" />
+        </frame>
+        <frame id="326:2955" name="Pending invitation" x="0" y="505" width="354" height="130">
+          <frame id="326:2956" name="Badge / Đang chờ phản hồi" x="0" y="16" width="143" height="34">
+            <text id="326:2957" name="Đang chờ phản hồi" x="8" y="8" width="127" height="18" />
+          </frame>
+          <text id="326:2958" name="minh.anh@email.com" x="0" y="62" width="322" height="22" />
+          <text id="326:2959" name="Lời mời đã gửi ngày 30/09/2026." x="0" y="96" width="322" height="18" />
+        </frame>
+      </frame>
+    </frame>
+    <rounded-rectangle id="326:2928" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="379:3481" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="326:2953" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2042" name="M18 · Theo dõi giá vé" x="2610" y="2480" width="402" height="874" />
+  <frame id="317:2043" name="M19 · Xuất &amp; chia sẻ" x="120" y="3580" width="402" height="874" />
+  <frame id="317:2044" name="M20 · Cài đặt chuyến đi" x="618" y="3580" width="402" height="874" />
+  <frame id="317:2045" name="M21 · Chỉnh sửa chuyến đi" x="1116" y="3580" width="402" height="874">
+    <frame id="327:2964" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="327:2965" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="327:2966" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="327:2967" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="327:2970" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="327:2973" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="327:2977" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="327:2978" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8524" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="327:2979" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="327:2982" name="Chỉnh sửa chuyến đi" x="56" y="16" width="242" height="22" />
+      <frame id="327:2983" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="327:2984" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="327:2985" name="Content" x="24" y="0" width="354" height="981">
+        <instance id="603:8453" name="Destination illustration" x="0" y="8" width="354" height="166" />
+        <frame id="381:3195" name="Page heading" x="0" y="198" width="354" height="65">
+          <text id="327:2988" name="Đà Nẵng 3N2Đ" x="0" y="0" width="354" height="36" />
+          <text id="327:2989" name="Cập nhật thông tin cho cả nhóm." x="0" y="42" width="354" height="23" />
+        </frame>
+        <frame id="327:2990" name="Field / Tên chuyến đi" x="0" y="287" width="354" height="82">
+          <text id="327:2991" name="Tên chuyến đi" x="0" y="0" width="354" height="22" />
+          <instance id="327:2992" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="327:2994" name="Field / Điểm đến" x="0" y="393" width="354" height="82">
+          <text id="327:2995" name="Điểm đến" x="0" y="0" width="354" height="22" />
+          <instance id="327:2996" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="327:2998" name="Dates" x="0" y="499" width="354" height="82">
+          <frame id="327:2999" name="Field / Ngày đi" x="0" y="0" width="171" height="82">
+            <text id="327:3000" name="Ngày đi" x="0" y="0" width="171" height="22" />
+            <instance id="327:3001" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+          <frame id="327:3003" name="Field / Ngày về" x="183" y="0" width="171" height="82">
+            <text id="327:3004" name="Ngày về" x="0" y="0" width="171" height="22" />
+            <instance id="327:3005" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+        </frame>
+        <frame id="327:3007" name="Field / Ngân sách cả nhóm" x="0" y="605" width="354" height="82">
+          <text id="327:3008" name="Ngân sách cả nhóm" x="0" y="0" width="354" height="22" />
+          <instance id="327:3009" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="327:3011" name="Field / Mô tả" x="0" y="711" width="354" height="82">
+          <text id="327:3012" name="Mô tả" x="0" y="0" width="354" height="22" />
+          <instance id="327:3013" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <instance id="327:3017" name="Mobile/Button" x="0" y="817" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="327:2986" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="381:3196" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="327:3015" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2046" name="M22 · Tài khoản &amp; thông báo" x="1614" y="3580" width="402" height="874" />
+  <frame id="317:2047" name="M23 · Trung tâm thông báo" x="2112" y="3580" width="402" height="874" />
+  <frame id="317:2048" name="M24 · Phản hồi lời mời" x="2610" y="3580" width="402" height="874">
+    <frame id="327:3208" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="327:3209" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="327:3210" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="327:3211" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="327:3214" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="327:3217" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="327:3221" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="327:3222" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8533" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="327:3223" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="327:3226" name="Lời mời chuyến đi" x="56" y="16" width="242" height="22" />
+      <frame id="327:3227" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="327:3228" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="327:3229" name="Content" x="24" y="0" width="354" height="964">
+        <instance id="603:8474" name="Destination illustration" x="0" y="8" width="354" height="210" />
+        <text id="327:3232" name="Cùng nhau đến
+Đà Nẵng nhé!" x="0" y="242" width="354" height="72" />
+        <frame id="327:3233" name="Inviter" x="0" y="338" width="354" height="44">
+          <frame id="327:3234" name="Avatar / T" x="0" y="0" width="44" height="44">
+            <text id="327:3235" name="T" x="0" y="13" width="44" height="18" />
+          </frame>
+          <frame id="327:3236" name="Inviter details" x="56" y="0" width="298" height="44">
+            <text id="327:3237" name="Trang Nguyễn đã mời bạn" x="0" y="0" width="298" height="22" />
+            <text id="327:3238" name="Tham gia với vai trò thành viên" x="0" y="26" width="298" height="18" />
+          </frame>
+        </frame>
+        <frame id="327:3239" name="Invitation details" x="0" y="406" width="354" height="234">
+          <text id="327:3240" name="Đà Nẵng 3N2Đ" x="16" y="16" width="322" height="26" />
+          <instance id="327:3241" name="Mobile/List row" x="16" y="54" width="322" height="76" />
+          <instance id="327:3253" name="Mobile/List row" x="16" y="142" width="322" height="76" />
+        </frame>
+        <instance id="327:3265" name="Mobile/Button" x="0" y="664" width="354" height="52" />
+        <instance id="327:3267" name="Mobile/Button" x="0" y="740" width="354" height="52" />
+        <text id="327:3269" name="Bạn có thể thay đổi tùy chọn thông báo
+sau khi tham gia chuyến đi" x="0" y="816" width="354" height="36" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="327:3230" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2049" name="M25 · Chia sẻ công khai" x="120" y="4680" width="402" height="874">
+    <frame id="328:3047" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="328:3048" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="328:3049" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="328:3050" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="328:3053" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="328:3056" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="328:3060" name="Navigation header" x="24" y="54" width="354" height="54">
+      <rounded-rectangle id="328:3061" name="Asset / 42e2a0ea" x="0" y="8" width="112" height="38" />
+      <frame id="329:3234" name="Header spacing" x="124" y="26.5" width="94" height="1" />
+      <instance id="329:3235" name="Mobile/Button" x="230" y="5" width="124" height="44" />
+    </frame>
+    <frame id="387:3180" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="387:3181" name="Content" x="24" y="0" width="354" height="1317">
+        <frame id="387:3182" name="Badge / BẢN CHIA SẺ · CHỈ XEM" x="0" y="8" width="171" height="34">
+          <text id="387:3183" name="BẢN CHIA SẺ · CHỈ XEM" x="8" y="8" width="155" height="18" />
+        </frame>
+        <frame id="387:3184" name="Destination cover" x="0" y="66" width="354" height="210">
+          <instance id="603:8495" name="Destination illustration" x="0" y="0" width="354" height="210" />
+          <rounded-rectangle id="387:3186" name="Image contrast" x="0" y="0" width="354" height="210" />
+          <frame id="387:3187" name="Cover title" x="20" y="126" width="314" height="58">
+            <text id="387:3188" name="Đà Nẵng 3N2Đ" x="0" y="0" width="314" height="36" />
+            <text id="387:3189" name="12–14/10/2026 · 3 ngày 2 đêm" x="0" y="40" width="314" height="18" />
+          </frame>
+        </frame>
+        <text id="387:3190" name="Một chuyến đi thật đẹp cùng cả nhóm." x="0" y="300" width="354" height="23" />
+        <frame id="387:3191" name="Public days" x="0" y="347" width="354" height="36">
+          <instance id="387:3192" name="Mobile/Chip" x="0" y="0" width="150" height="36" />
+          <instance id="387:3194" name="Mobile/Chip" x="158" y="0" width="94" height="36" />
+          <instance id="387:3196" name="Mobile/Chip" x="260" y="0" width="94" height="36" />
+        </frame>
+        <frame id="387:3198" name="Timeline / 08:00" x="0" y="407" width="354" height="82">
+          <frame id="387:3199" name="Time" x="0" y="32" width="48" height="18">
+            <text id="387:3200" name="08:00" x="0" y="0" width="48" height="18" />
+          </frame>
+          <instance id="387:3307" name="Mobile/Activity card" x="60" y="0" width="294" height="82" />
+        </frame>
+        <frame id="387:3207" name="Timeline / 11:30" x="0" y="513" width="354" height="82">
+          <frame id="387:3208" name="Time" x="0" y="32" width="48" height="18">
+            <text id="387:3209" name="11:30" x="0" y="0" width="48" height="18" />
+          </frame>
+          <instance id="387:3313" name="Mobile/Activity card" x="60" y="0" width="294" height="82" />
+        </frame>
+        <frame id="387:3216" name="Timeline / 14:00" x="0" y="619" width="354" height="82">
+          <frame id="387:3217" name="Time" x="0" y="32" width="48" height="18">
+            <text id="387:3218" name="14:00" x="0" y="0" width="48" height="18" />
+          </frame>
+          <instance id="387:3319" name="Mobile/Activity card" x="60" y="0" width="294" height="82" />
+        </frame>
+        <frame id="387:3225" name="Timeline / 19:00" x="0" y="725" width="354" height="82">
+          <frame id="387:3226" name="Time" x="0" y="32" width="48" height="18">
+            <text id="387:3227" name="19:00" x="0" y="0" width="48" height="18" />
+          </frame>
+          <instance id="387:3325" name="Mobile/Activity card" x="60" y="0" width="294" height="82" />
+        </frame>
+        <frame id="387:3234" name="Shared dress code" x="0" y="831" width="354" height="116">
+          <text id="387:3235" name="Dress code ngày 1" x="16" y="16" width="322" height="26" />
+          <text id="387:3236" name="Trắng · Xanh biển · Be
+Mang mũ, kính râm và đồ thoáng mát." x="16" y="54" width="322" height="46" />
+        </frame>
+        <frame id="387:3237" name="Shared packing" x="0" y="971" width="354" height="116">
+          <text id="387:3238" name="Cả nhóm nhớ mang" x="16" y="16" width="322" height="26" />
+          <text id="387:3239" name="Đồ bơi · Kem chống nắng
+Sạc dự phòng · Thuốc cá nhân" x="16" y="54" width="322" height="46" />
+        </frame>
+        <instance id="387:3240" name="Mobile/Button" x="0" y="1111" width="354" height="52" />
+        <text id="387:3242" name="Bản chia sẻ chỉ xem. Thông tin riêng và quỹ nhóm được ẩn." x="0" y="1187" width="354" height="18" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="328:3074" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2050" name="M26 · Nhập mật khẩu chia sẻ" x="618" y="4680" width="402" height="874">
+    <frame id="328:3124" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="328:3125" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="328:3126" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="328:3127" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="328:3130" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="328:3133" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="328:3137" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="328:3138" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8536" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="328:3139" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="328:3142" name="Mở chuyến đi" x="56" y="16" width="242" height="22" />
+      <frame id="328:3143" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="328:3144" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="328:3145" name="Content" x="24" y="0" width="354" height="878">
+        <rounded-rectangle id="328:3147" name="Asset / 42e2a0ea" x="0" y="8" width="130" height="44" />
+        <frame id="328:3148" name="Protected illustration" x="0" y="76" width="354" height="104">
+          <instance id="328:3149" name="Mobile/Icon/lock" x="149" y="24" width="56.000003814697266" height="56.000003814697266" />
+        </frame>
+        <frame id="381:3200" name="Page heading" x="0" y="204" width="354" height="124">
+          <text id="328:3153" name="Hành trình này
+có mật khẩu" x="0" y="0" width="354" height="72" />
+          <text id="328:3154" name="Nhập mật khẩu được người chia sẻ gửi cho bạn để xem kế hoạch." x="0" y="78" width="354" height="46" />
+        </frame>
+        <frame id="328:3155" name="Field / Mật khẩu" x="0" y="352" width="354" height="82">
+          <text id="328:3156" name="Mật khẩu" x="0" y="0" width="354" height="22" />
+          <instance id="328:3157" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <instance id="328:3159" name="Mobile/Button" x="0" y="458" width="354" height="52" />
+        <text id="328:3161" name="Chưa có mật khẩu? Hãy liên hệ người
+đã gửi liên kết cho bạn." x="0" y="534" width="354" height="36" />
+        <rounded-rectangle id="328:3162" name="Asset / becd309d" x="0" y="594" width="354" height="172" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="328:3146" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="317:2051" name="M27 · Liên kết không khả dụng" x="1116" y="4680" width="402" height="874">
+    <frame id="328:3163" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="328:3164" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="328:3165" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="328:3166" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="328:3169" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="328:3172" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="328:3176" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="328:3177" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8539" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="328:3178" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="328:3181" name="Liên kết chia sẻ" x="56" y="16" width="242" height="22" />
+      <frame id="328:3182" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="328:3183" name="Scrollable viewport" x="0" y="120" width="402" height="754">
+      <frame id="328:3184" name="Content" x="24" y="0" width="354" height="650">
+        <frame id="328:3186" name="Empty illustration" x="0" y="8" width="354" height="204">
+          <rounded-rectangle id="328:3187" name="Asset / 4ded9f2f" x="99" y="24" width="156" height="156" />
+        </frame>
+        <frame id="381:3201" name="Page heading" x="0" y="236" width="354" height="124">
+          <text id="328:3188" name="Hành trình này
+chưa thể mở" x="0" y="0" width="354" height="72" />
+          <text id="328:3189" name="Liên kết có thể đã hết hạn, được thu hồi hoặc chuyến đi không còn" x="0" y="78" width="354" height="46" />
+        </frame>
+        <frame id="328:3190" name="Next step" x="0" y="384" width="354" height="78">
+          <text id="328:3191" name="Nhờ người chia sẻ gửi lại một liên kết mới để tiếp tục xem kế hoạ" x="16" y="16" width="322" height="46" />
+        </frame>
+        <instance id="328:3192" name="Mobile/Button" x="0" y="486" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="328:3185" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="328:3072" name="Scrollable viewport" x="3207" y="4725" width="402" height="754">
+    <frame id="328:3073" name="Content" x="24" y="0" width="354" height="1464">
+      <frame id="328:3075" name="Badge / BẢN CHIA SẺ · CHỈ XEM" x="0" y="8" width="171" height="34">
+        <text id="328:3076" name="BẢN CHIA SẺ · CHỈ XEM" x="8" y="8" width="155" height="18" />
+      </frame>
+      <instance id="603:8516" name="Destination illustration" x="0" y="66" width="354" height="190" />
+      <text id="328:3078" name="Đà Nẵng 3N2Đ" x="0" y="280" width="354" height="36" />
+      <text id="328:3079" name="12–14/10/2026 · 3 ngày, 2 đêm" x="0" y="340" width="354" height="23" />
+      <text id="328:3080" name="Một chuyến đi thật đẹp cùng cả nhóm." x="0" y="387" width="354" height="23" />
+      <frame id="328:3081" name="Public days" x="0" y="434" width="354" height="36">
+        <instance id="328:3082" name="Mobile/Chip" x="0" y="0" width="150" height="36" />
+        <instance id="328:3084" name="Mobile/Chip" x="158" y="0" width="94" height="36" />
+        <instance id="328:3086" name="Mobile/Chip" x="260" y="0" width="94" height="36" />
+      </frame>
+      <frame id="328:3088" name="Bán đảo Sơn Trà" x="0" y="494" width="354" height="78">
+        <frame id="328:3089" name="Activity" x="17" y="17" width="322" height="44">
+          <text id="328:3090" name="08:00" x="0" y="11" width="62" height="22" />
+          <frame id="328:3091" name="Details" x="74" y="0" width="248" height="44">
+            <text id="328:3092" name="Bán đảo Sơn Trà" x="0" y="0" width="248" height="22" />
+            <text id="328:3093" name="Ngắm cảnh · Hải Vọng Đài" x="0" y="26" width="248" height="18" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="328:3094" name="Ăn trưa hải sản" x="0" y="596" width="354" height="78">
+        <frame id="328:3095" name="Activity" x="17" y="17" width="322" height="44">
+          <text id="328:3096" name="11:30" x="0" y="11" width="62" height="22" />
+          <frame id="328:3097" name="Details" x="74" y="0" width="248" height="44">
+            <text id="328:3098" name="Ăn trưa hải sản" x="0" y="0" width="248" height="22" />
+            <text id="328:3099" name="Nhà hàng Bé Mặn" x="0" y="26" width="248" height="18" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="328:3100" name="Bãi biển Mỹ Khê" x="0" y="698" width="354" height="78">
+        <frame id="328:3101" name="Activity" x="17" y="17" width="322" height="44">
+          <text id="328:3102" name="14:00" x="0" y="11" width="62" height="22" />
+          <frame id="328:3103" name="Details" x="74" y="0" width="248" height="44">
+            <text id="328:3104" name="Bãi biển Mỹ Khê" x="0" y="0" width="248" height="22" />
+            <text id="328:3105" name="Tắm biển · Thư giãn" x="0" y="26" width="248" height="18" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="328:3106" name="Cầu Rồng" x="0" y="800" width="354" height="78">
+        <frame id="328:3107" name="Activity" x="17" y="17" width="322" height="44">
+          <text id="328:3108" name="19:00" x="0" y="11" width="62" height="22" />
+          <frame id="328:3109" name="Details" x="74" y="0" width="248" height="44">
+            <text id="328:3110" name="Cầu Rồng" x="0" y="0" width="248" height="22" />
+            <text id="328:3111" name="Dạo phố · Ngắm cảnh" x="0" y="26" width="248" height="18" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="328:3112" name="Dress code" x="0" y="902" width="354" height="158">
+        <instance id="328:3113" name="Mobile/Icon/shirt" x="17" y="17" width="28" height="28" />
+        <text id="328:3116" name="Dress code ngày 1" x="17" y="57" width="322" height="26" />
+        <text id="328:3117" name="Trắng · Xanh biển · Be
+Mang mũ, kính râm và đồ thoáng mát." x="17" y="95" width="322" height="46" />
+      </frame>
+      <frame id="328:3118" name="Shared packing" x="0" y="1084" width="354" height="118">
+        <text id="328:3119" name="Cả nhóm nhớ mang" x="17" y="17" width="322" height="26" />
+        <text id="328:3120" name="Đồ bơi · Kem chống nắng
+Sạc dự phòng · Thuốc cá nhân" x="17" y="55" width="322" height="46" />
+      </frame>
+      <instance id="328:3121" name="Mobile/Button" x="0" y="1226" width="354" height="52" />
+      <text id="328:3123" name="Đây là kế hoạch được chia sẻ để xem.
+Thông tin riêng và quỹ nhóm " x="0" y="1302" width="354" height="36" />
+    </frame>
+  </frame>
+  <frame id="317:2052" name="M28 · Tiện ích chuyến đi" x="1614" y="4680" width="402" height="874" />
+  <frame id="317:2053" name="M29 · Thêm hoạt động" x="2112" y="4680" width="402" height="874">
+    <frame id="328:3335" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="328:3336" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="328:3337" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="328:3338" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="328:3341" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="328:3344" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="328:3348" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="328:3349" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8545" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="328:3350" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="328:3353" name="Thêm hoạt động" x="56" y="16" width="242" height="22" />
+      <frame id="328:3354" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="328:3355" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="328:3356" name="Content" x="24" y="0" width="354" height="963">
+        <frame id="381:3204" name="Page heading" x="0" y="8" width="354" height="65">
+          <text id="328:3358" name="Thêm một trải nghiệm" x="0" y="0" width="354" height="36" />
+          <text id="328:3359" name="Đà Nẵng 3N2Đ · Ngày 1" x="0" y="42" width="354" height="23" />
+        </frame>
+        <frame id="328:3360" name="Field / Địa điểm / hoạt động" x="0" y="97" width="354" height="82">
+          <text id="328:3361" name="Địa điểm / hoạt động" x="0" y="0" width="354" height="22" />
+          <instance id="328:3362" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3364" name="Field / Ngày" x="0" y="203" width="354" height="82">
+          <text id="328:3365" name="Ngày" x="0" y="0" width="354" height="22" />
+          <instance id="328:3366" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3368" name="Time range" x="0" y="309" width="354" height="82">
+          <frame id="328:3369" name="Field / Bắt đầu" x="0" y="0" width="171" height="82">
+            <text id="328:3370" name="Bắt đầu" x="0" y="0" width="171" height="22" />
+            <instance id="328:3371" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+          <frame id="328:3373" name="Field / Kết thúc" x="183" y="0" width="171" height="82">
+            <text id="328:3374" name="Kết thúc" x="0" y="0" width="171" height="22" />
+            <instance id="328:3375" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+        </frame>
+        <frame id="328:3377" name="Field / Di chuyển" x="0" y="415" width="354" height="82">
+          <text id="328:3378" name="Di chuyển" x="0" y="0" width="354" height="22" />
+          <instance id="328:3379" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3381" name="Field / Ghi chú" x="0" y="521" width="354" height="82">
+          <text id="328:3382" name="Ghi chú" x="0" y="0" width="354" height="22" />
+          <instance id="328:3383" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3385" name="Schedule check" x="0" y="627" width="354" height="148">
+          <instance id="328:3386" name="Mobile/Icon/clock" x="16" y="16" width="24" height="24" />
+          <text id="328:3390" name="Dành thời gian di chuyển" x="16" y="52" width="322" height="22" />
+          <text id="328:3391" name="Cân nhắc khoảng nghỉ giữa hoạt động này và bữa trưa lúc 11:30." x="16" y="86" width="322" height="46" />
+        </frame>
+        <instance id="328:3394" name="Mobile/Button" x="0" y="799" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="328:3357" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="381:3205" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="328:3392" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2054" name="M30 · Thêm vật dụng" x="2610" y="4680" width="402" height="874">
+    <frame id="328:3396" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="328:3397" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="328:3398" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="328:3399" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="328:3402" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="328:3405" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="328:3409" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="328:3410" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8548" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="328:3411" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="328:3414" name="Thêm vật dụng" x="56" y="16" width="242" height="22" />
+      <frame id="328:3415" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="328:3416" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="328:3417" name="Content" x="24" y="0" width="354" height="909">
+        <frame id="381:3206" name="Page heading" x="0" y="8" width="354" height="65">
+          <text id="328:3419" name="Nhớ mang theo…" x="0" y="0" width="354" height="36" />
+          <text id="328:3420" name="Phân công để cả nhóm cùng sẵn sàng." x="0" y="42" width="354" height="23" />
+        </frame>
+        <frame id="328:3421" name="Field / Tên vật dụng" x="0" y="97" width="354" height="82">
+          <text id="328:3422" name="Tên vật dụng" x="0" y="0" width="354" height="22" />
+          <instance id="328:3423" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3425" name="Item classification" x="0" y="203" width="354" height="82">
+          <frame id="328:3426" name="Field / Danh mục" x="0" y="0" width="171" height="82">
+            <text id="328:3427" name="Danh mục" x="0" y="0" width="171" height="22" />
+            <instance id="328:3428" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+          <frame id="328:3430" name="Field / Số lượng" x="183" y="0" width="171" height="82">
+            <text id="328:3431" name="Số lượng" x="0" y="0" width="171" height="22" />
+            <instance id="328:3432" name="Mobile/Field" x="0" y="30" width="171" height="52" />
+          </frame>
+        </frame>
+        <frame id="328:3434" name="Field / Người chuẩn bị" x="0" y="309" width="354" height="82">
+          <text id="328:3435" name="Người chuẩn bị" x="0" y="0" width="354" height="22" />
+          <instance id="328:3436" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3438" name="Field / Hạn chuẩn bị" x="0" y="415" width="354" height="82">
+          <text id="328:3439" name="Hạn chuẩn bị" x="0" y="0" width="354" height="22" />
+          <instance id="328:3440" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3442" name="Field / Ghi chú" x="0" y="521" width="354" height="82">
+          <text id="328:3443" name="Ghi chú" x="0" y="0" width="354" height="22" />
+          <instance id="328:3444" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="328:3446" name="Packing tip" x="0" y="627" width="354" height="94">
+          <frame id="328:3447" name="Tip" x="16" y="16" width="322" height="62">
+            <rounded-rectangle id="328:3448" name="Asset / 564936d9" x="0" y="0" width="62" height="62" />
+            <text id="328:3449" name="Những món dùng chung chỉ cần
+một người nhận chuẩn bị." x="74" y="13" width="246" height="36" />
+          </frame>
+        </frame>
+        <instance id="328:3452" name="Mobile/Button" x="0" y="745" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="328:3418" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+    <frame id="381:3207" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="328:3450" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+  </frame>
+  <frame id="317:2055" name="Mobile · Components" x="120" y="5940" width="2840" height="5567" />
+  <frame id="329:3244" name="Mobile · Design index" x="120" y="60" width="2840" height="121">
+    <text id="329:3245" name="Wolfari · Mobile" x="0" y="0" width="1800" height="40" />
+    <text id="329:3246" name="30 màn hình · 402 × 874 · Be Vietnam Pro · Thanh tab kính nổi · P" x="0" y="56" width="2700" height="26" />
+    <text id="329:3247" name="Khám phá → Chuyến đi → Không gian làm việc nhóm → Chia sẻ · Cuộn " x="0" y="98" width="2700" height="23" />
+  </frame>
+  <frame id="405:3506" name="M31 · Thao tác nhanh — Bottom sheet" x="3208" y="1380" width="402" height="874">
+    <frame id="405:3507" name="iOS / Status bar" x="0" y="0" width="402" height="54" hidden="true">
+      <text id="405:3508" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="405:3509" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="405:3510" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="405:3511" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="405:3512" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="405:3513" name="Navigation header" x="24" y="54" width="354" height="54" hidden="true">
+      <frame id="405:3514" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8551" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="405:3515" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="405:3516" name="Chuyến đi của tôi" x="56" y="16" width="242" height="22" />
+      <frame id="405:3517" name="Action / more" x="310" y="5" width="44" height="44">
+        <instance id="657:8554" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="405:3518" name="Mobile/Icon/more" x="11" y="11" width="22" height="22" />
+      </frame>
+    </frame>
+    <frame id="405:3519" name="Scrollable viewport" x="0" y="120" width="402" height="754" hidden="true">
+      <frame id="405:3520" name="Content" x="24" y="0" width="354" height="1184">
+        <instance id="562:7811" name="Mobile/Trip section switcher" x="0" y="8" width="354" height="52" />
+        <frame id="405:3526" name="Destination cover" x="0" y="84" width="354" height="192">
+          <instance id="603:8558" name="Destination illustration" x="0" y="0" width="354" height="192" />
+          <rounded-rectangle id="405:3528" name="Image contrast" x="0" y="0" width="354" height="192" />
+          <frame id="405:3529" name="Cover title" x="20" y="108" width="314" height="58">
+            <text id="405:3530" name="Đà Nẵng 3N2Đ" x="0" y="0" width="314" height="36" />
+            <text id="405:3531" name="12–14/10/2026  ·  3 ngày 2 đêm" x="0" y="40" width="314" height="18" />
+          </frame>
+        </frame>
+        <instance id="405:3532" name="Mobile/Avatar group" x="0" y="300" width="354" height="52" />
+        <frame id="405:3533" name="Trip essentials" x="0" y="376" width="354" height="74">
+          <frame id="405:3534" name="Essentials" x="16" y="16" width="322" height="42">
+            <frame id="405:3535" name="Lịch trình" x="0" y="0" width="155" height="42">
+              <frame id="405:3536" name="Icon badge / calendar" x="0" y="0" width="36" height="36">
+                <instance id="405:3537" name="Mobile/Icon/calendar" x="7" y="7" width="22" height="22" />
+              </frame>
+              <frame id="405:3538" name="Label" x="44" y="0" width="111" height="42">
+                <text id="405:3539" name="4 hoạt động" x="0" y="0" width="111" height="22" />
+                <text id="405:3540" name="Lịch trình" x="0" y="24" width="111" height="18" />
+              </frame>
+            </frame>
+            <frame id="405:3541" name="Hành lý" x="167" y="0" width="155" height="42">
+              <frame id="405:3542" name="Icon badge / bag" x="0" y="0" width="36" height="36">
+                <instance id="405:3543" name="Mobile/Icon/bag" x="7" y="7" width="22" height="22" />
+              </frame>
+              <frame id="405:3544" name="Label" x="44" y="0" width="111" height="42">
+                <text id="405:3545" name="8 / 12 món" x="0" y="0" width="111" height="22" />
+                <text id="405:3546" name="Hành lý" x="0" y="24" width="111" height="18" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+        <frame id="405:3547" name="Section header" x="0" y="474" width="354" height="28">
+          <text id="405:3548" name="Lịch trình ngày đầu" x="0" y="0" width="250" height="28" />
+          <text id="405:3549" name="Xem tất cả" x="258" y="5" width="96" height="18" />
+        </frame>
+        <frame id="405:3550" name="Timeline / 08:00" x="0" y="526" width="354" height="82">
+          <frame id="405:3551" name="Time" x="0" y="32" width="48" height="18">
+            <text id="405:3552" name="08:00" x="0" y="0" width="48" height="18" />
+          </frame>
+          <instance id="405:3553" name="Mobile/Activity card" x="60" y="0" width="294" height="82" />
+        </frame>
+        <frame id="405:3554" name="Budget summary" x="0" y="632" width="354" height="98">
+          <frame id="405:3555" name="Budget" x="16" y="16" width="322" height="48">
+            <frame id="405:3556" name="Icon badge / wallet" x="0" y="4" width="40" height="40">
+              <instance id="405:3557" name="Mobile/Icon/wallet" x="9" y="9" width="22" height="22" />
+            </frame>
+            <frame id="405:3558" name="Budget details" x="52" y="0" width="242" height="48">
+              <text id="405:3559" name="6.250.000 ₫ đã chi" x="0" y="0" width="242" height="26" />
+              <text id="405:3560" name="Ngân sách nhóm 9.000.000 ₫" x="0" y="30" width="242" height="18" />
+            </frame>
+          </frame>
+          <frame id="405:3561" name="Progress" x="16" y="76" width="322" height="6">
+            <rounded-rectangle id="405:3562" name="Completed" x="0" y="0" width="223.61111450195312" height="6" />
+          </frame>
+        </frame>
+        <frame id="405:3563" name="Section header" x="0" y="754" width="354" height="28">
+          <text id="405:3564" name="Chuẩn bị cùng nhau" x="0" y="0" width="354" height="28" />
+        </frame>
+        <instance id="405:3565" name="Mobile/List row" x="0" y="806" width="354" height="76" />
+        <instance id="405:3566" name="Mobile/List row" x="0" y="906" width="354" height="76" />
+        <instance id="405:3567" name="Mobile/Button" x="0" y="1006" width="354" height="52" />
+      </frame>
+    </frame>
+    <rounded-rectangle id="405:3568" name="Bottom safe-area fade" x="0" y="778" width="402" height="96" />
+    <instance id="405:3569" name="Mobile/Tab bar · Liquid glass" x="24" y="782" width="354" height="64" hidden="true" />
+    <rounded-rectangle id="405:3570" name="iOS / Home indicator" x="134" y="860" width="134" height="5" hidden="true" />
+    <rounded-rectangle id="405:3571" name="Dismiss sheet" x="0" y="0" width="402" height="874" />
+    <instance id="405:3572" name="Mobile/Quick action sheet" x="8" y="404" width="386" height="462" />
+    <rounded-rectangle id="405:3633" name="Sheet / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="405:3634" name="Mobile · Modern component showcase" x="3208" y="5940" width="1080" height="1369">
+    <text id="405:3635" name="Mobile / Modern components" x="32" y="32" width="1016" height="36" />
+    <text id="405:3636" name="8 nhóm component · Auto layout · Trạng thái có thể tái sử dụng · " x="32" y="92" width="1016" height="23" />
+    <frame id="405:3637" name="Component collections" x="32" y="139" width="1016" height="1198">
+      <frame id="405:3638" name="Foundations in use" x="0" y="0" width="496" height="1198">
+        <frame id="405:3640" name="01  Bộ lọc &amp; tìm kiếm" x="0" y="0" width="496" height="382">
+          <text id="405:3641" name="01  Bộ lọc &amp; tìm kiếm" x="20" y="20" width="456" height="26" />
+          <instance id="405:3642" name="Mobile/Segmented control" x="71" y="62" width="354" height="44" />
+          <instance id="405:3649" name="Mobile/Segmented control" x="71" y="122" width="354" height="44" />
+          <instance id="405:3656" name="Mobile/Segmented control" x="71" y="182" width="354" height="44" />
+          <instance id="405:3663" name="Mobile/Search bar" x="71" y="242" width="354" height="52" />
+          <instance id="405:3674" name="Mobile/Search bar" x="71" y="310" width="354" height="52" />
+        </frame>
+        <frame id="405:3684" name="02  Tiến độ &amp; cộng tác" x="0" y="406" width="496" height="398">
+          <text id="405:3685" name="02  Tiến độ &amp; cộng tác" x="20" y="20" width="456" height="26" />
+          <instance id="405:3686" name="Mobile/Progress summary" x="71" y="62" width="354" height="116" />
+          <instance id="405:3696" name="Mobile/Progress summary" x="71" y="194" width="354" height="116" />
+          <instance id="405:3706" name="Mobile/Avatar group" x="71" y="326" width="354" height="52" />
+        </frame>
+        <frame id="405:3723" name="03  Nhãn trạng thái" x="0" y="828" width="496" height="112">
+          <text id="405:3724" name="03  Nhãn trạng thái" x="20" y="20" width="456" height="26" />
+          <frame id="405:3725" name="Badge tones" x="35" y="62" width="426" height="30">
+            <instance id="405:3726" name="Mobile/Status badge" x="0" y="0" width="134" height="30" />
+            <instance id="405:3729" name="Mobile/Status badge" x="146" y="0" width="134" height="30" />
+            <instance id="405:3732" name="Mobile/Status badge" x="292" y="0" width="134" height="30" />
+          </frame>
+        </frame>
+        <frame id="424:4164" name="06  Danh sách thành viên" x="0" y="964" width="496" height="234">
+          <text id="424:4165" name="06  Danh sách thành viên" x="20" y="20" width="456" height="26" />
+          <instance id="424:4166" name="Mobile/Member row" x="87" y="58" width="322" height="72" />
+          <instance id="424:4174" name="Mobile/Member row" x="87" y="142" width="322" height="72" />
+        </frame>
+      </frame>
+      <frame id="405:3639" name="Actions in use" x="520" y="0" width="496" height="846">
+        <frame id="405:3735" name="04  Thao tác nhanh" x="0" y="0" width="496" height="278">
+          <text id="405:3736" name="04  Thao tác nhanh" x="20" y="20" width="456" height="26" />
+          <frame id="405:3737" name="Quick action states" x="69" y="62" width="358" height="116">
+            <instance id="405:3738" name="Mobile/Quick action" x="0" y="0" width="171" height="116" />
+            <instance id="405:3751" name="Mobile/Quick action" x="187" y="0" width="171" height="116" />
+          </frame>
+          <instance id="405:3767" name="Mobile/Action row" x="71" y="194" width="354" height="64" />
+        </frame>
+        <frame id="405:3779" name="05  Bảng thao tác từ dưới" x="0" y="302" width="496" height="544">
+          <text id="405:3780" name="05  Bảng thao tác từ dưới" x="20" y="20" width="456" height="26" />
+          <instance id="405:3781" name="Mobile/Quick action sheet" x="55" y="62" width="386" height="462" />
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="424:4048" name="M32 · Chỉnh sửa hồ sơ" x="3208" y="2480" width="402" height="874">
+    <frame id="424:4049" name="iOS / Status bar" x="0" y="0" width="402" height="54">
+      <text id="424:4050" name="9:41" x="28" y="16" width="264" height="22" />
+      <frame id="424:4051" name="System indicators" x="292" y="15.5" width="86" height="23">
+        <instance id="424:4052" name="Mobile/Icon/signal" x="0" y="3" width="17" height="17" />
+        <instance id="424:4055" name="Mobile/Icon/wifi" x="22" y="2.5" width="18" height="18" />
+        <instance id="424:4058" name="Mobile/Icon/battery" x="45" y="0" width="23" height="23" />
+      </frame>
+    </frame>
+    <frame id="424:4062" name="Navigation header" x="24" y="54" width="354" height="54">
+      <frame id="424:4063" name="Action / back" x="0" y="5" width="44" height="44">
+        <instance id="657:8557" name="Apple iOS 27 / Linked glass" x="0" y="0" width="44" height="44" />
+        <instance id="424:4064" name="Mobile/Icon/back" x="11" y="11" width="22" height="22" />
+      </frame>
+      <text id="424:4067" name="Thông tin cá nhân" x="56" y="16" width="242" height="22" />
+      <frame id="424:4098" name="Header spacing" x="310" y="5" width="44" height="44" />
+    </frame>
+    <frame id="424:4074" name="Scrollable viewport" x="0" y="120" width="402" height="648">
+      <frame id="424:4075" name="Content" x="24" y="0" width="354" height="577">
+        <frame id="424:4077" name="Page heading" x="0" y="8" width="354" height="65">
+          <text id="424:4078" name="Thông tin của bạn" x="0" y="0" width="354" height="36" />
+          <text id="424:4079" name="Cập nhật để nhóm dễ nhận ra bạn." x="0" y="42" width="354" height="23" />
+        </frame>
+        <frame id="424:4080" name="Profile identity" x="0" y="97" width="354" height="96">
+          <frame id="424:4081" name="Identity" x="0" y="16" width="322" height="64">
+            <rounded-rectangle id="424:4082" name="Asset / c675e4c8" x="0" y="0" width="64" height="64" />
+            <frame id="424:4083" name="Identity copy" x="80" y="8" width="242" height="48">
+              <text id="424:4084" name="Trang Nguyễn" x="0" y="0" width="242" height="26" />
+              <text id="424:4085" name="Tài khoản Wolfari" x="0" y="30" width="242" height="18" />
+            </frame>
+          </frame>
+        </frame>
+        <frame id="424:4086" name="Field / Họ và tên" x="0" y="217" width="354" height="82">
+          <text id="424:4087" name="Họ và tên" x="0" y="0" width="354" height="22" />
+          <instance id="424:4088" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <frame id="424:4090" name="Field / Email" x="0" y="323" width="354" height="82">
+          <text id="424:4091" name="Email" x="0" y="0" width="354" height="22" />
+          <instance id="424:4092" name="Mobile/Field" x="0" y="30" width="354" height="52" />
+        </frame>
+        <text id="424:4094" name="Email được dùng để nhận lời mời và các thông báo về chuyến đi." x="0" y="429" width="354" height="36" />
+      </frame>
+    </frame>
+    <frame id="424:4095" name="Sticky primary action" x="0" y="768" width="402" height="94">
+      <instance id="424:4096" name="Mobile/Button" x="24" y="12" width="354" height="52" />
+    </frame>
+    <rounded-rectangle id="424:4076" name="iOS / Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="449:4053" name="Mobile · Prototype controls" x="4460" y="5940" width="750" height="360">
+    <text id="449:4054" name="Prototype · Điều khiển" x="24" y="24" width="702" height="26" />
+    <text id="449:4055" name="Công tắc và checkbox có thể tương tác khi chạy prototype." x="24" y="74" width="702" height="23" />
+    <frame id="449:4065" name="Switch examples" x="24" y="121" width="702" height="31">
+      <instance id="449:4066" name="Mobile/Switch" x="0" y="0" width="51" height="31" />
+      <instance id="449:4069" name="Mobile/Switch" x="83" y="0" width="51" height="31" />
+    </frame>
+    <instance id="449:4114" name="Mobile/Checklist item" x="24" y="176" width="354" height="68" />
+    <instance id="449:4119" name="Mobile/Checklist item" x="24" y="268" width="354" height="68" />
+  </frame>
+  <frame id="450:4374" name="P01 · Chuyến đi đã sẵn sàng" x="4460" y="280" width="402" height="874">
+    <rounded-rectangle id="450:4375" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4377" name="Feedback" x="24" y="273" width="354" height="332">
+      <rounded-rectangle id="582:8037" name="Asset / 564936d9" x="24" y="24" width="72" height="52" />
+      <text id="450:4382" name="Chuyến đi đã sẵn sàng" x="24" y="92" width="306" height="26" />
+      <text id="450:4383" name="Đà Nẵng 3N2Đ đã có không gian riêng để cả nhóm cùng lên kế hoạch." x="24" y="134" width="306" height="46" />
+      <frame id="450:4384" name="Actions" x="24" y="196" width="306" height="112">
+        <instance id="450:4385" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4388" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4392" name="P02 · Đã lưu hoạt động" x="4958" y="280" width="402" height="874">
+    <rounded-rectangle id="450:4393" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4395" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4396" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4397" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4400" name="Đã lưu hoạt động" x="24" y="88" width="306" height="26" />
+      <text id="450:4401" name="Hoạt động mẫu đã được ghi nhận trong luồng thử nghiệm." x="24" y="130" width="306" height="46" />
+      <frame id="450:4402" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4403" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4406" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4410" name="P03 · Đã lưu vật dụng" x="5456" y="280" width="402" height="874">
+    <rounded-rectangle id="450:4411" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4413" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4414" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4415" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4418" name="Đã lưu vật dụng" x="24" y="88" width="306" height="26" />
+      <text id="450:4419" name="Bạn đã hoàn tất luồng thêm vật dụng cho chuyến đi." x="24" y="130" width="306" height="46" />
+      <frame id="450:4420" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4421" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4424" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4428" name="P04 · Đã lưu khoản chi" x="5954" y="280" width="402" height="874">
+    <rounded-rectangle id="450:4429" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4431" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4432" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4433" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4436" name="Đã lưu khoản chi" x="24" y="88" width="306" height="26" />
+      <text id="450:4437" name="Bạn đã hoàn tất bước ghi nhận khoản chi cho quỹ nhóm." x="24" y="130" width="306" height="46" />
+      <frame id="450:4438" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4439" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4442" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4446" name="P05 · Lời mời đã sẵn sàng" x="4460" y="1380" width="402" height="874">
+    <rounded-rectangle id="450:4447" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4449" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4450" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4451" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4454" name="Lời mời đã sẵn sàng" x="24" y="88" width="306" height="26" />
+      <text id="450:4455" name="Mời Minh Anh cùng xem và chuẩn bị cho hành trình Đà Nẵng." x="24" y="130" width="306" height="46" />
+      <frame id="450:4456" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4457" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4460" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4464" name="P06 · Đã lưu hồ sơ" x="4958" y="1380" width="402" height="874">
+    <rounded-rectangle id="450:4465" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4467" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4468" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4469" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4472" name="Đã lưu hồ sơ" x="24" y="88" width="306" height="26" />
+      <text id="450:4473" name="Thông tin hồ sơ của bạn đã được cập nhật trong bản xem thử." x="24" y="130" width="306" height="46" />
+      <frame id="450:4474" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4475" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4478" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4482" name="P07 · Đã lưu cài đặt" x="5456" y="1380" width="402" height="874">
+    <rounded-rectangle id="450:4483" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4485" name="Feedback" x="24" y="285" width="354" height="305">
+      <frame id="450:4486" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4487" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4490" name="Đã lưu cài đặt" x="24" y="88" width="306" height="26" />
+      <text id="450:4491" name="Các tùy chọn chuyến đi đã được ghi nhận." x="24" y="130" width="306" height="23" />
+      <frame id="450:4492" name="Actions" x="24" y="169" width="306" height="112">
+        <instance id="450:4493" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4496" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4500" name="P08 · Đã lưu chuyến đi" x="5954" y="1380" width="402" height="874">
+    <rounded-rectangle id="450:4501" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4503" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4504" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4505" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4508" name="Đã lưu chuyến đi" x="24" y="88" width="306" height="26" />
+      <text id="450:4509" name="Thông tin chuyến đi đã được cập nhật trong bản xem thử." x="24" y="130" width="306" height="46" />
+      <frame id="450:4510" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4511" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4514" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4518" name="P09 · Đã lưu ngưỡng giá" x="4460" y="2480" width="402" height="874">
+    <rounded-rectangle id="450:4519" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4521" name="Feedback" x="24" y="303" width="354" height="268">
+      <frame id="450:4522" name="Icon badge / check" x="24" y="24" width="48" height="48">
+        <instance id="450:4523" name="Mobile/Icon/check" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4526" name="Đã lưu ngưỡng giá" x="24" y="88" width="306" height="26" />
+      <text id="450:4527" name="Thông báo giá vé sẽ dùng ngưỡng bạn đã chọn." x="24" y="130" width="306" height="46" />
+      <frame id="450:4528" name="Actions" x="24" y="192" width="306" height="52">
+        <instance id="450:4529" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4533" name="P10 · Xuất lịch trình PDF" x="4958" y="2480" width="402" height="874">
+    <rounded-rectangle id="450:4534" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4536" name="Feedback" x="24" y="262" width="354" height="351">
+      <frame id="450:4537" name="Icon badge / file" x="24" y="24" width="48" height="48">
+        <instance id="450:4538" name="Mobile/Icon/file" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4541" name="Xuất lịch trình PDF" x="24" y="88" width="306" height="26" />
+      <text id="450:4542" name="Bản xuất gồm lịch trình, địa điểm và thông tin chuyến đi. Xem bố " x="24" y="130" width="306" height="69" />
+      <frame id="450:4543" name="Actions" x="24" y="215" width="306" height="112">
+        <instance id="450:4544" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4547" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4551" name="P11 · Liên kết chia sẻ" x="5456" y="2480" width="402" height="874">
+    <rounded-rectangle id="450:4552" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4554" name="Feedback" x="24" y="250" width="354" height="374">
+      <frame id="450:4555" name="Icon badge / share" x="24" y="24" width="48" height="48">
+        <instance id="450:4556" name="Mobile/Icon/share" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4559" name="Liên kết chia sẻ" x="24" y="88" width="306" height="26" />
+      <text id="450:4560" name="wolfari.app/s/da-nang-3n2d
+
+Bạn có thể mở trang dành cho người nh" x="24" y="130" width="306" height="92" />
+      <frame id="450:4561" name="Actions" x="24" y="238" width="306" height="112">
+        <instance id="450:4562" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4565" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4569" name="P12 · Đăng xuất khỏi Wolfari?" x="5954" y="2480" width="402" height="874">
+    <rounded-rectangle id="450:4570" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4572" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4573" name="Icon badge / user" x="24" y="24" width="48" height="48">
+        <instance id="450:4574" name="Mobile/Icon/user" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4578" name="Đăng xuất khỏi Wolfari?" x="24" y="88" width="306" height="26" />
+      <text id="450:4579" name="Bạn có thể đăng nhập lại để tiếp tục chuẩn bị các chuyến đi." x="24" y="130" width="306" height="46" />
+      <frame id="450:4580" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4581" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4584" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4588" name="P13 · Lưu trữ chuyến đi?" x="4460" y="3580" width="402" height="874">
+    <rounded-rectangle id="450:4589" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4591" name="Feedback" x="24" y="273" width="354" height="328">
+      <frame id="450:4592" name="Icon badge / trip" x="24" y="24" width="48" height="48">
+        <instance id="450:4593" name="Mobile/Icon/trip" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4597" name="Lưu trữ chuyến đi?" x="24" y="88" width="306" height="26" />
+      <text id="450:4598" name="Lịch trình và các kỷ niệm sẽ được giữ lại để bạn xem sau." x="24" y="130" width="306" height="46" />
+      <frame id="450:4599" name="Actions" x="24" y="192" width="306" height="112">
+        <instance id="450:4600" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+        <instance id="450:4603" name="Mobile/Button" x="0" y="60" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="450:4607" name="P14 · Thiết bị đang đăng nhập" x="4958" y="3580" width="402" height="874">
+    <rounded-rectangle id="450:4608" name="Dismiss feedback" x="0" y="0" width="402" height="874" />
+    <frame id="450:4610" name="Feedback" x="24" y="269" width="354" height="337">
+      <frame id="450:4611" name="Icon badge / lock" x="24" y="24" width="48" height="48">
+        <instance id="450:4612" name="Mobile/Icon/lock" x="13" y="13" width="22" height="22" />
+      </frame>
+      <text id="450:4616" name="Thiết bị đang đăng nhập" x="24" y="88" width="306" height="26" />
+      <text id="450:4617" name="iPhone · Phiên hiện tại
+Đang hoạt động
+
+Đây là thiết bị dùng để x" x="24" y="130" width="306" height="115" />
+      <frame id="450:4618" name="Actions" x="24" y="261" width="306" height="52">
+        <instance id="450:4619" name="Mobile/Button" x="0" y="0" width="306" height="52" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="461:5096" name="Mobile · Travel journal components" x="6516" y="5940" width="1174" height="1897" />
+  <frame id="588:8020" name="M33 · Chi tiết hoạt động — Bottom sheet" x="6516" y="280" width="402" height="874">
+    <rounded-rectangle id="588:8021" name="Dismiss activity detail" x="0" y="0" width="402" height="874" />
+    <instance id="588:8023" name="Mobile/Activity detail sheet" x="8" y="486" width="386" height="380" />
+    <rounded-rectangle id="588:8053" name="Home indicator" x="134" y="860" width="134" height="5" />
+  </frame>
+  <frame id="612:8805" name="P15 · Hành lý sẵn sàng" x="7810" y="280" width="402" height="874" />
+</canvas>

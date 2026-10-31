@@ -172,6 +172,7 @@ export function AuthPage({
             {register && (
               <Input
                 id="auth-fullName"
+                required
                 label="Họ và tên"
                 name="fullName"
                 autoComplete="name"
@@ -183,6 +184,7 @@ export function AuthPage({
             )}
             <Input
               id="auth-email"
+              required
               label="Email"
               type="email"
               name="email"
@@ -195,6 +197,7 @@ export function AuthPage({
             />
             <Input
               id="auth-password"
+              required
               label="Mật khẩu"
               type="password"
               name="password"
@@ -208,6 +211,7 @@ export function AuthPage({
             {register && (
               <Input
                 id="auth-confirmation"
+                required
                 label="Nhập lại mật khẩu"
                 type="password"
                 autoComplete="new-password"
@@ -223,6 +227,7 @@ export function AuthPage({
               <label className={styles.consent}>
                 <input
                   id="auth-acceptedTerms"
+                  required
                   type="checkbox"
                   checked={values.acceptedTerms}
                   onChange={(e) => field('acceptedTerms', e.target.checked)}

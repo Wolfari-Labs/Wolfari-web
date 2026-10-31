@@ -1,8 +1,10 @@
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router';
 import { Button } from '../shared/components/Button';
 import { Input } from '../shared/components/Input';
 import { Select } from '../shared/components/Select';
+import { Textarea } from '../shared/components/Textarea';
 import { Alert } from '../shared/components/Alert';
 import { Drawer } from '../shared/components/Drawer';
 import { NavigationButton } from '../shared/components/NavigationButton';
@@ -28,6 +30,7 @@ import styles from './design-system.module.css';
 
 function DesignSystemPreview() {
   const [loading, setLoading] = useState(false);
+  const [retries, setRetries] = useState(0);
   const [error, setError] = useState<string>();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -79,9 +82,10 @@ function DesignSystemPreview() {
         </div>
       </section>
       <section className={styles.panel} aria-labelledby="fields-title">
-        <h2 id="fields-title">Input & Select</h2>
+        <h2 id="fields-title">Input, Select & Textarea</h2>
         <form
           className={styles.grid}
+          noValidate
           onSubmit={(event) => {
             event.preventDefault();
             setError('Lỗi minh họa: hãy kiểm tra nội dung đã nhập.');
@@ -118,6 +122,29 @@ function DesignSystemPreview() {
           <Select label="Select error" error="Thông báo lỗi minh họa" defaultValue="default">
             <option value="default">Cần kiểm tra</option>
           </Select>
+          <Input
+            label="Nội dung bắt buộc"
+            required
+            hint="Trường bắt buộc; kiểm tra semantics, không gửi request."
+          />
+          <Input label="Nội dung chỉ đọc" readOnly value="Giá trị có thể chọn và sao chép" />
+          <Input
+            label="Mật khẩu minh họa"
+            type="password"
+            autoComplete="off"
+            defaultValue="preview-only"
+          />
+          <Textarea
+            label="Ghi chú minh họa"
+            hint="Có thể nhập nhiều dòng; không gửi request."
+            error={error}
+          />
+          <Textarea label="Textarea disabled" disabled defaultValue="Không khả dụng" />
+          <Textarea
+            label="Textarea chỉ đọc"
+            readOnly
+            defaultValue="Có thể chọn và sao chép nội dung."
+          />
           <div className={styles.row}>
             <Button type="submit" variant="outline">
               Hiện lỗi minh họa
@@ -187,11 +214,29 @@ function DesignSystemPreview() {
             error={{ code: 'SERVICE_UNAVAILABLE', correlationId: 'preview-only', retryable: false }}
           />
           <ContentState state="unavailable" headingLevel={2} />
+          <ContentState
+            state="error"
+            headingLevel={2}
+            error={{
+              code: 'VERSION_CONFLICT',
+              correlationId: 'preview-'.repeat(30),
+              retryable: false,
+            }}
+            onRetry={() => setRetries((count) => count + 1)}
+          />
+          <ContentState
+            state="error"
+            headingLevel={2}
+            error={{ code: 'PERMISSION_DENIED', correlationId: null, retryable: false }}
+            onRetry={() => setRetries((count) => count + 1)}
+          />
+          <ContentState state="not-found" headingLevel={2} showHome />
         </div>
+        <p role="status">Số lần tải lại minh họa: {retries}</p>
       </section>
       <section className={styles.panel} aria-label="Component nâng cấp">
         <h2>Card, lựa chọn và menu</h2>
-        <Card>
+        <Card aria-label="Card minh họa">
           <Badge tone="success">Sẵn sàng</Badge>
           <p>Bo góc 16px · Be Vietnam Pro · Phản hồi chuyển động nhẹ.</p>
           <Switch label="Bật tùy chọn minh họa" checked={checked} onChange={setChecked} />
@@ -265,7 +310,9 @@ createRoot(root).render(
   <StrictMode>
     {import.meta.env.DEV || import.meta.env.MODE === 'preview' ? (
       <MotionProvider>
-        <DesignSystemPreview />
+        <BrowserRouter>
+          <DesignSystemPreview />
+        </BrowserRouter>
       </MotionProvider>
     ) : (
       <ContentState state="unavailable" />

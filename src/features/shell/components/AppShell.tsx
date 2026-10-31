@@ -1,4 +1,12 @@
-import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { Link, NavLink } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSection, ShellSnapshot } from '../model/shell';
@@ -90,6 +98,8 @@ export function AppShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerLoaded, setDrawerLoaded] = useState(false);
   const menuTrigger = useRef<HTMLButtonElement>(null);
+  const drawerClose = useRef<HTMLButtonElement>(null);
+  const desktopSidebar = useRef<HTMLElement>(null);
   const [contentScope, animateContent] = useAnimate<HTMLElement>();
   const animatedPath = useRef(currentPath);
   useEffect(() => {
@@ -127,6 +137,17 @@ export function AppShell({
       : currentPath.startsWith('/trips')
         ? 'trips'
         : 'none';
+  useLayoutEffect(() => {
+    if (!tripLayout || !canReadTrip) return;
+    const nav = desktopSidebar.current?.querySelector('nav');
+    const active = nav?.querySelector<HTMLElement>('a[aria-current="page"]');
+    if (!nav || !active) return;
+    const navBounds = nav.getBoundingClientRect();
+    const activeBounds = active.getBoundingClientRect();
+    if (activeBounds.bottom > navBounds.bottom)
+      nav.scrollTop += activeBounds.bottom - navBounds.bottom;
+    else if (activeBounds.top < navBounds.top) nav.scrollTop -= navBounds.top - activeBounds.top;
+  }, [canReadTrip, collapsed, currentPath, tripLayout]);
   const drawerLabel = adminLayout
     ? 'Điều hướng Admin'
     : tripLayout
@@ -246,6 +267,21 @@ export function AppShell({
       ) : null}
     </nav>
   );
+  const mobileMenu = (
+    <button
+      ref={menuTrigger}
+      className={styles.mobileMenuButton}
+      aria-label={'Mở ' + drawerLabel.toLocaleLowerCase('vi')}
+      aria-expanded={drawerOpen}
+      aria-haspopup="dialog"
+      onClick={() => {
+        setDrawerLoaded(true);
+        setDrawerOpen(true);
+      }}
+    >
+      {adminLayout ? <UiIcon name="menu" /> : 'Menu'}
+    </button>
+  );
   return (
     <div
       className={`${styles.shell} ${dressRoute ? styles.dressRoute : ''} ${adminLayout ? styles.adminShell : tripLayout || listLayout ? styles.tripShell : styles.flowShell}`}
@@ -342,20 +378,11 @@ export function AppShell({
           </header>
         </>
       )}
-      <header className={styles.mobileHeader} data-node-id={tripLayout ? '325:2266' : '322:2268'}>
-        <button
-          ref={menuTrigger}
-          className={styles.mobileMenuButton}
-          aria-label={'Mở ' + drawerLabel.toLocaleLowerCase('vi')}
-          aria-expanded={drawerOpen}
-          aria-haspopup="dialog"
-          onClick={() => {
-            setDrawerLoaded(true);
-            setDrawerOpen(true);
-          }}
-        >
-          <UiIcon name="menu" />
-        </button>
+      <header
+        className={`${styles.mobileHeader} ${adminLayout ? styles.adminMobileHeader : ''}`}
+        data-node-id={adminLayout ? undefined : '779:6442'}
+      >
+        {adminLayout && mobileMenu}
         <Link to={paths.home} className={styles.mobileLogo} aria-label="Wolfari · Trang chủ">
           <img src={logo} alt="Wolfari" />
         </Link>
@@ -372,11 +399,7 @@ export function AppShell({
               <Avatar name={viewer.fullName} />
             </Link>
           </div>
-        ) : guest ? (
-          <Link className={styles.mobileAccount} to={paths.login} aria-label="Đăng nhập">
-            <Icon file="2e748.svg" />
-          </Link>
-        ) : (
+        ) : guest ? null : (
           <button
             className={styles.mobileAccount}
             disabled
@@ -385,6 +408,7 @@ export function AppShell({
             —
           </button>
         )}
+        {!adminLayout && mobileMenu}
       </header>
       <div className={styles.layout}>
         {adminLayout ? (
@@ -393,6 +417,7 @@ export function AppShell({
           </aside>
         ) : tripLayout ? (
           <aside
+            ref={desktopSidebar}
             className={collapsed ? styles.collapsed : styles.sidebar}
             data-node-id={collapsed ? '135:1042' : '135:484'}
           >
@@ -441,8 +466,41 @@ export function AppShell({
             label={drawerLabel}
             returnFocusRef={menuTrigger}
             onDismiss={() => setDrawerOpen(false)}
+            {...(!adminLayout
+              ? {
+                  className: styles.navigationDrawer,
+                  showHeader: false,
+                  initialFocusRef: drawerClose,
+                }
+              : {})}
           >
+            {!adminLayout && (
+              <div className={styles.drawerHeader}>
+                <Link to={paths.home} aria-label="Wolfari · Trang chủ" onClick={selectDestination}>
+                  <img src={logo} alt="Wolfari" />
+                </Link>
+                <button
+                  ref={drawerClose}
+                  className={styles.drawerClose}
+                  aria-label={'Đóng ' + drawerLabel.toLocaleLowerCase('vi')}
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  Đóng
+                </button>
+              </div>
+            )}
             {adminLayout ? adminNavigation : tripLayout ? tripNavigation : publicNavigation}
+            {tripLayout && (
+              <div className={styles.drawerDecoration} aria-hidden="true">
+                <p>
+                  Cùng bạn
+                  <br />
+                  đi xa hơn!
+                </p>
+                <img src={routeDecoration} alt="" className={styles.drawerRoute} />
+                <img src={mascot} alt="" className={styles.drawerMascot} />
+              </div>
+            )}
           </NavigationDrawer>
         </Suspense>
       )}

@@ -1,0 +1,480 @@
+Read-only MCP reference 2026-10-30; D18 editor. Primary editor node 26:425,430x300. Requested session rejected; retry without sessionId per tool error succeeded. Not application source.
+
+const imgIcon = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialLogo = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialMascot = "[TEMP_ASSET_URL_REMOVED]";
+const imgEllipse = "[TEMP_ASSET_URL_REMOVED]";
+const imgEllipse1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgEllipse2 = "[TEMP_ASSET_URL_REMOVED]";
+const imgEllipse3 = "[TEMP_ASSET_URL_REMOVED]";
+
+type ButtonPrimaryProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonPrimary({ className, label = "Tạo chuyến đi" }: ButtonPrimaryProps) {
+  return (
+    <div className={className || "bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[44px] items-center justify-center relative rounded-[18px] to-[#008eaa] w-[170px]"} data-node-id="11:9" data-name="Button/Primary">
+      <div className="relative shrink-0 size-[18px]" data-node-id="11:10" data-name="Icon">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon} />
+      </div>
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-white,white)] whitespace-nowrap" data-node-id="11:13">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function BrandLogo({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[60px] overflow-clip relative w-[180px]"} data-node-id="14:2" data-name="Brand/Logo">
+      <div className="absolute h-[60px] left-0 top-0 w-[180px]" data-node-id="14:3" data-name="Official logo">
+        <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialLogo} />
+      </div>
+    </div>
+  );
+}
+
+type ButtonOutlineProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonOutline({ className, label = "Xem chi tiết" }: ButtonOutlineProps) {
+  return (
+    <div className={className || "bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[44px] items-center justify-center relative rounded-[18px] w-[150px]"} data-node-id="11:14" data-name="Button/Outline">
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] whitespace-nowrap" data-node-id="11:15">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function BrandMascot({ className }: { className?: string }) {
+  return (
+    <div className={className || "overflow-clip relative size-[144px]"} data-node-id="14:4" data-name="Brand/Mascot">
+      <div className="absolute left-0 size-[144px] top-0" data-node-id="14:5" data-name="Official mascot">
+        <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialMascot} />
+      </div>
+    </div>
+  );
+}
+
+export default function Component15OverlayModalStates() {
+  return (
+    <div className="bg-[var(--wolfari-color-white,white)] relative size-full" data-node-id="26:406" data-name="15 · Overlay & Modal states">
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] leading-[40px] left-[40px] not-italic text-[32px] text-[color:var(--wolfari-color-ink,#06458b)] top-[30px] w-[600px]" data-node-id="26:407">{`Wolfari · Overlay & Modal states`}</p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[24px] left-[40px] not-italic text-[16px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[76px] w-[1100px]" data-node-id="26:408">
+        Các trạng thái thao tác mở trên trang hiện tại để tránh làm người dùng mất ngữ cảnh. Tất cả nội dung dưới đây là layer editable.
+      </p>
+      <BrandMascot className="absolute left-[1240px] overflow-clip size-[130px] top-[18px]" />
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[480px] left-[40px] rounded-[18px] top-[140px] w-[660px]" data-node-id="26:411" data-name="A · Chỉnh sửa hoạt động">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[380px]" data-node-id="26:412">
+          A · Chỉnh sửa hoạt động
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[47px] w-[600px]" data-node-id="26:413">
+          Mở overlay từ menu của một Activity.
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[380px] left-[17px] rounded-[14px] top-[81px] w-[624px]" data-node-id="26:414" data-name="Screen underlay">
+          <BrandLogo className="absolute h-[36px] left-[17px] overflow-clip top-[11px] w-[110px]" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[189px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[21px] w-[310px] whitespace-pre-wrap" data-node-id="26:417">{`Trang chủ     Chuyến đi của tôi     Lên lịch`}</p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[72px] left-[17px] rounded-[12px] top-[65px] w-[588px]" data-node-id="26:418" data-name="hero strip" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[28px] left-[35px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[85px] w-[230px]" data-node-id="26:419">
+            Đà Nẵng 3N2Đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[17px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:420" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[88px] left-[162px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:421" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[307px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:422" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[452px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:423" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-ink,#06458b)] h-[380px] left-[-1px] rounded-[14px] top-[-1px] w-[624px]" data-node-id="26:424" data-name="dim" />
+          <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[300px] left-[96px] rounded-[14px] top-[39px] w-[430px]" data-node-id="26:425" data-name="Chỉnh sửa hoạt động">
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[360px]" data-node-id="26:426">
+              Chỉnh sửa hoạt động
+            </p>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[395px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[11px] w-[32px]" data-node-id="26:427">
+              ×
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[394px]" data-node-id="26:428">
+              Tên hoạt động
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[75px] w-[394px]" data-node-id="26:429" data-name="Tên hoạt động" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[374px]" data-node-id="26:430">
+              Bãi biển Mỹ Khê
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[122px]" data-node-id="26:431">
+              Ngày
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[143px] w-[122px]" data-node-id="26:432" data-name="Ngày" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[102px]" data-node-id="26:433">
+              12/10/2026
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[149px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[120px]" data-node-id="26:434">
+              Giờ bắt đầu
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[149px] rounded-[8px] top-[143px] w-[120px]" data-node-id="26:435" data-name="Giờ bắt đầu" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[159px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[100px]" data-node-id="26:436">
+              14:00
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[279px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[132px]" data-node-id="26:437">
+              Giờ kết thúc
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[279px] rounded-[8px] top-[143px] w-[132px]" data-node-id="26:438" data-name="Giờ kết thúc" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[289px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[112px]" data-node-id="26:439">
+              16:00
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[189px] w-[394px]" data-node-id="26:440">
+              Địa điểm
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[211px] w-[394px]" data-node-id="26:441" data-name="Địa điểm" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[221px] w-[374px]" data-node-id="26:442">
+              Bãi biển Mỹ Khê, Đà Nẵng
+            </p>
+            <ButtonOutline className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[38px] items-center justify-center left-[187px] rounded-[18px] top-[245px] w-[100px]" label="Hủy" />
+            <ButtonPrimary className="absolute bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[38px] items-center justify-center left-[297px] rounded-[18px] to-[#008eaa] top-[245px] w-[114px]" label="Lưu" />
+          </div>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[480px] left-[740px] rounded-[18px] top-[140px] w-[660px]" data-node-id="26:450" data-name="B · Mời thành viên">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[380px]" data-node-id="26:451">
+          B · Mời thành viên
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[47px] w-[600px]" data-node-id="26:452">
+          Chỉ mời Member; Public Share không tạo membership.
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[380px] left-[17px] rounded-[14px] top-[81px] w-[624px]" data-node-id="26:453" data-name="Screen underlay">
+          <BrandLogo className="absolute h-[36px] left-[17px] overflow-clip top-[11px] w-[110px]" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[189px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[21px] w-[310px] whitespace-pre-wrap" data-node-id="26:456">{`Trang chủ     Chuyến đi của tôi     Lên lịch`}</p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[72px] left-[17px] rounded-[12px] top-[65px] w-[588px]" data-node-id="26:457" data-name="hero strip" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[28px] left-[35px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[85px] w-[230px]" data-node-id="26:458">
+            Đà Nẵng 3N2Đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[17px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:459" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[88px] left-[162px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:460" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[307px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:461" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[452px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:462" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-ink,#06458b)] h-[380px] left-[-1px] rounded-[14px] top-[-1px] w-[624px]" data-node-id="26:463" data-name="dim" />
+          <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[292px] left-[96px] rounded-[14px] top-[43px] w-[430px]" data-node-id="26:464" data-name="Mời thành viên">
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[360px]" data-node-id="26:465">
+              Mời thành viên
+            </p>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[395px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[11px] w-[32px]" data-node-id="26:466">
+              ×
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-teal,#008cac)] h-[32px] left-[17px] rounded-[16px] top-[53px] w-[86px]" data-node-id="26:467" data-name="Email" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[60px] not-italic text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[59px] w-[86px]" data-node-id="26:468">
+              Email
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[32px] left-[111px] rounded-[16px] top-[53px] w-[100px]" data-node-id="26:469" data-name="Link mời" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[161px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[59px] w-[100px]" data-node-id="26:470">
+              Link mời
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[97px] w-[394px]" data-node-id="26:471">
+              Email
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[119px] w-[394px]" data-node-id="26:472" data-name="Email" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[129px] w-[374px]" data-node-id="26:473">
+              name@example.com
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[165px] w-[185px]" data-node-id="26:474">
+              Vai trò
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[187px] w-[185px]" data-node-id="26:475" data-name="Vai trò" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[197px] w-[165px]" data-node-id="26:476">
+              Member
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[220px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[165px] w-[191px]" data-node-id="26:477">
+              Ngày hết hạn
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[220px] rounded-[8px] top-[187px] w-[191px]" data-node-id="26:478" data-name="Ngày hết hạn" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[230px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[197px] w-[171px]" data-node-id="26:479">
+              30/09/2026
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[17px] text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[233px] w-[394px]" data-node-id="26:480" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              ⓘ Link mời khác link chỉ xem; người nhận phải chấp nhận lời mời hợp lệ.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[480px] left-[40px] rounded-[18px] top-[650px] w-[660px]" data-node-id="26:481" data-name="C · Tạo link chỉ xem">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[380px]" data-node-id="26:482">
+          C · Tạo link chỉ xem
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[47px] w-[600px]" data-node-id="26:483">
+          Public Share không hiển thị Finance hoặc dữ liệu riêng tư.
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[380px] left-[17px] rounded-[14px] top-[81px] w-[624px]" data-node-id="26:484" data-name="Screen underlay">
+          <BrandLogo className="absolute h-[36px] left-[17px] overflow-clip top-[11px] w-[110px]" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[189px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[21px] w-[310px] whitespace-pre-wrap" data-node-id="26:487">{`Trang chủ     Chuyến đi của tôi     Lên lịch`}</p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[72px] left-[17px] rounded-[12px] top-[65px] w-[588px]" data-node-id="26:488" data-name="hero strip" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[28px] left-[35px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[85px] w-[230px]" data-node-id="26:489">
+            Đà Nẵng 3N2Đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[17px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:490" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[88px] left-[162px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:491" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[307px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:492" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[452px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:493" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-ink,#06458b)] h-[380px] left-[-1px] rounded-[14px] top-[-1px] w-[624px]" data-node-id="26:494" data-name="dim" />
+          <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[320px] left-[96px] rounded-[14px] top-[29px] w-[430px]" data-node-id="26:495" data-name="Tạo link chỉ xem">
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[360px]" data-node-id="26:496">
+              Tạo link chỉ xem
+            </p>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[395px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[11px] w-[32px]" data-node-id="26:497">
+              ×
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[53px] w-[390px]" data-node-id="26:498">
+              Chọn nội dung được phép công khai.
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-teal,#008cac)] left-[17px] rounded-[5px] size-[20px] top-[87px]" data-node-id="26:499" data-name="check" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[27px] text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[86px] w-[20px]" data-node-id="26:500" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              ✓
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[47px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[87px] w-[260px]" data-node-id="26:501">
+              Lịch trình
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-teal,#008cac)] left-[17px] rounded-[5px] size-[20px] top-[117px]" data-node-id="26:502" data-name="check" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[27px] text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[116px] w-[20px]" data-node-id="26:503" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              ✓
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[47px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[117px] w-[260px]" data-node-id="26:504">{`Bản đồ & địa điểm`}</p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid left-[17px] rounded-[5px] size-[20px] top-[147px]" data-node-id="26:505" data-name="check" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[47px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[147px] w-[260px]" data-node-id="26:506">
+              Dress code
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid left-[17px] rounded-[5px] size-[20px] top-[177px]" data-node-id="26:507" data-name="check" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[47px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[177px] w-[260px]" data-node-id="26:508">
+              Packing list
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[215px] w-[185px]" data-node-id="26:509">
+              Ngày hết hạn
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[237px] w-[185px]" data-node-id="26:510" data-name="Ngày hết hạn" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[247px] w-[165px]" data-node-id="26:511">
+              26/10/2026
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[220px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[215px] w-[191px]" data-node-id="26:512">
+              Mật khẩu
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[220px] rounded-[8px] top-[237px] w-[191px]" data-node-id="26:513" data-name="Mật khẩu" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[230px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[247px] w-[171px]" data-node-id="26:514">
+              Tùy chọn
+            </p>
+            <ButtonPrimary className="absolute bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[38px] items-center justify-center left-[243px] rounded-[18px] to-[#008eaa] top-[273px] w-[168px]" label="Tạo link" />
+          </div>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[480px] left-[740px] rounded-[18px] top-[650px] w-[660px]" data-node-id="26:520" data-name="D · Tạo theo dõi giá">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[380px]" data-node-id="26:521">
+          D · Tạo theo dõi giá
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[47px] w-[600px]" data-node-id="26:522">
+          Theo dõi và cảnh báo; không tự đặt vé.
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[380px] left-[17px] rounded-[14px] top-[81px] w-[624px]" data-node-id="26:523" data-name="Screen underlay">
+          <BrandLogo className="absolute h-[36px] left-[17px] overflow-clip top-[11px] w-[110px]" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[189px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[21px] w-[310px] whitespace-pre-wrap" data-node-id="26:526">{`Trang chủ     Chuyến đi của tôi     Lên lịch`}</p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[72px] left-[17px] rounded-[12px] top-[65px] w-[588px]" data-node-id="26:527" data-name="hero strip" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[28px] left-[35px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[85px] w-[230px]" data-node-id="26:528">
+            Đà Nẵng 3N2Đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[17px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:529" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[88px] left-[162px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:530" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[307px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:531" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[452px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:532" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-ink,#06458b)] h-[380px] left-[-1px] rounded-[14px] top-[-1px] w-[624px]" data-node-id="26:533" data-name="dim" />
+          <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[320px] left-[96px] rounded-[14px] top-[29px] w-[430px]" data-node-id="26:534" data-name="Tạo theo dõi giá vé">
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[360px]" data-node-id="26:535">
+              Tạo theo dõi giá vé
+            </p>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[395px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[11px] w-[32px]" data-node-id="26:536">
+              ×
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[185px]" data-node-id="26:537">
+              Điểm đi
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[75px] w-[185px]" data-node-id="26:538" data-name="Điểm đi" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[165px]" data-node-id="26:539">
+              Hà Nội (HAN)
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[220px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[191px]" data-node-id="26:540">
+              Điểm đến
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[220px] rounded-[8px] top-[75px] w-[191px]" data-node-id="26:541" data-name="Điểm đến" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[230px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[171px]" data-node-id="26:542">
+              Đà Nẵng (DAD)
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[185px]" data-node-id="26:543">
+              Ngày đi
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[143px] w-[185px]" data-node-id="26:544" data-name="Ngày đi" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[165px]" data-node-id="26:545">
+              12/10/2026
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[220px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[191px]" data-node-id="26:546">
+              Ngưỡng giá (VND)
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[220px] rounded-[8px] top-[143px] w-[191px]" data-node-id="26:547" data-name="Ngưỡng giá (VND)" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[230px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[171px]" data-node-id="26:548">
+              1.400.000
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-teal,#008cac)] left-[17px] rounded-[5px] size-[20px] top-[199px]" data-node-id="26:549" data-name="check" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[27px] text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[198px] w-[20px]" data-node-id="26:550" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              ✓
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[47px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[199px] w-[200px]" data-node-id="26:551">
+              Nhận thông báo đẩy
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-teal,#008cac)] left-[17px] rounded-[5px] size-[20px] top-[231px]" data-node-id="26:552" data-name="check" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[27px] text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[230px] w-[20px]" data-node-id="26:553" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              ✓
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[47px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[231px] w-[220px]" data-node-id="26:554">
+              Nhận thông báo qua email
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[269px] w-[250px]" data-node-id="26:555">
+              Giá tham khảo; cần xác nhận lại ở nguồn bán.
+            </p>
+            <ButtonPrimary className="absolute bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[38px] items-center justify-center left-[287px] rounded-[18px] to-[#008eaa] top-[263px] w-[124px]" label="Tạo" />
+          </div>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[480px] left-[40px] rounded-[18px] top-[1160px] w-[660px]" data-node-id="26:561" data-name="E · Chỉnh sửa vật dụng">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[380px]" data-node-id="26:562">
+          E · Chỉnh sửa vật dụng
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[47px] w-[600px]" data-node-id="26:563">
+          Sửa Packing item ngay trên danh sách.
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[380px] left-[17px] rounded-[14px] top-[81px] w-[624px]" data-node-id="26:564" data-name="Screen underlay">
+          <BrandLogo className="absolute h-[36px] left-[17px] overflow-clip top-[11px] w-[110px]" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[189px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[21px] w-[310px] whitespace-pre-wrap" data-node-id="26:567">{`Trang chủ     Chuyến đi của tôi     Lên lịch`}</p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[72px] left-[17px] rounded-[12px] top-[65px] w-[588px]" data-node-id="26:568" data-name="hero strip" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[28px] left-[35px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[85px] w-[230px]" data-node-id="26:569">
+            Đà Nẵng 3N2Đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[17px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:570" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[88px] left-[162px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:571" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[307px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:572" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[452px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:573" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-ink,#06458b)] h-[380px] left-[-1px] rounded-[14px] top-[-1px] w-[624px]" data-node-id="26:574" data-name="dim" />
+          <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[300px] left-[96px] rounded-[14px] top-[39px] w-[430px]" data-node-id="26:575" data-name="Chỉnh sửa vật dụng">
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[360px]" data-node-id="26:576">
+              Chỉnh sửa vật dụng
+            </p>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[395px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[11px] w-[32px]" data-node-id="26:577">
+              ×
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[250px]" data-node-id="26:578">
+              Tên vật dụng
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[75px] w-[250px]" data-node-id="26:579" data-name="Tên vật dụng" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[230px]" data-node-id="26:580">
+              Sạc dự phòng
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[285px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[126px]" data-node-id="26:581">
+              Số lượng
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[285px] rounded-[8px] top-[75px] w-[126px]" data-node-id="26:582" data-name="Số lượng" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[295px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[106px]" data-node-id="26:583">
+              1
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[185px]" data-node-id="26:584">
+              Danh mục
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[143px] w-[185px]" data-node-id="26:585" data-name="Danh mục" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[165px]" data-node-id="26:586">
+              Điện tử
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[220px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[121px] w-[191px]" data-node-id="26:587">
+              Người phụ trách
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[220px] rounded-[8px] top-[143px] w-[191px]" data-node-id="26:588" data-name="Người phụ trách" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[230px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[171px]" data-node-id="26:589">
+              Hà
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[189px] w-[185px]" data-node-id="26:590">
+              Hạn chuẩn bị
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[211px] w-[185px]" data-node-id="26:591" data-name="Hạn chuẩn bị" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[221px] w-[165px]" data-node-id="26:592">
+              11/10/2026
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[220px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[189px] w-[191px]" data-node-id="26:593">
+              Nhắc nhở
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[220px] rounded-[8px] top-[211px] w-[191px]" data-node-id="26:594" data-name="Nhắc nhở" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[230px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[221px] w-[171px]" data-node-id="26:595">
+              Trước 1 ngày
+            </p>
+            <ButtonOutline className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[38px] items-center justify-center left-[187px] rounded-[18px] top-[245px] w-[100px]" label="Hủy" />
+            <ButtonPrimary className="absolute bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[38px] items-center justify-center left-[297px] rounded-[18px] to-[#008eaa] top-[245px] w-[114px]" label="Lưu" />
+          </div>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[480px] left-[740px] rounded-[18px] top-[1160px] w-[660px]" data-node-id="26:603" data-name="F · Thêm bộ phối">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[380px]" data-node-id="26:604">
+          F · Thêm bộ phối
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[47px] w-[600px]" data-node-id="26:605">
+          Tạo dress-code set cho cả Trip/ngày/Activity.
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[380px] left-[17px] rounded-[14px] top-[81px] w-[624px]" data-node-id="26:606" data-name="Screen underlay">
+          <BrandLogo className="absolute h-[36px] left-[17px] overflow-clip top-[11px] w-[110px]" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[189px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[21px] w-[310px] whitespace-pre-wrap" data-node-id="26:609">{`Trang chủ     Chuyến đi của tôi     Lên lịch`}</p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[72px] left-[17px] rounded-[12px] top-[65px] w-[588px]" data-node-id="26:610" data-name="hero strip" />
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[28px] left-[35px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[85px] w-[230px]" data-node-id="26:611">
+            Đà Nẵng 3N2Đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[17px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:612" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[88px] left-[162px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:613" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[307px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:614" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[88px] left-[452px] rounded-[10px] top-[153px] w-[132px]" data-node-id="26:615" data-name="ghost card" />
+          <div className="absolute bg-[var(--wolfari-color-ink,#06458b)] h-[380px] left-[-1px] rounded-[14px] top-[-1px] w-[624px]" data-node-id="26:616" data-name="dim" />
+          <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[300px] left-[96px] rounded-[14px] top-[39px] w-[430px]" data-node-id="26:617" data-name="Thêm bộ phối">
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[17px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[360px]" data-node-id="26:618">
+              Thêm bộ phối
+            </p>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[395px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[11px] w-[32px]" data-node-id="26:619">
+              ×
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[250px]" data-node-id="26:620">
+              Tên bộ phối
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[17px] rounded-[8px] top-[75px] w-[250px]" data-node-id="26:621" data-name="Tên bộ phối" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[27px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[230px]" data-node-id="26:622">
+              Dạo biển năng động
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[285px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[53px] w-[126px]" data-node-id="26:623">
+              Áp dụng
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[40px] left-[285px] rounded-[8px] top-[75px] w-[126px]" data-node-id="26:624" data-name="Áp dụng" />
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[295px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[85px] w-[106px]" data-node-id="26:625">
+              Cả chuyến
+            </p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[17px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[125px] w-[120px]" data-node-id="26:626">
+              Ảnh minh họa
+            </p>
+            <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-dashed h-[82px] left-[17px] rounded-[9px] top-[149px] w-[184px]" data-node-id="26:627" data-name="Upload" />
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[109px] text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-center top-[179px] w-[156px] whitespace-pre-wrap" data-node-id="26:628" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`⇧  Kéo thả / chọn file`}</p>
+            <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[225px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] top-[125px] w-[100px]" data-node-id="26:629">
+              Bảng màu
+            </p>
+            <div className="absolute left-[225px] size-[24px] top-[153px]" data-node-id="26:630" data-name="Ellipse">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse} />
+            </div>
+            <div className="absolute left-[261px] size-[24px] top-[153px]" data-node-id="26:631" data-name="Ellipse">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+            </div>
+            <div className="absolute left-[297px] size-[24px] top-[153px]" data-node-id="26:632" data-name="Ellipse">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse2} />
+            </div>
+            <div className="absolute left-[333px] size-[24px] top-[153px]" data-node-id="26:633" data-name="Ellipse">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse3} />
+            </div>
+            <ButtonPrimary className="absolute bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[38px] items-center justify-center left-[263px] rounded-[18px] to-[#008eaa] top-[245px] w-[148px]" label="Thêm bộ phối" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

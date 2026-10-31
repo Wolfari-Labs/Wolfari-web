@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useOptionalIdentityRepository } from './repositories/identity-context';
 import type { IdentityAcceptedResult } from './model/identity';
@@ -33,7 +33,8 @@ export function IdentityActionPage({ action }: { action: Action }) {
     [],
   );
 
-  useEffect(() => {
+  // Capture the one-time token and replace its URL before the missing-token state paints.
+  useLayoutEffect(() => {
     const value = new URLSearchParams(location.search).get('token');
     if (value) {
       setToken(value);
@@ -178,6 +179,9 @@ export function IdentityActionPage({ action }: { action: Action }) {
                 id="identity-email"
                 label="Email"
                 type="email"
+                name="email"
+                autoComplete="email"
+                required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
@@ -188,6 +192,9 @@ export function IdentityActionPage({ action }: { action: Action }) {
                   id="identity-password"
                   label="Mật khẩu mới"
                   type="password"
+                  name="new-password"
+                  autoComplete="new-password"
+                  required
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
@@ -195,14 +202,21 @@ export function IdentityActionPage({ action }: { action: Action }) {
                   id="identity-confirmation"
                   label="Nhập lại mật khẩu"
                   type="password"
+                  name="confirm-password"
+                  autoComplete="new-password"
+                  required
                   value={confirmation}
                   onChange={(event) => setConfirmation(event.target.value)}
                 />
               </>
             )}
           </div>
-          {action === 'verify' && !token && !completed && (
-            <Alert tone="error">Liên kết xác minh không có token.</Alert>
+          {action !== 'forgot' && !token && !completed && (
+            <Alert tone="error">
+              {action === 'verify'
+                ? 'Liên kết xác minh không có mã token.'
+                : 'Liên kết đặt lại mật khẩu không có mã token.'}
+            </Alert>
           )}
           {error && (
             <div className={styles.feedback}>
@@ -222,7 +236,7 @@ export function IdentityActionPage({ action }: { action: Action }) {
             className={styles.submit}
             type="submit"
             loading={!!pending}
-            disabled={completed || (action === 'verify' && !token)}
+            disabled={completed || (action !== 'forgot' && !token)}
           >
             {action === 'forgot'
               ? 'Gửi hướng dẫn'

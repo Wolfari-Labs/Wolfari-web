@@ -1,10 +1,14 @@
 import { AlertDialog, DropdownMenu, Tooltip, Tabs, Accordion } from 'radix-ui';
-import { useRef, type ReactNode } from 'react';
+import { useRef, type ComponentProps, type ReactNode } from 'react';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import styles from './Ui.module.css';
-export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <section className={`${styles.card} ${className}`}>{children}</section>;
+export function Card({ children, className = '', ...props }: ComponentProps<'section'>) {
+  return (
+    <section {...props} className={`${styles.card} ${className}`}>
+      {children}
+    </section>
+  );
 }
 export function Badge({
   children,

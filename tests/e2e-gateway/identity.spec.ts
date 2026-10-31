@@ -157,8 +157,8 @@ test('reset rejects a missing token locally and an expired token without clearin
 }) => {
   gateway.authenticated = true;
   await page.goto('/reset-password');
-  await page.getByRole('button', { name: 'Đặt lại mật khẩu' }).click();
   await expect(page.getByRole('alert')).toContainText('không có mã token');
+  await expect(page.getByRole('button', { name: 'Đặt lại mật khẩu' })).toBeDisabled();
   expect(gateway.calls.filter((call) => call.path.endsWith('/password-resets'))).toHaveLength(0);
   gateway.failures.set('POST /api/v1/auth/password-resets', 400);
   await page.goto('/reset-password?token=expired-reset');

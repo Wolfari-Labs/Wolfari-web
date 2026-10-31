@@ -419,7 +419,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
             model.invitations.push(created);
             return json(route, {
               invitation: created,
-              one_time_link: `http://127.0.0.1:5174/invitations/local#token=inv1_${'z'.repeat(43)}`,
+              // The contract requires a same-origin link in both dev and built-preview runs.
+              one_time_link: `${url.origin}/invitations/local#token=inv1_${'z'.repeat(43)}`,
             });
           }
           const invitation = model.invitations.find(

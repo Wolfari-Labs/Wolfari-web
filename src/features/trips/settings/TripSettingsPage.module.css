@@ -168,6 +168,10 @@
   margin-top: 10px;
 }
 
+.refreshButton {
+  margin-top: 10px;
+}
+
 .formColumns {
   display: grid;
   grid-template-columns: 1fr 1fr;

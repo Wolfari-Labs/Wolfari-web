@@ -57,6 +57,10 @@ describe('Auth validation without Identity writes', () => {
     expect(validateAuth('register', { ...valid, password: 'a'.repeat(129) })).toHaveProperty(
       'password',
     );
+    // Identity's validName currently limits trimmed JavaScript string length.
+    expect(validateAuth('register', { ...valid, fullName: '😀'.repeat(76) })).toHaveProperty(
+      'fullName',
+    );
   });
   it('validates name/email length, confirmation and consent; orders the first invalid field', () => {
     expect(
@@ -95,6 +99,8 @@ describe('Auth validation without Identity writes', () => {
       );
       await userEvent.click(screen.getByRole('button', { name: 'Đăng nhập' }));
       expect(screen.getByLabelText('Email')).toHaveFocus();
+      expect(screen.getByLabelText('Email')).toBeRequired();
+      expect(screen.getByLabelText('Mật khẩu')).toBeRequired();
       await userEvent.type(screen.getByLabelText('Email'), 'name@example.com');
       await userEvent.type(screen.getByLabelText('Mật khẩu'), 'preview password');
       await userEvent.click(screen.getByRole('button', { name: 'Đăng nhập' }));
@@ -107,6 +113,15 @@ describe('Auth validation without Identity writes', () => {
     } finally {
       fetchSpy.mockRestore();
     }
+  });
+  it('uses a registration consent error that remains truthful outside preview', async () => {
+    render(
+      <MemoryRouter>
+        <AuthPage mode="register" previewEnabled={false} />
+      </MemoryRouter>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
+    expect(screen.getByText('Chọn đồng ý để tiếp tục đăng ký.')).toBeInTheDocument();
   });
   it('reveals and hides a password without changing its value', async () => {
     render(

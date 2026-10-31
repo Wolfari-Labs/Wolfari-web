@@ -246,6 +246,10 @@
   flex-direction: column;
   gap: 10px;
 }
+.sidebar nav {
+  /* Allocate the available desktop height before scrolling a selected item. */
+  gap: clamp(5px, calc(100dvh - 980px), 10px);
+}
 .sidebar nav button,
 .sidebar nav a,
 .collapsed nav button,
@@ -500,31 +504,65 @@
   }
   .mobileHeader {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 72px;
+    padding: 0 16px;
+    margin-top: env(safe-area-inset-top, 0px);
+    background: white;
+    border-bottom: 1px solid #dff0f7;
+    font-family: var(--font-body);
+  }
+  .adminMobileHeader {
     display: grid;
     grid-template-columns: 44px minmax(0, 1fr) 44px;
-    align-items: center;
     gap: 12px;
     height: 54px;
-    margin: env(safe-area-inset-top, 0px) 24px 0;
-    font-family: var(--font-body);
+    margin-inline: 24px;
+    padding: 0;
+    background: transparent;
+    border: 0;
   }
   .dressRoute .mobileHeader {
     display: none;
   }
   .mobileMenuButton {
     font-family: var(--font-body);
+    width: 84px;
+    height: 44px;
+    border-color: var(--color-line);
+    border-radius: 18px;
+    font-size: 15px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .adminMobileHeader .mobileMenuButton {
+    width: 44px;
+    border-color: rgb(10 85 161 / 14%);
+    border-radius: 10px;
   }
   .mobileLogo,
   .mobileLogo img {
-    width: 112px;
-    height: 38px;
+    width: 130px;
+    height: 43.333px;
     object-fit: contain;
   }
   .mobileLogo {
-    justify-self: center;
+    margin-right: auto;
     min-height: var(--target-min);
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+  }
+  .adminMobileHeader .mobileLogo {
+    justify-self: center;
+    margin-right: 0;
+  }
+  .adminMobileHeader .mobileLogo,
+  .adminMobileHeader .mobileLogo img {
+    width: 112px;
+    height: 38px;
   }
   .mobileAccount {
     min-width: 44px;
@@ -547,13 +585,14 @@
   }
   .adminShell .layout {
     display: block;
+    min-height: calc(100dvh - 54px);
   }
   .tripShell .layout {
-    min-height: calc(100dvh - 54px);
+    min-height: calc(100dvh - 72px);
     height: auto;
   }
   .layout {
-    min-height: calc(100dvh - 54px);
+    min-height: calc(100dvh - 72px);
     height: auto;
   }
   .main {
@@ -562,7 +601,15 @@
   }
 }
 @media (max-width: 360px) {
-  .mobileHeader {
+  .mobileLogo,
+  .mobileLogo img {
+    width: 112px;
+    height: 38px;
+  }
+  .mobileMenuButton {
+    width: 72px;
+  }
+  .adminMobileHeader {
     margin-inline: 16px;
   }
   .main {
@@ -579,8 +626,83 @@
 .mobileAccountActions {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0;
+  flex-shrink: 0;
+}
+.adminMobileHeader .mobileAccountActions {
   justify-self: end;
+}
+.navigationDrawer.navigationDrawer {
+  width: min(300px, 86vw);
+  padding: 0;
+  gap: 0;
+  border-right: 1px solid #d7eaf2;
+}
+.navigationDrawer > :last-child {
+  padding: 0;
+}
+.drawerHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  min-height: 72px;
+  padding: 0 16px;
+  background: white;
+}
+.drawerHeader a,
+.drawerHeader img {
+  display: block;
+  width: 120px;
+  height: 40px;
+  object-fit: contain;
+}
+.drawerClose {
+  min-width: 70px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: white;
+  color: var(--color-ink);
+  font: 500 15px/22px var(--font-body);
+}
+.navigationDrawer.navigationDrawer nav {
+  padding: 8px;
+  gap: 8px;
+}
+.drawerDecoration {
+  min-height: 276px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.drawerDecoration p {
+  margin: 20px 0 0 74px;
+  color: #079cc5;
+  font: 700 18px/52px var(--font-handwritten);
+}
+.drawerRoute {
+  position: absolute;
+  left: 82px;
+  top: 79px;
+  width: 145px;
+  height: 40px;
+}
+.drawerMascot {
+  display: block;
+  width: 166px;
+  height: 166px;
+  margin: -14px auto 0;
+  object-fit: contain;
+}
+@media (max-height: 700px) {
+  .drawerDecoration {
+    display: none;
+  }
 }
 .sidebar nav svg,
 .collapsed nav svg,

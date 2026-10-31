@@ -19,6 +19,53 @@ import type { UpdateTripIntent, UpdateTripResult } from '../repositories/trip.re
 import coverFallback from '../../../shared/assets/figma/bd989.svg';
 import styles from './TripSettingsPage.module.css';
 import { calendarDate } from '../../../shared/lib/calendar';
+import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
+
+interface SavedSettingsAttempt {
+  intent: UpdateTripIntent;
+  draft: { name: string; description: string; publicDescription: string };
+}
+
+function readSettingsAttempt(raw: string | null): SavedSettingsAttempt | null {
+  if (!raw) return null;
+  const value: unknown = JSON.parse(raw);
+  if (!value || typeof value !== 'object' || !('intent' in value) || !('draft' in value))
+    throw Error('Invalid settings journal');
+  const { intent, draft } = value;
+  if (!intent || typeof intent !== 'object' || !draft || typeof draft !== 'object')
+    throw Error('Invalid settings journal');
+  if (
+    !('idempotencyKey' in intent) ||
+    typeof intent.idempotencyKey !== 'string' ||
+    !intent.idempotencyKey ||
+    !('expectedPlanVersion' in intent) ||
+    !Number.isSafeInteger(intent.expectedPlanVersion) ||
+    !('expectedExportRevision' in intent) ||
+    !Number.isSafeInteger(intent.expectedExportRevision) ||
+    !('name' in draft) ||
+    typeof draft.name !== 'string' ||
+    !('description' in draft) ||
+    typeof draft.description !== 'string' ||
+    !('publicDescription' in draft) ||
+    typeof draft.publicDescription !== 'string'
+  )
+    throw Error('Invalid settings journal');
+  const parsedIntent = intent as UpdateTripIntent;
+  if (
+    (parsedIntent.name !== undefined && typeof parsedIntent.name !== 'string') ||
+    (parsedIntent.description !== undefined &&
+      parsedIntent.description !== null &&
+      typeof parsedIntent.description !== 'string') ||
+    (parsedIntent.publicDescription !== undefined &&
+      parsedIntent.publicDescription !== null &&
+      typeof parsedIntent.publicDescription !== 'string') ||
+    (parsedIntent.name === undefined &&
+      parsedIntent.description === undefined &&
+      parsedIntent.publicDescription === undefined)
+  )
+    throw Error('Invalid settings journal');
+  return { intent: parsedIntent, draft: draft as SavedSettingsAttempt['draft'] };
+}
 
 function displayDate(value: string, timezone: string, exclusive = false) {
   const date = calendarDate(Date.parse(value) - (exclusive ? 1 : 0), timezone).split('-');
@@ -156,22 +203,60 @@ function TripInformationForm({
   trip,
   onCancel,
   onSaved,
+  onRefresh,
+  canSave,
 }: {
   trip: TripDetailViewModel;
   onCancel: () => void;
   onSaved: (trip: TripDetailViewModel) => void;
+  onRefresh: () => Promise<boolean>;
+  canSave: boolean;
 }) {
   const repository = useTripRepository();
   const queryClient = useQueryClient();
-  const [name, setName] = useState(trip.name);
-  const [description, setDescription] = useState(trip.description ?? '');
-  const [publicDescription, setPublicDescription] = useState(trip.publicDescription ?? '');
+  const journalKey = `wolfari:trip-settings:v1:${trip.currentMembership.userId}:${trip.id}`;
+  const journal = useRef(createStorageFallback());
+  const restored = useRef<{
+    saved: SavedSettingsAttempt | null;
+    blocked: boolean;
+    invalid: boolean;
+    storageIssue: boolean;
+  } | null>(null);
+  if (!restored.current) {
+    const entry = journal.current.read(browserStorage('sessionStorage'), journalKey);
+    try {
+      const saved = readSettingsAttempt(entry.raw);
+      restored.current = {
+        saved,
+        blocked: !!saved || entry.status !== 'saved',
+        invalid: false,
+        storageIssue: entry.status !== 'saved',
+      };
+    } catch {
+      restored.current = { saved: null, blocked: true, invalid: true, storageIssue: false };
+    }
+  }
+  const [name, setName] = useState(restored.current.saved?.draft.name ?? trip.name);
+  const [description, setDescription] = useState(
+    restored.current.saved?.draft.description ?? trip.description ?? '',
+  );
+  const [publicDescription, setPublicDescription] = useState(
+    restored.current.saved?.draft.publicDescription ?? trip.publicDescription ?? '',
+  );
   const [focused, setFocused] = useState<'name' | 'description' | 'publicDescription' | null>(null);
   const [result, setResult] = useState<Exclude<UpdateTripResult, { status: 'updated' }> | null>(
     null,
   );
   const [refreshingConflict, setRefreshingConflict] = useState(false);
-  const attempt = useRef<{ fingerprint: string; key: string } | null>(null);
+  const [refreshFailed, setRefreshFailed] = useState(false);
+  const [unresolvedIntent, setUnresolvedIntent] = useState(restored.current.blocked);
+  const [invalidJournal, setInvalidJournal] = useState(restored.current.invalid);
+  const [storageIssue, setStorageIssue] = useState(restored.current.storageIssue);
+  const [unknownRefreshFailed, setUnknownRefreshFailed] = useState(false);
+  const [reviewedCurrent, setReviewedCurrent] = useState(false);
+  const attempt = useRef<{ fingerprint: string; intent: UpdateTripIntent } | null>(
+    restored.current.saved ? { fingerprint: '', intent: restored.current.saved.intent } : null,
+  );
   const controller = useRef<AbortController | null>(null);
   const trimmedName = name.trim();
   const nameDirty = trimmedName !== trip.name;
@@ -180,6 +265,24 @@ function TripInformationForm({
   const publicDescriptionValue = publicDescription.trim() === '' ? null : publicDescription;
   const publicDescriptionDirty = publicDescriptionValue !== trip.publicDescription;
   const dirty = nameDirty || descriptionDirty || publicDescriptionDirty;
+  const saveAttempt = (intent: UpdateTripIntent) => {
+    const record: SavedSettingsAttempt = {
+      intent,
+      draft: { name, description, publicDescription },
+    };
+    const saved =
+      journal.current.write(
+        browserStorage('sessionStorage'),
+        journalKey,
+        JSON.stringify(record),
+      ) === 'saved';
+    setStorageIssue(!saved);
+    return saved;
+  };
+  const clearAttempt = () => {
+    journal.current.write(browserStorage('sessionStorage'), journalKey, null);
+    attempt.current = null;
+  };
   const nameError =
     result?.status === 'validation-error' && result.fieldErrors.name
       ? result.fieldErrors.name
@@ -201,23 +304,51 @@ function TripInformationForm({
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (!dirty || nameError || refreshingConflict) return;
-    setResult(null);
-    const changes: Pick<UpdateTripIntent, 'name' | 'description' | 'publicDescription'> = {
-      ...(nameDirty ? { name: trimmedName } : {}),
-      ...(descriptionDirty ? { description: descriptionValue } : {}),
-      ...(publicDescriptionDirty ? { publicDescription: publicDescriptionValue } : {}),
-    };
-    const fingerprint = JSON.stringify(changes);
-    if (!attempt.current || attempt.current.fingerprint !== fingerprint) {
-      attempt.current = { fingerprint, key: requestKey() };
+    if (
+      mutation.isPending ||
+      nameError ||
+      refreshingConflict ||
+      (!unresolvedIntent && (!dirty || refreshFailed || !canSave))
+    )
+      return;
+    let intent: UpdateTripIntent;
+    if (unresolvedIntent) {
+      // An ambiguous response can only repeat the immutable original transaction.
+      if (!attempt.current) return;
+      intent = attempt.current.intent;
+      if (!saveAttempt(intent)) return;
+    } else {
+      setResult(null);
+      setReviewedCurrent(false);
+      const changes: Pick<UpdateTripIntent, 'name' | 'description' | 'publicDescription'> = {
+        ...(nameDirty ? { name: trimmedName } : {}),
+        ...(descriptionDirty ? { description: descriptionValue } : {}),
+        ...(publicDescriptionDirty ? { publicDescription: publicDescriptionValue } : {}),
+      };
+      const fingerprint = JSON.stringify(changes);
+      if (!attempt.current || attempt.current.fingerprint !== fingerprint) {
+        attempt.current = {
+          fingerprint,
+          intent: {
+            ...changes,
+            expectedPlanVersion: trip.planVersion,
+            expectedExportRevision: trip.exportRevision,
+            idempotencyKey: requestKey(),
+          },
+        };
+      }
+      intent = attempt.current.intent;
+      if (!saveAttempt(intent)) return;
     }
-    const response = await mutation.mutateAsync({
-      ...changes,
-      expectedPlanVersion: trip.planVersion,
-      expectedExportRevision: trip.exportRevision,
-      idempotencyKey: attempt.current.key,
-    });
+    let response: UpdateTripResult;
+    try {
+      response = await mutation.mutateAsync(intent);
+    } catch {
+      // Transport failure does not prove that the server rejected the write.
+      setUnresolvedIntent(true);
+      setResult({ status: 'unknown', correlationId: null, retryable: true });
+      return;
+    }
     if (response.status === 'updated') {
       queryClient.setQueryData(tripQueryKeys.detail(trip.id, 'success'), {
         status: 'ready',
@@ -229,27 +360,73 @@ function TripInformationForm({
       );
       // Other projections must be fetched from their repositories, not stamped
       // with a revision from a different response.
+      clearAttempt();
+      setUnresolvedIntent(false);
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
         queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
         queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
         queryClient.invalidateQueries({ queryKey: ['plan', trip.id] }),
       ]);
-      attempt.current = null;
       onSaved(response.trip);
       return;
     }
     setResult(response);
+    if (response.status === 'unknown') {
+      setUnresolvedIntent(true);
+      setUnknownRefreshFailed(false);
+      return;
+    }
+    if (unresolvedIntent && response.status === 'unavailable') return;
+    setUnresolvedIntent(false);
+    if (response.status !== 'unavailable') clearAttempt();
     if (response.status === 'conflict') {
-      attempt.current = null;
       setRefreshingConflict(true);
       try {
-        await queryClient.invalidateQueries({
-          queryKey: tripQueryKeys.detail(trip.id, 'success'),
-        });
+        setRefreshFailed(!(await onRefresh()));
+      } catch {
+        setRefreshFailed(true);
       } finally {
         setRefreshingConflict(false);
       }
+    }
+  }
+
+  async function refreshUnknown() {
+    if (mutation.isPending) return;
+    setRefreshingConflict(true);
+    setUnknownRefreshFailed(false);
+    try {
+      if (await onRefresh()) {
+        if (journal.current.write(browserStorage('sessionStorage'), journalKey, null) === 'saved') {
+          attempt.current = null;
+          setUnresolvedIntent(false);
+          setInvalidJournal(false);
+          setStorageIssue(false);
+          setResult(null);
+          setReviewedCurrent(true);
+        } else {
+          setStorageIssue(true);
+          setUnknownRefreshFailed(true);
+        }
+      } else {
+        setUnknownRefreshFailed(true);
+      }
+    } catch {
+      setUnknownRefreshFailed(true);
+    } finally {
+      setRefreshingConflict(false);
+    }
+  }
+
+  async function retryRefresh() {
+    setRefreshingConflict(true);
+    try {
+      setRefreshFailed(!(await onRefresh()));
+    } catch {
+      setRefreshFailed(true);
+    } finally {
+      setRefreshingConflict(false);
     }
   }
 
@@ -257,14 +434,80 @@ function TripInformationForm({
     <section className={styles.card} aria-labelledby="edit-trip-heading">
       <h2 id="edit-trip-heading">Chỉnh sửa thông tin chuyến đi</h2>
       <form className={styles.form} onSubmit={(event) => void submit(event)} noValidate>
-        {result && result.status !== 'validation-error' && (
+        {result && result.status !== 'validation-error' && !unresolvedIntent && (
           <Alert tone={result.status === 'conflict' ? 'warning' : 'error'}>
             {mutationMessage(result)}
+          </Alert>
+        )}
+        {unresolvedIntent && (
+          <Alert tone="warning">
+            {attempt.current ? (
+              <span>
+                Chưa xác định được kết quả lưu. Bản nháp bị khóa; chỉ thử lại đúng yêu cầu cũ hoặc
+                tải trạng thái hiện tại trước khi sửa tiếp.
+              </span>
+            ) : (
+              <span>
+                Không thể xác minh yêu cầu lưu trước đó. Biểu mẫu bị khóa cho đến khi tải được trạng
+                thái hiện tại.
+              </span>
+            )}
+            {invalidJournal && (
+              <span>
+                Yêu cầu lưu đã giữ không hợp lệ; hãy tải trạng thái hiện tại trước khi sửa.
+              </span>
+            )}
+            {storageIssue && (
+              <span>Không truy cập được bộ nhớ phiên để xác minh mã yêu cầu đã giữ.</span>
+            )}
+            {unknownRefreshFailed && (
+              <span>
+                Chưa tải được trạng thái hiện tại.
+                {attempt.current ? ' Yêu cầu cũ vẫn được giữ để thử lại.' : ' Hãy thử tải lại.'}
+              </span>
+            )}
+            <Button
+              variant="outline"
+              className={styles.refreshButton}
+              onClick={() => void refreshUnknown()}
+              loading={refreshingConflict}
+              disabled={mutation.isPending}
+            >
+              Tải trạng thái hiện tại
+            </Button>
+          </Alert>
+        )}
+        {reviewedCurrent && (
+          <Alert tone="warning">
+            Đã tải trạng thái hiện tại. Hãy kiểm tra bản nháp trước khi lưu yêu cầu mới.
+          </Alert>
+        )}
+        {storageIssue && !unresolvedIntent && (
+          <Alert tone="warning">
+            Không thể lưu mã yêu cầu an toàn trong phiên này, nên chưa gửi thay đổi. Hãy bật bộ nhớ
+            phiên rồi thử lại.
+          </Alert>
+        )}
+        {(refreshFailed || !canSave) && (
+          <Alert tone="error">
+            <span>
+              Chưa tải được thông tin chuyến đi mới. Bản nháp vẫn được giữ; hãy tải lại trước khi
+              lưu.
+            </span>
+            <Button
+              variant="outline"
+              className={styles.refreshButton}
+              onClick={() => void retryRefresh()}
+              loading={refreshingConflict}
+            >
+              Tải lại thông tin chuyến đi
+            </Button>
           </Alert>
         )}
         <Input
           label="Tên chuyến đi"
           value={name}
+          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
           maxLength={201}
           error={nameError}
           className={!nameDirty && focused !== 'name' ? styles.currentValue : ''}
@@ -284,6 +527,7 @@ function TripInformationForm({
         <Textarea
           label="Mô tả chuyến đi"
           value={description}
+          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
           error={result?.status === 'validation-error' ? result.fieldErrors.description : undefined}
           className={!descriptionDirty && focused !== 'description' ? styles.currentValue : ''}
           onFocus={() => setFocused('description')}
@@ -296,6 +540,7 @@ function TripInformationForm({
         <Textarea
           label="Mô tả công khai"
           value={publicDescription}
+          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
           error={
             result?.status === 'validation-error' ? result.fieldErrors.publicDescription : undefined
           }
@@ -314,16 +559,20 @@ function TripInformationForm({
           <Button
             variant="outline"
             onClick={onCancel}
-            disabled={mutation.isPending || refreshingConflict}
+            disabled={mutation.isPending || refreshingConflict || unresolvedIntent}
           >
             ← Hủy
           </Button>
           <Button
             type="submit"
             loading={mutation.isPending}
-            disabled={!dirty || !!nameError || refreshingConflict}
+            disabled={
+              !!nameError ||
+              refreshingConflict ||
+              (unresolvedIntent ? !attempt.current : !dirty || refreshFailed || !canSave)
+            }
           >
-            Lưu thay đổi
+            {unresolvedIntent ? 'Thử lại đúng yêu cầu cũ' : 'Lưu thay đổi'}
           </Button>
         </div>
       </form>
@@ -392,7 +641,22 @@ export function TripSettingsPage() {
     queryFn: ({ signal }) => repository.getTrip({ tripId, scenario: 'success', signal }),
     enabled: tripId !== '',
   });
-  const trip = query.data?.status === 'ready' ? query.data.data : null;
+  const latestReadyTrip = query.data?.status === 'ready' ? query.data.data : null;
+  const lastReadyTrip = useRef<{ tripId: string; trip: TripDetailViewModel } | null>(null);
+  if (latestReadyTrip && !query.isError) lastReadyTrip.current = { tripId, trip: latestReadyTrip };
+  const recoverableReadFailure =
+    query.isError ||
+    (query.data?.status === 'error' &&
+      query.data.error.retryable &&
+      (query.data.error.code === 'SERVICE_UNAVAILABLE' ||
+        query.data.error.code === 'RESOURCE_EXHAUSTED'));
+  // A retryable post-conflict read keeps the draft mounted. Definitive access errors take priority.
+  const trip =
+    latestReadyTrip ??
+    (editRequested && recoverableReadFailure && lastReadyTrip.current?.tripId === tripId
+      ? lastReadyTrip.current.trip
+      : null);
+  const canSave = latestReadyTrip !== null && !query.isError;
   const canEdit =
     trip?.currentMembership.role === 'OWNER' &&
     trip.permissions.canUpdate &&
@@ -436,7 +700,7 @@ export function TripSettingsPage() {
       </div>
       {query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
-      ) : error ? (
+      ) : error && !trip ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
           error={error}
@@ -462,8 +726,14 @@ export function TripSettingsPage() {
           <div className={styles.columns}>
             {editMode ? (
               <TripInformationForm
+                key={`${trip.id}:${trip.currentMembership.userId}`}
                 trip={trip}
                 onCancel={returnToView}
+                onRefresh={async () => {
+                  const refreshed = await query.refetch();
+                  return refreshed.isSuccess && refreshed.data?.status === 'ready';
+                }}
+                canSave={canSave}
                 onSaved={() => {
                   setNotice('Đã lưu thông tin chuyến đi.');
                   returnToView();

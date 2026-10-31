@@ -115,11 +115,11 @@ for (const viewport of [
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     const header = page.locator(
-      'header[data-node-id="135:483"]:visible, header[data-node-id="322:2268"]:visible',
+      'header[data-node-id="135:483"]:visible, header[data-node-id="779:6442"]:visible',
     );
     await expect(header).toHaveCount(1);
     const desktop = viewport.width > 768;
-    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 54);
+    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
     const targets = await page
       .locator(
         'button:visible:not(:disabled), a:visible, input:visible, select:visible, summary:visible',
@@ -180,11 +180,13 @@ for (const viewport of [
       expect(Math.round((await header.boundingBox())!.y)).toBe(0);
     } else {
       const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
-      expect(logo.x + logo.width / 2).toBeCloseTo(viewport.width / 2, 0);
+      expect(Math.round(logo.x)).toBe(16);
       const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
-      expect((await menu.boundingBox())!.x).toBeLessThan(logo.x);
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
+      expect((await menu.boundingBox())!.x).toBeGreaterThan(
+        (await account.boundingBox())!.x + (await account.boundingBox())!.width,
+      );
       await expect(header.getByRole('heading')).toHaveCount(0);
       expect(
         (await page.locator('main').getByRole('heading', { level: 1 }).boundingBox())!.y,
@@ -407,7 +409,7 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   await expect(drawer).toBeVisible();
   const box = (await drawer.boundingBox())!;
   expect(box.x).toBe(0);
-  expect(box.width).toBeLessThanOrEqual(280);
+  expect(Math.round(box.width)).toBe(Math.round(Math.min(300, 402 * 0.86)));
   await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chính' })).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   for (let index = 0; index < 8; index++) {

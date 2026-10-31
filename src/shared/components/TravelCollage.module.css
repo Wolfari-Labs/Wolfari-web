@@ -78,6 +78,10 @@
     400 2.77cqw/1.3 'Patrick Hand',
     cursive;
 }
+.scene:not(.auth) .note,
+.scene:not(.auth) figcaption {
+  color: var(--color-action-primary);
+}
 .daLat {
   left: 68.98%;
   top: 64.13%;

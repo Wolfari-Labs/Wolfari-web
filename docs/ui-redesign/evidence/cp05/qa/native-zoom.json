@@ -1,0 +1,12 @@
+{
+  "factor": 2,
+  "before": {
+    "width": 1418,
+    "dpr": 1
+  },
+  "after": {
+    "width": 709,
+    "dpr": 2,
+    "cssZoom": "1"
+  }
+}

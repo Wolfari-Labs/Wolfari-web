@@ -118,6 +118,16 @@ for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 4
     expect(await cloudLayers.count()).toBe(5);
     for (let index = 0; index < (await cloudLayers.count()); index += 1) {
       const layer = cloudLayers.nth(index);
+      // Fonts may finish before the lazily imported Home mounts/decodes its images.
+      // Retain the exact aspect/coverage assertions, but read loaded dimensions.
+      await expect
+        .poll(() =>
+          layer.locator('img').evaluate((element) => {
+            const image = element as HTMLImageElement;
+            return image.complete && image.naturalWidth > 0 && image.naturalHeight > 0;
+          }),
+        )
+        .toBe(true);
       const bounds = await layer.boundingBox();
       const image = await layer.locator('img').evaluate((element) => {
         const target = element as HTMLImageElement;

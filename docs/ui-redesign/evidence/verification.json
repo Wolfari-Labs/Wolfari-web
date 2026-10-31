@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "totals": {
+    "frames": 7239,
+    "components": 175,
+    "sets": 17,
+    "screens": 167
+  },
+  "variables": 257,
+  "collections": 5,
+  "routes": 22,
+  "officialScreenshots": 18,
+  "markdownFiles": 15,
+  "localLinks": 44,
+  "copied": [
+    {
+      "file": "evidence/baseline/plan-1366x520.png",
+      "sha256": "02aa9d4c383731b7a9811a80965cc90e0ee53061ffeaccdcbe5dec76c77ac169"
+    },
+    {
+      "file": "evidence/baseline/fund-320x600.png",
+      "sha256": "be4dc5e218c851581f55966cc7dd9fba1f9a7a625d59f38bce921c96c052a094"
+    },
+    {
+      "file": "evidence/baseline/overview-820x900.png",
+      "sha256": "1601b2b0d69d08bf34999fe993d57033abdf8828c41510c5568da4c9f8d71c41"
+    },
+    {
+      "file": "evidence/baseline/members-320x600.png",
+      "sha256": "a8e743429612c19e76a37416b39a98796afa7a426b45c7bc80d3264932425aba"
+    },
+    {
+      "file": "evidence/baseline/login-1366x520.png",
+      "sha256": "ba73dfbf0bc729fbfd6546f6e6fee9bd1202943b7138305d5433eecbc21c154c"
+    },
+    {
+      "file": "evidence/baseline/create-820x900.png",
+      "sha256": "21f707919490053d1eac7fc1cea6b1a0423ce29b8976b50652cb3aa4ed836621"
+    }
+  ],
+  "failures": []
+}

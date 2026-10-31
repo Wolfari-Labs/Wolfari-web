@@ -211,6 +211,22 @@
   justify-content: center;
   margin: 28px 0 8px;
 }
+.loadedNotice {
+  margin: -6px 0 14px;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+.refreshError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.refreshError > :first-child {
+  flex: 1 1 300px;
+}
 .empty {
   padding: 32px;
   background: #ffffffb3;

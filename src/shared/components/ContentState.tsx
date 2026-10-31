@@ -2,7 +2,7 @@ import type { DomainError } from '../types/result';
 import styles from './ContentState.module.css';
 import { Button } from './Button';
 import { Skeleton } from './Skeleton';
-import { Link } from 'react-router';
+import { ButtonLink } from './ButtonLink';
 
 const messages = {
   PERMISSION_DENIED: ['Bạn không có quyền truy cập', 'Chọn nội dung bạn có quyền xem để tiếp tục.'],
@@ -64,9 +64,9 @@ export function ContentState({
       {(showHome || onReload) && (
         <div className={styles.recovery}>
           {showHome && (
-            <Link className={styles.homeLink} to="/">
+            <ButtonLink variant="outline" to="/">
               Về trang chủ
-            </Link>
+            </ButtonLink>
           )}
           {onReload && (
             <Button variant="outline" onClick={onReload}>

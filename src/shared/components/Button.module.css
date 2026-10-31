@@ -16,7 +16,7 @@
   line-height: var(--line-label);
   overflow-wrap: anywhere;
   transition:
-    transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform var(--motion-control) var(--motion-control-easing),
     background-color var(--motion-duration),
     box-shadow var(--motion-duration),
     opacity var(--motion-duration);
@@ -89,7 +89,7 @@
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: spin 800ms linear infinite;
+  animation: spin var(--motion-spinner) linear infinite;
 }
 .button:disabled {
   background: var(--color-line);
@@ -133,6 +133,10 @@
 @media (prefers-reduced-motion: reduce) {
   .button {
     transition: none;
+  }
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: none;
   }
   .spinner {
     animation: none;

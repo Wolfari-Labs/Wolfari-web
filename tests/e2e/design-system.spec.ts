@@ -150,6 +150,7 @@ test('native Select keyboard and field focus survive errors', async ({ page }) =
 test('hover and pressed variants preserve focus, disabled controls and field errors', async ({
   page,
 }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto('/design-system.html');
   const outline = page.getByRole('button', { name: 'Xem minh họa', exact: true });

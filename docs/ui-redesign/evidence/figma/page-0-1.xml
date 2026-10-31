@@ -1,0 +1,83 @@
+<canvas id="0:1" name="00 — Assets" x="0" y="0" width="0" height="0">
+  <frame id="87:11" name="ASSETS / Official Brand &amp; References" x="80" y="80" width="1240" height="3151">
+    <text id="87:12" name="Title" x="48" y="48" width="698" height="39" />
+    <text id="87:13" name="Note" x="48" y="119" width="790" height="17" />
+    <frame id="87:14" name="Official Assets" x="48" y="168" width="1208" height="320">
+      <frame id="88:2" name="ASSET / Logo / Wolfari" x="0" y="0" width="420" height="280" />
+      <frame id="92:2" name="REFERENCE / Brand Mascot Sheet" x="444" y="0" width="420" height="280" />
+      <frame id="89:2" name="ASSET / App Icon" x="888" y="0" width="320" height="320" />
+    </frame>
+    <frame id="87:15" name="Visual References" x="48" y="520" width="1144" height="1104">
+      <frame id="91:2" name="REFERENCE / Landing Page" x="0" y="0" width="480" height="720" />
+      <frame id="90:2" name="REFERENCE / Workspace Expanded" x="504" y="0" width="480" height="576" />
+      <frame id="94:2" name="REFERENCE / Workspace Reference A" x="0" y="744" width="480" height="360" />
+      <frame id="93:2" name="REFERENCE / Workspace Collapsed" x="504" y="744" width="480" height="360" />
+    </frame>
+    <frame id="87:1597" name="Asset Placeholders" x="48" y="1656" width="1144" height="1447">
+      <text id="87:1598" name="Editable image placeholders" x="29" y="29" width="328" height="29" />
+      <text id="87:1599" name="Use only when the official raster cannot be directly reused. Every frame preserves its aspect ratio and clips content." x="29" y="78" width="713" height="16" />
+      <frame id="87:1600" name="Placeholder Grid" x="29" y="114" width="1086" height="1304">
+        <frame id="87:1601" name="ASSET / Mascot / Map" x="0" y="0" width="280" height="200">
+          <text id="87:1602" name="ASSET / Mascot / Map" x="12" y="12" width="256" height="40" />
+          <text id="87:1603" name="IMAGE PLACEHOLDER" x="12" y="172" width="107" height="12" />
+        </frame>
+        <frame id="87:1604" name="ASSET / Mascot / Wave" x="296" y="0" width="240" height="240">
+          <text id="87:1605" name="ASSET / Mascot / Wave" x="12" y="12" width="216" height="40" />
+          <text id="87:1606" name="IMAGE PLACEHOLDER" x="12" y="212" width="107" height="12" />
+        </frame>
+        <frame id="87:1607" name="ASSET / Hero / Landing" x="552" y="0" width="360" height="260">
+          <text id="87:1608" name="ASSET / Hero / Landing" x="12" y="12" width="336" height="40" />
+          <text id="87:1609" name="IMAGE PLACEHOLDER" x="12" y="232" width="107" height="12" />
+        </frame>
+        <frame id="87:1610" name="ASSET / Decor / PaperPlane" x="0" y="276" width="160" height="120">
+          <text id="87:1611" name="ASSET / Decor / PaperPlane" x="12" y="12" width="136" height="40" />
+          <text id="87:1612" name="IMAGE PLACEHOLDER" x="12" y="92" width="107" height="12" />
+        </frame>
+        <frame id="87:1613" name="ASSET / Decor / Cloud" x="176" y="276" width="200" height="100">
+          <text id="87:1614" name="ASSET / Decor / Cloud" x="12" y="12" width="176" height="40" />
+          <text id="87:1615" name="IMAGE PLACEHOLDER" x="12" y="72" width="107" height="12" />
+        </frame>
+        <frame id="87:1616" name="ASSET / TravelPhoto / 01" x="392" y="276" width="180" height="220">
+          <text id="87:1617" name="ASSET / TravelPhoto / 01" x="12" y="12" width="156" height="40" />
+          <text id="87:1618" name="IMAGE PLACEHOLDER" x="12" y="192" width="107" height="12" />
+        </frame>
+        <frame id="87:1619" name="ASSET / TravelPhoto / 02" x="588" y="276" width="180" height="220">
+          <text id="87:1620" name="ASSET / TravelPhoto / 02" x="12" y="12" width="156" height="40" />
+          <text id="87:1621" name="IMAGE PLACEHOLDER" x="12" y="192" width="107" height="12" />
+        </frame>
+        <frame id="87:1622" name="ASSET / Decor / StickyNote" x="784" y="276" width="180" height="160">
+          <text id="87:1623" name="ASSET / Decor / StickyNote" x="12" y="12" width="156" height="40" />
+          <text id="87:1624" name="IMAGE PLACEHOLDER" x="12" y="132" width="107" height="12" />
+        </frame>
+        <frame id="87:1625" name="ASSET / Preview / Phone01" x="0" y="512" width="160" height="320">
+          <text id="87:1626" name="ASSET / Preview / Phone01" x="12" y="12" width="136" height="40" />
+          <text id="87:1627" name="IMAGE PLACEHOLDER" x="12" y="292" width="107" height="12" />
+        </frame>
+        <frame id="87:1628" name="ASSET / Preview / Phone02" x="176" y="512" width="160" height="320">
+          <text id="87:1629" name="ASSET / Preview / Phone02" x="12" y="12" width="136" height="40" />
+          <text id="87:1630" name="IMAGE PLACEHOLDER" x="12" y="292" width="107" height="12" />
+        </frame>
+        <frame id="87:1631" name="ASSET / Preview / Laptop" x="352" y="512" width="360" height="230">
+          <text id="87:1632" name="ASSET / Preview / Laptop" x="12" y="12" width="336" height="40" />
+          <text id="87:1633" name="IMAGE PLACEHOLDER" x="12" y="202" width="107" height="12" />
+        </frame>
+        <frame id="87:1634" name="ASSET / Landscape / Vietnam" x="0" y="848" width="360" height="220">
+          <text id="87:1635" name="ASSET / Landscape / Vietnam" x="12" y="12" width="336" height="40" />
+          <text id="87:1636" name="IMAGE PLACEHOLDER" x="12" y="192" width="107" height="12" />
+        </frame>
+        <frame id="87:1637" name="ASSET / Landscape / CTA" x="376" y="848" width="360" height="180">
+          <text id="87:1638" name="ASSET / Landscape / CTA" x="12" y="12" width="336" height="40" />
+          <text id="87:1639" name="IMAGE PLACEHOLDER" x="12" y="152" width="107" height="12" />
+        </frame>
+        <frame id="87:1640" name="ASSET / Decor / Postcards" x="752" y="848" width="240" height="180">
+          <text id="87:1641" name="ASSET / Decor / Postcards" x="12" y="12" width="216" height="40" />
+          <text id="87:1642" name="IMAGE PLACEHOLDER" x="12" y="152" width="107" height="12" />
+        </frame>
+        <frame id="87:1643" name="ASSET / Decor / Signpost" x="0" y="1084" width="160" height="220">
+          <text id="87:1644" name="ASSET / Decor / Signpost" x="12" y="12" width="136" height="40" />
+          <text id="87:1645" name="IMAGE PLACEHOLDER" x="12" y="192" width="107" height="12" />
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+</canvas>

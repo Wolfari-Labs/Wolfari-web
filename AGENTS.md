@@ -1,0 +1,15 @@
+# Wolfari frontend redesign
+
+- Official design reference: https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-Travel-Workspace
+- Start with `docs/ui-redesign/MASTER_PLAN.md`, `STATE.md`, and the active checkpoint record. Stop after each checkpoint; require explicit user approval before advancing.
+- Product scope is Web only. No native/mobile app, SwiftUI, React Native, or iOS/Android UI deliverables. Small viewports mean responsive browser layouts, not a separate mobile product.
+- CP-01 through CP-03 are APPROVED/DONE with their recorded exceptions. The user approved CP-04 on 2026-10-30 (D25), preserving its verification limits, and authorized CP-05. CP-05 Trips list/create/overview/settings completed W01–W13 including D29 A1–A6 remediation and D30 CP05-A03, and is READY_FOR_REVIEW, not approved. Stop before CP-06 until explicit user approval. See docs/ui-redesign/CP05_ACCEPTANCE.md. No Backend/dependency changes or official Figma writes.
+- CP-04 is APPROVED/DONE after W01–W06; see docs/ui-redesign/CP04_ACCEPTANCE.md. Its full built fixture run remains 184/190 with six corrected focused tests 6/6, not full 190/190. Approval is not blanket approval of pending design deltas.
+- CP-03 is APPROVED/DONE; its W01–W06 implementation and evidence remain in docs/ui-redesign/CP03_ACCEPTANCE.md. D22 approves only CP03-A01 error Alert text contrast; other pending deltas remain pending. CP-04 approval is not blanket approval of those deltas.
+- CP-02 was closed by explicit user instruction on 2026-10-30 (D20): COMPLETE with accepted exceptions. Visual QA is CLOSED / WAIVED_BY_USER (D19), verification remains NOT_RUN / UNVERIFIED. See docs/ui-redesign/CP02_ACCEPTANCE.md. Do not reopen that QA gate; unapproved design deltas are not implementation authority.
+- Design direction: `docs/ui-redesign/DESIGN_SYSTEM.md`; route coverage: `ROUTE_MATRIX.md`; contracts: `INTEGRATION_CONTRACTS.md` in the same directory. Proposed decisions are not approvals.
+- Approved CP-02 rule (2026-10-30): preserve existing Web Figma designs; log every proposed visual/interaction departure separately in `docs/ui-redesign/DESIGN_DELTAS.md` for explicit review. Do not interpret checkpoint approval as blanket approval of prior layout/token/motion proposals or AI alternatives.
+- Preserve React/TypeScript, CSS Modules/tokens, repository boundaries, routes, guards, query keys, session/CSRF handling, idempotency, versions, cursors and business-state semantics. Do not replace runtime behavior with fixture behavior.
+- Use shared accessible primitives; retain keyboard access, focus return, reduced motion, readable errors, truthful pending/unknown states and responsive reflow. Avoid decorative motion in task-heavy workspace regions.
+- Verify affected flows with lint, typecheck, unit/component tests, build and relevant E2E. Label fixture/HTTP mocks separately from live Backend; record NOT_RUN and failed baseline evidence honestly.
+- Preserve user changes and existing evidence. No automatic Git history changes, commit/push, deployment, secret changes, production data mutations or Backend edits.

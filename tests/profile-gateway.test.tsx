@@ -121,6 +121,18 @@ describe('Profile Gateway interactions', () => {
     expect(client.getQueryState(['shell', null, 'success'])?.isInvalidated).toBe(true);
   });
 
+  it('rejects a name over the Identity service UTF-16 limit before PATCH', async () => {
+    const updateProfile = vi.fn();
+    mount({ updateProfile });
+    const name = await screen.findByLabelText('Tên hiển thị');
+    await userEvent.clear(name);
+    await userEvent.type(name, '😀'.repeat(76));
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    expect(name).toHaveFocus();
+    expect(screen.getByText('Tên hiển thị cần từ 1 đến 150 ký tự.')).toBeInTheDocument();
+    expect(updateProfile).not.toHaveBeenCalled();
+  });
+
   it('keeps draft on conflict, refetches version and only retries on an explicit submit', async () => {
     const readSelf = vi
       .fn()
@@ -202,14 +214,12 @@ describe('Profile Gateway interactions', () => {
       .mockReturnValueOnce('blob:old')
       .mockReturnValueOnce('blob:new');
     const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
-    const getAvatar = vi
-      .fn()
-      .mockResolvedValue({
-        status: 'ready',
-        bytes: new ArrayBuffer(3),
-        contentType: 'image/png',
-        correlationId: 'img',
-      });
+    const getAvatar = vi.fn().mockResolvedValue({
+      status: 'ready',
+      bytes: new ArrayBuffer(3),
+      contentType: 'image/png',
+      correlationId: 'img',
+    });
     const withAvatar = { ...profile, avatar: { src: '/api/v1/me/avatar', alt: 'Avatar' } };
     const { unmount } = mount({
       readSelf: vi.fn(async () => ready(withAvatar)),
@@ -217,13 +227,11 @@ describe('Profile Gateway interactions', () => {
       uploadAvatar: vi
         .fn()
         .mockResolvedValue({ status: 'uploaded', objectKey: 'new-avatar', correlationId: 'up' }),
-      updateProfile: vi
-        .fn()
-        .mockResolvedValue({
-          status: 'updated',
-          profile: { ...withAvatar, version: 5 },
-          correlationId: 'patch',
-        }),
+      updateProfile: vi.fn().mockResolvedValue({
+        status: 'updated',
+        profile: { ...withAvatar, version: 5 },
+        correlationId: 'patch',
+      }),
     });
     await waitFor(() => expect(screen.getByAltText('Avatar')).toHaveAttribute('src', 'blob:old'));
     fireEvent.change(screen.getByLabelText('Chọn ảnh đại diện'), {
