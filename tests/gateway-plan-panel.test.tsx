@@ -103,6 +103,29 @@ const add = () => screen.getByRole('button', { name: 'Thêm hoạt động' });
 const save = () => screen.getByRole('button', { name: 'Lưu' });
 
 describe('Gateway Plan controls', () => {
+  it('opens the approved centered activity dialog with every Gateway field and returns focus', async () => {
+    const { user } = await setup();
+    const trigger = add();
+    await user.click(trigger);
+    const dialog = screen.getByRole('dialog', { name: 'Thêm hoạt động' });
+    for (const label of [
+      'Tên hoạt động',
+      'Ngày bắt đầu hoặc ngày chưa có giờ',
+      'Giờ bắt đầu',
+      'Giờ kết thúc',
+      'Ngày kết thúc (nếu có giờ)',
+      'Địa điểm',
+      'Loại hoạt động',
+      'Mô tả',
+      'Mô tả công khai',
+    ]) {
+      expect(within(dialog).getByLabelText(label)).toBeInTheDocument();
+    }
+    expect(within(dialog).getByLabelText('Tên hoạt động')).toHaveFocus();
+    await user.click(within(dialog).getByRole('button', { name: 'Hủy chỉnh sửa' }));
+    expect(screen.queryByRole('dialog', { name: 'Thêm hoạt động' })).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
   it('reconciles an unknown create and retries the exact intent before closing the form', async () => {
     const { user, create, refresh, plan } = await setup();
     create.mockResolvedValueOnce({

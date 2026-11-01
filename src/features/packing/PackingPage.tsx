@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
@@ -57,6 +57,16 @@ export function PackingPage() {
   const canEdit = data?.plan.permissions.canEdit === true;
   const canComplete = data?.plan.permissions.canComplete === true;
   const canWrite = previewEnabled && canEdit && canComplete;
+  const gatewayItems = useMemo(
+    () => data?.plan.packingItems.map((item) => ({ ...item, reminder: null })) ?? [],
+    [data?.plan.packingItems],
+  );
+  const visibleItems = previewEnabled ? items : gatewayItems;
+  const categoryOptions = previewEnabled
+    ? catalog.categories
+    : [...new Set(gatewayItems.map((item) => item.category?.trim() || 'Khác'))].sort((a, b) =>
+        a.localeCompare(b, 'vi'),
+      );
 
   useEffect(() => {
     if (!data) {
@@ -72,9 +82,9 @@ export function PackingPage() {
     return () => window.clearTimeout(timer);
   }, [feedback]);
 
-  const visible = filterPackingItems(items, filter, category, viewerMemberId);
+  const visible = filterPackingItems(visibleItems, filter, category, viewerMemberId);
   const groups = groupPackingItems(visible);
-  const progress = packingProgress(items);
+  const progress = packingProgress(visibleItems);
   const percent = progress.total ? Math.round((progress.completed / progress.total) * 100) : 0;
   const members = data ? [{ id: viewerMemberId, label: 'Tôi' }] : [];
   const initial: PackingFormValues =
@@ -171,7 +181,7 @@ export function PackingPage() {
               </i>
               <span>{percent}%</span>
             </div>
-            {canWrite && (
+            {canWrite ? (
               <Button
                 onClick={(event) => {
                   addButtonRef.current = event.currentTarget;
@@ -180,25 +190,33 @@ export function PackingPage() {
               >
                 <Icon name="plus" size={18} /> Thêm vật dụng
               </Button>
-            )}
+            ) : !previewEnabled ? (
+              <span className={styles.readOnlyBadge}>Chỉ xem</span>
+            ) : null}
           </section>
           <div className={styles.list}>
             <div className={styles.toolbar}>
               <div className={styles.filters} role="group" aria-label="Bộ lọc vật dụng">
                 <button
+                  type="button"
                   className={filter === 'ALL' ? styles.active : ''}
+                  aria-pressed={filter === 'ALL'}
                   onClick={() => setFilter('ALL')}
                 >
                   Tất cả
                 </button>
                 <button
+                  type="button"
                   className={filter === 'MINE' ? styles.active : ''}
+                  aria-pressed={filter === 'MINE'}
                   onClick={() => setFilter('MINE')}
                 >
                   Của tôi
                 </button>
                 <button
+                  type="button"
                   className={filter === 'TODO' ? styles.active : ''}
+                  aria-pressed={filter === 'TODO'}
                   onClick={() => setFilter('TODO')}
                 >
                   Chưa hoàn thành
@@ -211,7 +229,7 @@ export function PackingPage() {
                   onChange={(event) => setCategory(event.target.value)}
                 >
                   <option value="ALL">Danh mục: Tất cả</option>
-                  {catalog.categories.map((value) => (
+                  {categoryOptions.map((value) => (
                     <option key={value}>{value}</option>
                   ))}
                 </Select>
@@ -223,7 +241,7 @@ export function PackingPage() {
               <span>Số lượng</span>
               <span>Người chuẩn bị</span>
               <span>Hạn chuẩn bị</span>
-              <span>Thao tác</span>
+              <span>{previewEnabled ? 'Thao tác' : 'Quyền'}</span>
             </div>
             {groups.length ? (
               <div className={styles.groups}>
@@ -256,51 +274,83 @@ export function PackingPage() {
                       {!isCollapsed && (
                         <div className={styles.table}>
                           {group.items.map((item) => (
-                            <div className={styles.row} key={item.id}>
-                              <button
-                                className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
-                                aria-label={`Đánh dấu ${item.name}`}
-                                aria-pressed={item.status === 'COMPLETED'}
-                                disabled={!canWrite}
-                                onClick={() => toggle(item)}
-                              >
-                                {item.status === 'COMPLETED' ? (
-                                  <Icon name="check" size={18} />
-                                ) : null}
-                              </button>
+                            <div
+                              className={
+                                previewEnabled ? styles.row : `${styles.row} ${styles.gatewayRow}`
+                              }
+                              key={item.id}
+                            >
+                              {previewEnabled ? (
+                                <button
+                                  className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
+                                  aria-label={`Đánh dấu ${item.name}`}
+                                  aria-pressed={item.status === 'COMPLETED'}
+                                  disabled={!canWrite}
+                                  onClick={() => toggle(item)}
+                                >
+                                  {item.status === 'COMPLETED' ? (
+                                    <Icon name="check" size={18} />
+                                  ) : null}
+                                </button>
+                              ) : (
+                                <span
+                                  className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
+                                  role="img"
+                                  aria-label={
+                                    item.status === 'COMPLETED'
+                                      ? 'Đã hoàn thành'
+                                      : 'Chưa hoàn thành'
+                                  }
+                                >
+                                  {item.status === 'COMPLETED' && <Icon name="check" size={18} />}
+                                </span>
+                              )}
                               <div className={styles.name}>
                                 <strong>{item.name}</strong>
                                 {item.note && <small>{item.note}</small>}
                               </div>
-                              <span>
+                              <span className={styles.quantity}>
+                                {!previewEnabled && (
+                                  <span className={styles.mobileReadLabel}>Số lượng: </span>
+                                )}
                                 {item.quantity} {item.unit ?? ''}
                               </span>
-                              <span>
+                              <span className={styles.assignee}>
+                                {!previewEnabled && (
+                                  <span className={styles.mobileReadLabel}>Người chuẩn bị: </span>
+                                )}
                                 {item.assignedMemberId === viewerMemberId
                                   ? 'Tôi'
                                   : item.assignedMemberId
                                     ? 'Đã phân công'
                                     : 'Chưa phân công'}
                               </span>
-                              <span>
+                              <span className={styles.due}>
+                                {!previewEnabled && (
+                                  <span className={styles.mobileReadLabel}>Hạn chuẩn bị: </span>
+                                )}
                                 {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC') ?? '—'}
                               </span>
-                              <ActionMenu
-                                label={`Thao tác ${item.name}`}
-                                items={[
-                                  {
-                                    label: 'Chỉnh sửa',
-                                    disabled: !canWrite,
-                                    action: () => setDrawer({ open: true, mode: 'edit', item }),
-                                  },
-                                  {
-                                    label: 'Xóa',
-                                    disabled: !canWrite,
-                                    danger: true,
-                                    action: () => remove(item),
-                                  },
-                                ]}
-                              />
+                              {previewEnabled ? (
+                                <ActionMenu
+                                  label={`Thao tác ${item.name}`}
+                                  items={[
+                                    {
+                                      label: 'Chỉnh sửa',
+                                      disabled: !canWrite,
+                                      action: () => setDrawer({ open: true, mode: 'edit', item }),
+                                    },
+                                    {
+                                      label: 'Xóa',
+                                      disabled: !canWrite,
+                                      danger: true,
+                                      action: () => remove(item),
+                                    },
+                                  ]}
+                                />
+                              ) : (
+                                <span className={styles.readOnlyRowLabel}>Chỉ xem</span>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -311,12 +361,18 @@ export function PackingPage() {
               </div>
             ) : (
               <div className={styles.empty}>
-                <h2>{items.length ? 'Không có mục phù hợp' : 'Chưa có hành lý đã lưu'}</h2>
+                <h2>{visibleItems.length ? 'Không có mục phù hợp' : 'Chưa có hành lý đã lưu'}</h2>
                 <p>Danh sách phù hợp sẽ xuất hiện tại đây.</p>
               </div>
             )}
           </div>
-          {!canWrite && <CapabilityNote>Danh sách hiện chỉ hỗ trợ xem.</CapabilityNote>}
+          {!canWrite && (
+            <CapabilityNote>
+              {previewEnabled
+                ? 'Danh sách hiện chỉ hỗ trợ xem.'
+                : 'Danh sách hiện chỉ hỗ trợ xem. Trạng thái hoàn thành, thêm và sửa vật dụng chưa khả dụng trong chế độ này.'}
+            </CapabilityNote>
+          )}
           {feedback && (
             <div className={styles.feedback} role="status">
               {feedback}

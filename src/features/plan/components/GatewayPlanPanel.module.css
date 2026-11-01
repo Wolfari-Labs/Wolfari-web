@@ -8,10 +8,22 @@
 .panel p {
   margin: 0;
 }
-.panel header,
 .item {
   display: grid;
   gap: 0.65rem;
+}
+.feedback {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.syncDetails {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+}
+.syncDetails summary {
+  cursor: pointer;
+  width: fit-content;
 }
 .actions {
   display: flex;
@@ -74,4 +86,49 @@
   min-height: 2.75rem;
   font: inherit;
   padding: 0.5rem;
+}
+.editorDialog.editorDialog {
+  inset: 12px;
+  width: min(560px, calc(100% - 24px));
+  max-width: calc(100% - 24px);
+  max-height: calc(100dvh * var(--plan-editor-inverse-zoom, 1) - 24px);
+}
+.editorDialog .form {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+.scheduleFields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  min-width: 0;
+}
+.scheduleOptions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.scheduleHint {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+}
+.formActions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-block: 0.5rem 0.25rem;
+  background: var(--color-white);
+}
+@media (max-width: 480px) {
+  .scheduleFields,
+  .scheduleOptions {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

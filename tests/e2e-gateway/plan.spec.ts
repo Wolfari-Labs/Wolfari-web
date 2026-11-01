@@ -66,7 +66,7 @@ test('HTTP mock: Gateway exposes only the shared server Plan, never a competing 
   expect(mock.writes).toEqual([]);
 });
 
-test('HTTP mock: Plan drawer remains scrollable at 2x document zoom and returns keyboard focus', async ({
+test('HTTP mock: Plan editor dialog remains scrollable at 2x CSS zoom and returns keyboard focus', async ({
   page,
   gateway,
 }) => {
@@ -79,12 +79,12 @@ test('HTTP mock: Plan drawer remains scrollable at 2x document zoom and returns 
     document.documentElement.style.zoom = '2';
   });
   await trigger.click();
-  const drawer = page.getByRole('dialog', { name: 'Chỉnh sửa lịch trình' });
-  await expect(drawer.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
-  const save = drawer.getByRole('button', { name: 'Lưu', exact: true });
+  const dialog = page.getByRole('dialog', { name: 'Thêm hoạt động' });
+  await expect(dialog.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
+  const save = dialog.getByRole('button', { name: 'Lưu', exact: true });
   await save.scrollIntoViewIfNeeded();
   await expect(save).toBeInViewport();
   await page.keyboard.press('Escape');
-  await expect(drawer).not.toBeVisible();
+  await expect(dialog).not.toBeVisible();
   await expect(trigger).toBeFocused();
 });

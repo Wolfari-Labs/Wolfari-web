@@ -1,0 +1,198 @@
+.page {
+  min-height: 100%;
+  padding: 8px 22px 24px 18px;
+  background: var(--color-background);
+  color: var(--color-ink);
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 22px;
+  margin-bottom: 4px;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.breadcrumb a {
+  color: var(--color-action-primary);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 14px;
+}
+
+.filters button {
+  min-height: 44px;
+  padding: 7px 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: var(--color-white);
+  color: var(--color-action-primary);
+  font: inherit;
+  font-size: 13px;
+}
+
+.filters button[aria-pressed='true'] {
+  border-color: var(--color-action-primary);
+  background: var(--color-action-primary);
+  color: var(--color-white);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 280px);
+  gap: 16px;
+  align-items: start;
+}
+
+.cards {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+.group {
+  min-width: 0;
+}
+
+.group > h2 {
+  margin: 0 0 10px;
+  color: var(--color-action-primary);
+  font-size: 16px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.card,
+.readOnlyPanel,
+.empty {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: var(--color-white);
+}
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+
+.cardHeader span,
+.badge {
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: var(--color-surface);
+  color: var(--color-action-primary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.noArtwork {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  padding: 18px;
+  border: 1px dashed var(--color-line);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.card > p,
+.readOnlyPanel > p:not(.badge),
+.empty p {
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+.card dl {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.card dl div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.card dt {
+  color: var(--color-muted);
+}
+
+.card dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.readOnlyPanel h2 {
+  margin: 0 0 16px;
+  color: var(--color-ink);
+  font-size: 20px;
+}
+
+.badge {
+  display: inline-block;
+  margin: 0;
+}
+
+.empty h2 {
+  margin: 0 0 6px;
+  font-size: 19px;
+}
+
+.empty p {
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .page {
+    padding: 12px 14px 28px;
+  }
+
+  .cardGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

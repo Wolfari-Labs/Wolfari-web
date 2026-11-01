@@ -74,6 +74,18 @@
   white-space: nowrap;
   overflow-wrap: normal;
 }
+.readOnlyBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: var(--color-surface);
+  color: var(--color-action-primary);
+  font-size: 13px;
+}
 .progress {
   width: 220px;
   display: grid;
@@ -166,7 +178,7 @@
 .tableHead,
 .row {
   display: grid;
-  grid-template-columns: 44px minmax(160px, 1fr) 80px minmax(100px, 0.7fr) 110px 44px;
+  grid-template-columns: 44px minmax(160px, 1fr) 80px minmax(100px, 0.7fr) 110px 64px;
   gap: 14px;
   align-items: center;
   padding-inline: 32px;
@@ -244,6 +256,14 @@
 }
 .checkbox:disabled {
   opacity: 0.75;
+}
+.readOnlyRowLabel {
+  color: var(--color-action-primary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.mobileReadLabel {
+  display: none;
 }
 .name {
   min-width: 0;
@@ -327,7 +347,7 @@
   }
   .tableHead,
   .row {
-    grid-template-columns: 44px minmax(130px, 1fr) 70px 100px 90px 44px;
+    grid-template-columns: 44px minmax(130px, 1fr) 70px 100px 90px 64px;
     padding-inline: 24px;
     gap: 10px;
   }
@@ -363,6 +383,9 @@
     width: 100%;
     white-space: normal;
   }
+  .summary > .readOnlyBadge {
+    grid-column: 1 / -1;
+  }
   .list {
     height: auto;
     max-height: none;
@@ -395,14 +418,46 @@
     margin: 0 14px 14px;
   }
   .row {
-    grid-template-columns: 44px minmax(0, 1fr) 50px 44px;
+    grid-template-columns: 44px minmax(0, 1fr) 50px 56px;
     min-width: 0;
     gap: 8px;
     padding: 10px 8px;
   }
-  .row > span:nth-of-type(2),
-  .row > span:nth-of-type(3) {
+  .row > .assignee,
+  .row > .due {
     display: none;
+  }
+  .gatewayRow {
+    grid-template-columns: 44px minmax(0, 1fr) 56px;
+  }
+  .gatewayRow > .name {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .gatewayRow > .readOnlyRowLabel {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .gatewayRow > .quantity,
+  .gatewayRow > .assignee,
+  .gatewayRow > .due {
+    display: block;
+    grid-column: 2 / -1;
+    color: var(--color-muted);
+  }
+  .gatewayRow > .quantity {
+    grid-row: 2;
+  }
+  .gatewayRow > .assignee {
+    grid-row: 3;
+  }
+  .gatewayRow > .due {
+    grid-row: 4;
+  }
+  .gatewayRow .mobileReadLabel {
+    display: inline;
+    color: var(--color-ink);
+    font-weight: 500;
   }
   .drawerOpen .list {
     width: auto;

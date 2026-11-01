@@ -42,6 +42,18 @@
   border-radius: 12px;
   flex-shrink: 0;
 }
+.typeIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-selected);
+}
+.typeIcon img {
+  border-radius: 0;
+}
 .location {
   display: inline-flex;
   align-items: center;
@@ -59,13 +71,79 @@
 .footer {
   justify-content: space-between;
 }
+.compact {
+  display: grid;
+  grid-template-columns: minmax(125px, 165px) minmax(140px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 78px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.compact .schedule {
+  min-width: 0;
+  padding-right: 10px;
+  border-right: 1px solid var(--color-line);
+}
+.compact .schedule > button {
+  order: -1;
+  margin-left: 0;
+}
+.compact .body {
+  min-width: 0;
+  margin: 0;
+  gap: 10px;
+}
+.compact .body > img {
+  width: 90px;
+  height: 54px;
+  border-radius: 6px;
+}
+.compact .copy h3 {
+  font-size: 14px;
+  line-height: 20px;
+}
+.compact .copy p {
+  margin: 2px 0;
+  font-size: 12px;
+  line-height: 18px;
+}
+.compact .footer {
+  justify-content: flex-end;
+  max-width: 230px;
+}
+.compact .actions {
+  justify-content: flex-end;
+}
+@media (max-width: 1100px) {
+  .compact {
+    grid-template-columns: minmax(110px, 145px) minmax(0, 1fr);
+  }
+  .compact .footer {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
+@media (max-width: 600px) {
+  .compact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .compact .schedule {
+    border-right: 0;
+    padding-right: 0;
+  }
+  .compact .footer {
+    grid-column: auto;
+  }
+}
 @media (hover: hover) {
   .card:hover {
     box-shadow: var(--shadow-soft);
   }
 }
 @media (max-width: 600px) {
-  .body img {
+  .body > img {
     width: 72px;
     height: 64px;
   }

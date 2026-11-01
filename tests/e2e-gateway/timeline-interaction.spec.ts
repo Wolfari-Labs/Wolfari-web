@@ -61,7 +61,7 @@ test('Gateway timed drag requires confirmation; a conflict keeps the draft and r
     page.getByRole('button', { name: 'Kéo hoạt động Đi dạo' }),
     page.getByRole('button', { name: 'Ngày 2 · 02/11', exact: true }),
   );
-  const dialog = page.getByRole('dialog', { name: 'Chỉnh sửa lịch trình' });
+  const dialog = page.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' });
   await expect(dialog).toBeVisible();
   expect(mock.writes).toHaveLength(0);
   await expect(dialog.getByLabel('Ngày bắt đầu hoặc ngày chưa có giờ')).toHaveValue('2026-11-02');

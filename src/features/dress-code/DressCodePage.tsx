@@ -24,7 +24,7 @@ import tripLandscape from '../../shared/assets/figma/bd989.svg';
 import tripLandscapeForeground from '../../shared/assets/figma/25ff8.svg';
 import sendIcon from '../../shared/assets/figma/ac8db.svg';
 import officialLogo from '../../shared/assets/figma/44363.png';
-import { DeferredReadPage } from '../plan/components/DeferredReadPage';
+import { GatewayDressCodePage } from './GatewayDressCodePage';
 
 type DressScope = 'ALL' | 'DAY' | 'ACTIVITY';
 
@@ -149,7 +149,7 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
 
 export function DressCodePage() {
   const { previewEnabled } = useOutletContext<RouteContext>();
-  return previewEnabled ? <PreviewDressCodePage /> : <DeferredReadPage kind="dress" />;
+  return previewEnabled ? <PreviewDressCodePage /> : <GatewayDressCodePage />;
 }
 function PreviewDressCodePage() {
   const { tripId = '' } = useParams();

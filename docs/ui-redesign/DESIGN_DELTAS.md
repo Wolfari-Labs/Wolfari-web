@@ -8,6 +8,8 @@ Chốt D19/D20,30/10/2026: CP02 COMPLETE với ngoại lệ visual QA WAIVED_BY_
 
 Cập nhật D18,30/10/2026: user duyệt3 bố trí đã trình. `APPROVED_LAYOUT` cho PLN08 (centered editor + required fields), phần placement của FND03/XRT05 (right form→below main ở narrow), HMA04 (source header/menu, account/notification access). Các ID có nhiều nội dung chỉ được duyệt phần này; default tabs, chart/copy/validation refinements và những ID khác vẫn pending. Approval design/spec, không permission implementation/Figma writes.
 
+Cập nhật D33,31/10/2026: user duyệt riêng PLN01–05, PLN07 và phần Plan Web của DLT09 **đúng theo [CP06 decision packet](CP06_DESIGN_DECISIONS.md)**. Chỉ các phương án trong bảng đó chuyển `APPROVED_CP06_SCOPE`; PLN06, DLT03 và các delta khác vẫn pending. Không suy từ quyết định này quyền đổi Figma, Backend, dependency hoặc làm CP07.
+
 - `SOURCE`: thông tin xác định từ Figma, ghi node/evidence; không tự gọi source proposal là nghiệp vụ đã triển khai.
 - `PRESERVE_RUNTIME`: hành vi/contracts/components hiện có, không thêm tính năng và không thay visual tùy ý.
 - `DELTA_PENDING`: khác biệt visual/interaction hoặc state bổ sung chưa đủ source; cần review trước implementation.
@@ -26,19 +28,19 @@ Cập nhật D18,30/10/2026: user duyệt3 bố trí đã trình. `APPROVED_LAYO
 | DLT06 | Light-first / trì hoãn dark | DELTA_PENDING như quyết định sản phẩm; các frame đang review là light source. Không tự tạo dark hoặc tuyên bố user đã từ bỏ dark. |
 | DLT07 | Rút gọn Home storytelling; progressive form tạo Trip; sắp xếp lại Overview/Fund panels | DELTA_PENDING; chưa có approval đổi content/order. Bám source, giữ runtime constraints. |
 | DLT08 | Motion mới120/180/220/240ms, route fade, reorder transitions mới | DELTA_PENDING. Không phải motion extracted từ Figma. Reduced-motion/cleanup và existing motion giữ nguyên cho tới review mapping. |
-| DLT09 | Reflow Plan/Members/Auth tại320/402/768/820; editor full-width; bỏ nested scrolling | DELTA_PENDING ở chi tiết chưa có Web frame. Nguyên tắc Web402 drawer/document flow có SOURCE785:6670; không suy mọi màn có composition đã thiết kế. |
+| DLT09 | Reflow Plan/Members/Auth tại320/402/768/820; editor full-width; bỏ nested scrolling | APPROVED_CP06_SCOPE D33 **chỉ cho Plan Web** theo packet: day tabs scroll, metrics reflow, timeline/panel/editor usable ở hẹp/short-height/zoom. Members/Auth và proposal “bỏ nested scrolling” toàn app vẫn DELTA_PENDING. |
 
 ## Plan — khác biệt cụ thể cần quyết định trong design review
 
 | ID | Source → runtime gap | Đề xuất để review, chưa triển khai |
 |---|---|---|
-| PLN01 |20:236 chỉ day tabs; RuntimeTimeline có ALL/POOL và split toggle | Giữ truy cập ALL/POOL qua controls cùng hệ day navigation, không bỏ hành vi runtime. Trình placement trên source trước CP06. |
-| PLN02 |439:2028 panel là selected places chưa xếp lịch; Gateway split hiện là activities chưa có ngày | Giữ panel visual nguồn, label đúng object thực tế. Không biến location thành saved activity bằng local draft; action tạo activity phải qua create contract. |
-| PLN03 |439:2497 có map trong Plan; Gateway RuntimeTimeline chưa có day-map; PlanView preview có nút Hiện bản đồ disabled | Trình read projection từ existing coordinates cùng unavailable/list fallback; không hứa route geometry/travel-time provider. Không coi preview đã có map hoạt động; chưa tự mở tích hợp provider. |
-| PLN04 | Source có travel totals/connectors, online avatars/cursor, share và thêm ngày | Không hiển thị dữ liệu giả trong Gateway. Review unavailable/explanation hoặc omission từng vùng; không bỏ cả metric strip. “Thêm ngày” không âm thầm sửa Trip dates. |
-| PLN05 | Source có thumbnail cho activity; Gateway decoder đặt cover:null | Dùng asset thật chỉ khi là editorial/decorative có nhãn phù hợp hoặc dữ liệu có provenance; nếu thiếu, review row không ảnh/placeholder phù hợp. Không gán ảnh điểm khác vào địa điểm thật. |
+| PLN01 |20:236 chỉ day tabs; RuntimeTimeline có ALL/POOL và split toggle | APPROVED_CP06_SCOPE D33: day tabs sau banner; ALL/POOL sau các ngày trong cùng thanh, default ALL giữ nguyên; filter read-only, drop permission giữ. |
+| PLN02 |439:2028 panel là selected places chưa xếp lịch; Gateway split hiện là activities chưa có ngày | APPROVED_CP06_SCOPE D33: panel hai nhóm selected places chưa xếp và saved POOL activities; chọn địa điểm mở editor prefill, tạo chỉ sau explicit submit qua create contract. |
+| PLN03 |439:2497 có map trong Plan; Gateway RuntimeTimeline chưa có day-map; PlanView preview có nút Hiện bản đồ disabled | APPROVED_CP06_SCOPE D33: map/pool là alternative right panel; scoped day markers khi provider thật sẵn có, unavailable/list fallback khi thiếu; không vẽ route/travel giả. |
+| PLN04 | Source có travel totals/connectors, online avatars/cursor, share và thêm ngày | APPROVED_CP06_SCOPE D33: giữ bốn metrics với scope rõ và unavailable trung thực; không presence/share/Add day giả. |
+| PLN05 | Source có thumbnail cho activity; Gateway decoder đặt cover:null | APPROVED_CP06_SCOPE D33: type icon/badge và cover thật nếu có, thiếu thì neutral/empty; shared TripHero giữ đến khi asset delta riêng. |
 | PLN06 | Source text muted và controls nhỏ hơn current accessible adaptations | Đo contrast và target từng cặp; trình token delta có số liệu. Giữ accessibility invariants, không đổi palette toàn app để xử lý một cặp màu. |
-| PLN07 | Source chưa chứng minh đủ error/unknown/conflict/editor field states | Bổ sung trạng thái vào vùng hiện có, giữ command hook; xem PLAN_SPEC. Copy/layout bổ sung vẫn phải review, không đồng nghĩa Backend capability mới. |
+| PLN07 | Source chưa chứng minh đủ error/unknown/conflict/editor field states | APPROVED_CP06_SCOPE D33: feedback/reconcile gần timeline và trong editor; giữ command hook/recovery, không toast-only hoặc Finance lifecycle. |
 
 ## Home/Auth — khác biệt cụ thể cần review
 
@@ -69,7 +71,7 @@ Tất cả `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_S
 
 ## Members — khác biệt cụ thể cần review
 
-`DELTA_PENDING`, source/code/field/state details: [Members spec](MEMBERS_SPEC.md).
+`DELTA_PENDING`, source/code/field/state details: [Members spec](MEMBERS_SPEC.md). D38 mở CP08, không duyệt mặc định các mã này. [CP08 decision packet](CP08_DESIGN_DECISIONS.md) cụ thể hóa MBR01–MBR05 sau source/contract audit W01 ngày01/11/2026; cần explicit approval trước W02–W05. Recipient299:2010 còn gate đọc design context thành công trước W05 UI edits.
 
 | ID | Gap | Review proposal |
 |---|---|---|
@@ -89,7 +91,7 @@ Tất cả `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_S
 | XRT01 | Trip create source có destination/map/style/budget/cover ngoài current create | APPROVED D29: source two-column Web desktop, supported fields trái, capability explanation phải; narrow form trước side panel; no wizard/API expansion or fake controls. Gateway screenshot/QA phải dùng runtime thật. |
 | XRT02 | Custom create-success dialog/focus, “Tiếp tục chỉnh sửa” chỉ dismiss | APPROVED D29: giữ visual/source mascot, dùng shared accessible overlay behavior; primary mở Trip, secondary “Đóng thông báo” xóa form draft cũ sau success. Không auto POST/navigation khi đóng. |
 | XRT03 | Overview/settings source data/reminder/lifecycle khác actual | Giữ section order, per-panel unknown/error/capability; name/description/publicDescription edit, other fields không tự active. |
-| XRT04 | Map/Dress/Packing source interactive controls vs Gateway read projection | Source-shaped read-only surfaces + explicit capability, preserve preview separately; no pretend map/provider/upload/apply/save. |
+| XRT04 | Map/Dress/Packing source interactive controls vs Gateway read projection | APPROVED_CP07_SCOPE theo D36 **chỉ** ba phương án CP07-M01/D01/P01 trong [CP07 decision packet](CP07_DESIGN_DECISIONS.md): source-shaped read-only Gateway surfaces + explicit capability, preserve Preview separately; no pretend map/provider/upload/apply/save. Màu/font/motion/asset departures khác vẫn pending. |
 | XRT05 | Price source form phải/chart, runtime Drawer/UTC details | APPROVED_LAYOUT D18 chỉ placement: form phải desktop, dưới nội dung khi Web hẹp. Chart/table/copy còn review; retain UTC/all passengers, stop not delete, MOCK_FLIGHT label. |
 | XRT06 | Profile push devices/Notifications full-page/bulk filters khác runtime | Keep profile source cards with actual sessions/preferences; inbox stays existing Drawer, per-item read, no new route/push registration. |
 | XRT07 | Admin/404 no canonical implemented design | Current guarded Admin placeholder;404 shared-shell heading/explanation/home recovery, no fake KPIs/business UI. |

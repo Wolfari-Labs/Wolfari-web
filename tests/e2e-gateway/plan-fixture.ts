@@ -9,9 +9,9 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     title,
     position,
     description: null as string | null,
-    public_description: null,
+    public_description: null as string | null,
     activity_type: 'WALK',
-    selected_location_id: null,
+    selected_location_id: null as string | null,
     scheduled_date: null as string | null,
     starts_at: null as string | null,
     ends_at: null as string | null,
@@ -27,6 +27,7 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     activity('55555555-2222-4222-8222-222222222222', 'Ăn sáng', 1),
   ];
   const controls = { conflictNext: false, forbidden: false };
+  const selectedLocations: Record<string, unknown>[] = [];
   const writes: { method: string; body: Record<string, unknown>; key: string }[] = [];
   await page.route(`**/api/v1/trips/${tripId}/**`, async (route) => {
     const request = route.request();
@@ -41,7 +42,10 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
         plan_version: trip.plan_version,
         export_revision: trip.export_revision,
         activities,
-        selected_locations: [],
+        selected_locations: selectedLocations.map((location) => ({
+          ...location,
+          plan_version: trip.plan_version,
+        })),
         dress_codes: [],
         packing_items: [],
         permissions: {
@@ -83,6 +87,12 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
           Number(body.position),
         ),
         activity_type: String(body.activity_type),
+        selected_location_id: body.selected_location_id as string | null,
+        scheduled_date: body.scheduled_date as string | null,
+        starts_at: body.starts_at as string | null,
+        ends_at: body.ends_at as string | null,
+        description: body.description as string | null,
+        public_description: body.public_description as string | null,
       });
     } else if (id === 'order') {
       const ids = body.activity_ids as string[];
@@ -105,7 +115,14 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
       const selected = activities.find((item) => item.id === id)!;
       if (typeof body.title === 'string') selected.title = body.title;
       if (typeof body.activity_type === 'string') selected.activity_type = body.activity_type;
-      for (const key of ['scheduled_date', 'starts_at', 'ends_at', 'description'] as const) {
+      for (const key of [
+        'scheduled_date',
+        'starts_at',
+        'ends_at',
+        'description',
+        'public_description',
+        'selected_location_id',
+      ] as const) {
         if (key in body) selected[key] = body[key] as string | null;
       }
     }
@@ -120,5 +137,5 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
           ),
     );
   });
-  return { writes, controls, activities };
+  return { writes, controls, activities, selectedLocations };
 }

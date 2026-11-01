@@ -1,6 +1,6 @@
 # CP-05 — nghiệm thu Trips Web
 
-Ngày31/10/2026: **READY_FOR_REVIEW** sau W01–W13 và remediation D29/D30; CP-05 chưa được người dùng APPROVED. Snapshot W01–W07 ngày30/10 và các lượt FAIL lịch sử vẫn được giữ trong [verification](CP05_VERIFICATION.md). Hồ sơ: [record](checkpoints/CP-05.md), [ảnh và provenance](evidence/cp05/qa/README.md), [contracts](INTEGRATION_CONTRACTS.md).
+Ngày31/10/2026: **APPROVED / DONE theo D32** sau W01–W13 và remediation D29/D30. Người dùng đã chấp thuận checkpoint và yêu cầu mở CP06. Snapshot W01–W07 ngày30/10, các lượt FAIL lịch sử và NOT_RUN vẫn được giữ trong [verification](CP05_VERIFICATION.md). Hồ sơ: [record](checkpoints/CP-05.md), [ảnh và provenance](evidence/cp05/qa/README.md), [contracts](INTEGRATION_CONTRACTS.md).
 
 ## Deliverables và Definition of Done
 
@@ -20,4 +20,4 @@ Live Backend, production environment, manual screen reader, thiết bị vật l
 
 ## Stop
 
-CP-05 **READY_FOR_REVIEW** sau W01–W13, chờ người dùng nghiệm thu riêng. Dừng trước CP-06; không commit/push.
+CP-05 **APPROVED / DONE** theo user/D32. CP-06 được mở bằng chỉ thị riêng; D32 không phê duyệt các design delta còn pending. Không commit/push trong lượt ghi nhận này.

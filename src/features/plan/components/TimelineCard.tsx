@@ -12,6 +12,8 @@ export function TimelineCard({
   actions,
   handle,
   cover,
+  typeIcon,
+  compact = false,
 }: {
   title: string;
   time: string;
@@ -21,10 +23,12 @@ export function TimelineCard({
   actions?: ReactNode;
   handle?: ReactNode;
   cover?: { src: string; alt: string } | null;
+  typeIcon?: string | null;
+  compact?: boolean;
 }) {
   return (
     <m.div
-      className={styles.card}
+      className={`${styles.card} ${compact ? styles.compact : ''}`}
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.22 }}
@@ -35,6 +39,11 @@ export function TimelineCard({
         {handle}
       </div>
       <div className={styles.body}>
+        {typeIcon && (
+          <span className={styles.typeIcon} aria-hidden="true">
+            <img src={typeIcon} alt="" width="24" height="24" />
+          </span>
+        )}
         <div className={styles.copy}>
           <h3>{title}</h3>
           {description && <p>{description}</p>}

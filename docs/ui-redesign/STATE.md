@@ -1,6 +1,25 @@
 # Trạng thái thực thi
 
-## Hiện tại — CP05 READY_FOR_REVIEW, 31/10/2026
+## Hiện tại — CP08 IN_PROGRESS, 01/11/2026
+
+- User chấp thuận CP07 theo D38; [CP07](checkpoints/CP-07.md) **APPROVED/DONE**, giữ toàn bộ test-mode/failure history/NOT_RUN trong [acceptance](CP07_ACCEPTANCE.md). [CP08](checkpoints/CP-08.md) mở đúng MASTER_PLAN cho `T/members`, `/invitations`, `/invitations/local`, Owner/Member lifecycle, invitations và PlanEditPolicy Web; STOP trước CP09.
+- W01 **COMPLETE**: scope/dependencies/acceptance, Git và actual source/contracts đã đối chiếu. Branch `draft/demo-ui-ux`, HEAD `4a4ff2687aac675c6614d92025534bf11afac3e0` khớp local origin tracking ref, không fetch. Giữ dirty CP06/CP07 và `DANH_GIA_CHI_TIET_GIAO_DIEN.md` ngoài scope. Members/infrastructure/package/lock không có diff; Backend worktree sạch. Chỉ cập nhật tài liệu trong W01, không commit/push/Backend/dependency/Figma writes.
+- Baseline **PASS**: Vitest6 files/114 tests và Vite dev Gateway HTTP-mock E2E10/10. Đây là trước implementation CP08, không là QA nghiệm thu hoặc live Backend. [Verification](CP08_VERIFICATION.md) ghi lệnh, contract boundaries và NOT_RUN. Figma context đã đọc thành công Members768:7492, owner invite475:2294, policy475:2530; không full resurvey. Recipient299:2010 lỗi `Transport closed` ở hai lần đọc; ảnh official lịch sử không thay gate design context trước W05.
+- Next exact action: **chờ user duyệt riêng MBR01–MBR05 trong [decision packet](CP08_DESIGN_DECISIONS.md)** theo D17; W02–W05 `PENDING_DESIGN_APPROVAL`, chưa sửa UI/tests. Sau approval: tiếp tục W02 Members/lifecycle, rồi W03 Owner invitations/W04 Policy; W05 chỉ sửa UI sau khi đọc context recipient thành công. W06 QA/W07 acceptance chưa thực hiện, CP08 chưa đạt DoD và chưa READY_FOR_REVIEW.
+- W01 consistency: inventory/link verifier59 Markdown/580 local links/22 routes, strict UTF-8/whitespace/conflict scan60 Markdown và `git diff --check` PASS. Backend sạch; source/integration/package boundaries không đổi. Các kết quả này kiểm tra hồ sơ/baseline, không thay W06 QA.
+
+## Snapshot CP07 — lịch sử trước D38
+
+- User chấp thuận CP06 theo D35; [CP06](checkpoints/CP-06.md) **APPROVED/DONE** với các giới hạn trong [acceptance](CP06_ACCEPTANCE.md) được giữ nguyên. [CP07](checkpoints/CP-07.md) **READY_FOR_REVIEW**, W01–W06 complete trong scope Map/Dress/Packing Web D35/D36. W05: lint/typecheck, 571 unit, production/preview builds, Gateway projection11/11, composition15/15, native Chrome zoom1/1 và Preview fixture28/28 + Packing sau sửa4/4 PASS. [Verification](CP07_VERIFICATION.md) phân biệt HTTP-mock/fixture/Places mock và NOT_RUN; [evidence](evidence/cp07/README.md) có Gateway trước/sau, axe/zoom. W06: [acceptance](CP07_ACCEPTANCE.md), route/decision/state/record đồng bộ. Packing Gateway hẹp đủ assignee/due; Preview denied giữ disabled controls cũ. Next exact action: **STOP, chờ explicit user approval CP07 trước CP08**. Không commit/push/Backend/dependency/Figma writes.
+
+## Snapshot CP06 — lịch sử trước D35
+
+- User duyệt CP05 và mở CP06 theo D32. [CP05](checkpoints/CP-05.md) **APPROVED/DONE**, giữ nguyên FAIL/NOT_RUN trong [nghiệm thu](CP05_ACCEPTANCE.md). [CP06](checkpoints/CP-06.md) **READY_FOR_REVIEW** W01–W07 complete; scope chỉ Lịch trình Web. D18 duyệt editor giữa màn hình + đủ fields hiện có; D33 duyệt riêng PLN01–05, PLN07, Plan-only DLT09 đúng [packet](CP06_DESIGN_DECISIONS.md). PLN06 và delta khác pending. [Acceptance](CP06_ACCEPTANCE.md) ghi native Gateway zoom/live/manual limits. STOP trước CP07, chờ user approval CP06.
+- Git tại W01 sạch trên `draft/demo-ui-ux`, HEAD `4a4ff2687aac675c6614d92025534bf11afac3e0`, trùng origin tracking branch. Commit đã có trước lượt này; CP06 source/docs/tests/evidence now dirty by design; no commit/push. W02 editor14/14 + Gateway11/11, W03 read-only/contract64/64 + Gateway1/1, W04–W07 focused unit83/83, Gateway Plan17/17, typecheck/build and targeted lint/format/diff-check PASS. Five Web viewport composition screenshots reviewed; native Gateway Plan zoom200%, live Backend, manual screen reader, physical device and performance NOT_RUN. CP05 source/docs/evidence and Backend boundary preserved. Exact next action: STOP and await explicit CP06 approval before CP07.
+
+- Final consistency check01/11/2026: đồng bộ tiêu đề STATE và trạng thái ROUTE_MATRIX với D34; typecheck và git diff --check chạy lại PASS. HEAD khớp local origin tracking ref; Backend worktree sạch, diff infrastructure/package/lock rỗng. Không chạy lại unit/E2E/build trong bước docs-only này; giữ kết quả và giới hạn W04–W07. STOP chờ duyệt CP06.
+
+## Snapshot CP05 — lịch sử trước D32
 
 - User chốt A1–A6/D29 và CP05-A03/D30; W08–W13 COMPLETE, CP05 chờ người dùng nghiệm thu riêng, CP06 chưa mở. XRT01/02, CP04-R01/R02 và D30 chỉ áp dụng đúng phần đã duyệt; XRT03 pending. Scoped Figma MCP `get_design_context` node3:30 đã đọc thành công, không full resurvey. Không sửa Backend/dependencies/Figma hoặc Git history.
 - W09/W12 Create success: shared Radix Drawer center, copy “Đóng thông báo”, reset draft sau confirmed success; Gateway built HTTP-mock modal2/2 và full57/57 PASS xác nhận primary initial focus, Escape/secondary return focus, draft reset, không extra POST và sampled axe0 tại1440/402. Gateway layout1440 form780/panel436/gap24 theo source3:30; Web402/320 form trước panel, không tràn ngang. Ảnh/báo cáo cuối ở [QA](evidence/cp05/qa/README.md).
@@ -12,6 +31,7 @@
 - Active checkpoint: [CP-05](checkpoints/CP-05.md) **READY_FOR_REVIEW**; W01–W13 COMPLETE, [nghiệm thu](CP05_ACCEPTANCE.md). Scope `/trips`, `/trips/new`, Trip overview, `T/settings` và D29 Shell/Home sửa có giới hạn; Web only. STOP trước CP06, chờ user approval.
 
 ## Snapshot W01–W07 — lịch sử trước D29
+
 - W01 COMPLETE: đọc AGENTS/master/state/CP04/decisions/route gaps/source map/deltas/contracts; xác minh Git `draft/demo-ui-ux` / `dc99219241c4cf36d0952115fc93f646d4fc1581` với toàn bộ CP03/04 changes còn uncommitted/untracked, `git diff --check` PASS (line-ending warnings); không reset/overwrite. Dependencies, DoD và integration invariants đã kiểm tra. Figma official inventory còn đủ; scoped source review hoàn tất trong W02–W06, không full resurvey.
 - W02 Trips list COMPLETE: source3:29, loaded-only filter/count/search/sort, truthful cursor-empty/no-match và stale refresh state; focused Vitest17/17, targeted ESLint/Prettier/diff-check PASS. W03 Create COMPLETE: source3:30 basic form copy, field errors/focus, actor-scoped draft/immutable idempotency; focused Vitest4/4, Gateway HTTP-mock1/1, typecheck, targeted lint/format/diff-check PASS. W04 Overview COMPLETE: source3:31/32, bốn summary/ba workspace panels, per-panel states, Map/Price Watch route thật; Vitest9/9, fixture overview17/17, Gateway HTTP-mock2/2, typecheck/lint/format/diff-check PASS. W05 Settings COMPLETE: retryable conflict-refetch giữ draft/khóa Save đến khi tải lại, 403/404 hiện state riêng; focused Vitest11/11, targeted lint/format/diff-check PASS.
 - W06 COMPLETE: [verification](CP05_VERIFICATION.md) và [visual QA](evidence/cp05/qa/README.md). Lint/typecheck,44 Vitest files/557 tests, production/preview builds PASS. Full built fixture194/196 trước D26/D27 (2 contrast FAIL), sau sửa approved CP05 focused5/5 PASS và native zoom1/1. Full built Gateway53/55 do new axe test thiếu mock fixture, đã sửa và focused2/2 PASS; không ghi full55/55. Đối chiếu5 source/runtime views,15 copied artifacts hash-match; sidebar Settings của Shell bị cắt22px lúc đầu nhưng focus cuộn cho đủ44px. Live Backend/manual screen reader/thiết bị thật NOT_RUN. Rà soát contract không thấy blocker mới; targeted format/inventory/UTF-8/diff-check PASS trước W07 docs.
@@ -54,6 +74,7 @@
 - Source chính thức: https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-Travel-Workspace
 - Branch/HEAD đã xác minh: draft/demo-ui-ux / dc99219241c4cf36d0952115fc93f646d4fc1581.
 - Git lúc mở CP02: untracked AGENTS.md và docs/ui-redesign; giữ nguyên toàn bộ evidence. Không source/tests/Backend/dependency edits, commit/push hoặc Figma writes.
+
 ## Lịch sử work units trước khi đóng theo D20
 
 Các trạng thái IN_PROGRESS/PARTIAL dưới đây là lịch sử tại thời điểm thực hiện; status hiện tại là COMPLETE với ngoại lệ ở đầu hồ sơ.
@@ -85,6 +106,5 @@ CP02 docs verification30/10/2026: `node docs/ui-redesign/evidence/verify-invento
 - CP01 inventory:3 pages,7.239 FRAME nodes,175 components,17 sets,257 variables/5 collections;167 root/section-level records;22 routes. Evidence official/invalidated không sửa.
 - CP01 lint/typecheck/build PASS;44 files/545 unit tests PASS; fixture158 PASS/8 FAIL; Gateway HTTP-mock47 PASS/4 FAIL. Live Backend NOT_RUN. Chi tiết tại checkpoints/CP-01.md.
 - CP01 visual sampling18 Figma +6 baseline images; không phải full-state QA. Historical browser host/Chrome URL block, Code Connect plan restriction, native zoom/manual screen-reader/performance NOT_RUN không được suy ra hiện đã khắc phục.
--12 baseline E2E failures chưa root-cause. Không tự sửa code hoặc rerun mutation journeys trong CP02 design work.
+  -12 baseline E2E failures chưa root-cause. Không tự sửa code hoặc rerun mutation journeys trong CP02 design work.
 - Current runtime boundary: Notifications/PriceWatch wired; Map/Dress Gateway projection; Packing read-only; Admin placeholder. Contract constraints giữ nguyên.
-

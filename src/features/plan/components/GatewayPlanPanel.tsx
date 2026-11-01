@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { restorePlanCommand, type PlanCommandIntent } from '../model/plan-command-intent';
-import type { ActivityViewModel, PlanViewModel } from '../model/plan';
+import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { usePlanRepository } from '../repositories/plan-context';
 import { usePlanCommands } from '../hooks/use-plan-commands';
@@ -34,6 +34,7 @@ function ActivityForm({
   plan,
   disabled,
   targetDay,
+  suggestedLocation,
   onSubmit,
   onCancel,
 }: {
@@ -42,14 +43,17 @@ function ActivityForm({
   plan: PlanViewModel;
   disabled: boolean;
   targetDay?: string;
+  suggestedLocation?: SelectedLocationViewModel;
   onSubmit: (fields: import('../model/plan').ActivityCreateInput) => Promise<boolean>;
   onCancel: () => void;
 }) {
-  const [title, setTitle] = useState(activity?.title ?? '');
+  const [title, setTitle] = useState(activity?.title ?? suggestedLocation?.name ?? '');
   const [type, setType] = useState(activity?.activityType ?? 'SIGHTSEEING');
   const [description, setDescription] = useState(activity?.description ?? '');
   const [publicDescription, setPublicDescription] = useState(activity?.publicDescription ?? '');
-  const [location, setLocation] = useState(activity?.selectedLocationId ?? '');
+  const [location, setLocation] = useState(
+    activity?.selectedLocationId ?? suggestedLocation?.id ?? '',
+  );
   const [day, setDay] = useState(
     targetDay ??
       (activity?.startsAt
@@ -130,7 +134,6 @@ function ActivityForm({
       aria-label={activity ? 'Sửa hoạt động' : 'Thêm hoạt động'}
       noValidate
     >
-      <h3>{activity ? 'Sửa hoạt động' : 'Thêm hoạt động'}</h3>
       {error && <Alert tone="error">{error}</Alert>}
       <fieldset disabled={disabled}>
         <Input
@@ -141,6 +144,79 @@ function ActivityForm({
           maxLength={255}
           required
         />
+        <div className={styles.scheduleFields}>
+          <Input
+            label="Ngày bắt đầu hoặc ngày chưa có giờ"
+            type="date"
+            value={day}
+            min={localDate(trip.startAt, trip.timezone)}
+            max={lastTripDate(trip.endAt, trip.timezone)}
+            onChange={(event) => setDay(event.target.value)}
+          />
+          <Input
+            label="Giờ bắt đầu"
+            type="time"
+            value={start}
+            onChange={(event) => setStart(event.target.value)}
+          />
+          <Input
+            label="Giờ kết thúc"
+            type="time"
+            value={end}
+            onChange={(event) => setEnd(event.target.value)}
+          />
+        </div>
+        <div className={styles.scheduleOptions}>
+          <Input
+            label="Ngày kết thúc (nếu có giờ)"
+            type="date"
+            value={endDay}
+            min={day || undefined}
+            max={localDate(trip.endAt, trip.timezone)}
+            onChange={(event) => setEndDay(event.target.value)}
+          />
+          {activity?.startsAt && !day && (
+            <Button
+              variant="plain"
+              onClick={() => {
+                setDay(localDate(activity.startsAt!, trip.timezone));
+                setStart(clock(activity.startsAt, trip.timezone));
+                setEnd(clock(activity.endsAt, trip.timezone));
+              }}
+            >
+              Khôi phục giờ trước khi sửa
+            </Button>
+          )}
+          {day && (
+            <Button
+              variant="plain"
+              onClick={() => {
+                setDay('');
+                setStart('');
+                setEnd('');
+                setEndDay('');
+              }}
+            >
+              Bỏ ngày và giờ
+            </Button>
+          )}
+        </div>
+        <p className={styles.scheduleHint}>
+          Chọn ngày không cần giờ; có thể đặt giờ kết thúc vào ngày tiếp theo. Mọi thay đổi chỉ áp
+          dụng cho hoạt động này.
+        </p>
+        <Select
+          label="Địa điểm"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+        >
+          <option value="">Không liên kết địa điểm</option>
+          {plan.selectedLocations.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </Select>
         <Input
           label="Loại hoạt động"
           value={type}
@@ -158,80 +234,11 @@ function ActivityForm({
           value={publicDescription}
           onChange={(event) => setPublicDescription(event.target.value)}
         />
-        <Select
-          label="Địa điểm"
-          value={location}
-          onChange={(event) => setLocation(event.target.value)}
-        >
-          <option value="">Không liên kết địa điểm</option>
-          {plan.selectedLocations.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </Select>
-        <p>
-          Chọn ngày không cần giờ; có thể đặt giờ kết thúc vào ngày tiếp theo. Mọi thay đổi chỉ áp
-          dụng cho hoạt động này.
-        </p>
-        <Input
-          label="Ngày bắt đầu hoặc ngày chưa có giờ"
-          type="date"
-          value={day}
-          min={localDate(trip.startAt, trip.timezone)}
-          max={lastTripDate(trip.endAt, trip.timezone)}
-          onChange={(event) => setDay(event.target.value)}
-        />
-        {activity?.startsAt && !day && (
-          <Button
-            variant="plain"
-            onClick={() => {
-              setDay(localDate(activity.startsAt!, trip.timezone));
-              setStart(clock(activity.startsAt, trip.timezone));
-              setEnd(clock(activity.endsAt, trip.timezone));
-            }}
-          >
-            Khôi phục giờ trước khi sửa
-          </Button>
-        )}
-        <Input
-          label="Giờ bắt đầu"
-          type="time"
-          value={start}
-          onChange={(event) => setStart(event.target.value)}
-        />
-        <Input
-          label="Ngày kết thúc (nếu có giờ)"
-          type="date"
-          value={endDay}
-          min={day || undefined}
-          max={localDate(trip.endAt, trip.timezone)}
-          onChange={(event) => setEndDay(event.target.value)}
-        />
-        <Input
-          label="Giờ kết thúc"
-          type="time"
-          value={end}
-          onChange={(event) => setEnd(event.target.value)}
-        />
-        {day && (
-          <Button
-            variant="plain"
-            onClick={() => {
-              setDay('');
-              setStart('');
-              setEnd('');
-              setEndDay('');
-            }}
-          >
-            Bỏ ngày và giờ
-          </Button>
-        )}
-        <div className={styles.actions}>
-          <Button type="submit">Lưu</Button>
+        <div className={styles.formActions}>
           <Button variant="outline" onClick={onCancel}>
             Hủy chỉnh sửa
           </Button>
+          <Button type="submit">Lưu</Button>
         </div>
       </fieldset>
     </form>
@@ -269,6 +276,7 @@ export function GatewayPlanPanel({
     activity: ActivityViewModel | null;
     version: number;
     targetDay?: string;
+    suggestedLocation?: SelectedLocationViewModel;
   } | null>(null);
   const [confirm, setConfirm] = useState<ActivityViewModel | null>(null);
   const [confirmVersion, setConfirmVersion] = useState(0);
@@ -284,6 +292,19 @@ export function GatewayPlanPanel({
     onBusyChange(locked);
     return () => onBusyChange(false);
   }, [locked, onBusyChange]);
+  useEffect(() => {
+    if (!editing) return;
+    // A document-level CSS zoom scales fixed dialogs without shrinking viewport units.
+    // Keep the editor inside the visible viewport in that existing zoom mode.
+    const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
+    document.documentElement.style.setProperty(
+      '--plan-editor-inverse-zoom',
+      String(zoom > 0 ? 1 / zoom : 1),
+    );
+    return () => {
+      document.documentElement.style.removeProperty('--plan-editor-inverse-zoom');
+    };
+  }, [editing]);
   const close = () => {
     setEditing(null);
     setConfirm(null);
@@ -313,19 +334,8 @@ export function GatewayPlanPanel({
     [ids[index], ids[target]] = [ids[target]!, ids[index]!];
     await execute({ kind: 'reorder', activityIds: ids });
   };
-  return (
-    <section className={styles.panel} aria-label="Hoạt động trong lịch trình">
-      <header>
-        <h2>Lịch trình chung</h2>
-        <p>Cùng nhau tạo nên một hành trình đáng nhớ.</p>
-        <details>
-          <summary>Chi tiết đồng bộ</summary>
-          <p>
-            Phiên bản {plan.planVersion}. Đổi thứ tự giữ nguyên giờ. Ngày chưa có giờ cũng được lưu
-            và chia sẻ với thành viên.
-          </p>
-        </details>
-      </header>
+  const feedback = (
+    <div className={styles.feedback}>
       {!canEdit && (
         <Alert>
           Bạn có thể xem lịch trình
@@ -353,45 +363,59 @@ export function GatewayPlanPanel({
           )}
         </Alert>
       )}
-      <div className={styles.actions}>
-        {!editing && (
-          <Button
-            variant="outline"
-            disabled={commands.pending}
-            onClick={() => void commands.reconcile()}
-          >
-            Tải lại để đối chiếu
-          </Button>
-        )}
-        {commands.status === 'unknown' && !editing && (
-          <Button
-            disabled={!commands.canRetryUnknown || commands.pending}
-            onClick={async () => {
-              if (await commands.retryUnknown()) close();
-            }}
-          >
-            Thử lại đúng yêu cầu cũ
-          </Button>
-        )}
-        {canEdit && repository.createActivity && (
-          <Button
-            icon={<Icon name="plus" />}
-            ref={addRef}
-            disabled={locked || !!editing || !!confirm}
-            onClick={(event) => {
-              trigger.current = event.currentTarget;
-              setEditing({ activity: null, version: plan.planVersion });
-            }}
-          >
-            Thêm hoạt động
-          </Button>
-        )}
-      </div>
+      <details className={styles.syncDetails}>
+        <summary>Chi tiết đồng bộ</summary>
+        <p>
+          Phiên bản {plan.planVersion}. Đổi thứ tự giữ nguyên giờ. Ngày chưa có giờ cũng được lưu và
+          chia sẻ với thành viên.
+        </p>
+      </details>
+    </div>
+  );
+  const actions = (
+    <>
+      {!editing && (
+        <Button
+          variant="outline"
+          disabled={commands.pending}
+          onClick={() => void commands.reconcile()}
+        >
+          Tải lại để đối chiếu
+        </Button>
+      )}
+      {commands.status === 'unknown' && !editing && (
+        <Button
+          disabled={!commands.canRetryUnknown || commands.pending}
+          onClick={async () => {
+            if (await commands.retryUnknown()) close();
+          }}
+        >
+          Thử lại đúng yêu cầu cũ
+        </Button>
+      )}
+      {canEdit && repository.createActivity && (
+        <Button
+          icon={<Icon name="plus" />}
+          ref={addRef}
+          disabled={locked || !!editing || !!confirm}
+          onClick={(event) => {
+            trigger.current = event.currentTarget;
+            setEditing({ activity: null, version: plan.planVersion });
+          }}
+        >
+          Thêm hoạt động
+        </Button>
+      )}
+    </>
+  );
+  return (
+    <section className={styles.panel} aria-label="Hoạt động trong lịch trình">
       <Drawer
         returnFocusRef={trigger}
         open={!!editing}
-        label="Chỉnh sửa lịch trình"
-        side="right"
+        label={editing?.activity ? 'Chỉnh sửa hoạt động' : 'Thêm hoạt động'}
+        side="center"
+        className={styles.editorDialog ?? ''}
         onDismiss={close}
       >
         {editing && (
@@ -444,6 +468,9 @@ export function GatewayPlanPanel({
               trip={trip}
               plan={plan}
               {...(editing.targetDay !== undefined ? { targetDay: editing.targetDay } : {})}
+              {...(editing.suggestedLocation
+                ? { suggestedLocation: editing.suggestedLocation }
+                : {})}
               disabled={locked || !canEdit || editing.version !== plan.planVersion}
               onCancel={close}
               onSubmit={async (fields) => {
@@ -494,6 +521,12 @@ export function GatewayPlanPanel({
         plan={plan}
         disabled={locked || !!editing || !!confirm}
         canEdit={canEdit}
+        actions={actions}
+        feedback={feedback}
+        onCreateFromLocation={(location) => {
+          trigger.current = document.activeElement as HTMLElement;
+          setEditing({ activity: null, version: plan.planVersion, suggestedLocation: location });
+        }}
         onEdit={(activity) => {
           trigger.current = document.activeElement as HTMLElement;
           setEditing({ activity, version: plan.planVersion });

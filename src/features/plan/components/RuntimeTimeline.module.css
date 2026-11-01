@@ -1,19 +1,27 @@
-.toolbar {
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
+.workspace {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
 }
 .days {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   max-width: 100%;
-  overflow: auto;
-  padding: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 2px 8px;
+  margin-block: 14px 6px;
 }
 .days button {
   flex-shrink: 0;
+  min-width: 128px;
+  min-height: 54px;
+  border-radius: 8px;
+}
+.dayUtilities {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
 }
 .days [data-drop-target],
 .surface [data-drop-target] {
@@ -25,26 +33,92 @@
   color: var(--color-muted);
 }
 .surface {
-  background: rgb(255 255 255 / 60%);
-  padding: 18px;
+  background: white;
+  padding: 16px;
   border: 1px solid var(--color-line);
-  border-radius: 20px;
+  border-radius: 10px;
+  min-width: 0;
+  min-height: 498px;
+}
+.timelineHeader,
+.poolHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.timelineHeader > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.timelineHeader h2,
+.poolHeader h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+}
+.progress,
+.poolHeader span {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.timelineActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.poolGroup {
+  margin-top: 18px;
+}
+.poolGroup h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+.placeList {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.placeList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+}
+.placeList li > div {
   min-width: 0;
 }
-.surface > h3 {
-  font-size: 18px;
-  margin: 0 0 16px;
+.placeList strong,
+.placeList small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.placeList small {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 13px;
 }
 .list {
   display: grid;
-  gap: 16px;
+  gap: 10px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 .row {
   min-width: 0;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 .row[data-dragging] {
   opacity: 0.3;
@@ -70,7 +144,28 @@
   color: var(--color-muted);
 }
 @media (max-width: 768px) {
+  .days button {
+    min-width: 108px;
+  }
   .surface {
     padding: 12px;
+    min-height: 0;
+  }
+  .timelineHeader h2,
+  .poolHeader h2 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .timelineActions > button {
+    flex: 1 1 auto;
+  }
+}
+@media (max-width: 480px) {
+  .dayUtilities {
+    margin-left: 0;
+  }
+  .placeList li {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

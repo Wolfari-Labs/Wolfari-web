@@ -8,12 +8,18 @@ export function SplitPanel({
   primary,
   secondary,
   storageKey,
+  secondaryLabel = 'Hoạt động chưa xếp ngày',
+  initialSecondaryOpen = false,
+  onSecondaryDismiss,
 }: {
   primary: ReactNode;
   secondary: ReactNode;
   storageKey: string;
+  secondaryLabel?: string;
+  initialSecondaryOpen?: boolean;
+  onSecondaryDismiss?: () => void;
 }) {
-  const [wide, setWide] = useState(false),
+  const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1201px)').matches),
     [ratio] = useState(() => {
       try {
         const n = Number(window.localStorage.getItem(storageKey));
@@ -24,7 +30,7 @@ export function SplitPanel({
     });
   const ref = useRef<GroupImperativeHandle | null>(null);
   const poolTrigger = useRef<HTMLButtonElement>(null);
-  const [poolOpen, setPoolOpen] = useState(false);
+  const [poolOpen, setPoolOpen] = useState(initialSecondaryOpen);
   useEffect(() => {
     const media = window.matchMedia('(min-width: 1201px)');
     const update = () => setWide(media.matches);
@@ -41,15 +47,18 @@ export function SplitPanel({
           icon={<Icon name="packing" />}
           onClick={() => setPoolOpen(true)}
         >
-          Hoạt động chưa xếp ngày
+          {secondaryLabel}
         </Button>
         {primary}
         <Drawer
           open={poolOpen}
-          label="Hoạt động chưa xếp ngày"
+          label={secondaryLabel}
           side="right"
           returnFocusRef={poolTrigger}
-          onDismiss={() => setPoolOpen(false)}
+          onDismiss={() => {
+            setPoolOpen(false);
+            onSecondaryDismiss?.();
+          }}
         >
           {secondary}
         </Drawer>

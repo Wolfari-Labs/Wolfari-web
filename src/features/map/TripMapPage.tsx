@@ -34,11 +34,11 @@ import {
 } from './place-selection-store';
 import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
 import styles from './TripMapPage.module.css';
-import { DeferredReadPage } from '../plan/components/DeferredReadPage';
+import { GatewayMapPage } from './GatewayMapPage';
 
 export function TripMapPage() {
   const { previewEnabled } = useOutletContext<RouteContext>();
-  return previewEnabled ? <PreviewMapPage /> : <DeferredReadPage kind="map" />;
+  return previewEnabled ? <PreviewMapPage /> : <GatewayMapPage />;
 }
 function PreviewMapPage() {
   const { tripId = '' } = useParams();
