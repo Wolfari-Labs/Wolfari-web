@@ -38,7 +38,7 @@ export function Notifications({ actor }: { actor: string }) {
       <Drawer open={open} label="Thông báo" side="right" onDismiss={() => setOpen(false)}>
         {open && (
           <Suspense fallback={<ContentState state="loading" />}>
-            <Inbox actor={actor} onNavigate={() => setOpen(false)} />
+            <Inbox key={actor} actor={actor} onNavigate={() => setOpen(false)} />
           </Suspense>
         )}
       </Drawer>

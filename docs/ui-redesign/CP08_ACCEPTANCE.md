@@ -1,6 +1,6 @@
 # CP-08 acceptance — Members / Invitations / PlanEditPolicy Web
 
-**Status: READY_FOR_REVIEW, 01/11/2026.** W01–W07 are complete within D38/D41 and the approved MBR01–MBR05 packet. This is an implementation handoff, **not** user approval of CP-08. Stop before CP-09. Web only; no native/mobile product deliverable.
+**Status: APPROVED / DONE, 01/11/2026 (D43).** W01–W07 are complete within D38/D41 and the approved MBR01–MBR05 packet. User approval closes CP-08 while preserving every verification limit and NOT_RUN disposition below. CP-09 proceeds in its own record. Web only; no native/mobile product deliverable.
 
 ## Scope and outcome
 
@@ -24,4 +24,4 @@ Gateway Members now follows the official Web source hierarchy: trip banner and t
 
 ## Repository and stop
 
-Branch `draft/demo-ui-ux`, HEAD `6908b0b1b3debb5171dffdf358aa2029dc858172` is one commit ahead of the local origin tracking ref; CP08 changes remain uncommitted. An unrelated user edit in `DANH_GIA_CHI_TIET_GIAO_DIEN.md` was left untouched. Backend worktree is clean; no commit/push/deployment. **STOP: await explicit user approval of CP-08 before CP-09.** D41 approval covered MBR01–MBR05 only, not CP-08 acceptance or other pending design deltas.
+At the W07 acceptance snapshot, branch `draft/demo-ui-ux`, HEAD `6908b0b1b3debb5171dffdf358aa2029dc858172` was one commit ahead of the local origin tracking ref; CP08 changes remained uncommitted. An unrelated user edit in `DANH_GIA_CHI_TIET_GIAO_DIEN.md` was left untouched. Backend worktree was clean; no commit/push/deployment. The W07 stop gate awaited explicit CP-08 approval; the user subsequently granted it under D43 and opened CP-09. D41 approval covered MBR01–MBR05 only, not other pending design deltas.

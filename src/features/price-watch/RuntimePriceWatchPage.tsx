@@ -55,7 +55,9 @@ function Observations({
       {query.isPending && <ContentState state="loading" />}
       {query.isError && (
         <Alert tone="error">
-          Chưa tải được lịch sử.{' '}
+          {query.isFetchNextPageError
+            ? 'Không tải được trang lịch sử tiếp theo. Các quan sát đã tải vẫn được giữ.'
+            : 'Chưa tải được lịch sử quan sát.'}{' '}
           <Button
             variant="plain"
             onClick={() =>
@@ -74,24 +76,31 @@ function Observations({
               BigInt(latest.price) <= BigInt(watch.fields.threshold_price) ? 'success' : 'neutral'
             }
           >
-            Mới nhất trong dữ liệu đã tải
+            Quan sát gần nhất đã tải
           </Badge>
         </p>
       ) : (
         !query.isPending && !query.isError && <p>Chưa có giá quan sát.</p>
+      )}
+      {!!rows.length && (
+        <p>
+          Lịch sử chỉ gồm các quan sát đã tải; thời điểm quan sát và nhận dữ liệu ở từng dòng. Thời
+          gian hiển thị theo múi giờ thiết bị. Không xác nhận giá hiện tại hoặc giá thấp nhất của
+          toàn bộ lịch sử.
+        </p>
       )}
       <ul className={styles.list}>
         {rows.map((row) => (
           <li key={row.id}>
             <strong>{money(row.price)}</strong>
             <p>
-              {new Date(row.observedAt).toLocaleString('vi-VN')} · {row.provider}
+              Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn: {row.provider}
             </p>
             <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
           </li>
         ))}
       </ul>
-      {query.hasNextPage && (
+      {query.hasNextPage && !query.isFetchNextPageError && (
         <Button
           variant="outline"
           loading={query.isFetchingNextPage}
@@ -148,7 +157,10 @@ function WatchWorkspace({
   const [success, setSuccess] = useState('');
   const intent = useRef<WatchIntent | null>(null),
     inFlight = useRef(false),
-    alive = useRef(true);
+    alive = useRef(true),
+    formHeadingRef = useRef<HTMLHeadingElement>(null),
+    formTriggerRef = useRef<HTMLElement | null>(null),
+    formContextRef = useRef<HTMLElement>(null);
   const journalKey = `wolfari:price-watch:${trip.currentMembership.userId}:${trip.id}`;
   useEffect(() => {
     alive.current = true;
@@ -177,6 +189,34 @@ function WatchWorkspace({
     trip.archivedAt === null &&
     trip.lifecycle !== 'ARCHIVED' &&
     trip.currentMembership.leftAt === null;
+  const openForm = (item: RuntimeWatch | null) => {
+    if (editing) {
+      formHeadingRef.current?.focus({ preventScroll: true });
+      formHeadingRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      return;
+    }
+    formTriggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setEditing({ item });
+  };
+  const closeForm = () => {
+    if (busy) return;
+    const trigger = formTriggerRef.current;
+    formTriggerRef.current = null;
+    setEditing(null);
+    window.requestAnimationFrame(() => {
+      if (trigger?.isConnected && !trigger.hasAttribute('disabled')) trigger.focus();
+      else formContextRef.current?.focus();
+    });
+  };
+  useEffect(() => {
+    if (!editing) return;
+    const frame = window.requestAnimationFrame(() => {
+      formHeadingRef.current?.focus({ preventScroll: true });
+      formHeadingRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [editing]);
   const send = async (next: WatchIntent, retry = false) => {
     if (inFlight.current || storageBlocked || !writable || (blocked && !retry)) return;
     const signal = writeScope();
@@ -218,6 +258,14 @@ function WatchWorkspace({
       if (!alive.current || signal.aborted) return;
       setBlocked(false);
       setEditing(null);
+      if (editing) {
+        const trigger = formTriggerRef.current;
+        formTriggerRef.current = null;
+        window.requestAnimationFrame(() => {
+          if (trigger?.isConnected && !trigger.hasAttribute('disabled')) trigger.focus();
+          else formContextRef.current?.focus();
+        });
+      }
       setStop(null);
       setNotice('');
       setSuccess('Đã lưu thay đổi.');
@@ -299,153 +347,172 @@ function WatchWorkspace({
         <Badge tone="warning">MOCK_FLIGHT · Mô phỏng</Badge>
       </div>
       <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
-      {recovery}
-      <div className={styles.actions}>
-        <Button
-          icon={<Icon name="plus" />}
-          disabled={!writable || busy || blocked}
-          onClick={() => setEditing({ item: null })}
-        >
-          Tạo theo dõi
-        </Button>
-        <Button variant="outline" onClick={() => void query.refetch()} disabled={busy}>
-          Làm mới
-        </Button>
-      </div>
-      {query.isPending && <ContentState state="loading" />}
-      {query.isError && (
-        <Alert tone="error">
-          Không tải được danh sách.{' '}
-          <Button
-            variant="plain"
-            onClick={() =>
-              void (query.isFetchNextPageError ? query.fetchNextPage() : query.refetch())
-            }
-          >
-            Thử lại
-          </Button>
-        </Alert>
-      )}
-      {!query.isPending && !query.isError && !items.length && (
-        <div className={priceStyles.empty}>
-          <Icon name="price" size={40} />
-          <h2>Chờ một mức giá hợp lý</h2>
-          <p>Tạo theo dõi đầu tiên bằng mã sân bay, ngày đi và ngân sách của bạn.</p>
-        </div>
-      )}
-      <div className={priceStyles.grid}>
-        {items.map((item) => {
-          const own = item.ownerId === trip.currentMembership.userId,
-            active = item.status === 'ACTIVE' || item.status === 'PAUSED';
-          return (
-            <article key={item.id} className={priceStyles.card}>
-              <div className={priceStyles.heading}>
-                <Icon name="price" />
-                <Badge tone={item.status === 'ACTIVE' ? 'success' : 'neutral'}>
-                  {labels[item.status]}
-                </Badge>
-              </div>
-              <h2>
-                {item.fields.origin} <span aria-label="đến">→</span> {item.fields.destination}
-              </h2>
-              <p>
-                {item.fields.departure_date} ·{' '}
-                {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'}
-              </p>
-              <p className={styles.metadata}>Ngưỡng cảnh báo</p>
-              <strong className={styles.money}>{money(item.fields.threshold_price)}</strong>
-              <div className={styles.actions}>
-                <Button variant="outline" onClick={() => setSelected(item.id)}>
-                  Lịch sử giá
-                </Button>
-                {own && active && writable && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      disabled={busy || blocked}
-                      onClick={() => setEditing({ item })}
-                    >
-                      Sửa
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      disabled={busy || blocked}
-                      onClick={() =>
-                        void send({
-                          method: 'POST',
-                          path: `/api/v1/price-watches/${item.id}/${item.status === 'ACTIVE' ? 'pause' : 'resume'}`,
-                          body: { expected_version: item.version },
-                        })
-                      }
-                    >
-                      {item.status === 'ACTIVE' ? 'Tạm dừng' : 'Tiếp tục'}
-                    </Button>
-                  </>
-                )}
-                {active && writable && (own || trip.currentMembership.role === 'OWNER') && (
-                  <Button variant="ghost" disabled={busy || blocked} onClick={() => setStop(item)}>
-                    Dừng
-                  </Button>
-                )}
-              </div>
-            </article>
-          );
-        })}
-      </div>
-      {query.hasNextPage && (
-        <Button
-          variant="outline"
-          loading={query.isFetchingNextPage}
-          onClick={() => void query.fetchNextPage()}
-        >
-          Tải thêm theo dõi
-        </Button>
-      )}
-      <Drawer
-        open={!!editing}
-        label={editing?.item ? 'Sửa theo dõi giá' : 'Tạo theo dõi giá'}
-        side="right"
-        onDismiss={() => {
-          if (!busy) setEditing(null);
-        }}
-      >
-        {editing && (
-          <>
-            {recovery}
-            <PriceWatchForm
-              key={editing.item?.id ?? 'new'}
-              initial={editing.item}
-              timezone={trip.timezone}
-              busy={busy}
-              disabled={busy || blocked || !writable}
-              onSave={(fields) => {
-                const latest = editing.item ? items.find((i) => i.id === editing.item!.id) : null;
-                if (editing.item && latest?.version !== editing.item.version) {
-                  setNotice(
-                    'Phiên bản đã thay đổi. Đóng form và mở lại sau khi đối chiếu; không ghi đè.',
-                  );
-                  setBlocked(true);
-                  return;
+      {!editing && recovery}
+      <div className={priceStyles.workspace}>
+        <section className={priceStyles.workspaceMain} aria-label="Danh sách theo dõi giá">
+          <div className={styles.actions}>
+            <Button
+              icon={<Icon name="plus" />}
+              disabled={!writable || busy || blocked}
+              onClick={() => openForm(null)}
+            >
+              Tạo theo dõi
+            </Button>
+            <Button variant="outline" onClick={() => void query.refetch()} disabled={busy}>
+              Làm mới
+            </Button>
+          </div>
+          {query.isPending && <ContentState state="loading" />}
+          {query.isError && (
+            <Alert tone="error">
+              Không tải được danh sách.{' '}
+              <Button
+                variant="plain"
+                onClick={() =>
+                  void (query.isFetchNextPageError ? query.fetchNextPage() : query.refetch())
                 }
-                void send(
-                  editing.item
-                    ? {
-                        method: 'PATCH',
-                        path: `/api/v1/price-watches/${editing.item.id}`,
-                        body: { ...fields, expected_version: editing.item.version },
-                      }
-                    : {
-                        method: 'POST',
-                        path: `/api/v1/trips/${trip.id}/price-watches`,
-                        body: fields,
-                        key: crypto.randomUUID(),
-                      },
-                );
-              }}
-            />
-          </>
-        )}
-      </Drawer>
+              >
+                Thử lại
+              </Button>
+            </Alert>
+          )}
+          {!query.isPending && !query.isError && !items.length && (
+            <div className={priceStyles.empty}>
+              <Icon name="price" size={40} />
+              <h2>Chờ một mức giá hợp lý</h2>
+              <p>Tạo theo dõi đầu tiên bằng mã sân bay, ngày đi và ngân sách của bạn.</p>
+            </div>
+          )}
+          <div className={priceStyles.grid}>
+            {items.map((item) => {
+              const own = item.ownerId === trip.currentMembership.userId,
+                active = item.status === 'ACTIVE' || item.status === 'PAUSED';
+              return (
+                <article key={item.id} className={priceStyles.card}>
+                  <div className={priceStyles.heading}>
+                    <Icon name="price" />
+                    <Badge tone={item.status === 'ACTIVE' ? 'success' : 'neutral'}>
+                      {labels[item.status]}
+                    </Badge>
+                  </div>
+                  <h2>
+                    {item.fields.origin} <span aria-label="đến">→</span> {item.fields.destination}
+                  </h2>
+                  <p>
+                    {item.fields.departure_date} ·{' '}
+                    {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'}
+                  </p>
+                  <p className={styles.metadata}>Ngưỡng cảnh báo</p>
+                  <strong className={styles.money}>{money(item.fields.threshold_price)}</strong>
+                  <div className={styles.actions}>
+                    <Button variant="outline" onClick={() => setSelected(item.id)}>
+                      Lịch sử giá
+                    </Button>
+                    {own && active && writable && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          disabled={busy || blocked}
+                          onClick={() => openForm(item)}
+                        >
+                          Sửa
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          disabled={busy || blocked || !!editing}
+                          onClick={() =>
+                            void send({
+                              method: 'POST',
+                              path: `/api/v1/price-watches/${item.id}/${item.status === 'ACTIVE' ? 'pause' : 'resume'}`,
+                              body: { expected_version: item.version },
+                            })
+                          }
+                        >
+                          {item.status === 'ACTIVE' ? 'Tạm dừng' : 'Tiếp tục'}
+                        </Button>
+                      </>
+                    )}
+                    {active && writable && (own || trip.currentMembership.role === 'OWNER') && (
+                      <Button
+                        variant="ghost"
+                        disabled={busy || blocked || !!editing}
+                        onClick={() => setStop(item)}
+                      >
+                        Dừng
+                      </Button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+          {query.hasNextPage && (
+            <Button
+              variant="outline"
+              loading={query.isFetchingNextPage}
+              onClick={() => void query.fetchNextPage()}
+            >
+              Tải thêm theo dõi
+            </Button>
+          )}
+        </section>
+        <aside
+          ref={formContextRef}
+          className={priceStyles.context}
+          aria-label="Biểu mẫu theo dõi giá"
+          tabIndex={-1}
+        >
+          {editing && (
+            <>
+              <div className={priceStyles.contextHeader}>
+                <h2 ref={formHeadingRef} tabIndex={-1}>
+                  {editing.item ? 'Sửa theo dõi giá' : 'Tạo theo dõi giá'}
+                </h2>
+                <Button variant="outline" disabled={busy} onClick={closeForm}>
+                  Đóng biểu mẫu
+                </Button>
+              </div>
+              {recovery}
+              <PriceWatchForm
+                key={editing.item?.id ?? 'new'}
+                initial={editing.item}
+                timezone={trip.timezone}
+                busy={busy}
+                disabled={busy || blocked || !writable}
+                onSave={(fields) => {
+                  const latest = editing.item ? items.find((i) => i.id === editing.item!.id) : null;
+                  if (editing.item && latest?.version !== editing.item.version) {
+                    setNotice(
+                      'Phiên bản đã thay đổi. Đóng form và mở lại sau khi đối chiếu; không ghi đè.',
+                    );
+                    setBlocked(true);
+                    return;
+                  }
+                  void send(
+                    editing.item
+                      ? {
+                          method: 'PATCH',
+                          path: `/api/v1/price-watches/${editing.item.id}`,
+                          body: { ...fields, expected_version: editing.item.version },
+                        }
+                      : {
+                          method: 'POST',
+                          path: `/api/v1/trips/${trip.id}/price-watches`,
+                          body: fields,
+                          key: crypto.randomUUID(),
+                        },
+                  );
+                }}
+              />
+            </>
+          )}
+          {!editing && (
+            <div className={priceStyles.contextEmpty}>
+              <h2>Tạo theo dõi giá</h2>
+            </div>
+          )}
+        </aside>
+      </div>
       <Drawer
         open={!!current}
         label="Chi tiết theo dõi giá"

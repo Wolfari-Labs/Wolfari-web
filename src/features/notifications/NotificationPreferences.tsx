@@ -65,11 +65,14 @@ export function NotificationPreferences({ actor }: { actor: string }) {
       setSuccess('Đã lưu tùy chọn thông báo.');
     } catch (error) {
       if (signal.aborted) return;
-      setConflict(true);
+      const failure = commandFailure(error);
+      setConflict(failure.conflict || failure.uncertain);
       setMessage(
-        commandFailure(error).conflict
+        failure.conflict
           ? 'Tùy chọn đã thay đổi. Bản nhập được giữ; tải lại để đối chiếu trước khi lưu.'
-          : 'Chưa xác nhận được kết quả. Tải lại tùy chọn để đối chiếu trước khi gửi tiếp.',
+          : failure.uncertain
+            ? 'Chưa xác nhận được kết quả. Tải lại tùy chọn để đối chiếu trước khi gửi tiếp.'
+            : 'Yêu cầu bị từ chối. Kiểm tra dữ liệu hoặc quyền rồi thử lại.',
       );
     } finally {
       inFlight.current = false;

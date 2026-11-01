@@ -16,6 +16,17 @@ export const adminSections: { id: AdminSection; label: string; letter: string }[
   { id: 'audit', label: 'Audit & hỗ trợ', letter: 'A' },
   { id: 'configuration', label: 'Cấu hình', letter: 'C' },
 ];
+export function AdminPlaceholder() {
+  return (
+    <section className={styles.placeholder} role="status">
+      <h2>Chức năng quản trị chưa khả dụng</h2>
+      <p>
+        Các mục quản trị chưa được triển khai. Vai trò Admin không tự cấp quyền xem hoặc chỉnh sửa
+        chuyến đi.
+      </p>
+    </section>
+  );
+}
 export function AdminNavigation({
   section,
   allowed,

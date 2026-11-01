@@ -58,7 +58,7 @@ CP04 implementation theo D18/HMA04: public/trip Web header dùng logo trái/Menu
 
 ## Fund — khác biệt cụ thể cần review
 
-Tất cả `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_SPEC.md).
+FND01/FND02/FND04/FND05/FND06 là `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_SPEC.md) và phương án CP09 cụ thể tại [CP09 decision packet](CP09_DESIGN_DECISIONS.md). FND03 đã duyệt riêng phần placement theo D18.
 
 | ID | Gap | Review proposal |
 |---|---|---|
@@ -71,7 +71,7 @@ Tất cả `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_S
 
 ## Members — khác biệt cụ thể cần review
 
-`APPROVED_CP08_SCOPE` chỉ cho MBR01–MBR05 theo D41, source/code/field/state details: [Members spec](MEMBERS_SPEC.md) và [CP08 decision packet](CP08_DESIGN_DECISIONS.md). D38 chỉ mở checkpoint; D41 duyệt rõ năm mã ngày01/11/2026. Recipient card `299:2042` context đã đọc thành công trước W05, full parent `299:2010` Transport closed giữ như lịch sử. CP08 [READY_FOR_REVIEW](CP08_ACCEPTANCE.md) với QA limits; các delta khác vẫn pending.
+`APPROVED_CP08_SCOPE` chỉ cho MBR01–MBR05 theo D41, source/code/field/state details: [Members spec](MEMBERS_SPEC.md) và [CP08 decision packet](CP08_DESIGN_DECISIONS.md). D38 chỉ mở checkpoint; D41 duyệt rõ năm mã ngày01/11/2026. Recipient card `299:2042` context đã đọc thành công trước W05, full parent `299:2010` Transport closed giữ như lịch sử. CP08 [APPROVED/DONE](CP08_ACCEPTANCE.md) theo D43 với QA limits; các delta khác vẫn pending.
 
 | ID | Gap | Review proposal |
 |---|---|---|
@@ -92,9 +92,9 @@ Tất cả `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_S
 | XRT02 | Custom create-success dialog/focus, “Tiếp tục chỉnh sửa” chỉ dismiss | APPROVED D29: giữ visual/source mascot, dùng shared accessible overlay behavior; primary mở Trip, secondary “Đóng thông báo” xóa form draft cũ sau success. Không auto POST/navigation khi đóng. |
 | XRT03 | Overview/settings source data/reminder/lifecycle khác actual | Giữ section order, per-panel unknown/error/capability; name/description/publicDescription edit, other fields không tự active. |
 | XRT04 | Map/Dress/Packing source interactive controls vs Gateway read projection | APPROVED_CP07_SCOPE theo D36 **chỉ** ba phương án CP07-M01/D01/P01 trong [CP07 decision packet](CP07_DESIGN_DECISIONS.md): source-shaped read-only Gateway surfaces + explicit capability, preserve Preview separately; no pretend map/provider/upload/apply/save. Màu/font/motion/asset departures khác vẫn pending. |
-| XRT05 | Price source form phải/chart, runtime Drawer/UTC details | APPROVED_LAYOUT D18 chỉ placement: form phải desktop, dưới nội dung khi Web hẹp. Chart/table/copy còn review; retain UTC/all passengers, stop not delete, MOCK_FLIGHT label. |
-| XRT06 | Profile push devices/Notifications full-page/bulk filters khác runtime | Keep profile source cards with actual sessions/preferences; inbox stays existing Drawer, per-item read, no new route/push registration. |
-| XRT07 | Admin/404 no canonical implemented design | Current guarded Admin placeholder;404 shared-shell heading/explanation/home recovery, no fake KPIs/business UI. |
+| XRT05 | Price source form phải/chart, runtime Drawer/UTC details | APPROVED_LAYOUT D18 cho placement: form phải desktop, dưới nội dung khi Web hẹp. **PWT01 APPROVED D46** cho Gateway lịch sử dạng dòng quan sát thật, source/time/freshness/error; không dựng chart tĩnh hoặc suy giá thấp nhất. Source card decoration/palette và delta khác còn review. Retain UTC/all passengers, stop not delete, MOCK_FLIGHT label. [Decision packet](CP10_DESIGN_DECISIONS.md). |
+| XRT06 | Profile push devices/Notifications full-page/bulk filters khác runtime | **NTF01 APPROVED D45** trong [CP10 packet](CP10_DESIGN_DECISIONS.md): keep profile source cards/current sessions/preferences, inbox in existing Drawer/per-item read, no new route/bulk/push registration. |
+| XRT07 | Admin/404 no canonical implemented design | **ADM01 APPROVED D45** trong [CP10 packet](CP10_DESIGN_DECISIONS.md): guarded Admin placeholder with truthful same-geometry copy; no fake KPIs/business UI. 404 existing shared-shell recovery is outside CP10. |
 | PERF01 | No measured performance baseline | Proposed lab budgets/procedure in FOUNDATIONS_HANDOFF; review thresholds before enforcement. No current performance PASS. |
 
 ## Không phải thay đổi direction

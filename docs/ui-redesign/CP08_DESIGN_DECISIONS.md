@@ -2,7 +2,7 @@
 
 Status: **APPROVED_CP08_DELTAS** theo user approval ngày01/11/2026 (D41). D39 được giữ nguyên như hồ sơ lịch sử; D41 là approval hiện hành cho MBR01–MBR05. Chỉ Web; giữ Preview và Gateway riêng, không Backend/dependency/Figma writes. Các giới hạn/gate kỹ thuật vẫn giữ nguyên.
 
-**Current gate:** MBR01–MBR05 đã được người dùng duyệt rõ theo D41. W01–W07 hiện READY_FOR_REVIEW theo D42 và [acceptance](CP08_ACCEPTANCE.md); phải chờ duyệt CP08 rõ ràng trước CP09. D41 không miễn quality gates, không duyệt palette/font/motion/asset khác.
+**Current gate:** MBR01–MBR05 đã được người dùng duyệt rõ theo D41 và CP08 đã được user chấp thuận APPROVED/DONE theo D43. W01–W07 giữ nguyên các giới hạn trong D42 và [acceptance](CP08_ACCEPTANCE.md); D43 không duyệt palette/font/motion/asset khác hoặc các delta Finance.
 
 ## Nguồn và actual contracts
 
@@ -26,4 +26,4 @@ Status: **APPROVED_CP08_DELTAS** theo user approval ngày01/11/2026 (D41). D39 �
 
 User chỉ duyệt đúng năm hàng trên. Chưa đổi font, palette, duration, official assets hoặc thêm nghiệp vụ. Nếu browser đo ra contrast lỗi cần thay màu ngoài phần đã được duyệt, ghi delta riêng kèm evidence trước áp dụng. Không thêm transfer Owner, Fund Holder assignment, booking/refund, API hoặc giả total/recipient metadata để giống ảnh.
 
-W02 Members/lifecycle → W03 Invitations owner → W04 Policy → W05 Recipient → W06 QA → W07 acceptance đã hoàn tất với giới hạn trong [acceptance](CP08_ACCEPTANCE.md). **STOP trước CP09**, chờ user approval CP08; D41 không phải approval checkpoint.
+W02 Members/lifecycle → W03 Invitations owner → W04 Policy → W05 Recipient → W06 QA → W07 acceptance đã hoàn tất với giới hạn trong [acceptance](CP08_ACCEPTANCE.md). D41 chỉ là approval cho năm delta; user sau đó duyệt riêng checkpoint CP-08 theo D43 và mở CP-09. Stop gate trước CP-09 là trạng thái lịch sử đã được giải quyết.

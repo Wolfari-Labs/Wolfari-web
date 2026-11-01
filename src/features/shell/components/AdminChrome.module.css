@@ -8,6 +8,24 @@
   background: white;
   border-right: 1px solid #cfe8f2;
 }
+.placeholder {
+  padding: var(--space-48) var(--space-24);
+  text-align: center;
+  color: var(--color-muted);
+  max-width: 640px;
+  margin: 72px auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.placeholder h2 {
+  color: var(--color-ink);
+  font-size: var(--font-size-title);
+  font-weight: var(--weight-semibold);
+  line-height: var(--line-title);
+}
+.placeholder p {
+  line-height: 24px;
+}
 .brand {
   display: flex;
   align-items: center;

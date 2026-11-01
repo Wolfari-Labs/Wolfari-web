@@ -1,4 +1,4 @@
-import { useCallback, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
@@ -28,6 +28,7 @@ import { toDomainError, money } from '../../shared/lib/runtime-validation';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import type { MembershipViewModel } from '../members/model/members';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
+import fundStyles from './FundPage.module.css';
 
 export const formatVnd = (value: string | null) =>
   value === null ? 'Chưa đặt' : value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
@@ -382,6 +383,10 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   const op = useCommandSession(session, refresh);
   const [form, setForm] = useState<FormSpec | null>(null);
   const [instructionId, setInstructionId] = useState<string | null>(null);
+  const formHeadingRef = useRef<HTMLHeadingElement>(null);
+  const formTriggerRef = useRef<HTMLElement | null>(null);
+  const formContextRef = useRef<HTMLElement>(null);
+  const refreshButtonRef = useRef<HTMLButtonElement>(null);
   const fundQuery = useQuery({
     queryKey: ['finance', actor, trip.id, 'fund'],
     queryFn: ({ signal }) => runtime.fund(trip.id, signal),
@@ -449,7 +454,21 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     unresolved(op) ||
     trip.archivedAt !== null ||
     (fund !== null && fund.status !== 'OPEN');
-  const open = (kind: CommandKind, resource?: FormSpec['resource']) =>
+  const rememberFormTrigger = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      formTriggerRef.current = document.activeElement;
+    }
+  };
+  const focusOpenForm = () => {
+    formHeadingRef.current?.focus({ preventScroll: true });
+    formHeadingRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  };
+  const open = (kind: CommandKind, resource?: FormSpec['resource']) => {
+    if (form) {
+      focusOpenForm();
+      return;
+    }
+    rememberFormTrigger();
     setForm({
       kind,
       resource,
@@ -458,26 +477,91 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
         ...(resource ? { expected_version: resource.version } : {}),
       },
     });
+  };
+  const closeForm = useCallback(() => {
+    const trigger = formTriggerRef.current;
+    formTriggerRef.current = null;
+    setForm(null);
+    window.requestAnimationFrame(() => {
+      if (trigger?.isConnected && !trigger.hasAttribute('disabled')) trigger.focus();
+      else if (formContextRef.current) formContextRef.current.focus();
+      else refreshButtonRef.current?.focus();
+    });
+  }, []);
+  useEffect(() => {
+    if (!form) return;
+    const frame = window.requestAnimationFrame(() => {
+      formHeadingRef.current?.focus({ preventScroll: true });
+      formHeadingRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [form]);
   const data = <T extends { id: string }>(pages: { items: T[] }[] | undefined): T[] => [
     ...new Map((pages?.flatMap((p) => p.items) ?? []).map((row) => [row.id, row])).values(),
   ];
+  const renderContext = () => (
+    <aside
+      ref={formContextRef}
+      className={`${styles.panel} ${fundStyles.gatewayContext}`}
+      aria-label="Ngữ cảnh thao tác quỹ"
+      tabIndex={-1}
+    >
+      {form ? (
+        <>
+          <div className={styles.actions}>
+            <h2 ref={formHeadingRef} tabIndex={-1}>
+              {labels[form.kind]}
+            </h2>
+            <Button variant="outline" onClick={closeForm}>
+              Đóng biểu mẫu
+            </Button>
+          </div>
+          <FundCommandForm
+            key={form.kind + ':' + (form.resource?.id ?? '')}
+            spec={form}
+            trip={trip}
+            fund={fund}
+            destinations={destinations.data ?? []}
+            members={members}
+            session={session}
+            onClose={closeForm}
+          />
+        </>
+      ) : (
+        <div className={fundStyles.gatewayContextEmpty}>
+          <h2>Thao tác quỹ</h2>
+          <p>
+            Chọn một thao tác ở vùng dữ liệu bên trái. Biểu mẫu sẽ giữ nguyên vùng làm việc khi màn
+            hình hẹp.
+          </p>
+          <p>TEST · Không chuyển tiền thật. Đóng vùng này không hủy thao tác đang chờ đối soát.</p>
+        </div>
+      )}
+    </aside>
+  );
   return (
     <>
       <OperationStatus
         session={session}
         onReenter={() => {
           const i = op.intent;
-          if (i)
+          if (i) {
+            if (form) {
+              focusOpenForm();
+              return;
+            }
+            rememberFormTrigger();
             setForm({
               kind: i.kind,
               recovery: true,
               versions: i.versions,
               resource: destinations.data?.find((d) => d.id === i.resourceId),
             });
+          }
         }}
       />
       <div className={styles.actions}>
-        <Button variant="outline" onClick={refresh}>
+        <Button ref={refreshButtonRef} variant="outline" onClick={refresh}>
           Tải lại quỹ
         </Button>
         {membersQuery.hasNextPage && (
@@ -489,356 +573,356 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       {membersQuery.isError && (
         <QueryError error={membersQuery.error} retry={() => void membersQuery.refetch()} />
       )}
-      {fundQuery.isError ? (
-        <QueryError error={fundQuery.error} retry={() => void fundQuery.refetch()} />
-      ) : fundQuery.isPending ? (
-        <ContentState state="loading" />
-      ) : !fund ? (
-        <section className={styles.panel}>
-          <h2>Chuyến đi chưa bật quỹ</h2>
-          <p>Chủ chuyến có thể chọn người giữ quỹ và thêm thông tin nhận tiền thử nghiệm.</p>
-          {owner && (
-            <Button disabled={blocked || !members.length} onClick={() => open('enable')}>
-              Bật quỹ TEST
-            </Button>
+      {fundQuery.isSuccess && fund && (
+        <section className={styles.panel} aria-label="Trạng thái quỹ">
+          <h2>
+            <Icon name="fund" />
+            Quỹ nhóm{' '}
+            <Badge>
+              {(
+                { OPEN: 'Đang mở', CLOSED: 'Đã đóng', CLOSING: 'Đang chốt' } as Record<
+                  string,
+                  string
+                >
+              )[fund.status] ?? fund.status}
+            </Badge>
+          </h2>
+          <p>
+            <Badge tone="warning">TEST</Badge> · Chỉ ghi nhận thủ công, không chuyển tiền thật.
+          </p>
+          <p>
+            Người giữ quỹ: {name(fund.holder_user_id)} · {owner ? 'Bạn là chủ chuyến. ' : ''}
+            {holder ? 'Bạn là người giữ quỹ.' : ''}
+          </p>
+          {fund.status !== 'OPEN' && (
+            <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
           )}
-        </section>
-      ) : (
-        <>
-          <section className={styles.panel} aria-label="Trạng thái quỹ">
-            <h2>
-              <Icon name="fund" />
-              Quỹ nhóm{' '}
-              <Badge>
-                {(
-                  { OPEN: 'Đang mở', CLOSED: 'Đã đóng', CLOSING: 'Đang chốt' } as Record<
-                    string,
-                    string
-                  >
-                )[fund.status] ?? fund.status}
-              </Badge>
-            </h2>
-            <p>
-              <Badge tone="warning">TEST</Badge> · Chỉ ghi nhận thủ công, không chuyển tiền thật.
-            </p>
-            <p>
-              Người giữ quỹ: {name(fund.holder_user_id)} · {owner ? 'Bạn là chủ chuyến. ' : ''}
-              {holder ? 'Bạn là người giữ quỹ.' : ''}
-            </p>
-            {fund.status !== 'OPEN' && (
-              <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
-            )}
-            <div className={styles.grid}>
-              {[
-                ['Ngân sách', fund.budget_amount],
-                ['Số dư ghi sổ', fund.current_balance],
-                ['Đang giữ cho hoàn dư', fund.reserved_refund],
-                ['Số dư khả dụng', fund.available_balance],
-              ].map(([label, value]) => (
-                <div key={label} className={styles.stat}>
-                  <p>{label}</p>
-                  <strong className={styles.money}>{formatVnd(value ?? null)}</strong>
-                </div>
-              ))}
-            </div>
-            {owner && (
-              <div className={styles.actions}>
-                <Button disabled={blocked} onClick={() => open('budget')}>
-                  Sửa ngân sách
-                </Button>
-                <Button disabled={blocked} onClick={() => open('destination-create')}>
-                  Thêm đích nhận TEST
-                </Button>
+          <div className={styles.grid}>
+            {[
+              ['Ngân sách', fund.budget_amount],
+              ['Số dư ghi sổ', fund.current_balance],
+              ['Đang giữ cho hoàn dư', fund.reserved_refund],
+              ['Số dư khả dụng', fund.available_balance],
+            ].map(([label, value]) => (
+              <div key={label} className={styles.stat}>
+                <p>{label}</p>
+                <strong className={styles.money}>{formatVnd(value ?? null)}</strong>
               </div>
-            )}
-            <details>
-              <summary>Chi tiết hỗ trợ</summary>
-              <p>
-                Mã quỹ: {fund.id} · Finance version: {fund.finance_version}
-              </p>
-            </details>
-          </section>
-          <section className={styles.panel} aria-label="Đích nhận">
-            <h2>Đích nhận TEST</h2>
-            {destinations.isError ? (
-              <QueryError error={destinations.error} retry={() => void destinations.refetch()} />
-            ) : destinations.isPending ? (
-              <ContentState state="loading" />
-            ) : (
-              <ul className={styles.list}>
-                {destinations.data.map((d) => (
-                  <li key={d.id}>
-                    <strong>
-                      {d.destination_type === 'VIETQR' ? 'Tài khoản ngân hàng' : 'MOMO SANDBOX'} ·{' '}
-                      {d.active ? 'Đang hoạt động' : 'Đã tắt'}
-                    </strong>
-                    <p>
-                      {d.confirmed_by_holder_at
-                        ? 'Người giữ quỹ đã xác nhận'
-                        : 'Chờ người giữ quỹ xác nhận'}
-                    </p>
-                    {d.account_name && (
-                      <p>
-                        {d.bank_code} · {d.account_number} · {d.account_name}
-                      </p>
-                    )}
-                    {d.momo_phone && <p>MOMO SANDBOX · {d.momo_phone}</p>}
-                    <div className={styles.actions}>
-                      {owner && d.destination_type === 'VIETQR' && (
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => open('destination-edit', d)}
-                        >
-                          Sửa đích nhận
-                        </Button>
-                      )}
-                      {holder && d.active && !d.confirmed_by_holder_at && (
-                        <Button disabled={blocked} onClick={() => open('destination-confirm', d)}>
-                          Xác nhận đích nhận
-                        </Button>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-          <section className={styles.panel} aria-label="Đợt thu">
-            <h2>
-              <Icon name="plan" />
-              Đợt thu
-            </h2>
-            {owner && (
-              <Button
-                disabled={
-                  blocked ||
-                  !destinations.data?.some(
-                    (d) => d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
-                  )
-                }
-                onClick={() => open('request-create')}
-              >
-                Tạo đợt thu
+            ))}
+          </div>
+          {owner && (
+            <div className={styles.actions}>
+              <Button disabled={blocked} onClick={() => open('budget')}>
+                Sửa ngân sách
               </Button>
-            )}
-            {requests.isPending && <ContentState state="loading" />}
-            {requests.isSuccess && !data(requests.data?.pages).length && <p>Chưa có đợt thu.</p>}
-            {requests.isError && (
-              <QueryError
-                error={requests.error}
-                retry={() =>
-                  void (requests.isFetchNextPageError
-                    ? requests.fetchNextPage()
-                    : requests.refetch())
-                }
-              />
-            )}
-            <ul className={styles.list}>
-              {data(requests.data?.pages).map((r) => (
-                <li key={r.id}>
-                  <strong>
-                    {r.title} ·{' '}
-                    {r.status === 'OPEN'
-                      ? 'Đang thu'
-                      : r.status === 'CANCELLED'
-                        ? 'Đã hủy'
-                        : 'Đã đóng'}
-                  </strong>
-                  <p>
-                    {r.note ?? 'Không có ghi chú'} · {r.contributions.length} khoản trong đợt
-                  </p>
-                  <p>
-                    {r.due_at
-                      ? 'Hạn thu: ' +
-                        new Date(r.due_at).toLocaleString('vi-VN', { timeZone: trip.timezone })
-                      : 'Chưa đặt hạn thu'}
-                  </p>
-                  {owner && r.status === 'OPEN' && (
-                    <Button
-                      variant="outline"
-                      disabled={blocked}
-                      onClick={() => open('request-edit', r)}
-                    >
-                      Sửa đợt thu
-                    </Button>
-                  )}
-                </li>
-              ))}
-            </ul>
-            {requests.hasNextPage && (
-              <Button
-                loading={requests.isFetchingNextPage}
-                onClick={() => void requests.fetchNextPage()}
-              >
-                Tải thêm đợt thu
+              <Button disabled={blocked} onClick={() => open('destination-create')}>
+                Thêm đích nhận TEST
               </Button>
-            )}
-          </section>
-          <section className={styles.panel} aria-label="Các khoản đóng góp">
-            <h2>
-              <Icon name="members" />
-              Các khoản đóng góp
-            </h2>
-            {contributions.isPending && <ContentState state="loading" />}
-            {contributions.isSuccess && !data(contributions.data?.pages).length && (
-              <p>Chưa có khoản đóng góp.</p>
-            )}
-            {contributions.isError && (
-              <QueryError
-                error={contributions.error}
-                retry={() =>
-                  void (contributions.isFetchNextPageError
-                    ? contributions.fetchNextPage()
-                    : contributions.refetch())
-                }
-              />
-            )}
-            <ul className={styles.list}>
-              {data(contributions.data?.pages).map((c) => (
-                <li key={c.id} data-testid={'contribution-' + c.member_user_id}>
-                  <strong>
-                    {name(c.member_user_id)} · {formatVnd(c.amount)}
-                  </strong>
-                  <p>{statusLabels[c.status]}</p>
-                  {c.rejected_reason && <p>Lý do từ chối gần nhất: {c.rejected_reason}</p>}
-                  {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
-                  {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
-                  <div className={styles.actions}>
-                    {c.status === 'PENDING' && c.member_user_id === actor && (
-                      <>
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => setInstructionId(c.id)}
-                        >
-                          Xem hướng dẫn TEST
-                        </Button>
-                        <Button disabled={blocked} onClick={() => open('report', c)}>
-                          Báo đã chuyển TEST
-                        </Button>
-                      </>
-                    )}
-                    {c.status === 'TRANSFER_REPORTED' && holder && (
-                      <>
-                        <Button disabled={blocked} onClick={() => open('confirm', c)}>
-                          Xác nhận đã nhận TEST
-                        </Button>
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => open('reject', c)}
-                        >
-                          Từ chối báo chuyển
-                        </Button>
-                      </>
-                    )}
-                    {c.status === 'PENDING' && owner && (
-                      <>
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => open('amount', c)}
-                        >
-                          Sửa số tiền
-                        </Button>
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => open('waive', c)}
-                        >
-                          Miễn khoản đóng
-                        </Button>
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => open('cancel', c)}
-                        >
-                          Hủy khoản đóng
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-            {contributions.hasNextPage && (
-              <Button
-                loading={contributions.isFetchingNextPage}
-                onClick={() => void contributions.fetchNextPage()}
-              >
-                Tải thêm khoản đóng
-              </Button>
-            )}
-          </section>
-          <section className={styles.panel} aria-label="Lịch sử quỹ">
-            <h2>
-              <Icon name="fund" />
-              Lịch sử quỹ
-            </h2>
-            {ledger.isPending && <ContentState state="loading" />}
-            {ledger.isSuccess && !data(ledger.data?.pages).length && (
-              <p>Chưa có giao dịch được ghi nhận.</p>
-            )}
-            {ledger.isError && (
-              <QueryError
-                error={ledger.error}
-                retry={() =>
-                  void (ledger.isFetchNextPageError ? ledger.fetchNextPage() : ledger.refetch())
-                }
-              />
-            )}
-            <ul className={styles.list}>
-              {data(ledger.data?.pages).map((row) => (
-                <li key={row.id}>
-                  <strong>
-                    #{row.sequence} ·{' '}
-                    {
-                      {
-                        CONTRIBUTION: 'Đóng góp',
-                        EXPENSE: 'Chi quỹ',
-                        REFUND: 'Hoàn tiền',
-                        REVERSAL: 'Điều chỉnh',
-                      }[row.transaction_type]
-                    }{' '}
-                    · {row.direction === 'IN' ? '+ ' : '− '}
-                    {formatVnd(row.amount)}
-                  </strong>
-                  <p>Số dư sau bút toán: {formatVnd(row.balance_after)}</p>
-                </li>
-              ))}
-            </ul>
-            {ledger.hasNextPage && (
-              <Button
-                loading={ledger.isFetchingNextPage}
-                onClick={() => void ledger.fetchNextPage()}
-              >
-                Tải thêm lịch sử
-              </Button>
-            )}
-            <p>Lịch sử ghi nhận của quỹ. Các nghiệp vụ chi, hoàn dư và đóng quỹ chưa khả dụng.</p>
-          </section>
-        </>
+            </div>
+          )}
+          <details>
+            <summary>Chi tiết hỗ trợ</summary>
+            <p>
+              Mã quỹ: {fund.id} · Finance version: {fund.finance_version}
+            </p>
+          </details>
+        </section>
       )}
-      <Drawer
-        open={form !== null}
-        label={form ? labels[form.kind] : 'Thao tác quỹ'}
-        side="right"
-        onDismiss={() => setForm(null)}
-      >
-        {form && (
-          <FundCommandForm
-            key={form.kind + ':' + (form.resource?.id ?? '')}
-            spec={form}
-            trip={trip}
-            fund={fund}
-            destinations={destinations.data ?? []}
-            members={members}
-            session={session}
-            onClose={() => setForm(null)}
-          />
-        )}
-      </Drawer>
+      {/* Keep the context at a stable position so read-state changes cannot reset its draft. */}
+      <div className={fundQuery.isSuccess || form ? fundStyles.gatewayWorkspace : undefined}>
+        <div className={fundQuery.isSuccess || form ? fundStyles.gatewayMain : undefined}>
+          {fundQuery.isError ? (
+            <QueryError error={fundQuery.error} retry={() => void fundQuery.refetch()} />
+          ) : fundQuery.isPending ? (
+            <ContentState state="loading" />
+          ) : !fund ? (
+            <section className={styles.panel}>
+              <h2>Chuyến đi chưa bật quỹ</h2>
+              <p>Chủ chuyến có thể chọn người giữ quỹ và thêm thông tin nhận tiền thử nghiệm.</p>
+              {owner && (
+                <Button disabled={blocked || !members.length} onClick={() => open('enable')}>
+                  Bật quỹ TEST
+                </Button>
+              )}
+            </section>
+          ) : (
+            <>
+              <section className={styles.panel} aria-label="Đích nhận">
+                <h2>Đích nhận TEST</h2>
+                {destinations.isError ? (
+                  <QueryError
+                    error={destinations.error}
+                    retry={() => void destinations.refetch()}
+                  />
+                ) : destinations.isPending ? (
+                  <ContentState state="loading" />
+                ) : (
+                  <ul className={styles.list}>
+                    {destinations.data.map((d) => (
+                      <li key={d.id}>
+                        <strong>
+                          {d.destination_type === 'VIETQR' ? 'Tài khoản ngân hàng' : 'MOMO SANDBOX'}{' '}
+                          · {d.active ? 'Đang hoạt động' : 'Đã tắt'}
+                        </strong>
+                        <p>
+                          {d.confirmed_by_holder_at
+                            ? 'Người giữ quỹ đã xác nhận'
+                            : 'Chờ người giữ quỹ xác nhận'}
+                        </p>
+                        {d.account_name && (
+                          <p>
+                            {d.bank_code} · {d.account_number} · {d.account_name}
+                          </p>
+                        )}
+                        {d.momo_phone && <p>MOMO SANDBOX · {d.momo_phone}</p>}
+                        <div className={styles.actions}>
+                          {owner && d.destination_type === 'VIETQR' && (
+                            <Button
+                              variant="outline"
+                              disabled={blocked}
+                              onClick={() => open('destination-edit', d)}
+                            >
+                              Sửa đích nhận
+                            </Button>
+                          )}
+                          {holder && d.active && !d.confirmed_by_holder_at && (
+                            <Button
+                              disabled={blocked}
+                              onClick={() => open('destination-confirm', d)}
+                            >
+                              Xác nhận đích nhận
+                            </Button>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+              <section className={styles.panel} aria-label="Đợt thu">
+                <h2>
+                  <Icon name="plan" />
+                  Đợt thu
+                </h2>
+                {owner && (
+                  <Button
+                    disabled={
+                      blocked ||
+                      !destinations.data?.some(
+                        (d) =>
+                          d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
+                      )
+                    }
+                    onClick={() => open('request-create')}
+                  >
+                    Tạo đợt thu
+                  </Button>
+                )}
+                {requests.isPending && <ContentState state="loading" />}
+                {requests.isSuccess && !data(requests.data?.pages).length && (
+                  <p>Chưa có đợt thu.</p>
+                )}
+                {requests.isError && (
+                  <QueryError
+                    error={requests.error}
+                    retry={() =>
+                      void (requests.isFetchNextPageError
+                        ? requests.fetchNextPage()
+                        : requests.refetch())
+                    }
+                  />
+                )}
+                <ul className={styles.list}>
+                  {data(requests.data?.pages).map((r) => (
+                    <li key={r.id}>
+                      <strong>
+                        {r.title} ·{' '}
+                        {r.status === 'OPEN'
+                          ? 'Đang thu'
+                          : r.status === 'CANCELLED'
+                            ? 'Đã hủy'
+                            : 'Đã đóng'}
+                      </strong>
+                      <p>
+                        {r.note ?? 'Không có ghi chú'} · {r.contributions.length} khoản trong đợt
+                      </p>
+                      <p>
+                        {r.due_at
+                          ? 'Hạn thu: ' +
+                            new Date(r.due_at).toLocaleString('vi-VN', { timeZone: trip.timezone })
+                          : 'Chưa đặt hạn thu'}
+                      </p>
+                      {owner && r.status === 'OPEN' && (
+                        <Button
+                          variant="outline"
+                          disabled={blocked}
+                          onClick={() => open('request-edit', r)}
+                        >
+                          Sửa đợt thu
+                        </Button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                {requests.hasNextPage && (
+                  <Button
+                    loading={requests.isFetchingNextPage}
+                    onClick={() => void requests.fetchNextPage()}
+                  >
+                    Tải thêm đợt thu
+                  </Button>
+                )}
+              </section>
+              <section className={styles.panel} aria-label="Các khoản đóng góp">
+                <h2>
+                  <Icon name="members" />
+                  Các khoản đóng góp
+                </h2>
+                {contributions.isPending && <ContentState state="loading" />}
+                {contributions.isSuccess && !data(contributions.data?.pages).length && (
+                  <p>Chưa có khoản đóng góp.</p>
+                )}
+                {contributions.isError && (
+                  <QueryError
+                    error={contributions.error}
+                    retry={() =>
+                      void (contributions.isFetchNextPageError
+                        ? contributions.fetchNextPage()
+                        : contributions.refetch())
+                    }
+                  />
+                )}
+                <ul className={styles.list}>
+                  {data(contributions.data?.pages).map((c) => (
+                    <li key={c.id} data-testid={'contribution-' + c.member_user_id}>
+                      <strong>
+                        {name(c.member_user_id)} · {formatVnd(c.amount)}
+                      </strong>
+                      <p>{statusLabels[c.status]}</p>
+                      {c.rejected_reason && <p>Lý do từ chối gần nhất: {c.rejected_reason}</p>}
+                      {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
+                      {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
+                      <div className={styles.actions}>
+                        {c.status === 'PENDING' && c.member_user_id === actor && (
+                          <>
+                            <Button
+                              variant="outline"
+                              disabled={blocked}
+                              onClick={() => setInstructionId(c.id)}
+                            >
+                              Xem hướng dẫn TEST
+                            </Button>
+                            <Button disabled={blocked} onClick={() => open('report', c)}>
+                              Báo đã chuyển TEST
+                            </Button>
+                          </>
+                        )}
+                        {c.status === 'TRANSFER_REPORTED' && holder && (
+                          <>
+                            <Button disabled={blocked} onClick={() => open('confirm', c)}>
+                              Xác nhận đã nhận TEST
+                            </Button>
+                            <Button
+                              variant="outline"
+                              disabled={blocked}
+                              onClick={() => open('reject', c)}
+                            >
+                              Từ chối báo chuyển
+                            </Button>
+                          </>
+                        )}
+                        {c.status === 'PENDING' && owner && (
+                          <>
+                            <Button
+                              variant="outline"
+                              disabled={blocked}
+                              onClick={() => open('amount', c)}
+                            >
+                              Sửa số tiền
+                            </Button>
+                            <Button
+                              variant="outline"
+                              disabled={blocked}
+                              onClick={() => open('waive', c)}
+                            >
+                              Miễn khoản đóng
+                            </Button>
+                            <Button
+                              variant="outline"
+                              disabled={blocked}
+                              onClick={() => open('cancel', c)}
+                            >
+                              Hủy khoản đóng
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                {contributions.hasNextPage && (
+                  <Button
+                    loading={contributions.isFetchingNextPage}
+                    onClick={() => void contributions.fetchNextPage()}
+                  >
+                    Tải thêm khoản đóng
+                  </Button>
+                )}
+              </section>
+              <section className={styles.panel} aria-label="Lịch sử quỹ">
+                <h2>
+                  <Icon name="fund" />
+                  Lịch sử quỹ
+                </h2>
+                {ledger.isPending && <ContentState state="loading" />}
+                {ledger.isSuccess && !data(ledger.data?.pages).length && (
+                  <p>Chưa có giao dịch được ghi nhận.</p>
+                )}
+                {ledger.isError && (
+                  <QueryError
+                    error={ledger.error}
+                    retry={() =>
+                      void (ledger.isFetchNextPageError ? ledger.fetchNextPage() : ledger.refetch())
+                    }
+                  />
+                )}
+                <ul className={styles.list}>
+                  {data(ledger.data?.pages).map((row) => (
+                    <li key={row.id}>
+                      <strong>
+                        #{row.sequence} ·{' '}
+                        {
+                          {
+                            CONTRIBUTION: 'Đóng góp',
+                            EXPENSE: 'Chi quỹ',
+                            REFUND: 'Hoàn tiền',
+                            REVERSAL: 'Điều chỉnh',
+                          }[row.transaction_type]
+                        }{' '}
+                        · {row.direction === 'IN' ? '+ ' : '− '}
+                        {formatVnd(row.amount)}
+                      </strong>
+                      <p>Số dư sau bút toán: {formatVnd(row.balance_after)}</p>
+                    </li>
+                  ))}
+                </ul>
+                {ledger.hasNextPage && (
+                  <Button
+                    loading={ledger.isFetchingNextPage}
+                    onClick={() => void ledger.fetchNextPage()}
+                  >
+                    Tải thêm lịch sử
+                  </Button>
+                )}
+                <p>
+                  Lịch sử ghi nhận của quỹ. Các nghiệp vụ chi, hoàn dư và đóng quỹ chưa khả dụng.
+                </p>
+              </section>
+            </>
+          )}
+        </div>
+        {(fundQuery.isSuccess || form) && renderContext()}
+      </div>
       <Drawer
         open={instructionId !== null}
         label="Hướng dẫn chuyển TEST"

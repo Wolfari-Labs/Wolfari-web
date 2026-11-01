@@ -8,6 +8,7 @@ import { Icon } from '../../shared/components/Icon';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
 import { useWriteScope } from '../../shared/lib/use-write-scope';
+import { commandFailure } from '../../shared/lib/command-failure';
 import type { NotificationItem } from './notification.repository';
 import styles from './Notifications.module.css';
 function destination(item: NotificationItem) {
@@ -31,6 +32,7 @@ export default function NotificationInbox({
   const cache = useQueryClient(),
     [unread, setUnread] = useState(false),
     [error, setError] = useState(''),
+    [readUnknown, setReadUnknown] = useState(false),
     [marking, setMarking] = useState<string | null>(null);
   const inbox = useInfiniteQuery({
     queryKey: ['notifications', actor, 'inbox', unread],
@@ -51,7 +53,7 @@ export default function NotificationInbox({
     ).values(),
   ];
   const mark = async (id: string) => {
-    if (!repository || inFlight.current) return;
+    if (!repository || inFlight.current || readUnknown) return;
     const signal = writeScope();
     if (signal.aborted) return;
     inFlight.current = true;
@@ -61,8 +63,16 @@ export default function NotificationInbox({
       await repository.read(id, signal);
       if (signal.aborted) return;
       await cache.invalidateQueries({ queryKey: ['notifications', actor] });
-    } catch {
-      if (!signal.aborted) setError('Chưa thể đánh dấu đã đọc. Bạn có thể thử lại.');
+    } catch (cause) {
+      if (!signal.aborted) {
+        const uncertain = commandFailure(cause).uncertain;
+        setReadUnknown(uncertain);
+        setError(
+          uncertain
+            ? 'Chưa xác nhận được trạng thái đã đọc. Tải lại danh sách để đối chiếu trước khi thử tiếp.'
+            : 'Chưa thể đánh dấu đã đọc. Bạn có thể thử lại.',
+        );
+      }
     } finally {
       inFlight.current = false;
       if (!signal.aborted) setMarking(null);
@@ -90,7 +100,25 @@ export default function NotificationInbox({
               Chưa đọc
             </Button>
           </div>
-          {error && <Alert tone="error">{error}</Alert>}
+          {error && (
+            <Alert tone="error" live>
+              {error}
+              {readUnknown && (
+                <Button
+                  variant="plain"
+                  onClick={async () => {
+                    const result = await inbox.refetch();
+                    if (!result.isError) {
+                      setReadUnknown(false);
+                      setError('');
+                    }
+                  }}
+                >
+                  Tải lại danh sách
+                </Button>
+              )}
+            </Alert>
+          )}
           {inbox.isPending && <ContentState state="loading" />}
           {inbox.isError && (
             <Alert tone="error">
@@ -130,7 +158,7 @@ export default function NotificationInbox({
                     <Button
                       variant="plain"
                       loading={marking === item.id}
-                      disabled={!!marking}
+                      disabled={!!marking || readUnknown}
                       onClick={() => void mark(item.id)}
                     >
                       Đánh dấu đã đọc

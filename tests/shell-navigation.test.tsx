@@ -7,6 +7,7 @@ import { App } from '../src/app/App';
 import { createRouter } from '../src/app/router';
 import { createGatewayShellRepository } from '../src/infrastructure/repositories/shell.gateway-repository';
 import { ContentState } from '../src/shared/components/ContentState';
+import { AdminPlaceholder } from '../src/features/shell/components/AdminChrome';
 import {
   createFixtureShellRepository,
   previewTripId,
@@ -30,7 +31,7 @@ function mount() {
           { path: '/trips/:tripId/settings', element: <ContentState state="placeholder" /> },
           { path: '/trips', element: <ContentState state="placeholder" /> },
           { path: '/', element: <ContentState state="placeholder" /> },
-          { path: '/admin', element: <ContentState state="placeholder" /> },
+          { path: '/admin', element: <AdminPlaceholder /> },
         ],
       },
     ],
@@ -81,7 +82,7 @@ describe('Shell interactions', () => {
     expect(router.state.location.pathname).toBe('/admin');
     await screen.findByText('Bạn không có quyền truy cập');
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'admin');
-    await screen.findByText('Không gian làm việc');
+    await screen.findByText('Chức năng quản trị chưa khả dụng');
     expect(screen.queryByText('Bạn không có quyền truy cập')).not.toBeInTheDocument();
     const nav = screen.getByRole('navigation', { name: 'Điều hướng Admin' });
     await userEvent.click(within(nav).getByRole('button', { name: 'Tài khoản' }));

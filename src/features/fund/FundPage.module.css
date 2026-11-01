@@ -34,3 +34,12 @@
 @media (max-width: 1200px) { .stateBar { flex-wrap:wrap; }.stateBar > div { flex-basis:100%; }.workspace { grid-template-columns:minmax(0,1fr) minmax(280px,36%); }.tableHead,.row{grid-template-columns:28px 1.2fr 1fr 1fr 1fr 90px;font-size:12px}.tabs button{padding-inline:12px} }
 @media (max-width: 820px) { .page { padding:8px 16px 24px; }.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.formPanel{order:2}.ledger{order:1}.stateBar{align-items:flex-start}.stateBar button{flex:1}.holder{margin-left:auto}.table{overflow-x:auto}.tableHead,.row{min-width:680px} }
 @media (max-width: 520px) { .breadcrumb{gap:6px;font-size:12px;flex-wrap:wrap}.stateBar{margin-top:16px}.stateBar h2{font-size:20px;line-height:28px}.stateBar button{width:100%;flex-basis:100%}.holder{margin-left:0}.metrics{grid-template-columns:1fr;gap:12px}.metrics > div{min-height:94px}.workspace{gap:16px}.ledger{padding:12px 8px}.tabs{gap:6px}.tabs button{padding-inline:12px}.table{overflow:visible}.tableHead{display:none}.row{min-width:0;grid-template-columns:24px 1fr auto;gap:6px;padding:10px;min-height:72px}.row span:nth-of-type(2),.row span:nth-of-type(3){display:none}.row em{grid-column:3;grid-row:1 / span 2}.row b{grid-column:2}.twoFields{grid-template-columns:1fr}.formPanel{min-height:0}.page > :global(.preview){margin-top:16px} }
+.gatewayWorkspace { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,372px); gap:16px; align-items:start; margin-top:16px; }
+.gatewayMain { display:grid; gap:16px; min-width:0; }
+.gatewayMain > section { margin:0; }
+.gatewayContext { position:sticky; top:16px; min-width:0; margin:0; }
+.gatewayContext form { margin-top:14px; }
+.gatewayContextEmpty { min-height:220px; display:grid; align-content:center; gap:8px; }
+.gatewayContextEmpty p { margin:0; color:var(--color-muted); font-size:13px; line-height:20px; }
+@media (max-width:1024px) { .gatewayWorkspace{grid-template-columns:1fr}.gatewayContext{position:static;order:2}.gatewayMain{order:1} }
+@media (max-width:520px) { .gatewayContext{padding:12px} }

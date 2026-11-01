@@ -47,6 +47,8 @@ async function expectRouteContent(page: Page, route: string) {
     await expect(page.locator('[data-flow="members-preview"]')).toBeVisible();
   else if (/^\/trips\/[^/]+$/.test(route))
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
+  else if (route === '/admin')
+    await expect(page.getByText('Chức năng quản trị chưa khả dụng', { exact: true })).toBeVisible();
   else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
 }
 async function choose(page: Page, scenario: string) {
@@ -454,7 +456,7 @@ for (const size of [
     await page.goto('/admin');
     await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
     await choose(page, 'admin');
-    await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+    await expect(page.getByText('Chức năng quản trị chưa khả dụng', { exact: true })).toBeVisible();
     await loadedAssets(page);
     if (size.width > 768) {
       await page.screenshot({ path: info.outputPath('admin.png') });

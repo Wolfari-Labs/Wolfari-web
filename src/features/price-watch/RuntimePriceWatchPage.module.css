@@ -43,3 +43,53 @@
 .empty svg {
   color: var(--color-action-primary);
 }
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 372px);
+  gap: 16px;
+  align-items: start;
+  margin-block: 20px;
+}
+.workspaceMain {
+  min-width: 0;
+}
+.context {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background: white;
+  box-shadow: var(--shadow-selection);
+}
+.contextHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.contextHeader h2 {
+  margin: 0;
+}
+.contextEmpty {
+  min-height: 220px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+@media (max-width: 1024px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+  .context {
+    order: 2;
+  }
+  .workspaceMain {
+    order: 1;
+  }
+}
+@media (max-width: 520px) {
+  .context {
+    padding: 12px;
+  }
+}
