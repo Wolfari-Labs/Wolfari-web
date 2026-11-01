@@ -1,6 +1,8 @@
 # CP-08 — quyết định cần duyệt cho Members / Invitations / Policy Web
 
-Status: **AWAITING_EXPLICIT_APPROVAL**, 01/11/2026. D38 duyệt CP07 và mở CP08; không duyệt mặc định MBR01–MBR05 trong [delta register](DESIGN_DELTAS.md). Phương án dưới đây cụ thể hóa đúng năm mã hiện có, không tạo roadmap mới. Chỉ Web; giữ Preview và Gateway riêng, không Backend/dependency/Figma writes.
+Status: **APPROVED_CP08_DELTAS** theo user approval ngày01/11/2026 (D41). D39 được giữ nguyên như hồ sơ lịch sử; D41 là approval hiện hành cho MBR01–MBR05. Chỉ Web; giữ Preview và Gateway riêng, không Backend/dependency/Figma writes. Các giới hạn/gate kỹ thuật vẫn giữ nguyên.
+
+**Current gate:** MBR01–MBR05 đã được người dùng duyệt rõ theo D41. W01–W07 hiện READY_FOR_REVIEW theo D42 và [acceptance](CP08_ACCEPTANCE.md); phải chờ duyệt CP08 rõ ràng trước CP09. D41 không miễn quality gates, không duyệt palette/font/motion/asset khác.
 
 ## Nguồn và actual contracts
 
@@ -20,8 +22,8 @@ Status: **AWAITING_EXPLICIT_APPROVAL**, 01/11/2026. D38 duyệt CP07 và mở CP
 | **MBR04** — Người nhận lời mời | Card giữa theo299:2010, mascot/title/trip/inviter lấy nguồn và data thật. Metadata dùng **hết hạn, trạng thái lời mời, vai trò Member khi tham gia**, bỏ ngày chuyến đi/số lượng4/6 vì preview không cung cấp. Giữ decline/accept rõ ràng và các trạng thái thiếu token/đăng nhập/sai tài khoản/chưa xác minh/hết hạn/revoked/error/retry trong cùng family. | Không lưu token vào URL/query key/storage/evidence. Giữ internal returnTo, token/actor isolation, accept-vs-decline lock và receipt-driven navigation. `/invitations/local` giữ mode boundary. W05 phải có design context đọc thành công trước sửa UI; approval này không thay gate kỹ thuật đó. |
 | **MBR05** — Web hẹp và trạng thái xử lý | Giữ thứ tự banner → controls → nội dung chính → guidance; ở820/768/402/320 panel stack khi cần, long names/emails wrap, rows giữ đủ role/joined/left/action, recipient metadata một cột và actions stack. Không cố định chiều cao main theo screenshot. Loading/empty/error đặt trong vùng dữ liệu; pagination error giữ rows cũ. Lifecycle OperationStatus luôn ở ngoài Drawer/tab và còn thấy sau mất quyền/rời Trip. | Test keyboard/focus/reduced motion, short-height và native200% zoom; không native/mobile UI. Giữ state machine/versions/cursors, không dựa animation để kết thúc mutation. Reflow chỉ CP08, không phê duyệt DLT09 toàn ứng dụng hoặc timing/palette/font mới. |
 
-## Giới hạn của approval được hỏi
+## Giới hạn của approval D41
 
-Chỉ xin duyệt đúng năm hàng trên. Chưa đổi font, palette, duration, official assets hoặc thêm nghiệp vụ. Nếu browser đo ra contrast lỗi cần thay màu ngoài phần đã được duyệt, ghi delta riêng kèm evidence trước áp dụng. Không thêm transfer Owner, Fund Holder assignment, booking/refund, API hoặc giả total/recipient metadata để giống ảnh.
+User chỉ duyệt đúng năm hàng trên. Chưa đổi font, palette, duration, official assets hoặc thêm nghiệp vụ. Nếu browser đo ra contrast lỗi cần thay màu ngoài phần đã được duyệt, ghi delta riêng kèm evidence trước áp dụng. Không thêm transfer Owner, Fund Holder assignment, booking/refund, API hoặc giả total/recipient metadata để giống ảnh.
 
-Sau approval riêng: W02 Members/lifecycle → W03 Invitations owner → W04 Policy → W05 Recipient → W06 QA → W07 acceptance và STOP trước CP09. Work unit nào còn gate kỹ thuật phải ghi BLOCKED/NOT_RUN đúng bằng chứng, không suy approval thành đã kiểm thử.
+W02 Members/lifecycle → W03 Invitations owner → W04 Policy → W05 Recipient → W06 QA → W07 acceptance đã hoàn tất với giới hạn trong [acceptance](CP08_ACCEPTANCE.md). **STOP trước CP09**, chờ user approval CP08; D41 không phải approval checkpoint.

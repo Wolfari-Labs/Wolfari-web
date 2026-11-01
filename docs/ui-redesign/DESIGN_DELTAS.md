@@ -71,7 +71,7 @@ Tất cả `DELTA_PENDING`; evidence/fields/permissions tại [Fund spec](FUND_S
 
 ## Members — khác biệt cụ thể cần review
 
-`DELTA_PENDING`, source/code/field/state details: [Members spec](MEMBERS_SPEC.md). D38 mở CP08, không duyệt mặc định các mã này. [CP08 decision packet](CP08_DESIGN_DECISIONS.md) cụ thể hóa MBR01–MBR05 sau source/contract audit W01 ngày01/11/2026; cần explicit approval trước W02–W05. Recipient299:2010 còn gate đọc design context thành công trước W05 UI edits.
+`APPROVED_CP08_SCOPE` chỉ cho MBR01–MBR05 theo D41, source/code/field/state details: [Members spec](MEMBERS_SPEC.md) và [CP08 decision packet](CP08_DESIGN_DECISIONS.md). D38 chỉ mở checkpoint; D41 duyệt rõ năm mã ngày01/11/2026. Recipient card `299:2042` context đã đọc thành công trước W05, full parent `299:2010` Transport closed giữ như lịch sử. CP08 [READY_FOR_REVIEW](CP08_ACCEPTANCE.md) với QA limits; các delta khác vẫn pending.
 
 | ID | Gap | Review proposal |
 |---|---|---|

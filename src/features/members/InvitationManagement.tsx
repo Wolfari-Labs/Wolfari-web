@@ -16,6 +16,7 @@ import {
   type InvitationManagementAttempt,
 } from './invitation-management-attempt';
 import styles from './Invitations.module.css';
+import send from '../../shared/assets/figma/ac8db.svg';
 
 const labels = {
   PENDING: 'Đang chờ phản hồi',
@@ -271,7 +272,13 @@ export function InvitationManagement({
   const locked = pending || Boolean(attempt) || Boolean(link) || !allowed || query.isError;
   return (
     <div className={styles.workspace}>
-      <form className={styles.panel} aria-label="Mời thành viên" noValidate onSubmit={create}>
+      <form
+        className={styles.panel}
+        aria-label="Mời thành viên"
+        noValidate
+        onSubmit={create}
+        data-cp08-primary
+      >
         <h2>Mời thành viên</h2>
         <p>
           Người nhận trở thành Member sau khi chấp nhận. Quyền sửa lịch trình và trách nhiệm quỹ
@@ -309,7 +316,12 @@ export function InvitationManagement({
             }}
           />
         )}
-        <Button type="submit" disabled={locked || Boolean(link) || !invitation.createInvitation}>
+        <Button
+          type="submit"
+          icon={<img src={send} alt="" width={18} height={18} />}
+          loading={pending && attempt?.action === 'create'}
+          disabled={locked || Boolean(link) || !invitation.createInvitation}
+        >
           {kind === 'EMAIL' ? 'Gửi lời mời' : 'Tạo liên kết'}
         </Button>
         {error && (
@@ -335,7 +347,13 @@ export function InvitationManagement({
             <div className={styles.actions}>
               <Button
                 onClick={() => {
-                  void navigator.clipboard?.writeText(link).then(
+                  if (!navigator.clipboard?.writeText) {
+                    setNotice(
+                      'Không thể sao chép tự động. Hãy chọn và sao chép liên kết hiển thị.',
+                    );
+                    return;
+                  }
+                  void navigator.clipboard.writeText(link).then(
                     () => setNotice('Đã sao chép liên kết.'),
                     () =>
                       setNotice(
@@ -358,8 +376,22 @@ export function InvitationManagement({
             </div>
           </section>
         )}
+        <div className={styles.note}>
+          <h3>Quy tắc lời mời</h3>
+          <p>
+            Chỉ Owner được tạo và thu hồi lời mời. Lời mời qua email cần đúng tài khoản nhận và
+            email đã xác minh.
+          </p>
+        </div>
+        <div className={styles.note} data-tone="member">
+          <h3>Khi chấp nhận</h3>
+          <p>
+            Hệ thống kiểm tra lại lời mời và quyền tham gia. Quyền sửa lịch trình cần được cấp
+            riêng; không tự có trách nhiệm giữ quỹ.
+          </p>
+        </div>
       </form>
-      <section className={styles.panel} aria-label="Lời mời hiện có">
+      <section className={styles.panel} aria-label="Lời mời hiện có" data-cp08-secondary>
         <h2>Lời mời</h2>
         <Select
           label="Trạng thái lời mời"
@@ -391,6 +423,11 @@ export function InvitationManagement({
         )}
         {canReadInvitations && !query.isPending && !query.isError && items.length === 0 && (
           <p>Chưa có lời mời phù hợp.</p>
+        )}
+        {canReadInvitations && query.data && !readAuthorityLost && (
+          <p className={styles.metadata}>
+            {items.length} lời mời đã tải{query.hasNextPage ? ' · Còn trang tiếp theo' : ''}
+          </p>
         )}
         <ul className={styles.list}>
           {items.map((item) => (
@@ -444,6 +481,13 @@ export function InvitationManagement({
             Tải thêm lời mời
           </Button>
         )}
+        <div className={styles.note} data-tone="terminal">
+          <h3>Lời mời kết thúc</h3>
+          <p>
+            Lời mời đã chấp nhận, từ chối, hết hạn hoặc thu hồi không thể dùng lại để tham gia. Muốn
+            tham gia lại cần lời mời mới.
+          </p>
+        </div>
       </section>
     </div>
   );

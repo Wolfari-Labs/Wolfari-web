@@ -1,15 +1,15 @@
-# ĐÁNH GIÁ CHUYÊN SÂU & TOÀN DIỆN GIAO DIỆN WOLFARI WEB
-*Góc nhìn từ trải nghiệm con người thực tế, tâm lý học hành vi (UX Psychology) và chuẩn mực thiết kế sản phẩm số (Digital Product Design)*
+# BẢN ĐÁNH GIÁ TOÀN DIỆN & CHUYÊN SÂU GIAO DIỆN WOLFARI WEB
+*Phân tích dưới lăng kính trải nghiệm con người thực tế, tâm lý học hành vi (UX Psychology), công thái học phần mềm (Software Ergonomics) và chuẩn mực thiết kế sản phẩm số (Digital Product Design)*
 
 ---
 
 ## LỜI NÓI ĐẦU: TIẾP CẬN DƯỚI GÓC NHÌN CON NGƯỜI THẬT
 
 Khi một người dùng mở một ứng dụng lên kế hoạch du lịch như **Wolfari**, họ không tìm kiếm một bảng tính Excel hay một phần mềm quản lý công việc văn phòng (Jira, Trello). Họ đang mang trong mình:
-1. **Sự háo hức, mong chờ**: Cảm xúc về một kỳ nghỉ sắp tới cùng người yêu, gia đình hoặc nhóm bạn thân.
+1. **Sự háo hức, mong chờ**: Cảm xúc về một kỳ nghỉ sắp tới cùng người yêu, gia đình hoặc nhóm bạn thân sau những ngày làm việc căng thẳng.
 2. **Sự lo âu, mệt mỏi tiềm ẩn**: Nỗi sợ trễ chuyến bay, quên đồ đạc, lịch trình quá dày làm kiệt sức, hay sự ngại ngùng tế nhị khi chia tiền bạc ("ai nợ ai", "thủ quỹ tính nhầm").
 
-Một giao diện du lịch xuất sắc là giao diện **tiếp thêm năng lượng cho sự hào hứng** và **xóa tan nỗi âu lo điều phối**. 
+Một giao diện du lịch xuất sắc là giao diện **tiếp thêm năng lượng cho sự hào hứng** và **xóa tan nỗi âu lo điều phối**.
 
 Tài liệu này không lặp lại những báo cáo kiểm thử kỹ thuật khô khan (pass/fail unit test, mã token CSS), mà soi chiếu trực tiếp vào **từng màn hình, từng hình ảnh, từng nút bấm, từng khoảng trống** để trả lời câu hỏi cốt tử: 
 > *“Một con người bằng xương bằng thịt khi nhìn vào và thao tác trên giao diện này sẽ cảm thấy như thế nào?”*
@@ -18,11 +18,20 @@ Tài liệu này không lặp lại những báo cáo kiểm thử kỹ thuật 
 
 ## PHẦN I. HÀNH TRÌNH CẢM XÚC TỔNG THỂ (THE EMOTIONAL JOURNEY)
 
+```mermaid
+graph LR
+    A["1. Landing Page<br/>(Hào hứng, cuốn hút)"] --> B["2. Đăng ký/Đăng nhập<br/>(Khựng lại: Mật khẩu 15 ký tự)"]
+    B --> C["3. Danh sách chuyến đi<br/>(Thích thú: Album kỷ niệm)"]
+    C --> D["4. Tạo chuyến mới<br/>(Hụt hẫng: Bản đồ tĩnh, múi giờ IANA)"]
+    D --> E["5. Vào Workspace chuyến đi<br/>(Ngợp: Banner choán hết màn hình)"]
+    E --> F["6. Quản lý tác vụ<br/>(Plan đỉnh cao, Quỹ văn minh, nhưng Settings bị khóa)"]
+```
+
 ### 1. Điểm chạm đầu tiên: Cảm xúc nhen nhóm rất tốt (Aesthetic & Charm)
 - **Vibe tổng thể**: Tông màu xanh biển kết hợp xanh ngọc và nắng vàng mang lại cảm giác mát mẻ, tự do của biển miền Trung (Đà Nẵng, Nha Trang, Phú Quốc).
 - **Linh vật chú sói Wolfari**: Chú sói chibi cầm cuốn sổ hành trình, đội mũ phiêu lưu là một tài sản hình ảnh (brand asset) cực kỳ đắt giá. Nó biến ứng dụng từ một "công cụ vô hồn" thành một "người bạn đồng hành". Các chi tiết phong cách scrapbook (ảnh chụp polaroid kẹp giấy, ghim băng dính màu pastel, mũi tên nét đứt vẽ tay) khơi gợi lại thói quen dán nhật ký du lịch thời trẻ.
 
-### 2. Nhưng cú va chạm thực tế: Sự giằng co phong cách và rào cản thao tác
+### 2. Cú va chạm thực tế: Sự giằng co phong cách và rào cản thao tác
 Ngay sau ấn tượng ban đầu dễ thương, người dùng bước vào các tác vụ thực tế và bắt đầu gặp những điểm "hẫng":
 - **Sự phân liệt phong cách (Visual Schizophrenia)**: Bên ngoài landing page và thẻ danh sách thì thơ mộng, thủ công (scrapbook, ảnh dán); nhưng khi bước vào bên trong chuyến đi (*Lịch trình, Quỹ nhóm, Thành viên*), giao diện đột ngột biến thành một dashboard văn phòng phẳng lì, nghiêm nghị với những khối bo góc trắng toát và các bảng biểu khô khan.
 - **Bệnh "Nghiện Banner" (Banner-heavy layout)**: Trên màn hình máy tính thông thường, banner phong cảnh choán hết nửa trên màn hình. Mỗi lần chuyển tab là một lần phải cuộn chuột dài để tìm nơi bắt đầu làm việc.
@@ -44,7 +53,7 @@ Ngay sau ấn tượng ban đầu dễ thương, người dùng bước vào cá
 #### Hạt sạn dưới góc nhìn con người thật
 1. **Mockup thiết bị gây hiểu lầm tai hại (Marketing Mismatch)**:
    - Trong khối *"Xem trước trải nghiệm của bạn"*, giao diện đặt 2 chiếc iPhone đời mới bên cạnh một chiếc laptop MacBook, kèm câu: *"Dù là trên web hay điện thoại, Wolfari luôn đồng hành cùng bạn mọi lúc, mọi nơi"*.
-   - **Tâm lý người dùng**: Một người trẻ truy cập trang này trên điện thoại sẽ ngay lập tức kéo xuống tìm nút *"Tải trên App Store"* hoặc *"Tải trên Google Play"*. Nhưng thực tế sản phẩm là **Web-only**, không có app native. Việc vẽ 2 chiếc iPhone với giao diện mobile app riêng biệt tạo ra một kỳ vọng ảo, khiến người dùng cảm giác bị "lừa nhẹ" khi phát hiện ra không có ứng dụng di động để cài đặt.
+   - **Tâm lý người dùng**: Một người trẻ truy cập trang này trên điện thoại sẽ ngay lập tức kéo xuống tìm nút *"Tải trên App Store"* hoặc *"Tải trên Google Play"*. Nhưng thực tế sản phẩm là **Web-only**, không có app native. Việc vẽ 2 chiếc iPhone với giao diện mobile app riêng biệt tạo ra một kỳ vọng ảo, khiến người dùng cảm giác bị "hẫng nhẹ" khi phát hiện ra không có ứng dụng di động để cài đặt.
 2. **Nút "Xem trước" thiếu tương tác thực**:
    - Khối *"Những hành trình đang được lưu lại"* trưng bày 4 tấm card rất đẹp: *Đà Nẵng – Hội An, Phú Quốc, Đà Lạt, Sài Gòn*.
    - **Tâm lý người dùng**: Người ta sẽ tò mò click vào xem thử lịch trình mẫu của Đà Nẵng xem chuyến đi đó ăn gì, chơi ở đâu. Nhưng hiện tại các thẻ này chỉ là ảnh chụp phẳng, không click mở xem được. Sự tò mò bị chặn đứng lại.
@@ -121,10 +130,7 @@ Ngay sau ấn tượng ban đầu dễ thương, người dùng bước vào cá
 1. **Banner chiếm quá nhiều không gian (The Fold Problem)**:
    - Trên màn hình 1440×960 hoặc laptop 1366×768, sau khi nhìn xong thanh điều hướng trên cùng, breadcrumb và tấm banner to, người dùng phải cuộn chuột xuống thì mới thấy được danh sách hoạt động ngày 1.
 2. **Cảm giác hụt hẫng vì các thẻ rỗng**:
-   - Thẻ *Thời tiết*: "Chưa khả dụng".
-   - Thẻ *Ngân sách/Quỹ nhóm*: "Chưa khả dụng".
-   - Thẻ *Bản đồ hành trình*: "Bản đồ hành trình sẽ xuất hiện khi có dữ liệu địa điểm".
-   - Thẻ *Theo dõi giá vé*: "Chưa khả dụng".
+   - Thẻ *Thời tiết*: "Chưa khả dụng". Thẻ *Ngân sách/Quỹ nhóm*: "Chưa khả dụng". Thẻ *Bản đồ hành trình*: "Bản đồ hành trình sẽ xuất hiện khi có dữ liệu địa điểm". Thẻ *Theo dõi giá vé*: "Chưa khả dụng".
    - **Cảm giác con người**: Trong tổng số 6 khối nội dung trên màn hình, có tới 4 khối thông báo "Chưa khả dụng" hoặc trống trơn. Người dùng cảm thấy như đang đứng trong một ngôi nhà xây dở chỉ có mỗi khung cửa sổ.
 3. **Thẻ góc dưới phải vô dụng**:
    - Thẻ *"Mỗi chuyến đi là một câu chuyện..."* với hình vẽ sóng biển màu nước trông rất thơ mộng, nhưng nó chiếm nguyên một góc phải mà không mang lại bất kỳ giá trị thông tin hay hành động nào. Khi quản lý một chuyến đi thực tế, người ta cần công cụ, không cần một tấm bưu thiếp chiếm chỗ.
@@ -154,6 +160,9 @@ Ngay sau ấn tượng ban đầu dễ thương, người dùng bước vào cá
    - Lúc này, cột lịch trình bên trái bị co hẹp lại, các ảnh thumbnail địa điểm bị ép nhỏ, tên địa chỉ bị ngắt dòng lộn xộn. Trải nghiệm đọc lịch trình đột ngột trở nên bí bách.
 3. **Nút "Thêm ngày" nằm ngang hàng với tab ngày**:
    - Tab Ngày 1, Ngày 2, Ngày 3 có nút `+ Thêm ngày` nằm ngay bên cạnh. Điều này rất tiện, nhưng nếu chuyến đi dài 10 ngày thì thanh tab này sẽ tràn màn hình và buộc người dùng phải cuộn ngang – một thao tác rất khó chịu trên chuột máy tính bàn.
+4. **Cửa sổ soạn thảo hoạt động (Centered Activity Modal)**:
+   - Khi bấm "Thêm hoạt động" hoặc sửa một hoạt động, cửa sổ modal hiện giữa màn hình (rộng 560px).
+   - **Vấn đề ngắt quãng dòng tư duy (Context Disconnect)**: Trường chọn "Địa điểm" bên trong form chỉ là một `<select>` dropdown chứa các địa điểm đã lưu từ trước. Nếu người dùng chợt nhớ ra quán cà phê muốn ghé, họ **không thể gõ tìm và thêm địa điểm mới ngay trong form này**! Họ buộc phải hủy form, quay ra ngoài tìm cách thêm địa điểm vào kho, rồi mới quay lại tạo hoạt động. Thao tác này gây ức chế lớn cho người dùng thực tế.
 
 ---
 
@@ -209,38 +218,105 @@ Ngay sau ấn tượng ban đầu dễ thương, người dùng bước vào cá
 
 ---
 
-### 10. Thanh điều hướng & Menu trên Mobile (Responsive Drawer — 402px)
-*(Đối chiếu hình ảnh: `trip-drawer-402.png`, `overview-fixture-402.png`, `not-found-402.png`)*
+### 10. Danh sách đồ đạc (Packing List — `/trips/:id/packing`)
+*(Đối chiếu mã nguồn: `PackingPage.tsx`, `PackingPage.module.css`)*
 
 #### Cảm nhận trực quan
-- Ngăn kéo (Drawer) mở ra mượt mà từ bên trái, nền trắng sạch sẽ, icon thẳng hàng.
+- Phân nhóm đồ đạc thông minh: *Giấy tờ tùy thân, Quần áo, Thuốc men y tế, Đồ điện tử, Đồ dùng cá nhân*.
+- Có thanh tiến độ hoàn thành (*8/12 món - 67%*). Checkbox tích chọn tạo cảm giác nhẹ nhõm và an tâm rằng mình không quên thứ gì quan trọng ở nhà.
 
 #### Hạt sạn dưới góc nhìn con người thật
-1. **Bị "nhốt" trong chuyến đi (No Exit Strategy)**:
-   - Hãy nhìn vào `trip-drawer-402.png`: Menu chỉ liệt kê 9 mục bên trong chuyến đi (*Tổng quan, Bản đồ, Lịch trình, Dress code, Packing list, Thành viên, Quỹ nhóm, Giá vé, Cài đặt*).
-   - **Tâm lý người dùng**: Một người đang ở trong chuyến đi Đà Nẵng, muốn quay về *"Danh sách chuyến đi của tôi"* để xem lại chuyến đi Phú Quốc tháng sau, hoặc muốn bấm vào trang cá nhân để đổi mật khẩu/đăng xuất thì làm thế nào? Trong menu này hoàn toàn **không có nút quay về "Chuyến đi của tôi"** và cũng **không có avatar/thông tin tài khoản**. Người dùng bị mắc kẹt hoàn toàn bên trong chuyến đi hiện tại!
-2. **Trang 404 lạnh lùng**:
-   - Trang báo lỗi 404 (`not-found-402.png`) chỉ có mỗi dòng chữ: *"Không tìm thấy trang. Chọn một mục trong thanh điều hướng để tiếp tục"* và nút *"Về trang chủ"*.
-   - Với một ứng dụng có linh vật đáng yêu như Wolfari, việc không cho chú sói xuất hiện với vẻ mặt gãi đầu ngơ ngác kèm câu: *"Ái chà, bạn lạc đường rồi!"* là một sự bỏ phí cảm xúc rất đáng tiếc.
+- **Sự phân biệt đối xử giữa Preview vs Gateway**: Trong mã nguồn, ở chế độ Gateway thật, danh sách đồ đạc bị hạn chế quyền chỉnh sửa (chủ yếu là read projection). Người dùng không thể tự do thêm món đồ cá nhân đột xuất (ví dụ: "sạc máy ảnh Sony", "thuốc say xe của mẹ"). Một danh sách đồ chuẩn bị mà không cho người đi thêm đồ của riêng mình thì sẽ nhanh chóng bị bỏ xó để quay về ghi chú trên điện thoại (Apple Notes/Google Keep).
+- **Thiếu phân công đồ chung vs đồ riêng**: Đi nhóm luôn có những món đồ dùng chung (bộ cờ cá ngựa, loa bluetooth, kem chống nắng dùng chung, bàn ủi mini). Giao diện chưa làm nổi bật được ai chịu trách nhiệm mang đồ gì cho cả nhóm.
 
 ---
 
-## PHẦN III. ĐÁNH GIÁ DESIGN TOKENS, MÀU SẮC & CÔNG THÁI HỌC THỊ GIÁC
+### 11. Trang phục du lịch (Dress Code — `/trips/:id/dress-code`)
+*(Đối chiếu mã nguồn: `GatewayDressCodePage.tsx`, `DressCodePage.module.css`)*
 
-### 1. Độ tương phản màu sắc (Color Contrast & Accessibility)
-- **Nền trang (`#f4fbfe`) và Nền thẻ (`#ffffff`)**:
-  - Tỉ lệ tương phản giữa màu xanh lơ nhạt của nền và màu trắng tinh của thẻ card là cực kỳ thấp.
-  - Trên các màn hình máy tính phổ thông (màn hình TN hoặc IPS giá rẻ với độ sáng dưới 250 nits), người dùng hầu như không phân biệt được đâu là mép thẻ và đâu là nền trang. Toàn bộ giao diện bị bệt thành một mảng sáng loáng, gây mỏi mắt khi làm việc buổi tối.
-- **Màu chữ phụ (`#4f7093`)**:
-  - Dùng cho các ghi chú, ngày tháng, địa chỉ phụ ở cỡ chữ 13px. Màu xám xanh này trên nền trắng chỉ vừa ngấp nghé ngưỡng tối thiểu WCAG AA. Khi ra ngoài trời nắng xem điện thoại, chữ này sẽ hoàn toàn bị "tàng hình".
+#### Cảm nhận trực quan
+- **Ý tưởng cực kỳ bắt trend giới trẻ**: Nhóm bạn trẻ Việt Nam đi du lịch (nhất là phái nữ) cực kỳ quan tâm đến việc mặc gì: ngày 1 mặc tone be/trắng chụp ảnh cafe, ngày 2 mặc đồ bơi, ngày 3 đi chùa phải mặc đồ kín đáo lịch sự. Tính năng phân loại *Cả chuyến / Theo ngày / Theo hoạt động* đánh trúng tâm lý này.
 
-### 2. Sự bất hợp lý của Linh vật sói ở Sidebar Desktop
-- Ở chân sidebar bên trái có hình vẽ chú sói ngồi đọc sách kèm câu *"Cùng bạn đi xa hơn!"* và nút *"<< Thu gọn"*.
-- Hình vẽ này cao tới gần 200px. Trên các màn hình laptop chiều cao 768px, việc "nhồi" chú sói vào góc này khiến thanh menu điều hướng bị dài quá cỡ, đẩy nút **Cài đặt** xuống sát đáy màn hình, buộc sidebar phải xuất hiện thanh cuộn riêng. Đây là lỗi kinh điển: **hy sinh công năng vì yếu tố trang trí**.
+#### Hạt sạn dưới góc nhìn con người thật
+- **Văn bản khô khan, thiếu hình ảnh (No Moodboard / Visual Palette)**: Điểm mấu chốt của trang phục là **màu sắc và phong cách thị giác**. Nhưng giao diện hiện tại toàn bộ là các dòng chữ mô tả dài ngoằng. Người dùng không thấy được bảng màu chủ đạo (Color Swatches: ví dụ mã màu pastel `#f8e4d8`, `#317c89`) và không có chỗ để đính kèm ảnh outfit mẫu. Nó biến một tính năng thời trang hào hứng thành một bảng nội quy trường học.
 
 ---
 
-## PHẦN IV. BẢNG TỔNG KẾT & CHẤM ĐIỂM TRẢI NGHIỆM CON NGƯỜI
+### 12. Theo dõi giá vé máy bay (Price Watch — `/trips/:id/price-watch`)
+*(Đối chiếu mã nguồn: `RuntimePriceWatchPage.tsx`, `RuntimePriceWatchPage.module.css`)*
+
+#### Cảm nhận trực quan
+- Biểu đồ theo dõi giá vé theo thời gian, phát hiện giá vé tăng hay giảm để chốt vé đúng thời điểm. Rất hữu ích cho các chuyến bay nội địa Việt Nam (Hà Nội/Sài Gòn đi Đà Nẵng, Phú Quốc).
+
+#### Hạt sạn dưới góc nhìn con người thật
+- **Cú sốc múi giờ UTC**: Dữ liệu lịch sử quan sát giá đang hiển thị theo thời gian gốc UTC hoặc định dạng ngày tháng thô của máy tính. Người dùng Việt Nam nhìn vào giờ bay `01:30 UTC` sẽ bị nhầm lẫn nghiêm trọng sang giờ bay thực tế ở Việt Nam (`08:30 GMT+7`).
+- **Gắn nhãn `MOCK_FLIGHT`**: Dữ liệu giả lập ghi chữ MOCK_FLIGHT gây bối rối cho người dùng phổ thông không hiểu thuật ngữ phần mềm.
+
+---
+
+### 13. Hộp thư thông báo (Notification Inbox Drawer)
+*(Đối chiếu mã nguồn: `NotificationInbox.tsx`, `Notifications.module.css`)*
+
+#### Cảm nhận trực quan
+- Bấm chuông thông báo ở thanh trên cùng, một ngăn kéo trượt ra từ bên phải rất gọn gàng.
+- Phân loại rõ thông báo: Lời mời tham gia chuyến đi, cập nhật lịch trình, biến động giá vé, nhắc nhở đóng quỹ.
+
+#### Hạt sạn dưới góc nhìn con người thật
+- **Thiếu thao tác trực tiếp (Inline Action)**: Khi nhận được thông báo *"Trang Nguyễn đã mời bạn tham gia Đà Nẵng 3N2Đ"*, người dùng muốn bấm nút "Đồng ý" ngay trên thông báo đó. Nhưng hiện tại họ phải bấm vào thông báo để chuyển hướng sang một trang khác rồi mới được thao tác. Điều này làm tăng số bước nhấp chuột không cần thiết.
+
+---
+
+### 14. Menu Mobile (Drawer 402px — `trip-drawer-402.png`, `not-found-402.png`)
+* **Bị "nhốt" trong chuyến đi (No Exit)**: Menu mobile chỉ liệt kê 9 mục của chuyến đi hiện tại. Hoàn toàn **không có nút quay về "Chuyến đi của tôi"** và **không có thông tin tài khoản / đăng xuất**. Người dùng bị mắc kẹt hoàn toàn, muốn đổi sang chuyến đi khác phải gõ lại URL trình duyệt.
+* **Trang 404 lạnh lùng**: Chỉ có dòng chữ báo lỗi khô khốc. Một ứng dụng có linh vật đáng yêu như Wolfari lại thiếu hình ảnh chú sói gãi đầu ngơ ngác *"Úi, lạc đường rồi!"* là một sự bỏ phí cảm xúc rất đáng tiếc.
+
+---
+
+## PHẦN III. PHÂN TÍCH CÔNG THÁI HỌC CỦA TỪNG COMPONENT CỐT LÕI (CORE COMPONENT ERGONOMICS)
+
+| Component | Điểm mạnh hiện tại | Điểm yếu công thái học (Ergonomics Flaws) |
+| :--- | :--- | :--- |
+| **`Button`** | Đủ variants (*primary, secondary, outline, plain, destructive*). Chiều cao đạt chuẩn 44px dễ bấm trên cảm ứng. | Nút chính dùng màu gradient hoặc `#006b92` rất đẹp, nhưng nút thứ cấp (*secondary/outline*) viền quá mảnh (`#cdebf7`), đặt trên nền sáng gần như "vô hình". Trạng thái loading đôi khi làm mất nhãn văn bản khiến chiều rộng nút bị giật (Layout Shift - CLS). |
+| **`Drawer`** | Hiệu ứng trượt mượt mà, Radix UI xử lý bẫy tiêu điểm (focus trap) và phím Escape rất chuẩn mực. | Ngăn kéo mobile (`trip-drawer-402.png`) chiếm 300px trên màn hình 402px, phần tối mờ (backdrop) còn lại chỉ 102px, quá hẹp để người dùng ngón tay cái chạm bấm ra ngoài để đóng drawer. |
+| **`Modal Dialog`** | Căn giữa màn hình chuẩn mực theo Figma D18 (`560px`). Nút Lưu/Hủy dính ở đáy (`sticky bottom`). | Trên màn hình laptop chiều cao 520px - 600px, modal dài quá sinh ra thanh cuộn dọc bên trong. Nút bấm dính đáy che mất trường nhập cuối cùng nếu không có lớp đệm (padding-bottom) đủ lớn. |
+| **`Input / Select`** | Có icon trước/sau, nhãn hiển thị rõ ràng, viền focus xanh đậm dễ nhận biết. | Trường chọn `<Select>` trong toàn bộ ứng dụng vẫn dùng dropdown gốc của trình duyệt (native select). Trông rất thô sơ, không ăn nhập với ngôn ngữ thiết kế bo tròn pastel của sản phẩm. |
+| **`SplitPanel`** | Cho phép chia đôi màn hình giữa Lịch trình và Bản đồ/Kho địa điểm. Có nhớ vị trí kéo thả. | Vạch kéo (divider handle) quá mỏng (chỉ 2-4px), người dùng chuột rất khó rê trúng điểm để kéo; trên màn hình cảm ứng hầu như không kéo được. |
+
+---
+
+## PHẦN IV. SO SÁNH VỚI CÁC CHUẨN MỰC QUỐC TẾ (COMPETITOR BENCHMARKING)
+
+```mermaid
+quadrantChart
+    title Ma trận Định vị Trải nghiệm Ứng dụng Du lịch
+    x-axis "Thiếu bản sắc văn hóa" --> "Đậm đà bản sắc & Tình cảm"
+    y-axis "Công cụ rời rạc" --> "Workspace cộng tác toàn diện"
+    quadrant-1 "Ngôi sao lý tưởng (Ideal Star)"
+    quadrant-2 "Tiện ích kỹ thuật cao (Tech Utility)"
+    quadrant-3 "Rời rạc & Khô khan"
+    quadrant-4 "Giàu cảm xúc nhưng thiếu công cụ"
+    "Wanderlog": [0.25, 0.88]
+    "Notion Travel": [0.20, 0.55]
+    "Polarsteps": [0.45, 0.40]
+    "Google Maps Lists": [0.15, 0.30]
+    "Wolfari Web (Hiện tại)": [0.78, 0.62]
+```
+
+### 1. Điểm Wolfari vượt trội so với thế giới (Wanderlog, Polarsteps, TripIt):
+1. **Giải quyết xuất sắc bài toán văn hóa nhóm của người Việt**:
+   - Các ứng dụng phương Tây (như Wanderlog) thường rất yếu ở khâu **Quỹ nhóm (Group Fund)**. Ở Việt Nam, văn hóa đi chơi là "bầu thủ quỹ", nộp tiền một cục hoặc chia đều các bữa ăn. Tính năng Quỹ nhóm của Wolfari với 4 chỉ số và danh sách nghĩa vụ từng người là một "đặc sản" cực mạnh.
+2. **Linh vật và tính gắn kết cảm xúc (Emotional Mascot)**:
+   - Trong khi Wanderlog hay TripIt trông như phần mềm quản lý kho bãi, Wolfari có chú sói phiêu lưu dẫn lối, mang lại sự thư giãn và nụ cười cho người dùng.
+
+### 2. Điểm Wolfari cần học hỏi từ các đối thủ lớn:
+1. **Khả năng tương tác bản đồ 2 chiều (Bidirectional Map Interaction của Wanderlog)**:
+   - Ở Wanderlog, khi rê chuột vào hoạt động số 1 trên timeline, điểm số 1 trên bản đồ nảy lên (bounce animation); click vào điểm trên bản đồ thì timeline tự cuộn đến đúng hoạt động đó. Wolfari hiện tại bản đồ và timeline vẫn còn rời rạc.
+2. **Thêm địa điểm thông minh (Smart Place Autocomplete)**:
+   - Các app quốc tế tích hợp Google Places API, người dùng chỉ cần gõ "Bánh xèo Bà Dưỡng" là tự ra địa chỉ, ảnh đại diện, giờ mở cửa. Wolfari hiện tại đòi hỏi thêm thủ công khá nhiều bước.
+
+---
+
+## PHẦN V. BẢNG TỔNG KẾT & CHẤM ĐIỂM TRẢI NGHIỆM CON NGƯỜI
 
 | Tiêu chí | Điểm (Thang 10) | Nhận xét chân thật |
 | :--- | :---: | :--- |
@@ -254,22 +330,46 @@ Ngay sau ấn tượng ban đầu dễ thương, người dùng bước vào cá
 
 ---
 
-## PHẦN V. 5 ĐỀ XUẤT CẢI TIẾN ĐỂ GIAO DIỆN "CHẠM ĐẾN TRÁI TIM"
+## PHẦN VI. LỘ TRÌNH 3 GIAI ĐOẠN TỐI ƯU HÓA GIAO DIỆN
 
-1. **Thu nhỏ Banner khi làm việc (Sticky Compact Workspace Header)**:
-   - Khi người dùng ở trang Lịch trình hoặc Quỹ nhóm, tấm ảnh phong cảnh chỉ nên hiển thị đầy đủ lúc vừa vào trang. Khi bắt đầu cuộn chuột xuống để làm việc, banner nên tự động thu gọn lại thành một thanh bar mỏng (cao khoảng 50px) gắn trên đỉnh gồm: *Tên chuyến đi · Ngày · Nút Chỉnh sửa*. Nhường trọn vẹn 85% chiều cao màn hình cho việc sắp xếp lịch trình và quản lý thu chi.
-2. **Hạ chuẩn mật khẩu xuống 8 ký tự**:
-   - Đừng biến một ứng dụng đi chơi thành cổng bảo mật tài chính quốc tế. Hãy cho phép mật khẩu từ 8 ký tự để người dùng dễ dàng rủ rê bạn bè tạo tài khoản chỉ trong 30 giây.
-3. **Thêm lối thoát trên Mobile Drawer**:
-   - Bổ sung ngay 2 mục ở đầu hoặc cuối Drawer mobile:  
-     - `⬅ Tất cả chuyến đi của tôi`  
-     - `Tài khoản: [Tên người dùng] · Đăng xuất`
-4. **"Giấu" nút Chuyển Owner vào menu 3 chấm**:
-   - Thay vì bày nút "Chuyển Owner" to tướng cạnh tên từng người bạn, hãy thay bằng nút 3 chấm `...` với các lựa chọn: *Nhắn tin, Xem chi tiêu, Phân công công việc, và mục Chuyển quyền trưởng nhóm (chữ đỏ có cảnh báo xác nhận)*.
-5. **Biến trang 404 thành điểm chạm đáng yêu**:
-   - Đưa hình ảnh chú sói Wolfari cầm tấm bản đồ lộn ngược, mắt tròn xoe với thông điệp hài hước:  
-     *"Úi, hình như chúng mình đi lạc vào rừng rồi! Để Wolfari dẫn bạn quay lại trang chủ nhé."*
+```mermaid
+flowchart TD
+    subgraph G1 ["Giai đoạn 1: Sửa nhanh trong tuần (Quick Wins)"]
+        G1A["Hạ mật khẩu xuống 8 ký tự"]
+        G1B["Ẩn nút Chuyển Owner vào menu ..."]
+        G1C["Thêm lối thoát trên Mobile Drawer"]
+        G1D["Sửa lỗi đè chữ Skip-link"]
+    end
+    subgraph G2 ["Giai đoạn 2: Tối ưu công thái học (Medium Term)"]
+        G2A["Banner thu gọn mỏng 50px khi cuộn"]
+        G2B["Thay bản đồ minh họa bằng mẹo du lịch"]
+        G2C["Múi giờ dropdown thân thiện (GMT+7)"]
+        G2D["Thêm hình ảnh/màu sắc cho Dress Code"]
+    end
+    subgraph G3 ["Giai đoạn 3: Trải nghiệm mượt mà đỉnh cao (Vision)"]
+        G3A["Tương tác 2 chiều Timeline - Bản đồ"]
+        G3B["Tìm kiếm địa điểm tự động gợi ý"]
+        G3C["Hỗ trợ lưu nháp Offline khi mất mạng"]
+    end
+    G1 --> G2 --> G3
+```
+
+### 1. Giai đoạn 1: Sửa nhanh giải tỏa ức chế (Quick Wins — 1 đến 2 ngày)
+1. **Hạ chuẩn mật khẩu xuống 8 ký tự**: Xóa bỏ rào cản 15 ký tự ngay lập tức để người dùng dễ dàng tạo tài khoản.
+2. **Ẩn nút "Chuyển Owner"**: Thay bằng nút `...` (Menu hành động), đưa tính năng chuyển trưởng nhóm vào trong với màu đỏ cảnh báo.
+3. **Thêm lối thoát trên Drawer Mobile**: Đặt liên kết `⬅ Chuyến đi của tôi` và thông tin `Tài khoản / Đăng xuất` vào menu mobile.
+4. **Sửa lỗi đè chữ Skip-link**: Ẩn nút "Đến nội dung chính" ra khỏi tầm nhìn thị giác thông thường bằng kỹ thuật CSS `sr-only` chuẩn.
+
+### 2. Giai đoạn 2: Nâng tầm công thái học (Medium Term — 1 đến 2 tuần)
+1. **Banner thu gọn khi cuộn (Sticky Compact Header)**: Khi cuộn xuống xem Lịch trình hoặc Quỹ, banner ảnh tự co thành thanh mỏng 50px. Nhường 85% diện tích màn hình laptop cho nội dung thao tác.
+2. **Thay thế bản đồ minh họa ở trang Tạo chuyến đi**: Đổi khung bản đồ tĩnh thành danh sách các địa điểm check-in gợi ý hoặc các câu nói truyền cảm hứng du lịch.
+3. **Thân thiện hóa ô Múi giờ**: Thay input gõ tay `Asia/Ho_Chi_Minh` bằng dropdown `(GMT+07:00) Giờ Việt Nam / Hà Nội`.
+4. **Thêm chất liệu thời trang cho Dress Code**: Bổ sung các ô bảng màu (color swatches) để nhóm bạn dễ thống nhất mặc tone gì chụp ảnh đẹp.
+
+### 3. Giai đoạn 3: Trải nghiệm gắn kết đỉnh cao (Vision)
+1. **Tương tác 2 chiều Bản đồ - Lịch trình**: Rê chuột đến đâu trên timeline, bản đồ phóng to và phát sáng điểm đó đến đấy.
+2. **Tự động hóa địa điểm**: Gõ tên quán là tự nhận diện địa chỉ và ảnh đại diện.
+3. **Linh vật tương tác (Interactive Mascot)**: Chú sói Wolfari biết đổi biểu cảm khi người dùng hoàn thành 100% đồ đạc (nhảy múa chúc mừng) hoặc khi lịch trình bị trùng giờ (sói làm mặt lo lắng nhắc nhở).
 
 ---
-*Báo cáo được lập cho mục đích nghiên cứu và nâng cấp trải nghiệm người dùng nội bộ Wolfari Web. Không áp dụng thay đổi mã nguồn hoặc commit.*
-
+*Báo cáo được lưu trữ trực tiếp tại `DANH_GIA_CHI_TIET_GIAO_DIEN.md` trong thư mục gốc của dự án. Không áp dụng thay đổi mã nguồn hoặc commit.*
