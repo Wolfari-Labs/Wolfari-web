@@ -1,6 +1,12 @@
 # Hướng dẫn build và chạy Wolfari demo 1 local
 
-Ngày cập nhật: **29/10/2026**. Hướng dẫn chuẩn cho **demo local**, Web `feat/demo-1-web` và Backend `feat/demo-1-backend`, bao gồm các thay đổi chưa commit. Core, lịch trình cộng tác, selected editors, leave/remove và quỹ đóng góp thủ công đã có giao diện Gateway thật. Kết luận nghiệm thu, snapshot và giới hạn nằm trong [validation](docs/demo-1-web-validation.md); truy vết 49 tác vụ ở [phụ lục](docs/demo-1-web-addendum-v1.0.md). Không dùng riêng HEAD để xác định bản cần chạy.
+Ngày cập nhật: **03/11/2026**. Runbook cho **localhost trên Windows**, Web `feat/demo-1-readiness-web` (nguồn `draft/demo-ui-ux`) và Backend `feat/demo-1-readiness-backend` (nguồn `feat/demo-1-backend` + `origin/main`). Chỉ hai repo này; không Mobile/LAN/production.
+
+Trạng thái lệnh và readiness hiện hành: [báo cáo nghiệm thu](docs/demo-readiness-validation.md). Phần chưa chạy vẫn **DRAFT/NOT_VERIFIED**, không suy PASS từ tài liệu. [Kịch bản trình bày](docs/HUONG_DAN_DEMO_TRUC_TIEP.md), [quy trình PR/merge](docs/HUONG_DAN_PR_VA_MERGE_MAIN.md). [Validation tháng 10](docs/demo-1-web-validation.md) và [phụ lục cũ](docs/demo-1-web-addendum-v1.0.md) là lịch sử, không thay kiểm chứng cặp phiên bản mới. Không dùng riêng HEAD khi working tree còn thay đổi.
+
+Ngày03/11 người dùng yêu cầu chuyển sang [giai đoạn D](docs/PHASE_D_HANDOFF.md). Các lệnh launcher đã được kiểm chứng; bundle demo đã build lại sau sửa Finance. Live mở rộng cuối FAIL và chưa đủ chuỗi dev1/preview2 trên bản cuối, nên đây chưa là xác nhận `READY_FOR_LOCAL_DEMO` hoặc cho phép merge.
+
+Đã kiểm chứng trên máy này: `demo:init/start/check/accounts`, `demo:build/preview`, `demo:stop` và khởi động lại, Chromium login → Trip → Plan → Fund → reload; dữ liệu giữ nguyên. Edge hai lượt +30 phút còn chờ người dùng, không suy từ smoke automation. `demo:accounts` hiện kiểm journal seed cũ và báoMISSING; bộ TEST mới dùng journal riêng như mục4.
 
 ## 1. Điều kiện và kiến trúc
 
@@ -33,7 +39,7 @@ corepack pnpm demo:start
 
 Giữ terminal mở. Launcher kiểm cổng/ownership, bật hạ tầng, áp dụng forward migrations rồi build/start service. Backend mới cần Trip V003 cho `scheduled_date`. Không dùng lệnh migration development để sửa nhầm DB demo.
 
-Với dữ liệu demo đã có: dừng đúng launcher bằng `demo:stop` trước khi nâng cấp, chạy lại `demo:init` rồi `demo:start`. Giữ volume và secrets; **không reset hoặc seed lại chỉ để lấy password**.
+Với dữ liệu demo đã có: dừng đúng launcher bằng `demo:stop` trước khi nâng cấp; kiểm kê và backup database/volume cùng cấu hình trước migration, ghi SHA hai repo; chạy lại `demo:init` rồi `demo:start`. Backup `.local/demo` chỉ bảo vệ config/journal, **không phải database backup**. Giữ volume và secrets; **không reset hoặc seed lại chỉ để lấy password**. Nếu chưa có cách phục hồi backup đã xác minh, chưa nâng database có dữ liệu quan trọng. Harness kiểm đường nâng cấp bằng database test riêng, không sửa dữ liệu cá nhân để vượt migration.
 
 Tại terminal Backend thứ hai:
 
@@ -79,7 +85,11 @@ Không chạy dev và preview đồng thời trên 5273. `dist-demo/` là bản 
 | MinIO API/UI | 19000 / 19001 |
 | Mailpit SMTP/UI | 11025 / 18025 |
 
-Xem email thực tế bằng `corepack pnpm demo:accounts` trong Backend. Không giả định luôn có `demo-owner@wolfari.test`. Password sinh ngẫu nhiên nằm trong `Wolfari-backend/.local/demo/seed.json`; chỉ đọc cục bộ, không dán vào log/issue/chat. Password trong journal có thể cũ sau khi đổi ở UI: dùng Quên mật khẩu và Mailpit <http://127.0.0.1:18025/>. Seed không tự reset tài khoản đã tồn tại.
+`corepack pnpm demo:accounts` kiểm tra email/trạng thái tài khoản từ journal bằng READ ONLY, **không in password, không tạo session**. Không giả định luôn có `demo-owner@wolfari.test`. Password seed sinh ngẫu nhiên nằm trong `Wolfari-backend/.local/demo/seed.json`; chỉ đọc cục bộ, không dán vào log/issue/chat. Password trong journal có thể cũ sau khi đổi ở UI: dùng Quên mật khẩu và Mailpit <http://127.0.0.1:18025/>. Seed không tự reset tài khoản đã tồn tại. Nếu journal còn nhưng database/volume đã mất và accounts báo `MISSING`, giữ journal/backup, không giả định password reset sẽ tạo lại account; tạo bộ TEST mới bằng UI với email khác.
+
+Bộ nghiệm thu tạo ngày03/11/2026: năm vai trò `owner`, `holder`, `editor`, `member`, `outsider` ở **`.local/demo/readiness-20261102.json` trong Backend**. Mở file riêng tư bằng trình soạn thảo cục bộ, không dùng lệnh in toàn file vào terminal đang ghi log/chia sẻ màn hình. Lấy `accounts.<role>.email/password`; đây là credentials TEST cục bộ, không được commit. Tên file giữ ngày mở đợt nghiệm thu, không là ngày tạo database. `demo:accounts` không đọc journal riêng này, nênMISSING của seed cũ không nói bộ mới bị mất. Cách kiểm bộ mới là đăng nhập và mở Trip theo kịch bản.
+
+Trip `TEST — Readiness smoke 500000` đã xác nhận đủ500000 và hai ledger; chỉ dùng đọc/persistence. Trip `DEMO TEST — sẵn sàng report và confirm` giữ khoản200000/300000 chưa report để diễn tập. Lượt diễn tập thứ hai tạo Trip/đợt thu TEST riêng qua UI; không reset hoặc confirm lại khoản đã xử lý. Nếu ngày trình bày khác ngày chuẩn bị, tạo Trip có ngày phù hợp trước buổi demo.
 
 Token verify/reset/invite được loại khỏi URL sau khi đọc, không lưu để tiện reload. Khi cần mở lại, lấy link từ thư gốc. Mailpit không phải dịch vụ gửi thư production và hộp thư có thể mất khi restart hạ tầng; dùng resend nếu cần.
 
@@ -90,7 +100,7 @@ Tại Web:
 ```powershell
 corepack pnpm lint
 corepack pnpm typecheck
-corepack pnpm test
+corepack pnpm test --maxWorkers=2
 corepack pnpm build
 corepack pnpm build:preview
 corepack pnpm exec playwright install chromium
@@ -103,7 +113,11 @@ Các suite sẵn có: `test:e2e` là fixture; `test:e2e:gateway` dùng HTTP mock
 ```powershell
 corepack pnpm test:e2e
 corepack pnpm test:e2e:gateway
-corepack pnpm test:e2e:demo1
+corepack pnpm test:e2e:built
+corepack pnpm test:e2e:gateway:built
+corepack pnpm test:e2e:demo1 --runtime=dev
+corepack pnpm test:e2e:demo1 --runtime=preview
+corepack pnpm test:e2e:demo1 --runtime=preview
 ```
 
 `test:e2e:demo1` tự build Backend/Web, cấp ports ngẫu nhiên, Compose project/volumes riêng, áp dụng migrations của từng service, tạo năm tài khoản và dữ liệu nghiệp vụ qua UI rồi chạy Chromium trên **dev và build/preview**. Không cần `demo:start` hoặc `demo:seed`, không reset dữ liệu đang trình diễn. Dùng Docker cùng Node native, không container hóa ứng dụng.
@@ -113,11 +127,13 @@ corepack pnpm test:e2e:demo1
 - Secrets test trong `.local/demo1/<runId>/` đã ignored; không commit hoặc chia sẻ thư mục này.
 - Cleanup chỉ dừng PID con và tài nguyên có project/label đúng run ID. Mặc định xóa volumes **của lần test**; dữ liệu test này không được giữ để trình diễn. `corepack pnpm test:e2e:demo1 --keep` giữ volumes test, vẫn dừng container/app; không áp dụng cho dữ liệu demo cá nhân.
 - Không chạy hai bộ Playwright vào cùng output directory. Fixture và HTTP mock đã tách `test-results/fixture` / `test-results/gateway`.
+- `test:e2e:built` tự build fixture vào `test-results/build/fixture`; `test:e2e:gateway:built` tự build Gateway vào `test-results/build/gateway`. Reports tương ứng `fixture-preview` / `gateway-preview`; không dùng `build:preview` fixture để tuyên bố Backend PASS. Các lệnh này cũng được cấu hình thành job CI riêng; chưa có CI hiện hành trước push.
+- Sau sửa implementation cuối: cần dev1 và preview2 liên tiếp không retry trên cùng implementation hai repo. Business proof chỉ được ghi sau toàn bộ scenario thành công; vẫn phải đọc exit code, Playwright results và final source consistency. Không cộng các phần PASS của nhiều run thất bại thành một full PASS.
 - Bộ `test:e2e:live` cũ không thay gate demo1: bốn bài Auth/Invitations/Trip-Plan/Members dùng seed và ghi thêm dữ liệu vào instance demo; không có quỹ/fault/restart cô lập. Selector đã cập nhật nhưng lượt bàn giao này không chạy lên dữ liệu cá nhân; không lấy kết quả lịch sử làm bằng chứng hiện hành.
 
 Không bật trace/HAR/video cho luồng có token/password. Không chuyển tiền thật, không tự tải QR có dữ liệu ngân hàng ra provider ngoài.
 
-Trên máy ít RAM, chạy các suite **lần lượt**, không chạy Backend unit cùng browser/hạ tầng. Có thể dùng `corepack pnpm test --maxWorkers=2` ở từng repo; không tăng heap hoặc dừng ứng dụng khác một cách tự động. Các launcher test cũng tắt DOM failure snapshot của bản Playwright đang khóa để không ghi form nhạy cảm vào artifact.
+Trên máy ít RAM, chạy các suite **lần lượt**, không chạy Backend unit cùng browser/hạ tầng. Unit tối đa2 worker, live1; không tăng heap hoặc dừng ứng dụng khác tự động. Launcher tắt DOM failure snapshot; Playwright vẫn có thể ghi source excerpt trong `error-context.md`. Redactor không thay review an toàn trước chia sẻ artifact. Raw logs, signed URLs và `.local` không đưa vào Git.
 
 ## 6. Dừng, chạy lại và xử lý lỗi
 
@@ -130,6 +146,7 @@ Trong Backend, `corepack pnpm demo:stop` dừng đúng Web demo/Backend/hạ t�
 - Timeout/503/202: chưa chắc request chưa commit; giữ nguyên key/body, không tạo lệnh mới để thử vận may.
 - `NEEDS_REVIEW`: giữ operation ID, phục hồi dependency rồi theo runbook operator Backend; không sửa ledger/receipt/guard bằng SQL.
 - Finance unavailable: không diễn giải là số dư 0 hoặc chưa có quỹ.
+- Finance notification không xuất hiện: kiểm đúng môi trường/actor/preferences. Hai flag `FINANCE_OUTBOX_ENABLED` và `AUTOMATION_FINANCE_NOTIFICATION_ENABLED` mặc định tắt trong demo cá nhân. Isolated acceptance bật chúng cho request/Holder review; không tự bật shared/development broker. Bật trên dataset trình diễn cần review bindings/consumer và nghiệm thu riêng theo [runbook inbox](../Wolfari-backend/docs/architecture/finance-notification-inbox.md).
 - Không lưu được sessionStorage: không gửi mutation mới cần nhật ký phục hồi. Bật quyền lưu trữ cho origin, không xóa journal đang pending để vượt chặn.
 - Journal hỏng/quá lớn hoặc sai actor/scope: chặn ghi và giữ dữ liệu để đối soát. Policy cũng giữ key/body/revision qua reload. Không xóa journal rồi tạo request mới khi kết quả chưa biết.
 - Rời Trip thành công: trang Members vẫn cho kiểm tra operation của chính actor; mất quyền đọc Trip không có nghĩa leave thất bại.
@@ -146,7 +163,7 @@ Reset demo xóa dữ liệu, không phải thao tác sửa lỗi thông thườn
 5. C báo chuyển → B từ chối có lý do → C reload đọc lại lý do → báo lại → B xác nhận. D báo → B xác nhận. Balance **500000**, đúng **2 IN**. Không chuyển tiền thật.
 6. Kiểm leave/remove theo nghĩa vụ, restart không reset rồi đọc lại. Fund kết thúc **OPEN**; không gọi đây là quyết toán.
 
-Không dùng expense/refund/closure/payment thật, DSS/provider, Export/Share/Admin hoặc Packing/Dress/Map writer làm chức năng đã hoàn thành. Dữ liệu fixture ở cổng 5173 không phải dữ liệu Gateway ở 5273.
+Inbox/read/preferences và Price Watch đã có UI Gateway. Khi trình bày observation phải nói rõ provider `MOCK_FLIGHT`; không khẳng định vé/giá thực. Delivery Finance trong harness không chứng minh demo cá nhân đã bật delivery. Không dùng expense/refund/closure/payment thật, DSS/provider thật, Export/Share/Admin CRUD hoặc Packing/Dress/Map writer làm chức năng đã hoàn thành. Dữ liệu fixture ở cổng 5173 không phải dữ liệu Gateway ở 5273.
 
 ## 8. HTTPS khi đưa lên production
 

@@ -1,0 +1,4088 @@
+{
+  "generatedAt": "2026-11-02T18:42:46.143Z",
+  "timezone": "Asia/Saigon",
+  "status": "PHASE_D_DRAFT_NOT_READY_TO_MERGE",
+  "reason": "User requested phase D. Final expanded live failed; delete/reload sequencing correction not rerun. Post-fix full live and manual Edge gates remain incomplete.",
+  "current": {
+    "web": {
+      "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+      "branch": "feat/demo-1-readiness-web",
+      "implementationSha256": "c0563a73f5906acda31424f6c5d8dc8ca34facc9cdeb6dea9d6142643b221fc3",
+      "treeSha256": "3feb1ca372469b3b03105569babc7e47bf370eb5864108667f0e717156d945d4"
+    },
+    "backend": {
+      "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+      "branch": "feat/demo-1-readiness-backend",
+      "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+      "treeSha256": "b930bf1330928db7e1a11795ede4e4c1bcd90e433f6c2390a214b98c4cb02713"
+    }
+  },
+  "runs": [
+    {
+      "label": "baseline-backend-install",
+      "repo": "backend",
+      "command": "corepack pnpm install --frozen-lockfile",
+      "startedAt": "2026-11-02T15:07:22.031Z",
+      "finishedAt": "2026-11-02T15:07:24.506Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-backend-install.log",
+        "sha256": "fc4b6c458a0ccc2dd244c845c33feb8fe14cfa5fa533ef526d9c9e0e609420d7",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-backend-build",
+      "repo": "backend",
+      "command": "corepack pnpm build",
+      "startedAt": "2026-11-02T15:07:53.732Z",
+      "finishedAt": "2026-11-02T15:08:04.923Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-backend-build.log",
+        "sha256": "f67f46f4e7593401b93559514da4e18cdf267fb4627654e1816d32add95f3d10",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-backend-lint",
+      "repo": "backend",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T15:08:05.629Z",
+      "finishedAt": "2026-11-02T15:08:18.143Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-backend-lint.log",
+        "sha256": "e92a677911be85811d010071ffd31fbc2f48e08dd0c37d9dbde92dd03a0b10ca",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-backend-unit",
+      "repo": "backend",
+      "command": "corepack pnpm test --maxWorkers=2",
+      "startedAt": "2026-11-02T15:08:18.827Z",
+      "finishedAt": "2026-11-02T15:09:09.387Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-backend-unit.log",
+        "sha256": "3fc60ddf823a8689dfd969afaca080eefb81cae5f1f0fca66aae43d687244283",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-web-install",
+      "repo": "web",
+      "command": "corepack pnpm install --frozen-lockfile",
+      "startedAt": "2026-11-02T15:09:37.305Z",
+      "finishedAt": "2026-11-02T15:09:54.247Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-web-install.log",
+        "sha256": "b0aa78a8f5089a80a08ad16a51980b1b952cc643b8c7d2e2a0b6bfee02046bba",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-web-lint",
+      "repo": "web",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T15:09:54.996Z",
+      "finishedAt": "2026-11-02T15:10:07.421Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-web-lint.log",
+        "sha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-web-types",
+      "repo": "web",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T15:10:08.145Z",
+      "finishedAt": "2026-11-02T15:10:26.637Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-web-types.log",
+        "sha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-web-unit",
+      "repo": "web",
+      "command": "corepack pnpm test --maxWorkers=2",
+      "startedAt": "2026-11-02T15:10:27.328Z",
+      "finishedAt": "2026-11-02T15:12:26.334Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-web-unit.log",
+        "sha256": "b3897576f3c451dc2933d3ac1b6bb72bb48ed0fbd546a2ae4a56d5d03de4f65b",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-web-build",
+      "repo": "web",
+      "command": "corepack pnpm build",
+      "startedAt": "2026-11-02T15:12:27.031Z",
+      "finishedAt": "2026-11-02T15:12:29.866Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-web-build.log",
+        "sha256": "63af92d05c4c84cd39190448c9fbbc15bd7158c425301149deec7e2b0be243f7",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "baseline-live-preview",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=preview",
+      "startedAt": "2026-11-02T15:12:30.559Z",
+      "finishedAt": "2026-11-02T15:13:04.221Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "draft/demo-ui-ux",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/baseline-live-preview.log",
+        "sha256": "cc3166ea53a6863e56e3745e013354b3083e9b08d0e0af7a28d8047d2b6c9090",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "minio-build-retry",
+      "repo": "backend",
+      "command": "corepack pnpm exec docker build --progress=plain -t wolfari-minio:local infrastructure/minio",
+      "startedAt": "2026-11-02T15:15:08.089Z",
+      "finishedAt": "2026-11-02T15:15:14.539Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "b4c173bb1e441089d5cd07ece4766592c23e7999ceb74720312f08a8a2f96d24"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "b4c173bb1e441089d5cd07ece4766592c23e7999ceb74720312f08a8a2f96d24"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/minio-build-retry.log",
+        "sha256": "746cc2ba08fadf4f54cd809c8c49e07efa04d28aed2cc206bf86c3115d63fc03",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "minio-base-pull",
+      "repo": "backend",
+      "command": "corepack pnpm exec docker pull docker.io/library/golang:1.24.6-alpine3.22@sha256:c8c5f95d64aa79b6547f3b626eb84b16a7ce18a139e3e9ca19a8c078b85ba80d",
+      "startedAt": "2026-11-02T15:16:16.522Z",
+      "finishedAt": "2026-11-02T15:16:27.022Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "242444d975e5ba09517258bce72f37ea3dcf5b5ea863860cd4208ad6ce7527f2"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "242444d975e5ba09517258bce72f37ea3dcf5b5ea863860cd4208ad6ce7527f2"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/minio-base-pull.log",
+        "sha256": "85b82841ac52d88f9db881c8ef719aff5f64975779df8f0d4e5e3cbdf0c5628a",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-backend-install",
+      "repo": "backend",
+      "command": "corepack pnpm install --frozen-lockfile",
+      "startedAt": "2026-11-02T15:16:47.623Z",
+      "finishedAt": "2026-11-02T15:16:49.052Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-backend-install.log",
+        "sha256": "d15924fad6e2fa2b74e18ce6d7646e2b38316c9472995189e5b3c16872dd3e0a",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-contracts-generate",
+      "repo": "backend",
+      "command": "corepack pnpm contracts:generate",
+      "startedAt": "2026-11-02T15:16:49.746Z",
+      "finishedAt": "2026-11-02T15:16:52.487Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-contracts-generate.log",
+        "sha256": "d43cadd3177b234ec8cc8a7e215c0d4c89c8061155c2ff5b77da952864a54b19",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-contracts-check",
+      "repo": "backend",
+      "command": "corepack pnpm contracts:check",
+      "startedAt": "2026-11-02T15:16:53.218Z",
+      "finishedAt": "2026-11-02T15:16:55.257Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-contracts-check.log",
+        "sha256": "310a41a06ac1eb62c30cd3f402efe6c63542315e844d667f44e24bbabc983636",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "minio-alpine-pull",
+      "repo": "backend",
+      "command": "corepack pnpm exec docker pull docker.io/library/alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412",
+      "startedAt": "2026-11-02T15:17:41.642Z",
+      "finishedAt": "2026-11-02T15:17:46.062Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/minio-alpine-pull.log",
+        "sha256": "903ff7b5c18b5922b6704c598567aa40f82e234b11eb1571578361a909be010b",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "minio-build-cached",
+      "repo": "backend",
+      "command": "corepack pnpm exec docker build --progress=plain -t wolfari-minio:local infrastructure/minio",
+      "startedAt": "2026-11-02T15:17:46.778Z",
+      "finishedAt": "2026-11-02T15:19:56.487Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "backend": {
+          "head": "ebd3550d2cc3d5dc96ae25a0b0dbaba10a326be4",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "baffe3889481012929b5ead45572e137de03fec3148eee1abdb5d48bf8513062"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/minio-build-cached.log",
+        "sha256": "117fa1ec829b0716b0157b44131078148b9a63a074d85c1c9daf43792c2059ad",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-backend-build",
+      "repo": "backend",
+      "command": "corepack pnpm build",
+      "startedAt": "2026-11-02T15:20:44.103Z",
+      "finishedAt": "2026-11-02T15:20:55.734Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-backend-build.log",
+        "sha256": "9c89752c9836862aa3250259643099c97c1ff609ab875fc0b471a5b9041d7405",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-backend-lint",
+      "repo": "backend",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T15:20:56.473Z",
+      "finishedAt": "2026-11-02T15:21:05.900Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-backend-lint.log",
+        "sha256": "e92a677911be85811d010071ffd31fbc2f48e08dd0c37d9dbde92dd03a0b10ca",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-backend-unit",
+      "repo": "backend",
+      "command": "corepack pnpm test --maxWorkers=2",
+      "startedAt": "2026-11-02T15:21:06.566Z",
+      "finishedAt": "2026-11-02T15:22:04.652Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-backend-unit.log",
+        "sha256": "f375097c0992febf8dfef2c497914618a4872be9088d8a46d159d077864db6fa",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-contracts-lint",
+      "repo": "backend",
+      "command": "corepack pnpm contracts:lint",
+      "startedAt": "2026-11-02T15:22:05.374Z",
+      "finishedAt": "2026-11-02T15:22:06.899Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-contracts-lint.log",
+        "sha256": "99eae5312ae72095ad4a13db80068b979f99ef15ae0a8fa00d119214b61697e1",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-contracts-rest",
+      "repo": "backend",
+      "command": "corepack pnpm contracts:rest",
+      "startedAt": "2026-11-02T15:22:07.631Z",
+      "finishedAt": "2026-11-02T15:22:11.662Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-contracts-rest.log",
+        "sha256": "5b7cdfa5b18d2f6a9f68d5a9108f2551901593d7e11474ebbdbb5356eadd662d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "merged-contracts-breaking",
+      "repo": "backend",
+      "command": "corepack pnpm contracts:breaking --against origin/main",
+      "startedAt": "2026-11-02T15:22:12.345Z",
+      "finishedAt": "2026-11-02T15:22:14.342Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/merged-contracts-breaking.log",
+        "sha256": "467efb9a9f73f8b5c978c015d0add3d97a4ec2490910cd00fcb6a2d5880b3338",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "harness-types",
+      "repo": "web",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T15:22:15.045Z",
+      "finishedAt": "2026-11-02T15:22:24.736Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/harness-types.log",
+        "sha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "harness-unit",
+      "repo": "web",
+      "command": "corepack pnpm test tests/demo1-ownership.test.ts --maxWorkers=2",
+      "startedAt": "2026-11-02T15:22:25.431Z",
+      "finishedAt": "2026-11-02T15:22:29.828Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3dbfc2f74f252b8cf3cdae2f132267882608bf831a4288025022cbad25111352"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/harness-unit.log",
+        "sha256": "2acdb6f51dadae2bebf133b5a323eac80bb6275f7f64ed11c3baa75af420a107",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "harness-unit-fixed",
+      "repo": "web",
+      "command": "corepack pnpm test tests/demo1-ownership.test.ts --maxWorkers=2",
+      "startedAt": "2026-11-02T15:23:47.106Z",
+      "finishedAt": "2026-11-02T15:23:50.779Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "03c0840ae7dc93406a56dd2e1819d205d5d6baa83d15beb54ef93d32019ff1ab"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "03c0840ae7dc93406a56dd2e1819d205d5d6baa83d15beb54ef93d32019ff1ab"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/harness-unit-fixed.log",
+        "sha256": "ec98a7e1ffcdb40502499fb24c9b0104fb28f8c5b0817fc3ee19be005e9e5c74",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "chromium-install",
+      "repo": "web",
+      "command": "corepack pnpm exec playwright install chromium",
+      "startedAt": "2026-11-02T15:23:51.438Z",
+      "finishedAt": "2026-11-02T15:23:53.106Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "03c0840ae7dc93406a56dd2e1819d205d5d6baa83d15beb54ef93d32019ff1ab"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "03c0840ae7dc93406a56dd2e1819d205d5d6baa83d15beb54ef93d32019ff1ab"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/chromium-install.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-live-preview-1",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=preview",
+      "startedAt": "2026-11-02T15:23:53.766Z",
+      "finishedAt": "2026-11-02T15:25:50.447Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "03c0840ae7dc93406a56dd2e1819d205d5d6baa83d15beb54ef93d32019ff1ab"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "03c0840ae7dc93406a56dd2e1819d205d5d6baa83d15beb54ef93d32019ff1ab"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-live-preview-1.log",
+        "sha256": "7e16a7f541b735f7736e7e1f63395334e9215fbc1981ef732e4dd05bd14e65dd",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-live-preview-2",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=preview",
+      "startedAt": "2026-11-02T15:29:03.038Z",
+      "finishedAt": "2026-11-02T15:31:23.279Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e553ae4ddb7e399539adec4f5024f7ea04d33cbf1397df5b2d21eb4a02592faa"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "e553ae4ddb7e399539adec4f5024f7ea04d33cbf1397df5b2d21eb4a02592faa"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-live-preview-2.log",
+        "sha256": "df22800bd16515a71417474bf085e583541143f19d3ff86887b598e65e750d76",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-live-preview-3",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=preview",
+      "startedAt": "2026-11-02T15:32:43.569Z",
+      "finishedAt": "2026-11-02T15:35:59.116Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "ae21a6c70108f2a6177b3eb05821ff0da0d5b0c9e0a7929e3569a1ccbf497853"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "ae21a6c70108f2a6177b3eb05821ff0da0d5b0c9e0a7929e3569a1ccbf497853"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-live-preview-3.log",
+        "sha256": "6188ad3b1ec00ceb62fa67f1d49d015a2b04b08a5a429fa7655a64d77de4f809",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-live-preview-4",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=preview",
+      "startedAt": "2026-11-02T15:42:51.383Z",
+      "finishedAt": "2026-11-02T15:46:12.892Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "6338ea3daf7f1ed9495daeaf61c0fe4fc5b05def59d1288f3f133bf251eee849"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "6338ea3daf7f1ed9495daeaf61c0fe4fc5b05def59d1288f3f133bf251eee849"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-live-preview-4.log",
+        "sha256": "5ebe95710bd4a48f13425c4d382a688432565b3330d167b3bbb0e73b521402ae",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-db",
+      "repo": "backend",
+      "command": "corepack pnpm db:test",
+      "startedAt": "2026-11-02T15:46:56.930Z",
+      "finishedAt": "2026-11-02T15:47:34.589Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-db.log",
+        "sha256": "3a38d10130b95ed6724fd614214ed032007932f1922f39fc48fae99c8e253ce8",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-identity",
+      "repo": "backend",
+      "command": "corepack pnpm identity:test",
+      "startedAt": "2026-11-02T15:47:35.310Z",
+      "finishedAt": "2026-11-02T15:48:54.333Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-identity.log",
+        "sha256": "082ee5e730d1df928deb90b3aeb078235785f679b495bec450700a0dd041b426",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-trip",
+      "repo": "backend",
+      "command": "corepack pnpm trip:test",
+      "startedAt": "2026-11-02T15:48:55.027Z",
+      "finishedAt": "2026-11-02T15:49:35.317Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-trip.log",
+        "sha256": "a03d844dd9c6d575d7feec4445e7bc8513249ca1ef032cbcce8a5ecfb881453e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-invitations",
+      "repo": "backend",
+      "command": "corepack pnpm trip:invitations:test",
+      "startedAt": "2026-11-02T15:49:36.021Z",
+      "finishedAt": "2026-11-02T15:50:48.769Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-invitations.log",
+        "sha256": "111e0db6f6891f8640c233a4465e18e70986bc226ad044c2748926cf3adf6caf",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-members",
+      "repo": "backend",
+      "command": "corepack pnpm trip:members:test",
+      "startedAt": "2026-11-02T15:50:49.440Z",
+      "finishedAt": "2026-11-02T15:51:35.179Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-members.log",
+        "sha256": "2aa1e1693940ade54744ec2321500f489791d050b62e105e0214e21d9737153e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-finance",
+      "repo": "backend",
+      "command": "corepack pnpm finance:test",
+      "startedAt": "2026-11-02T15:51:35.870Z",
+      "finishedAt": "2026-11-02T15:54:45.584Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-finance.log",
+        "sha256": "0f8f64f740b01724ec64b12be0f139de09ba08d88848aa4187f39b70a08665b6",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-notification",
+      "repo": "backend",
+      "command": "corepack pnpm notification:test",
+      "startedAt": "2026-11-02T15:54:46.326Z",
+      "finishedAt": "2026-11-02T15:55:21.855Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-notification.log",
+        "sha256": "cb9d1ad584604b0d25180f46f9b7070f86ab6df4621b0363a19d3b68e3b6d097",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-price-watch",
+      "repo": "backend",
+      "command": "corepack pnpm price-watch:test",
+      "startedAt": "2026-11-02T15:55:22.531Z",
+      "finishedAt": "2026-11-02T15:56:01.093Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-price-watch.log",
+        "sha256": "29f30465042ac72a2d88032c65c51a0fb5231fa79e162ead707b1fab0f515f92",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-acceptance",
+      "repo": "backend",
+      "command": "corepack pnpm demo:acceptance",
+      "startedAt": "2026-11-02T15:56:01.765Z",
+      "finishedAt": "2026-11-02T15:56:57.467Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-acceptance.log",
+        "sha256": "acefd80b5ad15f7afef520395b3dbea275298e47e2de07f6c8286400305c2a3d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-outbox",
+      "repo": "backend",
+      "command": "corepack pnpm finance:outbox:test",
+      "startedAt": "2026-11-02T15:56:58.150Z",
+      "finishedAt": "2026-11-02T15:57:40.720Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-outbox.log",
+        "sha256": "4ccefe560be268faadcde86e2a14e6b30e1209faa3b3a453e7ecf211fdac65bf",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-finance-notification",
+      "repo": "backend",
+      "command": "corepack pnpm finance:notification:test",
+      "startedAt": "2026-11-02T15:57:41.403Z",
+      "finishedAt": "2026-11-02T16:02:39.383Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-finance-notification.log",
+        "sha256": "38aeb5d762aa62c0478b2f818b564e3a13f3b1ba238b3128fdcebe0955d69281",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-contracts-unit",
+      "repo": "backend",
+      "command": "corepack pnpm contracts:test --maxWorkers=2",
+      "startedAt": "2026-11-02T16:02:40.151Z",
+      "finishedAt": "2026-11-02T16:02:50.122Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-contracts-unit.log",
+        "sha256": "094862db3329062a515f22e527b7c914ab2e1fbe88bc3bb28d80c4422b1efa4b",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-lint",
+      "repo": "web",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T16:03:44.812Z",
+      "finishedAt": "2026-11-02T16:03:55.828Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-lint.log",
+        "sha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-types",
+      "repo": "web",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T16:03:56.542Z",
+      "finishedAt": "2026-11-02T16:04:11.683Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-types.log",
+        "sha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-unit",
+      "repo": "web",
+      "command": "corepack pnpm test --maxWorkers=2",
+      "startedAt": "2026-11-02T16:04:12.441Z",
+      "finishedAt": "2026-11-02T16:06:10.325Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-unit.log",
+        "sha256": "5ac345c86e25cb5979f6a07da6b955597f275bb3668cbf9039ba529c83cc4681",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-build",
+      "repo": "web",
+      "command": "corepack pnpm build",
+      "startedAt": "2026-11-02T16:06:11.015Z",
+      "finishedAt": "2026-11-02T16:06:13.922Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-build.log",
+        "sha256": "b461b023559687f09d89cbbe199ffe2ba2268d3224214266857bdea5ebd8829f",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-preview-build",
+      "repo": "web",
+      "command": "corepack pnpm build:preview",
+      "startedAt": "2026-11-02T16:06:14.621Z",
+      "finishedAt": "2026-11-02T16:06:17.311Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-preview-build.log",
+        "sha256": "97230b4c3db9eb111d5295bf429e6690c43726e7308d8c9096d7fd2ff7123134",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-fixture-dev",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e",
+      "startedAt": "2026-11-02T16:06:18.022Z",
+      "finishedAt": "2026-11-02T16:12:01.289Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-fixture-dev.log",
+        "sha256": "bec5efc54e85a28f7ae48bc0dc1c0393a3103e7eb9afa27cca97eccc2829cb55",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "candidate-web-gateway-dev-2",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway",
+      "startedAt": "2026-11-02T16:15:23.456Z",
+      "finishedAt": "2026-11-02T16:21:47.324Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "47df3908fd6c9ae9b87223645debd9cbd592434c62419bc0228640a6bae4df4c"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/candidate-web-gateway-dev-2.log",
+        "sha256": "3d2a1a26c6686ccced9f1b56a67b6d54f7f497ed8e522a8b65567687f2dfd886",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fixture-dev-single-worker",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e --workers=1",
+      "startedAt": "2026-11-02T16:23:03.466Z",
+      "finishedAt": "2026-11-02T16:32:55.936Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "cd2ab43866f86a8e2a71c4509b5f3c14bade63f5f69394537da9c01fd5b79aa3"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "cd2ab43866f86a8e2a71c4509b5f3c14bade63f5f69394537da9c01fd5b79aa3"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fixture-dev-single-worker.log",
+        "sha256": "2a60b089cfe5f470735511b0587f42017a901e34fbe84dfef17a53c484bcf390",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "gateway-navigation-diagnostic",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway tests/e2e-gateway/cp11-shell-current.spec.ts --workers=1 --trace=on",
+      "startedAt": "2026-11-02T16:35:50.414Z",
+      "finishedAt": "2026-11-02T16:36:15.699Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "cd2ab43866f86a8e2a71c4509b5f3c14bade63f5f69394537da9c01fd5b79aa3"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "cd2ab43866f86a8e2a71c4509b5f3c14bade63f5f69394537da9c01fd5b79aa3"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/gateway-navigation-diagnostic.log",
+        "sha256": "e0db84ea330a6f110ac8c253f2b7bb0d4586263e17d96ae1c1ea9fd3b1c107e6",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fixture-built-single-worker",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:built --workers=1",
+      "startedAt": "2026-11-02T16:37:47.923Z",
+      "finishedAt": "2026-11-02T16:45:22.050Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "cd2ab43866f86a8e2a71c4509b5f3c14bade63f5f69394537da9c01fd5b79aa3"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fixture-built-single-worker.log",
+        "sha256": "bebbae41e82bf1c446a4d2943610495a0bc413a6637560dafca7593b70100c55",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "gateway-built-single-worker",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway:built --workers=1",
+      "startedAt": "2026-11-02T16:45:22.813Z",
+      "finishedAt": "2026-11-02T16:52:21.833Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/gateway-built-single-worker.log",
+        "sha256": "7586eb5053c6e93073b940b83980da208dc2c06db5d34b46e1b7622bd0b7a903",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-dev-1",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=dev",
+      "startedAt": "2026-11-02T16:54:21.315Z",
+      "finishedAt": "2026-11-02T16:56:34.215Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "10fe1cb433a62c1bd72cb8c1d047734f12930e105ea74947d1c878000a9b4ce9"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-dev-1.log",
+        "sha256": "0029e365dcf326edbae68033bd6b475c84b0321ee86a4a4608711756504a8dc1",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-dev-2",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=dev",
+      "startedAt": "2026-11-02T16:59:03.133Z",
+      "finishedAt": "2026-11-02T17:01:58.254Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "7057d9407fbeb7fa599527d083c0c8abae461552b6cc2a6a47fc85704c60c35d"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "7057d9407fbeb7fa599527d083c0c8abae461552b6cc2a6a47fc85704c60c35d"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-dev-2.log",
+        "sha256": "e552a7ad75508b86fed1973d000941bb4d67cbf4a7d7c8f18b38e276667947f3",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-dev-3",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=dev",
+      "startedAt": "2026-11-02T17:03:27.566Z",
+      "finishedAt": "2026-11-02T17:08:14.874Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "022bf806fb95e70fc1441a96689d3ac1725589096e73a5844c46262e5753ad75"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "022bf806fb95e70fc1441a96689d3ac1725589096e73a5844c46262e5753ad75"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-dev-3.log",
+        "sha256": "374983b2f987ce752eb694e1c0eff8eed1e640a53ff800c8a89ecdbc62f9d41d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-preview-1",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=preview",
+      "startedAt": "2026-11-02T17:08:42.956Z",
+      "finishedAt": "2026-11-02T17:12:37.508Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "022bf806fb95e70fc1441a96689d3ac1725589096e73a5844c46262e5753ad75"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "022bf806fb95e70fc1441a96689d3ac1725589096e73a5844c46262e5753ad75"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-preview-1.log",
+        "sha256": "9246f74513dc8343397f6f2dec94f360b2e5d9049ef9344690c1fbff358e1636",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-preview-2",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=preview",
+      "startedAt": "2026-11-02T17:12:58.430Z",
+      "finishedAt": "2026-11-02T17:17:01.366Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "022bf806fb95e70fc1441a96689d3ac1725589096e73a5844c46262e5753ad75"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "022bf806fb95e70fc1441a96689d3ac1725589096e73a5844c46262e5753ad75"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-preview-2.log",
+        "sha256": "8bc22fc79d1e0199c6c4dcfb5d054622b3ce1556104219ab3651fdf267515320",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-dev-4",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=dev",
+      "startedAt": "2026-11-02T17:21:18.870Z",
+      "finishedAt": "2026-11-02T17:26:13.942Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-dev-4.log",
+        "sha256": "ad33fd2376c47621fd7c9b35a57f8f3b345df692ecfcde73606981388c0518fc",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-preview-3",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=preview",
+      "startedAt": "2026-11-02T17:26:39.917Z",
+      "finishedAt": "2026-11-02T17:30:35.084Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-preview-3.log",
+        "sha256": "067b918e202ed3127e02f03195c0b1a112136d9aad44a0b83f1f186be311d558",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-live-preview-4",
+      "repo": "web",
+      "command": "corepack pnpm exec node scripts/demo1-e2e.mjs --runtime=preview",
+      "startedAt": "2026-11-02T17:30:52.325Z",
+      "finishedAt": "2026-11-02T17:34:41.976Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-live-preview-4.log",
+        "sha256": "89d5ac7fdf1a9ffc863a8ca18512251abb375fa7482765ae127fdd008e12a70b",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-prepare",
+      "repo": "web",
+      "command": "corepack pnpm exec node test-results/readiness/20261102/personal-smoke.mjs prepare",
+      "startedAt": "2026-11-02T17:44:27.513Z",
+      "finishedAt": "2026-11-02T17:44:59.612Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-prepare.log",
+        "sha256": "b7fd319246c27305bfa4966445bd03ed7604c9a5313de9314c2b7e74d79a1a08",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-resume-1",
+      "repo": "web",
+      "command": "corepack pnpm exec node test-results/readiness/20261102/personal-smoke.mjs resume",
+      "startedAt": "2026-11-02T17:46:47.363Z",
+      "finishedAt": "2026-11-02T17:47:19.133Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-resume-1.log",
+        "sha256": "edeacaa6e7dacba73ff20f966470fbadb9bbbff8ff145a15ffb5d9b9b04d396e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-stop-1",
+      "repo": "backend",
+      "command": "corepack pnpm demo:stop",
+      "startedAt": "2026-11-02T17:48:00.873Z",
+      "finishedAt": "2026-11-02T17:48:05.903Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-stop-1.log",
+        "sha256": "0750aa152c314243aaeb66a57572b42f21b646fe578dde92d0ffe7b6a856e5a3",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-init",
+      "repo": "backend",
+      "command": "corepack pnpm demo:init",
+      "startedAt": "2026-11-02T17:48:23.604Z",
+      "finishedAt": "2026-11-02T17:48:25.075Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-init.log",
+        "sha256": "9630d92764bc7bbf59ac6edcc2d303000ae87b1355a379be4d3b2cbed4feff9e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-restart-check",
+      "repo": "backend",
+      "command": "corepack pnpm demo:check",
+      "startedAt": "2026-11-02T17:49:51.920Z",
+      "finishedAt": "2026-11-02T17:49:55.243Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-restart-check.log",
+        "sha256": "2ba18c682e1e36b7e0cbe66fc390c6dd70fc513ddcac4913b1ed7b62be7968ef",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-restart-verify",
+      "repo": "web",
+      "command": "corepack pnpm exec node test-results/readiness/20261102/personal-smoke.mjs verify",
+      "startedAt": "2026-11-02T17:50:14.135Z",
+      "finishedAt": "2026-11-02T17:50:24.501Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-restart-verify.log",
+        "sha256": "061c269f756a6fdd1780c34ae38dda776f736cd6b6db438b1e3819e2fe3e80c7",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-restart-preview",
+      "repo": "web",
+      "command": "corepack pnpm demo:preview",
+      "startedAt": "2026-11-02T17:49:02.027Z",
+      "finishedAt": "2026-11-02T17:52:02.520Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-restart-preview.log",
+        "sha256": "ba2d32deda9bfdf4c665222a0fa2c613e2a4ca2313e2f96a3adf0cb9767546d3",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-restart-start",
+      "repo": "backend",
+      "command": "corepack pnpm demo:start",
+      "startedAt": "2026-11-02T17:48:48.581Z",
+      "finishedAt": "2026-11-02T17:52:02.649Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-restart-start.log",
+        "sha256": "4b7acf8c8ff119ce9f26e4a2426ad379d9000d0d1b6d155996d3cbc6c152a1ba",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "personal-stop-after-verify",
+      "repo": "backend",
+      "command": "corepack pnpm demo:stop",
+      "startedAt": "2026-11-02T17:51:59.809Z",
+      "finishedAt": "2026-11-02T17:52:04.695Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "2b6c648b09a2ed0d1a4c4f1b670338d770263ad2c700d4c6cb15ea59ccc2c184"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/personal-stop-after-verify.log",
+        "sha256": "fe73f035d88d857c5c4c7c21d0b03445d734dae3643b100135a8289f8e223ce9",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "rd09-reproduction",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway:built finance-refresh.spec.ts --workers=1",
+      "startedAt": "2026-11-02T18:23:20.970Z",
+      "finishedAt": "2026-11-02T18:23:35.340Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "5fe3b832c18ef3a746527246c795465641cec9efd58502595892afe851d40442"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "5fe3b832c18ef3a746527246c795465641cec9efd58502595892afe851d40442"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/rd09-reproduction.log",
+        "sha256": "aa54c4fdd18c5b7c88608297608478f94e42fdeaed27e23bcfd1ed7d7758eea0",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "rd09-fix-focused",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway:built finance-refresh.spec.ts finance-operations.spec.ts --workers=1",
+      "startedAt": "2026-11-02T18:24:05.465Z",
+      "finishedAt": "2026-11-02T18:24:28.851Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "09335b43cff01f6baf39928151adcac41237d82c6f283f0906e91feed13fe7eb"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "09335b43cff01f6baf39928151adcac41237d82c6f283f0906e91feed13fe7eb"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/rd09-fix-focused.log",
+        "sha256": "6d8c7f113ac823c17e69e53296f6e0200486808f8992213e4fb763d5b54b8658",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "rd09-fix-focused-2",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway:built finance-refresh.spec.ts finance-operations.spec.ts --workers=1",
+      "startedAt": "2026-11-02T18:25:44.924Z",
+      "finishedAt": "2026-11-02T18:26:02.353Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/rd09-fix-focused-2.log",
+        "sha256": "528be7729b6e75ef5706a82c762299232b62415f892e020ca5a177147f5e7c6f",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-rd09-lint",
+      "repo": "web",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T18:26:21.792Z",
+      "finishedAt": "2026-11-02T18:26:32.523Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-rd09-lint.log",
+        "sha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-rd09-types",
+      "repo": "web",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T18:26:33.277Z",
+      "finishedAt": "2026-11-02T18:26:48.412Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-rd09-types.log",
+        "sha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-rd09-unit",
+      "repo": "web",
+      "command": "corepack pnpm test --maxWorkers=2",
+      "startedAt": "2026-11-02T18:26:49.114Z",
+      "finishedAt": "2026-11-02T18:28:49.599Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "28b7e7a3a7c7c4687ea08086545056b51535c75a10811e29378d08a6d38a200a"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-rd09-unit.log",
+        "sha256": "c64c1d2db5cb8d060739c4fa7e123613a32abc9388f72c181055f2ded54d1ad3",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "map-clock-focused",
+      "repo": "web",
+      "command": "corepack pnpm test tests/trip-map-nearby.test.tsx --maxWorkers=1",
+      "startedAt": "2026-11-02T18:30:18.196Z",
+      "finishedAt": "2026-11-02T18:30:27.004Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "cb1070adc34d2863552d172e55126761640dfd789760d700ff246454faeabf7c"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "cb1070adc34d2863552d172e55126761640dfd789760d700ff246454faeabf7c"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/map-clock-focused.log",
+        "sha256": "3ec217ab2a864f79250bdc144b5a9f59c65331e93949c9a392c47f4dc51af43c",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "final-rd09-unit-2",
+      "repo": "web",
+      "command": "corepack pnpm test --maxWorkers=2",
+      "startedAt": "2026-11-02T18:30:27.724Z",
+      "finishedAt": "2026-11-02T18:32:22.774Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "cb1070adc34d2863552d172e55126761640dfd789760d700ff246454faeabf7c"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "cb1070adc34d2863552d172e55126761640dfd789760d700ff246454faeabf7c"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/final-rd09-unit-2.log",
+        "sha256": "6f8c9c4c00534c5ca75df8abc36c5a922dffeca95644ddc126b6fdee110a608e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "expanded-live-dev",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=dev",
+      "startedAt": "2026-11-02T18:32:23.493Z",
+      "finishedAt": "2026-11-02T18:35:10.511Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "cb1070adc34d2863552d172e55126761640dfd789760d700ff246454faeabf7c"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "cb1070adc34d2863552d172e55126761640dfd789760d700ff246454faeabf7c"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/expanded-live-dev.log",
+        "sha256": "f60ba6ec32ec5059588826a1a68e71edb99d65a0ae95efd31b6bfde3513aaaea",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "d-handoff-lint",
+      "repo": "web",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T18:37:16.518Z",
+      "finishedAt": "2026-11-02T18:37:24.055Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3eaf35537302d56fb5f9f79fd4725ada712ba87ba1f98e631ac4b3e1a3541781"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3eaf35537302d56fb5f9f79fd4725ada712ba87ba1f98e631ac4b3e1a3541781"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/d-handoff-lint.log",
+        "sha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "d-handoff-typecheck",
+      "repo": "web",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T18:37:24.735Z",
+      "finishedAt": "2026-11-02T18:37:34.359Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3eaf35537302d56fb5f9f79fd4725ada712ba87ba1f98e631ac4b3e1a3541781"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3eaf35537302d56fb5f9f79fd4725ada712ba87ba1f98e631ac4b3e1a3541781"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/d-handoff-typecheck.log",
+        "sha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "d-handoff-demo-build",
+      "repo": "web",
+      "command": "corepack pnpm demo:build",
+      "startedAt": "2026-11-02T18:37:35.031Z",
+      "finishedAt": "2026-11-02T18:37:37.786Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3eaf35537302d56fb5f9f79fd4725ada712ba87ba1f98e631ac4b3e1a3541781"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "finalSource": {
+        "web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "diffSha256": "3eaf35537302d56fb5f9f79fd4725ada712ba87ba1f98e631ac4b3e1a3541781"
+        },
+        "backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "diffSha256": "60fecaf0d0ee9445ccd2d49ec2cd7c423bcfd4e3211dcc89492643f18b2d0c9d"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/d-handoff-demo-build.log",
+        "sha256": "9d45d93c97b24e9b41311cb0c0032c3da21004ba720cc11a8cb791dd2d2016da",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-backend-build",
+      "repo": "backend",
+      "command": "corepack pnpm build",
+      "startedAt": "2026-11-02T17:55:54.767Z",
+      "finishedAt": "2026-11-02T17:56:08.629Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-backend-build.log",
+        "sha256": "8732b88b8d8e2aed6096ae9d033ee20cbcedbf7811e158a47d3a126c1b889602",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-backend-install-online",
+      "repo": "backend",
+      "command": "corepack pnpm install --frozen-lockfile",
+      "startedAt": "2026-11-02T17:55:03.928Z",
+      "finishedAt": "2026-11-02T17:55:23.077Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-backend-install-online.log",
+        "sha256": "2ebc087895048b94e6c0e4daeaab81f91d8ef3b2666d8a778b6201b537978497",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-backend-install",
+      "repo": "backend",
+      "command": "corepack pnpm install --frozen-lockfile --offline",
+      "startedAt": "2026-11-02T17:54:25.104Z",
+      "finishedAt": "2026-11-02T17:54:26.912Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-backend-install.log",
+        "sha256": "624a56f53718825904864d76ca8768ce9b2f930247afafd4e3a518b54ac1820a",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-backend-launcher",
+      "repo": "backend",
+      "command": "corepack pnpm dev:test",
+      "startedAt": "2026-11-02T17:56:09.675Z",
+      "finishedAt": "2026-11-02T17:56:31.415Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-backend-launcher.log",
+        "sha256": "32196364c9908ea8a02f4278b1197cc8647e5ef781efae434ea9f805e578be1d",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-fixture-dev",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T17:57:25.141Z",
+      "finishedAt": "2026-11-02T18:07:54.295Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-fixture-dev.log",
+        "sha256": "8a71b97bc17f7e8ecd65d8499d6226c7515003830bb48a027a8477752595eb40",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-gateway-dev",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:gateway --workers=1",
+      "startedAt": "2026-11-02T18:08:38.514Z",
+      "finishedAt": "2026-11-02T18:18:55.352Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-gateway-dev.log",
+        "sha256": "270909b93d5fa3f0357fc05dc42a849708e80a2057be2c638375659e7f3845fc",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-live-preview",
+      "repo": "web",
+      "command": "corepack pnpm test:e2e:demo1 --runtime=preview",
+      "startedAt": "2026-11-02T18:18:56.731Z",
+      "finishedAt": "2026-11-02T18:22:48.456Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-live-preview.log",
+        "sha256": "56a51d5777acb0565c5624a319aba960a069c5ebcba95cb798b1bd89f06d2042",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-web-build",
+      "repo": "web",
+      "command": "corepack pnpm build",
+      "startedAt": "2026-11-02T17:57:21.254Z",
+      "finishedAt": "2026-11-02T17:57:24.169Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-web-build.log",
+        "sha256": "9fefad7bebeeb25c3f108fd9a8a9523761bbf37bedb1c47f310e4c90564c6d35",
+        "rawIgnored": true
+      }
+    },
+    {
+      "label": "fresh-web-install",
+      "repo": "web",
+      "command": "corepack pnpm install --frozen-lockfile",
+      "startedAt": "2026-11-02T17:56:32.440Z",
+      "finishedAt": "2026-11-02T17:56:47.331Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "finalSource": {
+        "Wolfari-backend": {
+          "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+          "branch": "feat/demo-1-readiness-backend",
+          "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+          "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+        },
+        "Wolfari-web": {
+          "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+          "branch": "feat/demo-1-readiness-web",
+          "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+          "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+        }
+      },
+      "evidence": {
+        "path": "test-results/readiness/20261102/fresh-web-install.log",
+        "sha256": "4981b6826f9f765e3a45acc71281843f2e7112599a1d5f4acf54fd4edfb74e13",
+        "rawIgnored": true
+      }
+    }
+  ],
+  "live": [
+    {
+      "scope": "candidate",
+      "runId": "20261102152355-993ae498",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T15:24:36.703Z",
+        "duration": 69112.46900000001,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "3a30e6d2d7e655cc7fb1605731195325786ce01ec4a361f2265f15c9b4d6ba7f",
+        "treeSha256": "54620a58f4b3d5a756feedf68bf197d3ca658c87c886990e9ab35c861e64a3c6"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "5ea356dccf629183cfdee347ad04dc171801a3153211da820fec13f42a656dbe"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102152355-993ae498/preview/results.json",
+        "sha256": "1240c1f2a74108cf176426eec321abea111de8423d05767236b4427007b9d199",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102152904-883f4e05",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T15:29:46.762Z",
+        "duration": 91829.61,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "c025e5e781a4871905f749e9edae4004a2020b47492e1f182a22e9a7a21d8ae8",
+        "treeSha256": "64ea88c0da3d23c2f08b0da0c2a9a94881d531d9119e4ce1a291cfaa5f360d1c"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "5ea356dccf629183cfdee347ad04dc171801a3153211da820fec13f42a656dbe"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102152904-883f4e05/preview/results.json",
+        "sha256": "45340cb1a2bf58d408db4ff5ae3f6c930507773d4fdb5a18b7b967b5a7e7e078",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102153244-8d183765",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T15:33:26.654Z",
+        "duration": 147897.479,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "b5b91aab3ee7f6ba4b394d53a31451b00993bf1ec95b2a8e7b739a9a41c40126",
+        "treeSha256": "19a6716381d8ae3ec6e5abd70eec13d28dd958152167befda9eaabeb026fce41"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "5ea356dccf629183cfdee347ad04dc171801a3153211da820fec13f42a656dbe"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102153244-8d183765/preview/results.json",
+        "sha256": "d375f922325f0afb8c8a27f814021b97dd71dc35d506a2f7954c3ede43743899",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102154252-327c96ba",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T15:43:36.739Z",
+        "duration": 149475.15,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "64a740ae5a1a647f7bec26322c0b05ef6731bfe09ff3366acd2d9c84a8fb778f",
+        "treeSha256": "8be76a4993c870abcf17d24a34f41c66ab81afae38a537a774e7921544c080d8"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "5ea356dccf629183cfdee347ad04dc171801a3153211da820fec13f42a656dbe"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "test-results/demo1/20261102154252-327c96ba/preview/results.json",
+        "sha256": "d505753b974823405715397e8648b366bb3860978d1012c0bada9e148a826000",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102165422-0f242470",
+      "runtime": "dev",
+      "stats": {
+        "startTime": "2026-11-02T16:55:08.100Z",
+        "duration": 81045.373,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "64a740ae5a1a647f7bec26322c0b05ef6731bfe09ff3366acd2d9c84a8fb778f",
+        "treeSha256": "57b99495c35d4cbd93d1aadffe8eb7e11e067bd5e32156196ed8c8485f5a4a56"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102165422-0f242470/dev/results.json",
+        "sha256": "2b7173a6e27b71680fa0b2256d242cdf0b6245fa1b925c14c300be0303160686",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102165904-1f101613",
+      "runtime": "dev",
+      "stats": {
+        "startTime": "2026-11-02T16:59:48.083Z",
+        "duration": 124893.785,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "5f6140f2f5095b05ea13bb5888f8e46e93e9feb8ba87b550619fbd986c0c8340",
+        "treeSha256": "9dffed44093b85b3acbd2de913bb35992355deece957846940cff5348d283cee"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102165904-1f101613/dev/results.json",
+        "sha256": "a664776f6e90919db1d5490f24a7e8a6b61d10eeb1dd65e9fdc2f0252a0c5cfa",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102170329-50bc4ea6",
+      "runtime": "dev",
+      "stats": {
+        "startTime": "2026-11-02T17:04:12.101Z",
+        "duration": 235312.341,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "8493f3b9e520f274ef1309d945e2d35574aad285bacffbf459fadd9ff881c0fd",
+        "treeSha256": "09ea1453a55a97cbc0299eb1b04b05563a8ecbdbb0913379c3b35cb3b7db6b63"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "test-results/demo1/20261102170329-50bc4ea6/dev/results.json",
+        "sha256": "340e237e74ed00efcb5b6a049fd4d4a5b9e53d45e5ca0b3e09710ea27ce762a3",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102170844-a40de76a",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T17:09:27.368Z",
+        "duration": 182613.858,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "8493f3b9e520f274ef1309d945e2d35574aad285bacffbf459fadd9ff881c0fd",
+        "treeSha256": "09ea1453a55a97cbc0299eb1b04b05563a8ecbdbb0913379c3b35cb3b7db6b63"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "test-results/demo1/20261102170844-a40de76a/preview/results.json",
+        "sha256": "4e4eb0624fdc7f0c4b4c041c2e136774eb74fcb0a2641156ef69b025ed41199b",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102171259-0bf80315",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T17:13:44.545Z",
+        "duration": 192141.131,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "8493f3b9e520f274ef1309d945e2d35574aad285bacffbf459fadd9ff881c0fd",
+        "treeSha256": "09ea1453a55a97cbc0299eb1b04b05563a8ecbdbb0913379c3b35cb3b7db6b63"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102171259-0bf80315/preview/results.json",
+        "sha256": "10116b1ff18893ace2e9d32bc8b46e8a9dea3960be48074ee5464dba1bf65ee8",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102172120-6606e567",
+      "runtime": "dev",
+      "stats": {
+        "startTime": "2026-11-02T17:22:01.931Z",
+        "duration": 244509.153,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+        "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "test-results/demo1/20261102172120-6606e567/dev/results.json",
+        "sha256": "2638928204c72006727c189acdff241acd279a9c315367641426a16e2832f463",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102172641-398317aa",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T17:27:25.633Z",
+        "duration": 182518.71,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+        "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "test-results/demo1/20261102172641-398317aa/preview/results.json",
+        "sha256": "57b443d6cc82a7ccac4ab6fa42ab4bbdcdd803e336fe7e7761d345abc26e9e47",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102173053-fb54789f",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T17:31:35.529Z",
+        "duration": 179591.78600000002,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+        "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "test-results/demo1/20261102173053-fb54789f/preview/results.json",
+        "sha256": "a0ae7da8810f2bc0f30bef39b4ff535751468c5e32ae764cc2214d7fc8d647f0",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "candidate",
+      "runId": "20261102183225-1fcdc2b4",
+      "runtime": "dev",
+      "stats": {
+        "startTime": "2026-11-02T18:33:09.396Z",
+        "duration": 116124.807,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "b3a5dfbdd97620d1bda502c789de2a5b3fb39560dee86e608eca9417dbc57600",
+        "treeSha256": "230bebc2f36f639e790d5f4564b90af5b1b46e53b5bac373269a64cdcc509c12"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "680b7a631a24e1178d7b478f45303efcf277cb80a68bf3443bdc4c71799f7caf"
+      },
+      "sourceStable": null,
+      "finalBusinessProof": null,
+      "evidence": {
+        "report": "test-results/demo1/20261102183225-1fcdc2b4/dev/results.json",
+        "sha256": "3233e1ba9b5d3437e38d29b8d92f712fed113e660e0bd6443ca38bd3e7070cd0",
+        "rawIgnored": true
+      }
+    },
+    {
+      "scope": "fresh-source-replay",
+      "runId": "20261102181858-e7d23909",
+      "runtime": "preview",
+      "stats": {
+        "startTime": "2026-11-02T18:19:42.937Z",
+        "duration": 179718.845,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "web": {
+        "head": "6a6a7d1b4daa2a9aed892c0418a1461b466627eb",
+        "branch": "feat/demo-1-readiness-web",
+        "implementationSha256": "3926bfa939c8f18c0b29dc78b4a9dbec9f2e6d77c273c41bfa01d6c74bde5152",
+        "treeSha256": "2ede6e84129e1ece7e024c98b13632f0013b72fd9fed0af875ad62adfa7ae38a"
+      },
+      "backend": {
+        "head": "bec284f6b14e6451fd2e988acde8ae831c307f8a",
+        "branch": "feat/demo-1-readiness-backend",
+        "implementationSha256": "3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f",
+        "treeSha256": "a8fdce1ead01399e011205e764adc1dc992760e8383a60401f64f8a4c9d98617"
+      },
+      "sourceStable": true,
+      "finalBusinessProof": {
+        "scenarioPassed": true,
+        "balance": "500000",
+        "ledgerEntries": 2,
+        "fundState": "OPEN",
+        "noBusinessSqlSeed": true,
+        "financeInbox": true,
+        "mockObservation": true,
+        "restart": true
+      },
+      "evidence": {
+        "report": "../.readiness-replay/20261103/Wolfari-web/test-results/demo1/20261102181858-e7d23909/preview/results.json",
+        "sha256": "e11e9a9e50d092845ff192890188f9f58c2159b637106348b543a587a23ae7fe",
+        "rawIgnored": true
+      }
+    }
+  ],
+  "manual": {
+    "browser": "Microsoft Edge",
+    "rehearsals": "NOT_RUN",
+    "soak30Minutes": "NOT_RUN",
+    "assignedTo": "user",
+    "nativeZoom200": "NOT_RUN"
+  },
+  "remote": {
+    "push": "NOT_RUN",
+    "newPR": "NOT_RUN",
+    "candidateCI": "NOT_RUN",
+    "reviewerApproval": "NOT_RUN",
+    "merge": "NOT_RUN",
+    "mainVerified": false
+  },
+  "limitations": [
+    "Fixtures and HTTP mocks are not live Backend.",
+    "Fresh replay uses local clones plus exact uncommitted source overlay, not a clean committed checkout or a new OS.",
+    "Business 409/lost-response retries are distinct from Playwright runner retries.",
+    "Raw logs, private journals, credentials and tokens are not included."
+  ]
+}
