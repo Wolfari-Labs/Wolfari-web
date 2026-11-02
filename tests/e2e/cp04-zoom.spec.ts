@@ -67,7 +67,7 @@ test('CP04 native browser 200% zoom keeps Shell, recovery and Profile reachable'
       await writeFile(info.outputPath(name), bytes);
     };
 
-    const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+    const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
     await expect(menu).toBeVisible();
     await menu.click();
     const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });

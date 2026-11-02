@@ -136,7 +136,7 @@ test('CP05 fixture reduced-motion Trip drawer returns keyboard focus', async ({ 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(`/trips/${tripId}`);
   await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
-  const trigger = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+  const trigger = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
   await trigger.focus();
   await trigger.press('Enter');
   const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });

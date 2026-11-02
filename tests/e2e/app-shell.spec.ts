@@ -5,13 +5,13 @@ for (const width of [1440, 402])
     await page.setViewportSize({ width, height: 800 });
     await page.goto(tripPath);
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
-    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
     await page.getByRole('link', { name: 'Packing list', exact: true }).click();
     await expect(page.locator('[data-flow="packing-read"]')).toBeVisible();
     await expect(page.locator('[data-flow="trip-overview"]')).toHaveCount(0);
     await expect(page).toHaveURL(tripPath + '/packing');
     await expect(page.locator('main')).toBeFocused();
-    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
     if (width <= 768) {
       await page
         .getByRole('dialog', { name: 'Điều hướng chuyến đi' })
@@ -211,7 +211,7 @@ for (const size of sizes)
       const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
       expect(Math.round(logo.width)).toBe(size.width <= 360 ? 112 : 130);
       expect(Math.round(logo.x)).toBe(16);
-      const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+      const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
       expect((await menu.boundingBox())!.x).toBeGreaterThan(
@@ -311,7 +311,7 @@ test('mobile scroll waits for the lazy Plan route after drawer navigation', asyn
   try {
     await page.goto(tripPath);
     await expectRouteContent(page, tripPath);
-    await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
     const planRequest = page.waitForRequest((request) => planModule.test(request.url()));
     await drawer.getByRole('link', { name: 'Lịch trình', exact: true }).click();
@@ -347,7 +347,7 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
   await expect(page.getByRole('link', { name: 'Đến nội dung chính' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
-  const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+  const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
   await menu.click();
   const drawer = page.getByRole('dialog'),
     close = drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' });
@@ -438,7 +438,7 @@ for (const route of routes)
     if (route.startsWith('/trips/')) {
       await choose(page, 'forbidden-snapshot');
       await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
-      await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+      await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
       const drawer = page.getByRole('dialog');
       for (const button of await drawer.getByRole('navigation').getByRole('button').all())
         await expect(button).toBeDisabled();
@@ -581,7 +581,7 @@ test('CP04 authenticated Web Home keeps account and inbox access beside Menu', a
 test('CP04 Web trip drawer follows the approved navigation composition', async ({ page }, info) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto(tripPath + '/fund');
-  const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+  const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
   await menu.click();
   const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
   await expect(drawer.getByRole('img', { name: 'Wolfari' })).toBeVisible();

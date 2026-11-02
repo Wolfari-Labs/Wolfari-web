@@ -18,6 +18,8 @@ Cập nhật D33,31/10/2026: user duyệt riêng PLN01–05, PLN07 và phần Pl
 
 ## Đề xuất trước đó — không được áp dụng mặc định
 
+CP11 cập nhật02/11/2026: [CP11-A01](CP11_DESIGN_DECISIONS.md) **APPROVED D50 / IMPLEMENTED_AND_VERIFIED, subset PLN06**: chỉ breadcrumb Plan #079fc5→existing #006b92, chung Gateway/Preview. Browser computed colors #006b92/#f4fbfe cho tỷ lệ5.7066:1; sampled axe contrast PASS. Không duyệt toàn PLN06. Các nhận xét khác ở [CP11 disposition](CP11_REVIEW_DISPOSITION.md), không tự thành approval hoặc roadmap mới.
+
 | ID | Đề xuất | Trạng thái / xử lý |
 |---|---|---|
 | DLT01 | Ba ảnh AI Plan, day-rail mới, horizontal navigation mới | WITHDRAWN; xem lịch sử evidence/cp02. Không cần chọn lại. |

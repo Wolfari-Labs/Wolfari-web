@@ -1,6 +1,6 @@
 # CP-10 acceptance — Price Watch / Notifications / Admin Web
 
-**Status: READY_FOR_REVIEW, 02/11/2026.** W01–W05 are complete within the CP-10 scope and the separately approved XRT05/D18, NTF01/ADM01/D45 and PWT01/D46 decisions. This is an implementation and review record, **not user approval of CP-10**. Stop before CP-11. Web only.
+**Status: APPROVED / DONE, 02/11/2026 (D48).** The user explicitly approved CP-10 and authorized CP-11. W01–W05 are complete within the CP-10 scope and the separately approved XRT05/D18, NTF01/ADM01/D45 and PWT01/D46 decisions. Approval preserves the full-unit failure and all verification limits below; it does not approve unrelated design deltas. Web only.
 
 ## Delivered
 
@@ -22,4 +22,4 @@
 
 [CP-10 evidence](evidence/cp10/README.md) records the commands, HTTP-mock versus fixture modes, ten reviewed screenshots and SHA-256 values, intermediate test-fixture timing failure, full-unit Map failure and NOT_RUN items. Existing CP-09 deferred Finance work and FND deltas remain outside CP-10. The official Admin child design context failed with selection/transport errors; no full Admin visual-context claim is made. The current lint passes after excluding generated `.local/**` output; its earlier generated-output failure remains historical.
 
-The user-owned `DANH_GIA_CHI_TIET_GIAO_DIEN.md` and prior CP-08/09 work remain intact. At acceptance, branch `draft/demo-ui-ux`, HEAD `4900d59aa079c1d6b23da359788ef9ddee7ffc81`; the working tree has uncommitted changes. The Backend worktree is clean. No commit, push, deployment, Backend/dependency/official Figma edit or production-data mutation was performed. CP-11 requires a separate explicit user approval of CP-10.
+The user-owned `DANH_GIA_CHI_TIET_GIAO_DIEN.md` and prior CP-08/09 work remained intact. At the review snapshot, branch `draft/demo-ui-ux`, HEAD `4900d59aa079c1d6b23da359788ef9ddee7ffc81`, had uncommitted changes. At D48 approval/CP11 activation the checkout is clean at `f6e1b424a968d11b9fc7ee366da578a752ba7856`; that commit already existed when this turn began. The Backend worktree is clean. No commit, push, deployment, Backend/dependency/official Figma edit or production-data mutation was performed by this checkpoint work. CP-11 now proceeds under D48.

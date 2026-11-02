@@ -18,6 +18,9 @@ import styles from './AppShell.module.css';
 import { Icon as UiIcon, type IconName } from '../../../shared/components/Icon';
 import { Avatar } from '../../../shared/components/Avatar';
 import { useAnimate } from 'motion/react-mini';
+import { NavigationButton } from '../../../shared/components/NavigationButton';
+import { desktopMediaQuery } from '../../../shared/styles/breakpoints';
+import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
 
 const Notifications = lazy(() =>
   import('../../notifications/Notifications').then((module) => ({ default: module.Notifications })),
@@ -66,9 +69,20 @@ function Icon({ file, className }: { file: keyof typeof assets; className?: stri
   return <UiIcon name={name ?? 'info'} {...(className ? { className } : {})} />;
 }
 
-import { NavigationButton } from '../../../shared/components/NavigationButton';
-import { desktopMediaQuery } from '../../../shared/styles/breakpoints';
-import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
+function accountInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(-2)
+    .map((part) => part[0])
+    .join('')
+    .toLocaleUpperCase('vi');
+}
+
+function profileLabel(name: string) {
+  const initials = accountInitials(name);
+  return initials ? `${initials} ${name} · Hồ sơ cá nhân` : `${name} · Hồ sơ cá nhân`;
+}
 
 export function AppShell({
   snapshot,
@@ -201,8 +215,20 @@ export function AppShell({
     selectDestination();
     onAdminSectionChange(next);
   };
-  const tripNavigation = (
+  const tripNavigation = (includeAccountLinks = false) => (
     <nav aria-label="Điều hướng chuyến đi">
+      {includeAccountLinks && canReadTrip && (
+        <>
+          <NavLink to={paths.trips} onClick={selectDestination}>
+            <UiIcon name="plan" />
+            <span>Chuyến đi của tôi</span>
+          </NavLink>
+          <NavLink to={paths.profile} onClick={selectDestination}>
+            <UiIcon name="user" />
+            <span>Hồ sơ cá nhân</span>
+          </NavLink>
+        </>
+      )}
       {sections.map((item) =>
         tripPath(item.id) && canReadTrip ? (
           <NavLink
@@ -271,7 +297,11 @@ export function AppShell({
     <button
       ref={menuTrigger}
       className={styles.mobileMenuButton}
-      aria-label={'Mở ' + drawerLabel.toLocaleLowerCase('vi')}
+      aria-label={
+        adminLayout
+          ? 'Mở ' + drawerLabel.toLocaleLowerCase('vi')
+          : 'Menu · Mở ' + drawerLabel.toLocaleLowerCase('vi')
+      }
       aria-expanded={drawerOpen}
       aria-haspopup="dialog"
       onClick={() => {
@@ -351,7 +381,7 @@ export function AppShell({
                       <Link
                         to={paths.profile}
                         className={styles.profile}
-                        aria-label={'Hồ sơ cá nhân · ' + viewer.fullName}
+                        aria-label={profileLabel(viewer.fullName)}
                       >
                         <Avatar name={viewer.fullName} />
                         <span className={styles.accountName}>{viewer.fullName}</span>
@@ -394,7 +424,7 @@ export function AppShell({
             <Link
               className={styles.mobileAccount}
               to={paths.profile}
-              aria-label={'Hồ sơ cá nhân · ' + viewer.fullName}
+              aria-label={profileLabel(viewer.fullName)}
             >
               <Avatar name={viewer.fullName} />
             </Link>
@@ -421,7 +451,7 @@ export function AppShell({
             className={collapsed ? styles.collapsed : styles.sidebar}
             data-node-id={collapsed ? '135:1042' : '135:484'}
           >
-            {tripNavigation}
+            {tripNavigation()}
             {!collapsed && (
               <div className={styles.sidebarDecoration} aria-hidden="true">
                 <p>
@@ -489,7 +519,11 @@ export function AppShell({
                 </button>
               </div>
             )}
-            {adminLayout ? adminNavigation : tripLayout ? tripNavigation : publicNavigation}
+            {adminLayout
+              ? adminNavigation
+              : tripLayout
+                ? tripNavigation(true)
+                : publicNavigation}
             {tripLayout && (
               <div className={styles.drawerDecoration} aria-hidden="true">
                 <p>

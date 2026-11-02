@@ -117,7 +117,7 @@ test('password change rejects bad credentials, then clears the session on succes
   await page.getByLabel('Email', { exact: true }).fill('second@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill(' second password long ');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
-  await page.getByRole('link', { name: 'Hồ sơ cá nhân · Second Account' }).click();
+  await page.getByRole('link', { name: /Hồ sơ cá nhân/ }).click();
   await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Second Account');
   await expect(page.getByLabel('Email', { exact: true })).toHaveValue('second@example.com');
   await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');

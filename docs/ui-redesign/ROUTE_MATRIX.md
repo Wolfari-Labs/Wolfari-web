@@ -4,7 +4,7 @@ Policy update CP02/D17: cột Redesign kế thừa đề xuất discovery CP01, 
 
 Source: `src/app/router.tsx`, `src/main.tsx`, feature modules và repository adapters tại commit CP-01. Figma chính thức: https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-Travel-Workspace
 
-22 route entries kể cả wildcard. `T = /trips/:tripId` trong bảng. CP03/04/05/06/07/08 đã APPROVED/DONE; CP09 **APPROVED/DONE_WITH_EXCEPTIONS** theo D44, CP10 **READY_FOR_REVIEW** theo D47, CP11+ PLANNED. Các đoạn ghi ngày bên dưới giữ lịch sử chuyển trạng thái. Xem [contracts](INTEGRATION_CONTRACTS.md) để biết invariants; IDs không có page prefix mặc định thuộc Desktop. Mxx thuộc Mobile page, không dùng native chrome cho Web.
+22 route entries kể cả wildcard. `T = /trips/:tripId` trong bảng. CP03/04/05/06/07/08 đã APPROVED/DONE; CP09 **APPROVED/DONE_WITH_EXCEPTIONS** theo D44, CP10 **APPROVED/DONE** theo D48, CP11 **BLOCKED_USER/BLOCKED_TOOL** cho quality/release-readiness. Các đoạn ghi ngày bên dưới giữ lịch sử chuyển trạng thái. Xem [contracts](INTEGRATION_CONTRACTS.md) để biết invariants; IDs không có page prefix mặc định thuộc Desktop. Mxx thuộc Mobile page, không dùng native chrome cho Web.
 
 CP04 cập nhật30/10/2026: `/`, `/login`, `/register`, `/forgot-password`, `/verify-email`, `/reset-password`, `/profile`, `*` và Shell/navigation đã hoàn thành work unit trong scope CP04, status **READY_FOR_REVIEW**, chờ approval. Home giữ năm section nguồn và guest/user CTA; Auth/Profile giữ contract/session/token/version và bổ sung field semantics/truthful states; 404 giữ focus/Home recovery; Web402 header/drawer theo HMA04/D18. [Acceptance](CP04_ACCEPTANCE.md) ghi đầy đủ test modes/limits. Các row “Redesign” bên dưới vẫn là proposal lịch sử CP01 nếu khác source; chỉ register [DESIGN_DELTAS](DESIGN_DELTAS.md) có quyền xác nhận delta đã duyệt. CP05+ không được triển khai ở lượt này.
 
@@ -52,6 +52,8 @@ D44–D47 cập nhật01–02/11/2026: CP09 **APPROVED/DONE_WITH_EXCEPTIONS**; W
 | `*`                  | ContentState not-found                         | Không có dedicated404 đã xác định                | Không cần business API                                                              | Recovery link, navigation context, keyboard/focus                                                                                                                                                                                 | 04    |
 
 ## Cross-route surfaces
+
+CP11 current quality coverage after D50/D51: [22-route/test-state mapping](CP11_REVIEW_DISPOSITION.md), [current verification](CP11_VERIFICATION.md). Unit577/577, built Preview208/208, built Gateway HTTP-mock126/126 PASS; native Gateway Plan200% và breadcrumb A01 có evidence mới. [Performance lab](CP11_PERFORMANCE.md)80 samples local. Default all-rules shell profile/Menu label-name finding giữ rõ; full direct visual/manual/live/CI chưa được nghiệm thu. Dev116/123 và các failure lịch sử giữ trong verification; không overwrite historical outcomes ở trên hoặc suy full live integration.
 
 | Surface                                   | Current source                                | Figma reference           | Integration / preservation                                                          |
 | ----------------------------------------- | --------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------- |

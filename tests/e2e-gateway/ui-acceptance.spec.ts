@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import { writeFile } from 'node:fs/promises';
 import { test, expect, login } from './gateway-fixture';
 import { mockPlan } from './plan-fixture';
 const tripId = '11111111-1111-4111-8111-111111111111';
@@ -60,7 +61,7 @@ for (const size of [
         await expect(page.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' })).toBeVisible();
       else if (name === 'map')
         await expect(
-          page.getByRole('heading', { name: 'Chuyến đi chưa có địa điểm' }),
+          page.getByRole('status').filter({ hasText: /^Chuyến đi chưa có địa điểm đã lưu\.$/ }),
         ).toBeVisible();
       else if (name === 'dress')
         await expect(
@@ -94,6 +95,18 @@ for (const size of [
       });
       await page.screenshot({ path: info.outputPath(name + '.png'), fullPage: true });
       if (name === 'plan') {
+        const mainBreadcrumb = page
+          .locator('main')
+          .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true });
+        await expect(mainBreadcrumb).toHaveCSS('color', 'rgb(0, 107, 146)');
+        const colors = await mainBreadcrumb.evaluate((link) => ({
+          foreground: getComputedStyle(link).color,
+          background: getComputedStyle(document.body).backgroundColor,
+        }));
+        await writeFile(
+          info.outputPath('plan-breadcrumb-colors.json'),
+          JSON.stringify(colors, null, 2),
+        );
         await page.getByRole('listitem', { name: 'Ăn sáng', exact: true }).scrollIntoViewIfNeeded();
         await page.screenshot({ path: info.outputPath('plan-cards.png') });
       }
@@ -101,6 +114,10 @@ for (const size of [
         const scan = await new AxeBuilder({ page })
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze();
+        await writeFile(
+          info.outputPath(name + '-axe.json'),
+          JSON.stringify(scan.violations, null, 2),
+        );
         expect.soft(scan.violations, name).toEqual([]);
       }
     }

@@ -1,0 +1,774 @@
+{
+  "scope": "Static manifest JS/CSS closure plus emitted assets; no runtime/network measurement",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "AMD Ryzen 7 6800HS Creator Edition             "
+  },
+  "buildRoot": "D:\\Desktop\\NHAP\\PBL6\\Wolfari-web\\.local\\cp11-production",
+  "manifestSha256": "5199a3851f8b4636607fd68501d6151572c85ed95ae38993a5cc57bd06cf6172",
+  "limits": [
+    "Home is the entry static closure, not a measured browser request graph.",
+    "Route closures include entry + route static imports, excluding dynamic imports, images and fonts.",
+    "gzipBytes sums per-file local gzip output, not server encoding or actual wire bytes.",
+    "Nested dynamic feature chunks require runtime loading and are listed separately.",
+    "No approved PERF01 SLA, production p75, LCP/CLS/INP, or before/after speed claim.",
+    "Marker scan is heuristic; source/runtime boundary tests remain authoritative."
+  ],
+  "routes": {
+    "home": {
+      "bytes": 607777,
+      "gzipBytes": 176926,
+      "files": [
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/index-BRUosNag.js",
+          "bytes": 389065,
+          "gzipBytes": 118172,
+          "sha256": "1fb782608a23db32bf6ae06435391d2bdb28cd25c6cf3ab9757f63f9fd5608bb"
+        },
+        {
+          "file": "assets/index-DcPFV2T4.css",
+          "bytes": 109271,
+          "gzipBytes": 21425,
+          "sha256": "6d7f3e97ba56f7432db7803f5730d94a17b92d3bb71cd72e9b1856d28b772743"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        }
+      ]
+    },
+    "auth": {
+      "bytes": 702154,
+      "gzipBytes": 198122,
+      "files": [
+        {
+          "file": "assets/04603-Bfu0HwZ_.js",
+          "bytes": 3411,
+          "gzipBytes": 942,
+          "sha256": "331eba49f304878201c9459fc669634fbbc3471d5c3e6e02d17318ec98e2ca5c"
+        },
+        {
+          "file": "assets/AuthPage-CF3ymZUy.js",
+          "bytes": 9090,
+          "gzipBytes": 3735,
+          "sha256": "d6bd0028762f48044e4db02e559c6c01975cba97f2737c3ff2750d9c8c6cb51b"
+        },
+        {
+          "file": "assets/AuthPage-DTaCPG9S.css",
+          "bytes": 6746,
+          "gzipBytes": 1982,
+          "sha256": "dbed09d1eb95d436fcce57c36290af2e416a859ea017676b772faf3baf16d682"
+        },
+        {
+          "file": "assets/AuthPage.module-BfbYWmTH.js",
+          "bytes": 1316,
+          "gzipBytes": 712,
+          "sha256": "b8167ed082c7e78d4d391cacbe95e630fdbbac70b60fdcfc53a7a786e3f7eb72"
+        },
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/Input-y6tPV7ZX.js",
+          "bytes": 1652,
+          "gzipBytes": 867,
+          "sha256": "5abb32a540476c76de5ac3e18db1a852c7b86634b5a40c8a70e2f1b203b21286"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/index-BRUosNag.js",
+          "bytes": 389065,
+          "gzipBytes": 118172,
+          "sha256": "1fb782608a23db32bf6ae06435391d2bdb28cd25c6cf3ab9757f63f9fd5608bb"
+        },
+        {
+          "file": "assets/index-DcPFV2T4.css",
+          "bytes": 109271,
+          "gzipBytes": 21425,
+          "sha256": "6d7f3e97ba56f7432db7803f5730d94a17b92d3bb71cd72e9b1856d28b772743"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        },
+        {
+          "file": "assets/scene-assets-Cj3yt77N.js",
+          "bytes": 71758,
+          "gzipBytes": 12678,
+          "sha256": "68c24e6e340e992d5e1ccde41e6454a6e77a1c696e1de5b0e0d8436e430e4052"
+        },
+        {
+          "file": "assets/use-identity-task-CsFS76FW.js",
+          "bytes": 404,
+          "gzipBytes": 280,
+          "sha256": "9708aa528f29b2a0a6bbff5244c1cc95e5d547d086736032e0d5a7dabbec5e62"
+        }
+      ]
+    },
+    "plan": {
+      "bytes": 1021596,
+      "gzipBytes": 311297,
+      "files": [
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/Drawer-CTZEFPj7.css",
+          "bytes": 2960,
+          "gzipBytes": 1017,
+          "sha256": "71fe66ac28b7c9a1531244a191869473bb81d381705757cf6991bdafee6a2c8e"
+        },
+        {
+          "file": "assets/Drawer-D04GhZHo.js",
+          "bytes": 1597,
+          "gzipBytes": 807,
+          "sha256": "c3e3df7c0de51046a4b00ec06569e914b412f1239a4a13ce007a2df4d531d9db"
+        },
+        {
+          "file": "assets/Input-y6tPV7ZX.js",
+          "bytes": 1652,
+          "gzipBytes": 867,
+          "sha256": "5abb32a540476c76de5ac3e18db1a852c7b86634b5a40c8a70e2f1b203b21286"
+        },
+        {
+          "file": "assets/PlanPage-EzyxT8ST.js",
+          "bytes": 257334,
+          "gzipBytes": 81405,
+          "sha256": "02a3293c499ade3c7833ae50818cbdc655ef36205c97356c2852ee6592c7a8a9"
+        },
+        {
+          "file": "assets/PlanPage-N0VBvNkr.css",
+          "bytes": 22139,
+          "gzipBytes": 4680,
+          "sha256": "84f8214865ba8ce03da8945645796af31c7322b811eb3d35173c0b05359df080"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/TripHero-CAZwV7ce.js",
+          "bytes": 3865,
+          "gzipBytes": 1630,
+          "sha256": "624ac2f96a5f0ae80ce3f9f82deabdd90c395ae8be00c9d8df89a24b75b2c21c"
+        },
+        {
+          "file": "assets/TripHero-DNgaHc-t.css",
+          "bytes": 11084,
+          "gzipBytes": 2957,
+          "sha256": "415cb8ecd67345b527760106e11013c9fe843f5fe50b926fb1797b8431fbaf7e"
+        },
+        {
+          "file": "assets/Ui-D3w-F3X8.js",
+          "bytes": 3752,
+          "gzipBytes": 1429,
+          "sha256": "62a5974f6b6af69d028bc3771b70b629a3065aabb905d9f9517ec98690a8bc4f"
+        },
+        {
+          "file": "assets/browser-storage-B4ajCdc-.js",
+          "bytes": 720,
+          "gzipBytes": 367,
+          "sha256": "caf30f9e60c5400a87a34e80246a9bb9e4960bbac5d302d6d319886719ddb72e"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/dist-BMS_5jFZ.js",
+          "bytes": 5181,
+          "gzipBytes": 1915,
+          "sha256": "7a71f10030f6f7454d2106dfc66b1f6d033bb6a6f012decc3981b02ba2c1e420"
+        },
+        {
+          "file": "assets/dist-DYfarpui.js",
+          "bytes": 50091,
+          "gzipBytes": 17430,
+          "sha256": "f8f7c19d1ad665b78128ff5e52fb550f3c4e1aa5d5b2cede431a072ab2928682"
+        },
+        {
+          "file": "assets/es2015-D3H0iljp.js",
+          "bytes": 34519,
+          "gzipBytes": 11860,
+          "sha256": "4e39a39f33afc41c99d8b7f429e89cdd23edeaf7d6e1757706651b653a1361e4"
+        },
+        {
+          "file": "assets/index-BRUosNag.js",
+          "bytes": 389065,
+          "gzipBytes": 118172,
+          "sha256": "1fb782608a23db32bf6ae06435391d2bdb28cd25c6cf3ab9757f63f9fd5608bb"
+        },
+        {
+          "file": "assets/index-DcPFV2T4.css",
+          "bytes": 109271,
+          "gzipBytes": 21425,
+          "sha256": "6d7f3e97ba56f7432db7803f5730d94a17b92d3bb71cd72e9b1856d28b772743"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/place-selection-store-DhrMbaYG.js",
+          "bytes": 8876,
+          "gzipBytes": 3629,
+          "sha256": "06c66071f4ceea8b6e4aaa608db990364c9f26db78d81c770c1bc319b116c546"
+        },
+        {
+          "file": "assets/plan-BGd-BzLW.js",
+          "bytes": 120,
+          "gzipBytes": 118,
+          "sha256": "6e76cacb2804e375f6211b7ea50743c0634d072beb65341c4f966c63eec7ec7f"
+        },
+        {
+          "file": "assets/plan-draft-BuUdVFXm.js",
+          "bytes": 6213,
+          "gzipBytes": 2411,
+          "sha256": "2fd2a03a57bfdec051c5e427864f3478c78f56e72e64d2776497c49c05536df1"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        },
+        {
+          "file": "assets/trip-list-query-DzgDhBj2.js",
+          "bytes": 1014,
+          "gzipBytes": 643,
+          "sha256": "dc4e7048e43f2036192f3f943da5ba3918c68c74f6ba56805616e01a70863409"
+        },
+        {
+          "file": "assets/trip-query-keys-BXnqlEhj.js",
+          "bytes": 99,
+          "gzipBytes": 98,
+          "sha256": "a1a93dac3749af9b61e8b35d0498dfbc375002119752bb47ff6d56ce8654cf09"
+        },
+        {
+          "file": "assets/use-trip-plan-snapshot-4N73cHGb.js",
+          "bytes": 2603,
+          "gzipBytes": 1108,
+          "sha256": "52afa2b20c697e1e46ef5785e5e20946ed895f694b691d62f9490458bf00ed6c"
+        }
+      ]
+    },
+    "fund": {
+      "bytes": 779598,
+      "gzipBytes": 236632,
+      "files": [
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/CapabilityNote-BKtJuMrO.js",
+          "bytes": 242,
+          "gzipBytes": 205,
+          "sha256": "af6696d024008845c1bb0da42cde6625b0976684f54604b4644455d3560b45ef"
+        },
+        {
+          "file": "assets/CapabilityNote-DYI9JQFm.css",
+          "bytes": 364,
+          "gzipBytes": 220,
+          "sha256": "a7adb1ad1404fc43f98c4aa298bc1db251decd83e5fb0b72a3288ca0bc1ad53a"
+        },
+        {
+          "file": "assets/DemoWorkspace-DR8SQBQq.css",
+          "bytes": 3211,
+          "gzipBytes": 1049,
+          "sha256": "e68f9ec42ca3f2906c45f70d42b8906bcdc70407661aba9ac35f8608df5b38a1"
+        },
+        {
+          "file": "assets/DemoWorkspace.module-C2w9w2Ni.js",
+          "bytes": 394,
+          "gzipBytes": 223,
+          "sha256": "6840effc133d9e4e59e85035bf61a7df72c37149edee7176f6e42c8e7c24a347"
+        },
+        {
+          "file": "assets/Drawer-CTZEFPj7.css",
+          "bytes": 2960,
+          "gzipBytes": 1017,
+          "sha256": "71fe66ac28b7c9a1531244a191869473bb81d381705757cf6991bdafee6a2c8e"
+        },
+        {
+          "file": "assets/Drawer-D04GhZHo.js",
+          "bytes": 1597,
+          "gzipBytes": 807,
+          "sha256": "c3e3df7c0de51046a4b00ec06569e914b412f1239a4a13ce007a2df4d531d9db"
+        },
+        {
+          "file": "assets/FundPage-DyZJ5zaL.js",
+          "bytes": 11003,
+          "gzipBytes": 3847,
+          "sha256": "16182fced4b1a66ab9506bdbe7753723d2cb89ffea47a6753bb10bcad62eb49f"
+        },
+        {
+          "file": "assets/GatewayFundPage-BLR7PK5e.js",
+          "bytes": 22539,
+          "gzipBytes": 7216,
+          "sha256": "91207edeba6c9476ae8dc364933ec11aa27b3ecb7d9a8fc68d81a2929bdcaa7c"
+        },
+        {
+          "file": "assets/GatewayFundPage-Btx5g9wO.css",
+          "bytes": 7488,
+          "gzipBytes": 1833,
+          "sha256": "a619a98232e4b7874fab562caeb4620a894d4fad53dfc12bd745539285f1f9d7"
+        },
+        {
+          "file": "assets/Input-y6tPV7ZX.js",
+          "bytes": 1652,
+          "gzipBytes": 867,
+          "sha256": "5abb32a540476c76de5ac3e18db1a852c7b86634b5a40c8a70e2f1b203b21286"
+        },
+        {
+          "file": "assets/OperationStatus-CGC8n-21.js",
+          "bytes": 3533,
+          "gzipBytes": 1677,
+          "sha256": "eb081c63afb135ca63b454d68243b63f8fe6d645df8bec292db3627620849e99"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/TripHero-CAZwV7ce.js",
+          "bytes": 3865,
+          "gzipBytes": 1630,
+          "sha256": "624ac2f96a5f0ae80ce3f9f82deabdd90c395ae8be00c9d8df89a24b75b2c21c"
+        },
+        {
+          "file": "assets/TripHero-DNgaHc-t.css",
+          "bytes": 11084,
+          "gzipBytes": 2957,
+          "sha256": "415cb8ecd67345b527760106e11013c9fe843f5fe50b926fb1797b8431fbaf7e"
+        },
+        {
+          "file": "assets/Ui-D3w-F3X8.js",
+          "bytes": 3752,
+          "gzipBytes": 1429,
+          "sha256": "62a5974f6b6af69d028bc3771b70b629a3065aabb905d9f9517ec98690a8bc4f"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/dist-BMS_5jFZ.js",
+          "bytes": 5181,
+          "gzipBytes": 1915,
+          "sha256": "7a71f10030f6f7454d2106dfc66b1f6d033bb6a6f012decc3981b02ba2c1e420"
+        },
+        {
+          "file": "assets/dist-DYfarpui.js",
+          "bytes": 50091,
+          "gzipBytes": 17430,
+          "sha256": "f8f7c19d1ad665b78128ff5e52fb550f3c4e1aa5d5b2cede431a072ab2928682"
+        },
+        {
+          "file": "assets/es2015-D3H0iljp.js",
+          "bytes": 34519,
+          "gzipBytes": 11860,
+          "sha256": "4e39a39f33afc41c99d8b7f429e89cdd23edeaf7d6e1757706651b653a1361e4"
+        },
+        {
+          "file": "assets/index-BRUosNag.js",
+          "bytes": 389065,
+          "gzipBytes": 118172,
+          "sha256": "1fb782608a23db32bf6ae06435391d2bdb28cd25c6cf3ab9757f63f9fd5608bb"
+        },
+        {
+          "file": "assets/index-DcPFV2T4.css",
+          "bytes": 109271,
+          "gzipBytes": 21425,
+          "sha256": "6d7f3e97ba56f7432db7803f5730d94a17b92d3bb71cd72e9b1856d28b772743"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/plan-draft-BuUdVFXm.js",
+          "bytes": 6213,
+          "gzipBytes": 2411,
+          "sha256": "2fd2a03a57bfdec051c5e427864f3478c78f56e72e64d2776497c49c05536df1"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        },
+        {
+          "file": "assets/trip-list-query-DzgDhBj2.js",
+          "bytes": 1014,
+          "gzipBytes": 643,
+          "sha256": "dc4e7048e43f2036192f3f943da5ba3918c68c74f6ba56805616e01a70863409"
+        },
+        {
+          "file": "assets/useInfiniteQuery-Dpd0rHMf.js",
+          "bytes": 1119,
+          "gzipBytes": 470,
+          "sha256": "dcc837943f2277493d120af0676caaa47ef8f55e1a949aa0a59c1ec0198a458b"
+        }
+      ]
+    }
+  },
+  "dynamicEntries": [
+    {
+      "source": "src/features/auth/AuthPage.tsx",
+      "file": "assets/AuthPage-CF3ymZUy.js"
+    },
+    {
+      "source": "src/features/auth/IdentityActionPage.tsx",
+      "file": "assets/IdentityActionPage-BNfkP0B8.js"
+    },
+    {
+      "source": "src/features/auth/ProfilePage.tsx",
+      "file": "assets/ProfilePage-CZMtAQ5U.js"
+    },
+    {
+      "source": "src/features/dress-code/DressCodePage.tsx",
+      "file": "assets/DressCodePage-soSNN4So.js"
+    },
+    {
+      "source": "src/features/fund/FundPage.tsx",
+      "file": "assets/FundPage-DyZJ5zaL.js"
+    },
+    {
+      "source": "src/features/map/TripMapPage.tsx",
+      "file": "assets/TripMapPage-DXgek9Bp.js"
+    },
+    {
+      "source": "src/features/members/InvitationPage.tsx",
+      "file": "assets/InvitationPage-BsrHKzke.js"
+    },
+    {
+      "source": "src/features/members/MembersPage.tsx",
+      "file": "assets/MembersPage-JTGOc7SY.js"
+    },
+    {
+      "source": "src/features/notifications/NotificationInbox.tsx",
+      "file": "assets/NotificationInbox-CppDP5kH.js"
+    },
+    {
+      "source": "src/features/notifications/Notifications.tsx",
+      "file": "assets/Notifications-TQPgK-Xc.js"
+    },
+    {
+      "source": "src/features/packing/PackingPage.tsx",
+      "file": "assets/PackingPage-MZ5x25sc.js"
+    },
+    {
+      "source": "src/features/plan/PlanPage.tsx",
+      "file": "assets/PlanPage-EzyxT8ST.js"
+    },
+    {
+      "source": "src/features/price-watch/PriceWatchPage.tsx",
+      "file": "assets/PriceWatchPage-DcEk869Q.js"
+    },
+    {
+      "source": "src/features/shell/components/AccountMenu.tsx",
+      "file": "assets/AccountMenu-Dvf2MXbz.js"
+    },
+    {
+      "source": "src/features/trips/TripListPage.tsx",
+      "file": "assets/TripListPage-yXwzKbTI.js"
+    },
+    {
+      "source": "src/features/trips/TripOverviewPage.tsx",
+      "file": "assets/TripOverviewPage-BOt-52yL.js"
+    },
+    {
+      "source": "src/features/trips/create/CreateTripPage.tsx",
+      "file": "assets/CreateTripPage-Bjsj6PE1.js"
+    },
+    {
+      "source": "src/features/trips/settings/TripSettingsPage.tsx",
+      "file": "assets/TripSettingsPage-BWKUPqJP.js"
+    },
+    {
+      "source": "src/shared/components/motion-features.ts",
+      "file": "assets/motion-features-CH2DwF8m.js"
+    }
+  ],
+  "emitted": {
+    "count": 119,
+    "bytes": 5893208
+  },
+  "largestAssets": [
+    {
+      "file": "assets/06bd1-9iR9yAvz.png",
+      "bytes": 2698783,
+      "gzipBytes": 2691115,
+      "sha256": "f20376520c1f0c2fce091f3b2a88f89adc4cdbc4ff5fa196899853cdafb5ddf8"
+    },
+    {
+      "file": "assets/16cac-ZW08gMZN.png",
+      "bytes": 475435,
+      "gzipBytes": 474940,
+      "sha256": "cb66f7fb5d6276b01c9d076924384ad4fe457a6f51755794b4e034971157de9b"
+    },
+    {
+      "file": "assets/index-BRUosNag.js",
+      "bytes": 389065,
+      "gzipBytes": 118172,
+      "sha256": "1fb782608a23db32bf6ae06435391d2bdb28cd25c6cf3ab9757f63f9fd5608bb"
+    },
+    {
+      "file": "assets/2dc85-DROnVtLO.png",
+      "bytes": 335606,
+      "gzipBytes": 335719,
+      "sha256": "ff8d2e69da9f8ff673a93ec75f526e1529b5add3b929a9dc64ceb54dbfa54de8"
+    },
+    {
+      "file": "assets/PlanPage-EzyxT8ST.js",
+      "bytes": 257334,
+      "gzipBytes": 81405,
+      "sha256": "02a3293c499ade3c7833ae50818cbdc655ef36205c97356c2852ee6592c7a8a9"
+    },
+    {
+      "file": "assets/index-DcPFV2T4.css",
+      "bytes": 109271,
+      "gzipBytes": 21425,
+      "sha256": "6d7f3e97ba56f7432db7803f5730d94a17b92d3bb71cd72e9b1856d28b772743"
+    },
+    {
+      "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+      "bytes": 93078,
+      "gzipBytes": 30564,
+      "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+    },
+    {
+      "file": "assets/8b8b5-DkVHiSbk.png",
+      "bytes": 72613,
+      "gzipBytes": 72656,
+      "sha256": "22a5e53a92b0459fa715cea51796fae8bc987bd07c14e75811dbab53b8756347"
+    },
+    {
+      "file": "assets/scene-assets-Cj3yt77N.js",
+      "bytes": 71758,
+      "gzipBytes": 12678,
+      "sha256": "68c24e6e340e992d5e1ccde41e6454a6e77a1c696e1de5b0e0d8436e430e4052"
+    },
+    {
+      "file": "assets/TripListPage-Bd3jIri9.css",
+      "bytes": 51425,
+      "gzipBytes": 7569,
+      "sha256": "14641d683f9ff2c504dd5b4a4a384fbbfc877af9687be957d3907dc9db222ae7"
+    }
+  ],
+  "fonts": [
+    {
+      "file": "assets/be-vietnam-pro-latin-400-normal-bXgqVju9.woff",
+      "bytes": 16432,
+      "gzipBytes": 16429,
+      "sha256": "c0190200223755a3c52bb47b9cf6c3604f19288599cfbbe5026904d5d439f7d7"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-400-normal-PpnXBOrz.woff2",
+      "bytes": 21168,
+      "gzipBytes": 21174,
+      "sha256": "03d1b589cff172e1a670b3573e731d3380bc326f80cf83b0d3504e3188e2e074"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-500-normal-B6LVzGNe.woff2",
+      "bytes": 21892,
+      "gzipBytes": 21920,
+      "sha256": "b621f77d35f777023aa11ca524462d511b4b28a813adbc0e9d15a10fc61dfe4e"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-500-normal-BJkVuMHw.woff",
+      "bytes": 16996,
+      "gzipBytes": 16987,
+      "sha256": "0a905f6bc6f1120d20ad3dde690989db3149a98227026f2de47dca6aef71edab"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-600-normal-5IO4e7bK.woff",
+      "bytes": 17016,
+      "gzipBytes": 17013,
+      "sha256": "f900efb46ec81e9ff6017c6868f3f47cebde34ac87da16cc587da0e0b1f4c1d4"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-600-normal-BZDkUTrt.woff2",
+      "bytes": 22032,
+      "gzipBytes": 22060,
+      "sha256": "9503dec2a7c532c8331e9600bcafea287a4fd208573b8668d85ab8d8de1863c7"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-700-normal-C2EtzaOi.woff",
+      "bytes": 16908,
+      "gzipBytes": 16919,
+      "sha256": "f44cc3417bd1fcbddaaec0c02d5383dfcf34a16ef1fc32f8cf179ea4a468861b"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-700-normal-DlW1Zbsh.woff2",
+      "bytes": 22152,
+      "gzipBytes": 22180,
+      "sha256": "a193dd87699bd2e18ddf72dc271493ea82a23dad9f5c334d9f2a257b1e05fc30"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-400-normal-BuGn0gnm.woff",
+      "bytes": 6568,
+      "gzipBytes": 6541,
+      "sha256": "4d50c7991ca377aef28fb1fb24d4ce7ea64d69f6bd2661e7e74fb9d9fef11dc0"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-400-normal-CRcqvyg1.woff2",
+      "bytes": 11532,
+      "gzipBytes": 11555,
+      "sha256": "dc085e2fba3414e5c5bf1e6172f921a9f81c5859946a4ed3d63c1e470d96a9e2"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-500-normal-CfdwVo8-.woff",
+      "bytes": 6884,
+      "gzipBytes": 6860,
+      "sha256": "6b81283a46623b9a99bc7a1800f936549ead1f871d1dfcd803ddcd18c433a7d8"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-500-normal-DREgrEoJ.woff2",
+      "bytes": 12172,
+      "gzipBytes": 12195,
+      "sha256": "86341610cbe907eecf461c9159c168d5efb52bb1a33963813a08f520555d8e66"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-600-normal-DkpCIyan.woff",
+      "bytes": 6880,
+      "gzipBytes": 6862,
+      "sha256": "2d68010bd89add4c477e9c9c3ef29b78a68f76439309f4633c91a8674e9ba751"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-600-normal-nyU-ZL2p.woff2",
+      "bytes": 12176,
+      "gzipBytes": 12199,
+      "sha256": "97658c6f9a384f29a3005c3d96e2a0d1c810192cf68979071c290f5a377a9f99"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-700-normal-By_5yT39.woff",
+      "bytes": 6892,
+      "gzipBytes": 6863,
+      "sha256": "4fa311d11645e588ac98d0e665920fd55eb0eb624c600d9e5dd007f4b9d5159c"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-700-normal-Csr0PCuG.woff2",
+      "bytes": 12468,
+      "gzipBytes": 12491,
+      "sha256": "4f58af2d1c3e28a9ba14c51c82db2751d78344b75bdcb34de24a1031ebe59da6"
+    },
+    {
+      "file": "assets/patrick-hand-latin-400-normal-B7HHA2Vw.woff2",
+      "bytes": 23944,
+      "gzipBytes": 23972,
+      "sha256": "ac5bc9033b2572bf84d39f7150c1634e37ed16e8dbee632d6d0bceac0bbf0199"
+    },
+    {
+      "file": "assets/patrick-hand-latin-400-normal-Df9_VoRQ.woff",
+      "bytes": 17652,
+      "gzipBytes": 17657,
+      "sha256": "0f7031f6665437e04d6f354c5f64d6ae6777b498afbe804638c45b957a7ce8aa"
+    },
+    {
+      "file": "assets/patrick-hand-vietnamese-400-normal-65jA92mZ.woff2",
+      "bytes": 11572,
+      "gzipBytes": 11595,
+      "sha256": "7813e19e2d80efee8ace1de69517c99a0eb3059917336c4c8fccddbd8c838a9e"
+    },
+    {
+      "file": "assets/patrick-hand-vietnamese-400-normal-CZjY324Y.woff",
+      "bytes": 6496,
+      "gzipBytes": 6453,
+      "sha256": "9c33011b9733596f5ee20e8d1cdb3d6169a4e1cae27ec55ff21baf512402d404"
+    }
+  ],
+  "fixtureMarkerHits": []
+}

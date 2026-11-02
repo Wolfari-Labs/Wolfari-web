@@ -96,25 +96,36 @@ function mutationMessage(result: Exclude<UpdateTripResult, { status: 'updated' }
   }
 }
 
-function LockedField({ label, value }: { label: string; value: string }) {
+function ReadOnlyTripSummary({ trip }: { trip: TripDetailViewModel }) {
   return (
-    <Input
-      label={label}
-      value={value}
-      disabled
-      readOnly
-      hint="Chưa hỗ trợ chỉnh sửa trong phiên bản này."
-    />
+    <section className={styles.readOnlyPanel} aria-labelledby="read-only-trip-details-heading">
+      <h3 id="read-only-trip-details-heading">Thông tin chỉ xem</h3>
+      <p className={styles.capabilityNote}>
+        Điểm đến, ngày và ngân sách hiện chỉ có thể xem; các trường này chưa hỗ trợ chỉnh sửa.
+      </p>
+      <dl className={styles.readOnlyGrid}>
+        <div>
+          <dt>Điểm đến</dt>
+          <dd>Chưa có dữ liệu</dd>
+        </div>
+        <div>
+          <dt>Ngày bắt đầu</dt>
+          <dd>{displayDate(trip.startAt, trip.timezone)}</dd>
+        </div>
+        <div>
+          <dt>Ngày kết thúc</dt>
+          <dd>{displayDate(trip.endAt, trip.timezone, true)}</dd>
+        </div>
+        <div>
+          <dt>Ngân sách dự kiến</dt>
+          <dd>Chưa có dữ liệu</dd>
+        </div>
+      </dl>
+    </section>
   );
 }
 
-function CoverPreview({
-  trip,
-  editable = false,
-}: {
-  trip: TripDetailViewModel;
-  editable?: boolean;
-}) {
+function CoverPreview({ trip }: { trip: TripDetailViewModel }) {
   const cover = trip.presentation.cover;
   return (
     <div className={styles.coverField}>
@@ -125,16 +136,7 @@ function CoverPreview({
           <img src={cover?.src ?? coverFallback} alt="" />
         </picture>
         <div>
-          {editable && (
-            <Button variant="outline" disabled title="Thay ảnh chưa được hỗ trợ">
-              Thay ảnh
-            </Button>
-          )}
-          <p>
-            {editable
-              ? 'Chưa hỗ trợ thay ảnh bìa.'
-              : 'Ảnh hiện đang được sử dụng làm bìa chuyến đi.'}
-          </p>
+          <p>Ảnh bìa hiện đang được sử dụng cho chuyến đi.</p>
         </div>
       </div>
     </div>
@@ -518,12 +520,6 @@ function TripInformationForm({
             setResult(null);
           }}
         />
-        <LockedField label="Điểm đến" value="Chưa có dữ liệu" />
-        <div className={styles.formColumns}>
-          <LockedField label="Ngày bắt đầu" value={displayDate(trip.startAt, trip.timezone)} />
-          <LockedField label="Ngày kết thúc" value={displayDate(trip.endAt, trip.timezone, true)} />
-        </div>
-        <LockedField label="Ngân sách dự kiến" value="Chưa có dữ liệu" />
         <Textarea
           label="Mô tả chuyến đi"
           value={description}
@@ -554,7 +550,8 @@ function TripInformationForm({
             setResult(null);
           }}
         />
-        <CoverPreview trip={trip} editable />
+        <ReadOnlyTripSummary trip={trip} />
+        <CoverPreview trip={trip} />
         <div className={styles.formActions}>
           <Button
             variant="outline"

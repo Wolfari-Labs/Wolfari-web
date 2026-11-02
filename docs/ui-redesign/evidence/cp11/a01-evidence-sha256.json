@@ -1,0 +1,37 @@
+[
+  {
+    "file": "gateway-plan-a01-1440.png",
+    "source": ".local\\cp11-a01-final-gateway\\ui-acceptance-Gateway-visual-and-accessibility-1440x900\\plan.png",
+    "sha256": "650e475e6b6ca44e92781070fe6203fad735ffdf1395baa25cea5ae47de68e25"
+  },
+  {
+    "file": "gateway-plan-a01-402.png",
+    "source": ".local\\cp11-a01-final-gateway\\ui-acceptance-Gateway-visual-and-accessibility-402x874\\plan.png",
+    "sha256": "801b55c7e4f120241b5d910b6ceef652a4fbe007d006ffc2fa208b7249081459"
+  },
+  {
+    "file": "plan-a01-axe.json",
+    "source": ".local\\cp11-a01-final-gateway\\ui-acceptance-Gateway-visual-and-accessibility-1440x900\\plan-axe.json",
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  {
+    "file": "plan-a01-colors.json",
+    "source": ".local\\cp11-a01-final-gateway\\ui-acceptance-Gateway-visual-and-accessibility-1440x900\\plan-breadcrumb-colors.json",
+    "sha256": "077a7b26061c02ab3ecb6434c97f97e48c436c2f424a873ffc4a5a3537f40bc3"
+  },
+  {
+    "file": "plan-native-zoom.json",
+    "source": ".local\\cp11-a01-final-gateway\\cp11-plan-native-zoom-CP11-bcc27--fit-native-Chrome-200-zoom\\native-zoom.json",
+    "sha256": "1aefde67783c3af1f6b275c6f131cf6de4452624d42d0a1fa84d25237b1a3f13"
+  },
+  {
+    "file": "plan-editor-native-zoom.png",
+    "source": ".local\\cp11-a01-final-gateway\\cp11-plan-native-zoom-CP11-bcc27--fit-native-Chrome-200-zoom\\plan-editor-native-zoom.png",
+    "sha256": "2f90dfd970afc12a214168250eaddb6f89ebb82883c54dad172b6b526266537d"
+  },
+  {
+    "file": "shell-label-findings.json",
+    "source": ".local/cp11-a01-final-gateway.json inline axe attachments",
+    "sha256": "ce725ea78f36853515e26800d217e97fb708ad2a09ed0fa5ce6823912405f1eb"
+  }
+]

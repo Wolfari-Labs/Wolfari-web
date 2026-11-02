@@ -41,16 +41,16 @@ describe('Gateway Create Trip', () => {
     expect(createTrip).not.toHaveBeenCalled();
 
     await fill(user);
-    const timezone = screen.getByLabelText('Múi giờ');
-    await user.clear(timezone);
+    const timezonePreset = screen.getByLabelText('Múi giờ');
+    await user.selectOptions(timezonePreset, '__custom__');
+    const timezone = screen.getByLabelText('Múi giờ IANA');
     await user.type(timezone, 'Not/A_Timezone');
     await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
     expect(timezone).toHaveFocus();
     expect(screen.getByText('Vui lòng nhập múi giờ IANA hợp lệ.')).toBeInTheDocument();
     expect(createTrip).not.toHaveBeenCalled();
 
-    await user.clear(timezone);
-    await user.type(timezone, 'Asia/Ho_Chi_Minh');
+    await user.selectOptions(timezonePreset, 'Asia/Ho_Chi_Minh');
     await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
     await waitFor(() => expect(createTrip).toHaveBeenCalledOnce());
     expect(createTrip.mock.calls[0]![0].intent.timezone).toBe('Asia/Ho_Chi_Minh');

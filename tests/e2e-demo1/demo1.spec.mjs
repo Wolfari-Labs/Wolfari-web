@@ -164,13 +164,11 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await outsider.getByLabel('Tên hiển thị').fill('Outsider X updated');
       await outsider.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
       await expect(outsider.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
-      await outsider
-        .getByLabel('Chọn ảnh đại diện')
-        .setInputFiles({
-          name: 'demo-avatar.png',
-          mimeType: 'image/png',
-          buffer: await readFile(resolve('src/shared/assets/figma/ddfc7.png')),
-        });
+      await outsider.getByLabel('Chọn ảnh đại diện').setInputFiles({
+        name: 'demo-avatar.png',
+        mimeType: 'image/png',
+        buffer: await readFile(resolve('src/shared/assets/figma/ddfc7.png')),
+      });
       await expect(outsider.getByText('Đã cập nhật ảnh đại diện.')).toBeVisible();
       await outsider.reload();
       await expect(outsider.getByLabel('Tên hiển thị')).toHaveValue('Outsider X updated');
@@ -239,7 +237,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         .fill(`Demo1 ${runtime} ${manifest.runId}`);
       await owner.getByLabel('Ngày đi', { exact: true }).fill('2026-11-02');
       await owner.getByLabel('Ngày về', { exact: true }).fill('2026-11-05');
-      await owner.getByLabel('Múi giờ', { exact: true }).fill('Asia/Ho_Chi_Minh');
+      await owner.getByLabel('Múi giờ', { exact: true }).selectOption('Asia/Ho_Chi_Minh');
       await owner
         .getByLabel('Mô tả ngắn', { exact: true })
         .fill('Demo local — dữ liệu thật, chuyển tiền TEST.');
@@ -717,7 +715,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         .fill('Owner Holder one-day year boundary');
       await outsider.getByLabel('Ngày đi', { exact: true }).fill('2026-12-31');
       await outsider.getByLabel('Ngày về', { exact: true }).fill('2026-12-31');
-      await outsider.getByLabel('Múi giờ', { exact: true }).fill('America/New_York');
+      await outsider.getByLabel('Múi giờ', { exact: true }).selectOption('__custom__');
+      await outsider.getByLabel('Múi giờ IANA', { exact: true }).fill('America/New_York');
       await outsider.getByRole('button', { name: 'Tạo chuyến đi', exact: true }).click();
       await outsider.getByRole('link', { name: 'Mở chuyến đi' }).click();
       const selfTripId = new URL(outsider.url()).pathname.split('/')[2];

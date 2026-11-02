@@ -99,11 +99,9 @@ for (const viewport of [
     await expect(
       page.getByRole('listitem', { name: 'Địa điểm chưa xếp', exact: true }),
     ).toBeVisible();
-    // Existing Gateway shell has two CP05 baseline findings (Overview link contrast
-    // and profile label/name mismatch); CP06 keeps them in the evidence packet and
-    // does not silently claim a shell-wide axe clean run.
-    expect(initialAxe.violations.map((violation) => violation.id)).toEqual(
-      expect.arrayContaining(['color-contrast', 'label-content-name-mismatch']),
-    );
+    // CP11-A02 fixes the shell accessible-name mismatch. Keep the axe gate
+    // strict for this route after the visible-label and accessible-name text
+    // are aligned.
+    expect(initialAxe.violations).toEqual([]);
   });
 }

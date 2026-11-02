@@ -166,7 +166,7 @@ test('CP04 fixture reduced-motion trip drawer keeps keyboard recovery', async ({
   await page.setViewportSize({ width: 402, height: 600 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/trips/11111111-1111-4111-8111-111111111111');
-  const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+  const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
   await menu.click();
   const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
   await expect(drawer).toBeVisible();

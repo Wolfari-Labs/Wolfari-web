@@ -149,10 +149,18 @@ describe('Shell interactions', () => {
   it('opens the mobile workspace drawer and changes section without bottom tabs', async () => {
     mount();
     await screen.findByText('Trang Nguyễn');
-    await userEvent.click(screen.getByRole('button', { name: 'Mở điều hướng chuyến đi' }));
+    await userEvent.click(screen.getByRole('button', { name: /Mở điều hướng chuyến đi/ }));
     const drawer = within(await screen.findByRole('dialog')).getByRole('navigation', {
       name: 'Điều hướng chuyến đi',
     });
+    expect(within(drawer).getByRole('link', { name: 'Chuyến đi của tôi' })).toHaveAttribute(
+      'href',
+      '/trips',
+    );
+    expect(within(drawer).getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute(
+      'href',
+      '/profile',
+    );
     await userEvent.click(within(drawer).getByRole('link', { name: 'Lịch trình' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(

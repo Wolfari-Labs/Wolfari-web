@@ -166,18 +166,13 @@ test('HTTP mock: unknown policy outcome is not called saved and retry reuses the
   expect(writes[1]!.idempotencyKey).toBe(writes[0]!.idempotencyKey);
 });
 
-test('HTTP mock: SELECTED uses membership IDs; OWNER_ONLY preserves inactive assignments; archived and member writers blocked', async ({
+test('HTTP mock: SELECTED uses membership IDs and OWNER_ONLY preserves inactive assignments after reload', async ({
   page,
   gateway,
 }) => {
-  await login(page);
-  await page.goto(`/trips/${memberTripId}/members`);
-  await expect(page.getByText('Trang Gateway', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình' })).toHaveCount(0);
-
   const owner = gateway.trips.find((trip) => trip.id === ownerTripId)!;
   owner.plan_edit_policy = 'SELECTED_MEMBERS';
-  await page.goto(`/trips/${ownerTripId}/members`);
+  await openOwnerMembers(page);
   await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình' })).toBeEnabled();
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
   await expect(
@@ -202,11 +197,36 @@ test('HTTP mock: SELECTED uses membership IDs; OWNER_ONLY preserves inactive ass
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
   await page.getByRole('radio', { name: 'Thành viên được chọn', exact: true }).check();
   await expect(page.getByRole('checkbox', { name: 'Member Gateway', exact: true })).toBeChecked();
+});
 
+// Independent permission states must not share the mutation/reload scenario's timeout.
+test('HTTP mock: a Member cannot open or write Plan policy', async ({ page, gateway }) => {
+  await login(page);
+  await page.goto(`/trips/${memberTripId}/members`);
+  // A header account name is not proof that the lazy Members page has finished loading.
+  await expect(
+    page
+      .getByRole('region', { name: 'Danh sách thành viên' })
+      .getByText('Trang Gateway', { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình' })).toHaveCount(0);
+  expect(
+    gateway.calls.filter((call) => call.method === 'PUT' && call.path.endsWith('/plan-policy')),
+  ).toEqual([]);
+});
+
+test('HTTP mock: an archived Trip keeps Owner policy read-only without writes', async ({
+  page,
+  gateway,
+}) => {
+  const owner = gateway.trips.find((trip) => trip.id === ownerTripId)!;
   owner.plan_edit_policy = 'OWNER_ONLY';
   owner.lifecycle = 'ARCHIVED';
   owner.archived_at = '2026-10-01T00:00:00Z';
-  await page.goto(`/trips/${ownerTripId}/members`);
+  await openOwnerMembers(page);
   await page.getByRole('button', { name: 'Quyền sửa lịch trình' }).click();
   await expect(page.getByRole('button', { name: 'Lưu quyền' })).toBeDisabled();
+  expect(
+    gateway.calls.filter((call) => call.method === 'PUT' && call.path.endsWith('/plan-policy')),
+  ).toEqual([]);
 });

@@ -4,6 +4,7 @@ import { useTripRepository } from '../repositories/repository-context';
 import type { CreateTripIntent } from '../repositories/trip.repository';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
+import { Select } from '../../../shared/components/Select';
 import { Textarea } from '../../../shared/components/Textarea';
 import { Alert } from '../../../shared/components/Alert';
 import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
@@ -22,6 +23,20 @@ interface Draft {
   timezone: string;
 }
 type DraftErrors = Partial<Record<keyof Draft, string>>;
+
+const CUSTOM_TIMEZONE = '__custom__';
+const TIMEZONE_PRESETS = [
+  { value: 'Asia/Ho_Chi_Minh', label: 'Việt Nam — UTC+07:00' },
+  { value: 'Asia/Bangkok', label: 'Thái Lan — UTC+07:00' },
+  { value: 'Asia/Singapore', label: 'Singapore — UTC+08:00' },
+  { value: 'Asia/Tokyo', label: 'Nhật Bản — UTC+09:00' },
+  { value: 'Asia/Seoul', label: 'Hàn Quốc — UTC+09:00' },
+  { value: 'UTC', label: 'UTC — UTC+00:00' },
+] as const;
+
+function timezonePreset(value: string) {
+  return TIMEZONE_PRESETS.some((preset) => preset.value === value) ? value : CUSTOM_TIMEZONE;
+}
 
 function validateDraft(draft: Draft): DraftErrors {
   const errors: DraftErrors = {};
@@ -46,7 +61,13 @@ function focusFirstError(errors: DraftErrors) {
   const first = (['name', 'startDate', 'endDate', 'timezone', 'description'] as const).find(
     (field) => errors[field],
   );
-  if (first) document.getElementById(`gateway-create-trip-${first}`)?.focus();
+  if (first) {
+    const id =
+      first === 'timezone' ? 'gateway-create-trip-timezone-custom' : `gateway-create-trip-${first}`;
+    (
+      document.getElementById(id) ?? document.getElementById('gateway-create-trip-timezone')
+    )?.focus();
+  }
 }
 
 const empty = (): Draft => ({
@@ -163,6 +184,8 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
     setMessage('');
     persist(next, null);
   };
+  const selectedTimezonePreset = timezonePreset(draft.timezone);
+  const customTimezone = selectedTimezonePreset === CUSTOM_TIMEZONE;
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (sending.current || initial.current?.invalid || !actorId) return;
@@ -299,15 +322,40 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
                 onChange={(e) => edit('endDate', e.target.value)}
               />
             </div>
-            <Input
+            <Select
               id="gateway-create-trip-timezone"
               label="Múi giờ"
-              hint="Ví dụ: Asia/Ho_Chi_Minh"
-              value={draft.timezone}
+              hint="Chọn múi giờ thường dùng hoặc chọn múi giờ khác để nhập mã IANA."
+              value={selectedTimezonePreset}
               required
-              error={errors.timezone}
-              onChange={(e) => edit('timezone', e.target.value)}
-            />
+              error={!customTimezone ? errors.timezone : undefined}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (next === CUSTOM_TIMEZONE) {
+                  edit('timezone', customTimezone ? draft.timezone : '');
+                } else {
+                  edit('timezone', next);
+                }
+              }}
+            >
+              {TIMEZONE_PRESETS.map((preset) => (
+                <option key={preset.value} value={preset.value}>
+                  {preset.label}
+                </option>
+              ))}
+              <option value={CUSTOM_TIMEZONE}>Múi giờ khác — nhập mã IANA</option>
+            </Select>
+            {customTimezone && (
+              <Input
+                id="gateway-create-trip-timezone-custom"
+                label="Múi giờ IANA"
+                hint="Ví dụ: America/New_York"
+                value={draft.timezone}
+                required
+                error={errors.timezone}
+                onChange={(e) => edit('timezone', e.target.value)}
+              />
+            )}
             <Textarea
               id="gateway-create-trip-description"
               label="Mô tả ngắn"

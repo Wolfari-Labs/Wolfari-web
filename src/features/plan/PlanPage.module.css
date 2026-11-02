@@ -18,7 +18,7 @@
   margin: 0;
 }
 .breadcrumb a {
-  color: var(--color-active);
+  color: var(--color-action-primary);
   min-height: 22px;
   display: inline-flex;
   align-items: center;

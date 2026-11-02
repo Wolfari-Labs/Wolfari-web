@@ -6,11 +6,26 @@ import { Icon } from '../../../shared/components/Icon';
 import styles from './AppShell.module.css';
 import ui from '../../../shared/components/Ui.module.css';
 
+function accountInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(-2)
+    .map((part) => part[0])
+    .join('')
+    .toLocaleUpperCase('vi');
+}
+
 export function AccountMenu({ name }: { name: string }) {
+  const initials = accountInitials(name);
   return (
     <DropdownMenu.Root>
       <div className={styles.profileGroup}>
-        <Link to={paths.profile} className={styles.profile} aria-label={'Hồ sơ cá nhân · ' + name}>
+        <Link
+          to={paths.profile}
+          className={styles.profile}
+          aria-label={initials ? `${initials} ${name} · Hồ sơ cá nhân` : `${name} · Hồ sơ cá nhân`}
+        >
           <Avatar name={name} />
           <span className={styles.accountName}>{name}</span>
         </Link>
