@@ -1,0 +1,189 @@
+{
+  "at": "2026-11-02T19:15:35.879Z",
+  "scope": "Windows fixture E2E synchronization; no application runtime/API changes; not live Backend/manual Edge",
+  "base": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+  "fixCommit": "f5eefe3bbc4bd5249420fc1b99c444ed6efa5560",
+  "testFiles": [
+    {
+      "file": "tests/e2e/app-shell.spec.ts",
+      "sha256": "7c7dc64a48b02f5b0271b9587428dbe1124dba78b86dab8e7e5a0ec1ead6041d"
+    },
+    {
+      "file": "tests/e2e/foundations-zoom.spec.ts",
+      "sha256": "c42089493ed0064aa6f6df33fc9f1444d6220c9665381a5504cc0f05d95586f4"
+    },
+    {
+      "file": "tests/e2e/trip-overview.spec.ts",
+      "sha256": "fc6239ee314236c848e8c7a8409fae439fae3f2ddc9f99e8a283205d4a96905d"
+    }
+  ],
+  "commands": [
+    {
+      "label": "ci-sidebar-baseline",
+      "command": "corepack pnpm test:e2e:built tests/e2e/trip-overview.spec.ts --grep expanded and collapsed --repeat-each=10 --workers=1 --trace=on",
+      "startedAt": "2026-11-02T18:58:24.370Z",
+      "finishedAt": "2026-11-02T18:58:58.308Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sidebar-baseline.log",
+      "logSha256": "5d83ae5fbd1cfcbd8c876bbd90d6444b2524aef5c8c74561d9c912d20f0cd648"
+    },
+    {
+      "label": "ci-overlay-baseline",
+      "command": "corepack pnpm test:e2e:built tests/e2e/foundations-zoom.spec.ts tests/e2e/app-shell.spec.ts --grep drawer.traps|CP03.native --repeat-each=5 --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T18:59:55.035Z",
+      "finishedAt": "2026-11-02T18:59:55.715Z",
+      "exitCode": 255,
+      "status": "FAIL",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-overlay-baseline.log",
+      "logSha256": "5e9f6acc8a12d13b4ce17dcaacc60acfdaeda581d66606ff81ff687cf46b6543"
+    },
+    {
+      "label": "ci-zoom-baseline",
+      "command": "corepack pnpm test:e2e:built tests/e2e/foundations-zoom.spec.ts --repeat-each=10 --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T19:00:08.676Z",
+      "finishedAt": "2026-11-02T19:00:53.733Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-zoom-baseline.log",
+      "logSha256": "bd1b83488ab7c807d21e168c47432bdf9f1e9f665a6d836a3604a57897c33f2c"
+    },
+    {
+      "label": "ci-sync-focused",
+      "command": "corepack pnpm test:e2e:built tests/e2e/trip-overview.spec.ts tests/e2e/app-shell.spec.ts tests/e2e/foundations-zoom.spec.ts --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T19:01:42.427Z",
+      "finishedAt": "2026-11-02T19:03:30.536Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-focused.log",
+      "logSha256": "93f9f11c2088224592af2b83ff64390d12805e269ad46b06675028d806ad545d"
+    },
+    {
+      "label": "ci-sync-full-fixture",
+      "command": "corepack pnpm test:e2e:built --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T19:05:58.397Z",
+      "finishedAt": "2026-11-02T19:14:40.706Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-full-fixture.log",
+      "logSha256": "5f82cf1a563236e2328c2929810b45f75b5fee38e9a8e86f65061cb3df30fb9b"
+    },
+    {
+      "label": "ci-sync-lint",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T19:08:29.000Z",
+      "finishedAt": "2026-11-02T19:08:43.779Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-lint.log",
+      "logSha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d"
+    },
+    {
+      "label": "ci-sync-typecheck",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T19:08:59.325Z",
+      "finishedAt": "2026-11-02T19:09:18.819Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-typecheck.log",
+      "logSha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e"
+    },
+    {
+      "label": "ci-sync-unit",
+      "command": "corepack pnpm test tests/shared-ui.test.tsx tests/shell-navigation.test.tsx --maxWorkers=2",
+      "startedAt": "2026-11-02T19:09:48.595Z",
+      "finishedAt": "2026-11-02T19:10:03.035Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-unit.log",
+      "logSha256": "dced96aecf178ff1407eafe969eb4433b711e78f5861dc89be860693ba018ace"
+    },
+    {
+      "label": "ci-sync-format",
+      "command": "corepack pnpm exec prettier --check tests/e2e/app-shell.spec.ts tests/e2e/foundations-zoom.spec.ts tests/e2e/trip-overview.spec.ts",
+      "startedAt": "2026-11-02T19:09:24.029Z",
+      "finishedAt": "2026-11-02T19:09:25.909Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-format.log",
+      "logSha256": "06c02f0cdfe94ce26d7892aa4b8ec5897aa255d0ac1d1cae95e847e2b4e036d1"
+    },
+    {
+      "label": "ci-sync-format-final",
+      "command": "corepack pnpm exec prettier --check tests/e2e/app-shell.spec.ts tests/e2e/foundations-zoom.spec.ts tests/e2e/trip-overview.spec.ts",
+      "startedAt": "2026-11-02T19:15:00.554Z",
+      "finishedAt": "2026-11-02T19:15:02.154Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "webHeadAtStart": "79bd041c7ec01fd5f76b08cf64ea064320193bb8",
+      "backendHeadAtStart": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7",
+      "log": "test-results/readiness/20261102/ci-sync-format-final.log",
+      "logSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "reports": [
+    {
+      "file": "test-results/readiness/20261102/ci-sync-focused-results.json",
+      "sha256": "da74163b64c3bdb83fd41b8e6e62c8a0dd15f828627afbd929e8aa078a43068a",
+      "stats": {
+        "startTime": "2026-11-02T19:01:46.023Z",
+        "duration": 104418.633,
+        "expected": 48,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "test-results/readiness/20261102/ci-sync-repeat-results.json",
+      "sha256": "c4bafa51810cd37c7bfbf58203a7af288b6c24482e57ef0e3cadeb2231d07a0c",
+      "stats": {
+        "startTime": "2026-11-02T19:04:08.663Z",
+        "duration": 86575.22,
+        "expected": 30,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "test-results/readiness/20261102/ci-sync-full-fixture-results.json",
+      "sha256": "581962a7dd50f2b1d75f1aa1f28df08fbcfe0f8ea26ab6c874ff48175a858d65",
+      "stats": {
+        "startTime": "2026-11-02T19:06:02.039Z",
+        "duration": 518554.843,
+        "expected": 208,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "repeatedCommand": "node scripts/e2e-built.mjs fixture tests/e2e/trip-overview.spec.ts tests/e2e/app-shell.spec.ts tests/e2e/foundations-zoom.spec.ts --grep 'expanded and collapsed|drawer traps|CP03 native' --repeat-each=10 --workers=1 --trace=retain-on-failure",
+  "repeatedExitCode": 0,
+  "caveats": [
+    "Baseline Windows sidebar10/10 and native zoom10/10 passed; original failures observed on Linux CI, not reproduced locally.",
+    "ci-overlay-baseline exit255 is shell regex quoting failure before E2E; replaced by direct Node invocation.",
+    "Initial scoped format check failed on mixed line endings in trip-overview; subsequent normalization only, no behavioral test edit.",
+    "CI on the pushed fix is a separate gate. Historical CI runs: push41504076560 fixture205/208; PR41504224195 fixture207/208, other jobs PASS.",
+    "Live acceptance and manual/reviewer gates remain incomplete; no merge authorization or MAIN_VERIFIED claim."
+  ]
+}

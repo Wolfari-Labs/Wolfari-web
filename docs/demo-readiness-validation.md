@@ -15,7 +15,7 @@ Ngày mở: **02/11/2026, Asia/Saigon**; chốt chuyển giai đoạn **03/11/20
 | Nhánh nghiệm thu | `feat/demo-1-readiness-web` | `feat/demo-1-readiness-backend` |
 | Merge local | `main` đã là ancestor; không tạo merge rỗng | `bec284f` hợp nhất cả hai parents |
 
-Trong giai đoạn A–C chưa push/tạo PR/merge remote. Ngày03/11 người dùng yêu cầu chuyển D; trạng thái Git mới ở hồ sơ bàn giao D. Backend PR #14–16 không được đưa vào. Fetch mới nhất giữ nguyên hai main trên; API read-only thấy Backend #14/#15 còn mở, Web chưa có PR. SHA và tree/implementation hash của từng live run nằm trong snapshot riêng; không coi working tree chưa commit là bản commit gốc.
+Trong giai đoạn A–C chưa push/tạo PR/merge remote. Ngày03/11 người dùng yêu cầu chuyển D và chấp thuận GitHub API: đã push, tạo Draft Backend #17 và Web #21; chưa merge. Backend PR #14–16 không được đưa vào. Fetch/API ngày03/11 giữ nguyên hai main trên, cả hai đều là ancestor của candidate. SHA và tree/implementation hash của từng live run nằm trong snapshot riêng; không coi working tree chưa commit là bản commit gốc. [Trạng thái remote và CI](PHASE_D_HANDOFF.md).
 
 ## Nơi lưu bằng chứng
 
@@ -49,14 +49,14 @@ Không có thay đổi source trong baseline. Frozen install dùng đúng lockfi
 | Web lint/typecheck/unit/builds | PASS49 files /586 unit tests; cả hai builds PASS |
 | Web fixture dev | Fresh source replay **PASS208/208**, exit0, một worker (`fresh-fixture-dev`, 10,5 phút). Giữ hai lần FAIL207/208 trước đó ở checkout chính; focused PASS không được dùng thay full |
 | Web Gateway HTTP mock dev | Fresh source replay **PASS127/127**, exit0, một worker (`fresh-gateway-dev`, 10,2 phút). Giữ lần FAIL126/127 trước đó và trace focused; không kết luận nguyên nhân chậm tải đã được loại bỏ |
-| Web built fixture/Gateway HTTP mock | PASS **208/208 fixture**, **127/127 HTTP mock**, exit0, một worker, không skipped/flaky; outputs tách riêng |
+| Web built fixture/Gateway HTTP mock | Trước RD-09: PASS208/208 và127/127 local. Sau RD-13: full built fixture **208/208 PASS** local; Gateway HTTP mock **128/128 PASS** trên CI `79bd041` (trước RD-13, runtime giữ nguyên). [Evidence và giới hạn CI](WEB_PR21_CI_FIX.md) |
 | Live preview trung gian | PASS1 scenario /15 business steps, run `20261102154252-327c96ba`; không thay final dev1 + preview2 |
 | Dev + hai preview trước sửa RD-09 | PASS **1 scenario /15 steps mỗi lượt**, cùng implementation hash; xem bảng runs bên dưới. Sau sửa runtime RD-09 phải chạy chuỗi mới |
 | Runbook launcher/personal demo | PASS init/start/check/build/preview/stop/restart và Chromium smoke sau restart; journal cũ MISSING được giữ nguyên; 5 TEST accounts mới |
 | Edge manual, hai diễn tập, soak 30 phút | NOT_RUN / chờ người dùng; user đã nhận tự diễn tập theo checklist khi bản chạy sẵn sàng |
 | Fresh source replay trước RD-09 | Hai clone cục bộ + overlay đúng hash candidate; không copy config, journal, node_modules. Backend install/build/dev:test PASS; Web install/build và full dev fixture208/Gateway127 PASS; isolated preview `20261102181858-e7d23909` PASS15 steps, 179,7 giây, exit0. Chưa là clean committed checkout hoặc máy sạch; chưa đại diện source sau sửa RD-09 |
 | RD-09 focused regression | Baseline FAIL khi nút mới vẫn bật trong lúc GET quỹ bị giữ chậm. Sau sửa, ba bài Finance HTTP-mock built PASS (`rd09-fix-focused-2`), gồm draft/version conflict. Một lần authoring fixture thiếu error-envelope fields được giữ riêng, không là lỗi runtime |
-| Candidate CI/PR/reviewer/main verification | NOT_RUN; chưa push |
+| Candidate CI/PR/reviewer/main verification | Draft Backend17/Web21 đã tạo. Backend CI PASS tại `fc7bc3e`; Web `79bd041` FAIL built fixture, các job khác PASS. [Bản sửa CI](WEB_PR21_CI_FIX.md). Reviewer approval/merge/main verification chưa đạt |
 
 ## Issue register
 
@@ -74,6 +74,7 @@ Không có thay đổi source trong baseline. Frozen install dùng đúng lockfi
 | RD-10 | Personal smoke sequencing / đã xử lý | Sau accept invitation ở actor khác, Owner còn membership revision cũ; UI trả conflict và giữ draft. Helper đọc lại roster trước chọn Editor. Tiếp tục đúng5 accounts/Trip đã tạo, không đăng ký trùng hoặc ghi đè journal. |
 | RD-11 | Unit test timing / đã sửa | `final-rd09-unit` FAIL585/586: callback debounce300ms của Map chưa được gọi trong cửa sổ waitFor. Test nay kích hoạt lại cùng truy vấn rỗng bằng fake timer, vẫn kiểm provider error/saved data; không tăng timeout hoặc sửa Map runtime. Focused4/4 và full586/586 PASS. |
 | RD-12 | Live test sequencing / chưa kiểm lại | `expanded-live-dev` / `20261102183225-1fcdc2b4` FAIL: sau Delete lập tức reload, activity đã mất trên API nhưng nút Sửa còn disabled. Test được bổ sung chờ DELETE200, item biến mất và nút Sửa enabled trước reload. **NOT_RERUN** theo yêu cầu chuyển D; chưa kết luận mọi nguyên nhân đã khắc phục. |
+| RD-13 | CI test synchronization / chặn merge khi CI còn đỏ | Web `79bd041` built fixture: push205/208, PR207/208. Chờ geometry sidebar, Drawer actionability và nested modal layer trước tương tác; giữ nguyên width72, focus/dismissal assertions, timeout và retries0. [Chi tiết/kết quả hiện hành](WEB_PR21_CI_FIX.md); không gộp với live Backend hoặc manual Edge. |
 
 ## Trạng thái cuối trước commit/push giai đoạn D
 
@@ -151,7 +152,7 @@ Vì còn các ô chưa có browser live riêng, **không công bố toàn bộ B
 - Live preview trung gian đã chứng minh balance500000, ledger2, FundOPEN, lý do reject sau reload, contribution request/Holder inbox đọc lại, observationMOCK_FLIGHT và restart. Final proof chỉ ghi sau toàn bộ scenario; không dùng business-proof của các run cũ thất bại làm full PASS.
 - Invitation expired, nhiều tình huống money concurrency và schema upgrade có API/integration/fixture evidence; không tự gắn tất cả thành browser live/manual. Checklist live chưa bao phủ hết ma trận người dùng chỉ bằng một test tổng hợp.
 - Native Chrome200% có bài fixture/HTTP-mock riêng; CSS zoom trong live scenario không thay native Edge rehearsal.
-- Đã thêm lệnh `test:e2e:built` / `test:e2e:gateway:built` và CI matrix tương ứng; CI mới chưa chạy vì chưa push.
+- Đã thêm lệnh `test:e2e:built` / `test:e2e:gateway:built` và CI matrix tương ứng. CI đã chạy trên PR21; kết quả/fix riêng ở [RD-13](WEB_PR21_CI_FIX.md), không thay bằng kết quả local lịch sử.
 - Đã tham khảo [Vite performance](https://v8.vite.dev/guide/performance) về warmup, nhưng **chưa áp warmup hoặc đổi app config**: timing hiện có chưa chứng minh transform CPU là nguyên nhân duy nhất. Không sửa security/antivirus hoặc đóng app ngoài Wolfari để ép kết quả.
 
 ## Điều kiện đóng

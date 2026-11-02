@@ -2,7 +2,7 @@
 
 **GIAI ĐOẠN D / DRAFT.** Người dùng đã yêu cầu chuyển D ngày03/11. Đây là hướng dẫn, không xác nhận PR/CI/reviewer đã đạt. Kiểm tra [bàn giao D](PHASE_D_HANDOFF.md), [readiness](demo-readiness-validation.md) và trạng thái GitHub thực tế trước mỗi thao tác. Gate live post-fix và Edge còn thiếu nên chưa merge.
 
-Đã soạn sẵn [nội dung PR Backend](pr-drafts/demo-readiness-backend.md) và [nội dung PR Web](pr-drafts/demo-readiness-web.md) với tested pair/kết quả/giới hạn hiện hành. Đây là file local, chưa có PR remote. Khi commit/push, bổ sung SHA candidate và liên kết evidence thật; không dùng các dấu trạng thái chưa kiểm chứng như PASS.
+Đã push và tạo [Draft PR Backend #17](https://github.com/Wolfari-Labs/Wolfari-backend/pull/17), [Draft PR Web #21](https://github.com/Wolfari-Labs/Wolfari-web/pull/21) bằng GitHub API theo chấp thuận của người dùng, không cài GitHub CLI. Các bước tạo PR dưới đây là hướng dẫn tham khảo, không tạo lại PR trùng. [Nội dung Backend](pr-drafts/demo-readiness-backend.md) và [nội dung Web](pr-drafts/demo-readiness-web.md) lưu phạm vi/gate; xem [báo cáo lỗi CI Web](WEB_PR21_CI_FIX.md) và CI trên HEAD hiện hành trước review/merge.
 
 Repo canonical: [Wolfari-backend](https://github.com/Wolfari-Labs/Wolfari-backend) và [Wolfari-web](https://github.com/Wolfari-Labs/Wolfari-web). Backend local remote cũ `thepiece27/Wolfari` hiện redirect về repo canonical; không tự đổi remote hoặc push sang repo khác.
 

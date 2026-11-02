@@ -5,10 +5,10 @@
 ## Candidate và bằng chứng
 
 - Backend: `feat/demo-1-readiness-backend`, candidate docs commit `fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7`, merge source `bec284f6b14e6451fd2e988acde8ae831c307f8a`. Main đã fetch `37a4b5786f913f2ce2705204d013076cbcf1bd3a`.
-- Web: `feat/demo-1-readiness-web`, source readiness commit `20063c08999caaf129c16195260566088fbfb52f`; docs commit tách riêng sau đó. Main đã fetch `e2dae06bdef9747d874120bead2d61e44426a14f`. Implementation SHA-256 cuối `c0563a73f5906acda31424f6c5d8dc8ca34facc9cdeb6dea9d6142643b221fc3`.
+- Web: `feat/demo-1-readiness-web`, source readiness commit `20063c08999caaf129c16195260566088fbfb52f`; docs commit tách riêng sau đó. Main đã fetch `e2dae06bdef9747d874120bead2d61e44426a14f`. Implementation SHA-256 trước sửa fixture E2E RD-13 là `c0563a73f5906acda31424f6c5d8dc8ca34facc9cdeb6dea9d6142643b221fc3`; application runtime không đổi trong RD-13.
 - [Readiness đầy đủ](demo-readiness-validation.md) và [evidence JSON](evidence/demo-readiness/run-summary-20261103.json) ghi từng command/exit/hash. Dùng `git log -3 --oneline` và `git rev-parse HEAD` để xác nhận commit bàn giao; không coi SHA nguồn là toàn bộ candidate.
 - Current source đã đạt lint/typecheck/demo build, unit586/586, Finance HTTP-mock3/3. Bộ full fixture208/Gateway127 và dev1+preview2 PASS thuộc bản trước sửa Finance refresh.
-- Live cuối `20261102183225-1fcdc2b4` FAIL tại Delete/reload Plan. Đã chỉnh test chờ DELETE200 và UI hết pending trước reload; chưa chạy lại theo yêu cầu chốt. Dev1+preview2 trên bản cuối, full browser128 sau bổ sung regression, Edge2 lượt/30 phút vẫn là gate còn thiếu.
+- Live cuối `20261102183225-1fcdc2b4` FAIL tại Delete/reload Plan. Đã chỉnh test chờ DELETE200 và UI hết pending trước reload; chưa chạy lại theo yêu cầu chốt. Dev1+preview2 live trên bản cuối, Edge2 lượt/30 phút vẫn là gate còn thiếu. Gateway HTTP mock128 đã PASS cả dev và built trên CI tại `79bd041`; không thay gate live.
 
 ## Dọn dẹp đã thực hiện
 
@@ -30,14 +30,14 @@ GitHub main của cả hai repo có protection và cho phép merge commit. Khôn
 
 ## Trạng thái công cụ và thao tác remote
 
-GitHub web chưa điều khiển được: browser inventory rỗng, `The browser access host is unavailable`; native pipe cũng unavailable. Read-only API đã kiểm repo/main/PR trước push; không tạo PR bằng API vì kế hoạch chọn GitHub web.
+GitHub web chưa điều khiển được (`The browser access host is unavailable`). Người dùng đã chấp thuận dùng GitHub API, không cài GitHub CLI. Hai nhánh đã push và hai Draft PR đã tạo:
 
-Trước khi bấm tạo PR, kiểm lại nhánh đã push và diff:
+- [Backend PR #17](https://github.com/Wolfari-Labs/Wolfari-backend/pull/17), HEAD `fc7bc3e`: [CI PR PASS](https://github.com/Wolfari-Labs/Wolfari-backend/actions/runs/41504212006).
+- [Web PR #21](https://github.com/Wolfari-Labs/Wolfari-web/pull/21), phụ thuộc Backend. CI tại `79bd041` FAIL built fixture; checks (unit586, dev fixture208, dev HTTP mock128) và built HTTP mock128 PASS. [Chẩn đoán và kiểm chứng bản sửa](WEB_PR21_CI_FIX.md).
 
-- [So sánh / tạo PR Backend](https://github.com/Wolfari-Labs/Wolfari-backend/compare/main...feat/demo-1-readiness-backend?expand=1)
-- [So sánh / tạo PR Web](https://github.com/Wolfari-Labs/Wolfari-web/compare/main...feat/demo-1-readiness-web?expand=1)
+Cả hai **chưa merge**. Fetch và GitHub API ngày03/11 xác nhận main vẫn là hai SHA ở trên; `git rev-list --left-right --count origin/main...HEAD` có phía trái bằng0 ở cả hai repo. Backend đã hợp nhất main bằng merge `bec284f`; Web main đã là ancestor, không cần merge rỗng. Không còn commit main chưa tích hợp tại mốc kiểm tra này. Phải kiểm lại nếu main tiến thêm trong lúc review.
 
-Chọn menu cạnh Create pull request → **Create draft pull request**, dán đúng file nội dung tương ứng. Các liên kết trên không có nghĩa PR đã tồn tại. Xem kết quả push/CI thực tế trong bàn giao cuối; không dùng nút Merge khi còn gate thiếu.
+Không tạo PR trùng, không dùng nút Merge khi còn gate hoặc approval thiếu. Các bước Git ở trên là quy trình; trạng thái thực tế lấy từ hai PR và CI trên HEAD hiện hành.
 
 ## Chạy bản demo để người dùng diễn tập
 
