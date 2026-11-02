@@ -1,12 +1,20 @@
-# CP11 — Hồ sơ kiểm chứng và điều kiện nghiệm thu
+# CP11 — Nghiệm thu APPROVED / DONE_WITH_EXCEPTIONS
 
-Ngày02/11/2026. **BLOCKED_USER/BLOCKED_TOOL — còn full visual/manual/live gate, chưa DONE/APPROVED**, không deploy/freeze hoặc mở checkpoint mới. D50 duyệt A01; D52 duyệt A02–A05 sau khi user chọn gói bốn nhóm và yêu cầu implementation. D55 ghi full automated gate/current local lab sau source edit cuối; đó không phải checkpoint approval hoặc miễn gate. CP10 APPROVED/DONE theo D48, giữ toàn bộ giới hạn lịch sử. CP11 chỉ Web.
+Ngày02/11/2026. **APPROVED / DONE_WITH_EXCEPTIONS — D56**. User chấp thuận đề nghị sửa lỗi current-page cuối và đóng với các giới hạn đã liệt kê bằng “được, sửa và xác nhận cho tôi”, tiếp đó “tiếp tục. và chốt đóng sẵn sàng cho tôi”. Final correction và focused gates đã PASS; hồ sơ được đóng với ngoại lệ rõ, không tuyên bố mọi gate DoD ban đầu đã đạt hoặc production-ready. CP11 chỉ Web. **STOP: không release/deploy/freeze hoặc mở checkpoint mới.**
 
-## Bổ sung sau D55
+## Nghiệm thu D56 và kiểm chứng sau sửa cuối
+
+- Thêm `end` riêng vào Trip-list NavLink: trong Trip Drawer, chỉ trang workspace thực sự đang mở có `aria-current="page"`, không đồng thời đánh dấu “Chuyến đi của tôi”. Không đổi routes, layout, guards, API hoặc các quyền workspace/account.
+- Fresh lint/typecheck/scoped Prettier và production/Preview builds PASS; shell-navigation unit **7/7**, Preview Drawer **1/1**, Preview denied routes **3/3**, final Gateway HTTP-mock Drawer **1/1 PASS**, clean exit0. Gateway kiểm tra overview/settings, Escape/focus, chọn Trip list và yêu cầu có Trip requests thực được quan sát nhưng không có mutation. [Closeout evidence](evidence/cp11/run-summary-closeout.json), [verification](CP11_VERIFICATION.md) lưu paths/hashes/modes và các lỗi test-authoring/setup đã sửa.
+- D55 full unit **578/578**, Gateway HTTP-mock **126/126**, Preview fixture **208/208** PASS là evidence **trước final NavLink edit**. Full suites **NOT_RERUN** sau sửa một dòng; không gộp các focused tests thành full-suite PASS. Lab80+40 mẫu cũng trước D56, không chạy lại hoặc suy post-D56 performance.
+- Git resume `draft/demo-ui-ux`, HEAD `c73e0ada4c1a846de61aabb93f1bc9f01c3991c6`, ahead local origin5, sạch trước sửa; source/test/docs cuối giữ uncommitted. Backend sạch, package/lock không đổi; không commit/push/Backend/dependency/Figma writes.
+- D56 chấp nhận riêng full direct Figma/runtime visual review chưa hoàn tất, live Backend/provider/delivery, manual screen reader, CI và physical-device **NOT_RUN**. Các giới hạn này không biến thành PASS. Local lab không production p75/INP/SLA; CP09 deferred work và các design delta pending không được phê duyệt thêm.
+
+## Snapshot D55 trước final NavLink correction — lịch sử
 
 - Sau chỉnh sửa compact-name/denied-Drawer, fresh full unit **48 files/578 tests PASS**, built Gateway HTTP-mock **126/126 PASS** (4.1min) và Preview fixture **208/208 PASS** (4.6min), cả ba clean exit0. [Run summary D55](evidence/cp11/run-summary-d54.json) lưu report hashes và từng mode riêng; D53 full runs trước sửa giữ làm lịch sử. Lint/typecheck/scoped Prettier và production/Preview builds cũng PASS trên source cuối.
 - Fresh local Gateway HTTP-mock lab **8/8 PASS/40 mẫu** trên source cuối; [summary](evidence/cp11/runtime-lab-d54.json) so với40 mẫu post-A01 lịch sử, không là production A/B. [Static payload D54](evidence/cp11/build-payload-d54.json) Home177113B/Auth198313B/Plan311496B/Fund236832B gzip local static JS/CSS closure;119 emitted assets5896577B. Mẫu ít, ranges chồng lấn; không suy hiệu năng production, network payload hoặc PERF01 SLA.
-- Full visual/source comparison qua CUA vẫn BLOCKED_TOOL. Live E2E cần Gateway13000/Docker Desktop Linux engine nhưng cả hai unavailable; manual screen reader/CI/physical device NOT_RUN. CP11 vẫn chờ hoàn tất hoặc user chấp nhận cụ thể các ngoại lệ.
+- Ở snapshot D55, full visual/source comparison qua CUA vẫn BLOCKED_TOOL. Live E2E cần Gateway13000/Docker Desktop Linux engine nhưng cả hai unavailable; manual screen reader/CI/physical device NOT_RUN. D56 sau đó chấp nhận các ngoại lệ để đóng checkpoint; không sửa kết quả kiểm chứng lịch sử.
 
 ## Bổ sung D54 trước full rerun (lịch sử)
 
@@ -36,21 +44,18 @@ Ngày02/11/2026. **BLOCKED_USER/BLOCKED_TOOL — còn full visual/manual/live ga
 
 Unit baseline576/577, dev Gateway116/123 (7 FAIL), focused dev Members0/3 và pre-A01 built Gateway124/125 (contrast FAIL) vẫn nằm trong [verification](CP11_VERIFICATION.md), không bị đổi thành PASS. Post-A01 lượt đầu121/126 (5 FAIL) do CP06 tests đòi lỗi contrast cũ phải tồn tại; sửa expectation lỗi thời rồi mới chạy full126/126. Không tăng timeout hay tắt axe rule để đạt kết quả này.
 
-## Gate chưa đạt
+## Disposition các gate khi đóng D56
 
-| Gate | Kết quả hiện tại | Điều kiện còn lại |
+| Gate | Bằng chứng và giới hạn | Disposition D56 |
 | --- | --- | --- |
-|20 findings/22 routes | Code/contract disposition COMPLETE; visual half PARTIAL | Browser host vẫn unavailable; screenshots Web820/1366 chỉ là local test review, chưa direct full source comparison. Không mở lại CP02 waived QA. |
-| Corrections | [CP11-A01–A05](CP11_DESIGN_DECISIONS.md) APPROVED/VERIFIED; D54 compact-name/denied-Drawer focused gates PASS; default CP06 axe5/5 zero | Các findings cũ giữ ở historical evidence; sampled axe không là full manual WCAG audit. |
-| Full quality | D55 fresh full unit578/578, Gateway HTTP-mock126/126, Preview fixture208/208 PASS/exit0 **sau source edit cuối**; D54 focused unit7/7, Gateway axe5/5, Preview boundaries9/9, denied3/3, Drawer1/1 PASS; current lint/typecheck/builds PASS | Manual screen reader/live Backend/CI/physical-device NOT_RUN; native Gateway Plan zoom PASS HTTP-mock trong full suite. Dev load failures vẫn là history. |
-| Performance | Historical A01 before/after80 mẫu + D55 current lab8/8,40 mẫu; current static manifest closures measured | Ranges chồng lấn/mẫu ít; không có production p75/Web Vitals/INP hoặc PERF01 SLA PASS. |
-| Compatibility/release | A01–A05 là thay đổi frontend đã duyệt; focused tests bảo vệ route/permission contract | HTTP mocks không chứng minh live Backend/provider/delivery. Gateway13000 không có listener và Docker Linux engine unavailable; live suites NOT_RUN. Ngoại lệ CP09, MOCK_FLIGHT, read-only projections và Admin placeholder là scope đã ghi. |
+|20 findings/22 routes | Code/contract disposition COMPLETE; visual half PARTIAL, browser host unavailable; sampled screenshots không full source comparison | **ACCEPTED_EXCEPTION** cho phần full direct visual còn thiếu; không mở lại CP02 waived QA, không visual PASS. |
+| Corrections | [CP11-A01–A05](CP11_DESIGN_DECISIONS.md) APPROVED/VERIFIED; final Drawer exact matching có post-fix unit/fixture/HTTP-mock gates PASS | **COMPLETE** trong approved scope; sampled axe không là full manual WCAG audit. |
+| Full quality | D55 full unit578/578, Gateway126/126, Preview208/208 trước final NavLink edit; D56 fresh lint/typecheck/builds và focused unit7/7, fixture1/1+3/3, Gateway1/1 PASS | **COMPLETE_WITH_ACCEPTED_EXCEPTIONS**; full suites NOT_RERUN sau final fix; manual screen reader/live/CI/device NOT_RUN được chấp nhận. Native Plan200% HTTP-mock/history/dev failures giữ nguyên. |
+| Performance | A01 historical80 mẫu + D54 lab8/8,40 mẫu và static closures, tất cả trước D56 | **MEASURED_WITH_LIMITS**; không post-D56 lab/production p75/Web Vitals/INP/PERF01 SLA PASS. Không tự áp optimization hoặc threshold mới. |
+| Compatibility/release | Approved frontend-only changes; final Gateway no-write assertion có nonempty observed API traffic; Backend/package/lock giữ nguyên | **ACCEPTED_LIVE_EXCEPTION**, không production release approval. Live Backend/provider/delivery NOT_RUN; CP09/MockFlight/read-only/Admin boundaries giữ nguyên. |
 
-## Kết luận và next action
+## Kết luận và Stop Protocol
 
-Chưa đạt toàn bộ DoD CP11; **không đề nghị release** hoặc đánh dấu checkpoint hoàn tất. Hồ sơ này không phải miễn gate hay user acceptance. Không có yêu cầu duyệt lại CP11-A01 hoặc toàn bộ20 đề xuất.
+CP11 **APPROVED / DONE_WITH_EXCEPTIONS** theo D56, W06 hồ sơ hoàn tất. Các approved implementation work units đã kiểm chứng trong phạm vi nêu trên; những gate thiếu evidence được đóng theo explicit exception acceptance, không bị giả thành PASS. D55 blocker là lịch sử trước quyết định đóng mới, không còn là active next action.
 
-1. Khôi phục công cụ browser capture để hoàn tất full visual/source review. Shell label/name finding đã được xử lý và kiểm tra trong D55 full Gateway; không cần xin waiver cho nó. Live E2E cần Gateway listener/Docker Linux engine; manual/live/CI/physical-device limitations cần được chấp nhận rõ nếu đóng với ngoại lệ.
-2. Nếu user chọn đóng CP11 với ngoại lệ, ghi một quyết định **APPROVED/DONE_WITH_EXCEPTIONS** đúng danh sách trên; NOT_RUN vẫn là NOT_RUN, không tuyên bố production ready. Nếu không chấp nhận ngoại lệ, tiếp tục các gate còn thiếu khi đủ công cụ/thẩm quyền. Không tự waiving gate từ câu “hoàn tất CP11”. Không rerun automated suites đã PASS nếu source/build không thay đổi.
-
-Sau khi thật sự đạt DoD và hoàn tất nghiệm thu CP11 mới chuyển READY_FOR_REVIEW rồi **STOP**; không tự deploy/freeze/chuyển checkpoint.
+**Dừng tại CP11.** Không mở checkpoint mới, deploy/freeze/release, commit/push hoặc mở rộng các delta pending. Hồ sơ sẵn sàng bàn giao checkpoint với giới hạn rõ; nếu sau này cần production release, full direct visual/live/manual/CI/device checks phải được lên phạm vi và thực hiện riêng. Không yêu cầu duyệt lại A01–A05 hoặc coi D56 là approval mọi20 đề xuất.

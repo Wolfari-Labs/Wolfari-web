@@ -157,6 +157,12 @@ describe('Shell interactions', () => {
       'href',
       '/trips',
     );
+    expect(within(drawer).getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
+      'aria-current',
+    );
+    expect(within(drawer).getAllByRole('link', { current: 'page' })).toEqual([
+      within(drawer).getByRole('link', { name: 'Tổng quan chuyến đi' }),
+    ]);
     expect(within(drawer).getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute(
       'href',
       '/profile',
@@ -172,5 +178,13 @@ describe('Shell interactions', () => {
     expect(
       screen.queryByRole('button', { name: 'Đóng điều hướng chuyến đi' }),
     ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /Mở điều hướng chuyến đi/ }));
+    const planDrawer = within(await screen.findByRole('dialog'));
+    expect(planDrawer.getAllByRole('link', { current: 'page' })).toEqual([
+      planDrawer.getByRole('link', { name: 'Lịch trình' }),
+    ]);
+    expect(planDrawer.getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
+      'aria-current',
+    );
   });
 });

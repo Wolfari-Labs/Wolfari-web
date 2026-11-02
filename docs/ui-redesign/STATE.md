@@ -1,6 +1,15 @@
 # Trạng thái thực thi
 
-## Hiện tại — CP11 BLOCKED_USER/BLOCKED_TOOL sau D55, 02/11/2026
+## Hiện tại — CP11 APPROVED / DONE_WITH_EXCEPTIONS theo D56, 02/11/2026
+
+- User đã duyệt sửa lỗi current-page của Trip Drawer và yêu cầu “tiếp tục. và chốt đóng sẵn sàng cho tôi”. Sau focused post-fix gates PASS, D56 đóng **APPROVED/DONE_WITH_EXCEPTIONS**. Full direct visual/live Backend/provider/delivery/manual screen reader/CI/device vẫn là giới hạn được chấp nhận, không chuyển NOT_RUN thành PASS hoặc tuyên bố production-ready.
+- Final correction thêm `end` cho Trip-list NavLink, nên chỉ workspace section thực sự đang mở có `aria-current="page"`. Fresh lint/typecheck/scoped Prettier và production/Preview builds PASS; shell unit **7/7**, Preview Drawer **1/1**, denied routes **3/3**, Gateway HTTP-mock Drawer **1/1 PASS**, clean exit0. [Closeout evidence](evidence/cp11/run-summary-closeout.json), [verification/failure history](CP11_VERIFICATION.md). D55 full unit578/578, Gateway126/126, Preview208/208 là bằng chứng trước final NavLink edit; full suites **NOT_RERUN** sau sửa, không gộp các focused runs thành full suite.
+- W01 COMPLETE_WITH_LIMITS; W02 code disposition20 nhận xét/22 routes COMPLETE, visual exception accepted; W03 APPROVED_SCOPE_COMPLETE; W04 COMPLETE_WITH_ACCEPTED_EXCEPTIONS; W05 MEASURED_WITH_LIMITS với lab80+40 mẫu trước D56, không production/SLA; W06 COMPLETE. [Record](checkpoints/CP-11.md), [nghiệm thu và ngoại lệ](CP11_ACCEPTANCE.md).
+- Git resume: `draft/demo-ui-ux`, HEAD `c73e0ada4c1a846de61aabb93f1bc9f01c3991c6`, ahead local origin5, sạch trước sửa; commit ngoài agent đã bao gồm D55. Final source/test/docs changes giữ uncommitted; Backend sạch, package/lock không đổi, không commit/push hoặc sửa Backend/dependencies/Figma.
+- Final dossier integrity D56: inventory/link verifier **PASS76 Markdown/818 local links/22 routes**, six baseline image hashes unchanged; strict UTF-8/replacement/conflict scan **17 changed/new files PASS**; `git diff --check` PASS. Các số801/803/812 ở snapshot hoặc lượt trung gian không phải count cuối.
+- **STOP sau CP11.** Hồ sơ checkpoint đã đóng với ngoại lệ, không mở checkpoint mới/release/deploy/freeze, không duyệt thêm pending deltas hoặc CP09 deferred work. Bất kỳ release hoặc workstream mới nào cần yêu cầu/phạm vi riêng.
+
+## Snapshot D55 — BLOCKED_USER/BLOCKED_TOOL trước D56, lịch sử
 
 - User chọn gói bốn nhóm và yêu cầu triển khai; CP11-A02–A05 đã áp dụng đúng [packet](CP11_DESIGN_DECISIONS.md): shell labels/Drawer links, Settings read-only summary, Create timezone Select + custom IANA. Đây là các delta riêng đã duyệt D52, không phải approval các proposal còn pending.
 - Sau chỉnh sửa compact-name/Drawer denied cuối, fresh full unit **578/578** (48 files), built Gateway HTTP-mock **126/126** và built Preview fixture **208/208** đều PASS/exit0. [D55 run summary](evidence/cp11/run-summary-d54.json) giữ hashes và từng run riêng; D53 full runs trước chỉnh sửa vẫn là lịch sử riêng trong [verification](CP11_VERIFICATION.md). Production/Preview builds, lint/typecheck/scoped format và các focused D54 (shell unit7/7, Gateway axe5/5 zero, Preview boundaries9/9, denied3/3, Drawer1/1) PASS.

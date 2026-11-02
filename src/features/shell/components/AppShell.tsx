@@ -219,7 +219,7 @@ export function AppShell({
     <nav aria-label="Điều hướng chuyến đi">
       {includeAccountLinks && viewer && (
         <>
-          <NavLink to={paths.trips} onClick={selectDestination}>
+          <NavLink end to={paths.trips} onClick={selectDestination}>
             <UiIcon name="plan" />
             <span>Chuyến đi của tôi</span>
           </NavLink>

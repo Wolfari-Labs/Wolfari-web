@@ -1,8 +1,8 @@
 # CP11 — Hiệu năng local có giới hạn
 
-Ngày02/11/2026. **MEASURED_WITH_LIMITS**, không production SLA PASS. Hồ sơ có cặp lịch sử trước/sau CP11-A01 (80 mẫu) và lượt mới trên source D54 cuối (40 mẫu). Đây là local Gateway HTTP-mock lab, không phải phép đo production hoặc toàn bộ chương trình redesign.
+Ngày02/11/2026. **MEASURED_WITH_LIMITS**, không production SLA PASS. Hồ sơ có cặp lịch sử trước/sau CP11-A01 (80 mẫu) và lượt trên source D54 (40 mẫu), trước final NavLink exact-matching correction D56. Không chạy lại lab sau D56 hoặc suy các số dưới đây là post-D56 performance. Đây là local Gateway HTTP-mock lab, không phải phép đo production hoặc toàn bộ chương trình redesign.
 
-## D55 — Source cuối D54, local lab hiện tại
+## D55 — Source D54, local lab trước D56
 
 - Build Gateway cuối `.local/cp11-compact-gateway`; `CP11_TEST_MODE=gateway`, `CP11_RUN_TAG=lab-d54`, một worker. Lab **8/8 PASS/exit0,40 mẫu**: Home/Auth/Plan/Fund × Web1440/402 ×5 mẫu, cache disabled, CPU1/unthrottled localhost. [Summary và raw sanitized samples](evidence/cp11/runtime-lab-d54.json), [run report/hash](evidence/cp11/run-summary-d54.json), raw Playwright `.local/cp11-lab-d54-lab.json`. Cột “trước” bên dưới là40 mẫu post-A01 **lịch sử** trong `runtime-lab.json`; không phải concurrent A/B hoặc cùng lần chạy.
 

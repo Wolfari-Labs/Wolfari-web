@@ -443,6 +443,7 @@ for (const route of routes)
       const drawerNav = drawer.getByRole('navigation');
       await expect(drawerNav.getByRole('link', { name: 'Chuyến đi của tôi' })).toBeVisible();
       await expect(drawerNav.getByRole('link', { name: 'Hồ sơ cá nhân' })).toBeVisible();
+      await expect(drawerNav.locator('a[aria-current="page"]')).toHaveCount(0);
       for (const button of await drawerNav.getByRole('button').all())
         await expect(button).toBeDisabled();
       await page.keyboard.press('Escape');
@@ -607,6 +608,10 @@ test('CP04 Web trip drawer follows the approved navigation composition', async (
     '/profile',
   );
   await expect(nav.getByRole('link', { name: 'Quỹ nhóm' })).toHaveAttribute('aria-current', 'page');
+  await expect(nav.locator('a[aria-current="page"]')).toHaveCount(1);
+  await expect(nav.getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
+    'aria-current',
+  );
   await expect(drawer.locator('img[class*="drawerMascot"]')).toBeVisible();
   await page.screenshot({ path: info.outputPath('cp04-trip-menu-402.png') });
   await drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' }).click();

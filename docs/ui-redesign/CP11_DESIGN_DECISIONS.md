@@ -14,7 +14,7 @@ User chốt tiếp gói bốn nhóm trọng tâm (điều hướng Drawer, Cài 
 
 Source context: Plan Web20:236 và các approved CP06 adaptations D33; inventory hiện có đủ, không resurvey/Figma write. D26 chỉ duyệt Overview, không mở rộng sang Plan. Mã này không duyệt toàn PLN06 hoặc các delta khác.
 
-D54 là sửa thực thi trong A02/A03 đã duyệt: kiểm chứng focused sau source edit, không phải user approval mới hay ngoại lệ gate. D55 sau đó chạy fresh full unit/Gateway/Preview và local lab trên source cuối. [Verification](CP11_VERIFICATION.md) tách D53 lịch sử, D54 focused và D55 full runs.
+D54 là sửa thực thi trong A02/A03 đã duyệt: kiểm chứng focused sau source edit, không phải user approval mới hay ngoại lệ gate. D55 sau đó chạy fresh full unit/Gateway/Preview và local lab trên source D54. D56 sửa riêng Trip-list NavLink exact matching trong A03 để trang con không nhận thêm current-page sai ở link Trip list; không đổi thiết kế, routes hoặc contract. [Verification](CP11_VERIFICATION.md) tách D53 lịch sử, D54 focused, D55 full runs trước final correction và D56 post-fix gates; không duyệt thêm delta pending.
 
 Evidence: dev Gateway test `ui-acceptance.spec.ts` desktop1440×900, path `.local/cp11-resume-gateway/ui-acceptance-Gateway-visual-and-accessibility-1440x900/`. `plan.png` đã mở/xem đúng trạng thái; `error-context.md` giữ raw axe foreground/background/font/rule. Đây là ảnh test HTTP-mock, không phải live Backend hay direct visual audit.
 
