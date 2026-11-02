@@ -35,6 +35,8 @@ GitHub web chưa điều khiển được (`The browser access host is unavailab
 - [Backend PR #17](https://github.com/Wolfari-Labs/Wolfari-backend/pull/17), HEAD `fc7bc3e`: [CI PR PASS](https://github.com/Wolfari-Labs/Wolfari-backend/actions/runs/41504212006).
 - [Web PR #21](https://github.com/Wolfari-Labs/Wolfari-web/pull/21), phụ thuộc Backend. CI tại `79bd041` FAIL built fixture; checks (unit586, dev fixture208, dev HTTP mock128) và built HTTP mock128 PASS. [Chẩn đoán và kiểm chứng bản sửa](WEB_PR21_CI_FIX.md).
 
+Tại `30bea4a`, CI push đã PASS cả ba job, nhưng CI PR vẫn FAIL207/208 ở backdrop Design System. Đã bổ sung readiness ở Design System/Trip List và chờ entry geometry Trip List; ba backdrop cases lặp20 lần/case đạt60/60 local, lint/typecheck/format PASS. Không gọi PR xanh từ kết quả push hoặc local; theo dõi CI HEAD hiện hành và [báo cáo nối tiếp](WEB_PR21_CI_FIX.md).
+
 Cả hai **chưa merge**. Fetch và GitHub API ngày03/11 xác nhận main vẫn là hai SHA ở trên; `git rev-list --left-right --count origin/main...HEAD` có phía trái bằng0 ở cả hai repo. Backend đã hợp nhất main bằng merge `bec284f`; Web main đã là ancestor, không cần merge rỗng. Không còn commit main chưa tích hợp tại mốc kiểm tra này. Phải kiểm lại nếu main tiến thêm trong lúc review.
 
 Không tạo PR trùng, không dùng nút Merge khi còn gate hoặc approval thiếu. Các bước Git ở trên là quy trình; trạng thái thực tế lấy từ hai PR và CI trên HEAD hiện hành.

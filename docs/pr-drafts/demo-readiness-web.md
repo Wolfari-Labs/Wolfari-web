@@ -14,9 +14,11 @@ Runbook, kịch bản Edge, hướng dẫn PR/merge và báo cáo evidence phân
 
 CI built fixture tại `79bd041` còn ba timing failures ở lượt push (205/208), một ở lượt PR (207/208). Bổ sung đồng bộ geometry sidebar220/72, actionability Drawer sau reopen và nested alert layer trước Escape. Giữ nguyên application CSS/runtime, assertions cũ, timeout và retries0. [Báo cáo CI và kết quả sửa](https://github.com/Wolfari-Labs/Wolfari-web/blob/feat/demo-1-readiness-web/docs/WEB_PR21_CI_FIX.md).
 
+Tại `30bea4a`, CI push xanh nhưng CI PR còn FAIL207/208 ở backdrop Design System. Đã rà cả ba raw backdrop clicks: AppShell đã sửa; bổ sung readiness check còn thiếu cho Design System và Trip List. Không dùng CI push xanh để thay CI PR đỏ; xem báo cáo và checks trên HEAD mới.
+
 ## Cặp kiểm chứng
 
-- Web application source commit `20063c08999caaf129c16195260566088fbfb52f`; hash readiness trước sửa CI `c0563a73f5906acda31424f6c5d8dc8ca34facc9cdeb6dea9d6142643b221fc3`. Bản sửa CI sau đó chỉ thay ba fixture E2E và docs/evidence, không thay runtime.
+- Web application source commit `20063c08999caaf129c16195260566088fbfb52f`; hash readiness trước sửa CI `c0563a73f5906acda31424f6c5d8dc8ca34facc9cdeb6dea9d6142643b221fc3`. Các bản sửa CI sau đó chỉ thay fixture E2E và docs/evidence, không thay runtime.
 - Backend candidate `bec284f6b14e6451fd2e988acde8ae831c307f8a`; implementation hash `3298ef26df465d4d1437c97bcabbf491000a316b86b945aed59ebfdf7b41ee9f`.
 - Web main đã tích hợp `e2dae06bdef9747d874120bead2d61e44426a14f`.
 - Sau Backend merge phải ghi Backend main SHA thực tế và chạy lại cross-repo gate; các kết quả hiện tại không chứng minh Backend main sau merge.

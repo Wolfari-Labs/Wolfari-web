@@ -407,6 +407,9 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   const drawer = page.getByRole('dialog', { name: 'Điều hướng chính' });
   await menu.click();
   await expect(drawer).toBeVisible();
+  // Visibility can precede the entry animation's final position, even with
+  // reduced motion. Keep the exact x=0 contract, but await it before measuring.
+  await expect.poll(async () => (await drawer.boundingBox())?.x).toBe(0);
   const box = (await drawer.boundingBox())!;
   expect(box.x).toBe(0);
   expect(Math.round(box.width)).toBe(Math.round(Math.min(300, 402 * 0.86)));
@@ -425,6 +428,10 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   await expect(menu).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await menu.click();
+  const close = drawer.getByRole('button', { name: 'Đóng điều hướng chính' });
+  await expect(close).toBeFocused();
+  // Match the shared Drawer readiness check before sending a raw backdrop click.
+  await close.click({ trial: true });
   await page.mouse.click(390, 200);
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();

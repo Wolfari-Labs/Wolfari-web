@@ -45,6 +45,19 @@ corepack pnpm test:e2e:built --workers=1 --trace=retain-on-failure
 
 [Evidence tổng hợp](evidence/demo-readiness/web-ci-fix-20261103.json) lưu fix commit, hash ba test, command/exit/timestamps và thống kê report. Các commit tài liệu sau fix không đổi test/runtime. Raw logs/report trong `test-results/readiness/20261102/ci-*` (ignored); CI logs trong workspace `.readiness-replay/ci-<runId>/` (không commit). Lần gọi runner ban đầu `ci-overlay-baseline` exit255 vì regex chứa pipe bị Windows shell diễn giải, chưa chạy E2E; đã chuyển sang lệnh Node trực tiếp ở trên, không coi đó là failure sản phẩm.
 
-## Gate còn lại
+## Bổ sung: backdrop ở Design System và Trip List
+
+CI trên `30bea4a2c033fe08190446ad218f77b52aedd3d0` sau bản sửa đầu:
+
+- [Push41508393423](https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/41508393423): cả ba job PASS, built fixture208/208.
+- [PR41508405323](https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/41508405323): built fixture207/208 FAIL tại `design-system.spec.ts:125`; checks và built Gateway PASS. Ba case sửa trước không còn fail trong lượt này. Không coi push xanh là thay thế PR đang đỏ.
+
+Failure mới vẫn là raw click ngay sau reopen, ở bài Design System chưa được sửa trong đợt đầu. Rà toàn bộ `page.mouse.click` trong fixture/Gateway tìm thấy ba call sites: AppShell đã có readiness check; Design System và Trip List còn thiếu. Bổ sung cùng điều kiện focus + `close.click({ trial: true })` cho cả hai, giữ một click tọa độ backdrop và các assertions đóng/return-focus. Trial không thực hiện click nút đóng. Không sửa Drawer runtime, timeout/retries hoặc thiết kế. Bản sửa đầu chưa bao phủ hết mẫu test này; không kết luận lỗi hạ tầng từ số lượng pass.
+
+Baseline Windows Design System lặp10:10/10 PASS (`ci-backdrop-baseline`); lỗi gốc chỉ được quan sát trên CI Linux. Lượt đầu lặp ba bài backdrop20 lần/bài đạt59/60, FAIL riêng Trip List tại vị trí mở lần đầu: x=-300, expected0 (`trip-list.spec.ts:411`, trước bước backdrop). Trace xác nhận test đọc geometry lúc entry animation chưa xong; `toBeVisible()` không bảo đảm final position. Bổ sung polling đúng x=0 trước khi lấy box, giữ các assertions x/width cũ, không nới tolerance. Raw report/trace lần thất bại được giữ riêng.
+
+Bản cuối: **60/60 PASS**, exit0, ba bài backdrop ×20 lần, một worker, retries0, không skipped/flaky (`ci-backdrop-repeat-final`,3 phút). Lint/typecheck/format cuối PASS, exit0. [Evidence bổ sung](evidence/demo-readiness/web-backdrop-followup-20261103.json) ghi đầy đủ baseline,59/60 FAIL và60/60 PASS. Không thay runtime/workflow; full suites hậu bổ sung cần lấy từ CI HEAD mới. Full208 local ở phần trước thuộc bản sửa đầu, không phải lượt mới sau bổ sung này.
+
+## Gate còn lại sau bổ sung
 
 Backend [PR17](https://github.com/Wolfari-Labs/Wolfari-backend/pull/17) đã có CI PASS nhưng chưa merge. Cả hai main vẫn là ancestor của readiness tại lúc kiểm tra. Web còn cần CI trên HEAD sửa, review hợp lệ và các gate live/manual đã ghi ở [readiness](demo-readiness-validation.md). Sửa CI fixture không biến trạng thái thành READY_TO_MERGE hoặc MAIN_VERIFIED.

@@ -121,6 +121,10 @@ test('shared drawer keyboard, backdrop, scrolling and focus return', async ({ pa
   await expect(trigger).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await trigger.click();
+  await expect(close).toBeFocused();
+  // Raw mouse events do not wait for the reopened dialog to become interactive.
+  // Trial checks readiness without closing it; the backdrop click must dismiss it.
+  await close.click({ trial: true });
   await page.mouse.click(390, 120);
   await expect(drawer).not.toBeVisible();
   await expect(trigger).toBeFocused();
