@@ -32,7 +32,7 @@ Chương trình bao phủ **mọi route hiện hữu**, responsive, accessibilit
 
 ## 3. Chung cho từng implementation checkpoint
 
-CP11 post-D50/D51 hiện tại: A01 đã duyệt và VERIFIED; lint/typecheck/builds, unit577/577, Gateway HTTP-mock126/126, Preview208/208 và local performance lab80 samples PASS/MEASURED_WITH_LIMITS. Native Plan200% có evidence mới. Không còn chờ duyệt màu hay thiếu toàn bộ runtime performance. Blocker còn lại: full direct visual review unavailable; shell profile/Menu label-name baseline và manual/live/CI/device limits cần completion hoặc explicit exception acceptance theo [hồ sơ CP11](CP11_ACCEPTANCE.md). Không tự đánh dấu DONE hoặc triển khai delta khác; không phải production release.
+CP11 post-D55 hiện tại: A01–A05 đã duyệt riêng và VERIFIED; sau compact-name/denied-Drawer source edits cuối, fresh full unit578/578, Gateway HTTP-mock126/126 và Preview208/208 PASS/exit0. Lint/typecheck/builds và focused shell unit7/7, Gateway CP06 all-rules axe5/5 zero, Preview boundaries9/9, denied routes3/3, Drawer1/1 PASS; native Plan200% có evidence HTTP-mock. Performance lab80 mẫu trước A02–A05 là lịch sử; current-source D54 lab thêm8 nhóm/40 mẫu, có giới hạn local và không production/SLA. Blocker còn lại: full direct visual review unavailable; manual/live/CI/device limits cần completion hoặc explicit exception acceptance theo [hồ sơ CP11](CP11_ACCEPTANCE.md). Không tự đánh dấu DONE hoặc mở delta khác; không phải production release.
 
 Deliverables: coherent usable feature journey, shared component reuse, tests, visual evidence before/after, updated matrix/decisions/state/checkpoint. Không chia checkpoint thành đổi vài button; không gộp tất cả domains vào một lần.
 

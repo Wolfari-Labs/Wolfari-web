@@ -217,7 +217,7 @@ export function AppShell({
   };
   const tripNavigation = (includeAccountLinks = false) => (
     <nav aria-label="Điều hướng chuyến đi">
-      {includeAccountLinks && canReadTrip && (
+      {includeAccountLinks && viewer && (
         <>
           <NavLink to={paths.trips} onClick={selectDestination}>
             <UiIcon name="plan" />
@@ -378,13 +378,13 @@ export function AppShell({
                   </Suspense>
                   <Suspense
                     fallback={
-                      <Link
-                        to={paths.profile}
-                        className={styles.profile}
-                        aria-label={profileLabel(viewer.fullName)}
-                      >
+                      <Link to={paths.profile} className={styles.profile}>
                         <Avatar name={viewer.fullName} />
                         <span className={styles.accountName}>{viewer.fullName}</span>
+                        <span className={styles.profileCompactName}>
+                          {`${accountInitials(viewer.fullName)} ${viewer.fullName}`}
+                        </span>
+                        <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
                       </Link>
                     }
                   >
@@ -519,11 +519,7 @@ export function AppShell({
                 </button>
               </div>
             )}
-            {adminLayout
-              ? adminNavigation
-              : tripLayout
-                ? tripNavigation(true)
-                : publicNavigation}
+            {adminLayout ? adminNavigation : tripLayout ? tripNavigation(true) : publicNavigation}
             {tripLayout && (
               <div className={styles.drawerDecoration} aria-hidden="true">
                 <p>

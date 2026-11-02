@@ -440,9 +440,19 @@ for (const route of routes)
       await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
       await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
       const drawer = page.getByRole('dialog');
-      for (const button of await drawer.getByRole('navigation').getByRole('button').all())
+      const drawerNav = drawer.getByRole('navigation');
+      await expect(drawerNav.getByRole('link', { name: 'Chuyến đi của tôi' })).toBeVisible();
+      await expect(drawerNav.getByRole('link', { name: 'Hồ sơ cá nhân' })).toBeVisible();
+      for (const button of await drawerNav.getByRole('button').all())
         await expect(button).toBeDisabled();
       await page.keyboard.press('Escape');
+      if (route === tripPath) {
+        await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
+        await drawerNav.getByRole('link', { name: 'Chuyến đi của tôi' }).click();
+        await expect(page).toHaveURL('/trips');
+        await expect(drawer).not.toBeVisible();
+        await expect(page.locator('main')).toBeFocused();
+      }
     }
   });
 
@@ -587,7 +597,15 @@ test('CP04 Web trip drawer follows the approved navigation composition', async (
   await expect(drawer.getByRole('img', { name: 'Wolfari' })).toBeVisible();
   await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' })).toBeFocused();
   const nav = drawer.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
-  await expect(nav.getByRole('link')).toHaveCount(9);
+  await expect(nav.getByRole('link')).toHaveCount(11);
+  await expect(nav.getByRole('link', { name: 'Chuyến đi của tôi' })).toHaveAttribute(
+    'href',
+    '/trips',
+  );
+  await expect(nav.getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute(
+    'href',
+    '/profile',
+  );
   await expect(nav.getByRole('link', { name: 'Quỹ nhóm' })).toHaveAttribute('aria-current', 'page');
   await expect(drawer.locator('img[class*="drawerMascot"]')).toBeVisible();
   await page.screenshot({ path: info.outputPath('cp04-trip-menu-402.png') });

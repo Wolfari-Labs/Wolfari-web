@@ -1,13 +1,22 @@
 # Trạng thái thực thi
 
-## Hiện tại — CP11 BLOCKED_USER/BLOCKED_TOOL sau D50, 02/11/2026
+## Hiện tại — CP11 BLOCKED_USER/BLOCKED_TOOL sau D55, 02/11/2026
 
-- **Đã hoàn tất phần triển khai được duyệt và full automated gates; chưa DONE/APPROVED hoặc READY_FOR_REVIEW vô điều kiện.** [Hồ sơ và điều kiện nghiệm thu](CP11_ACCEPTANCE.md). Không mở checkpoint mới/release.
+- User chọn gói bốn nhóm và yêu cầu triển khai; CP11-A02–A05 đã áp dụng đúng [packet](CP11_DESIGN_DECISIONS.md): shell labels/Drawer links, Settings read-only summary, Create timezone Select + custom IANA. Đây là các delta riêng đã duyệt D52, không phải approval các proposal còn pending.
+- Sau chỉnh sửa compact-name/Drawer denied cuối, fresh full unit **578/578** (48 files), built Gateway HTTP-mock **126/126** và built Preview fixture **208/208** đều PASS/exit0. [D55 run summary](evidence/cp11/run-summary-d54.json) giữ hashes và từng run riêng; D53 full runs trước chỉnh sửa vẫn là lịch sử riêng trong [verification](CP11_VERIFICATION.md). Production/Preview builds, lint/typecheck/scoped format và các focused D54 (shell unit7/7, Gateway axe5/5 zero, Preview boundaries9/9, denied3/3, Drawer1/1) PASS.
+- Lab mới trên current source: **8/8 PASS,40 mẫu** Home/Auth/Plan/Fund × Web1440/402, so với40 mẫu post-A01 lịch sử; [performance](CP11_PERFORMANCE.md) ghi LCP/CLS/ranges và giới hạn. Static closure D54 Home177113B/Auth198313B/Plan311496B/Fund236832B gzip; đây không là thời gian tải hoặc production SLA. Lab80 mẫu trước D52 giữ nguyên, không gộp vào lượt mới. Inventory/link verifier sau cập nhật D55 **PASS76 Markdown/801 local links/22 routes**, six baseline image hashes unchanged; `git diff --check` PASS.
+- Tên profile accessible ở769–1100px chứa initials/tên dù tên trực quan ẩn; Drawer cho viewer đăng nhập đi Trip list/Profile khi `canReadTrip=false`, workspace items vẫn disabled. Direct full Figma/runtime visual comparison vẫn BLOCKED_TOOL: CUA `getState` báo `browsers: []`/browser access host unavailable. Screenshots test Web820/1366 đã mở xem nhưng không thay full source audit. Live E2E cần Gateway `127.0.0.1:13000` hiện không có listener; isolated demo cần Docker Desktop Linux engine, `docker info`/`docker ps` exit1 do thiếu pipe `dockerDesktopLinuxEngine`. Manual screen reader/live Backend/CI/physical device NOT_RUN. CP11 chưa DONE/APPROVED; next action là hoàn tất các gate còn thiếu hoặc user chấp nhận ngoại lệ cụ thể rồi review nghiệm thu. STOP, không release/checkpoint mới.
+- Git HEAD nay `f1b2dcf685ee3d09f91de6d5ac68407f35fc55d6` (external history change trong lượt triển khai); agent không commit/push. Worktree hiện có sửa tiếp sau commit được giữ; Backend sạch, package/lock không đổi.
+
+- **Đã hoàn tất phần triển khai được duyệt và full automated gates trên current source; chưa DONE/APPROVED hoặc READY_FOR_REVIEW vô điều kiện.** [Hồ sơ và điều kiện nghiệm thu](CP11_ACCEPTANCE.md). Không mở checkpoint mới/release.
 - D50/CP11-A01 đã áp dụng và VERIFIED: chỉ `.breadcrumb a` Plan sang existing #006b92; computed background #f4fbfe, contrast5.7066:1, sampled axe contrast PASS. Không hỏi duyệt lại A01/toàn PLN06.
-- Final post-A01: lint/typecheck/scoped format/both builds PASS; unit **577/577**, built Gateway HTTP-mock **126/126**, built Preview fixture **208/208**, tất cả clean exit0. Native Plan browser200% PASS, không CSS zoom. Baseline/failure history giữ nguyên; all-rules axe vẫn có finding nhãn profile/Menu đã ghi, không full WCAG PASS.
-- W01 COMPLETE_WITH_LIMITS; W02 code disposition20 nhận xét/22 routes COMPLETE, direct visual PARTIAL; W03 APPROVED_SCOPE_COMPLETE; W04 automated COMPLETE_WITH_BASELINE_FINDINGS/manual NOT_RUN; W05 MEASURED_WITH_LIMITS với [80 mẫu local trước/sau](CP11_PERFORMANCE.md); W06 dossier complete nhưng checkpoint chưa đóng. [Record](checkpoints/CP-11.md), [verification](CP11_VERIFICATION.md).
-- Git `draft/demo-ui-ux`, HEAD `f6e1b424a968d11b9fc7ee366da578a752ba7856`, ahead local origin3, giữ worktree CP11. Backend sạch, user report hash không đổi; không sửa dependencies/contracts/Figma, không commit/push.
-- **Next action cần user quyết định:** khôi phục công cụ direct visual review và xử lý/accept baseline label/name finding, hoặc chấp nhận rõ đóng CP11 `DONE_WITH_EXCEPTIONS` theo danh sách trong acceptance (full visual/manual/live Backend/CI/physical-device còn thiếu, không production-ready). Không tự miễn gate từ yêu cầu “hoàn tất CP11”; không cần rerun các full automated suites nếu code không đổi.
+- W01 COMPLETE_WITH_LIMITS; W02 code disposition20 nhận xét/22 routes COMPLETE, direct visual PARTIAL; W03 APPROVED_SCOPE_COMPLETE; W04 current full suites PASS/manual/live NOT_RUN; W05 MEASURED_WITH_LIMITS với [80 mẫu lịch sử +40 mẫu current](CP11_PERFORMANCE.md); W06 dossier updated nhưng checkpoint chưa đóng. [Record](checkpoints/CP-11.md), [verification](CP11_VERIFICATION.md).
+
+## Snapshot D51 — lịch sử trước A02–A05
+
+- Post-A01: lint/typecheck/scoped format/both builds PASS; unit **577/577**, built Gateway HTTP-mock **126/126**, built Preview fixture **208/208**, tất cả clean exit0. Native Plan browser200% PASS, không CSS zoom. Khi đó all-rules axe còn finding nhãn profile/Menu; đã sửa ở A02 sau đó, không suy full WCAG PASS.
+- Git lúc đó `draft/demo-ui-ux`, HEAD `f6e1b424a968d11b9fc7ee366da578a752ba7856`, ahead local origin3. HEAD hiện tại ở phần đầu STATE; không commit/push trong lượt xử lý D54.
+- Câu next action D51 về shell label/name nay đã giải quyết bằng A02; visual/manual/live/CI/device vẫn tồn tại. Không tự miễn gate hoặc rerun full suites nếu source/build không đổi.
 
 ## Snapshot tiến độ D50 — IN_PROGRESS, lịch sử
 

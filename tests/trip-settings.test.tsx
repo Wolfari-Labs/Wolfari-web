@@ -102,6 +102,11 @@ describe('Trip Settings', () => {
     expect(name.className).toContain('currentValue');
     expect(publicDescription).toHaveValue('');
     expect(publicDescription.className).toContain('currentValue');
+    const readOnly = screen.getByRole('region', { name: 'Thông tin chỉ xem' });
+    expect(readOnly).toHaveTextContent('Điểm đến');
+    expect(readOnly).toHaveTextContent('Ngân sách dự kiến');
+    expect(readOnly.querySelectorAll('input')).toHaveLength(0);
+    expect(screen.queryByRole('button', { name: 'Thay ảnh' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Lưu thay đổi' })).toBeDisabled();
     await user.clear(name);
     await user.type(name, 'Đà Nẵng cuối tuần');

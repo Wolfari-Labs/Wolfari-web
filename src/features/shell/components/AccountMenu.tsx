@@ -6,7 +6,7 @@ import { Icon } from '../../../shared/components/Icon';
 import styles from './AppShell.module.css';
 import ui from '../../../shared/components/Ui.module.css';
 
-function accountInitials(name: string) {
+function initials(name: string) {
   return name
     .trim()
     .split(/\s+/)
@@ -17,17 +17,14 @@ function accountInitials(name: string) {
 }
 
 export function AccountMenu({ name }: { name: string }) {
-  const initials = accountInitials(name);
   return (
     <DropdownMenu.Root>
       <div className={styles.profileGroup}>
-        <Link
-          to={paths.profile}
-          className={styles.profile}
-          aria-label={initials ? `${initials} ${name} · Hồ sơ cá nhân` : `${name} · Hồ sơ cá nhân`}
-        >
+        <Link to={paths.profile} className={styles.profile}>
           <Avatar name={name} />
           <span className={styles.accountName}>{name}</span>
+          <span className={styles.profileCompactName}>{`${initials(name)} ${name}`}</span>
+          <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
         </Link>
         <DropdownMenu.Trigger className={styles.profileChevron} aria-label="Mở menu tài khoản">
           <Icon name="chevron" size={16} />

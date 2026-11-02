@@ -20,6 +20,8 @@ Cập nhật D33,31/10/2026: user duyệt riêng PLN01–05, PLN07 và phần Pl
 
 CP11 cập nhật02/11/2026: [CP11-A01](CP11_DESIGN_DECISIONS.md) **APPROVED D50 / IMPLEMENTED_AND_VERIFIED, subset PLN06**: chỉ breadcrumb Plan #079fc5→existing #006b92, chung Gateway/Preview. Browser computed colors #006b92/#f4fbfe cho tỷ lệ5.7066:1; sampled axe contrast PASS. Không duyệt toàn PLN06. Các nhận xét khác ở [CP11 disposition](CP11_REVIEW_DISPOSITION.md), không tự thành approval hoặc roadmap mới.
 
+CP11 D52: user duyệt riêng [CP11-A02–A05](CP11_DESIGN_DECISIONS.md) sau khi chọn gói bốn nhóm và yêu cầu implementation. Tình trạng IMPLEMENTED/VERIFIED trong scope: sửa shell accessible names, hai route link Drawer, Settings read-only summary và timezone Select/custom IANA. Các delta DLT03/PLN06/FND và đề xuất khác vẫn pending; không có approval cho thiết kế lại diện rộng hoặc Backend writer.
+
 | ID | Đề xuất | Trạng thái / xử lý |
 |---|---|---|
 | DLT01 | Ba ảnh AI Plan, day-rail mới, horizontal navigation mới | WITHDRAWN; xem lịch sử evidence/cp02. Không cần chọn lại. |

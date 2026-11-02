@@ -1,0 +1,4165 @@
+{
+  "evidenceDate": "2026-11-02",
+  "limits": "Local fixture/HTTP-mock reports; not live Backend, CI or manual accessibility. Separate runs are never summed into a fictional all-pass suite.",
+  "runs": [
+    {
+      "file": ".local/cp11-d54-unit.json",
+      "sha256": "5aef0c9f5bfe4bd4e7319721798256b0ec03851a360bf53f2d490aa1767f1df2",
+      "runner": "vitest",
+      "success": true,
+      "total": 578,
+      "passed": 578,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "file": ".local/cp11-d54-full-gateway.json",
+      "sha256": "1f25c482f4865c769fb60a2084bf5f50dff74f3834232e9ff6ba0a319bcd4d16",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T09:15:02.190Z",
+        "duration": 244998.678,
+        "expected": 126,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "admin-placeholder.spec.ts",
+          "line": 4,
+          "title": "Gateway Admin role guard and truthful placeholder at Web 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2890
+            }
+          ]
+        },
+        {
+          "file": "admin-placeholder.spec.ts",
+          "line": 4,
+          "title": "Gateway Admin role guard and truthful placeholder at Web 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3105
+            }
+          ]
+        },
+        {
+          "file": "cp05-create-axe.spec.ts",
+          "line": 9,
+          "title": "CP05 Gateway Create axe review 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2963
+            }
+          ]
+        },
+        {
+          "file": "cp05-create-axe.spec.ts",
+          "line": 9,
+          "title": "CP05 Gateway Create axe review 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2881
+            }
+          ]
+        },
+        {
+          "file": "cp05-create-modal.spec.ts",
+          "line": 8,
+          "title": "CP05 Gateway Create success dialog focus and accessibility 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4061
+            }
+          ]
+        },
+        {
+          "file": "cp05-create-modal.spec.ts",
+          "line": 8,
+          "title": "CP05 Gateway Create success dialog focus and accessibility 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4358
+            }
+          ]
+        },
+        {
+          "file": "cp06-composition.spec.ts",
+          "line": 18,
+          "title": "CP06 HTTP mock: Plan composition and location-create 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5146
+            }
+          ]
+        },
+        {
+          "file": "cp06-composition.spec.ts",
+          "line": 18,
+          "title": "CP06 HTTP mock: Plan composition and location-create 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5862
+            }
+          ]
+        },
+        {
+          "file": "cp06-composition.spec.ts",
+          "line": 18,
+          "title": "CP06 HTTP mock: Plan composition and location-create 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5469
+            }
+          ]
+        },
+        {
+          "file": "cp06-composition.spec.ts",
+          "line": 18,
+          "title": "CP06 HTTP mock: Plan composition and location-create 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5397
+            }
+          ]
+        },
+        {
+          "file": "cp06-composition.spec.ts",
+          "line": 18,
+          "title": "CP06 HTTP mock: Plan composition and location-create 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5375
+            }
+          ]
+        },
+        {
+          "file": "cp06-editor.spec.ts",
+          "line": 10,
+          "title": "CP06 HTTP mock: centered activity editor remains usable at 1440px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2893
+            }
+          ]
+        },
+        {
+          "file": "cp06-editor.spec.ts",
+          "line": 10,
+          "title": "CP06 HTTP mock: centered activity editor remains usable at 320px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3415
+            }
+          ]
+        },
+        {
+          "file": "cp06-readonly.spec.ts",
+          "line": 6,
+          "title": "HTTP mock: revoked Plan edit rights keep day and pool navigation read only",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3949
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: map 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4904
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: map 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3040
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: map 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4651
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: map 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3092
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: map 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2673
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: dress-code 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5037
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: dress-code 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2801
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: dress-code 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4664
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: dress-code 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2953
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: dress-code 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3019
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: packing 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4929
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: packing 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3120
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: packing 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4833
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: packing 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2614
+            }
+          ]
+        },
+        {
+          "file": "cp07-composition.spec.ts",
+          "line": 194,
+          "title": "CP07 HTTP mock composition: packing 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2470
+            }
+          ]
+        },
+        {
+          "file": "cp07-native-zoom.spec.ts",
+          "line": 125,
+          "title": "CP07 Gateway Map, Dress and Packing fit native Chrome 200% zoom",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 6119
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 95,
+          "title": "CP07 Map reads only saved locations and filters scheduled/unscheduled locally",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2300
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 124,
+          "title": "CP07 Dress projects real scope/description and local scope filter without save controls",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3027
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 186,
+          "title": "CP07 Packing reports real progress and renders completed status without write actions",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3014
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 242,
+          "title": "CP07 empty Map/Dress/Packing remain readable and issue no writes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4994
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 299,
+          "title": "CP07 map holds loading until Plan read completes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2174
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 299,
+          "title": "CP07 dress-code holds loading until Plan read completes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2201
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 299,
+          "title": "CP07 packing holds loading until Plan read completes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2259
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 331,
+          "title": "CP07 map exposes Plan read error and retry",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2890
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 331,
+          "title": "CP07 dress-code exposes Plan read error and retry",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2980
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 331,
+          "title": "CP07 packing exposes Plan read error and retry",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2839
+            }
+          ]
+        },
+        {
+          "file": "cp07-projections.spec.ts",
+          "line": 343,
+          "title": "CP07 read permission denial blocks all three projection routes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2720
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: members 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3965
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: members 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2922
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: members 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2624
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: members 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3865
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: members 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2960
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: members 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3015
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: invitations 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3934
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: invitations 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2759
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: invitations 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3122
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: invitations 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3840
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: invitations 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3024
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: invitations 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2836
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: policy 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4128
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: policy 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3095
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: policy 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3167
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: policy 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4066
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: policy 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3106
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: policy 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2780
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: recipient 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3073
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: recipient 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2512
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: recipient 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2492
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: recipient 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2641
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: recipient 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2438
+            }
+          ]
+        },
+        {
+          "file": "cp08-composition.spec.ts",
+          "line": 20,
+          "title": "CP08 HTTP mock composition: recipient 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2180
+            }
+          ]
+        },
+        {
+          "file": "cp08-lifecycle.spec.ts",
+          "line": 8,
+          "title": "HTTP mock: Owner removal stays pending until operation confirmation and keeps status across tabs",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3076
+            }
+          ]
+        },
+        {
+          "file": "cp08-lifecycle.spec.ts",
+          "line": 70,
+          "title": "HTTP mock: Member leave keeps the same intent after unknown outcome and exposes confirmed result after access loss",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3053
+            }
+          ]
+        },
+        {
+          "file": "cp08-native-zoom.spec.ts",
+          "line": 35,
+          "title": "CP08 Members, invitations, policy and recipient fit native Chrome 200% zoom",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5277
+            }
+          ]
+        },
+        {
+          "file": "cp11-plan-native-zoom.spec.ts",
+          "line": 33,
+          "title": "CP11 HTTP mock: Plan navigation and centered editor fit native Chrome 200% zoom",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4558
+            }
+          ]
+        },
+        {
+          "file": "finance-operations.spec.ts",
+          "line": 7,
+          "title": "HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; pagination does not manufacture balance",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5468
+            }
+          ]
+        },
+        {
+          "file": "finance-operations.spec.ts",
+          "line": 159,
+          "title": "HTTP mock: a not-enabled Fund shows the setup form and stacks context on narrow Web",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3206
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 13,
+          "title": "login, profile save, private avatar replacement and paginated session revoke",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2415
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 50,
+          "title": "profile conflict retains draft and uses refreshed version only on explicit retry",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1766
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 68,
+          "title": "avatar attach error remains explicit and preserves the old picture",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1704
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 85,
+          "title": "password change rejects bad credentials, then clears the session on success",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2459
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 126,
+          "title": "later session page failure preserves loaded items and retry can recover",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2096
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 142,
+          "title": "expiry during a private read clears profile and redirects without reloading",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1865
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 154,
+          "title": "reset rejects a missing token locally and an expired token without clearing the active session",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1280
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 175,
+          "title": "private queries wait for bootstrap and anonymous redirect preserves returnTo",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 560
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 192,
+          "title": "expired session redirects without showing private profile data",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1937
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 204,
+          "title": "verification scrubs token, prevents repeat submission, then notifies login",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1850
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 222,
+          "title": "password recovery uses a generic notice, reset token is scrubbed and login follows success",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2351
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 244,
+          "title": "verification failure 400 stays on page with a safe message",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 821
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 244,
+          "title": "verification failure 429 stays on page with a safe message",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 680
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 244,
+          "title": "verification failure 503 stays on page with a safe message",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 639
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 258,
+          "title": "registration accepted does not authenticate and runtime pending is truthful",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1028
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 284,
+          "title": "Gateway profile responsive and keyboard controls at 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1936
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 284,
+          "title": "Gateway profile responsive and keyboard controls at 768",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1804
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 284,
+          "title": "Gateway profile responsive and keyboard controls at 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1734
+            }
+          ]
+        },
+        {
+          "file": "identity.spec.ts",
+          "line": 284,
+          "title": "Gateway profile responsive and keyboard controls at 320",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1727
+            }
+          ]
+        },
+        {
+          "file": "invitations.spec.ts",
+          "line": 6,
+          "title": "HTTP mock: Owner creates EMAIL/LINK and explicitly manages pending invitations",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3492
+            }
+          ]
+        },
+        {
+          "file": "invitations.spec.ts",
+          "line": 58,
+          "title": "HTTP mock: anonymous deep link scrubs token, returns through login, accepts, and opens Trip",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 884
+            }
+          ]
+        },
+        {
+          "file": "invitations.spec.ts",
+          "line": 84,
+          "title": "HTTP mock: invitation decline has a terminal confirmation on mobile",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 683
+            }
+          ]
+        },
+        {
+          "file": "invitations.spec.ts",
+          "line": 101,
+          "title": "HTTP mock: keyboard activation keeps invitation response accessible and terminal",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 673
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 14,
+          "title": "HTTP mock: Members pagination preserves opaque cursors, deduplicates IDs, and reveals departed rows only on request",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2888
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 48,
+          "title": "HTTP mock: a later-page read error keeps loaded rows and retry uses the same cursor",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2851
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 71,
+          "title": "HTTP mock: active Owner saves basic policy and confirms it from the refreshed Trip projection",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2642
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 106,
+          "title": "HTTP mock: policy conflict refetches membership revision and requires a new explicit submission",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3005
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 139,
+          "title": "HTTP mock: unknown policy outcome is not called saved and retry reuses the same intent",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4153
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 169,
+          "title": "HTTP mock: SELECTED uses membership IDs and OWNER_ONLY preserves inactive assignments after reload",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4241
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 203,
+          "title": "HTTP mock: a Member cannot open or write Plan policy",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2429
+            }
+          ]
+        },
+        {
+          "file": "members-policy.spec.ts",
+          "line": 218,
+          "title": "HTTP mock: an archived Trip keeps Owner policy read-only without writes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2808
+            }
+          ]
+        },
+        {
+          "file": "plan.spec.ts",
+          "line": 9,
+          "title": "HTTP mock: Plan CRUD, completion and full reorder (desktop)",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5258
+            }
+          ]
+        },
+        {
+          "file": "plan.spec.ts",
+          "line": 9,
+          "title": "HTTP mock: Plan CRUD, completion and full reorder (mobile)",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5147
+            }
+          ]
+        },
+        {
+          "file": "plan.spec.ts",
+          "line": 55,
+          "title": "HTTP mock: Gateway exposes only the shared server Plan, never a competing local draft editor",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2873
+            }
+          ]
+        },
+        {
+          "file": "plan.spec.ts",
+          "line": 69,
+          "title": "HTTP mock: Plan editor dialog remains scrollable at 2x CSS zoom and returns keyboard focus",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2906
+            }
+          ]
+        },
+        {
+          "file": "price-observations-cp10.spec.ts",
+          "line": 8,
+          "title": "Gateway Price Watch keeps loaded observations through a cursor error without inventing a fare",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4692
+            }
+          ]
+        },
+        {
+          "file": "timeline-interaction.spec.ts",
+          "line": 16,
+          "title": "Gateway drag reorders full IDs, cancels safely and changes only the day across groups",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3707
+            }
+          ]
+        },
+        {
+          "file": "timeline-interaction.spec.ts",
+          "line": 47,
+          "title": "Gateway timed drag requires confirmation; a conflict keeps the draft and revoked rights block writes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3565
+            }
+          ]
+        },
+        {
+          "file": "timeline-interaction.spec.ts",
+          "line": 82,
+          "title": "Gateway keyboard drag and split resize remain operable without a mouse",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3262
+            }
+          ]
+        },
+        {
+          "file": "timeline-interaction.spec.ts",
+          "line": 106,
+          "title": "Gateway touch drag uses the same reorder contract",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3399
+            }
+          ]
+        },
+        {
+          "file": "timeline-interaction.spec.ts",
+          "line": 138,
+          "title": "Gateway compact organizer uses a sheet with Escape and restored focus",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3004
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 14,
+          "title": "HTTP mock: overview retains source regions and isolates Plan, Fund and Members results",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1544
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 66,
+          "title": "HTTP mock: Trip read error does not masquerade as a permission denial or trigger panel reads",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 810
+            }
+          ]
+        },
+        {
+          "file": "trips.spec.ts",
+          "line": 7,
+          "title": "HTTP mock: login, cursor list, detail, create and conflict-safe settings update",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 6408
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 15,
+          "title": "Gateway visual and accessibility 1440x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 23489
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 15,
+          "title": "Gateway visual and accessibility 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 14956
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 15,
+          "title": "Gateway visual and accessibility 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 14294
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 15,
+          "title": "Gateway visual and accessibility 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 15129
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 15,
+          "title": "Gateway visual and accessibility 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 13552
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 15,
+          "title": "Gateway visual and accessibility 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 12869
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 143,
+          "title": "Gateway inbox closes on route change and restores body scrolling",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2266
+            }
+          ]
+        },
+        {
+          "file": "ui-acceptance.spec.ts",
+          "line": 161,
+          "title": "Gateway trip card menu opens settings without exposing unavailable actions",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2983
+            }
+          ]
+        },
+        {
+          "file": "ui-upgrade.spec.ts",
+          "line": 4,
+          "title": "Gateway Home uses the branded public presentation with real motion and no fixture controls",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2121
+            }
+          ]
+        },
+        {
+          "file": "ui-upgrade.spec.ts",
+          "line": 27,
+          "title": "Inbox reads from API, survives a later-page error and preferences preserve overrides",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2889
+            }
+          ]
+        },
+        {
+          "file": "ui-upgrade.spec.ts",
+          "line": 128,
+          "title": "Price Watch create retries the same idempotency key after unknown result, then pause/resume/stop",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 10017
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".local/cp11-d54-full-fixture.json",
+      "sha256": "1cbd7f49c67ad7544c1634e21e1fa90306b892d93c802ca6b3a7f0cb85b78819",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T09:19:18.641Z",
+        "duration": 277228.26100000006,
+        "expected": 208,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "app-shell.spec.ts",
+          "line": 4,
+          "title": "workspace projection sections use real routes 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1476
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 4,
+          "title": "workspace projection sections use real routes 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2408
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 1440×800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3060
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 1440×960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3582
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 1366×600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3326
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 1366×520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3199
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 1024×600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2943
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 820×600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2978
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 768×1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4208
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 402×874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4028
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 134,
+          "title": "workspace boundaries 320×480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3992
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 300,
+          "title": "mobile scroll waits for the lazy Plan route after drawer navigation",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2664
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 340,
+          "title": "drawer traps focus, closes with Escape/backdrop, and keeps background scroll locked",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2593
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1374
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /login",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1180
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /register",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1283
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1729
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips/11111111-1111-4111-8111-111111111111",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2286
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips/11111111-1111-4111-8111-111111111111/plan",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2132
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips/11111111-1111-4111-8111-111111111111/members",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2120
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /profile",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1418
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /admin",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1267
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 464,
+          "title": "Admin permission and shell 1440×800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1214
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 464,
+          "title": "Admin permission and shell 1024×520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1165
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 464,
+          "title": "Admin permission and shell 402×600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1337
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 509,
+          "title": "Guest public/auth pages have responsive header and natural scrolling",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 8860
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 530,
+          "title": "CP04 Web Home guest menu and 404 recovery keep public routes distinct",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1822
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 566,
+          "title": "CP04 authenticated Web Home keeps account and inbox access beside Menu",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2258
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 591,
+          "title": "CP04 Web trip drawer follows the approved navigation composition",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1232
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 616,
+          "title": "guest assets and expanded sidebar decorations retain source geometry",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3195
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 3,
+          "title": "guest header opens the matching Home sections from Home and login",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1655
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 21,
+          "title": "demo account opens User preview without API or persistent session 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4053
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 21,
+          "title": "demo account opens User preview without API or persistent session 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3339
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 2560px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3023
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1920px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2841
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1440px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2487
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1366px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2265
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1200px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2434
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1101px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2290
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1100px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2087
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 1024px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1975
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 820px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1980
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 768px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2095
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 402px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1751
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 99,
+          "title": "Home cloud layers cover the viewport at 320px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1572
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 10250
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7701
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7518
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 1024x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7152
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 820x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7779
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 768x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7871
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 6711
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 208,
+          "title": "Auth/public layout 320x480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 6670
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 335,
+          "title": "registration validates and remains unavailable without session or redirect",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1595
+            }
+          ]
+        },
+        {
+          "file": "auth-fixture.spec.ts",
+          "line": 358,
+          "title": "mobile profile keeps draft through error and never reports saved",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1495
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 21,
+          "title": "CP04 fixture guest and signed-in Home review 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 11658
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 21,
+          "title": "CP04 fixture guest and signed-in Home review 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 9694
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2502
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2407
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2522
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x950",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2440
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x951",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2487
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2578
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x985",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2557
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x986",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2454
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 66,
+          "title": "CP04 trip sidebar shows Settings on first render at 1440x990",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2518
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 109,
+          "title": "CP04 fixture recovery and 404 remain reachable 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5176
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 109,
+          "title": "CP04 fixture recovery and 404 remain reachable 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5272
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 109,
+          "title": "CP04 fixture recovery and 404 remain reachable 320x480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3157
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 109,
+          "title": "CP04 fixture recovery and 404 remain reachable 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4085
+            }
+          ]
+        },
+        {
+          "file": "cp04-review.spec.ts",
+          "line": 165,
+          "title": "CP04 fixture reduced-motion trip drawer keeps keyboard recovery",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1205
+            }
+          ]
+        },
+        {
+          "file": "cp04-zoom.spec.ts",
+          "line": 6,
+          "title": "CP04 native browser 200% zoom keeps Shell, recovery and Profile reachable",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5262
+            }
+          ]
+        },
+        {
+          "file": "cp05-review.spec.ts",
+          "line": 56,
+          "title": "CP05 fixture Web visual and axe review 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 14981
+            }
+          ]
+        },
+        {
+          "file": "cp05-review.spec.ts",
+          "line": 56,
+          "title": "CP05 fixture Web visual and axe review 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 12552
+            }
+          ]
+        },
+        {
+          "file": "cp05-review.spec.ts",
+          "line": 107,
+          "title": "CP05 fixture Web routes reflow and controls remain reachable 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 6613
+            }
+          ]
+        },
+        {
+          "file": "cp05-review.spec.ts",
+          "line": 107,
+          "title": "CP05 fixture Web routes reflow and controls remain reachable 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7774
+            }
+          ]
+        },
+        {
+          "file": "cp05-review.spec.ts",
+          "line": 134,
+          "title": "CP05 fixture reduced-motion Trip drawer returns keyboard focus",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1796
+            }
+          ]
+        },
+        {
+          "file": "cp05-zoom.spec.ts",
+          "line": 8,
+          "title": "CP05 native browser 200% zoom keeps Trip Web routes usable",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 5755
+            }
+          ]
+        },
+        {
+          "file": "cp11-regressions.spec.ts",
+          "line": 4,
+          "title": "CP11 fixture: register skip link appears only while focused at 402px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1705
+            }
+          ]
+        },
+        {
+          "file": "cp11-regressions.spec.ts",
+          "line": 4,
+          "title": "CP11 fixture: register skip link appears only while focused at 320px",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1529
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 11,
+          "title": "shared foundation layout 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1283
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 11,
+          "title": "shared foundation layout 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1461
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 11,
+          "title": "shared foundation layout 820x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1342
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 11,
+          "title": "shared foundation layout 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1388
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 11,
+          "title": "shared foundation layout 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1320
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 11,
+          "title": "shared foundation layout 320x480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1378
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 101,
+          "title": "shared drawer keyboard, backdrop, scrolling and focus return",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1032
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 129,
+          "title": "native Select keyboard and field focus survive errors",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1019
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 150,
+          "title": "hover and pressed variants preserve focus, disabled controls and field errors",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1552
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 174,
+          "title": "nested popup restores focus and scroll with motion no-preference",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1334
+            }
+          ]
+        },
+        {
+          "file": "design-system.spec.ts",
+          "line": 174,
+          "title": "nested popup restores focus and scroll with motion reduce",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 861
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 12,
+          "title": "CP03 fields, recovery and accessibility 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3009
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 67,
+          "title": "CP03 Auth required fields and invalid recovery 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2447
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 12,
+          "title": "CP03 fields, recovery and accessibility 1366",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2905
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 67,
+          "title": "CP03 Auth required fields and invalid recovery 1366",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2378
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 12,
+          "title": "CP03 fields, recovery and accessibility 768",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2947
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 67,
+          "title": "CP03 Auth required fields and invalid recovery 768",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2309
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 12,
+          "title": "CP03 fields, recovery and accessibility 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2804
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 67,
+          "title": "CP03 Auth required fields and invalid recovery 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2196
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 12,
+          "title": "CP03 fields, recovery and accessibility 320",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2772
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 67,
+          "title": "CP03 Auth required fields and invalid recovery 320",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2238
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 87,
+          "title": "reduced motion removes shared button displacement but keeps state feedback",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 844
+            }
+          ]
+        },
+        {
+          "file": "foundations-cp03.spec.ts",
+          "line": 111,
+          "title": "computed shared text, field error, focus and primary gradient contrast",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 614
+            }
+          ]
+        },
+        {
+          "file": "foundations-zoom.spec.ts",
+          "line": 6,
+          "title": "CP03 native browser 200% zoom keeps fields, modal footer and focus reachable",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3199
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1570
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1250
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 1024x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1776
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 820x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1241
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 768x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1320
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1362
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 14,
+          "title": "Fund preview 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1320
+            }
+          ]
+        },
+        {
+          "file": "fund-preview.spec.ts",
+          "line": 49,
+          "title": "Fund preview states stay truthful and do not claim a ledger mutation",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1761
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1919
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1857
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1879
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 1024x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1885
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 820x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1989
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 768x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2068
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1906
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 13,
+          "title": "Members preview 320x480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1867
+            }
+          ]
+        },
+        {
+          "file": "members-preview.spec.ts",
+          "line": 66,
+          "title": "member and invitation states, terminal statuses, draft and permission",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3330
+            }
+          ]
+        },
+        {
+          "file": "packing-list.spec.ts",
+          "line": 6,
+          "title": "read-only preview keeps the existing disabled item controls",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1539
+            }
+          ]
+        },
+        {
+          "file": "packing-list.spec.ts",
+          "line": 22,
+          "title": "desktop opens the right drawer and accepts a suggested item",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1464
+            }
+          ]
+        },
+        {
+          "file": "packing-list.spec.ts",
+          "line": 41,
+          "title": "mobile keeps custom category suggestion inside the form flow",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1390
+            }
+          ]
+        },
+        {
+          "file": "packing-list.spec.ts",
+          "line": 53,
+          "title": "keeps the last item edit action visible and usable",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1570
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2728
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2562
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2289
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 1024x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2537
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 820x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2274
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 768x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2359
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2168
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 13,
+          "title": "Plan preview 320x480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2180
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 109,
+          "title": "Plan states keep selection and pending/unknown do not claim saved",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1982
+            }
+          ]
+        },
+        {
+          "file": "plan-preview.spec.ts",
+          "line": 139,
+          "title": "keyboard drag moves an activity between the local pool and the selected day",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2800
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1248
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1223
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 1024x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1219
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 820x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1216
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 768x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1304
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1310
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 14,
+          "title": "Price Watch preview 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1355
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 35,
+          "title": "Price Watch preserves an old price when provider fails and keeps commands truthful",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1641
+            }
+          ]
+        },
+        {
+          "file": "price-watch-preview.spec.ts",
+          "line": 60,
+          "title": "Price Watch capability controls explain that preview actions do not mutate data",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1384
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 95,
+          "title": "Trip List layout 1440×800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2272
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 95,
+          "title": "Trip List layout 1366×520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2092
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 95,
+          "title": "Trip List layout 820×900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1732
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 95,
+          "title": "Trip List layout 768×900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2916
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 95,
+          "title": "Trip List layout 402×874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1903
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 95,
+          "title": "Trip List layout 320×600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1937
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 223,
+          "title": "Trip List local filters search and date sorting 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2660
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 294,
+          "title": "Trip List read states preserve filters and Guest cannot read 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3261
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 223,
+          "title": "Trip List local filters search and date sorting 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1930
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 294,
+          "title": "Trip List read states preserve filters and Guest cannot read 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2543
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 349,
+          "title": "Trip List preserves filter search and sort across viewport changes",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1976
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 369,
+          "title": "Trip List keyboard links open six Overview routes and Back returns to list",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3129
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 396,
+          "title": "Trip List Mobile drawer keyboard backdrop and same-route navigation restore focus",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2192
+            }
+          ]
+        },
+        {
+          "file": "trip-list.spec.ts",
+          "line": 441,
+          "title": "Trip List route aliases preserve layout and authenticated permission policy",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3232
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 1440x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1673
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 1366x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1671
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 1101x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1598
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 1024x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1720
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 820x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1620
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 769x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1659
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 768x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1710
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 402x900",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1683
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 42,
+          "title": "Map layout and place scrolling fit 320x700",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1650
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 80,
+          "title": "Collapsed sidebar icon points toward the content",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 713
+            }
+          ]
+        },
+        {
+          "file": "trip-map.spec.ts",
+          "line": 88,
+          "title": "Map filters use semantic status colors and accessible targets",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1637
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 2560x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1805
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1920x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1673
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1713
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1529
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1603
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1463
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1200x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1640
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1101x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1495
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1100x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1556
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 1024x768",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1527
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 820x768",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1516
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1444
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1407
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 82,
+          "title": "Trip overview reaches the final content at 320x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1375
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 112,
+          "title": "Trip overview uses all available desktop width with the expanded and collapsed sidebar",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1957
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 186,
+          "title": "Trip overview workspace grows for a long fifth activity and keeps its end reachable",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1639
+            }
+          ]
+        },
+        {
+          "file": "trip-overview.spec.ts",
+          "line": 223,
+          "title": "Trip overview keeps navigation, metadata states and scroll boundaries stable",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2046
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 15,
+          "title": "Trip Settings view is reachable at 1440x960",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1648
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 15,
+          "title": "Trip Settings view is reachable at 1366x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1531
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 15,
+          "title": "Trip Settings view is reachable at 1024x600",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1514
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 15,
+          "title": "Trip Settings view is reachable at 768x1024",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1534
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 15,
+          "title": "Trip Settings view is reachable at 402x874",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1502
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 15,
+          "title": "Trip Settings view is reachable at 320x480",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1465
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 47,
+          "title": "Owner enters edit from Settings, saves supported fields and returns to view",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1669
+            }
+          ]
+        },
+        {
+          "file": "trip-settings.spec.ts",
+          "line": 65,
+          "title": "Hero edit and mobile drawer both navigate to Settings view",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1800
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 13,
+          "title": "Create Trip preserves a retryable draft and fits 1440x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1623
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 13,
+          "title": "Create Trip preserves a retryable draft and fits 1366x520",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1647
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 13,
+          "title": "Create Trip preserves a retryable draft and fits 820x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1662
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 13,
+          "title": "Create Trip preserves a retryable draft and fits 768x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1718
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 13,
+          "title": "Create Trip preserves a retryable draft and fits 402x800",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1694
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 13,
+          "title": "Create Trip preserves a retryable draft and fits 320x640",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1824
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 33,
+          "title": "read-only workspace projections remain usable at 1440",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3579
+            }
+          ]
+        },
+        {
+          "file": "trip-workspace-projections.spec.ts",
+          "line": 33,
+          "title": "read-only workspace projections remain usable at 402",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3422
+            }
+          ]
+        },
+        {
+          "file": "web-fix-regressions.spec.ts",
+          "line": 17,
+          "title": "Settings updates keep cached Trip, Plan and shell projections consistent across navigation",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2477
+            }
+          ]
+        },
+        {
+          "file": "web-fix-regressions.spec.ts",
+          "line": 42,
+          "title": "two tabs preserve edits to different activities and reload the combined draft",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4592
+            }
+          ]
+        },
+        {
+          "file": "web-fix-regressions.spec.ts",
+          "line": 67,
+          "title": "same-activity conflict preserves typed input until explicit reload or cancel",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3361
+            }
+          ]
+        },
+        {
+          "file": "web-fix-regressions.spec.ts",
+          "line": 92,
+          "title": "Plan, Map and CreateTrip remain usable with getter storage failure",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3533
+            }
+          ]
+        },
+        {
+          "file": "web-fix-regressions.spec.ts",
+          "line": 92,
+          "title": "Plan, Map and CreateTrip remain usable with quota storage failure",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 3641
+            }
+          ]
+        },
+        {
+          "file": "web-fix-regressions.spec.ts",
+          "line": 131,
+          "title": "Fund tabs support arrows, wraparound, Home, End and Tab with synchronized panels",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1631
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".local/cp11-lab-d54-lab.json",
+      "sha256": "5c57cce6566da31c05b71aeade16bbfc2d03aed776b1a777156f767a42e25bef",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T09:24:06.636Z",
+        "duration": 86652.312,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory home 1440px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7829
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory auth 1440px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7896
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory plan 1440px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 14889
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory fund 1440px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 12222
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory home 402px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7195
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory auth 402px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 7909
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory plan 402px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 14479
+            }
+          ]
+        },
+        {
+          "file": "runtime.spec.ts",
+          "line": 15,
+          "title": "CP11 laboratory fund 402px five cold-asset samples",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 11989
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

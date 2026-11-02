@@ -1,16 +1,24 @@
-# CP11 — Điều chỉnh contrast đã duyệt
+# CP11 — Các điều chỉnh Web đã duyệt
 
 Status: **APPROVED_BY_USER — D50 / IMPLEMENTED_AND_VERIFIED**,02/11/2026. User xác nhận “ok, hoàn tất CP-11 cho tôi” ngay sau câu hỏi duyệt CP11-A01. Đã áp đúng selector và kiểm tra computed colors/axe sau sửa. Không thay đổi palette/layout/motion toàn app.
+
+User chốt tiếp gói bốn nhóm trọng tâm (điều hướng Drawer, Cài đặt, múi giờ, nhãn truy cập) rồi yêu cầu “Yes, implement this plan”; D52 ghi phạm vi duyệt riêng CP11-A02–A05. Các điều chỉnh này chỉ áp dụng Web. Không duyệt compact banner, Fund Drawer, Plan split mới, palette hoặc feature Backend trong báo cáo.
 
 | Mã | Vấn đề xác minh | Phương án giới hạn | Trạng thái |
 | --- | --- | --- | --- |
 | CP11-A01 (subset PLN06) | Axe HTTP-mock tại1440×900 đo link breadcrumb “Tổng quan chuyến đi” trên Plan: chữ13px #079fc5 trên #f4fbfe,2.96:1, yêu cầu4.5:1 của gate hiện có. | Chỉ `.breadcrumb a` trong `src/features/plan/PlanPage.module.css` dùng existing `--color-action-primary` #006b92 thay `--color-active`. CSS shared áp dụng cùng breadcrumb trong Gateway và Preview. Không đổi nền, bố cục, font, nav active state, day buttons hay các selector khác. | **APPROVED D50 / VERIFIED**. Browser computed #006b92 trên #f4fbfe; tỷ lệ5.7066:1 từ màu thực tế, axe contrast PASS. |
+| CP11-A02 | Default axe CP06 ghi `label-content-name-mismatch` ở profile desktop/narrow và Menu (5 scans/7 nodes). | Menu accessible name chứa chữ Menu; profile desktop dùng natural content name và text purpose ẩn trực quan. Ở Web769–1100, profile compact giữ initials/tên trong accessible name qua text ẩn trực quan khi tên hiển thị bị ẩn; AccountMenu và fallback cùng semantics. | **APPROVED D52 / VERIFIED**. Full built Gateway CP06 default all-rules axe5/5 và Gateway126/126 PASS trước D54; sau compact-name edit, CP06 axe5/5 zero và shell unit7/7 PASS focused. |
+| CP11-A03 | Trip Drawer có Home/Đóng nhưng thiếu lối trực tiếp tới Trip list và Profile; báo cáo mục02. | Hai link route hiện có ở đầu nav Drawer cho viewer đăng nhập, kể cả khi `canReadTrip=false`; chín workspace items vẫn disabled nếu không có quyền. Click link đóng Drawer/focus main; Escape trả nút mở. Desktop sidebar giữ nguyên. | **APPROVED D52 / VERIFIED**. Full fixture208/208 PASS trước D54; sau denied-route edit, Preview denied3/3 và Drawer composition1/1 PASS focused. |
+| CP11-A04 | Bốn field disabled trong edit Settings trông như form và lặp lời nhắc; báo cáo mục04. | Nhóm `Thông tin chỉ xem` cho destination/dates/budget sau ba input hỗ trợ; một capability note; bỏ nút thay ảnh disabled nhưng giữ preview; payload/draft/conflict giữ nguyên. | **APPROVED D52 / VERIFIED**. Settings unit16/16, Gateway Trip flow và Preview Settings PASS. |
+| CP11-A05 | Gateway Create bắt nhập IANA thô; báo cáo mục09. | Shared native Select với Việt Nam/Thái Lan/Singapore/Nhật/Hàn/UTC và custom IANA; default Việt Nam, restore arbitrary valid draft, không đổi timezone/date serializer/idempotent intent. | **APPROVED D52 / VERIFIED**. Create unit7/7, custom DST boundary + uncertain retry, Gateway Trip/Create và full built Gateway PASS. |
 
 Source context: Plan Web20:236 và các approved CP06 adaptations D33; inventory hiện có đủ, không resurvey/Figma write. D26 chỉ duyệt Overview, không mở rộng sang Plan. Mã này không duyệt toàn PLN06 hoặc các delta khác.
 
+D54 là sửa thực thi trong A02/A03 đã duyệt: kiểm chứng focused sau source edit, không phải user approval mới hay ngoại lệ gate. D55 sau đó chạy fresh full unit/Gateway/Preview và local lab trên source cuối. [Verification](CP11_VERIFICATION.md) tách D53 lịch sử, D54 focused và D55 full runs.
+
 Evidence: dev Gateway test `ui-acceptance.spec.ts` desktop1440×900, path `.local/cp11-resume-gateway/ui-acceptance-Gateway-visual-and-accessibility-1440x900/`. `plan.png` đã mở/xem đúng trạng thái; `error-context.md` giữ raw axe foreground/background/font/rule. Đây là ảnh test HTTP-mock, không phải live Backend hay direct visual audit.
 
-Formula check dùng sRGB relative luminance: `(Llighter +0.05)/(Ldarker +0.05)` cho hai màu nêu trên trả2.9635 và5.7066. Post-D50 browser xác nhận computed colors mới tại sáu viewport; sampled Plan axe không còn contrast violation. Đây không là full accessibility PASS: default CP06 scans còn shell label/name finding riêng.
+Formula check dùng sRGB relative luminance: `(Llighter +0.05)/(Ldarker +0.05)` cho hai màu nêu trên trả2.9635 và5.7066. Post-D50 browser xác nhận computed colors mới tại sáu viewport; sampled Plan axe không còn contrast violation. Ở snapshot D50 default CP06 scans vẫn còn shell label/name finding; A02/D54 đã giải quyết sau đó. Không suy full manual accessibility PASS.
 
 Historical built Gateway full125 cases xác nhận cùng lỗi là failure duy nhất (124 PASS/1 FAIL). [Raw axe JSON](evidence/cp11/plan-breadcrumb-axe.json) giữ foreground/background/selector trước sửa; [verification](CP11_VERIFICATION.md) tách các lượt post-fix và expectation cũ. Không ghi đè evidence trước approval.
 

@@ -102,6 +102,26 @@ describe('Gateway Create Trip', () => {
     await next.user.click(screen.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }));
     expect(next.createTrip.mock.calls[0]![0].intent).toEqual(intent);
   });
+  it('keeps a custom IANA timezone and its date serialization across an uncertain retry', async () => {
+    const { user, createTrip, unmount } = setup();
+    await fill(user);
+    await user.selectOptions(screen.getByLabelText('Múi giờ'), '__custom__');
+    await user.type(screen.getByLabelText('Múi giờ IANA'), 'America/New_York');
+    await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
+    await waitFor(() => expect(createTrip).toHaveBeenCalledOnce());
+    const intent = createTrip.mock.calls[0]![0].intent;
+    expect(intent).toMatchObject({
+      timezone: 'America/New_York',
+      startAt: '2026-11-01T04:00:00.000Z',
+      endAt: '2026-11-04T05:00:00.000Z',
+    });
+    unmount();
+    const next = setup();
+    expect(screen.getByLabelText('Múi giờ')).toHaveValue('__custom__');
+    expect(screen.getByLabelText('Múi giờ IANA')).toHaveValue('America/New_York');
+    await next.user.click(screen.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }));
+    expect(next.createTrip.mock.calls[0]![0].intent).toEqual(intent);
+  });
   it('closes a confirmed success with a blank form and no duplicate create request', async () => {
     const { user, createTrip } = setup();
     createTrip.mockResolvedValueOnce({

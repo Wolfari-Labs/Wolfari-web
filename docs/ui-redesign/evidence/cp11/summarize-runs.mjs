@@ -2,7 +2,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
-const inputPaths = process.argv.slice(2);
+const outputFile = process.argv[2] === '--output' ? process.argv[3] : undefined;
+const inputPaths = process.argv.slice(outputFile ? 4 : 2);
 if (!inputPaths.length) throw new Error('Pass existing Vitest/Playwright JSON report paths');
 const runs = [];
 for (const file of inputPaths) {
@@ -43,7 +44,7 @@ for (const file of inputPaths) {
   runs.push({ ...source, runner: 'playwright', stats: report.stats, cases });
 }
 await writeFile(
-  new URL('./run-summary.json', import.meta.url),
+  outputFile ?? new URL('./run-summary.json', import.meta.url),
   JSON.stringify(
     {
       evidenceDate: '2026-11-02',

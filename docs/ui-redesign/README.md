@@ -14,7 +14,7 @@ W04-C/D và W05-E: [Fund](FUND_SPEC.md), [Members](MEMBERS_SPEC.md), [các route
 
 ## Đọc và tiếp tục
 
-CP11 post-D50/D51: [verification](CP11_VERIFICATION.md), [20-item disposition/22 routes](CP11_REVIEW_DISPOSITION.md), [CP11-A01 approved/verified](CP11_DESIGN_DECISIONS.md), [80 mẫu performance lab](CP11_PERFORMANCE.md), [điều kiện nghiệm thu còn lại](CP11_ACCEPTANCE.md). Full unit577/577, Gateway126/126, Preview208/208 PASS. Full direct visual/shell-label/manual/live/CI limits còn chờ completion hoặc explicit exception acceptance; chưa DONE/READY_FOR_REVIEW vô điều kiện. Không tự release.
+CP11 post-D55: [verification](CP11_VERIFICATION.md), [20-item disposition/22 routes](CP11_REVIEW_DISPOSITION.md), [CP11-A01–A05 approved/verified](CP11_DESIGN_DECISIONS.md), [historical80 + current40 local performance samples](CP11_PERFORMANCE.md), [điều kiện nghiệm thu còn lại](CP11_ACCEPTANCE.md). Fresh full unit578/578, Gateway HTTP-mock126/126, Preview fixture208/208 PASS/exit0 sau source edit cuối; focused shell unit7/7, Gateway CP06 axe5/5, Preview boundaries9/9, denied3/3, Drawer1/1 PASS và lint/typecheck/builds PASS. Full direct visual/manual/live/CI/device limits còn chờ completion hoặc explicit exception acceptance; chưa DONE/READY_FOR_REVIEW vô điều kiện. Không tự release.
 
 1. [Trạng thái](STATE.md) và [master roadmap](MASTER_PLAN.md).
 2. [Checkpoint hiện tại CP-11](checkpoints/CP-11.md) và [STATE](STATE.md). [CP10 acceptance](CP10_ACCEPTANCE.md) giữ bằng chứng đã duyệt; [CP09 acceptance](CP09_ACCEPTANCE.md) giữ ngoại lệ và các FND decisions pending.

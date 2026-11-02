@@ -20,8 +20,10 @@ function stats(values) {
     max: sorted.at(-1),
   };
 }
+const [beforeDirectory, afterDirectory, outputFile, methodOverride] = process.argv.slice(2);
+if (!beforeDirectory || !afterDirectory) throw new Error('Pass two complete lab run directories');
 const runs = [];
-for (const directory of process.argv.slice(2)) {
+for (const directory of [beforeDirectory, afterDirectory]) {
   const reports = await Promise.all(
     (await walk(directory))
       .sort()
@@ -75,11 +77,12 @@ const comparison = runs[1].summary.map((after) => {
   };
 });
 await writeFile(
-  new URL('./runtime-lab.json', import.meta.url),
+  outputFile ?? new URL('./runtime-lab.json', import.meta.url),
   JSON.stringify(
     {
       date: '2026-11-02',
       method:
+        methodOverride ??
         'Sequential pre-A01 then post-A01 local HTTP-mock built runs; 5 cache-disabled samples per Home/Auth/Plan/Fund at 1440/402. Unthrottled localhost and CPU1, fixed observation cutoff. Not production p75/INP or approved SLA. Compare range/noise, not just medians.',
       comparison,
       runs,
