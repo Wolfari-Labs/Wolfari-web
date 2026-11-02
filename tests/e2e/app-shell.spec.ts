@@ -366,6 +366,10 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
   await expect(menu).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await menu.click();
+  await expect(close).toBeFocused();
+  // A raw mouse click has no locator actionability checks. Wait for the reopened
+  // drawer to be interactive before exercising dismissal through its backdrop.
+  await close.click({ trial: true });
   await page.mouse.click(390, 200);
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();

@@ -123,6 +123,9 @@ test('Trip overview uses all available desktop width with the expanded and colla
       await expect(page.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toBeVisible();
     }
 
+    // The accessible name can update before the browser has committed the new
+    // geometry. Assert the actual width before reading boxes across elements.
+    await expect(sidebar).toHaveCSS('width', state === 'expanded' ? '220px' : '72px');
     const sidebarBox = (await sidebar.boundingBox())!;
     const heroBox = (await page
       .getByRole('region', { name: 'Thông tin chuyến đi' })

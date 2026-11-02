@@ -73,7 +73,14 @@ test('CP03 native browser 200% zoom keeps fields, modal footer and focus reachab
     await confirm.click();
     const alert = page.getByRole('alertdialog');
     await expect(alert.getByRole('button', { name: 'Hủy' })).toBeFocused();
+    // Autofocus precedes Radix's layer-stack effect. Verify the parent is inert
+    // and the alert owns interaction before dispatching a document-level Escape.
+    await expect(
+      page.getByRole('dialog', { name: 'Popup minh họa', includeHidden: true }),
+    ).toHaveCSS('pointer-events', 'none');
+    await expect(alert).toHaveCSS('pointer-events', 'auto');
     await page.keyboard.press('Escape');
+    await expect(alert).not.toBeVisible();
     await expect(confirm).toBeFocused();
     await expect(dialog).toBeVisible();
     await expect(confirm).toBeInViewport();
