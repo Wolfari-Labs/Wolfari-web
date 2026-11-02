@@ -54,10 +54,36 @@ async function fund(page, tripId) {
   await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
 }
 async function confirmForm(page, label) {
-  const dialog = page.getByRole('dialog', { name: label, exact: true });
+  const dialog = page.getByRole('form', { name: label, exact: true });
   await dialog.getByRole('button', { name: 'Xác nhận · ' + label, exact: true }).click();
   await expect(dialog).not.toBeVisible();
   await expect(page.getByText('Đã hoàn tất thao tác.', { exact: true })).toBeVisible();
+}
+async function financeNotification(page, tripId, title) {
+  await page
+    .getByRole('button', { name: /^Thông báo/ })
+    .filter({ visible: true })
+    .click();
+  const inbox = page.getByRole('dialog', { name: 'Thông báo', exact: true });
+  const notice = inbox
+    .getByRole('listitem')
+    .filter({ has: page.getByText(title, { exact: true }) });
+  await expect(notice).toHaveCount(1);
+  await expect(notice.getByRole('link', { name: 'Xem chi tiết' })).toHaveAttribute(
+    'href',
+    `/trips/${tripId}/fund`,
+  );
+  await notice.getByRole('button', { name: 'Đánh dấu đã đọc', exact: true }).click();
+  await expect(notice.getByRole('button', { name: 'Đánh dấu đã đọc', exact: true })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await page.reload();
+  await page
+    .getByRole('button', { name: /^Thông báo/ })
+    .filter({ visible: true })
+    .click();
+  await expect(notice).toHaveCount(1);
+  await expect(notice).not.toHaveAttribute('data-unread', 'true');
+  await page.keyboard.press('Escape');
 }
 async function linkInvite(owner, tripId) {
   await owner.goto(`/trips/${tripId}/members`);
@@ -79,8 +105,11 @@ async function setEditors(owner, tripId, names) {
   await owner.goto(`/trips/${tripId}/members`);
   await owner.getByRole('button', { name: 'Quyền sửa lịch trình', exact: true }).click();
   await owner
-    .getByLabel('Ai có thể sửa lịch trình')
-    .selectOption(names.length ? 'SELECTED_MEMBERS' : 'OWNER_ONLY');
+    .getByRole('radio', {
+      name: names.length ? 'Thành viên được chọn' : 'Chỉ chủ chuyến',
+      exact: true,
+    })
+    .check();
   for (const name of names) await owner.getByRole('checkbox', { name, exact: true }).check();
   await owner.getByRole('button', { name: 'Lưu quyền', exact: true }).click();
   await expect(owner.getByText('Đã lưu quyền sửa lịch trình.')).toBeVisible();
@@ -101,7 +130,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
     pages = {},
     accounts = {},
     diagnostics = [];
-  let tripId;
+  let tripId, businessProof;
   try {
     await test.step('five new accounts verified by real Mailpit, no business SQL seed', async () => {
       for (const [role, name] of [
@@ -139,6 +168,26 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
           const path = new URL(response.url()).pathname;
           if (response.status() >= 400 && !path.startsWith('/api/'))
             diagnostics.push({ role, assetPath: path, status: response.status() });
+          if (
+            /\/api\/v1\/(funds|contributions)\//.test(path) &&
+            response.request().method() !== 'GET'
+          ) {
+            try {
+              const body = await response.json();
+              const sent = response.request().postDataJSON();
+              diagnostics.push({
+                role,
+                path,
+                status: response.status(),
+                error: body.error?.code,
+                expectedFinanceVersion: sent?.expected_finance_version,
+                expectedVersion: sent?.expected_version,
+                financeVersion: body.data?.finance_version,
+              });
+            } catch {
+              /* Never persist request bodies, recipient details or credentials. */
+            }
+          }
           if (!/\/api\/v1\/trips\/[0-9a-f-]{36}(?:\/plan|\/plan-policy)?$/.test(path)) return;
           try {
             const body = await response.json();
@@ -290,10 +339,34 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         );
       }
     });
-    await test.step('day-only, timed overnight, reorder, completion, reload and editor revocation', async () => {
+    await test.step('live Settings conflict keeps the draft and only explicit resubmit saves the reviewed version', async () => {
+      const context = await browser.newContext({ baseURL: manifest.webUrl });
+      contexts.push(context);
+      const other = await context.newPage();
+      await login(other, accounts.owner, `/trips/${tripId}/settings`);
+      await other.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+      const draft = other.getByRole('textbox', { name: 'Mô tả công khai' });
+      await draft.fill('Reviewed settings draft');
+      await owner.goto(`/trips/${tripId}/settings`);
+      await owner.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+      await owner
+        .getByRole('textbox', { name: 'Mô tả công khai' })
+        .fill('Owner first settings write');
+      await owner.getByRole('button', { name: 'Lưu thay đổi' }).click();
+      await expect(owner.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
+      await other.getByRole('button', { name: 'Lưu thay đổi' }).click();
+      await expect(other.getByText(/Thông tin chuyến đi đã thay đổi/)).toBeVisible();
+      await expect(draft).toHaveValue('Reviewed settings draft');
+      await other.getByRole('button', { name: 'Lưu thay đổi' }).click();
+      await expect(other.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
+      await owner.reload();
+      await expect(owner.getByText('Reviewed settings draft', { exact: true })).toBeVisible();
+      await context.close();
+    });
+    await test.step('day-only, timed overnight, delete, reorder, completion, reload and editor revocation', async () => {
       await editor.goto(`/trips/${tripId}/plan`);
       await editor.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
-      const drawer = editor.getByRole('dialog', { name: 'Chỉnh sửa lịch trình' });
+      const drawer = editor.getByRole('dialog', { name: /^(Thêm hoạt động|Chỉnh sửa hoạt động)$/ });
       await drawer.getByLabel('Tên hoạt động', { exact: true }).fill('Tham quan ngày-only');
       await drawer.getByLabel('Ngày bắt đầu hoặc ngày chưa có giờ').fill('2026-11-03');
       await drawer.getByRole('button', { name: 'Lưu' }).click();
@@ -328,6 +401,31 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(item).toContainText('Đã hoàn tất');
       await item.getByRole('button', { name: 'Mở lại', exact: true }).click();
       await expect(item).toContainText('Chưa hoàn tất');
+      await editor.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+      await drawer.getByLabel('Tên hoạt động', { exact: true }).fill('TEST temporary delete');
+      await drawer.getByRole('button', { name: 'Lưu' }).click();
+      await expect(drawer).not.toBeVisible();
+      await editor.getByRole('button', { name: 'Thao tác TEST temporary delete' }).click();
+      await editor.getByRole('menuitem', { name: 'Xóa', exact: true }).click();
+      const deleted = editor.waitForResponse(
+        (response) =>
+          response.request().method() === 'DELETE' &&
+          /\/activities\/[0-9a-f-]{36}$/.test(new URL(response.url()).pathname),
+      );
+      await editor.getByRole('button', { name: 'Xác nhận xóa', exact: true }).click();
+      expect((await deleted).status()).toBe(200);
+      await expect(
+        editor.getByRole('listitem', { name: 'TEST temporary delete', exact: true }),
+      ).toHaveCount(0);
+      await expect(item.getByRole('button', { name: 'Sửa' })).toBeEnabled();
+      await editor.reload();
+      await expect(
+        editor.getByRole('listitem', { name: 'TEST temporary delete', exact: true }),
+      ).toHaveCount(0);
+      await member.reload();
+      await expect(
+        member.getByRole('listitem', { name: 'TEST temporary delete', exact: true }),
+      ).toHaveCount(0);
       await item.getByRole('button', { name: 'Sửa' }).click();
       await drawer
         .getByLabel('Tên hoạt động', { exact: true })
@@ -350,7 +448,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       const edit = item.getByRole('button', { name: 'Sửa' });
       await edit.focus();
       await edit.press('Enter');
-      const drawer = editor.getByRole('dialog', { name: 'Chỉnh sửa lịch trình' });
+      const drawer = editor.getByRole('dialog', { name: 'Chỉnh sửa hoạt động', exact: true });
       await expect(drawer.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
       await drawer.getByLabel('Mô tả', { exact: true }).fill('Draft Editor conflict');
       await owner.goto(`/trips/${tripId}/plan`);
@@ -381,7 +479,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
     await test.step('Owner configures Fund; Holder consent; create two manual contributions', async () => {
       await fund(owner, tripId);
       await owner.getByRole('button', { name: 'Bật quỹ TEST', exact: true }).click();
-      const setup = owner.getByRole('dialog', { name: 'Bật quỹ TEST', exact: true });
+      const setup = owner.getByRole('form', { name: 'Bật quỹ TEST', exact: true });
       await setup.getByLabel('Người giữ quỹ (Holder)').selectOption({ label: 'Holder B' });
       await setup.getByLabel('Ngân sách (VND)').fill('900000');
       await setup.getByLabel('Mã ngân hàng TEST').fill('VCB');
@@ -393,12 +491,14 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await confirmForm(holder, 'Xác nhận đích nhận');
       await owner.reload();
       await owner.getByRole('button', { name: 'Tạo đợt thu', exact: true }).click();
-      const req = owner.getByRole('dialog', { name: 'Tạo đợt thu', exact: true });
+      const req = owner.getByRole('form', { name: 'Tạo đợt thu', exact: true });
       await req.getByLabel('Tên đợt thu').fill('Đợt thu demo1');
       await req.getByLabel('Ghi chú đợt thu').fill('TEST không chuyển tiền thật');
       await req.getByLabel('Khoản đóng · Editor C').fill('200000');
       await req.getByLabel('Khoản đóng · Member D').fill('300000');
       await confirmForm(owner, 'Tạo đợt thu');
+      await fund(editor, tripId);
+      await financeNotification(editor, tripId, 'Yêu cầu đóng góp');
       await expect(
         owner
           .getByRole('region', { name: 'Các khoản đóng góp' })
@@ -444,7 +544,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await owner.keyboard.press('Escape');
       await owner.goto(`/trips/${tripId}/price-watch`);
       await owner.getByRole('button', { name: 'Tạo theo dõi', exact: true }).click();
-      const form = owner.getByRole('dialog', { name: 'Tạo theo dõi giá', exact: true });
+      const form = owner
+        .getByRole('complementary', { name: 'Biểu mẫu theo dõi giá', exact: true })
+        .locator('form');
       await form.getByLabel('Sân bay đi (IATA)').fill('DAD');
       await form.getByLabel('Sân bay đến (IATA)').fill('SGN');
       const date = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
@@ -461,11 +563,38 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await owner.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
       await owner.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
       await expect(owner.getByText('Đang theo dõi', { exact: true })).toBeVisible();
-      await owner.getByRole('button', { name: 'Lịch sử giá', exact: true }).click();
-      await expect(owner.getByText('Chưa có giá quan sát.', { exact: true })).toBeVisible();
+      await expect
+        .poll(async () => {
+          await owner.getByRole('button', { name: 'Lịch sử giá', exact: true }).click();
+          const history = owner.getByRole('dialog', { name: 'Chi tiết theo dõi giá', exact: true });
+          await expect(
+            history.getByRole('heading', { name: 'Lịch sử giá quan sát' }),
+          ).toBeVisible();
+          const count = await history.getByRole('listitem').count();
+          if (!count) await owner.keyboard.press('Escape');
+          return count;
+        })
+        .toBeGreaterThan(0);
+      await expect(
+        owner.getByRole('dialog', { name: 'Chi tiết theo dõi giá', exact: true }),
+      ).toContainText('MOCK_FLIGHT');
       await owner.keyboard.press('Escape');
-      await owner.getByRole('button', { name: 'Dừng', exact: true }).click();
-      await owner.getByRole('button', { name: 'Xác nhận', exact: true }).click();
+      // The worker writes observations and advances watch.version. Reload the
+      // authoritative watch before issuing a versioned lifecycle command. A
+      // worker tick can still win the race after that reload; a 409 is an
+      // expected optimistic-concurrency result, so reconcile and retry the
+      // same stop intent instead of weakening the version guard.
+      let stopStatus = 409;
+      for (let attempt = 0; attempt < 3 && stopStatus === 409; attempt++) {
+        await owner.reload();
+        await owner.getByRole('button', { name: 'Dừng', exact: true }).click();
+        const stopped = owner.waitForResponse((r) =>
+          /\/price-watches\/[^/]+\/stop$/.test(new URL(r.url()).pathname),
+        );
+        await owner.getByRole('button', { name: 'Xác nhận', exact: true }).click();
+        stopStatus = (await stopped).status();
+      }
+      expect(stopStatus).toBe(200);
       await expect(owner.getByText('Đã dừng', { exact: true })).toBeVisible();
       await owner.reload();
       await expect(owner.getByText('Đã dừng', { exact: true })).toBeVisible();
@@ -480,13 +609,14 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await editor.getByRole('button', { name: 'Báo đã chuyển TEST', exact: true }).click();
       await confirmForm(editor, 'Báo đã chuyển TEST');
       await holder.reload();
+      await financeNotification(holder, tripId, 'Báo chuyển chờ xác nhận');
       const c = holder
         .getByRole('region', { name: 'Các khoản đóng góp' })
         .getByRole('listitem')
         .filter({ hasText: 'Editor C' });
       await c.getByRole('button', { name: 'Từ chối báo chuyển', exact: true }).click();
       await holder
-        .getByRole('dialog')
+        .getByRole('form', { name: 'Từ chối báo chuyển', exact: true })
         .getByLabel('Lý do', { exact: true })
         .fill('Chưa nhận TEST lần đầu');
       await confirmForm(holder, 'Từ chối báo chuyển');
@@ -507,7 +637,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         await route.abort('connectionreset'); // Real backend committed. No mock success response.
       });
       await holder
-        .getByRole('dialog')
+        .getByRole('form', { name: 'Xác nhận đã nhận TEST', exact: true })
         .getByRole('button', { name: 'Xác nhận · Xác nhận đã nhận TEST', exact: true })
         .click();
       await expect(holder.getByText(/Chưa xác nhận được kết quả/)).toBeVisible();
@@ -517,14 +647,63 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await holder.unroute('**/api/v1/contributions/*/confirm-received');
       await fund(member, tripId);
       await member.getByRole('button', { name: 'Báo đã chuyển TEST', exact: true }).click();
-      await confirmForm(member, 'Báo đã chuyển TEST');
+      let reportWrites = 0;
+      const reportListener = (request) => {
+        if (request.method() === 'POST' && request.url().endsWith('/report-transfer'))
+          reportWrites++;
+      };
+      member.on('request', reportListener);
+      await member
+        .getByRole('button', { name: 'Xác nhận · Báo đã chuyển TEST', exact: true })
+        .dblclick();
+      await expect(
+        member.getByRole('form', { name: 'Báo đã chuyển TEST', exact: true }),
+      ).toHaveCount(0);
+      await expect(member.getByText('Đã hoàn tất thao tác.', { exact: true })).toBeVisible();
+      member.off('request', reportListener);
+      expect(reportWrites, 'double click sends only one report command').toBe(1);
       await holder.reload();
       const d = holder
         .getByRole('region', { name: 'Các khoản đóng góp' })
         .getByRole('listitem')
         .filter({ hasText: 'Member D' });
       await d.getByRole('button', { name: 'Xác nhận đã nhận TEST', exact: true }).click();
-      await confirmForm(holder, 'Xác nhận đã nhận TEST');
+      const secondContext = await browser.newContext({ baseURL: manifest.webUrl });
+      contexts.push(secondContext);
+      const secondHolder = await secondContext.newPage();
+      await login(secondHolder, accounts.holder, `/trips/${tripId}/fund`);
+      await secondHolder
+        .getByRole('region', { name: 'Các khoản đóng góp' })
+        .getByRole('listitem')
+        .filter({ hasText: 'Member D' })
+        .getByRole('button', { name: 'Xác nhận đã nhận TEST', exact: true })
+        .click();
+      const responseFor = (page) =>
+        page.waitForResponse(
+          (r) => r.request().method() === 'POST' && r.url().endsWith('/confirm-received'),
+        );
+      const responses = Promise.all([responseFor(holder), responseFor(secondHolder)]);
+      await Promise.all(
+        [holder, secondHolder].map((page) =>
+          page
+            .getByRole('button', {
+              name: 'Xác nhận · Xác nhận đã nhận TEST',
+              exact: true,
+            })
+            .click(),
+        ),
+      );
+      expect((await responses).map((r) => r.status()).sort()).toEqual([200, 409]);
+      for (const page of [holder, secondHolder]) {
+        await page.reload();
+        await expect(page.getByRole('region', { name: 'Trạng thái quỹ' })).toContainText(
+          '500.000 ₫',
+        );
+        await expect(
+          page.getByRole('region', { name: 'Lịch sử quỹ' }).getByRole('listitem'),
+        ).toHaveCount(2);
+      }
+      await secondContext.close();
       for (const page of [owner, holder, editor, member]) {
         await fund(page, tripId);
         await expect(page.getByRole('region', { name: 'Trạng thái quỹ' })).toContainText(
@@ -642,29 +821,23 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
           timeout: 45000,
         })
         .toBe(200);
-      await writeFile(
-        resolve(manifest.artifactDir, `${runtime}-business-proof.json`),
-        JSON.stringify(
-          {
-            at: new Date().toISOString(),
-            runId: manifest.runId,
-            tripId,
-            runtime,
-            balance: '500000',
-            ledgerEntries: 2,
-            fundState: 'OPEN',
-            actors: 5,
-            noBusinessSqlSeed: true,
-            rejectionReadAfterReload: true,
-            restart: true,
-          },
-          null,
-          2,
-        ),
-      );
+      businessProof = {
+        runId: manifest.runId,
+        tripId,
+        runtime,
+        balance: '500000',
+        ledgerEntries: 2,
+        fundState: 'OPEN',
+        actors: 5,
+        noBusinessSqlSeed: true,
+        rejectionReadAfterReload: true,
+        financeRequestAndHolderInboxReadAfterReload: true,
+        mockFlightObservationThroughWorker: true,
+        restart: true,
+      };
     });
     await test.step('responsive viewport and deferred module honesty', async () => {
-      for (const width of [320, 402, 768, 1366, 1440]) {
+      for (const width of [320, 402, 768, 820, 1366, 1440]) {
         await owner.setViewportSize({ width, height: 900 });
         await owner.goto(`/trips/${tripId}/fund`);
         await expect(owner.getByRole('region', { name: 'Trạng thái quỹ' })).toBeVisible();
@@ -681,7 +854,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
             path === 'packing'
               ? 'Chưa có hành lý đã lưu'
               : path === 'map'
-                ? 'Chuyến đi chưa có địa điểm'
+                ? 'Chuyến đi chưa có địa điểm đã lưu.'
                 : 'Chưa có hướng dẫn trang phục',
             { exact: true },
           ),
@@ -695,7 +868,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         document.documentElement.style.zoom = '2';
       });
       await owner.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
-      const drawer = owner.getByRole('dialog', { name: 'Chỉnh sửa lịch trình' });
+      const drawer = owner.getByRole('dialog', { name: 'Thêm hoạt động', exact: true });
       await expect(drawer.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
       await drawer.getByRole('button', { name: 'Lưu', exact: true }).scrollIntoViewIfNeeded();
       await expect(drawer.getByRole('button', { name: 'Lưu', exact: true })).toBeInViewport();
@@ -722,7 +895,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       const selfTripId = new URL(outsider.url()).pathname.split('/')[2];
       await fund(outsider, selfTripId);
       await outsider.getByRole('button', { name: 'Bật quỹ TEST', exact: true }).click();
-      const setup = outsider.getByRole('dialog', { name: 'Bật quỹ TEST', exact: true });
+      const setup = outsider.getByRole('form', { name: 'Bật quỹ TEST', exact: true });
       await setup
         .getByLabel('Người giữ quỹ (Holder)')
         .selectOption({ label: 'Outsider X updated' });
@@ -738,7 +911,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await confirmForm(outsider, 'Xác nhận đích nhận');
       await outsider.getByRole('button', { name: 'Sửa đích nhận', exact: true }).click();
       await outsider
-        .getByRole('dialog')
+        .getByRole('form', { name: 'Sửa đích nhận TEST', exact: true })
         .getByLabel('Tên người nhận TEST')
         .fill('SELF HOLDER TEST V2');
       await confirmForm(outsider, 'Sửa đích nhận TEST');
@@ -748,7 +921,10 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await outsider.getByRole('button', { name: 'Xác nhận đích nhận', exact: true }).click();
       await confirmForm(outsider, 'Xác nhận đích nhận');
       await outsider.getByRole('button', { name: 'Sửa ngân sách', exact: true }).click();
-      await outsider.getByRole('dialog').getByLabel('Ngân sách (VND)').fill('1000000');
+      await outsider
+        .getByRole('form', { name: 'Sửa ngân sách', exact: true })
+        .getByLabel('Ngân sách (VND)')
+        .fill('1000000');
       const budgetAttempts = [];
       await outsider.route('**/api/v1/funds/*/budget', async (route) => {
         budgetAttempts.push({
@@ -759,7 +935,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         return route.continue();
       });
       await outsider
-        .getByRole('dialog')
+        .getByRole('form', { name: 'Sửa ngân sách', exact: true })
         .getByRole('button', { name: 'Xác nhận · Sửa ngân sách', exact: true })
         .click();
       await expect(outsider.getByText(/Chưa xác nhận được kết quả/)).toBeVisible();
@@ -771,9 +947,12 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await outsider.unroute('**/api/v1/funds/*/budget');
       for (const action of ['Miễn khoản đóng', 'Hủy khoản đóng']) {
         await outsider.getByRole('button', { name: 'Tạo đợt thu', exact: true }).click();
-        await outsider.getByRole('dialog').getByLabel('Tên đợt thu').fill(action);
         await outsider
-          .getByRole('dialog')
+          .getByRole('form', { name: 'Tạo đợt thu', exact: true })
+          .getByLabel('Tên đợt thu')
+          .fill(action);
+        await outsider
+          .getByRole('form', { name: 'Tạo đợt thu', exact: true })
           .getByLabel('Khoản đóng · Outsider X updated')
           .fill('10000');
         await confirmForm(outsider, 'Tạo đợt thu');
@@ -783,7 +962,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
           .filter({ hasText: action });
         await request.getByRole('button', { name: 'Sửa đợt thu' }).click();
         await outsider
-          .getByRole('dialog')
+          .getByRole('form', { name: 'Sửa đợt thu', exact: true })
           .getByLabel('Ghi chú đợt thu')
           .fill('Metadata is not money');
         await confirmForm(outsider, 'Sửa đợt thu');
@@ -792,14 +971,19 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
           .getByRole('listitem')
           .filter({ hasText: 'Chờ báo chuyển' });
         await pending.getByRole('button', { name: 'Sửa số tiền', exact: true }).click();
-        await outsider.getByRole('dialog').getByLabel('Số tiền mới (VND)').fill('20000');
+        await outsider
+          .getByRole('form', { name: 'Sửa số tiền', exact: true })
+          .getByLabel('Số tiền mới (VND)')
+          .fill('20000');
         await confirmForm(outsider, 'Sửa số tiền');
         await pending.getByRole('button', { name: action, exact: true }).click();
         await outsider
-          .getByRole('dialog')
+          .getByRole('form', { name: action, exact: true })
           .getByLabel('Lý do', { exact: true })
           .fill('Demo-only obligation resolved');
         await confirmForm(outsider, action);
+        // Deliberately open the next form without reload: the UI must wait for
+        // authoritative versions after the preceding successful command.
       }
       await outsider.reload();
       await expect(
@@ -849,6 +1033,37 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(outsider.getByRole('button', { name: 'Chấp nhận', exact: true })).toHaveCount(0);
       await context.close();
     });
+    await test.step('short-expiry invitation uses the public API contract and expires naturally in the live browser', async () => {
+      let expiresAt;
+      const routePattern = `**/api/v1/trips/${tripId}/invitations`;
+      // UI uses default seven days. Set only the existing optional API field;
+      // no fake response, database edits or machine-clock changes.
+      await owner.route(routePattern, async (route) => {
+        if (route.request().method() !== 'POST') return route.continue();
+        expiresAt = Date.now() + 10000;
+        await route.continue({
+          postData: JSON.stringify({
+            ...route.request().postDataJSON(),
+            expires_at: new Date(expiresAt).toISOString(),
+          }),
+        });
+      });
+      const link = await linkInvite(owner, tripId);
+      await owner.unroute(routePattern);
+      await outsider.goto(link);
+      await expect(outsider.getByRole('button', { name: 'Chấp nhận', exact: true })).toBeVisible();
+      await expect.poll(() => Date.now() >= expiresAt, { timeout: 15000 }).toBe(true);
+      await outsider.goto(link);
+      await expect(outsider.getByText('Đã hết hạn', { exact: true })).toBeVisible();
+      await expect(outsider.getByRole('button', { name: 'Chấp nhận', exact: true })).toHaveCount(0);
+      await outsider.goto('/admin');
+      await expect(
+        outsider.getByRole('heading', { name: 'Bạn không có quyền truy cập' }),
+      ).toBeVisible();
+      await expect(
+        outsider.getByRole('heading', { name: 'Chức năng quản trị chưa khả dụng' }),
+      ).toHaveCount(0);
+    });
     await test.step('same SPA account switch never shows another actor Create Trip draft', async () => {
       await owner.goto('/trips/new');
       await owner.evaluate(() => {
@@ -870,18 +1085,30 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       expect(await owner.evaluate(() => window.__demo1DocumentSentinel)).toBe('same-spa');
       await expect(owner.getByText('Owner private unsent draft', { exact: true })).toHaveCount(0);
     });
+    expect(
+      diagnostics.filter((entry) => entry.pageError),
+      'no unhandled browser errors',
+    ).toEqual([]);
+    await writeFile(
+      resolve(manifest.artifactDir, `${runtime}-business-proof.json`),
+      JSON.stringify(
+        { ...businessProof, at: new Date().toISOString(), scenarioPassed: true },
+        null,
+        2,
+      ),
+    );
   } catch (error) {
     for (const [role, page] of Object.entries(pages))
       if (!page.isClosed()) {
         // Never persist full DOM text: an open form may contain bank/account details.
         diagnostics.push({ role, path: new URL(page.url()).pathname });
       }
+    throw error;
+  } finally {
     await writeFile(
       resolve(manifest.artifactDir, runtime + '-diagnostics.json'),
       JSON.stringify(diagnostics, null, 2),
     );
-    throw error;
-  } finally {
     await Promise.allSettled(contexts.map((context) => context.close()));
   }
 });

@@ -31,7 +31,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm test
+      - run: pnpm test --maxWorkers=2
       - run: pnpm build
       - run: pnpm build:preview
       - name: Install Playwright Chromium
@@ -54,5 +54,35 @@ jobs:
         with:
           name: playwright-test-results-${{ github.run_attempt }}
           path: test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  built-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [fixture, gateway]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Build and test isolated bundle (fixture or HTTP mock, not live Backend)
+        run: node scripts/e2e-built.mjs ${{ matrix.mode }}
+      - name: Upload built browser evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: browser-built-${{ matrix.mode }}-${{ github.run_attempt }}
+          path: |
+            test-results/${{ matrix.mode }}-preview/
+            playwright-report/${{ matrix.mode }}-preview/
           if-no-files-found: ignore
           retention-days: 14

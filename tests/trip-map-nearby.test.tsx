@@ -85,11 +85,20 @@ describe('trip map nearby suggestions', () => {
     );
     const router = mountMap();
     try {
-      // Trip/Plan readiness and the real 300ms provider debounce precede the error.
-      // Observe those phases separately instead of spending one findBy timeout on all three.
       const list = await screen.findByRole('list');
       expect(within(list).getAllByRole('checkbox')).toHaveLength(6);
-      await waitFor(() => expect(searchGooglePlacesMock).toHaveBeenCalledOnce());
+      // Cancel the initial discovery and explicitly trigger the same empty-query
+      // search under a controlled debounce clock. Provider-error semantics must
+      // not depend on the host delivering a 300ms timer within waitFor's window.
+      const search = screen.getByRole('searchbox', { name: 'Tìm địa điểm' });
+      fireEvent.change(search, { target: { value: 'x' } });
+      searchGooglePlacesMock.mockClear();
+      vi.useFakeTimers();
+      fireEvent.change(search, { target: { value: '' } });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(300);
+      });
+      expect(searchGooglePlacesMock).toHaveBeenCalledOnce();
       await act(async () => {
         rejectProvider(new Error('Provider down'));
       });
@@ -103,6 +112,7 @@ describe('trip map nearby suggestions', () => {
       expect(window.localStorage.length).toBe(0);
     } finally {
       router.dispose();
+      vi.useRealTimers();
     }
   });
 

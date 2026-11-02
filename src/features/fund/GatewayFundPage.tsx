@@ -452,6 +452,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   const blocked =
     op.busy ||
     unresolved(op) ||
+    // A receipt settles the command before its invalidated projections finish
+    // loading. New forms must snapshot versions from the completed reads.
+    fundQuery.isFetching ||
+    destinations.isFetching ||
+    requests.isFetching ||
+    contributions.isFetching ||
+    membersQuery.isFetching ||
     trip.archivedAt !== null ||
     (fund !== null && fund.status !== 'OPEN');
   const rememberFormTrigger = () => {
