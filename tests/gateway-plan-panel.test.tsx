@@ -99,10 +99,33 @@ async function setup(options: { member?: boolean; archived?: boolean } = {}) {
   };
 }
 const item = (title: string) => within(screen.getByRole('listitem', { name: title }));
-const add = () => screen.getByRole('button', { name: 'Tạo hoạt động trên server' });
-const save = () => screen.getByRole('button', { name: 'Lưu trên server' });
+const add = () => screen.getByRole('button', { name: 'Thêm hoạt động' });
+const save = () => screen.getByRole('button', { name: 'Lưu' });
 
 describe('Gateway Plan controls', () => {
+  it('opens the approved centered activity dialog with every Gateway field and returns focus', async () => {
+    const { user } = await setup();
+    const trigger = add();
+    await user.click(trigger);
+    const dialog = screen.getByRole('dialog', { name: 'Thêm hoạt động' });
+    for (const label of [
+      'Tên hoạt động',
+      'Ngày bắt đầu hoặc ngày chưa có giờ',
+      'Giờ bắt đầu',
+      'Giờ kết thúc',
+      'Ngày kết thúc (nếu có giờ)',
+      'Địa điểm',
+      'Loại hoạt động',
+      'Mô tả',
+      'Mô tả công khai',
+    ]) {
+      expect(within(dialog).getByLabelText(label)).toBeInTheDocument();
+    }
+    expect(within(dialog).getByLabelText('Tên hoạt động')).toHaveFocus();
+    await user.click(within(dialog).getByRole('button', { name: 'Hủy chỉnh sửa' }));
+    expect(screen.queryByRole('dialog', { name: 'Thêm hoạt động' })).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
   it('reconciles an unknown create and retries the exact intent before closing the form', async () => {
     const { user, create, refresh, plan } = await setup();
     create.mockResolvedValueOnce({
@@ -141,9 +164,7 @@ describe('Gateway Plan controls', () => {
   });
   it('allows members to complete and reopen only their own completion', async () => {
     const { user, complete } = await setup({ member: true });
-    expect(
-      screen.queryByRole('button', { name: 'Tạo hoạt động trên server' }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Thêm hoạt động' })).not.toBeInTheDocument();
     expect(
       item('Their completed').queryByRole('button', { name: 'Mở lại' }),
     ).not.toBeInTheDocument();
@@ -161,24 +182,69 @@ describe('Gateway Plan controls', () => {
   it('makes archived trips read only even when snapshot permissions allow commands', async () => {
     await setup({ archived: true });
     expect(screen.queryByRole('button', { name: 'Hoàn tất' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Sửa trên server' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Sửa' })).not.toBeInTheDocument();
   });
   it('blocks empty create and preserves form input', async () => {
     const { user, create } = await setup();
     await user.click(add());
     await user.click(save());
     expect(create).not.toHaveBeenCalled();
-    expect(screen.getByRole('form', { name: 'Tạo hoạt động trên server' })).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: 'Thêm hoạt động' })).toBeInTheDocument();
   });
-  it('rejects a date without both times instead of inventing timestamps', async () => {
+  it('rejects a day outside the Trip even without times', async () => {
     const { user, create } = await setup();
     await user.click(add());
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Lunch');
-    fireEvent.change(screen.getByLabelText('Ngày có giờ trên server'), {
+    fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
       target: { value: '2026-10-01' },
     });
     await user.click(save());
     expect(create).not.toHaveBeenCalled();
+  });
+  it('saves a day-only activity with null timestamps', async () => {
+    const { user, create } = await setup();
+    await user.click(add());
+    await user.type(screen.getByLabelText('Tên hoạt động'), 'Lịch chưa giờ');
+    fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
+      target: { value: '2026-09-22' },
+    });
+    await user.click(save());
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activity: expect.objectContaining({
+          scheduledDate: '2026-09-22',
+          startsAt: null,
+          endsAt: null,
+        }),
+      }),
+    );
+  });
+  it('schedules a previously unscheduled activity overnight', async () => {
+    const { user, update } = await setup();
+    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa' }));
+    fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
+      target: { value: '2026-09-22' },
+    });
+    fireEvent.change(screen.getByLabelText('Ngày kết thúc (nếu có giờ)'), {
+      target: { value: '2026-09-23' },
+    });
+    fireEvent.change(screen.getByLabelText('Giờ bắt đầu'), {
+      target: { value: '23:00' },
+    });
+    fireEvent.change(screen.getByLabelText('Giờ kết thúc'), {
+      target: { value: '01:00' },
+    });
+    await user.click(save());
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activityId: 'todo',
+        fields: expect.objectContaining({
+          scheduledDate: null,
+          startsAt: '2026-09-22T16:00:00.000Z',
+          endsAt: '2026-09-22T18:00:00.000Z',
+        }),
+      }),
+    );
   });
   it('creates unscheduled activities and offers only server selected locations', async () => {
     const { user, create, plan, refresh } = await setup();
@@ -204,20 +270,22 @@ describe('Gateway Plan controls', () => {
   });
   it('blocks invalid edited title without sending a PATCH', async () => {
     const { user, update } = await setup();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa trên server' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa' }));
     await user.clear(screen.getByLabelText('Tên hoạt động'));
     await user.click(save());
     expect(update).not.toHaveBeenCalled();
-    expect(screen.getByLabelText('Ngày có giờ trên server')).toBeDisabled();
+    expect(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ')).toBeEnabled();
   });
   it('requires explicit delete confirmation and supports cancellation', async () => {
     const { user, remove } = await setup();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Xóa trên server' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Xóa' }));
     expect(remove).not.toHaveBeenCalled();
-    await user.click(screen.getByRole('button', { name: 'Hủy xóa' }));
+    await user.click(screen.getByRole('button', { name: 'Hủy' }));
     expect(remove).not.toHaveBeenCalled();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Xóa trên server' }));
-    await user.click(screen.getByRole('button', { name: 'Xác nhận xóa trên server' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Xóa' }));
+    await user.click(screen.getByRole('button', { name: 'Xác nhận xóa' }));
     expect(remove).toHaveBeenCalledTimes(1);
     expect(remove).toHaveBeenCalledWith(
       expect.objectContaining({ activityId: 'todo', expectedPlanVersion: 1 }),
@@ -225,8 +293,11 @@ describe('Gateway Plan controls', () => {
   });
   it('submits a complete reorder permutation and prevents boundary movement', async () => {
     const { user, reorder } = await setup();
-    expect(item('Todo activity').getByRole('button', { name: 'Đưa lên' })).toBeDisabled();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Đưa xuống' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    expect(await screen.findByRole('menuitem', { name: 'Đưa lên' })).toHaveAttribute(
+      'data-disabled',
+    );
+    await user.click(screen.getByRole('menuitem', { name: 'Đưa xuống' }));
     expect(reorder).toHaveBeenCalledWith(
       expect.objectContaining({ activityIds: ['mine', 'todo', 'theirs'] }),
     );
@@ -259,7 +330,7 @@ describe('Gateway Plan controls', () => {
       status: 'error',
       error: { code: 'VERSION_CONFLICT', retryable: false, correlationId: 'conflict-trace' },
     });
-    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa trên server' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa' }));
     await user.clear(screen.getByLabelText('Tên hoạt động'));
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Keep my edit');
     await user.click(save());

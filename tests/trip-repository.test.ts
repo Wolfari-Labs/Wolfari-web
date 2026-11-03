@@ -57,6 +57,24 @@ function gatewayTrip(overrides: Record<string, unknown> = {}) {
 }
 
 describe('Trip repository boundary', () => {
+  it.each([
+    { id: undefined },
+    { timezone: 'invalid/timezone' },
+    { plan_version: '1' },
+    { permissions: { can_read: 'false', can_update: true } },
+    { current_membership: { ...gatewayTrip().current_membership, trip_id: 'another' } },
+  ])('rejects malformed Trip without coercing permission or scope %#', async (override) => {
+    const client = createGatewayHttpClient({
+      transport: async () =>
+        new Response(
+          JSON.stringify({ data: gatewayTrip(override), meta: { correlation_id: 'invalid-test' } }),
+        ),
+    });
+    const repo = createGatewayTripRepository(undefined, undefined, client);
+    expect(await repo.getTrip({ ...request(), tripId: gatewayTrip().id })).toMatchObject({
+      status: 'error',
+    });
+  });
   it('PATCHes only supported dirty metadata with exact revisions and idempotency key', async () => {
     const source = fixtureTripCatalog[0]!;
     const transport = vi.fn<typeof fetch>().mockResolvedValue(

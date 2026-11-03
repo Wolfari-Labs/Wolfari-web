@@ -1,0 +1,275 @@
+<canvas id="95:85" name="Rebuild - Trip Overview" x="0" y="0" width="0" height="0">
+  <frame id="99:169" name="Tổng quan chuyến đi Wolfari" x="-721" y="-451" width="1440" height="900">
+    <instance id="99:170" name="Global Header" x="0" y="0" width="1440" height="68" />
+    <frame id="99:181" name="Không gian chuyến đi" x="0" y="68" width="1440" height="832">
+      <instance id="99:182" name="Trip Sidebar" x="0" y="0" width="212" height="832" />
+      <frame id="99:222" name="Nội dung tổng quan" x="212" y="0" width="1228" height="832">
+        <frame id="99:223" name="Điều hướng và thao tác" x="24" y="16" width="1180" height="39">
+          <instance id="99:224" name="Breadcrumb" x="0" y="0" width="296" height="39" />
+          <instance id="99:230" name="Button" x="1055" y="0" width="125" height="39" />
+        </frame>
+        <frame id="99:233" name="Hero chuyến đi" x="24" y="67" width="1180" height="160">
+          <rounded-rectangle id="99:234" name="ASSET / Ảnh bìa Đà Nẵng" x="0" y="0" width="420" height="160" />
+          <frame id="99:235" name="Giới thiệu chuyến đi" x="420" y="0" width="760" height="160">
+            <frame id="99:236" name="Trạng thái" x="24" y="20" width="83" height="22">
+              <text id="99:237" name="Nhãn trạng thái" x="10" y="5" width="63" height="12" />
+            </frame>
+            <text id="99:238" name="Tên chuyến đi" x="24" y="52" width="712" height="29" />
+            <text id="99:239" name="Mô tả" x="24" y="91" width="712" height="18" />
+            <frame id="99:240" name="Người tham gia" x="24" y="119" width="262" height="58">
+              <instance id="99:241" name="Avatar Group" x="0" y="0" width="148" height="58" />
+              <text id="99:246" name="Số người" x="158" y="21" width="104" height="16" />
+            </frame>
+          </frame>
+          <rounded-rectangle id="99:247" name="Trang trí" x="1080" y="70" width="120" height="120" />
+        </frame>
+        <frame id="99:248" name="Tóm tắt chuyến đi" x="24" y="239" width="1180" height="62">
+          <frame id="99:249" name="Thông tin tóm tắt" x="16" y="13" width="286.25" height="36">
+            <frame id="99:250" name="Icon" x="0" y="0" width="36" height="36">
+              <frame id="99:335" name="calendar" x="9" y="9" width="18" height="18" />
+            </frame>
+            <frame id="99:252" name="Nội dung" x="46" y="3" width="240.25" height="30">
+              <text id="99:253" name="Nhãn" x="0" y="0" width="44" height="12" />
+              <text id="99:254" name="Giá trị" x="0" y="14" width="141" height="16" />
+            </frame>
+          </frame>
+          <rounded-rectangle id="99:255" name="Phân cách" x="302.25" y="12" width="1" height="38" />
+          <frame id="99:256" name="Thông tin tóm tắt" x="303.25" y="13" width="286.25" height="36">
+            <frame id="99:257" name="Icon" x="0" y="0" width="36" height="36">
+              <frame id="99:338" name="map-pin" x="9" y="9" width="18" height="18" />
+            </frame>
+            <frame id="99:259" name="Nội dung" x="46" y="3" width="240.25" height="30">
+              <text id="99:260" name="Nhãn" x="0" y="0" width="45" height="12" />
+              <text id="99:261" name="Giá trị" x="0" y="14" width="118" height="16" />
+            </frame>
+          </frame>
+          <rounded-rectangle id="99:262" name="Phân cách" x="589.5" y="12" width="1" height="38" />
+          <frame id="99:263" name="Thông tin tóm tắt" x="590.5" y="13" width="286.25" height="36">
+            <frame id="99:264" name="Icon" x="0" y="0" width="36" height="36">
+              <frame id="99:341" name="wallet" x="9" y="9" width="18" height="18" />
+            </frame>
+            <frame id="99:266" name="Nội dung" x="46" y="3" width="240.25" height="30">
+              <text id="99:267" name="Nhãn" x="0" y="0" width="51" height="12" />
+              <text id="99:268" name="Giá trị" x="0" y="14" width="78" height="16" />
+            </frame>
+          </frame>
+          <rounded-rectangle id="99:269" name="Phân cách" x="876.75" y="12" width="1" height="38" />
+          <frame id="99:270" name="Thông tin tóm tắt" x="877.75" y="13" width="286.25" height="36">
+            <frame id="99:271" name="Icon" x="0" y="0" width="36" height="36">
+              <frame id="99:344" name="sun" x="9" y="9" width="18" height="18" />
+            </frame>
+            <frame id="99:273" name="Nội dung" x="46" y="3" width="240.25" height="30">
+              <text id="99:274" name="Nhãn" x="0" y="0" width="39" height="12" />
+              <text id="99:275" name="Giá trị" x="0" y="14" width="103" height="16" />
+            </frame>
+          </frame>
+        </frame>
+        <frame id="99:276" name="Bảng điều khiển" x="24" y="313" width="1180" height="503">
+          <frame id="99:277" name="Lịch trình" x="0" y="0" width="576" height="503">
+            <frame id="99:350" name="Lịch trình sắp tới" x="0" y="0" width="576" height="249">
+              <frame id="99:278" name="Tiêu đề lịch trình" x="16" y="16" width="544" height="17">
+                <text id="99:279" name="Tiêu đề" x="0" y="0" width="114" height="17" />
+                <text id="99:280" name="Xem tất cả" x="482" y="1" width="62" height="15" />
+              </frame>
+              <frame id="99:281" name="Ngày" x="16" y="45" width="544" height="46">
+                <frame id="99:282" name="Mốc ngày" x="0" y="0" width="42" height="46">
+                  <text id="99:283" name="Tháng" x="8.5" y="8.5" width="25" height="10" />
+                  <text id="99:284" name="Số ngày" x="10.5" y="18.5" width="21" height="19" />
+                </frame>
+                <frame id="99:285" name="Nội dung ngày" x="52" y="7" width="492" height="32">
+                  <text id="99:286" name="Tên hoạt động" x="0" y="0" width="125" height="15" />
+                  <text id="99:287" name="Thời gian" x="0" y="19" width="155" height="13" />
+                </frame>
+              </frame>
+              <rounded-rectangle id="99:288" name="Phân cách" x="16" y="103" width="544" height="1" />
+              <frame id="99:289" name="Ngày" x="16" y="116" width="544" height="46">
+                <frame id="99:290" name="Mốc ngày" x="0" y="0" width="42" height="46">
+                  <text id="99:291" name="Tháng" x="8.5" y="8.5" width="25" height="10" />
+                  <text id="99:292" name="Số ngày" x="10" y="18.5" width="22" height="19" />
+                </frame>
+                <frame id="99:293" name="Nội dung ngày" x="52" y="7" width="492" height="32">
+                  <text id="99:294" name="Tên hoạt động" x="0" y="0" width="130" height="15" />
+                  <text id="99:295" name="Thời gian" x="0" y="19" width="133" height="13" />
+                </frame>
+              </frame>
+              <rounded-rectangle id="99:351" name="Phân cách" x="16" y="174" width="544" height="1" />
+              <frame id="99:352" name="Ngày" x="16" y="187" width="544" height="46">
+                <frame id="99:353" name="Mốc ngày" x="0" y="0" width="42" height="46">
+                  <text id="99:354" name="THG 4" x="8.5" y="8.5" width="25" height="10" />
+                  <text id="99:355" name="07" x="11" y="18.5" width="20" height="19" />
+                </frame>
+                <frame id="99:356" name="Nội dung ngày" x="52" y="7" width="492" height="32">
+                  <text id="99:357" name="Checkin cầu Rồng &amp; biển Mỹ Khê" x="0" y="0" width="190" height="15" />
+                  <text id="99:358" name="09:00 · Bãi biển Mỹ Khê" x="0" y="19" width="124" height="13" />
+                </frame>
+              </frame>
+            </frame>
+            <frame id="99:359" name="Lịch trình chi tiết" x="0" y="261" width="576" height="242">
+              <frame id="99:360" name="Header" x="16" y="16" width="544" height="44">
+                <text id="99:361" name="Chi tiết lịch trình" x="0" y="13.5" width="113" height="17" />
+                <instance id="99:362" name="Segment Control" x="339" y="0" width="205" height="44" />
+              </frame>
+              <frame id="99:369" name="Ngày 1 header" x="16" y="72" width="544" height="21">
+                <frame id="99:370" name="Day badge" x="0" y="0" width="52" height="21">
+                  <text id="99:371" name="Ngày 1" x="8" y="4" width="36" height="13" />
+                </frame>
+                <text id="99:372" name="05/04 · Thứ Bảy" x="60" y="3" width="91" height="15" />
+              </frame>
+              <frame id="99:373" name="Activity row" x="16" y="105" width="544" height="46">
+                <frame id="99:374" name="Time" x="0" y="16.5" width="38" height="13">
+                  <text id="99:375" name="06:00" x="2.5" y="0" width="33" height="13" />
+                </frame>
+                <frame id="99:376" name="Detail" x="48" y="0" width="496" height="46">
+                  <text id="99:377" name="Bay đến Đà Nẵng" x="10" y="8" width="99" height="15" />
+                  <text id="99:378" name="VN123 · Sân bay Đà Nẵng" x="10" y="25" width="134" height="13" />
+                </frame>
+              </frame>
+              <frame id="99:379" name="Activity row" x="16" y="163" width="544" height="46">
+                <frame id="99:380" name="Time" x="0" y="16.5" width="38" height="13">
+                  <text id="99:381" name="11:30" x="4.5" y="0" width="29" height="13" />
+                </frame>
+                <frame id="99:382" name="Detail" x="48" y="0" width="496" height="46">
+                  <text id="99:383" name="Check-in khách sạn" x="10" y="8" width="115" height="15" />
+                  <text id="99:384" name="Mường Thanh Luxury Đà Nẵng" x="10" y="25" width="159" height="13" />
+                </frame>
+              </frame>
+              <frame id="99:385" name="Ngày 2 header" x="16" y="221" width="544" height="21">
+                <frame id="99:386" name="Day badge" x="0" y="0" width="54" height="21">
+                  <text id="99:387" name="Ngày 2" x="8" y="4" width="38" height="13" />
+                </frame>
+                <text id="99:388" name="06/04 · Chủ Nhật" x="62" y="3" width="98" height="15" />
+              </frame>
+              <frame id="99:389" name="Activity row" x="16" y="254" width="544" height="46">
+                <frame id="99:390" name="Time" x="0" y="16.5" width="38" height="13">
+                  <text id="99:391" name="08:00" x="2.5" y="0" width="33" height="13" />
+                </frame>
+                <frame id="99:392" name="Detail" x="48" y="0" width="496" height="46">
+                  <text id="99:393" name="Bà Nà Hills - Cầu Vàng" x="10" y="8" width="129" height="15" />
+                  <text id="99:394" name="Cáp treo · Tham quan 4h" x="10" y="25" width="129" height="13" />
+                </frame>
+              </frame>
+            </frame>
+          </frame>
+          <frame id="99:395" name="Bản đồ khu vực" x="588" y="0" width="280" height="503">
+            <frame id="99:396" name="Map header" x="0" y="0" width="280" height="31">
+              <text id="99:397" name="Bản đồ &amp; Địa điểm" x="14" y="14" width="123" height="17" />
+              <text id="99:398" name="Mở rộng" x="218" y="15" width="48" height="15" />
+            </frame>
+            <rounded-rectangle id="99:399" name="ASSET / Map Đà Nẵng" x="0" y="41" width="280" height="381" />
+            <frame id="99:400" name="Map legend" x="0" y="432" width="280" height="71">
+              <frame id="99:401" name="Pin row" x="12" y="8" width="159" height="13">
+                <ellipse id="99:402" name="Ellipse" x="0" y="1.5" width="10" height="10" />
+                <text id="99:403" name="Cầu Rồng - Điểm đến chính" x="16" y="0" width="143" height="13" />
+              </frame>
+              <frame id="99:404" name="Pin row" x="12" y="27" width="72" height="13">
+                <ellipse id="99:405" name="Ellipse" x="0" y="1.5" width="10" height="10" />
+                <text id="99:406" name="Bà Nà Hills" x="16" y="0" width="56" height="13" />
+              </frame>
+              <frame id="99:407" name="Pin row" x="12" y="46" width="100" height="13">
+                <ellipse id="99:408" name="Ellipse" x="0" y="1.5" width="10" height="10" />
+                <text id="99:409" name="Bãi biển Mỹ Khê" x="16" y="0" width="84" height="13" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="99:410" name="Cột phải" x="880" y="0" width="300" height="503">
+            <frame id="99:296" name="Ngân sách chuyến đi" x="0" y="0" width="300" height="224">
+              <text id="99:297" name="Tiêu đề" x="16" y="16" width="154" height="17" />
+              <frame id="99:298" name="Tổng chi" x="16" y="43" width="120" height="52">
+                <text id="99:299" name="Nhãn" x="0" y="0" width="50" height="12" />
+                <text id="99:300" name="Số tiền" x="0" y="14" width="120" height="24" />
+                <text id="99:301" name="Tỷ lệ" x="0" y="40" width="118" height="12" />
+              </frame>
+              <instance id="99:302" name="Progress Bar" x="16" y="105" width="268" height="36" />
+              <frame id="99:306" name="Chú giải" x="16" y="151" width="268" height="12">
+                <text id="99:307" name="Mục" x="0" y="0" width="76" height="12" />
+                <text id="99:308" name="Mục" x="205" y="0" width="63" height="12" />
+              </frame>
+              <frame id="99:309" name="Gợi ý" x="16" y="173" width="268" height="35">
+                <text id="99:310" name="Biểu tượng" x="10" y="10" width="14" height="14" />
+                <text id="99:311" name="Nội dung" x="30" y="10" width="228" height="15" />
+              </frame>
+            </frame>
+            <frame id="99:411" name="Theo dõi giá vé" x="0" y="236" width="300" height="198">
+              <frame id="99:412" name="Header" x="16" y="16" width="268" height="27">
+                <text id="99:413" name="Theo dõi giá vé" x="0" y="5" width="104" height="17" />
+                <instance id="99:414" name="Badge" x="198" y="0" width="70" height="27" />
+              </frame>
+              <frame id="99:419" name="Flight row" x="16" y="53" width="268" height="48">
+                <frame id="99:420" name="Airline icon" x="10" y="8" width="32" height="32">
+                  <text id="99:421" name="✈" x="8" y="8" width="16" height="16" />
+                </frame>
+                <frame id="99:422" name="Flight info" x="50" y="9" width="123" height="30">
+                  <text id="99:423" name="HCM → Đà Nẵng" x="0" y="0" width="96" height="15" />
+                  <text id="99:424" name="Vietnam Airlines · 05/04" x="0" y="17" width="125" height="13" />
+                </frame>
+                <frame id="99:425" name="Price" x="181" y="9.5" width="77" height="29">
+                  <text id="99:426" name="1.250.000 ₫" x="0" y="0" width="77" height="16" />
+                  <text id="99:427" name="/ người" x="0" y="17" width="33" height="12" />
+                </frame>
+              </frame>
+              <frame id="99:428" name="Bus row" x="16" y="111" width="268" height="48">
+                <frame id="99:429" name="Bus icon" x="10" y="8" width="32" height="32">
+                  <text id="99:430" name="🚌" x="8" y="8" width="16" height="16" />
+                </frame>
+                <frame id="99:431" name="Bus info" x="50" y="9" width="133" height="30">
+                  <text id="99:432" name="Xe khách Phương Trang" x="0" y="0" width="139" height="15" />
+                  <text id="99:433" name="Đêm 04/04 · 22:00" x="0" y="17" width="99" height="13" />
+                </frame>
+                <frame id="99:434" name="Price" x="191" y="9.5" width="67" height="29">
+                  <text id="99:435" name="280.000 ₫" x="0" y="0" width="67" height="16" />
+                  <text id="99:436" name="/ người" x="0" y="17" width="33" height="12" />
+                </frame>
+              </frame>
+              <text id="99:437" name="+ Thêm vé cần theo dõi" x="16" y="169" width="125" height="13" />
+            </frame>
+            <frame id="99:312" name="Việc cần làm" x="0" y="446" width="300" height="202">
+              <frame id="99:313" name="Tiêu đề" x="16" y="16" width="268" height="20">
+                <text id="99:314" name="Tiêu đề" x="0" y="1.5" width="88" height="17" />
+                <frame id="99:315" name="Số lượng" x="237" y="0" width="31" height="20">
+                  <text id="99:316" name="Giá trị" x="7" y="4" width="17" height="12" />
+                </frame>
+              </frame>
+              <frame id="99:317" name="Công việc" x="16" y="46" width="268" height="28">
+                <ellipse id="99:318" name="Trạng thái" x="0" y="6" width="16" height="16" />
+                <frame id="99:319" name="Chi tiết" x="24" y="0" width="244" height="28">
+                  <text id="99:320" name="Tên công việc" x="0" y="0" width="244" height="15" />
+                  <text id="99:321" name="Thời hạn" x="0" y="16" width="69" height="12" />
+                </frame>
+              </frame>
+              <frame id="99:322" name="Công việc" x="16" y="84" width="268" height="28">
+                <ellipse id="99:323" name="Trạng thái" x="0" y="6" width="16" height="16" />
+                <frame id="99:324" name="Chi tiết" x="24" y="0" width="244" height="28">
+                  <text id="99:325" name="Tên công việc" x="0" y="0" width="244" height="15" />
+                  <text id="99:326" name="Thời hạn" x="0" y="16" width="84" height="12" />
+                </frame>
+              </frame>
+              <frame id="99:327" name="Công việc" x="16" y="122" width="268" height="28">
+                <ellipse id="99:328" name="Trạng thái" x="0" y="6" width="16" height="16" />
+                <frame id="99:329" name="Chi tiết" x="24" y="0" width="244" height="28">
+                  <text id="99:330" name="Tên công việc" x="0" y="0" width="244" height="15" />
+                  <text id="99:331" name="Thời hạn" x="0" y="16" width="85" height="12" />
+                </frame>
+              </frame>
+              <rounded-rectangle id="99:332" name="Phân cách" x="16" y="160" width="268" height="1" />
+              <text id="99:333" name="Thêm công việc" x="16" y="171" width="132" height="15" />
+            </frame>
+            <frame id="99:438" name="Mascot banner" x="0" y="660" width="300" height="129">
+              <frame id="99:439" name="Mascot row" x="14" y="14" width="272" height="64">
+                <frame id="99:440" name="ASSET / Mascot / Wolfari" x="0" y="0" width="64" height="64">
+                  <rounded-rectangle id="99:441" name="Rectangle" x="0" y="0" width="64" height="64" />
+                </frame>
+                <frame id="99:442" name="Frame" x="74" y="7.5" width="198" height="49">
+                  <text id="99:443" name="Wolfari gợi ý cho bạn" x="0" y="0" width="123" height="15" />
+                  <text id="99:444" name="Đừng quên thoa kem chống nắng - Đà Nẵng nắng to lắm đấy! ☀️" x="0" y="19" width="198" height="30" />
+                </frame>
+              </frame>
+              <frame id="99:445" name="Quote banner" x="14" y="86" width="272" height="29">
+                <text id="99:446" name="&quot;Cùng bạn đi xa hơn - Wolfari đồng hành!&quot;" x="25" y="8" width="222" height="13" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+</canvas>

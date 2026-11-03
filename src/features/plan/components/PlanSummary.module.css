@@ -26,7 +26,7 @@
   min-height: 64px;
 }
 .summary time {
-  color: var(--color-active);
+  color: var(--color-action-primary);
   font-size: 13px;
 }
 .summary li span {
@@ -71,7 +71,7 @@
 }
 .days button[aria-pressed='true'] {
   color: white;
-  background: #079fc5;
+  background: var(--color-action-primary);
 }
 @media (max-width: 768px) {
   .summary li {

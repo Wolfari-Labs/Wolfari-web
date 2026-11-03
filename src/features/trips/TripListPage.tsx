@@ -12,7 +12,9 @@ import { TripCard } from './components/TripCard';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
+import { Icon } from '../../shared/components/Icon';
 import { ContentState } from '../../shared/components/ContentState';
+import { Alert } from '../../shared/components/Alert';
 import { uiAssets } from '../../shared/assets/asset-map';
 import roleIcon from '../../shared/assets/figma/2fa29.svg';
 import timeIcon from '../../shared/assets/figma/40d4c.svg';
@@ -58,7 +60,9 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
   };
   const readError = query.isError && !query.data ? queryError(query.error) : null;
   const nextPageError = query.isFetchNextPageError ? queryError(query.error) : null;
+  const refreshError = query.isRefetchError && query.data ? queryError(query.error) : null;
   const readSucceeded = !!query.data;
+  const morePages = !!query.hasNextPage;
   return (
     <section className={styles.page} aria-label="Danh sách chuyến đi">
       <div className={styles.pageArt} aria-hidden="true">
@@ -96,36 +100,39 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
               leadingIcon={<img src={uiAssets.search} alt="" />}
             />
           </div>
-          <div className={styles.unavailableFilters}>
-            <button
-              disabled
-              title="Lọc vai trò chưa có interaction contract"
-              aria-describedby="trip-filter-capability-note"
-            >
-              <img src={roleIcon} alt="" />
-              Vai trò: Tất cả<span aria-hidden="true">⌄</span>
-            </button>
-            <button
-              disabled
-              title="Lọc thời gian chưa có interaction contract"
-              aria-describedby="trip-filter-capability-note"
-            >
-              <img src={timeIcon} alt="" />
-              Thời gian<span aria-hidden="true">⌄</span>
-            </button>
-            <button
-              disabled
-              title="Bộ lọc nâng cao chưa có interaction contract"
-              aria-describedby="trip-filter-capability-note"
-            >
-              <img src={filterIcon} alt="" />
-              Bộ lọc
-            </button>
-            <span id="trip-filter-capability-note" className={styles.srOnly}>
-              Bộ lọc vai trò, thời gian và nâng cao sẽ chỉ xuất hiện khi Gateway cung cấp dữ liệu
-              tương ứng.
-            </span>
-          </div>
+          {previewEnabled && (
+            <div className={styles.unavailableFilters}>
+              <button
+                disabled
+                title="Lọc theo vai trò chưa khả dụng"
+                aria-describedby="trip-filter-capability-note"
+              >
+                <img src={roleIcon} alt="" />
+                Vai trò: Tất cả
+                <Icon name="chevron" size={16} />
+              </button>
+              <button
+                disabled
+                title="Lọc theo thời gian chưa khả dụng"
+                aria-describedby="trip-filter-capability-note"
+              >
+                <img src={timeIcon} alt="" />
+                Thời gian
+                <Icon name="chevron" size={16} />
+              </button>
+              <button
+                disabled
+                title="Bộ lọc nâng cao chưa khả dụng"
+                aria-describedby="trip-filter-capability-note"
+              >
+                <img src={filterIcon} alt="" />
+                Bộ lọc
+              </button>
+              <span id="trip-filter-capability-note" className={styles.srOnly}>
+                Các bộ lọc này hiện chưa khả dụng.
+              </span>
+            </div>
+          )}
         </div>
         <div className={styles.toolbar}>
           <div className={styles.statuses} role="group" aria-label="Trạng thái chuyến đi">
@@ -161,6 +168,25 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
             </Select>
           </div>
         </div>
+        {readSucceeded && morePages && (
+          <p className={styles.loadedNotice} role="status">
+            Đã tải {counts.ALL} chuyến đi có thể xem. Tìm kiếm, trạng thái và sắp xếp chỉ áp dụng
+            cho các chuyến đi đã tải; có thể còn chuyến đi khác.
+          </p>
+        )}
+        {refreshError && (
+          <div className={styles.refreshError}>
+            <Alert tone="error">
+              Không thể làm mới danh sách. Các chuyến đi bên dưới là dữ liệu đã tải trước đó.
+              {refreshError.correlationId && ` Mã đối chiếu: ${refreshError.correlationId}.`}
+            </Alert>
+            {refreshError.retryable && (
+              <Button variant="outline" onClick={retry}>
+                Tải lại danh sách
+              </Button>
+            )}
+          </div>
+        )}
         {query.isPending ? (
           <ContentState state="loading" headingLevel={2} />
         ) : readError ? (
@@ -176,11 +202,21 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
           />
         ) : visible.length === 0 ? (
           <section className={styles.empty} role="status">
-            <h2>{counts.ALL === 0 ? 'Chưa có chuyến đi' : 'Không có chuyến đi phù hợp'}</h2>
-            <p>
+            <h2>
               {counts.ALL === 0
-                ? 'Những hành trình bạn có quyền xem sẽ xuất hiện tại đây.'
-                : 'Thử một tên hoặc trạng thái khác để tìm hành trình của bạn.'}
+                ? morePages
+                  ? 'Chưa có chuyến đi trong phần đã tải'
+                  : 'Chưa có chuyến đi'
+                : morePages
+                  ? 'Không có chuyến đi phù hợp trong phần đã tải'
+                  : 'Không có chuyến đi phù hợp'}
+            </h2>
+            <p>
+              {morePages
+                ? 'Tải thêm chuyến đi để kiểm tra các trang còn lại hoặc thay đổi bộ lọc.'
+                : counts.ALL === 0
+                  ? 'Những hành trình bạn có quyền xem sẽ xuất hiện tại đây.'
+                  : 'Thử một tên hoặc trạng thái khác để tìm hành trình của bạn.'}
             </p>
             {(filter.name !== '' || filter.status !== 'ALL' || filter.sort !== 'listed') && (
               <Button variant="outline" onClick={() => setFilter(initialTripFilter)}>

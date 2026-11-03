@@ -1,98 +1,68 @@
-import { useLayoutEffect, useRef, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
+import { Dialog } from 'radix-ui';
+import { Icon } from './Icon';
 import styles from './Drawer.module.css';
-
 export function Drawer({
   open,
   label,
   onDismiss,
   side = 'left',
   className = '',
+  initialFocusRef,
+  returnFocusRef,
+  showHeader = true,
   children,
 }: {
   open: boolean;
   label: string;
   onDismiss: () => void;
-  side?: 'left' | 'right';
+  side?: 'left' | 'right' | 'center';
   className?: string;
+  initialFocusRef?: RefObject<HTMLElement | null>;
+  returnFocusRef?: RefObject<HTMLElement | null>;
+  showHeader?: boolean;
   children: ReactNode;
 }) {
-  const ref = useRef<HTMLDialogElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
   useLayoutEffect(() => {
-    const dialog = ref.current;
-    if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    if (!open && dialog.open) dialog.close();
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    const previousOverflowX = document.body.style.overflowX;
-    const previousDocumentOverflowX = document.documentElement.style.overflowX;
-    document.body.style.overflow = 'hidden'; // Modal scroll lock; drawer content remains scrollable.
-    document.body.style.overflowX = 'hidden';
-    document.documentElement.style.overflowX = 'hidden';
-    return () => {
-      document.body.style.overflow = previous;
-      document.body.style.overflowX = previousOverflowX;
-      document.documentElement.style.overflowX = previousDocumentOverflowX;
-    };
+    if (open) returnFocus.current = document.activeElement as HTMLElement;
   }, [open]);
   return (
-    <dialog
-      ref={ref}
-      hidden={!open}
-      className={`${styles.drawer} ${side === 'right' ? styles.right : ''} ${className}`}
-      aria-label={label}
-      onCancel={(event) => {
-        event.preventDefault();
-        onDismiss();
-      }}
-      onKeyDown={(event) => {
-        if (event.key !== 'Tab') return;
-        const elements = Array.from(
-          event.currentTarget.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-          ),
-        ).filter((element) => element.getClientRects().length > 0);
-        const first = elements[0],
-          last = elements.at(-1);
-        if (!first || !last) {
-          event.preventDefault();
-          event.currentTarget.focus();
-          return;
-        }
-        if (
-          event.shiftKey &&
-          (document.activeElement === first ||
-            !event.currentTarget.contains(document.activeElement))
-        ) {
-          event.preventDefault();
-          last.focus();
-        } else if (
-          !event.shiftKey &&
-          (document.activeElement === last || !event.currentTarget.contains(document.activeElement))
-        ) {
-          event.preventDefault();
-          first.focus();
-        }
-      }}
-      onClick={(event) => {
-        if (event.target !== event.currentTarget) return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        if (
-          event.clientX < bounds.left ||
-          event.clientX > bounds.right ||
-          event.clientY < bounds.top ||
-          event.clientY > bounds.bottom
-        )
-          onDismiss();
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onDismiss();
       }}
     >
-      <div className={styles.heading}>
-        <span>{label}</span>
-        <button autoFocus onClick={onDismiss} aria-label={'Đóng ' + label.toLocaleLowerCase('vi')}>
-          Đóng
-        </button>
-      </div>
-      <div className={styles.content}>{children}</div>
-    </dialog>
+      <Dialog.Portal>
+        <Dialog.Overlay className={styles.backdrop} />
+        <Dialog.Content
+          aria-describedby={undefined}
+          className={`${styles.drawer} ${side === 'center' ? styles.center : side === 'right' ? styles.right : ''} ${className}`}
+          onOpenAutoFocus={(event) => {
+            if (initialFocusRef?.current) {
+              event.preventDefault();
+              initialFocusRef.current.focus();
+            }
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            const destination = returnFocusRef?.current ?? returnFocus.current;
+            if (document.activeElement?.id !== 'main-content' && destination?.isConnected)
+              destination.focus();
+          }}
+        >
+          <div className={showHeader ? styles.heading : styles.hiddenHeading}>
+            <Dialog.Title className={styles.title}>{label}</Dialog.Title>
+            {showHeader && (
+              <Dialog.Close aria-label={'Đóng ' + label.toLocaleLowerCase('vi')}>
+                <Icon name="close" />
+              </Dialog.Close>
+            )}
+          </div>
+          <div className={styles.content}>{children}</div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

@@ -1,5 +1,15 @@
 import { test, expect, login, avatarPng } from './gateway-fixture';
 
+async function expectOnlySessionBoundary(page: Parameters<typeof login>[0]) {
+  const values = await page.evaluate(() => ({
+    local: { ...localStorage },
+    session: { ...sessionStorage },
+  }));
+  expect(Object.keys(values.local)).toEqual(['wolfari:session-boundary:v1']);
+  expect(values.local['wolfari:session-boundary:v1']).toMatch(/^[0-9a-f-]{36}$/);
+  expect(values.session).toEqual({}); // No access token, CSRF, cookie or credential payload.
+}
+
 test('login, profile save, private avatar replacement and paginated session revoke', async ({
   page,
   gateway,
@@ -34,7 +44,7 @@ test('login, profile save, private avatar replacement and paginated session revo
   await page.getByRole('button', { name: 'Thu hồi phiên' }).first().click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Đăng xuất', exact: true })).toBeEnabled();
-  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+  await expectOnlySessionBoundary(page);
 });
 
 test('profile conflict retains draft and uses refreshed version only on explicit retry', async ({
@@ -95,7 +105,7 @@ test('password change rejects bad credentials, then clears the session on succes
     gateway.calls.filter((call) => call.path.endsWith('/password-change')).at(-1)?.body,
   ).toEqual({ current_password: ' old password ', new_password: ' new password long ' });
   await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
-  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+  await expectOnlySessionBoundary(page);
   // Stay in the same SPA instance: a reload would hide leaked in-memory caches.
   gateway.profile = {
     ...gateway.profile,
@@ -107,7 +117,7 @@ test('password change rejects bad credentials, then clears the session on succes
   await page.getByLabel('Email', { exact: true }).fill('second@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill(' second password long ');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
-  await page.getByRole('link', { name: 'Hồ sơ cá nhân · Second Account' }).click();
+  await page.getByRole('link', { name: /Hồ sơ cá nhân/ }).click();
   await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Second Account');
   await expect(page.getByLabel('Email', { exact: true })).toHaveValue('second@example.com');
   await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
@@ -147,8 +157,8 @@ test('reset rejects a missing token locally and an expired token without clearin
 }) => {
   gateway.authenticated = true;
   await page.goto('/reset-password');
-  await page.getByRole('button', { name: 'Đặt lại mật khẩu' }).click();
   await expect(page.getByRole('alert')).toContainText('không có mã token');
+  await expect(page.getByRole('button', { name: 'Đặt lại mật khẩu' })).toBeDisabled();
   expect(gateway.calls.filter((call) => call.path.endsWith('/password-resets'))).toHaveLength(0);
   gateway.failures.set('POST /api/v1/auth/password-resets', 400);
   await page.goto('/reset-password?token=expired-reset');
@@ -227,7 +237,7 @@ test('password recovery uses a generic notice, reset token is scrubbed and login
     token: 'e2e-reset-token',
     new_password: ' new password long ',
   });
-  expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
+  await expectOnlySessionBoundary(page);
 });
 
 for (const status of [400, 429, 503]) {
@@ -260,7 +270,7 @@ test('registration accepted does not authenticate and runtime pending is truthfu
   await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill(' new password long ');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-  await expect(page.getByText('Đang gửi yêu cầu tới Identity…')).toBeVisible();
+  await expect(page.getByText('Đang xử lý…')).toBeVisible();
   await expect(page.getByText(/Không có request đang gửi/)).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Tạo tài khoản' })).toBeDisabled();
   release();

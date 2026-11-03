@@ -2,7 +2,7 @@
 :root {
   --color-white: #fff;
   --color-ink: #06458b;
-  --color-muted: #6c8bb2;
+  --color-muted: #4f7093;
   --color-line: #cdebf7;
   --color-selected: #e8f7fa;
   --color-blue: #0089c7;
@@ -13,37 +13,37 @@
   --color-active: #079fc5;
   --color-field-line: #bae4f4;
   --color-note: #ecf9fd;
-  --color-note-text: #5980ae;
+  --color-note-text: #4f7093;
   --color-text-muted-on-light: #4f7093;
-  --color-action-primary: #007caa;
+  --color-action-primary: #006b92;
   --color-border-control: #6daac0;
   --color-status-warning: #8a6500;
   --color-status-warning-surface: #fff7df;
   --color-status-danger: #a34b4b;
   --color-status-danger-surface: #fff0f0;
-  --color-gradient-start: #008ac4;
-  --color-gradient-end: #008eaa;
+  --color-gradient-start: #007caa;
+  --color-gradient-end: #007a8d;
   --action-gradient: linear-gradient(
     to right,
     var(--color-gradient-start),
     var(--color-gradient-end)
   );
   --ios-ink: #21343b;
-  --ios-muted: #64747c;
+  --ios-muted: var(--color-control-disabled-text);
   --ios-teal: #317c89;
-  --ios-secondary: #edf2f3;
+  --ios-secondary: var(--color-control-disabled-surface);
   --ios-background: #f5f7f8;
   --ios-line: #dce4e7;
   --ios-pressed: #245f6a;
-  --ios-error: #955c49;
+  --ios-error: var(--color-field-error);
   --ios-mint: #e8f2ef;
   --ios-amber: #f8f3e8;
   --ios-peach: #f8e4d8;
   --font-body: 'Be Vietnam Pro', sans-serif;
   --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
-  --font-handwritten: 'Caveat', cursive;
+  --font-handwritten: 'Patrick Hand', 'Be Vietnam Pro', cursive;
   --font-size-small: 13px;
-  --font-size-label: 15px;
+  --font-size-label: 14px;
   --font-size-body: 16px;
   --font-size-card-title: 20px;
   --font-size-title: 24px;
@@ -74,11 +74,21 @@
   --radius-10: 10px;
   --radius-12: 12px;
   --radius-16: 16px;
-  --radius-button: 18px;
+  --radius-button: 12px;
+  --radius-6: 6px;
+  --radius-control: 12px;
+  --radius-card: 16px;
+  --radius-dialog: 24px;
+  --color-border: var(--color-line);
+  --color-primary: var(--color-action-primary);
+  --color-surface: var(--color-white);
+  --color-text: var(--color-ink);
   --radius-20: 20px;
   --radius-24: 24px;
   --radius-pill: 999px;
   --shadow-soft: 0 8px 24px rgb(5 69 140 / 10%);
+  --shadow-raised: 0 12px 32px rgb(5 69 140 / 13%), 0 2px 6px rgb(5 69 140 / 5%);
+  --shadow-overlay: 0 24px 80px rgb(5 34 61 / 22%);
   --shadow-mobile-surface: 0 4px 16px rgb(23 59 77 / 4.3%);
   --shadow-selection: 0 1px 5px rgb(31 51 61 / 8%);
   --shadow-header: 0 2px 10px rgb(10 87 138 / 5%);
@@ -87,7 +97,7 @@
   --target-min: 44px;
   --target-drawer: 48px;
   --control-height: 44px;
-  --control-height-mobile: 52px;
+  --control-height-mobile: 48px;
   --header-height: 76px;
   --header-height-mobile: 54px;
   --sidebar-width: 220px;
@@ -99,6 +109,26 @@
   --focus-width: 3px;
   --focus-offset: 4px;
   --motion-duration: 150ms;
+  /* Web semantic roles; preserve legacy aliases and their existing values. */
+  --color-field-error: #955c49;
+  --color-control-disabled-text: #64747c;
+  --color-control-disabled-surface: #edf2f3;
+  --field-surface: var(--color-surface);
+  --field-text: var(--color-text);
+  --field-border-default: var(--color-field-line);
+  --card-padding: var(--space-24);
+  --card-padding-narrow: var(--space-16);
+  --card-surface: var(--color-surface);
+  /* Existing timings, not the unapproved CP02 motion proposals. */
+  --motion-control: 160ms;
+  --motion-control-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-spinner: 800ms;
+  --motion-drawer-enter: 260ms;
+  --motion-overlay-exit: 180ms;
+  --motion-backdrop: 180ms;
+  --motion-menu-enter: 160ms;
+  --motion-menu-exit: 120ms;
+  --motion-dialog-enter: 220ms;
   /* CSS media queries require literals; keep these aligned with breakpoints.ts. */
   --breakpoint-mobile: 768px;
   --breakpoint-narrow: 360px;

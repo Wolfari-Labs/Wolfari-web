@@ -61,11 +61,10 @@ test('HTTP mock: anonymous deep link scrubs token, returns through login, accept
 }) => {
   await page.goto(`/invitations/local#token=${invitationToken}`);
   await expect(page).toHaveURL(/\/invitations\/local$/);
-  await expect(page.getByRole('link', { name: 'Đăng nhập' })).toHaveAttribute(
-    'href',
-    '/login?returnTo=%2Finvitations',
-  );
-  await page.getByRole('link', { name: 'Đăng nhập' }).click();
+  await expect(
+    page.getByRole('main').getByRole('link', { name: 'Đăng nhập', exact: true }),
+  ).toHaveAttribute('href', '/login?returnTo=%2Finvitations');
+  await page.getByRole('main').getByRole('link', { name: 'Đăng nhập', exact: true }).click();
   await page.getByLabel('Email', { exact: true }).fill('guest@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill('password for gateway');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();

@@ -61,7 +61,9 @@ function activityType(location: SelectedLocationViewModel) {
 function fromActivity(activity: ActivityViewModel, timezone: string): PlanDraftActivity {
   return {
     ...activity,
-    scheduledDate: activity.startsAt ? localDate(activity.startsAt, timezone) : null,
+    scheduledDate: activity.startsAt
+      ? localDate(activity.startsAt, timezone)
+      : (activity.scheduledDate ?? null),
     origin: 'PLAN',
     clientOnly: false,
   };
@@ -321,6 +323,15 @@ export function localTimeToIso(day: string, time: string, timezone: string) {
     );
     instant = new Date(instant.getTime() + wanted - observed);
   }
+  const actual = timezoneParts(instant, timezone);
+  if (
+    actual.year !== year ||
+    actual.month !== month ||
+    actual.day !== date ||
+    actual.hour !== hour ||
+    actual.minute !== minute
+  )
+    throw new Error('Ngày/giờ không tồn tại trong múi giờ của chuyến đi.');
   return instant.toISOString();
 }
 

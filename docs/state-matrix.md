@@ -1,5 +1,30 @@
 # Wolfari Web — UI State Matrix
 
+## State Gateway demo1 hiện hành — 28/10/2026
+
+Thay thế các trạng thái phase cũ phía dưới; [validation](demo-1-web-validation.md) quyết định kết quả nghiệm thu, [integration matrix](gateway-integration-matrix.md) ghi contract.
+
+| Bề mặt | Pending/error/unknown | Recovery và dữ liệu |
+| --- | --- | --- |
+| Session | Unsupported browser/storage: fail closed; logout lỗi không báo revoked | Web Locks + epoch, token memory; stale response không phục hồi account cũ |
+| Create Trip | Validation giữ input; gửi lặp disabled; timeout không phải failed chắc chắn | Snapshot/key immutable theo actor qua reload; retry đúng request |
+| Overview | Loading/error riêng Trip/Plan/members/Fund | Không đọc được số tiền ≠0; một page ≠total |
+| Plan timeline/drawer | Permission/version chặn;409 giữ form | Nút đối chiếu ở trong drawer; ack version mới; không tự apply; completion quyền riêng |
+| Members/policy | Trang tiếp lỗi giữ rows/cursor; policy conflict giữ draft | GET receipt/current policy; assignments non-selected inert; không bịa name/email |
+| Fund read |403/503/invalid contract khác404 authorized absence | Refetch server; CLOSING/CLOSED readonly; int64 string chính xác |
+| Finance/membership command |202=PROCESSING; timeout/503=unknown; drawer đóng không hủy server | Journal actor-scoped; immutable key/body/version; poll backoff/limit; kiểm tra lại |
+| PENDING_RECOVERY/NEEDS_REVIEW | Không giải phóng guard để tạo lệnh mới | Theo operator runbook, không sửa ledger bằng SQL; sau SUCCEEDED refetch |
+| Finance success | Operation có thể không trả resource ID | Replay cùng request lấy receipt nếu cần; chỉ confirm tăng ledger |
+| Destination sensitive intent | Không lưu bank payload trong sessionStorage | Sau reload poll/refetch; nếu replay cần nhập lại đúng fingerprint |
+| Map/Dress/Packing Gateway | Loading/empty/forbidden/error thật | Read-only; không local-only success; fixture preview có nhãn riêng |
+
+HTTP giữ status/correlation/meta đã kiểm định, bao gồm `export_revision`; không biến response malformed thành empty hoặc quyền hợp lệ. Correlation ID ở chi tiết hỗ trợ, copy lỗi chính tiếng Việt có hướng xử lý.
+
+## State vocabulary và evidence lịch sử
+
+Các phần dưới giữ nguyên ngày/phase để truy vết; Create Trip “unavailable” và production boundary cũ đã được thay bằng bảng demo1 trên. Số test cũ không được cộng vào bằng chứng snapshot hiện tại.
+
+
 ## State vocabulary
 
 ### Projection screens triển khai 18/10/2026

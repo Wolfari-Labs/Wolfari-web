@@ -101,6 +101,10 @@ export function App({
       paths.invitations,
       '/invitations/local',
     ].includes(policyPath);
+  // This authenticated screen owns its Trip read guard. Keep it mounted after a
+  // successful leave: the actor can still poll their operation even though Trip
+  // reads now return 404. No Trip data is exposed by bypassing shell chrome.
+  const membershipRecoveryRoute = !!sessionManager && handle?.section === 'members';
   const shellQueryEnabled = !privateSessionBlocked && !standaloneAuthRoute;
   const query = useShell(tripId ?? null, scenario, shellQueryEnabled);
   const result = query.data;
@@ -289,15 +293,17 @@ export function App({
           </Button>
         </Alert>
       )}
-      {!handle?.notFound && (!ownContentTitle || !snapshot || denied) && (
-        <h1 className="screen-title">{title}</h1>
-      )}
+      {!handle?.notFound &&
+        !membershipRecoveryRoute &&
+        (!ownContentTitle || (!snapshot && !!requiresViewer) || denied) && (
+          <h1 className="screen-title">{title}</h1>
+        )}
       {!ownContentTitle && previewControls}
       {handle?.notFound ? (
         <Outlet context={routeContext} />
       ) : privateSessionBlocked ? (
         <ContentState state="loading" headingLevel={2} />
-      ) : standaloneAuthRoute ? (
+      ) : standaloneAuthRoute || membershipRecoveryRoute ? (
         <Outlet context={routeContext} />
       ) : query.isPending ? (
         <ContentState state="loading" headingLevel={2} />

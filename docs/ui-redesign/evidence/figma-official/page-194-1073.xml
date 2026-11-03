@@ -1,0 +1,2273 @@
+<canvas id="194:1073" name="Wolfari · Admin" x="0" y="0" width="0" height="0">
+  <frame id="194:1084" name="Wolfari/Admin Nav Item" x="0" y="3380" width="424" height="44">
+    <symbol id="194:1074" name="State=Default" x="0" y="0" width="204" height="44" />
+    <symbol id="194:1079" name="State=Active" x="220" y="0" width="204" height="44" />
+  </frame>
+  <symbol id="194:1085" name="Wolfari/Admin Topbar" x="460" y="3380" width="1192" height="72" />
+  <frame id="194:1093" name="A01 · Admin — Tổng quan" x="0" y="0" width="1440" height="960">
+    <frame id="197:1073" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="197:1074" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="197:1075" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="197:1076" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="197:1078" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="197:1079" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="197:1080" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="197:1081" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="197:1082" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="197:1083" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="197:1088" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="197:1093" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="197:1098" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="197:1103" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="197:1108" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="197:1113" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="197:1114" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="197:1115" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="197:1117" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="197:1118" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="197:1119" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="197:1120" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="197:1128" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="197:1129" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="197:1130" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="197:1131" name="Tổng quan hệ thống" x="0" y="0" width="235" height="32" />
+            <text id="197:1132" name="Theo dõi tài khoản, provider, tác vụ nền và trạng thái vận hành của Wolfari." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="197:1133" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="197:1134" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="197:1135" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1136" name="Admin permission boundary" x="28" y="94" width="1136" height="52">
+          <ellipse id="197:1137" name="Ellipse" x="17" y="14" width="24" height="24" />
+          <text id="197:1138" name="!" x="51" y="15" width="5" height="22" />
+          <text id="197:1139" name="Quyền Admin chỉ áp dụng ở cấp hệ thống; không mặc nhiên có quyền Owner và không được thao tác Finance thay người dùng." x="66" y="16" width="1030" height="20" />
+        </frame>
+        <frame id="197:1140" name="Metrics row" x="28" y="158" width="1136" height="112">
+          <frame id="197:1141" name="Metric / Tài khoản" x="0" y="0" width="272" height="98">
+            <text id="197:1142" name="Tài khoản" x="17" y="11" width="62" height="20" />
+            <text id="197:1143" name="1.248" x="17" y="33" width="67" height="32" />
+            <text id="197:1144" name="1.226 đang hoạt động" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1145" name="Metric / Provider hoạt động" x="288" y="0" width="272" height="98">
+            <text id="197:1146" name="Provider hoạt động" x="17" y="11" width="123" height="20" />
+            <text id="197:1147" name="5/6" x="17" y="33" width="45" height="32" />
+            <text id="197:1148" name="1 provider đang suy giảm" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1149" name="Metric / Job đang chạy" x="576" y="0" width="272" height="98">
+            <text id="197:1150" name="Job đang chạy" x="17" y="11" width="94" height="20" />
+            <text id="197:1151" name="12" x="17" y="33" width="26" height="32" />
+            <text id="197:1152" name="3 job đang chờ" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1153" name="Metric / Lỗi 24 giờ" x="864" y="0" width="272" height="98">
+            <text id="197:1154" name="Lỗi 24 giờ" x="17" y="11" width="64" height="20" />
+            <text id="197:1155" name="7" x="17" y="33" width="15" height="32" />
+            <text id="197:1156" name="2 lỗi cần xem lại" x="17" y="67" width="238" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1215" name="Two column row" x="28" y="282" width="1136" height="274">
+          <frame id="197:1157" name="Card / Sức khỏe dịch vụ" x="0" y="0" width="552" height="274">
+            <text id="197:1158" name="Sức khỏe dịch vụ" x="17" y="16" width="168" height="28" />
+            <frame id="197:1159" name="Health row" x="17" y="48" width="520" height="30">
+              <text id="197:1160" name="API Gateway" x="0" y="5" width="83" height="20" />
+              <frame id="197:1161" name="Status / Ổn định" x="438" y="0" width="82" height="30">
+                <ellipse id="197:1162" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1163" name="Ổn định" x="23" y="5" width="49" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1164" name="Health row" x="17" y="82" width="520" height="30">
+              <text id="197:1165" name="Identity" x="0" y="5" width="49" height="20" />
+              <frame id="197:1166" name="Status / Ổn định" x="438" y="0" width="82" height="30">
+                <ellipse id="197:1167" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1168" name="Ổn định" x="23" y="5" width="49" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1169" name="Health row" x="17" y="116" width="520" height="30">
+              <text id="197:1170" name="Trip Workspace" x="0" y="5" width="100" height="20" />
+              <frame id="197:1171" name="Status / Ổn định" x="438" y="0" width="82" height="30">
+                <ellipse id="197:1172" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1173" name="Ổn định" x="23" y="5" width="49" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1174" name="Health row" x="17" y="150" width="520" height="30">
+              <text id="197:1175" name="Finance" x="0" y="5" width="51" height="20" />
+              <frame id="197:1176" name="Status / Ổn định" x="438" y="0" width="82" height="30">
+                <ellipse id="197:1177" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1178" name="Ổn định" x="23" y="5" width="49" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1179" name="Health row" x="17" y="184" width="520" height="30">
+              <text id="197:1180" name="Notification" x="0" y="5" width="77" height="20" />
+              <frame id="197:1181" name="Status / Chậm" x="449" y="0" width="71" height="30">
+                <ellipse id="197:1182" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1183" name="Chậm" x="23" y="5" width="38" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1184" name="Health row" x="17" y="218" width="520" height="30">
+              <text id="197:1185" name="Export" x="0" y="5" width="43" height="20" />
+              <frame id="197:1186" name="Status / Ổn định" x="438" y="0" width="82" height="30">
+                <ellipse id="197:1187" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1188" name="Ổn định" x="23" y="5" width="49" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1189" name="Card / Sử dụng API ngoài" x="568" y="0" width="568" height="274">
+            <text id="197:1190" name="Sử dụng API ngoài" x="17" y="16" width="180" height="28" />
+            <frame id="197:1191" name="Progress / Map / Places" x="17" y="48" width="534" height="44">
+              <frame id="197:1192" name="Progress label" x="0" y="0" width="534" height="20">
+                <text id="197:1193" name="Map / Places" x="0" y="0" width="83" height="20" />
+                <text id="197:1194" name="62%" x="505" y="0" width="29" height="20" />
+              </frame>
+              <frame id="197:1195" name="Track" x="0" y="25" width="534" height="6">
+                <rounded-rectangle id="197:1196" name="Fill" x="0" y="0" width="331.0799865722656" height="6" />
+              </frame>
+            </frame>
+            <frame id="197:1197" name="Progress / Route" x="17" y="96" width="534" height="44">
+              <frame id="197:1198" name="Progress label" x="0" y="0" width="534" height="20">
+                <text id="197:1199" name="Route" x="0" y="0" width="37" height="20" />
+                <text id="197:1200" name="44%" x="504" y="0" width="30" height="20" />
+              </frame>
+              <frame id="197:1201" name="Track" x="0" y="25" width="534" height="6">
+                <rounded-rectangle id="197:1202" name="Fill" x="0" y="0" width="234.9600067138672" height="6" />
+              </frame>
+            </frame>
+            <frame id="197:1203" name="Progress / Weather" x="17" y="144" width="534" height="44">
+              <frame id="197:1204" name="Progress label" x="0" y="0" width="534" height="20">
+                <text id="197:1205" name="Weather" x="0" y="0" width="55" height="20" />
+                <text id="197:1206" name="71%" x="509" y="0" width="25" height="20" />
+              </frame>
+              <frame id="197:1207" name="Track" x="0" y="25" width="534" height="6">
+                <rounded-rectangle id="197:1208" name="Fill" x="0" y="0" width="379.1400146484375" height="6" />
+              </frame>
+            </frame>
+            <frame id="197:1209" name="Progress / Price" x="17" y="192" width="534" height="44">
+              <frame id="197:1210" name="Progress label" x="0" y="0" width="534" height="20">
+                <text id="197:1211" name="Price" x="0" y="0" width="33" height="20" />
+                <text id="197:1212" name="38%" x="506" y="0" width="28" height="20" />
+              </frame>
+              <frame id="197:1213" name="Track" x="0" y="25" width="534" height="6">
+                <rounded-rectangle id="197:1214" name="Fill" x="0" y="0" width="202.9199981689453" height="6" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+        <frame id="197:1258" name="Two column row" x="28" y="568" width="1136" height="258">
+          <frame id="197:1216" name="Card / Tác vụ nền gần đây" x="0" y="0" width="678" height="258">
+            <text id="197:1217" name="Tác vụ nền gần đây" x="17" y="16" width="192" height="28" />
+            <frame id="197:1218" name="Admin table" x="17" y="56" width="644" height="188">
+              <frame id="197:1219" name="Table header" x="0" y="0" width="644" height="44">
+                <frame id="197:1220" name="Cell" x="1" y="0" width="330" height="44">
+                  <text id="197:1221" name="Job" x="10" y="12" width="310" height="20" />
+                </frame>
+                <frame id="197:1222" name="Cell" x="331" y="0" width="160" height="44">
+                  <text id="197:1223" name="Trạng thái" x="10" y="12" width="140" height="20" />
+                </frame>
+                <frame id="197:1224" name="Cell" x="491" y="0" width="150" height="44">
+                  <text id="197:1225" name="Lần chạy" x="10" y="12" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1226" name="Table row" x="0" y="44" width="644" height="48">
+                <frame id="197:1227" name="Cell" x="1" y="0" width="330" height="48">
+                  <text id="197:1228" name="price-watch:DAD-SGN" x="10" y="14" width="310" height="20" />
+                </frame>
+                <frame id="197:1229" name="Cell" x="331" y="0" width="160" height="48">
+                  <frame id="197:1230" name="Status / Đang chạy" x="10" y="9" width="102" height="30">
+                    <ellipse id="197:1231" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1232" name="Đang chạy" x="23" y="5" width="69" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1233" name="Cell" x="491" y="0" width="150" height="48">
+                  <text id="197:1234" name="20:12" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1235" name="Table row" x="0" y="92" width="644" height="48">
+                <frame id="197:1236" name="Cell" x="1" y="0" width="330" height="48">
+                  <text id="197:1237" name="notification-reminder" x="10" y="14" width="310" height="20" />
+                </frame>
+                <frame id="197:1238" name="Cell" x="331" y="0" width="160" height="48">
+                  <frame id="197:1239" name="Status / Hoàn tất" x="10" y="9" width="89" height="30">
+                    <ellipse id="197:1240" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1241" name="Hoàn tất" x="23" y="5" width="56" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1242" name="Cell" x="491" y="0" width="150" height="48">
+                  <text id="197:1243" name="20:08" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1244" name="Table row" x="0" y="140" width="644" height="48">
+                <frame id="197:1245" name="Cell" x="1" y="0" width="330" height="48">
+                  <text id="197:1246" name="export:trip-3N2Đ" x="10" y="14" width="310" height="20" />
+                </frame>
+                <frame id="197:1247" name="Cell" x="331" y="0" width="160" height="48">
+                  <frame id="197:1248" name="Status / Hoàn tất" x="10" y="9" width="89" height="30">
+                    <ellipse id="197:1249" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1250" name="Hoàn tất" x="23" y="5" width="56" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1251" name="Cell" x="491" y="0" width="150" height="48">
+                  <text id="197:1252" name="19:54" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1253" name="Card / Sự kiện quản trị" x="694" y="0" width="442" height="258">
+            <text id="197:1254" name="Sự kiện quản trị" x="17" y="16" width="154" height="28" />
+            <text id="197:1255" name="20:10 · Admin mở khóa tài khoản user***@mail.com" x="17" y="56" width="406" height="20" />
+            <text id="197:1256" name="19:48 · Cập nhật quota Weather provider" x="17" y="88" width="406" height="20" />
+            <text id="197:1257" name="18:32 · Retry job Notification thất bại" x="17" y="120" width="406" height="20" />
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="194:1094" name="A02 · Admin — Tài khoản" x="1540" y="0" width="1440" height="960">
+    <frame id="197:1259" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="197:1260" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="197:1261" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="197:1262" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="197:1264" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="197:1265" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="197:1266" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="197:1267" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="197:1268" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="197:1269" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="197:1274" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="197:1279" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="197:1284" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="197:1289" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="197:1294" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="197:1299" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="197:1300" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="197:1301" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="197:1303" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="197:1304" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="197:1305" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="197:1306" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="197:1314" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="197:1315" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="197:1316" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="197:1317" name="Quản lý tài khoản" x="0" y="0" width="209" height="32" />
+            <text id="197:1318" name="Xem trạng thái tài khoản và thực hiện khóa/mở khóa ở phạm vi hệ thống." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="197:1319" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="197:1320" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="197:1321" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1322" name="Account metrics" x="28" y="94" width="1136" height="112">
+          <frame id="197:1323" name="Metric / Đang hoạt động" x="0" y="0" width="272" height="98">
+            <text id="197:1324" name="Đang hoạt động" x="17" y="11" width="104" height="20" />
+            <text id="197:1325" name="1.226" x="17" y="33" width="66" height="32" />
+            <text id="197:1326" name="+18 trong 7 ngày" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1327" name="Metric / Đã khóa" x="288" y="0" width="272" height="98">
+            <text id="197:1328" name="Đã khóa" x="17" y="11" width="54" height="20" />
+            <text id="197:1329" name="22" x="17" y="33" width="32" height="32" />
+            <text id="197:1330" name="4 tài khoản tuần này" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1331" name="Metric / Admin" x="576" y="0" width="272" height="98">
+            <text id="197:1332" name="Admin" x="17" y="11" width="41" height="20" />
+            <text id="197:1333" name="3" x="17" y="33" width="17" height="32" />
+            <text id="197:1334" name="Quyền hệ thống" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1335" name="Account policy" x="864" y="0" width="272" height="112">
+            <text id="197:1336" name="Lưu ý phân quyền" x="17" y="15" width="129" height="22" />
+            <text id="197:1337" name="Không gán vai trò Owner/Member tại đây." x="17" y="41" width="240" height="40" />
+          </frame>
+        </frame>
+        <frame id="197:1338" name="Card / Danh sách tài khoản" x="28" y="218" width="1136" height="640">
+          <text id="197:1339" name="Danh sách tài khoản" x="17" y="16" width="203" height="28" />
+          <frame id="206:1271" name="Admin/Account tabs" x="17" y="52" width="1104" height="38">
+            <frame id="206:1272" name="Tab / Tài khoản" x="0" y="6.5" width="83" height="25">
+              <frame id="206:1273" name="Tab content" x="0" y="0" width="83" height="18">
+                <frame id="206:1274" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="206:1278" name="Tài khoản" x="25" y="1.5" width="58" height="15" />
+              </frame>
+              <rounded-rectangle id="206:1279" name="Underline" x="0" y="23" width="83" height="2" />
+            </frame>
+            <frame id="206:1280" name="Tab / Đã khóa" x="107" y="6.5" width="75" height="25">
+              <frame id="206:1281" name="Tab content" x="0" y="0" width="75" height="18">
+                <frame id="206:1282" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="206:1285" name="Đã khóa" x="25" y="1.5" width="50" height="15" />
+              </frame>
+              <rounded-rectangle id="206:1286" name="Underline" x="0" y="23" width="75" height="2" />
+            </frame>
+            <frame id="206:1287" name="Tab / Quản trị viên" x="206" y="6.5" width="101" height="25">
+              <frame id="206:1288" name="Tab content" x="0" y="0" width="101" height="18">
+                <frame id="206:1289" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="206:1292" name="Quản trị viên" x="25" y="1.5" width="76" height="15" />
+              </frame>
+              <rounded-rectangle id="206:1293" name="Underline" x="0" y="23" width="101" height="2" />
+            </frame>
+            <frame id="206:1294" name="Tab / Lịch sử" x="331" y="6.5" width="67" height="25">
+              <frame id="206:1295" name="Tab content" x="0" y="0" width="67" height="18">
+                <frame id="206:1296" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="206:1299" name="Lịch sử" x="25" y="1.5" width="42" height="15" />
+              </frame>
+              <rounded-rectangle id="206:1300" name="Underline" x="0" y="23" width="67" height="2" />
+            </frame>
+          </frame>
+          <frame id="197:1340" name="Account toolbar" x="17" y="98" width="1104" height="48">
+            <frame id="197:1341" name="Search" x="0" y="4" width="430" height="40">
+              <text id="197:1342" name="Tìm theo email hoặc tên hiển thị..." x="13" y="10" width="213" height="20" />
+            </frame>
+            <frame id="197:1343" name="Filters" x="674" y="4" width="430" height="40">
+              <frame id="197:1344" name="Admin button / Trạng thái: Tất cả" x="0" y="0" width="138" height="36">
+                <text id="197:1345" name="Trạng thái: Tất cả" x="13" y="8" width="112" height="20" />
+              </frame>
+              <frame id="197:1346" name="Admin button / Vai trò hệ thống" x="146" y="0" width="127" height="36">
+                <text id="197:1347" name="Vai trò hệ thống" x="13" y="8" width="101" height="20" />
+              </frame>
+              <frame id="197:1348" name="Admin button / Làm mới" x="281" y="0" width="81" height="36">
+                <text id="197:1349" name="Làm mới" x="13" y="8" width="55" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1350" name="Admin table" x="17" y="154" width="1102" height="332">
+            <frame id="197:1351" name="Table header" x="0" y="0" width="1102" height="44">
+              <frame id="197:1352" name="Cell" x="1" y="0" width="180" height="44">
+                <text id="197:1353" name="Người dùng" x="10" y="12" width="160" height="20" />
+              </frame>
+              <frame id="197:1354" name="Cell" x="181" y="0" width="205" height="44">
+                <text id="197:1355" name="Email" x="10" y="12" width="185" height="20" />
+              </frame>
+              <frame id="197:1356" name="Cell" x="386" y="0" width="95" height="44">
+                <text id="197:1357" name="Vai trò" x="10" y="12" width="75" height="20" />
+              </frame>
+              <frame id="197:1358" name="Cell" x="481" y="0" width="130" height="44">
+                <text id="197:1359" name="Trạng thái" x="10" y="12" width="110" height="20" />
+              </frame>
+              <frame id="197:1360" name="Cell" x="611" y="0" width="170" height="44">
+                <text id="197:1361" name="Đăng nhập gần nhất" x="10" y="12" width="150" height="20" />
+              </frame>
+              <frame id="197:1362" name="Cell" x="781" y="0" width="250" height="44">
+                <text id="197:1363" name="Thao tác" x="10" y="12" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1364" name="Table row" x="0" y="44" width="1102" height="48">
+              <frame id="197:1365" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="197:1366" name="Nguyễn Minh Anh" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="197:1367" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="197:1368" name="minh***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="197:1369" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="197:1370" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="197:1371" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="197:1372" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="197:1373" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:1374" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1375" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="197:1376" name="30/09 19:42" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="197:1377" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="197:1378" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1379" name="Table row" x="0" y="92" width="1102" height="48">
+              <frame id="197:1380" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="197:1381" name="Trần Ngọc Linh" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="197:1382" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="197:1383" name="linh***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="197:1384" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="197:1385" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="197:1386" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="197:1387" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="197:1388" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:1389" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1390" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="197:1391" name="30/09 18:15" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="197:1392" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="197:1393" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1394" name="Table row" x="0" y="140" width="1102" height="48">
+              <frame id="197:1395" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="197:1396" name="Hoàng Gia Huy" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="197:1397" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="197:1398" name="huy***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="197:1399" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="197:1400" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="197:1401" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="197:1402" name="Status / Đã khóa" x="10" y="9" width="87" height="30">
+                  <ellipse id="197:1403" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:1404" name="Đã khóa" x="23" y="5" width="54" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1405" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="197:1406" name="27/09 10:03" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="197:1407" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="197:1408" name="Xem · Mở khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1409" name="Table row" x="0" y="188" width="1102" height="48">
+              <frame id="197:1410" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="197:1411" name="Lê Bảo Trâm" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="197:1412" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="197:1413" name="tram***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="197:1414" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="197:1415" name="Admin" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="197:1416" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="197:1417" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="197:1418" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:1419" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1420" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="197:1421" name="30/09 20:01" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="197:1422" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="197:1423" name="Xem" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1424" name="Table row" x="0" y="236" width="1102" height="48">
+              <frame id="197:1425" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="197:1426" name="Phạm Quốc Bảo" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="197:1427" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="197:1428" name="bao***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="197:1429" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="197:1430" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="197:1431" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="197:1432" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="197:1433" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:1434" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1435" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="197:1436" name="29/09 22:20" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="197:1437" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="197:1438" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1439" name="Table row" x="0" y="284" width="1102" height="48">
+              <frame id="197:1440" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="197:1441" name="Vũ Thu Hà" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="197:1442" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="197:1443" name="ha***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="197:1444" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="197:1445" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="197:1446" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="197:1447" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="197:1448" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:1449" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1450" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="197:1451" name="29/09 20:11" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="197:1452" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="197:1453" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="194:1095" name="A03 · Admin — Tích hợp &amp; Provider" x="0" y="1060" width="1440" height="960">
+    <frame id="197:1454" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="197:1455" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="197:1456" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="197:1457" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="197:1459" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="197:1460" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="197:1461" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="197:1462" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="197:1463" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="197:1464" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="197:1469" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="197:1474" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="197:1479" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="197:1484" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="197:1489" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="197:1494" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="197:1495" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="197:1496" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="197:1498" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="197:1499" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="197:1500" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="197:1501" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="197:1509" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="197:1510" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="197:1511" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="197:1512" name="Tích hợp &amp; Provider" x="0" y="0" width="236" height="32" />
+            <text id="197:1513" name="Theo dõi trạng thái, quota và cấu hình các nguồn dữ liệu bên ngoài." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="197:1514" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="197:1515" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="197:1516" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1517" name="Admin permission boundary" x="28" y="94" width="1136" height="52">
+          <ellipse id="197:1518" name="Ellipse" x="17" y="14" width="24" height="24" />
+          <text id="197:1519" name="!" x="51" y="15" width="5" height="22" />
+          <text id="197:1520" name="Credential và API key không hiển thị trực tiếp trên client; cấu hình nhạy cảm phải được quản lý ở server hoặc secret manager." x="66" y="16" width="1030" height="20" />
+        </frame>
+        <frame id="197:1521" name="Provider grid 1" x="28" y="158" width="1136" height="222">
+          <frame id="197:1522" name="Provider / Map / Places" x="0" y="0" width="360" height="222">
+            <frame id="197:1523" name="Provider heading" x="17" y="16" width="328" height="32">
+              <text id="197:1524" name="Map / Places" x="0" y="2" width="131" height="28" />
+              <frame id="197:1525" name="Status / Hoạt động" x="227" y="1" width="101" height="30">
+                <ellipse id="197:1526" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1527" name="Hoạt động" x="23" y="5" width="68" height="20" />
+              </frame>
+            </frame>
+            <text id="197:1528" name="Quota &amp; mức sử dụng" x="17" y="58" width="136" height="20" />
+            <frame id="197:1529" name="Progress / Đã sử dụng" x="17" y="88" width="326" height="44">
+              <frame id="197:1530" name="Progress label" x="0" y="0" width="326" height="20">
+                <text id="197:1531" name="Đã sử dụng" x="0" y="0" width="71" height="20" />
+                <text id="197:1532" name="62%" x="297" y="0" width="29" height="20" />
+              </frame>
+              <frame id="197:1533" name="Track" x="0" y="25" width="326" height="6">
+                <rounded-rectangle id="197:1534" name="Fill" x="0" y="0" width="202.1199951171875" height="6" />
+              </frame>
+            </frame>
+            <text id="197:1535" name="Cập nhật 20:05 · 30/09/2026" x="17" y="142" width="320" height="20" />
+            <frame id="197:1536" name="Provider actions" x="17" y="172" width="328" height="34">
+              <frame id="197:1537" name="Admin button / Cấu hình" x="0" y="0" width="82" height="36">
+                <text id="197:1538" name="Cấu hình" x="13" y="8" width="56" height="20" />
+              </frame>
+              <frame id="197:1539" name="Admin button / Tạm dừng" x="90" y="0" width="89" height="36">
+                <text id="197:1540" name="Tạm dừng" x="13" y="8" width="63" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1541" name="Provider / Route" x="374" y="0" width="360" height="222">
+            <frame id="197:1542" name="Provider heading" x="17" y="16" width="328" height="32">
+              <text id="197:1543" name="Route" x="0" y="2" width="59" height="28" />
+              <frame id="197:1544" name="Status / Hoạt động" x="227" y="1" width="101" height="30">
+                <ellipse id="197:1545" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1546" name="Hoạt động" x="23" y="5" width="68" height="20" />
+              </frame>
+            </frame>
+            <text id="197:1547" name="Quota &amp; mức sử dụng" x="17" y="58" width="136" height="20" />
+            <frame id="197:1548" name="Progress / Đã sử dụng" x="17" y="88" width="326" height="44">
+              <frame id="197:1549" name="Progress label" x="0" y="0" width="326" height="20">
+                <text id="197:1550" name="Đã sử dụng" x="0" y="0" width="71" height="20" />
+                <text id="197:1551" name="44%" x="296" y="0" width="30" height="20" />
+              </frame>
+              <frame id="197:1552" name="Track" x="0" y="25" width="326" height="6">
+                <rounded-rectangle id="197:1553" name="Fill" x="0" y="0" width="143.44000244140625" height="6" />
+              </frame>
+            </frame>
+            <text id="197:1554" name="Cập nhật 20:04 · 30/09/2026" x="17" y="142" width="320" height="20" />
+            <frame id="197:1555" name="Provider actions" x="17" y="172" width="328" height="34">
+              <frame id="197:1556" name="Admin button / Cấu hình" x="0" y="0" width="82" height="36">
+                <text id="197:1557" name="Cấu hình" x="13" y="8" width="56" height="20" />
+              </frame>
+              <frame id="197:1558" name="Admin button / Tạm dừng" x="90" y="0" width="89" height="36">
+                <text id="197:1559" name="Tạm dừng" x="13" y="8" width="63" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1560" name="Provider / Weather" x="748" y="0" width="360" height="222">
+            <frame id="197:1561" name="Provider heading" x="17" y="16" width="328" height="32">
+              <text id="197:1562" name="Weather" x="0" y="2" width="86" height="28" />
+              <frame id="197:1563" name="Status / Suy giảm" x="236" y="1" width="92" height="30">
+                <ellipse id="197:1564" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1565" name="Suy giảm" x="23" y="5" width="59" height="20" />
+              </frame>
+            </frame>
+            <text id="197:1566" name="Quota &amp; mức sử dụng" x="17" y="58" width="136" height="20" />
+            <frame id="197:1567" name="Progress / Đã sử dụng" x="17" y="88" width="326" height="44">
+              <frame id="197:1568" name="Progress label" x="0" y="0" width="326" height="20">
+                <text id="197:1569" name="Đã sử dụng" x="0" y="0" width="71" height="20" />
+                <text id="197:1570" name="71%" x="301" y="0" width="25" height="20" />
+              </frame>
+              <frame id="197:1571" name="Track" x="0" y="25" width="326" height="6">
+                <rounded-rectangle id="197:1572" name="Fill" x="0" y="0" width="231.4600067138672" height="6" />
+              </frame>
+            </frame>
+            <text id="197:1573" name="Lần lỗi gần nhất: 19:57" x="17" y="142" width="320" height="20" />
+            <frame id="197:1574" name="Provider actions" x="17" y="172" width="328" height="34">
+              <frame id="197:1575" name="Admin button / Cấu hình" x="0" y="0" width="82" height="36">
+                <text id="197:1576" name="Cấu hình" x="13" y="8" width="56" height="20" />
+              </frame>
+              <frame id="197:1577" name="Admin button / Tạm dừng" x="90" y="0" width="89" height="36">
+                <text id="197:1578" name="Tạm dừng" x="13" y="8" width="63" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+        <frame id="197:1579" name="Provider grid 2" x="28" y="392" width="1136" height="222">
+          <frame id="197:1580" name="Provider / Price Watch" x="0" y="0" width="360" height="222">
+            <frame id="197:1581" name="Provider heading" x="17" y="16" width="328" height="32">
+              <text id="197:1582" name="Price Watch" x="0" y="2" width="123" height="28" />
+              <frame id="197:1583" name="Status / Đã tắt" x="254" y="1" width="74" height="30">
+                <ellipse id="197:1584" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1585" name="Đã tắt" x="23" y="5" width="41" height="20" />
+              </frame>
+            </frame>
+            <text id="197:1586" name="Quota &amp; mức sử dụng" x="17" y="58" width="136" height="20" />
+            <frame id="197:1587" name="Progress / Đã sử dụng" x="17" y="88" width="326" height="44">
+              <frame id="197:1588" name="Progress label" x="0" y="0" width="326" height="20">
+                <text id="197:1589" name="Đã sử dụng" x="0" y="0" width="71" height="20" />
+                <text id="197:1590" name="0%" x="306" y="0" width="20" height="20" />
+              </frame>
+              <frame id="197:1591" name="Track" x="0" y="25" width="326" height="6">
+                <rounded-rectangle id="197:1592" name="Fill" x="0" y="0" width="10" height="6" />
+              </frame>
+            </frame>
+            <text id="197:1593" name="Provider chưa được kích hoạt" x="17" y="142" width="320" height="20" />
+            <frame id="197:1594" name="Provider actions" x="17" y="172" width="328" height="34">
+              <frame id="197:1595" name="Admin button / Cấu hình" x="0" y="0" width="82" height="36">
+                <text id="197:1596" name="Cấu hình" x="13" y="8" width="56" height="20" />
+              </frame>
+              <frame id="197:1597" name="Admin button / Bật" x="90" y="0" width="49" height="36">
+                <text id="197:1598" name="Bật" x="13" y="8" width="23" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1599" name="Provider / Email" x="374" y="0" width="360" height="222">
+            <frame id="197:1600" name="Provider heading" x="17" y="16" width="328" height="32">
+              <text id="197:1601" name="Email" x="0" y="2" width="55" height="28" />
+              <frame id="197:1602" name="Status / Hoạt động" x="227" y="1" width="101" height="30">
+                <ellipse id="197:1603" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1604" name="Hoạt động" x="23" y="5" width="68" height="20" />
+              </frame>
+            </frame>
+            <text id="197:1605" name="Quota &amp; mức sử dụng" x="17" y="58" width="136" height="20" />
+            <frame id="197:1606" name="Progress / Đã sử dụng" x="17" y="88" width="326" height="44">
+              <frame id="197:1607" name="Progress label" x="0" y="0" width="326" height="20">
+                <text id="197:1608" name="Đã sử dụng" x="0" y="0" width="71" height="20" />
+                <text id="197:1609" name="36%" x="297" y="0" width="29" height="20" />
+              </frame>
+              <frame id="197:1610" name="Track" x="0" y="25" width="326" height="6">
+                <rounded-rectangle id="197:1611" name="Fill" x="0" y="0" width="117.36000061035156" height="6" />
+              </frame>
+            </frame>
+            <text id="197:1612" name="Gửi thành công: 98,7%" x="17" y="142" width="320" height="20" />
+            <frame id="197:1613" name="Provider actions" x="17" y="172" width="328" height="34">
+              <frame id="197:1614" name="Admin button / Cấu hình" x="0" y="0" width="82" height="36">
+                <text id="197:1615" name="Cấu hình" x="13" y="8" width="56" height="20" />
+              </frame>
+              <frame id="197:1616" name="Admin button / Tạm dừng" x="90" y="0" width="89" height="36">
+                <text id="197:1617" name="Tạm dừng" x="13" y="8" width="63" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1618" name="Provider / Push Notification" x="748" y="0" width="360" height="222">
+            <frame id="197:1619" name="Provider heading" x="17" y="16" width="328" height="32">
+              <text id="197:1620" name="Push Notification" x="0" y="2" width="173" height="28" />
+              <frame id="197:1621" name="Status / Hoạt động" x="227" y="1" width="101" height="30">
+                <ellipse id="197:1622" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1623" name="Hoạt động" x="23" y="5" width="68" height="20" />
+              </frame>
+            </frame>
+            <text id="197:1624" name="Quota &amp; mức sử dụng" x="17" y="58" width="136" height="20" />
+            <frame id="197:1625" name="Progress / Đã sử dụng" x="17" y="88" width="326" height="44">
+              <frame id="197:1626" name="Progress label" x="0" y="0" width="326" height="20">
+                <text id="197:1627" name="Đã sử dụng" x="0" y="0" width="71" height="20" />
+                <text id="197:1628" name="58%" x="298" y="0" width="28" height="20" />
+              </frame>
+              <frame id="197:1629" name="Track" x="0" y="25" width="326" height="6">
+                <rounded-rectangle id="197:1630" name="Fill" x="0" y="0" width="189.0800018310547" height="6" />
+              </frame>
+            </frame>
+            <text id="197:1631" name="Token lỗi: 14" x="17" y="142" width="320" height="20" />
+            <frame id="197:1632" name="Provider actions" x="17" y="172" width="328" height="34">
+              <frame id="197:1633" name="Admin button / Cấu hình" x="0" y="0" width="82" height="36">
+                <text id="197:1634" name="Cấu hình" x="13" y="8" width="56" height="20" />
+              </frame>
+              <frame id="197:1635" name="Admin button / Tạm dừng" x="90" y="0" width="89" height="36">
+                <text id="197:1636" name="Tạm dừng" x="13" y="8" width="63" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+        <frame id="197:1637" name="Card / Nguyên tắc xử lý lỗi tích hợp" x="28" y="626" width="1136" height="138">
+          <text id="197:1638" name="Nguyên tắc xử lý lỗi tích hợp" x="17" y="16" width="280" height="28" />
+          <text id="197:1639" name="• Không tạo dữ liệu giả khi provider lỗi. • Hiển thị nguồn và thời điểm cập nhật. • Retry có giới hạn. • Core Trip tiếp tục hoạt động nếu chức năng không phụ thuộc provider." x="17" y="56" width="1088" height="40" />
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="194:1096" name="A04 · Admin — Giám sát hệ thống" x="1540" y="1060" width="1440" height="960">
+    <frame id="197:1640" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="197:1641" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="197:1642" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="197:1643" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="197:1645" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="197:1646" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="197:1647" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="197:1648" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="197:1649" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="197:1650" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="197:1655" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="197:1660" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="197:1665" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="197:1670" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="197:1675" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="197:1680" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="197:1681" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="197:1682" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="197:1684" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="197:1685" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="197:1686" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="197:1687" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="197:1695" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="197:1696" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="197:1697" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="197:1698" name="Giám sát hệ thống" x="0" y="0" width="218" height="32" />
+            <text id="197:1699" name="Health check, hiệu năng API, background job và lỗi tích hợp." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="197:1700" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="197:1701" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="197:1702" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1703" name="Monitoring metrics" x="28" y="94" width="1136" height="112">
+          <frame id="197:1704" name="Metric / API p95" x="0" y="0" width="272" height="98">
+            <text id="197:1705" name="API p95" x="17" y="11" width="51" height="20" />
+            <text id="197:1706" name="620 ms" x="17" y="33" width="89" height="32" />
+            <text id="197:1707" name="Mục tiêu đề xuất &lt; 2 giây" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1708" name="Metric / Tỷ lệ lỗi" x="288" y="0" width="272" height="98">
+            <text id="197:1709" name="Tỷ lệ lỗi" x="17" y="11" width="48" height="20" />
+            <text id="197:1710" name="0,8%" x="17" y="33" width="62" height="32" />
+            <text id="197:1711" name="24 giờ gần nhất" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1712" name="Metric / Queue đang chờ" x="576" y="0" width="272" height="98">
+            <text id="197:1713" name="Queue đang chờ" x="17" y="11" width="105" height="20" />
+            <text id="197:1714" name="3" x="17" y="33" width="17" height="32" />
+            <text id="197:1715" name="Không có dead-letter" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="197:1716" name="Metric / Provider lỗi" x="864" y="0" width="272" height="98">
+            <text id="197:1717" name="Provider lỗi" x="17" y="11" width="72" height="20" />
+            <text id="197:1718" name="1" x="17" y="33" width="10" height="32" />
+            <text id="197:1719" name="Weather đang suy giảm" x="17" y="67" width="238" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1813" name="Two column row" x="28" y="218" width="1136" height="306">
+          <frame id="197:1720" name="Card / Health check dịch vụ" x="0" y="0" width="430" height="306">
+            <text id="197:1721" name="Health check dịch vụ" x="17" y="16" width="208" height="28" />
+            <frame id="197:1722" name="Service" x="17" y="48" width="398" height="28">
+              <text id="197:1723" name="Gateway" x="0" y="4" width="58" height="20" />
+              <frame id="197:1724" name="Status / UP" x="347" y="-1" width="51" height="30">
+                <ellipse id="197:1725" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1726" name="UP" x="23" y="5" width="18" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1727" name="Service" x="17" y="80" width="398" height="28">
+              <text id="197:1728" name="Identity" x="0" y="4" width="49" height="20" />
+              <frame id="197:1729" name="Status / UP" x="347" y="-1" width="51" height="30">
+                <ellipse id="197:1730" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1731" name="UP" x="23" y="5" width="18" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1732" name="Service" x="17" y="112" width="398" height="28">
+              <text id="197:1733" name="Trip Workspace" x="0" y="4" width="100" height="20" />
+              <frame id="197:1734" name="Status / UP" x="347" y="-1" width="51" height="30">
+                <ellipse id="197:1735" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1736" name="UP" x="23" y="5" width="18" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1737" name="Service" x="17" y="144" width="398" height="28">
+              <text id="197:1738" name="Planning" x="0" y="4" width="55" height="20" />
+              <frame id="197:1739" name="Status / UP" x="347" y="-1" width="51" height="30">
+                <ellipse id="197:1740" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1741" name="UP" x="23" y="5" width="18" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1742" name="Service" x="17" y="176" width="398" height="28">
+              <text id="197:1743" name="Finance" x="0" y="4" width="51" height="20" />
+              <frame id="197:1744" name="Status / UP" x="347" y="-1" width="51" height="30">
+                <ellipse id="197:1745" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1746" name="UP" x="23" y="5" width="18" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1747" name="Service" x="17" y="208" width="398" height="28">
+              <text id="197:1748" name="Notification" x="0" y="4" width="77" height="20" />
+              <frame id="197:1749" name="Status / DEGRADED" x="292" y="-1" width="106" height="30">
+                <ellipse id="197:1750" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1751" name="DEGRADED" x="23" y="5" width="73" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1752" name="Service" x="17" y="240" width="398" height="28">
+              <text id="197:1753" name="Export" x="0" y="4" width="43" height="20" />
+              <frame id="197:1754" name="Status / UP" x="347" y="-1" width="51" height="30">
+                <ellipse id="197:1755" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:1756" name="UP" x="23" y="5" width="18" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:1757" name="Card / Background jobs" x="446" y="0" width="690" height="306">
+            <text id="197:1758" name="Background jobs" x="17" y="16" width="168" height="28" />
+            <frame id="197:1759" name="Admin table" x="17" y="56" width="656" height="236">
+              <frame id="197:1760" name="Table header" x="0" y="0" width="656" height="44">
+                <frame id="197:1761" name="Cell" x="1" y="0" width="270" height="44">
+                  <text id="197:1762" name="Job" x="10" y="12" width="250" height="20" />
+                </frame>
+                <frame id="197:1763" name="Cell" x="271" y="0" width="150" height="44">
+                  <text id="197:1764" name="Trạng thái" x="10" y="12" width="130" height="20" />
+                </frame>
+                <frame id="197:1765" name="Cell" x="421" y="0" width="100" height="44">
+                  <text id="197:1766" name="Retry" x="10" y="12" width="80" height="20" />
+                </frame>
+                <frame id="197:1767" name="Cell" x="521" y="0" width="130" height="44">
+                  <text id="197:1768" name="Lần chạy" x="10" y="12" width="110" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1769" name="Table row" x="0" y="44" width="656" height="48">
+                <frame id="197:1770" name="Cell" x="1" y="0" width="270" height="48">
+                  <text id="197:1771" name="notification-reminder" x="10" y="14" width="250" height="20" />
+                </frame>
+                <frame id="197:1772" name="Cell" x="271" y="0" width="150" height="48">
+                  <frame id="197:1773" name="Status / Hoàn tất" x="10" y="9" width="89" height="30">
+                    <ellipse id="197:1774" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1775" name="Hoàn tất" x="23" y="5" width="56" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1776" name="Cell" x="421" y="0" width="100" height="48">
+                  <text id="197:1777" name="0/3" x="10" y="14" width="80" height="20" />
+                </frame>
+                <frame id="197:1778" name="Cell" x="521" y="0" width="130" height="48">
+                  <text id="197:1779" name="20:08" x="10" y="14" width="110" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1780" name="Table row" x="0" y="92" width="656" height="48">
+                <frame id="197:1781" name="Cell" x="1" y="0" width="270" height="48">
+                  <text id="197:1782" name="price-watch-poll" x="10" y="14" width="250" height="20" />
+                </frame>
+                <frame id="197:1783" name="Cell" x="271" y="0" width="150" height="48">
+                  <frame id="197:1784" name="Status / Đã tắt" x="10" y="9" width="74" height="30">
+                    <ellipse id="197:1785" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1786" name="Đã tắt" x="23" y="5" width="41" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1787" name="Cell" x="421" y="0" width="100" height="48">
+                  <text id="197:1788" name="—" x="10" y="14" width="80" height="20" />
+                </frame>
+                <frame id="197:1789" name="Cell" x="521" y="0" width="130" height="48">
+                  <text id="197:1790" name="—" x="10" y="14" width="110" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1791" name="Table row" x="0" y="140" width="656" height="48">
+                <frame id="197:1792" name="Cell" x="1" y="0" width="270" height="48">
+                  <text id="197:1793" name="export-render" x="10" y="14" width="250" height="20" />
+                </frame>
+                <frame id="197:1794" name="Cell" x="271" y="0" width="150" height="48">
+                  <frame id="197:1795" name="Status / Đang chạy" x="10" y="9" width="102" height="30">
+                    <ellipse id="197:1796" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1797" name="Đang chạy" x="23" y="5" width="69" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1798" name="Cell" x="421" y="0" width="100" height="48">
+                  <text id="197:1799" name="0/2" x="10" y="14" width="80" height="20" />
+                </frame>
+                <frame id="197:1800" name="Cell" x="521" y="0" width="130" height="48">
+                  <text id="197:1801" name="20:12" x="10" y="14" width="110" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1802" name="Table row" x="0" y="188" width="656" height="48">
+                <frame id="197:1803" name="Cell" x="1" y="0" width="270" height="48">
+                  <text id="197:1804" name="weather-refresh" x="10" y="14" width="250" height="20" />
+                </frame>
+                <frame id="197:1805" name="Cell" x="271" y="0" width="150" height="48">
+                  <frame id="197:1806" name="Status / Thất bại" x="10" y="9" width="87" height="30">
+                    <ellipse id="197:1807" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                    <text id="197:1808" name="Thất bại" x="23" y="5" width="54" height="20" />
+                  </frame>
+                </frame>
+                <frame id="197:1809" name="Cell" x="421" y="0" width="100" height="48">
+                  <text id="197:1810" name="2/3" x="10" y="14" width="80" height="20" />
+                </frame>
+                <frame id="197:1811" name="Cell" x="521" y="0" width="130" height="48">
+                  <text id="197:1812" name="20:14" x="10" y="14" width="110" height="20" />
+                </frame>
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+        <frame id="197:1814" name="Card / Lỗi tích hợp gần đây" x="28" y="536" width="1136" height="306">
+          <text id="197:1815" name="Lỗi tích hợp gần đây" x="17" y="16" width="204" height="28" />
+          <frame id="197:1816" name="Admin table" x="17" y="56" width="1102" height="236">
+            <frame id="197:1817" name="Table header" x="0" y="0" width="1102" height="44">
+              <frame id="197:1818" name="Cell" x="1" y="0" width="150" height="44">
+                <text id="197:1819" name="Thời điểm" x="10" y="12" width="130" height="20" />
+              </frame>
+              <frame id="197:1820" name="Cell" x="151" y="0" width="140" height="44">
+                <text id="197:1821" name="Nguồn" x="10" y="12" width="120" height="20" />
+              </frame>
+              <frame id="197:1822" name="Cell" x="291" y="0" width="120" height="44">
+                <text id="197:1823" name="Mã" x="10" y="12" width="100" height="20" />
+              </frame>
+              <frame id="197:1824" name="Cell" x="411" y="0" width="430" height="44">
+                <text id="197:1825" name="Mô tả" x="10" y="12" width="410" height="20" />
+              </frame>
+              <frame id="197:1826" name="Cell" x="841" y="0" width="200" height="44">
+                <text id="197:1827" name="Xử lý" x="10" y="12" width="180" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1828" name="Table row" x="0" y="44" width="1102" height="48">
+              <frame id="197:1829" name="Cell" x="1" y="0" width="150" height="48">
+                <text id="197:1830" name="20:14:22" x="10" y="14" width="130" height="20" />
+              </frame>
+              <frame id="197:1831" name="Cell" x="151" y="0" width="140" height="48">
+                <text id="197:1832" name="Weather" x="10" y="14" width="120" height="20" />
+              </frame>
+              <frame id="197:1833" name="Cell" x="291" y="0" width="120" height="48">
+                <text id="197:1834" name="TIMEOUT" x="10" y="14" width="100" height="20" />
+              </frame>
+              <frame id="197:1835" name="Cell" x="411" y="0" width="430" height="48">
+                <text id="197:1836" name="Provider không phản hồi sau 8s" x="10" y="14" width="410" height="20" />
+              </frame>
+              <frame id="197:1837" name="Cell" x="841" y="0" width="200" height="48">
+                <text id="197:1838" name="Retry 2/3" x="10" y="14" width="180" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1839" name="Table row" x="0" y="92" width="1102" height="48">
+              <frame id="197:1840" name="Cell" x="1" y="0" width="150" height="48">
+                <text id="197:1841" name="19:57:01" x="10" y="14" width="130" height="20" />
+              </frame>
+              <frame id="197:1842" name="Cell" x="151" y="0" width="140" height="48">
+                <text id="197:1843" name="Weather" x="10" y="14" width="120" height="20" />
+              </frame>
+              <frame id="197:1844" name="Cell" x="291" y="0" width="120" height="48">
+                <text id="197:1845" name="429" x="10" y="14" width="100" height="20" />
+              </frame>
+              <frame id="197:1846" name="Cell" x="411" y="0" width="430" height="48">
+                <text id="197:1847" name="Vượt giới hạn tạm thời" x="10" y="14" width="410" height="20" />
+              </frame>
+              <frame id="197:1848" name="Cell" x="841" y="0" width="200" height="48">
+                <text id="197:1849" name="Chờ 60s" x="10" y="14" width="180" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1850" name="Table row" x="0" y="140" width="1102" height="48">
+              <frame id="197:1851" name="Cell" x="1" y="0" width="150" height="48">
+                <text id="197:1852" name="18:44:09" x="10" y="14" width="130" height="20" />
+              </frame>
+              <frame id="197:1853" name="Cell" x="151" y="0" width="140" height="48">
+                <text id="197:1854" name="Push" x="10" y="14" width="120" height="20" />
+              </frame>
+              <frame id="197:1855" name="Cell" x="291" y="0" width="120" height="48">
+                <text id="197:1856" name="TOKEN_INVALID" x="10" y="4" width="100" height="40" />
+              </frame>
+              <frame id="197:1857" name="Cell" x="411" y="0" width="430" height="48">
+                <text id="197:1858" name="Thiết bị không còn hợp lệ" x="10" y="14" width="410" height="20" />
+              </frame>
+              <frame id="197:1859" name="Cell" x="841" y="0" width="200" height="48">
+                <text id="197:1860" name="Đã vô hiệu token" x="10" y="14" width="180" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1861" name="Table row" x="0" y="188" width="1102" height="48">
+              <frame id="197:1862" name="Cell" x="1" y="0" width="150" height="48">
+                <text id="197:1863" name="17:32:48" x="10" y="14" width="130" height="20" />
+              </frame>
+              <frame id="197:1864" name="Cell" x="151" y="0" width="140" height="48">
+                <text id="197:1865" name="Email" x="10" y="14" width="120" height="20" />
+              </frame>
+              <frame id="197:1866" name="Cell" x="291" y="0" width="120" height="48">
+                <text id="197:1867" name="TEMP_FAIL" x="10" y="14" width="100" height="20" />
+              </frame>
+              <frame id="197:1868" name="Cell" x="411" y="0" width="430" height="48">
+                <text id="197:1869" name="Dịch vụ trả lỗi tạm thời" x="10" y="14" width="410" height="20" />
+              </frame>
+              <frame id="197:1870" name="Cell" x="841" y="0" width="200" height="48">
+                <text id="197:1871" name="Retry thành công" x="10" y="14" width="180" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="194:1097" name="A05 · Admin — Audit &amp; Hỗ trợ" x="0" y="2120" width="1440" height="960">
+    <frame id="197:1872" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="197:1873" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="197:1874" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="197:1875" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="197:1877" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="197:1878" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="197:1879" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="197:1880" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="197:1881" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="197:1882" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="197:1887" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="197:1892" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="197:1897" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="197:1902" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="197:1907" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="197:1912" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="197:1913" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="197:1914" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="197:1916" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="197:1917" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="197:1918" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="197:1919" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="197:1927" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="197:1928" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="197:1929" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="197:1930" name="Audit &amp; hỗ trợ" x="0" y="0" width="166" height="32" />
+            <text id="197:1931" name="Theo dõi thao tác quản trị và các yêu cầu hỗ trợ cần truy cập dữ liệu có kiểm soát." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="197:1932" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="197:1933" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="197:1934" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:1935" name="Admin permission boundary" x="28" y="94" width="1136" height="52">
+          <ellipse id="197:1936" name="Ellipse" x="17" y="14" width="24" height="24" />
+          <text id="197:1937" name="!" x="51" y="15" width="5" height="22" />
+          <text id="197:1938" name="Admin không được tự truy cập dữ liệu Trip riêng tư chỉ vì có quyền Admin; mọi truy cập hỗ trợ phải có lý do hợp lệ và được ghi lịch sử." x="66" y="16" width="1030" height="20" />
+        </frame>
+        <frame id="197:2055" name="Two column row" x="28" y="158" width="1136" height="650">
+          <frame id="197:1939" name="Card / Audit log quản trị" x="0" y="0" width="720" height="650">
+            <text id="197:1940" name="Audit log quản trị" x="17" y="16" width="173" height="28" />
+            <frame id="197:1941" name="Audit filters" x="17" y="56" width="688" height="44">
+              <frame id="197:1942" name="Admin button / Tất cả hành động" x="0" y="0" width="137" height="36">
+                <text id="197:1943" name="Tất cả hành động" x="13" y="8" width="111" height="20" />
+              </frame>
+              <frame id="197:1944" name="Admin button / Admin: Tất cả" x="145" y="0" width="114" height="36">
+                <text id="197:1945" name="Admin: Tất cả" x="13" y="8" width="88" height="20" />
+              </frame>
+              <frame id="197:1946" name="Admin button / 30/09/2026" x="267" y="0" width="108" height="36">
+                <text id="197:1947" name="30/09/2026" x="13" y="8" width="82" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:1948" name="Admin table" x="17" y="112" width="686" height="332">
+              <frame id="197:1949" name="Table header" x="0" y="0" width="686" height="44">
+                <frame id="197:1950" name="Cell" x="1" y="0" width="120" height="44">
+                  <text id="197:1951" name="Thời gian" x="10" y="12" width="100" height="20" />
+                </frame>
+                <frame id="197:1952" name="Cell" x="121" y="0" width="145" height="44">
+                  <text id="197:1953" name="Admin" x="10" y="12" width="125" height="20" />
+                </frame>
+                <frame id="197:1954" name="Cell" x="266" y="0" width="245" height="44">
+                  <text id="197:1955" name="Hành động" x="10" y="12" width="225" height="20" />
+                </frame>
+                <frame id="197:1956" name="Cell" x="511" y="0" width="150" height="44">
+                  <text id="197:1957" name="Đối tượng" x="10" y="12" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1958" name="Table row" x="0" y="44" width="686" height="48">
+                <frame id="197:1959" name="Cell" x="1" y="0" width="120" height="48">
+                  <text id="197:1960" name="20:10" x="10" y="14" width="100" height="20" />
+                </frame>
+                <frame id="197:1961" name="Cell" x="121" y="0" width="145" height="48">
+                  <text id="197:1962" name="trang.admin" x="10" y="14" width="125" height="20" />
+                </frame>
+                <frame id="197:1963" name="Cell" x="266" y="0" width="245" height="48">
+                  <text id="197:1964" name="Mở khóa tài khoản" x="10" y="14" width="225" height="20" />
+                </frame>
+                <frame id="197:1965" name="Cell" x="511" y="0" width="150" height="48">
+                  <text id="197:1966" name="user_1024" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1967" name="Table row" x="0" y="92" width="686" height="48">
+                <frame id="197:1968" name="Cell" x="1" y="0" width="120" height="48">
+                  <text id="197:1969" name="19:48" x="10" y="14" width="100" height="20" />
+                </frame>
+                <frame id="197:1970" name="Cell" x="121" y="0" width="145" height="48">
+                  <text id="197:1971" name="tram.admin" x="10" y="14" width="125" height="20" />
+                </frame>
+                <frame id="197:1972" name="Cell" x="266" y="0" width="245" height="48">
+                  <text id="197:1973" name="Cập nhật provider" x="10" y="14" width="225" height="20" />
+                </frame>
+                <frame id="197:1974" name="Cell" x="511" y="0" width="150" height="48">
+                  <text id="197:1975" name="weather" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1976" name="Table row" x="0" y="140" width="686" height="48">
+                <frame id="197:1977" name="Cell" x="1" y="0" width="120" height="48">
+                  <text id="197:1978" name="18:32" x="10" y="14" width="100" height="20" />
+                </frame>
+                <frame id="197:1979" name="Cell" x="121" y="0" width="145" height="48">
+                  <text id="197:1980" name="trang.admin" x="10" y="14" width="125" height="20" />
+                </frame>
+                <frame id="197:1981" name="Cell" x="266" y="0" width="245" height="48">
+                  <text id="197:1982" name="Retry background job" x="10" y="14" width="225" height="20" />
+                </frame>
+                <frame id="197:1983" name="Cell" x="511" y="0" width="150" height="48">
+                  <text id="197:1984" name="notification" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1985" name="Table row" x="0" y="188" width="686" height="48">
+                <frame id="197:1986" name="Cell" x="1" y="0" width="120" height="48">
+                  <text id="197:1987" name="16:14" x="10" y="14" width="100" height="20" />
+                </frame>
+                <frame id="197:1988" name="Cell" x="121" y="0" width="145" height="48">
+                  <text id="197:1989" name="tram.admin" x="10" y="14" width="125" height="20" />
+                </frame>
+                <frame id="197:1990" name="Cell" x="266" y="0" width="245" height="48">
+                  <text id="197:1991" name="Khóa tài khoản" x="10" y="14" width="225" height="20" />
+                </frame>
+                <frame id="197:1992" name="Cell" x="511" y="0" width="150" height="48">
+                  <text id="197:1993" name="user_0998" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:1994" name="Table row" x="0" y="236" width="686" height="48">
+                <frame id="197:1995" name="Cell" x="1" y="0" width="120" height="48">
+                  <text id="197:1996" name="14:06" x="10" y="14" width="100" height="20" />
+                </frame>
+                <frame id="197:1997" name="Cell" x="121" y="0" width="145" height="48">
+                  <text id="197:1998" name="trang.admin" x="10" y="14" width="125" height="20" />
+                </frame>
+                <frame id="197:1999" name="Cell" x="266" y="0" width="245" height="48">
+                  <text id="197:2000" name="Đổi feature flag" x="10" y="14" width="225" height="20" />
+                </frame>
+                <frame id="197:2001" name="Cell" x="511" y="0" width="150" height="48">
+                  <text id="197:2002" name="price_watch" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:2003" name="Table row" x="0" y="284" width="686" height="48">
+                <frame id="197:2004" name="Cell" x="1" y="0" width="120" height="48">
+                  <text id="197:2005" name="11:25" x="10" y="14" width="100" height="20" />
+                </frame>
+                <frame id="197:2006" name="Cell" x="121" y="0" width="145" height="48">
+                  <text id="197:2007" name="tram.admin" x="10" y="14" width="125" height="20" />
+                </frame>
+                <frame id="197:2008" name="Cell" x="266" y="0" width="245" height="48">
+                  <text id="197:2009" name="Xem log lỗi" x="10" y="14" width="225" height="20" />
+                </frame>
+                <frame id="197:2010" name="Cell" x="511" y="0" width="150" height="48">
+                  <text id="197:2011" name="export-job" x="10" y="14" width="130" height="20" />
+                </frame>
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:2012" name="Card / Yêu cầu hỗ trợ" x="736" y="0" width="400" height="650">
+            <text id="197:2013" name="Yêu cầu hỗ trợ" x="17" y="16" width="142" height="28" />
+            <frame id="197:2014" name="Support ticket" x="17" y="56" width="368" height="116">
+              <frame id="197:2015" name="Ticket head" x="13" y="11" width="344" height="26">
+                <text id="197:2016" name="#SP-042" x="0" y="2" width="72" height="22" />
+                <frame id="197:2017" name="Status / Chờ xử lý" x="253" y="-2" width="91" height="30">
+                  <ellipse id="197:2018" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2019" name="Chờ xử lý" x="23" y="5" width="58" height="20" />
+                </frame>
+              </frame>
+              <text id="197:2020" name="Không tải được file export" x="13" y="42" width="340" height="20" />
+              <frame id="197:2021" name="Ticket action" x="13" y="67" width="344" height="30">
+                <frame id="197:2022" name="Admin button / Xem yêu cầu" x="0" y="0" width="107" height="36">
+                  <text id="197:2023" name="Xem yêu cầu" x="13" y="8" width="81" height="20" />
+                </frame>
+                <frame id="197:2024" name="Admin button / Ghi lý do" x="115" y="0" width="81" height="36">
+                  <text id="197:2025" name="Ghi lý do" x="13" y="8" width="55" height="20" />
+                </frame>
+              </frame>
+            </frame>
+            <frame id="197:2026" name="Support ticket" x="17" y="184" width="368" height="116">
+              <frame id="197:2027" name="Ticket head" x="13" y="11" width="344" height="26">
+                <text id="197:2028" name="#SP-041" x="0" y="2" width="68" height="22" />
+                <frame id="197:2029" name="Status / Đang xử lý" x="244" y="-2" width="100" height="30">
+                  <ellipse id="197:2030" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2031" name="Đang xử lý" x="23" y="5" width="67" height="20" />
+                </frame>
+              </frame>
+              <text id="197:2032" name="Tài khoản bị khóa nhầm" x="13" y="42" width="340" height="20" />
+              <frame id="197:2033" name="Ticket action" x="13" y="67" width="344" height="30">
+                <frame id="197:2034" name="Admin button / Xem yêu cầu" x="0" y="0" width="107" height="36">
+                  <text id="197:2035" name="Xem yêu cầu" x="13" y="8" width="81" height="20" />
+                </frame>
+                <frame id="197:2036" name="Admin button / Ghi lý do" x="115" y="0" width="81" height="36">
+                  <text id="197:2037" name="Ghi lý do" x="13" y="8" width="55" height="20" />
+                </frame>
+              </frame>
+            </frame>
+            <frame id="197:2038" name="Support ticket" x="17" y="312" width="368" height="116">
+              <frame id="197:2039" name="Ticket head" x="13" y="11" width="344" height="26">
+                <text id="197:2040" name="#SP-039" x="0" y="2" width="72" height="22" />
+                <frame id="197:2041" name="Status / Đã giải quyết" x="226" y="-2" width="118" height="30">
+                  <ellipse id="197:2042" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2043" name="Đã giải quyết" x="23" y="5" width="85" height="20" />
+                </frame>
+              </frame>
+              <text id="197:2044" name="Provider bản đồ lỗi" x="13" y="42" width="340" height="20" />
+              <frame id="197:2045" name="Ticket action" x="13" y="67" width="344" height="30">
+                <frame id="197:2046" name="Admin button / Xem yêu cầu" x="0" y="0" width="107" height="36">
+                  <text id="197:2047" name="Xem yêu cầu" x="13" y="8" width="81" height="20" />
+                </frame>
+                <frame id="197:2048" name="Admin button / Ghi lý do" x="115" y="0" width="81" height="36">
+                  <text id="197:2049" name="Ghi lý do" x="13" y="8" width="55" height="20" />
+                </frame>
+              </frame>
+            </frame>
+            <frame id="197:2050" name="Support access policy" x="17" y="440" width="368" height="132">
+              <text id="197:2051" name="Truy cập dữ liệu hỗ trợ" x="13" y="11" width="164" height="22" />
+              <text id="197:2052" name="Chỉ hiển thị sau khi có lý do, phạm vi dữ liệu và audit event tương ứng." x="13" y="38" width="340" height="40" />
+              <frame id="197:2053" name="Admin button / Tạo yêu cầu truy cập" x="13" y="83" width="159" height="36">
+                <text id="197:2054" name="Tạo yêu cầu truy cập" x="13" y="8" width="133" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="194:1098" name="A06 · Admin — Cấu hình hệ thống" x="1540" y="2120" width="1440" height="960">
+    <frame id="197:2056" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="197:2057" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="197:2058" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="197:2059" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="197:2061" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="197:2062" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="197:2063" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="197:2064" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="197:2065" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="197:2066" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="197:2071" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="197:2076" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="197:2081" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="197:2086" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="197:2091" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="197:2096" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="197:2097" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="197:2098" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="197:2100" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="197:2101" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="197:2102" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="197:2103" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="197:2111" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="197:2112" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="197:2113" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="197:2114" name="Cấu hình hệ thống" x="0" y="0" width="215" height="32" />
+            <text id="197:2115" name="Quản lý feature flag, cấu hình vận hành và các thiết lập hệ thống được phép." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="197:2116" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="197:2117" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="197:2118" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="197:2186" name="Two column row" x="28" y="94" width="1136" height="380">
+          <frame id="197:2119" name="Card / Feature flags" x="0" y="0" width="552" height="380">
+            <text id="197:2120" name="Feature flags" x="17" y="16" width="132" height="28" />
+            <frame id="197:2121" name="Feature row" x="17" y="54" width="520" height="54">
+              <frame id="197:2122" name="Feature copy" x="0" y="5" width="370" height="44">
+                <text id="197:2123" name="Price Watch" x="0" y="0" width="91" height="22" />
+                <text id="197:2124" name="Theo dõi giá qua provider ngoài" x="0" y="24" width="360" height="20" />
+              </frame>
+              <frame id="197:2125" name="Status / Đã tắt" x="446" y="12" width="74" height="30">
+                <ellipse id="197:2126" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2127" name="Đã tắt" x="23" y="5" width="41" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2128" name="Feature row" x="17" y="118" width="520" height="54">
+              <frame id="197:2129" name="Feature copy" x="0" y="5" width="370" height="44">
+                <text id="197:2130" name="Google OAuth" x="0" y="0" width="104" height="22" />
+                <text id="197:2131" name="Đăng nhập Google mở rộng" x="0" y="24" width="360" height="20" />
+              </frame>
+              <frame id="197:2132" name="Status / Đang bật" x="427" y="12" width="93" height="30">
+                <ellipse id="197:2133" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2134" name="Đang bật" x="23" y="5" width="60" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2135" name="Feature row" x="17" y="182" width="520" height="54">
+              <frame id="197:2136" name="Feature copy" x="0" y="5" width="370" height="44">
+                <text id="197:2137" name="Public Share" x="0" y="0" width="92" height="22" />
+                <text id="197:2138" name="Cho phép tạo link chia sẻ" x="0" y="24" width="360" height="20" />
+              </frame>
+              <frame id="197:2139" name="Status / Đang bật" x="427" y="12" width="93" height="30">
+                <ellipse id="197:2140" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2141" name="Đang bật" x="23" y="5" width="60" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2142" name="Feature row" x="17" y="246" width="520" height="54">
+              <frame id="197:2143" name="Feature copy" x="0" y="5" width="370" height="44">
+                <text id="197:2144" name="DSS Weather" x="0" y="0" width="98" height="22" />
+                <text id="197:2145" name="Gợi ý dựa trên thời tiết" x="0" y="24" width="360" height="20" />
+              </frame>
+              <frame id="197:2146" name="Status / Đang bật" x="427" y="12" width="93" height="30">
+                <ellipse id="197:2147" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2148" name="Đang bật" x="23" y="5" width="60" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2149" name="Feature row" x="17" y="310" width="520" height="54">
+              <frame id="197:2150" name="Feature copy" x="0" y="5" width="370" height="44">
+                <text id="197:2151" name="Export Infographic" x="0" y="0" width="139" height="22" />
+                <text id="197:2152" name="Xuất ảnh trực quan" x="0" y="24" width="360" height="20" />
+              </frame>
+              <frame id="197:2153" name="Status / Đang bật" x="427" y="12" width="93" height="30">
+                <ellipse id="197:2154" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2155" name="Đang bật" x="23" y="5" width="60" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="197:2156" name="Card / Template &amp; danh mục" x="568" y="0" width="568" height="380">
+            <text id="197:2157" name="Template &amp; danh mục" x="17" y="16" width="215" height="28" />
+            <frame id="197:2158" name="Config row" x="17" y="56" width="536" height="66">
+              <frame id="197:2159" name="Config copy" x="13" y="8" width="360" height="50">
+                <text id="197:2160" name="Minimal" x="0" y="0" width="58" height="22" />
+                <text id="197:2161" name="Template export mặc định" x="0" y="24" width="350" height="20" />
+              </frame>
+              <frame id="197:2162" name="Status / Đang dùng" x="381" y="18" width="103" height="30">
+                <ellipse id="197:2163" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2164" name="Đang dùng" x="23" y="5" width="70" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2165" name="Config row" x="17" y="134" width="536" height="66">
+              <frame id="197:2166" name="Config copy" x="13" y="8" width="360" height="50">
+                <text id="197:2167" name="Travel Colorful" x="0" y="0" width="109" height="22" />
+                <text id="197:2168" name="Template infographic" x="0" y="24" width="350" height="20" />
+              </frame>
+              <frame id="197:2169" name="Status / Đang dùng" x="381" y="18" width="103" height="30">
+                <ellipse id="197:2170" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2171" name="Đang dùng" x="23" y="5" width="70" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2172" name="Config row" x="17" y="212" width="536" height="66">
+              <frame id="197:2173" name="Config copy" x="13" y="8" width="360" height="50">
+                <text id="197:2174" name="Tiện ích công cộng" x="0" y="0" width="140" height="22" />
+                <text id="197:2175" name="ATM · y tế · cửa hàng · trạm xăng" x="0" y="24" width="350" height="20" />
+              </frame>
+              <frame id="197:2176" name="Status / 6 danh mục" x="381" y="18" width="107" height="30">
+                <ellipse id="197:2177" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2178" name="6 danh mục" x="23" y="5" width="74" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2179" name="Config row" x="17" y="290" width="536" height="66">
+              <frame id="197:2180" name="Config copy" x="13" y="8" width="360" height="50">
+                <text id="197:2181" name="Email template" x="0" y="0" width="112" height="22" />
+                <text id="197:2182" name="Invite · reset · notification" x="0" y="24" width="350" height="20" />
+              </frame>
+              <frame id="197:2183" name="Status / 8 mẫu" x="381" y="18" width="72" height="30">
+                <ellipse id="197:2184" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                <text id="197:2185" name="8 mẫu" x="23" y="5" width="39" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+        <frame id="197:2187" name="Card / Cấu hình vận hành" x="28" y="486" width="1136" height="354">
+          <text id="197:2188" name="Cấu hình vận hành" x="17" y="16" width="182" height="28" />
+          <frame id="197:2189" name="Admin table" x="17" y="56" width="1102" height="284">
+            <frame id="197:2190" name="Table header" x="0" y="0" width="1102" height="44">
+              <frame id="197:2191" name="Cell" x="1" y="0" width="250" height="44">
+                <text id="197:2192" name="Thiết lập" x="10" y="12" width="230" height="20" />
+              </frame>
+              <frame id="197:2193" name="Cell" x="251" y="0" width="210" height="44">
+                <text id="197:2194" name="Giá trị" x="10" y="12" width="190" height="20" />
+              </frame>
+              <frame id="197:2195" name="Cell" x="461" y="0" width="180" height="44">
+                <text id="197:2196" name="Trạng thái" x="10" y="12" width="160" height="20" />
+              </frame>
+              <frame id="197:2197" name="Cell" x="641" y="0" width="420" height="44">
+                <text id="197:2198" name="Ghi chú" x="10" y="12" width="400" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2199" name="Table row" x="0" y="44" width="1102" height="48">
+              <frame id="197:2200" name="Cell" x="1" y="0" width="250" height="48">
+                <text id="197:2201" name="Background job retry" x="10" y="14" width="230" height="20" />
+              </frame>
+              <frame id="197:2202" name="Cell" x="251" y="0" width="210" height="48">
+                <text id="197:2203" name="3 lần" x="10" y="14" width="190" height="20" />
+              </frame>
+              <frame id="197:2204" name="Cell" x="461" y="0" width="180" height="48">
+                <frame id="197:2205" name="Status / Đang áp dụng" x="10" y="9" width="123" height="30">
+                  <ellipse id="197:2206" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2207" name="Đang áp dụng" x="23" y="5" width="90" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:2208" name="Cell" x="641" y="0" width="420" height="48">
+                <text id="197:2209" name="Retry có giới hạn, không lặp vô hạn" x="10" y="14" width="400" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2210" name="Table row" x="0" y="92" width="1102" height="48">
+              <frame id="197:2211" name="Cell" x="1" y="0" width="250" height="48">
+                <text id="197:2212" name="Logging" x="10" y="14" width="230" height="20" />
+              </frame>
+              <frame id="197:2213" name="Cell" x="251" y="0" width="210" height="48">
+                <text id="197:2214" name="Centralized" x="10" y="14" width="190" height="20" />
+              </frame>
+              <frame id="197:2215" name="Cell" x="461" y="0" width="180" height="48">
+                <frame id="197:2216" name="Status / Đang áp dụng" x="10" y="9" width="123" height="30">
+                  <ellipse id="197:2217" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2218" name="Đang áp dụng" x="23" y="5" width="90" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:2219" name="Cell" x="641" y="0" width="420" height="48">
+                <text id="197:2220" name="Không ghi credential có thể sử dụng lại" x="10" y="14" width="400" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2221" name="Table row" x="0" y="140" width="1102" height="48">
+              <frame id="197:2222" name="Cell" x="1" y="0" width="250" height="48">
+                <text id="197:2223" name="Health check" x="10" y="14" width="230" height="20" />
+              </frame>
+              <frame id="197:2224" name="Cell" x="251" y="0" width="210" height="48">
+                <text id="197:2225" name="Bật" x="10" y="14" width="190" height="20" />
+              </frame>
+              <frame id="197:2226" name="Cell" x="461" y="0" width="180" height="48">
+                <frame id="197:2227" name="Status / Đang áp dụng" x="10" y="9" width="123" height="30">
+                  <ellipse id="197:2228" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2229" name="Đang áp dụng" x="23" y="5" width="90" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:2230" name="Cell" x="641" y="0" width="420" height="48">
+                <text id="197:2231" name="Gateway + service chính" x="10" y="14" width="400" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2232" name="Table row" x="0" y="188" width="1102" height="48">
+              <frame id="197:2233" name="Cell" x="1" y="0" width="250" height="48">
+                <text id="197:2234" name="Backup / RPO / RTO" x="10" y="14" width="230" height="20" />
+              </frame>
+              <frame id="197:2235" name="Cell" x="251" y="0" width="210" height="48">
+                <text id="197:2236" name="Chưa chốt" x="10" y="14" width="190" height="20" />
+              </frame>
+              <frame id="197:2237" name="Cell" x="461" y="0" width="180" height="48">
+                <frame id="197:2238" name="Status / Open Question" x="10" y="9" width="128" height="30">
+                  <ellipse id="197:2239" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2240" name="Open Question" x="23" y="5" width="95" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:2241" name="Cell" x="641" y="0" width="420" height="48">
+                <text id="197:2242" name="Cần chốt trước nghiệm thu" x="10" y="14" width="400" height="20" />
+              </frame>
+            </frame>
+            <frame id="197:2243" name="Table row" x="0" y="236" width="1102" height="48">
+              <frame id="197:2244" name="Cell" x="1" y="0" width="250" height="48">
+                <text id="197:2245" name="Thời hạn log kỹ thuật" x="10" y="14" width="230" height="20" />
+              </frame>
+              <frame id="197:2246" name="Cell" x="251" y="0" width="210" height="48">
+                <text id="197:2247" name="Chưa chốt" x="10" y="14" width="190" height="20" />
+              </frame>
+              <frame id="197:2248" name="Cell" x="461" y="0" width="180" height="48">
+                <frame id="197:2249" name="Status / Open Question" x="10" y="9" width="128" height="30">
+                  <ellipse id="197:2250" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="197:2251" name="Open Question" x="23" y="5" width="95" height="20" />
+                </frame>
+              </frame>
+              <frame id="197:2252" name="Cell" x="641" y="0" width="420" height="48">
+                <text id="197:2253" name="Theo chính sách triển khai" x="10" y="14" width="400" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="215:1271" name="A02.1 · Admin — Tài khoản · Đã khóa" x="3080" y="0" width="1440" height="960">
+    <frame id="215:1272" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="215:1273" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="215:1274" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="215:1275" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="215:1276" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="215:1277" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="215:1278" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="215:1279" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="215:1280" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="215:1281" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="215:1282" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="215:1283" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="215:1284" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="215:1285" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="215:1286" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="215:1287" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="215:1288" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="215:1289" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="215:1290" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="215:1291" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="215:1292" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="215:1293" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="215:1294" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="215:1295" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="215:1296" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="215:1297" name="Quản lý tài khoản" x="0" y="0" width="209" height="32" />
+            <text id="215:1298" name="Xem trạng thái tài khoản và thực hiện khóa/mở khóa ở phạm vi hệ thống." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="215:1299" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="215:1300" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="215:1301" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="215:1302" name="Account metrics" x="28" y="94" width="1136" height="112">
+          <frame id="215:1303" name="Metric / Đang hoạt động" x="0" y="0" width="272" height="98">
+            <text id="215:1304" name="Đang hoạt động" x="17" y="11" width="104" height="20" />
+            <text id="215:1305" name="1.226" x="17" y="33" width="66" height="32" />
+            <text id="215:1306" name="+18 trong 7 ngày" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="215:1307" name="Metric / Đã khóa" x="288" y="0" width="272" height="98">
+            <text id="215:1308" name="Đã khóa" x="17" y="11" width="54" height="20" />
+            <text id="215:1309" name="22" x="17" y="33" width="32" height="32" />
+            <text id="215:1310" name="4 tài khoản tuần này" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="215:1311" name="Metric / Admin" x="576" y="0" width="272" height="98">
+            <text id="215:1312" name="Admin" x="17" y="11" width="41" height="20" />
+            <text id="215:1313" name="3" x="17" y="33" width="17" height="32" />
+            <text id="215:1314" name="Quyền hệ thống" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="215:1315" name="Account policy" x="864" y="0" width="272" height="112">
+            <text id="215:1316" name="Lưu ý phân quyền" x="17" y="15" width="129" height="22" />
+            <text id="215:1317" name="Không gán vai trò Owner/Member tại đây." x="17" y="41" width="240" height="40" />
+          </frame>
+        </frame>
+        <frame id="215:1318" name="Card / Danh sách tài khoản" x="28" y="218" width="1136" height="640">
+          <text id="215:1319" name="Danh sách tài khoản" x="17" y="16" width="203" height="28" />
+          <frame id="215:1320" name="Admin/Account tabs" x="17" y="52" width="1104" height="38">
+            <frame id="215:1321" name="Tab / Tài khoản" x="0" y="6.5" width="83" height="25">
+              <frame id="215:1322" name="Tab content" x="0" y="0" width="83" height="18">
+                <frame id="215:1323" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1327" name="Tài khoản" x="25" y="1.5" width="58" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1328" name="Underline" x="0" y="23" width="83" height="2" />
+            </frame>
+            <frame id="215:1329" name="Tab / Đã khóa" x="107" y="6.5" width="75" height="25">
+              <frame id="215:1330" name="Tab content" x="0" y="0" width="75" height="18">
+                <frame id="215:1331" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1334" name="Đã khóa" x="25" y="1.5" width="50" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1335" name="Underline" x="0" y="23" width="75" height="2" />
+            </frame>
+            <frame id="215:1336" name="Tab / Quản trị viên" x="206" y="6.5" width="101" height="25">
+              <frame id="215:1337" name="Tab content" x="0" y="0" width="101" height="18">
+                <frame id="215:1338" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1341" name="Quản trị viên" x="25" y="1.5" width="76" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1342" name="Underline" x="0" y="23" width="101" height="2" />
+            </frame>
+            <frame id="215:1343" name="Tab / Lịch sử" x="331" y="6.5" width="67" height="25">
+              <frame id="215:1344" name="Tab content" x="0" y="0" width="67" height="18">
+                <frame id="215:1345" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1348" name="Lịch sử" x="25" y="1.5" width="42" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1349" name="Underline" x="0" y="23" width="67" height="2" />
+            </frame>
+          </frame>
+          <frame id="215:1350" name="Account toolbar" x="17" y="98" width="1104" height="48">
+            <frame id="215:1351" name="Search" x="0" y="4" width="430" height="40">
+              <text id="215:1352" name="Tìm theo email hoặc tên hiển thị..." x="13" y="10" width="213" height="20" />
+            </frame>
+            <frame id="215:1353" name="Filters" x="674" y="4" width="430" height="40">
+              <frame id="215:1354" name="Admin button / Trạng thái: Tất cả" x="0" y="0" width="138" height="36">
+                <text id="215:1355" name="Trạng thái: Tất cả" x="13" y="8" width="112" height="20" />
+              </frame>
+              <frame id="215:1356" name="Admin button / Vai trò hệ thống" x="146" y="0" width="127" height="36">
+                <text id="215:1357" name="Vai trò hệ thống" x="13" y="8" width="101" height="20" />
+              </frame>
+              <frame id="215:1358" name="Admin button / Làm mới" x="281" y="0" width="81" height="36">
+                <text id="215:1359" name="Làm mới" x="13" y="8" width="55" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="215:1360" name="Admin table" x="17" y="154" width="1102" height="332">
+            <frame id="215:1361" name="Table header" x="0" y="0" width="1102" height="44">
+              <frame id="215:1362" name="Cell" x="1" y="0" width="180" height="44">
+                <text id="215:1363" name="Người dùng" x="10" y="12" width="160" height="20" />
+              </frame>
+              <frame id="215:1364" name="Cell" x="181" y="0" width="205" height="44">
+                <text id="215:1365" name="Email" x="10" y="12" width="185" height="20" />
+              </frame>
+              <frame id="215:1366" name="Cell" x="386" y="0" width="95" height="44">
+                <text id="215:1367" name="Vai trò" x="10" y="12" width="75" height="20" />
+              </frame>
+              <frame id="215:1368" name="Cell" x="481" y="0" width="130" height="44">
+                <text id="215:1369" name="Trạng thái" x="10" y="12" width="110" height="20" />
+              </frame>
+              <frame id="215:1370" name="Cell" x="611" y="0" width="170" height="44">
+                <text id="215:1371" name="Đăng nhập gần nhất" x="10" y="12" width="150" height="20" />
+              </frame>
+              <frame id="215:1372" name="Cell" x="781" y="0" width="250" height="44">
+                <text id="215:1373" name="Thao tác" x="10" y="12" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1374" name="Table row" x="0" y="44" width="1102" height="48" hidden="true">
+              <frame id="215:1375" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1376" name="Nguyễn Minh Anh" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1377" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1378" name="minh***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1379" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1380" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1381" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1382" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1383" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1384" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1385" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1386" name="30/09 19:42" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1387" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1388" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1389" name="Table row" x="0" y="44" width="1102" height="48" hidden="true">
+              <frame id="215:1390" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1391" name="Trần Ngọc Linh" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1392" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1393" name="linh***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1394" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1395" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1396" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1397" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1398" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1399" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1400" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1401" name="30/09 18:15" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1402" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1403" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1404" name="Table row" x="0" y="44" width="1102" height="48">
+              <frame id="215:1405" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1406" name="Hoàng Gia Huy" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1407" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1408" name="huy***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1409" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1410" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1411" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1412" name="Status / Đã khóa" x="10" y="9" width="87" height="30">
+                  <ellipse id="215:1413" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1414" name="Đã khóa" x="23" y="5" width="54" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1415" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1416" name="27/09 10:03" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1417" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1418" name="Xem · Mở khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1419" name="Table row" x="0" y="92" width="1102" height="48" hidden="true">
+              <frame id="215:1420" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1421" name="Lê Bảo Trâm" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1422" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1423" name="tram***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1424" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1425" name="Admin" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1426" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1427" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1428" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1429" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1430" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1431" name="30/09 20:01" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1432" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1433" name="Xem" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1434" name="Table row" x="0" y="92" width="1102" height="48" hidden="true">
+              <frame id="215:1435" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1436" name="Phạm Quốc Bảo" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1437" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1438" name="bao***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1439" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1440" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1441" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1442" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1443" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1444" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1445" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1446" name="29/09 22:20" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1447" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1448" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1449" name="Table row" x="0" y="92" width="1102" height="48" hidden="true">
+              <frame id="215:1450" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1451" name="Vũ Thu Hà" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1452" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1453" name="ha***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1454" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1455" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1456" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1457" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1458" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1459" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1460" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1461" name="29/09 20:11" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1462" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1463" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="215:1497" name="A02.2 · Admin — Tài khoản · Quản trị viên" x="3080" y="1060" width="1440" height="960">
+    <frame id="215:1498" name="Admin shell" x="0" y="0" width="1440" height="960">
+      <frame id="215:1499" name="Admin sidebar" x="0" y="0" width="248" height="960">
+        <frame id="215:1500" name="Admin brand" x="19" y="19" width="212" height="62">
+          <instance id="215:1501" name="Brand/Logo" x="0" y="12.333333969116211" width="111.99999237060547" height="37.33333206176758" />
+          <frame id="215:1502" name="Admin tag" x="121.99999237060547" y="8" width="90" height="46">
+            <text id="215:1503" name="TRUNG TÂM" x="0" y="0" width="77" height="20" />
+            <text id="215:1504" name="QUẢN TRỊ" x="0" y="21" width="74" height="22" />
+          </frame>
+        </frame>
+        <rounded-rectangle id="215:1505" name="Rectangle" x="19" y="91" width="212" height="1" />
+        <frame id="215:1506" name="Admin navigation" x="19" y="102" width="212" height="322">
+          <instance id="215:1507" name="Nav / Tổng quan" x="0" y="0" width="204" height="44" />
+          <instance id="215:1508" name="Nav / Tài khoản" x="0" y="50" width="204" height="44" />
+          <instance id="215:1509" name="Nav / Tích hợp" x="0" y="100" width="204" height="44" />
+          <instance id="215:1510" name="Nav / Giám sát" x="0" y="150" width="204" height="44" />
+          <instance id="215:1511" name="Nav / Audit &amp; hỗ trợ" x="0" y="200" width="204" height="44" />
+          <instance id="215:1512" name="Nav / Cấu hình" x="0" y="250" width="204" height="44" />
+        </frame>
+        <frame id="215:1513" name="Sidebar spacer" x="19" y="434" width="212" height="330" />
+        <frame id="215:1514" name="Admin reminder" x="19" y="774" width="212" height="100">
+          <instance id="215:1515" name="Brand/Mascot" x="13" y="19" width="62" height="62" />
+          <frame id="215:1516" name="Admin reminder text" x="85" y="15" width="118" height="70">
+            <text id="215:1517" name="Quản trị hệ thống" x="0" y="0" width="118" height="20" />
+            <text id="215:1518" name="không thay quyền trong Trip" x="0" y="23" width="118" height="40" />
+          </frame>
+        </frame>
+      </frame>
+      <instance id="215:1519" name="Wolfari/Admin Topbar" x="248" y="0" width="1192" height="72" />
+      <frame id="215:1520" name="Admin content" x="248" y="72" width="1192" height="888">
+        <frame id="215:1521" name="Page heading" x="28" y="18" width="1136" height="64">
+          <frame id="215:1522" name="Heading copy" x="0" y="2" width="780" height="60">
+            <text id="215:1523" name="Quản lý tài khoản" x="0" y="0" width="209" height="32" />
+            <text id="215:1524" name="Xem trạng thái tài khoản và thực hiện khóa/mở khóa ở phạm vi hệ thống." x="0" y="36" width="760" height="20" />
+          </frame>
+          <frame id="215:1525" name="Status / Dữ liệu minh họa" x="1000" y="17" width="136" height="30">
+            <ellipse id="215:1526" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+            <text id="215:1527" name="Dữ liệu minh họa" x="23" y="5" width="103" height="20" />
+          </frame>
+        </frame>
+        <frame id="215:1528" name="Account metrics" x="28" y="94" width="1136" height="112">
+          <frame id="215:1529" name="Metric / Đang hoạt động" x="0" y="0" width="272" height="98">
+            <text id="215:1530" name="Đang hoạt động" x="17" y="11" width="104" height="20" />
+            <text id="215:1531" name="1.226" x="17" y="33" width="66" height="32" />
+            <text id="215:1532" name="+18 trong 7 ngày" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="215:1533" name="Metric / Đã khóa" x="288" y="0" width="272" height="98">
+            <text id="215:1534" name="Đã khóa" x="17" y="11" width="54" height="20" />
+            <text id="215:1535" name="22" x="17" y="33" width="32" height="32" />
+            <text id="215:1536" name="4 tài khoản tuần này" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="215:1537" name="Metric / Admin" x="576" y="0" width="272" height="98">
+            <text id="215:1538" name="Admin" x="17" y="11" width="41" height="20" />
+            <text id="215:1539" name="3" x="17" y="33" width="17" height="32" />
+            <text id="215:1540" name="Quyền hệ thống" x="17" y="67" width="238" height="20" />
+          </frame>
+          <frame id="215:1541" name="Account policy" x="864" y="0" width="272" height="112">
+            <text id="215:1542" name="Lưu ý phân quyền" x="17" y="15" width="129" height="22" />
+            <text id="215:1543" name="Không gán vai trò Owner/Member tại đây." x="17" y="41" width="240" height="40" />
+          </frame>
+        </frame>
+        <frame id="215:1544" name="Card / Danh sách tài khoản" x="28" y="218" width="1136" height="640">
+          <text id="215:1545" name="Danh sách tài khoản" x="17" y="16" width="203" height="28" />
+          <frame id="215:1546" name="Admin/Account tabs" x="17" y="52" width="1104" height="38">
+            <frame id="215:1547" name="Tab / Tài khoản" x="0" y="6.5" width="83" height="25">
+              <frame id="215:1548" name="Tab content" x="0" y="0" width="83" height="18">
+                <frame id="215:1549" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1553" name="Tài khoản" x="25" y="1.5" width="58" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1554" name="Underline" x="0" y="23" width="83" height="2" />
+            </frame>
+            <frame id="215:1555" name="Tab / Đã khóa" x="107" y="6.5" width="75" height="25">
+              <frame id="215:1556" name="Tab content" x="0" y="0" width="75" height="18">
+                <frame id="215:1557" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1560" name="Đã khóa" x="25" y="1.5" width="50" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1561" name="Underline" x="0" y="23" width="75" height="2" />
+            </frame>
+            <frame id="215:1562" name="Tab / Quản trị viên" x="206" y="6.5" width="101" height="25">
+              <frame id="215:1563" name="Tab content" x="0" y="0" width="101" height="18">
+                <frame id="215:1564" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1567" name="Quản trị viên" x="25" y="1.5" width="76" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1568" name="Underline" x="0" y="23" width="101" height="2" />
+            </frame>
+            <frame id="215:1569" name="Tab / Lịch sử" x="331" y="6.5" width="67" height="25">
+              <frame id="215:1570" name="Tab content" x="0" y="0" width="67" height="18">
+                <frame id="215:1571" name="Icon" x="0" y="0" width="18" height="18" />
+                <text id="215:1574" name="Lịch sử" x="25" y="1.5" width="42" height="15" />
+              </frame>
+              <rounded-rectangle id="215:1575" name="Underline" x="0" y="23" width="67" height="2" />
+            </frame>
+          </frame>
+          <frame id="215:1576" name="Account toolbar" x="17" y="98" width="1104" height="48">
+            <frame id="215:1577" name="Search" x="0" y="4" width="430" height="40">
+              <text id="215:1578" name="Tìm theo email hoặc tên hiển thị..." x="13" y="10" width="213" height="20" />
+            </frame>
+            <frame id="215:1579" name="Filters" x="674" y="4" width="430" height="40">
+              <frame id="215:1580" name="Admin button / Trạng thái: Tất cả" x="0" y="0" width="138" height="36">
+                <text id="215:1581" name="Trạng thái: Tất cả" x="13" y="8" width="112" height="20" />
+              </frame>
+              <frame id="215:1582" name="Admin button / Vai trò hệ thống" x="146" y="0" width="127" height="36">
+                <text id="215:1583" name="Vai trò hệ thống" x="13" y="8" width="101" height="20" />
+              </frame>
+              <frame id="215:1584" name="Admin button / Làm mới" x="281" y="0" width="81" height="36">
+                <text id="215:1585" name="Làm mới" x="13" y="8" width="55" height="20" />
+              </frame>
+            </frame>
+          </frame>
+          <frame id="215:1586" name="Admin table" x="17" y="154" width="1102" height="332">
+            <frame id="215:1587" name="Table header" x="0" y="0" width="1102" height="44">
+              <frame id="215:1588" name="Cell" x="1" y="0" width="180" height="44">
+                <text id="215:1589" name="Người dùng" x="10" y="12" width="160" height="20" />
+              </frame>
+              <frame id="215:1590" name="Cell" x="181" y="0" width="205" height="44">
+                <text id="215:1591" name="Email" x="10" y="12" width="185" height="20" />
+              </frame>
+              <frame id="215:1592" name="Cell" x="386" y="0" width="95" height="44">
+                <text id="215:1593" name="Vai trò" x="10" y="12" width="75" height="20" />
+              </frame>
+              <frame id="215:1594" name="Cell" x="481" y="0" width="130" height="44">
+                <text id="215:1595" name="Trạng thái" x="10" y="12" width="110" height="20" />
+              </frame>
+              <frame id="215:1596" name="Cell" x="611" y="0" width="170" height="44">
+                <text id="215:1597" name="Đăng nhập gần nhất" x="10" y="12" width="150" height="20" />
+              </frame>
+              <frame id="215:1598" name="Cell" x="781" y="0" width="250" height="44">
+                <text id="215:1599" name="Thao tác" x="10" y="12" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1600" name="Table row" x="0" y="44" width="1102" height="48" hidden="true">
+              <frame id="215:1601" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1602" name="Nguyễn Minh Anh" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1603" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1604" name="minh***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1605" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1606" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1607" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1608" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1609" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1610" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1611" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1612" name="30/09 19:42" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1613" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1614" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1615" name="Table row" x="0" y="44" width="1102" height="48" hidden="true">
+              <frame id="215:1616" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1617" name="Trần Ngọc Linh" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1618" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1619" name="linh***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1620" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1621" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1622" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1623" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1624" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1625" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1626" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1627" name="30/09 18:15" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1628" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1629" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1630" name="Table row" x="0" y="44" width="1102" height="48" hidden="true">
+              <frame id="215:1631" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1632" name="Hoàng Gia Huy" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1633" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1634" name="huy***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1635" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1636" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1637" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1638" name="Status / Đã khóa" x="10" y="9" width="87" height="30">
+                  <ellipse id="215:1639" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1640" name="Đã khóa" x="23" y="5" width="54" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1641" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1642" name="27/09 10:03" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1643" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1644" name="Xem · Mở khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1645" name="Table row" x="0" y="44" width="1102" height="48">
+              <frame id="215:1646" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1647" name="Lê Bảo Trâm" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1648" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1649" name="tram***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1650" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1651" name="Admin" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1652" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1653" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1654" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1655" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1656" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1657" name="30/09 20:01" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1658" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1659" name="Xem" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1660" name="Table row" x="0" y="92" width="1102" height="48" hidden="true">
+              <frame id="215:1661" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1662" name="Phạm Quốc Bảo" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1663" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1664" name="bao***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1665" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1666" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1667" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1668" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1669" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1670" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1671" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1672" name="29/09 22:20" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1673" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1674" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+            <frame id="215:1675" name="Table row" x="0" y="92" width="1102" height="48" hidden="true">
+              <frame id="215:1676" name="Cell" x="1" y="0" width="180" height="48">
+                <text id="215:1677" name="Vũ Thu Hà" x="10" y="14" width="160" height="20" />
+              </frame>
+              <frame id="215:1678" name="Cell" x="181" y="0" width="205" height="48">
+                <text id="215:1679" name="ha***@mail.com" x="10" y="14" width="185" height="20" />
+              </frame>
+              <frame id="215:1680" name="Cell" x="386" y="0" width="95" height="48">
+                <text id="215:1681" name="User" x="10" y="14" width="75" height="20" />
+              </frame>
+              <frame id="215:1682" name="Cell" x="481" y="0" width="130" height="48">
+                <frame id="215:1683" name="Status / Hoạt động" x="10" y="9" width="101" height="30">
+                  <ellipse id="215:1684" name="Ellipse" x="10" y="11.5" width="7" height="7" />
+                  <text id="215:1685" name="Hoạt động" x="23" y="5" width="68" height="20" />
+                </frame>
+              </frame>
+              <frame id="215:1686" name="Cell" x="611" y="0" width="170" height="48">
+                <text id="215:1687" name="29/09 20:11" x="10" y="14" width="150" height="20" />
+              </frame>
+              <frame id="215:1688" name="Cell" x="781" y="0" width="250" height="48">
+                <text id="215:1689" name="Xem · Khóa" x="10" y="14" width="230" height="20" />
+              </frame>
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1337" name="Admin Action · Khóa tài khoản" x="4700" y="0" width="520" height="316">
+    <frame id="216:1338" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1339" name="Khóa tài khoản" x="0" y="0" width="145" height="24" />
+      <text id="216:1340" name="Tài khoản sẽ không thể đăng nhập cho đến khi được mở khóa lại." x="0" y="28" width="470" height="15" />
+    </frame>
+    <frame id="216:1341" name="Prototype field / Tài khoản" x="25" y="99" width="472" height="54">
+      <text id="216:1342" name="Tài khoản" x="0" y="0" width="53" height="14" />
+      <frame id="216:1343" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1344" name="minh***@mail.com" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1345" name="Prototype field / Lý do" x="25" y="167" width="472" height="72">
+      <text id="216:1346" name="Lý do" x="0" y="0" width="30" height="14" />
+      <frame id="216:1347" name="Field box" x="0" y="19" width="472" height="52">
+        <text id="216:1348" name="Nhập lý do khóa tài khoản..." x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1349" name="Modal actions" x="25" y="253" width="470" height="40">
+      <frame id="216:1350" name="Prototype button / Hủy" x="280" y="2.5" width="57" height="35">
+        <text id="216:1351" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1352" name="Prototype button / Xác nhận khóa" x="347" y="2.5" width="123" height="35">
+        <text id="216:1353" name="Xác nhận khóa" x="17" y="10" width="89" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1354" name="Admin Action · Mở khóa tài khoản" x="4700" y="396" width="520" height="308">
+    <frame id="216:1355" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1356" name="Mở khóa tài khoản" x="0" y="0" width="176" height="24" />
+      <text id="216:1357" name="Cho phép người dùng đăng nhập lại vào hệ thống." x="0" y="28" width="470" height="15" />
+    </frame>
+    <frame id="216:1358" name="Prototype field / Tài khoản" x="25" y="99" width="472" height="54">
+      <text id="216:1359" name="Tài khoản" x="0" y="0" width="53" height="14" />
+      <frame id="216:1360" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1361" name="huy***@mail.com" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1362" name="Prototype field / Ghi chú quản trị" x="25" y="167" width="472" height="64">
+      <text id="216:1363" name="Ghi chú quản trị" x="0" y="0" width="86" height="14" />
+      <frame id="216:1364" name="Field box" x="0" y="19" width="472" height="44">
+        <text id="216:1365" name="Đã xác minh yêu cầu hỗ trợ" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1366" name="Modal actions" x="25" y="245" width="470" height="40">
+      <frame id="216:1367" name="Prototype button / Hủy" x="318" y="2.5" width="57" height="35">
+        <text id="216:1368" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1369" name="Prototype button / Mở khóa" x="385" y="2.5" width="85" height="35">
+        <text id="216:1370" name="Mở khóa" x="17" y="10" width="51" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1371" name="Admin Action · Cấu hình Provider" x="4700" y="784" width="520" height="366">
+    <frame id="216:1372" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1373" name="Cấu hình Weather Provider" x="0" y="0" width="257" height="24" />
+      <text id="216:1374" name="Điều chỉnh giới hạn và chính sách gọi provider. Credential không hiển thị ở client." x="0" y="28" width="470" height="15" />
+    </frame>
+    <frame id="216:1375" name="Prototype field / Quota cảnh báo" x="25" y="99" width="472" height="54">
+      <text id="216:1376" name="Quota cảnh báo" x="0" y="0" width="88" height="14" />
+      <frame id="216:1377" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1378" name="80%" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1379" name="Prototype field / Timeout" x="25" y="167" width="472" height="54">
+      <text id="216:1380" name="Timeout" x="0" y="0" width="45" height="14" />
+      <frame id="216:1381" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1382" name="8 giây" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1383" name="Prototype field / Retry" x="25" y="235" width="472" height="54">
+      <text id="216:1384" name="Retry" x="0" y="0" width="30" height="14" />
+      <frame id="216:1385" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1386" name="Tối đa 3 lần" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1387" name="Modal actions" x="25" y="303" width="470" height="40">
+      <frame id="216:1388" name="Prototype button / Hủy" x="294" y="2.5" width="57" height="35">
+        <text id="216:1389" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1390" name="Prototype button / Lưu cấu hình" x="361" y="2.5" width="109" height="35">
+        <text id="216:1391" name="Lưu cấu hình" x="17" y="10" width="75" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1392" name="Admin Action · Trạng thái Provider" x="4700" y="1230" width="520" height="298">
+    <frame id="216:1393" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1394" name="Thay đổi trạng thái Provider" x="0" y="0" width="270" height="24" />
+      <text id="216:1395" name="Tạm dừng provider có thể làm một số chức năng phụ thuộc tạm thời không khả dụng." x="0" y="28" width="470" height="30" />
+    </frame>
+    <frame id="216:1396" name="Prototype field / Provider" x="25" y="99" width="472" height="54">
+      <text id="216:1397" name="Provider" x="0" y="0" width="46" height="14" />
+      <frame id="216:1398" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1399" name="Map / Places" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1400" name="Prototype field / Trạng thái mới" x="25" y="167" width="472" height="54">
+      <text id="216:1401" name="Trạng thái mới" x="0" y="0" width="78" height="14" />
+      <frame id="216:1402" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1403" name="Tạm dừng" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1404" name="Modal actions" x="25" y="235" width="470" height="40">
+      <frame id="216:1405" name="Prototype button / Hủy" x="312" y="2.5" width="57" height="35">
+        <text id="216:1406" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1407" name="Prototype button / Xác nhận" x="379" y="2.5" width="91" height="35">
+        <text id="216:1408" name="Xác nhận" x="17" y="10" width="57" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1409" name="Admin Action · Retry Job" x="4700" y="1608" width="520" height="366">
+    <frame id="216:1410" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1411" name="Retry background job" x="0" y="0" width="208" height="24" />
+      <text id="216:1412" name="Chạy lại tác vụ thất bại theo giới hạn retry của hệ thống." x="0" y="28" width="470" height="15" />
+    </frame>
+    <frame id="216:1413" name="Prototype field / Job" x="25" y="99" width="472" height="54">
+      <text id="216:1414" name="Job" x="0" y="0" width="20" height="14" />
+      <frame id="216:1415" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1416" name="weather-refresh" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1417" name="Prototype field / Lần thử hiện tại" x="25" y="167" width="472" height="54">
+      <text id="216:1418" name="Lần thử hiện tại" x="0" y="0" width="83" height="14" />
+      <frame id="216:1419" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1420" name="2 / 3" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1421" name="Prototype field / Lỗi gần nhất" x="25" y="235" width="472" height="54">
+      <text id="216:1422" name="Lỗi gần nhất" x="0" y="0" width="68" height="14" />
+      <frame id="216:1423" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1424" name="TIMEOUT · provider không phản hồi" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1425" name="Modal actions" x="25" y="303" width="470" height="40">
+      <frame id="216:1426" name="Prototype button / Hủy" x="304" y="2.5" width="57" height="35">
+        <text id="216:1427" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1428" name="Prototype button / Retry ngay" x="371" y="2.5" width="99" height="35">
+        <text id="216:1429" name="Retry ngay" x="17" y="10" width="65" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1430" name="Admin Action · Chi tiết hỗ trợ" x="4700" y="2054" width="520" height="366">
+    <frame id="216:1431" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1432" name="Yêu cầu hỗ trợ #SP-042" x="0" y="0" width="233" height="24" />
+      <text id="216:1433" name="Xem nội dung yêu cầu trước khi quyết định có cần truy cập dữ liệu hỗ trợ hay không." x="0" y="28" width="470" height="30" />
+    </frame>
+    <frame id="216:1434" name="Prototype field / Chủ đề" x="25" y="99" width="472" height="54">
+      <text id="216:1435" name="Chủ đề" x="0" y="0" width="39" height="14" />
+      <frame id="216:1436" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1437" name="Không tải được file export" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1438" name="Prototype field / Người gửi" x="25" y="167" width="472" height="54">
+      <text id="216:1439" name="Người gửi" x="0" y="0" width="53" height="14" />
+      <frame id="216:1440" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1441" name="user_1024" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1442" name="Prototype field / Phạm vi hiện tại" x="25" y="235" width="472" height="54">
+      <text id="216:1443" name="Phạm vi hiện tại" x="0" y="0" width="86" height="14" />
+      <frame id="216:1444" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1445" name="Chưa yêu cầu truy cập dữ liệu riêng tư" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1446" name="Modal actions" x="25" y="303" width="470" height="40">
+      <frame id="216:1447" name="Prototype button / Hủy" x="264" y="2.5" width="57" height="35">
+        <text id="216:1448" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1449" name="Prototype button / Ghi lý do truy cập" x="331" y="2.5" width="139" height="35">
+        <text id="216:1450" name="Ghi lý do truy cập" x="17" y="10" width="105" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1451" name="Admin Action · Lý do truy cập hỗ trợ" x="4700" y="2500" width="520" height="384">
+    <frame id="216:1452" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1453" name="Tạo yêu cầu truy cập dữ liệu" x="0" y="0" width="267" height="24" />
+      <text id="216:1454" name="Chỉ yêu cầu đúng phạm vi cần thiết; hành động này phải được ghi audit." x="0" y="28" width="470" height="15" />
+    </frame>
+    <frame id="216:1455" name="Prototype field / Lý do" x="25" y="99" width="472" height="72">
+      <text id="216:1456" name="Lý do" x="0" y="0" width="30" height="14" />
+      <frame id="216:1457" name="Field box" x="0" y="19" width="472" height="52">
+        <text id="216:1458" name="Phân tích lỗi export theo ticket #SP-042" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1459" name="Prototype field / Phạm vi dữ liệu" x="25" y="185" width="472" height="54">
+      <text id="216:1460" name="Phạm vi dữ liệu" x="0" y="0" width="81" height="14" />
+      <frame id="216:1461" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1462" name="Metadata export + log kỹ thuật liên quan" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1463" name="Prototype field / Thời hạn truy cập" x="25" y="253" width="472" height="54">
+      <text id="216:1464" name="Thời hạn truy cập" x="0" y="0" width="95" height="14" />
+      <frame id="216:1465" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1466" name="30 phút" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1467" name="Modal actions" x="25" y="321" width="470" height="40">
+      <frame id="216:1468" name="Prototype button / Hủy" x="297" y="2.5" width="57" height="35">
+        <text id="216:1469" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1470" name="Prototype button / Tạo yêu cầu" x="364" y="2.5" width="106" height="35">
+        <text id="216:1471" name="Tạo yêu cầu" x="17" y="10" width="72" height="15" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="216:1472" name="Admin Action · Feature Flag" x="4700" y="2964" width="520" height="298">
+    <frame id="216:1473" name="Modal heading" x="25" y="23" width="470" height="62">
+      <text id="216:1474" name="Bật Price Watch" x="0" y="0" width="157" height="24" />
+      <text id="216:1475" name="Bật tính năng chỉ khi provider tương ứng đã được cấu hình và kiểm tra hoạt động." x="0" y="28" width="470" height="30" />
+    </frame>
+    <frame id="216:1476" name="Prototype field / Tính năng" x="25" y="99" width="472" height="54">
+      <text id="216:1477" name="Tính năng" x="0" y="0" width="53" height="14" />
+      <frame id="216:1478" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1479" name="Price Watch" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1480" name="Prototype field / Trạng thái hiện tại" x="25" y="167" width="472" height="54">
+      <text id="216:1481" name="Trạng thái hiện tại" x="0" y="0" width="98" height="14" />
+      <frame id="216:1482" name="Field box" x="0" y="19" width="472" height="34">
+        <text id="216:1483" name="Đã tắt" x="13" y="9" width="440" height="15" />
+      </frame>
+    </frame>
+    <frame id="216:1484" name="Modal actions" x="25" y="235" width="470" height="40">
+      <frame id="216:1485" name="Prototype button / Hủy" x="289" y="2.5" width="57" height="35">
+        <text id="216:1486" name="Hủy" x="17" y="10" width="23" height="15" />
+      </frame>
+      <frame id="216:1487" name="Prototype button / Bật tính năng" x="356" y="2.5" width="114" height="35">
+        <text id="216:1488" name="Bật tính năng" x="17" y="10" width="80" height="15" />
+      </frame>
+    </frame>
+  </frame>
+</canvas>

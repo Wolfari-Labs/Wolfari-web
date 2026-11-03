@@ -7,6 +7,9 @@ export default tseslint.config(
     ignores: [
       'dist/**',
       'dist-demo/**',
+      'dist-demo1/**',
+      // Local build, browser-test and Vite output is generated; application/evidence source is elsewhere.
+      '.local/**',
       'node_modules/**',
       'coverage/**',
       'playwright-report/**',

@@ -6,6 +6,17 @@
   font-size: var(--font-size-label);
   line-height: var(--line-label);
 }
+.hiddenLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .field label {
   font-weight: var(--weight-medium);
   color: var(--color-ink);
@@ -13,21 +24,24 @@
 }
 .inputRow,
 .select {
-  background: var(--color-white);
-  border: 1px solid var(--color-field-line);
-  border-radius: var(--radius-10);
+  background: var(--field-surface);
+  border: 1px solid var(--field-border-default);
+  border-radius: var(--radius-control);
   min-height: var(--control-height);
   width: 100%;
   min-width: 0;
 }
 .inputRow {
   border: 0;
-  --field-border: var(--color-field-line);
+  --field-border: var(--field-border-default);
   box-shadow: inset 0 0 0 1px var(--field-border);
   display: flex;
   align-items: center;
   gap: var(--space-8);
   padding-inline: var(--space-14);
+  transition:
+    box-shadow var(--motion-control) ease,
+    background-color var(--motion-control) ease;
 }
 .input {
   border: 0;
@@ -37,22 +51,27 @@
   min-width: 0;
   min-height: var(--control-height);
   padding: 0;
-  color: var(--color-ink);
+  color: var(--field-text);
   font: inherit;
 }
 .input::placeholder {
   color: var(--color-note-text);
   opacity: 1;
 }
+.input:focus,
+.input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
 .textarea {
   width: 100%;
   min-height: 112px;
   resize: vertical;
-  padding: 12px 14px;
-  border: 1px solid var(--color-field-line);
-  border-radius: var(--radius-10);
-  background: var(--color-white);
-  color: var(--color-ink);
+  padding: var(--space-12) var(--space-14);
+  border: 1px solid var(--field-border-default);
+  border-radius: var(--radius-control);
+  background: var(--field-surface);
+  color: var(--field-text);
   font: inherit;
 }
 .textarea:focus {
@@ -60,7 +79,7 @@
   outline-offset: var(--focus-offset);
 }
 .textarea.invalid {
-  border-color: var(--ios-error);
+  border-color: var(--color-field-error);
 }
 .icon {
   display: inline-flex;
@@ -71,15 +90,20 @@
   flex-shrink: 0;
   border: 0;
   background: transparent;
-  color: var(--color-blue);
+  color: var(--color-muted);
   cursor: pointer;
   min-height: 44px;
+  min-width: 44px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
   padding: 0 var(--space-4);
   font: inherit;
   font-weight: var(--weight-medium);
 }
 .passwordToggle:hover:not(:disabled) {
-  text-decoration: underline;
+  background: var(--color-selected);
+  color: var(--color-ink);
 }
 .passwordToggle:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
@@ -87,7 +111,7 @@
   border-radius: var(--radius-6);
 }
 .passwordToggle:disabled {
-  color: var(--ios-muted);
+  color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
 .select {
@@ -95,10 +119,27 @@
   color: var(--color-ink);
   padding: 10px 40px 10px var(--space-14);
   appearance: none;
-  background-image: url('../assets/figma/9c529.svg');
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px 16px;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-control) ease,
+    box-shadow var(--motion-control) ease;
+}
+.selectWrap {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+}
+.selectChevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-muted);
+  pointer-events: none;
+}
+.select:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
 }
 .select[multiple],
 .select[size]:not([size='1']) {
@@ -107,12 +148,14 @@
   padding-right: var(--space-14);
 }
 .inputRow:focus-within {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
+  --field-border: var(--color-action-primary);
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: -2px;
+  box-shadow: none;
 }
 .invalid {
-  border-color: var(--ios-error);
-  --field-border: var(--ios-error);
+  border-color: var(--color-field-error);
+  --field-border: var(--color-field-error);
 }
 .hint,
 .error {
@@ -124,15 +167,17 @@
   color: var(--color-note-text);
 }
 .error {
-  color: var(--ios-error);
+  color: var(--color-field-error);
 }
 .inputRow:has(input:disabled),
-.select:disabled {
-  background-color: var(--ios-secondary);
-  color: var(--ios-muted);
+.select:disabled,
+.textarea:disabled {
+  background-color: var(--color-control-disabled-surface);
+  color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
 .input:disabled {
+  color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
 @media (hover: hover) {

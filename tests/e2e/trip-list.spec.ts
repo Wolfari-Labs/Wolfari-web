@@ -115,11 +115,11 @@ for (const viewport of [
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     const header = page.locator(
-      'header[data-node-id="135:483"]:visible, header[data-node-id="322:2268"]:visible',
+      'header[data-node-id="135:483"]:visible, header[data-node-id="779:6442"]:visible',
     );
     await expect(header).toHaveCount(1);
     const desktop = viewport.width > 768;
-    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 54);
+    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
     const targets = await page
       .locator(
         'button:visible:not(:disabled), a:visible, input:visible, select:visible, summary:visible',
@@ -180,11 +180,13 @@ for (const viewport of [
       expect(Math.round((await header.boundingBox())!.y)).toBe(0);
     } else {
       const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
-      expect(logo.x + logo.width / 2).toBeCloseTo(viewport.width / 2, 0);
+      expect(Math.round(logo.x)).toBe(16);
       const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
-      expect((await menu.boundingBox())!.x).toBeLessThan(logo.x);
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
+      expect((await menu.boundingBox())!.x).toBeGreaterThan(
+        (await account.boundingBox())!.x + (await account.boundingBox())!.width,
+      );
       await expect(header.getByRole('heading')).toHaveCount(0);
       expect(
         (await page.locator('main').getByRole('heading', { level: 1 }).boundingBox())!.y,
@@ -273,13 +275,19 @@ for (const width of [1440, 402]) {
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     if (width > 768) {
-      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute('href', '/trips/new');
+      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute(
+        'href',
+        '/trips/new',
+      );
       for (const label of ['Vai trò: Tất cả', 'Thời gian', 'Bộ lọc'])
         await expect(page.getByRole('button', { name: label, exact: true })).toBeDisabled();
       for (const action of await articles(page).getByRole('button').all())
-        await expect(action).toBeDisabled();
+        await expect(action).toBeEnabled();
     } else
-      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute('href', '/trips/new');
+      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute(
+        'href',
+        '/trips/new',
+      );
     await expectNoTransport(page, apiCalls);
   });
 
@@ -399,20 +407,31 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   const drawer = page.getByRole('dialog', { name: 'Điều hướng chính' });
   await menu.click();
   await expect(drawer).toBeVisible();
+  // Visibility can precede the entry animation's final position, even with
+  // reduced motion. Keep the exact x=0 contract, but await it before measuring.
+  await expect.poll(async () => (await drawer.boundingBox())?.x).toBe(0);
   const box = (await drawer.boundingBox())!;
   expect(box.x).toBe(0);
-  expect(box.width).toBeLessThanOrEqual(280);
+  expect(Math.round(box.width)).toBe(Math.round(Math.min(300, 402 * 0.86)));
   await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chính' })).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   for (let index = 0; index < 8; index++) {
     await page.keyboard.press('Tab');
-    expect(await page.evaluate(() => !!document.activeElement?.closest('dialog[open]'))).toBe(true);
+    expect(
+      await page.evaluate(
+        () => !!document.activeElement?.closest('[role="dialog"][data-state="open"]'),
+      ),
+    ).toBe(true);
   }
   await page.keyboard.press('Escape');
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await menu.click();
+  const close = drawer.getByRole('button', { name: 'Đóng điều hướng chính' });
+  await expect(close).toBeFocused();
+  // Match the shared Drawer readiness check before sending a raw backdrop click.
+  await close.click({ trial: true });
   await page.mouse.click(390, 200);
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();

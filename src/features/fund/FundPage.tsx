@@ -23,6 +23,7 @@ import { ContentState } from '../../shared/components/ContentState';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import type { DomainError } from '../../shared/types/result';
 import styles from './FundPage.module.css';
+import { GatewayFundPage } from './GatewayFundPage';
 
 /** Keep Finance decimal strings as strings; null is an intentional unknown value. */
 export const formatMoneyVnd = (value: string | null | undefined) => {
@@ -170,6 +171,10 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
 }
 
 export function FundPage() {
+  const repository = useFundRepository();
+  return repository.runtime ? <GatewayFundPage runtime={repository.runtime} /> : <FixtureFundPage />;
+}
+function FixtureFundPage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
   const tripRepository = useTripRepository();

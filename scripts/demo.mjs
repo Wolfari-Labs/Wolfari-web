@@ -9,7 +9,7 @@ const config = JSON.parse(await readFile(resolve(backend, '.local/demo/public.js
 if (config.project !== 'wolfari-demo' || config.backendRoot !== backend || config.webUrl !== 'http://localhost:5273' || config.gatewayUrl !== 'http://127.0.0.1:13000') throw new Error('Invalid demo manifest; run Backend demo:init.');
 const command = process.argv[2];
 if (!['dev', 'build', 'preview', 'test'].includes(command) || process.argv.length !== 3) throw new Error('Use demo:dev, demo:build, demo:preview or test:e2e:live');
-const env = { ...process.env, VITE_DATA_MODE: 'gateway', VITE_GATEWAY_PROXY_TARGET: config.gatewayUrl };
+const env = { ...process.env, PLAYWRIGHT_NO_COPY_PROMPT: '1', VITE_DATA_MODE: 'gateway', VITE_GATEWAY_PROXY_TARGET: config.gatewayUrl };
 delete env.NODE_OPTIONS;
 delete env.NODE_ENV;
 function run(file, args, extra = {}) {

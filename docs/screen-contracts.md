@@ -1,5 +1,29 @@
 # Wolfari Web — Screen Contracts
 
+## Hợp đồng màn hình Gateway demo1 — 28/10/2026
+
+Nguồn chuẩn API nằm ở Backend; Web không tạo OpenAPI cạnh tranh. Dẫn chiếu từng artifact và ảnh hưởng SRS/ERD/API/Mobile trong [phụ lục v1.0](demo-1-web-addendum-v1.0.md). Phần hiện hành này thay thế mô tả fixture/unavailable cũ phía dưới.
+
+| Screen | Actor / read-write | Validation và kết quả bắt buộc |
+| --- | --- | --- |
+| Create Trip | Authenticated → Trip POST + idempotency | Tên/mô tả/ngày/timezone; end-exclusive theo timezone; không giữ destination giả; unknown replay nguyên ý định |
+| Settings | Owner theo permissions → metadata PATCH | Không normalize instant khi chỉ sửa tên/mô tả; date batch ngoài demo |
+| Plan | Member read, Owner/Editor structure, completion capability riêng | pool / scheduled_date / starts_at+ends_at; omission≠null; full permutation; one PATCH move; version409 đối chiếu |
+| Members | Member list, Owner policy/invites/remove, self leave | display_name nullable; IDs UUID/scope đúng; selected membership IDs, membership_revision; leave chỉ terminal mới kết luận |
+| Fund | Active member read, Owner config, Holder consent/confirm, self report | TEST VND; selected active Holder; destination version consent kể cả Owner=Holder; int64 string; chỉ confirm→ledger |
+| Operations | Actor + Trip scope + key + command/body/versions | Validated session journal; không token/link/bank payload;202/503 không fake success; poll/replay/refetch |
+| Identity/Profile | User self, session cookie HttpOnly | Access token memory; cross-tab Web Locks; password/verify/reset/avatar/session errors rõ; actor cache reset |
+| Map/Dress/Packing | Member read projection server | Không writer trong Gateway; không ghép location IDs/draft local; readonly có lý do |
+
+Lý do từ chối đóng góp: consume `Contribution.rejected_reason` nullable từ Backend, hiển thị **lý do từ chối gần nhất** (có thể còn sau báo lại/confirm). Mở rộng optional `ContributionView` field15 tương thích cộng thêm; cột DB đã tồn tại, không migration/event mới.
+
+UI giữ thiết kế hiện có; drawer có focus trap/return, vùng scroll và thao tác keyboard tương đương reorder/edit. Error409 nằm trong modal, không yêu cầu bấm control ở nền bị khóa. Gateway không có scenario picker/demo credentials/fallback fixture. Kiểm viewport/keyboard và giới hạn zoom xem validation; không suy từ fixture sang server.
+
+## Thiết kế và contracts lịch sử trước demo1
+
+Nội dung/phase dưới được giữ để truy vết Figma và fixture. Khi khác phần demo1, phần demo1 và contract Backend hiện hành có ưu tiên; “Gateway chưa tích hợp”, “Create unavailable” hoặc Packing local-write không mô tả Gateway hiện tại.
+
+
 Tài liệu này là hợp đồng giữa thiết kế Figma, UI code, fixture và Gateway adapter. Không implement một flow mới nếu thiếu các mục bắt buộc bên dưới.
 
 ## Contracts: Create Trip, Dress Code, Packing List và Trip Map (18/10/2026)

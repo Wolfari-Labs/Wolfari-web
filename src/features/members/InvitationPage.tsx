@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ContentState } from '../../shared/components/ContentState';
@@ -11,6 +11,42 @@ import { invitationResponseAttempt, invitationToken } from './invitation-token';
 import type { DomainError } from '../../shared/types/result';
 import { invitationErrorMessage, refreshInvitationProjections } from './invitation-feedback';
 import styles from './Invitations.module.css';
+import mascot from '../../shared/assets/figma/4ff86.png';
+import send from '../../shared/assets/figma/ac8db.svg';
+
+const invitationStatus = {
+  PENDING: 'Đang chờ phản hồi',
+  ACCEPTED: 'Đã chấp nhận',
+  DECLINED: 'Đã từ chối',
+  EXPIRED: 'Đã hết hạn',
+  REVOKED: 'Đã thu hồi',
+};
+
+function ResponseCard({
+  title = 'Lời mời chuyến đi',
+  tripName,
+  subtitle,
+  children,
+}: {
+  title?: string;
+  tripName?: string;
+  subtitle?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className={styles.response} data-flow="invitation-response">
+      <header className={styles.responseHeader}>
+        <img src={mascot} alt="" width={118} height={118} />
+        <div>
+          <h1>{title}</h1>
+          {tripName && <h2>{tripName}</h2>}
+          {subtitle}
+        </div>
+      </header>
+      {children}
+    </section>
+  );
+}
 
 const noSubscription = () => () => undefined;
 const authenticated = () => 'authenticated';
@@ -29,27 +65,29 @@ export function InvitationPage() {
   // Remount the request owner across session/token changes to discard stale results.
   if (declined && !token)
     return (
-      <section className={styles.response}>
-        <h1>Đã từ chối lời mời</h1>
+      <ResponseCard title="Đã từ chối lời mời">
         <Link to={paths.trips}>Đến danh sách chuyến đi</Link>
-      </section>
+      </ResponseCard>
     );
   if (!token)
     return (
-      <section className={styles.response}>
-        <h1>Không có lời mời hợp lệ</h1>
+      <ResponseCard title="Không có lời mời hợp lệ">
         <p>Hãy mở lại liên kết gốc. Vì bảo mật, tải lại trang sẽ không giữ lời mời đang mở.</p>
-      </section>
+      </ResponseCard>
     );
-  if (session === 'unknown') return <ContentState state="loading" headingLevel={1} />;
+  if (session === 'unknown')
+    return (
+      <ResponseCard>
+        <ContentState state="loading" headingLevel={2} />
+      </ResponseCard>
+    );
   if (session !== 'authenticated')
     return (
-      <section className={styles.response}>
-        <h1>Lời mời chuyến đi</h1>
+      <ResponseCard>
         <p>Đăng nhập bằng tài khoản nhận lời mời để tiếp tục.</p>
         <Link to="/login?returnTo=%2Finvitations">Đăng nhập</Link> ·{' '}
         <Link to="/register?returnTo=%2Finvitations">Đăng ký</Link>
-      </section>
+      </ResponseCard>
     );
   return (
     <InvitationResponse
@@ -180,7 +218,11 @@ function InvitationResponse({
     !invitation.acceptInvitation ||
     !invitation.declineInvitation
   )
-    return <ContentState state="unavailable" headingLevel={1} />;
+    return (
+      <ResponseCard>
+        <ContentState state="unavailable" headingLevel={2} />
+      </ResponseCard>
+    );
   const preview =
     !authorityStale && previewQuery.data?.status === 'success' ? previewQuery.data.data : null;
   const previewError =
@@ -195,40 +237,70 @@ function InvitationResponse({
         : null;
   const visibleError = error ?? previewError;
   return (
-    <section className={styles.response}>
-      <h1>Lời mời chuyến đi</h1>
+    <ResponseCard
+      {...(preview ? { tripName: preview.tripName } : {})}
+      subtitle={
+        preview && (
+          <p>
+            {preview.inviterDisplayName || 'Một thành viên'} mời bạn tham gia{' '}
+            <strong>{preview.tripName}</strong>.
+          </p>
+        )
+      }
+    >
       {((!attempt && previewQuery.isPending) || (authorityStale && previewQuery.isFetching)) && (
         <ContentState state="loading" headingLevel={2} />
       )}
       {visibleError && (
         <Alert tone="warning" live>
           {invitationErrorMessage(visibleError)}
-          {visibleError.correlationId && <small> Mã tra cứu: {visibleError.correlationId}</small>}
+          {visibleError.correlationId && (
+            <details>
+              <summary>Chi tiết hỗ trợ</summary>
+              <small>Mã tra cứu: {visibleError.correlationId}</small>
+            </details>
+          )}
         </Alert>
       )}
       {preview && (
-        <>
+        <dl className={styles.responseMetadata}>
+          <div>
+            <dt>Hết hạn</dt>
+            <dd>{new Date(preview.expiresAt).toLocaleString('vi-VN')}</dd>
+          </div>
+          <div>
+            <dt>Trạng thái lời mời</dt>
+            <dd>{invitationStatus[preview.status]}</dd>
+          </div>
+          <div>
+            <dt>Vai trò khi tham gia</dt>
+            <dd>Member</dd>
+          </div>
+        </dl>
+      )}
+      {preview?.status === 'PENDING' && (
+        <div className={styles.note} data-tone="terminal">
           <p>
-            {preview.inviterDisplayName || 'Một thành viên'} mời bạn tham gia{' '}
-            <strong>{preview.tripName}</strong>.
+            Khi chấp nhận, hệ thống kiểm tra lại người nhận, hiệu lực lời mời và quyền tham gia
+            chuyến đi. Quyền sửa lịch trình và trách nhiệm quỹ được quản lý riêng.
           </p>
-          <p>Hết hạn: {new Date(preview.expiresAt).toLocaleString('vi-VN')}</p>
-        </>
+        </div>
       )}
       {((!authorityStale && preview?.status === 'PENDING') || attempt) && (
-        <div className={styles.actions}>
-          <Button
-            disabled={pending || (attempt !== null && attempt.action !== 'accept')}
-            onClick={() => void respond('accept')}
-          >
-            {attempt?.action === 'accept' ? 'Thử lại chấp nhận' : 'Chấp nhận'}
-          </Button>
+        <div className={styles.responseActions}>
           <Button
             variant="outline"
             disabled={pending || (attempt !== null && attempt.action !== 'decline')}
             onClick={() => void respond('decline')}
           >
             {attempt?.action === 'decline' ? 'Thử lại từ chối' : 'Từ chối'}
+          </Button>
+          <Button
+            icon={<img src={send} alt="" width={18} height={18} />}
+            disabled={pending || (attempt !== null && attempt.action !== 'accept')}
+            onClick={() => void respond('accept')}
+          >
+            {attempt?.action === 'accept' ? 'Thử lại chấp nhận' : 'Chấp nhận'}
           </Button>
         </div>
       )}
@@ -257,6 +329,6 @@ function InvitationResponse({
       >
         Đổi tài khoản
       </Button>
-    </section>
+    </ResponseCard>
   );
 }

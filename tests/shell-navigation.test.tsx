@@ -7,6 +7,7 @@ import { App } from '../src/app/App';
 import { createRouter } from '../src/app/router';
 import { createGatewayShellRepository } from '../src/infrastructure/repositories/shell.gateway-repository';
 import { ContentState } from '../src/shared/components/ContentState';
+import { AdminPlaceholder } from '../src/features/shell/components/AdminChrome';
 import {
   createFixtureShellRepository,
   previewTripId,
@@ -30,7 +31,7 @@ function mount() {
           { path: '/trips/:tripId/settings', element: <ContentState state="placeholder" /> },
           { path: '/trips', element: <ContentState state="placeholder" /> },
           { path: '/', element: <ContentState state="placeholder" /> },
-          { path: '/admin', element: <ContentState state="placeholder" /> },
+          { path: '/admin', element: <AdminPlaceholder /> },
         ],
       },
     ],
@@ -62,7 +63,7 @@ describe('Shell interactions', () => {
   });
   it('does not render a private outlet when a ready snapshot explicitly denies read', async () => {
     mount();
-    await screen.findByText('Trang Nguyễn ⌄');
+    await screen.findByText('Trang Nguyễn');
     await userEvent.selectOptions(
       screen.getByLabelText('Trạng thái preview'),
       'forbidden-snapshot',
@@ -76,12 +77,12 @@ describe('Shell interactions', () => {
   });
   it('requires an explicit Admin snapshot and never grants role from the URL', async () => {
     const router = mount();
-    await screen.findByText('Trang Nguyễn ⌄');
+    await screen.findByText('Trang Nguyễn');
     await userEvent.click(screen.getByRole('link', { name: 'Shell Admin' }));
     expect(router.state.location.pathname).toBe('/admin');
     await screen.findByText('Bạn không có quyền truy cập');
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'admin');
-    await screen.findByText('Không gian làm việc');
+    await screen.findByText('Chức năng quản trị chưa khả dụng');
     expect(screen.queryByText('Bạn không có quyền truy cập')).not.toBeInTheDocument();
     const nav = screen.getByRole('navigation', { name: 'Điều hướng Admin' });
     await userEvent.click(within(nav).getByRole('button', { name: 'Tài khoản' }));
@@ -93,7 +94,7 @@ describe('Shell interactions', () => {
   });
   it('toggles sidebar and changes section without claiming a mutation', async () => {
     const router = mount();
-    await screen.findByText('Trang Nguyễn ⌄');
+    await screen.findByText('Trang Nguyễn');
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
     await userEvent.click(within(sidebar).getByRole('link', { name: 'Packing list' }));
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/packing`);
@@ -118,23 +119,23 @@ describe('Shell interactions', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Thu gọn thanh điều hướng' }));
     const expand = screen.getByRole('button', { name: 'Mở rộng thanh điều hướng' });
     expect(expand).toHaveAttribute('aria-expanded', 'false');
-    expect(expand.querySelector('img')?.className).toContain('collapseIconReversed');
+    expect(expand.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.queryByText(/đã lưu/i)).not.toBeInTheDocument();
   });
   it('forbidden clears the membership and prevents section actions', async () => {
     mount();
-    await screen.findByText('Trang Nguyễn ⌄');
+    await screen.findByText('Trang Nguyễn');
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'forbidden');
     await screen.findByText('Bạn không có quyền truy cập');
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
     within(sidebar)
       .getAllByRole('button')
       .forEach((button) => expect(button).toBeDisabled());
-    expect(screen.queryByText('Trang Nguyễn ⌄')).not.toBeInTheDocument();
+    expect(screen.queryByText('Trang Nguyễn')).not.toBeInTheDocument();
   });
   it('renders empty, conflict reload, and persistent loading states', async () => {
     mount();
-    await screen.findByText('Trang Nguyễn ⌄');
+    await screen.findByText('Trang Nguyễn');
     const scenario = screen.getByLabelText('Trạng thái preview');
     await userEvent.selectOptions(scenario, 'empty');
     await screen.findByText('Chưa có nội dung');
@@ -147,11 +148,25 @@ describe('Shell interactions', () => {
   });
   it('opens the mobile workspace drawer and changes section without bottom tabs', async () => {
     mount();
-    await screen.findByText('Trang Nguyễn ⌄');
-    await userEvent.click(screen.getByRole('button', { name: 'Mở điều hướng chuyến đi' }));
-    const drawer = within(screen.getByRole('dialog')).getByRole('navigation', {
+    await screen.findByText('Trang Nguyễn');
+    await userEvent.click(screen.getByRole('button', { name: /Mở điều hướng chuyến đi/ }));
+    const drawer = within(await screen.findByRole('dialog')).getByRole('navigation', {
       name: 'Điều hướng chuyến đi',
     });
+    expect(within(drawer).getByRole('link', { name: 'Chuyến đi của tôi' })).toHaveAttribute(
+      'href',
+      '/trips',
+    );
+    expect(within(drawer).getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
+      'aria-current',
+    );
+    expect(within(drawer).getAllByRole('link', { current: 'page' })).toEqual([
+      within(drawer).getByRole('link', { name: 'Tổng quan chuyến đi' }),
+    ]);
+    expect(within(drawer).getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute(
+      'href',
+      '/profile',
+    );
     await userEvent.click(within(drawer).getByRole('link', { name: 'Lịch trình' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(
@@ -163,5 +178,13 @@ describe('Shell interactions', () => {
     expect(
       screen.queryByRole('button', { name: 'Đóng điều hướng chuyến đi' }),
     ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /Mở điều hướng chuyến đi/ }));
+    const planDrawer = within(await screen.findByRole('dialog'));
+    expect(planDrawer.getAllByRole('link', { current: 'page' })).toEqual([
+      planDrawer.getByRole('link', { name: 'Lịch trình' }),
+    ]);
+    expect(planDrawer.getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
+      'aria-current',
+    );
   });
 });

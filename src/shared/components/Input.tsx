@@ -1,6 +1,7 @@
 import { useState, type ComponentProps, type ReactNode } from 'react';
 import { Field, useField, type FieldProps } from './Field';
 import styles from './Field.module.css';
+import { Eye, EyeOff } from 'lucide-react';
 
 export interface InputProps extends ComponentProps<'input'>, FieldProps {
   leadingIcon?: ReactNode;
@@ -44,7 +45,11 @@ export function Input({
             disabled={props.disabled}
             onClick={() => setPasswordVisible((visible) => !visible)}
           >
-            {passwordVisible ? 'Ẩn' : 'Hiện'}
+            {passwordVisible ? (
+              <EyeOff size={18} aria-hidden="true" />
+            ) : (
+              <Eye size={18} aria-hidden="true" />
+            )}
           </button>
         )}
       </div>

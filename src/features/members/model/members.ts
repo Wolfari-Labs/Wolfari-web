@@ -35,6 +35,7 @@ export interface MembershipPageViewModel {
   readonly nextCursor: string | null;
 }
 export interface MembershipRepository {
+  readonly commands?: import('../../../infrastructure/operations/command-coordinator').CommandCoordinator;
   listMembers(request: MembershipReadRequest): Promise<ReadResult<MembershipPageViewModel>>;
 }
 export const invitationScenarios = [...membershipScenarios, 'expired', 'revoked', 'used'] as const;

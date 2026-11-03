@@ -32,7 +32,8 @@
 .error {
   background: var(--ios-peach);
   border-color: var(--ios-error);
-  color: var(--ios-error);
+  /* CP03-A01 / D22: retain the surface; readable text on the peach background. */
+  color: var(--color-status-danger);
 }
 .success .marker,
 .warning .marker,

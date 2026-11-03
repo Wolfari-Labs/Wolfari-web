@@ -1,0 +1,774 @@
+{
+  "scope": "Static manifest JS/CSS closure plus emitted assets; no runtime/network measurement",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "AMD Ryzen 7 6800HS Creator Edition             "
+  },
+  "buildRoot": "D:\\Desktop\\NHAP\\PBL6\\Wolfari-web\\.local\\cp11-compact-gateway",
+  "manifestSha256": "50828e3b630ac4d5909e2ed023ca7d8f0f35bfcf8755be87c0a83391befb960f",
+  "limits": [
+    "Home is the entry static closure, not a measured browser request graph.",
+    "Route closures include entry + route static imports, excluding dynamic imports, images and fonts.",
+    "gzipBytes sums per-file local gzip output, not server encoding or actual wire bytes.",
+    "Nested dynamic feature chunks require runtime loading and are listed separately.",
+    "No approved PERF01 SLA, production p75, LCP/CLS/INP, or before/after speed claim.",
+    "Marker scan is heuristic; source/runtime boundary tests remain authoritative."
+  ],
+  "routes": {
+    "home": {
+      "bytes": 608865,
+      "gzipBytes": 177113,
+      "files": [
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/index-C6TNTHKT.js",
+          "bytes": 389851,
+          "gzipBytes": 118304,
+          "sha256": "9a46e77aff1ccfc5862370c03db59fc186c3e0f840640582a5ee161600200444"
+        },
+        {
+          "file": "assets/index-hHp-e1Yc.css",
+          "bytes": 109573,
+          "gzipBytes": 21480,
+          "sha256": "eda026a89693405d12e3af3554acd39eb522f8d000ac97b62289bf3014759bdd"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        }
+      ]
+    },
+    "auth": {
+      "bytes": 703242,
+      "gzipBytes": 198313,
+      "files": [
+        {
+          "file": "assets/04603-Bfu0HwZ_.js",
+          "bytes": 3411,
+          "gzipBytes": 942,
+          "sha256": "331eba49f304878201c9459fc669634fbbc3471d5c3e6e02d17318ec98e2ca5c"
+        },
+        {
+          "file": "assets/AuthPage-DTaCPG9S.css",
+          "bytes": 6746,
+          "gzipBytes": 1982,
+          "sha256": "dbed09d1eb95d436fcce57c36290af2e416a859ea017676b772faf3baf16d682"
+        },
+        {
+          "file": "assets/AuthPage-Dhl8AvnM.js",
+          "bytes": 9090,
+          "gzipBytes": 3737,
+          "sha256": "bd43757ee577eebe996715b865be89d416d95bc687ffa77bab4fd72e057652ad"
+        },
+        {
+          "file": "assets/AuthPage.module-BfbYWmTH.js",
+          "bytes": 1316,
+          "gzipBytes": 712,
+          "sha256": "b8167ed082c7e78d4d391cacbe95e630fdbbac70b60fdcfc53a7a786e3f7eb72"
+        },
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/Input-BqV-Rx5S.js",
+          "bytes": 1652,
+          "gzipBytes": 869,
+          "sha256": "4d6c0363d83c43e50bf6c3d6a284c48ad84ed1a8bdbd749f251d357814bcc69c"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/index-C6TNTHKT.js",
+          "bytes": 389851,
+          "gzipBytes": 118304,
+          "sha256": "9a46e77aff1ccfc5862370c03db59fc186c3e0f840640582a5ee161600200444"
+        },
+        {
+          "file": "assets/index-hHp-e1Yc.css",
+          "bytes": 109573,
+          "gzipBytes": 21480,
+          "sha256": "eda026a89693405d12e3af3554acd39eb522f8d000ac97b62289bf3014759bdd"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        },
+        {
+          "file": "assets/scene-assets-C-WmDzDT.js",
+          "bytes": 71758,
+          "gzipBytes": 12678,
+          "sha256": "387abc4eb1dc894fde7269f30f46ea524029490b00c5db46119a4d42d46cacd1"
+        },
+        {
+          "file": "assets/use-identity-task-CsFS76FW.js",
+          "bytes": 404,
+          "gzipBytes": 280,
+          "sha256": "9708aa528f29b2a0a6bbff5244c1cc95e5d547d086736032e0d5a7dabbec5e62"
+        }
+      ]
+    },
+    "plan": {
+      "bytes": 1022692,
+      "gzipBytes": 311496,
+      "files": [
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/Drawer-CFpQXskG.js",
+          "bytes": 1597,
+          "gzipBytes": 808,
+          "sha256": "c48f4bbd448654f1da79580c3393698920611067e8efcebb1d290173710837b2"
+        },
+        {
+          "file": "assets/Drawer-CTZEFPj7.css",
+          "bytes": 2960,
+          "gzipBytes": 1017,
+          "sha256": "71fe66ac28b7c9a1531244a191869473bb81d381705757cf6991bdafee6a2c8e"
+        },
+        {
+          "file": "assets/Input-BqV-Rx5S.js",
+          "bytes": 1652,
+          "gzipBytes": 869,
+          "sha256": "4d6c0363d83c43e50bf6c3d6a284c48ad84ed1a8bdbd749f251d357814bcc69c"
+        },
+        {
+          "file": "assets/PlanPage-C83AROMw.js",
+          "bytes": 257334,
+          "gzipBytes": 81403,
+          "sha256": "2e068f74eb465cbce574e93bcd5798cb896cd4426824e4fdefb817edafc4a9c8"
+        },
+        {
+          "file": "assets/PlanPage-CUCViVS2.css",
+          "bytes": 22147,
+          "gzipBytes": 4682,
+          "sha256": "56ce27567d4bebe18a1379b482122b366e715005e380a39c3c32cf180e1b4937"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/TripHero-CDZem3z9.js",
+          "bytes": 3865,
+          "gzipBytes": 1630,
+          "sha256": "380d526c4724c01871ea13ed6b34c5db1a648501d07dcd3b8448c741e87f31e0"
+        },
+        {
+          "file": "assets/TripHero-DNgaHc-t.css",
+          "bytes": 11084,
+          "gzipBytes": 2957,
+          "sha256": "415cb8ecd67345b527760106e11013c9fe843f5fe50b926fb1797b8431fbaf7e"
+        },
+        {
+          "file": "assets/Ui-CGd3rQ5p.js",
+          "bytes": 3752,
+          "gzipBytes": 1433,
+          "sha256": "c006b6fc4c13176d5eed7260086354a6034d6dc30878793ff77ca6fe3147f0fd"
+        },
+        {
+          "file": "assets/browser-storage-B4ajCdc-.js",
+          "bytes": 720,
+          "gzipBytes": 367,
+          "sha256": "caf30f9e60c5400a87a34e80246a9bb9e4960bbac5d302d6d319886719ddb72e"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/dist-Bh7KgP3E.js",
+          "bytes": 50091,
+          "gzipBytes": 17432,
+          "sha256": "71fe88a6e0ade79fdae8e9c7cf63bfdae57889cfe1ace5006da5314473016d88"
+        },
+        {
+          "file": "assets/dist-DRa7WvQ1.js",
+          "bytes": 5181,
+          "gzipBytes": 1916,
+          "sha256": "349709271dc11aaff529e3f4860cdb0ca448f8e5229cbcc9ebd60ed62d7f7b55"
+        },
+        {
+          "file": "assets/es2015-jBHJ5Ca3.js",
+          "bytes": 34519,
+          "gzipBytes": 11861,
+          "sha256": "dee6446677f80f540ea6ec53a1f44658bdad92f6326f11e4ace0c3fad00fba4d"
+        },
+        {
+          "file": "assets/index-C6TNTHKT.js",
+          "bytes": 389851,
+          "gzipBytes": 118304,
+          "sha256": "9a46e77aff1ccfc5862370c03db59fc186c3e0f840640582a5ee161600200444"
+        },
+        {
+          "file": "assets/index-hHp-e1Yc.css",
+          "bytes": 109573,
+          "gzipBytes": 21480,
+          "sha256": "eda026a89693405d12e3af3554acd39eb522f8d000ac97b62289bf3014759bdd"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/place-selection-store-CCgoNyNY.js",
+          "bytes": 8876,
+          "gzipBytes": 3628,
+          "sha256": "d4221e8c348f8eb7c78ad7d35dd79a4eb6bd5ebdb3eb034c30ab42b7b5269b49"
+        },
+        {
+          "file": "assets/plan-BGd-BzLW.js",
+          "bytes": 120,
+          "gzipBytes": 118,
+          "sha256": "6e76cacb2804e375f6211b7ea50743c0634d072beb65341c4f966c63eec7ec7f"
+        },
+        {
+          "file": "assets/plan-draft-BVzegFCH.js",
+          "bytes": 6213,
+          "gzipBytes": 2412,
+          "sha256": "424372af8562e4b6b0c8c6f2adf2c86eab2a1a74cb2f9437b6ba0a0f8018eaf3"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        },
+        {
+          "file": "assets/trip-list-query-DzgDhBj2.js",
+          "bytes": 1014,
+          "gzipBytes": 643,
+          "sha256": "dc4e7048e43f2036192f3f943da5ba3918c68c74f6ba56805616e01a70863409"
+        },
+        {
+          "file": "assets/trip-query-keys-BXnqlEhj.js",
+          "bytes": 99,
+          "gzipBytes": 98,
+          "sha256": "a1a93dac3749af9b61e8b35d0498dfbc375002119752bb47ff6d56ce8654cf09"
+        },
+        {
+          "file": "assets/use-trip-plan-snapshot-ID0U_B1S.js",
+          "bytes": 2603,
+          "gzipBytes": 1109,
+          "sha256": "1675e2f4259758699a118d0fb8193ec02fbb2392edd9d19ae7b5650d2ea9733d"
+        }
+      ]
+    },
+    "fund": {
+      "bytes": 780686,
+      "gzipBytes": 236832,
+      "files": [
+        {
+          "file": "assets/Button-35ux8AP9.css",
+          "bytes": 2757,
+          "gzipBytes": 933,
+          "sha256": "8e444eadb091567b8f839afebe8647152f75dcca8ad39cf261b40d413d14c04f"
+        },
+        {
+          "file": "assets/Button-Bs1Z6Ivi.js",
+          "bytes": 1020,
+          "gzipBytes": 493,
+          "sha256": "9ea0d340483fe1cad1d46a4ac8a8eac6aa7515b11100cef39d7c4159544f0382"
+        },
+        {
+          "file": "assets/CapabilityNote-BKtJuMrO.js",
+          "bytes": 242,
+          "gzipBytes": 205,
+          "sha256": "af6696d024008845c1bb0da42cde6625b0976684f54604b4644455d3560b45ef"
+        },
+        {
+          "file": "assets/CapabilityNote-DYI9JQFm.css",
+          "bytes": 364,
+          "gzipBytes": 220,
+          "sha256": "a7adb1ad1404fc43f98c4aa298bc1db251decd83e5fb0b72a3288ca0bc1ad53a"
+        },
+        {
+          "file": "assets/DemoWorkspace-DR8SQBQq.css",
+          "bytes": 3211,
+          "gzipBytes": 1049,
+          "sha256": "e68f9ec42ca3f2906c45f70d42b8906bcdc70407661aba9ac35f8608df5b38a1"
+        },
+        {
+          "file": "assets/DemoWorkspace.module-C2w9w2Ni.js",
+          "bytes": 394,
+          "gzipBytes": 223,
+          "sha256": "6840effc133d9e4e59e85035bf61a7df72c37149edee7176f6e42c8e7c24a347"
+        },
+        {
+          "file": "assets/Drawer-CFpQXskG.js",
+          "bytes": 1597,
+          "gzipBytes": 808,
+          "sha256": "c48f4bbd448654f1da79580c3393698920611067e8efcebb1d290173710837b2"
+        },
+        {
+          "file": "assets/Drawer-CTZEFPj7.css",
+          "bytes": 2960,
+          "gzipBytes": 1017,
+          "sha256": "71fe66ac28b7c9a1531244a191869473bb81d381705757cf6991bdafee6a2c8e"
+        },
+        {
+          "file": "assets/FundPage-CMxzQf_L.js",
+          "bytes": 11003,
+          "gzipBytes": 3849,
+          "sha256": "0920969c4891aeab3beffb4ae5c460378b1d020ba12c299860365faec4a9f3c1"
+        },
+        {
+          "file": "assets/GatewayFundPage-B96D-F1M.js",
+          "bytes": 22539,
+          "gzipBytes": 7215,
+          "sha256": "09bde4abe8e9df3c86982a8ece84a9b208d08ad05a35fbc7fe6e634af7337c25"
+        },
+        {
+          "file": "assets/GatewayFundPage-Btx5g9wO.css",
+          "bytes": 7488,
+          "gzipBytes": 1833,
+          "sha256": "a619a98232e4b7874fab562caeb4620a894d4fad53dfc12bd745539285f1f9d7"
+        },
+        {
+          "file": "assets/Input-BqV-Rx5S.js",
+          "bytes": 1652,
+          "gzipBytes": 869,
+          "sha256": "4d6c0363d83c43e50bf6c3d6a284c48ad84ed1a8bdbd749f251d357814bcc69c"
+        },
+        {
+          "file": "assets/OperationStatus-BnOl88y7.js",
+          "bytes": 3533,
+          "gzipBytes": 1674,
+          "sha256": "d69e1d88669963b01c9852e7252ae252dc90eab74e52ac0bd6e535ff15c24922"
+        },
+        {
+          "file": "assets/QueryClientProvider-CqK1hh5D.js",
+          "bytes": 401,
+          "gzipBytes": 285,
+          "sha256": "ca1802ed010bc35da54ed2d92664fec450c2ef42cc1163e69bb77054e8ee43b3"
+        },
+        {
+          "file": "assets/TripHero-CDZem3z9.js",
+          "bytes": 3865,
+          "gzipBytes": 1630,
+          "sha256": "380d526c4724c01871ea13ed6b34c5db1a648501d07dcd3b8448c741e87f31e0"
+        },
+        {
+          "file": "assets/TripHero-DNgaHc-t.css",
+          "bytes": 11084,
+          "gzipBytes": 2957,
+          "sha256": "415cb8ecd67345b527760106e11013c9fe843f5fe50b926fb1797b8431fbaf7e"
+        },
+        {
+          "file": "assets/Ui-CGd3rQ5p.js",
+          "bytes": 3752,
+          "gzipBytes": 1433,
+          "sha256": "c006b6fc4c13176d5eed7260086354a6034d6dc30878793ff77ca6fe3147f0fd"
+        },
+        {
+          "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+          "bytes": 93078,
+          "gzipBytes": 30564,
+          "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+        },
+        {
+          "file": "assets/dist-Bh7KgP3E.js",
+          "bytes": 50091,
+          "gzipBytes": 17432,
+          "sha256": "71fe88a6e0ade79fdae8e9c7cf63bfdae57889cfe1ace5006da5314473016d88"
+        },
+        {
+          "file": "assets/dist-DRa7WvQ1.js",
+          "bytes": 5181,
+          "gzipBytes": 1916,
+          "sha256": "349709271dc11aaff529e3f4860cdb0ca448f8e5229cbcc9ebd60ed62d7f7b55"
+        },
+        {
+          "file": "assets/es2015-jBHJ5Ca3.js",
+          "bytes": 34519,
+          "gzipBytes": 11861,
+          "sha256": "dee6446677f80f540ea6ec53a1f44658bdad92f6326f11e4ace0c3fad00fba4d"
+        },
+        {
+          "file": "assets/index-C6TNTHKT.js",
+          "bytes": 389851,
+          "gzipBytes": 118304,
+          "sha256": "9a46e77aff1ccfc5862370c03db59fc186c3e0f840640582a5ee161600200444"
+        },
+        {
+          "file": "assets/index-hHp-e1Yc.css",
+          "bytes": 109573,
+          "gzipBytes": 21480,
+          "sha256": "eda026a89693405d12e3af3554acd39eb522f8d000ac97b62289bf3014759bdd"
+        },
+        {
+          "file": "assets/info-DhWda1SR.js",
+          "bytes": 3646,
+          "gzipBytes": 1773,
+          "sha256": "b11c5bf9112d26a77faed506046d5b2faad003d3ca0509f7d2b1860ffe6b03c6"
+        },
+        {
+          "file": "assets/plan-draft-BVzegFCH.js",
+          "bytes": 6213,
+          "gzipBytes": 2412,
+          "sha256": "424372af8562e4b6b0c8c6f2adf2c86eab2a1a74cb2f9437b6ba0a0f8018eaf3"
+        },
+        {
+          "file": "assets/react-B6PPDU_E.js",
+          "bytes": 8539,
+          "gzipBytes": 3281,
+          "sha256": "d0479b1fd04e9d35a06db771b1f5107e02b9229ad9f07102987292df40dcd8b6"
+        },
+        {
+          "file": "assets/trip-list-query-DzgDhBj2.js",
+          "bytes": 1014,
+          "gzipBytes": 643,
+          "sha256": "dc4e7048e43f2036192f3f943da5ba3918c68c74f6ba56805616e01a70863409"
+        },
+        {
+          "file": "assets/useInfiniteQuery-Daugxvmn.js",
+          "bytes": 1119,
+          "gzipBytes": 473,
+          "sha256": "addc2ec8d82bf06acc24f68344d09e5b8639f136f721589b641132e93660b8af"
+        }
+      ]
+    }
+  },
+  "dynamicEntries": [
+    {
+      "source": "src/features/auth/AuthPage.tsx",
+      "file": "assets/AuthPage-Dhl8AvnM.js"
+    },
+    {
+      "source": "src/features/auth/IdentityActionPage.tsx",
+      "file": "assets/IdentityActionPage-CdNiaLos.js"
+    },
+    {
+      "source": "src/features/auth/ProfilePage.tsx",
+      "file": "assets/ProfilePage-0I32d3tG.js"
+    },
+    {
+      "source": "src/features/dress-code/DressCodePage.tsx",
+      "file": "assets/DressCodePage-CbiPL01H.js"
+    },
+    {
+      "source": "src/features/fund/FundPage.tsx",
+      "file": "assets/FundPage-CMxzQf_L.js"
+    },
+    {
+      "source": "src/features/map/TripMapPage.tsx",
+      "file": "assets/TripMapPage-Bs_G9jPn.js"
+    },
+    {
+      "source": "src/features/members/InvitationPage.tsx",
+      "file": "assets/InvitationPage-BC_bg_vH.js"
+    },
+    {
+      "source": "src/features/members/MembersPage.tsx",
+      "file": "assets/MembersPage-DLl-4fHp.js"
+    },
+    {
+      "source": "src/features/notifications/NotificationInbox.tsx",
+      "file": "assets/NotificationInbox-BIdunl5v.js"
+    },
+    {
+      "source": "src/features/notifications/Notifications.tsx",
+      "file": "assets/Notifications-BKnZQvKY.js"
+    },
+    {
+      "source": "src/features/packing/PackingPage.tsx",
+      "file": "assets/PackingPage-CFgKce_O.js"
+    },
+    {
+      "source": "src/features/plan/PlanPage.tsx",
+      "file": "assets/PlanPage-C83AROMw.js"
+    },
+    {
+      "source": "src/features/price-watch/PriceWatchPage.tsx",
+      "file": "assets/PriceWatchPage-DH6lPyF4.js"
+    },
+    {
+      "source": "src/features/shell/components/AccountMenu.tsx",
+      "file": "assets/AccountMenu-Crj6IZRu.js"
+    },
+    {
+      "source": "src/features/trips/TripListPage.tsx",
+      "file": "assets/TripListPage-CC3oZnQh.js"
+    },
+    {
+      "source": "src/features/trips/TripOverviewPage.tsx",
+      "file": "assets/TripOverviewPage-DmneK-b6.js"
+    },
+    {
+      "source": "src/features/trips/create/CreateTripPage.tsx",
+      "file": "assets/CreateTripPage-gUnUCgxs.js"
+    },
+    {
+      "source": "src/features/trips/settings/TripSettingsPage.tsx",
+      "file": "assets/TripSettingsPage-BSHA6_7l.js"
+    },
+    {
+      "source": "src/shared/components/motion-features.ts",
+      "file": "assets/motion-features-Dm-yqDJH.js"
+    }
+  ],
+  "emitted": {
+    "count": 119,
+    "bytes": 5896577
+  },
+  "largestAssets": [
+    {
+      "file": "assets/06bd1-9iR9yAvz.png",
+      "bytes": 2698783,
+      "gzipBytes": 2691115,
+      "sha256": "f20376520c1f0c2fce091f3b2a88f89adc4cdbc4ff5fa196899853cdafb5ddf8"
+    },
+    {
+      "file": "assets/16cac-ZW08gMZN.png",
+      "bytes": 475435,
+      "gzipBytes": 474940,
+      "sha256": "cb66f7fb5d6276b01c9d076924384ad4fe457a6f51755794b4e034971157de9b"
+    },
+    {
+      "file": "assets/index-C6TNTHKT.js",
+      "bytes": 389851,
+      "gzipBytes": 118304,
+      "sha256": "9a46e77aff1ccfc5862370c03db59fc186c3e0f840640582a5ee161600200444"
+    },
+    {
+      "file": "assets/2dc85-DROnVtLO.png",
+      "bytes": 335606,
+      "gzipBytes": 335719,
+      "sha256": "ff8d2e69da9f8ff673a93ec75f526e1529b5add3b929a9dc64ceb54dbfa54de8"
+    },
+    {
+      "file": "assets/PlanPage-C83AROMw.js",
+      "bytes": 257334,
+      "gzipBytes": 81403,
+      "sha256": "2e068f74eb465cbce574e93bcd5798cb896cd4426824e4fdefb817edafc4a9c8"
+    },
+    {
+      "file": "assets/index-hHp-e1Yc.css",
+      "bytes": 109573,
+      "gzipBytes": 21480,
+      "sha256": "eda026a89693405d12e3af3554acd39eb522f8d000ac97b62289bf3014759bdd"
+    },
+    {
+      "file": "assets/chunk-OB3PAWPO-BiQ0wWpc.js",
+      "bytes": 93078,
+      "gzipBytes": 30564,
+      "sha256": "43a1c7395c6dccc1362b3c42cfd35995e3d9f642573c5d52be05c7a53169755e"
+    },
+    {
+      "file": "assets/8b8b5-DkVHiSbk.png",
+      "bytes": 72613,
+      "gzipBytes": 72656,
+      "sha256": "22a5e53a92b0459fa715cea51796fae8bc987bd07c14e75811dbab53b8756347"
+    },
+    {
+      "file": "assets/scene-assets-C-WmDzDT.js",
+      "bytes": 71758,
+      "gzipBytes": 12678,
+      "sha256": "387abc4eb1dc894fde7269f30f46ea524029490b00c5db46119a4d42d46cacd1"
+    },
+    {
+      "file": "assets/TripListPage-Bd3jIri9.css",
+      "bytes": 51425,
+      "gzipBytes": 7569,
+      "sha256": "14641d683f9ff2c504dd5b4a4a384fbbfc877af9687be957d3907dc9db222ae7"
+    }
+  ],
+  "fonts": [
+    {
+      "file": "assets/be-vietnam-pro-latin-400-normal-bXgqVju9.woff",
+      "bytes": 16432,
+      "gzipBytes": 16429,
+      "sha256": "c0190200223755a3c52bb47b9cf6c3604f19288599cfbbe5026904d5d439f7d7"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-400-normal-PpnXBOrz.woff2",
+      "bytes": 21168,
+      "gzipBytes": 21174,
+      "sha256": "03d1b589cff172e1a670b3573e731d3380bc326f80cf83b0d3504e3188e2e074"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-500-normal-B6LVzGNe.woff2",
+      "bytes": 21892,
+      "gzipBytes": 21920,
+      "sha256": "b621f77d35f777023aa11ca524462d511b4b28a813adbc0e9d15a10fc61dfe4e"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-500-normal-BJkVuMHw.woff",
+      "bytes": 16996,
+      "gzipBytes": 16987,
+      "sha256": "0a905f6bc6f1120d20ad3dde690989db3149a98227026f2de47dca6aef71edab"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-600-normal-5IO4e7bK.woff",
+      "bytes": 17016,
+      "gzipBytes": 17013,
+      "sha256": "f900efb46ec81e9ff6017c6868f3f47cebde34ac87da16cc587da0e0b1f4c1d4"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-600-normal-BZDkUTrt.woff2",
+      "bytes": 22032,
+      "gzipBytes": 22060,
+      "sha256": "9503dec2a7c532c8331e9600bcafea287a4fd208573b8668d85ab8d8de1863c7"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-700-normal-C2EtzaOi.woff",
+      "bytes": 16908,
+      "gzipBytes": 16919,
+      "sha256": "f44cc3417bd1fcbddaaec0c02d5383dfcf34a16ef1fc32f8cf179ea4a468861b"
+    },
+    {
+      "file": "assets/be-vietnam-pro-latin-700-normal-DlW1Zbsh.woff2",
+      "bytes": 22152,
+      "gzipBytes": 22180,
+      "sha256": "a193dd87699bd2e18ddf72dc271493ea82a23dad9f5c334d9f2a257b1e05fc30"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-400-normal-BuGn0gnm.woff",
+      "bytes": 6568,
+      "gzipBytes": 6541,
+      "sha256": "4d50c7991ca377aef28fb1fb24d4ce7ea64d69f6bd2661e7e74fb9d9fef11dc0"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-400-normal-CRcqvyg1.woff2",
+      "bytes": 11532,
+      "gzipBytes": 11555,
+      "sha256": "dc085e2fba3414e5c5bf1e6172f921a9f81c5859946a4ed3d63c1e470d96a9e2"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-500-normal-CfdwVo8-.woff",
+      "bytes": 6884,
+      "gzipBytes": 6860,
+      "sha256": "6b81283a46623b9a99bc7a1800f936549ead1f871d1dfcd803ddcd18c433a7d8"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-500-normal-DREgrEoJ.woff2",
+      "bytes": 12172,
+      "gzipBytes": 12195,
+      "sha256": "86341610cbe907eecf461c9159c168d5efb52bb1a33963813a08f520555d8e66"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-600-normal-DkpCIyan.woff",
+      "bytes": 6880,
+      "gzipBytes": 6862,
+      "sha256": "2d68010bd89add4c477e9c9c3ef29b78a68f76439309f4633c91a8674e9ba751"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-600-normal-nyU-ZL2p.woff2",
+      "bytes": 12176,
+      "gzipBytes": 12199,
+      "sha256": "97658c6f9a384f29a3005c3d96e2a0d1c810192cf68979071c290f5a377a9f99"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-700-normal-By_5yT39.woff",
+      "bytes": 6892,
+      "gzipBytes": 6863,
+      "sha256": "4fa311d11645e588ac98d0e665920fd55eb0eb624c600d9e5dd007f4b9d5159c"
+    },
+    {
+      "file": "assets/be-vietnam-pro-vietnamese-700-normal-Csr0PCuG.woff2",
+      "bytes": 12468,
+      "gzipBytes": 12491,
+      "sha256": "4f58af2d1c3e28a9ba14c51c82db2751d78344b75bdcb34de24a1031ebe59da6"
+    },
+    {
+      "file": "assets/patrick-hand-latin-400-normal-B7HHA2Vw.woff2",
+      "bytes": 23944,
+      "gzipBytes": 23972,
+      "sha256": "ac5bc9033b2572bf84d39f7150c1634e37ed16e8dbee632d6d0bceac0bbf0199"
+    },
+    {
+      "file": "assets/patrick-hand-latin-400-normal-Df9_VoRQ.woff",
+      "bytes": 17652,
+      "gzipBytes": 17657,
+      "sha256": "0f7031f6665437e04d6f354c5f64d6ae6777b498afbe804638c45b957a7ce8aa"
+    },
+    {
+      "file": "assets/patrick-hand-vietnamese-400-normal-65jA92mZ.woff2",
+      "bytes": 11572,
+      "gzipBytes": 11595,
+      "sha256": "7813e19e2d80efee8ace1de69517c99a0eb3059917336c4c8fccddbd8c838a9e"
+    },
+    {
+      "file": "assets/patrick-hand-vietnamese-400-normal-CZjY324Y.woff",
+      "bytes": 6496,
+      "gzipBytes": 6453,
+      "sha256": "9c33011b9733596f5ee20e8d1cdb3d6169a4e1cae27ec55ff21baf512402d404"
+    }
+  ],
+  "fixtureMarkerHits": []
+}

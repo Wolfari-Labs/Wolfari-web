@@ -8,8 +8,61 @@ import { Select } from '../src/shared/components/Select';
 import { Alert } from '../src/shared/components/Alert';
 import { NavigationButton } from '../src/shared/components/NavigationButton';
 import { ContentState } from '../src/shared/components/ContentState';
+import { Textarea } from '../src/shared/components/Textarea';
+import { Card } from '../src/shared/components/Ui';
+import { MemoryRouter } from 'react-router';
 
 describe('shared UI semantics and interactions', () => {
+  it('allows a Card to expose its labelled region and busy state without changing content', () => {
+    const ref = createRef<HTMLElement>();
+    const { rerender } = render(
+      <Card ref={ref} aria-labelledby="card-title" aria-busy>
+        <h2 id="card-title">Saved itinerary</h2>
+        <p>Existing content</p>
+      </Card>,
+    );
+    const region = screen.getByRole('region', { name: 'Saved itinerary' });
+    expect(ref.current).toBe(region);
+    expect(region).toHaveAttribute('aria-busy', 'true');
+    rerender(
+      <Card aria-label="Saved itinerary">
+        <p>Updated content</p>
+      </Card>,
+    );
+    expect(screen.getByRole('region', { name: 'Saved itinerary' })).not.toHaveAttribute(
+      'aria-busy',
+    );
+    expect(screen.getByText('Updated content')).toBeInTheDocument();
+  });
+  it('retains textarea drafts and descriptions through invalid, read-only and disabled states', async () => {
+    const ref = createRef<HTMLTextAreaElement>();
+    const { rerender } = render(<Textarea ref={ref} label="Notes" hint="Optional" />);
+    const input = screen.getByRole('textbox', { name: 'Notes' });
+    await userEvent.type(input, 'Draft\nSecond line');
+    rerender(<Textarea ref={ref} label="Notes" hint="Optional" error="Review notes" readOnly />);
+    expect(ref.current).toBe(input);
+    expect(input).toHaveValue('Draft\nSecond line');
+    expect(input).toHaveAccessibleDescription('Optional Review notes');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    await userEvent.type(input, 'ignored');
+    expect(input).toHaveValue('Draft\nSecond line');
+    rerender(<Textarea label="Notes" hint="Optional" disabled />);
+    expect(input).toBeDisabled();
+    expect(input).not.toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAccessibleDescription('Optional');
+    expect(input).toHaveValue('Draft\nSecond line');
+  });
+  it('uses route navigation for recovery without invoking a retry or fabricating success', async () => {
+    const retry = vi.fn();
+    render(
+      <MemoryRouter>
+        <ContentState state="not-found" showHome onRetry={retry} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole('link', { name: 'Về trang chủ' })).toHaveAttribute('href', '/');
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(retry).not.toHaveBeenCalled();
+  });
   it('uses a non-submitting button by default; Enter and Space invoke only the supplied callback', async () => {
     const clicked = vi.fn(),
       submitted = vi.fn();

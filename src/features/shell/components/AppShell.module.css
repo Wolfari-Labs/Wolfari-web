@@ -1,3 +1,9 @@
+.bellPlaceholder {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
 .shell {
   min-height: 100dvh;
   --desktop-header-height: var(--header-height);
@@ -85,7 +91,7 @@
   height: 20px;
 }
 .headerNav a[aria-current='page'] {
-  color: #079fc5;
+  color: var(--color-action-primary);
 }
 .headerNav a[aria-current='page']::after {
   content: '';
@@ -99,6 +105,11 @@
 }
 .account,
 .profile {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 14px;
+  padding: 4px 8px;
+  transition: background-color 160ms ease;
   min-height: var(--target-min);
   display: flex;
   align-items: center;
@@ -116,6 +127,53 @@
   font-weight: 600;
   color: #075495;
   white-space: nowrap;
+}
+.profileGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--target-min);
+}
+.profileChevron {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #075495;
+}
+.profileChevron:hover,
+.profileChevron[data-state='open'] {
+  background: var(--color-pale);
+}
+.profileChevron[data-state='open'] svg {
+  transform: rotate(180deg);
+}
+.profile:hover,
+.profile[data-state='open'] {
+  background: var(--color-pale);
+}
+.accountName {
+  max-width: 145px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profilePurpose,
+.profileCompactName {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.profileCompactName {
+  display: none;
 }
 .bell {
   min-width: var(--target-min);
@@ -203,6 +261,10 @@
   flex-direction: column;
   gap: 10px;
 }
+.sidebar nav {
+  /* Allocate the available desktop height before scrolling a selected item. */
+  gap: clamp(5px, calc(100dvh - 980px), 10px);
+}
 .sidebar nav button,
 .sidebar nav a,
 .collapsed nav button,
@@ -245,7 +307,7 @@
 .sidebar nav .selectedSection,
 .collapsed nav .selectedSection {
   background: #e8f7fa;
-  color: #079fc5;
+  color: var(--color-action-primary);
 }
 .selectedSection::before {
   position: absolute;
@@ -296,7 +358,7 @@
   margin-top: auto;
   border: 0;
   background: white;
-  color: #6c8bb2;
+  color: var(--color-muted);
   padding: 0;
   min-height: 60px;
   font-size: 13px;
@@ -319,7 +381,7 @@
 }
 
 .collapseIconReversed {
-  transform: scaleX(-1);
+  transform: none;
 }
 .main {
   flex: 1;
@@ -408,8 +470,11 @@
   .account {
     min-width: 0;
   }
-  .profile > span:last-child {
+  .profile .accountName {
     display: none;
+  }
+  .profile .profileCompactName {
+    display: block;
   }
 }
 @media (max-height: 950px) and (min-width: 769px) {
@@ -457,31 +522,65 @@
   }
   .mobileHeader {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 72px;
+    padding: 0 16px;
+    margin-top: env(safe-area-inset-top, 0px);
+    background: white;
+    border-bottom: 1px solid #dff0f7;
+    font-family: var(--font-body);
+  }
+  .adminMobileHeader {
     display: grid;
     grid-template-columns: 44px minmax(0, 1fr) 44px;
-    align-items: center;
     gap: 12px;
     height: 54px;
-    margin: env(safe-area-inset-top, 0px) 24px 0;
-    font-family: var(--font-body);
+    margin-inline: 24px;
+    padding: 0;
+    background: transparent;
+    border: 0;
   }
   .dressRoute .mobileHeader {
     display: none;
   }
   .mobileMenuButton {
     font-family: var(--font-body);
+    width: 84px;
+    height: 44px;
+    border-color: var(--color-line);
+    border-radius: 18px;
+    font-size: 15px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .adminMobileHeader .mobileMenuButton {
+    width: 44px;
+    border-color: rgb(10 85 161 / 14%);
+    border-radius: 10px;
   }
   .mobileLogo,
   .mobileLogo img {
-    width: 112px;
-    height: 38px;
+    width: 130px;
+    height: 43.333px;
     object-fit: contain;
   }
   .mobileLogo {
-    justify-self: center;
+    margin-right: auto;
     min-height: var(--target-min);
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+  }
+  .adminMobileHeader .mobileLogo {
+    justify-self: center;
+    margin-right: 0;
+  }
+  .adminMobileHeader .mobileLogo,
+  .adminMobileHeader .mobileLogo img {
+    width: 112px;
+    height: 38px;
   }
   .mobileAccount {
     min-width: 44px;
@@ -504,13 +603,14 @@
   }
   .adminShell .layout {
     display: block;
+    min-height: calc(100dvh - 54px);
   }
   .tripShell .layout {
-    min-height: calc(100dvh - 54px);
+    min-height: calc(100dvh - 72px);
     height: auto;
   }
   .layout {
-    min-height: calc(100dvh - 54px);
+    min-height: calc(100dvh - 72px);
     height: auto;
   }
   .main {
@@ -519,7 +619,15 @@
   }
 }
 @media (max-width: 360px) {
-  .mobileHeader {
+  .mobileLogo,
+  .mobileLogo img {
+    width: 112px;
+    height: 38px;
+  }
+  .mobileMenuButton {
+    width: 72px;
+  }
+  .adminMobileHeader {
     margin-inline: 16px;
   }
   .main {
@@ -532,4 +640,101 @@
 .listMain > :global(.preview),
 .listMain > h1 {
   margin: 24px;
+}
+.mobileAccountActions {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+.adminMobileHeader .mobileAccountActions {
+  justify-self: end;
+}
+.navigationDrawer.navigationDrawer {
+  width: min(300px, 86vw);
+  padding: 0;
+  gap: 0;
+  border-right: 1px solid #d7eaf2;
+}
+.navigationDrawer > :last-child {
+  padding: 0;
+}
+.drawerHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  min-height: 72px;
+  padding: 0 16px;
+  background: white;
+}
+.drawerHeader a,
+.drawerHeader img {
+  display: block;
+  width: 120px;
+  height: 40px;
+  object-fit: contain;
+}
+.drawerClose {
+  min-width: 70px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: white;
+  color: var(--color-ink);
+  font: 500 15px/22px var(--font-body);
+}
+.navigationDrawer.navigationDrawer nav {
+  padding: 8px;
+  gap: 8px;
+}
+.drawerDecoration {
+  min-height: 276px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.drawerDecoration p {
+  margin: 20px 0 0 74px;
+  color: #079cc5;
+  font: 700 18px/52px var(--font-handwritten);
+}
+.drawerRoute {
+  position: absolute;
+  left: 82px;
+  top: 79px;
+  width: 145px;
+  height: 40px;
+}
+.drawerMascot {
+  display: block;
+  width: 166px;
+  height: 166px;
+  margin: -14px auto 0;
+  object-fit: contain;
+}
+@media (max-height: 700px) {
+  .drawerDecoration {
+    display: none;
+  }
+}
+.sidebar nav svg,
+.collapsed nav svg,
+.headerNav svg {
+  flex-shrink: 0;
+}
+.sidebar nav a,
+.collapsed nav a {
+  transition:
+    background 160ms,
+    box-shadow 160ms;
+}
+.sidebar nav a:hover,
+.collapsed nav a:hover {
+  background: var(--color-pale);
+  box-shadow: var(--shadow-selection);
 }

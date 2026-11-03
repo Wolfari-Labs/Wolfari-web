@@ -1,0 +1,185 @@
+{
+  "at": "2026-11-02T19:49:38.510Z",
+  "base": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+  "scope": "Fixture E2E only; two remaining raw backdrop clicks now wait for reopened Drawer actionability. No runtime or timeout/retry changes.",
+  "commands": [
+    {
+      "label": "ci-backdrop-baseline",
+      "command": "corepack pnpm test:e2e:built tests/e2e/design-system.spec.ts --grep shared.drawer.keyboard --repeat-each=10 --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T19:41:42.164Z",
+      "finishedAt": "2026-11-02T19:42:16.397Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-baseline.log",
+      "logSha256": "a65565f0d60297cbc88c0e6ca141b4fa132d248d80d88ce32d110033d8696b3b"
+    },
+    {
+      "label": "ci-backdrop-repeat",
+      "command": "corepack pnpm test:e2e:built tests/e2e/design-system.spec.ts tests/e2e/trip-list.spec.ts tests/e2e/app-shell.spec.ts --grep backdrop --repeat-each=20 --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T19:42:39.757Z",
+      "finishedAt": "2026-11-02T19:45:37.224Z",
+      "exitCode": 1,
+      "status": "FAIL",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-repeat.log",
+      "logSha256": "678657bd3bd9b50f4619d10df86aa338b0c09049259d30a1a9686282d5381bfe"
+    },
+    {
+      "label": "ci-backdrop-repeat-final",
+      "command": "corepack pnpm test:e2e:built tests/e2e/design-system.spec.ts tests/e2e/trip-list.spec.ts tests/e2e/app-shell.spec.ts --grep backdrop --repeat-each=20 --workers=1 --trace=retain-on-failure",
+      "startedAt": "2026-11-02T19:45:48.203Z",
+      "finishedAt": "2026-11-02T19:48:55.511Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-repeat-final.log",
+      "logSha256": "65ce5576af34e93826f6ecd76b91c221122e98787c176e94c934e9c4d38ada89"
+    },
+    {
+      "label": "ci-backdrop-lint",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T19:42:58.034Z",
+      "finishedAt": "2026-11-02T19:43:15.216Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-lint.log",
+      "logSha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d"
+    },
+    {
+      "label": "ci-backdrop-typecheck",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T19:43:27.797Z",
+      "finishedAt": "2026-11-02T19:43:53.185Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-typecheck.log",
+      "logSha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e"
+    },
+    {
+      "label": "ci-backdrop-format",
+      "command": "corepack pnpm exec prettier --check tests/e2e/design-system.spec.ts tests/e2e/trip-list.spec.ts",
+      "startedAt": "2026-11-02T19:43:49.593Z",
+      "finishedAt": "2026-11-02T19:43:52.774Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-format.log",
+      "logSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "label": "ci-backdrop-lint-final",
+      "command": "corepack pnpm lint",
+      "startedAt": "2026-11-02T19:46:17.105Z",
+      "finishedAt": "2026-11-02T19:46:36.276Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-lint-final.log",
+      "logSha256": "4335ce45946101cd4aad42713f9522f43eb85d54e21ea875b767ccca3ae7e62d"
+    },
+    {
+      "label": "ci-backdrop-typecheck-final",
+      "command": "corepack pnpm typecheck",
+      "startedAt": "2026-11-02T19:46:38.081Z",
+      "finishedAt": "2026-11-02T19:47:05.266Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-typecheck-final.log",
+      "logSha256": "2cec47cc046ace60154f10e155355cb61b32b0a2e48d55369751da08b38abc1e"
+    },
+    {
+      "label": "ci-backdrop-format-final",
+      "command": "corepack pnpm exec prettier --check tests/e2e/design-system.spec.ts tests/e2e/trip-list.spec.ts",
+      "startedAt": "2026-11-02T19:47:00.419Z",
+      "finishedAt": "2026-11-02T19:47:03.287Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "source": {
+        "web": "30bea4a2c033fe08190446ad218f77b52aedd3d0",
+        "backend": "fc7bc3e9f2c826ebd3ad99e5ff0de5fc164799d7"
+      },
+      "log": "test-results/readiness/20261102/ci-backdrop-format-final.log",
+      "logSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "report": {
+    "file": "test-results/readiness/20261102/ci-backdrop-repeat-final-results.json",
+    "sha256": "67ffc3620c22518b099c7eaaac780d7bbf7932bc34bd8697b60423676b511ecd",
+    "stats": {
+      "startTime": "2026-11-02T19:45:53.299Z",
+      "duration": 182063.953,
+      "expected": 60,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "intermediateReport": {
+    "file": "test-results/readiness/20261102/ci-backdrop-repeat-results.json",
+    "stats": {
+      "startTime": "2026-11-02T19:42:43.410Z",
+      "duration": 173593.133,
+      "expected": 59,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "failure": "Trip List initial Drawer x=-300, expected0 before backdrop step; added polling for exact x=0 before measuring, no tolerance change."
+  },
+  "files": [
+    {
+      "file": "tests/e2e/design-system.spec.ts",
+      "sha256": "5c391990968a1fcc1dc2b126c6b70408594e77ee420568b7bead2b2121ab2467"
+    },
+    {
+      "file": "tests/e2e/trip-list.spec.ts",
+      "sha256": "6ab25ae40a211299263ebb2484d84d5a88cb0f627191a4fe7112597bdc7dd060"
+    }
+  ],
+  "history": {
+    "linuxPush": {
+      "run": 41508393423,
+      "conclusion": "success",
+      "fixture": "208/208"
+    },
+    "linuxPR": {
+      "run": 41508405323,
+      "conclusion": "failure",
+      "fixture": "207/208",
+      "failingCase": "shared drawer keyboard, backdrop, scrolling and focus return"
+    }
+  },
+  "limits": [
+    "Baseline Windows passed10/10; original failure observed on Linux CI, not locally reproduced.",
+    "New full suites delegated to CI on the pushed commit; prior full208 local is not post-followup evidence.",
+    "Live Backend, Edge rehearsal, reviewer and merge gates are separate and remain incomplete."
+  ]
+}

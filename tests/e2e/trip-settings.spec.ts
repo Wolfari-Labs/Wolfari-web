@@ -67,7 +67,7 @@ test('Hero edit and mobile drawer both navigate to Settings view', async ({ page
   await page.goto(trip);
   await page.getByRole('link', { name: 'Chỉnh sửa', exact: true }).click();
   await expect(page).toHaveURL(settings);
-  await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+  await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
   const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
   await expect(drawer.getByRole('link', { name: 'Cài đặt', exact: true })).toHaveAttribute(
     'aria-current',

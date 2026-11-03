@@ -1,0 +1,41 @@
+[
+  {
+    "id": "767:5377",
+    "name": "Alignment / Design contract",
+    "text": [
+      "Wolfari · Web alignment",
+      "Bản đề xuất · 16/10/2026\nGiữ phong cách và bố cục Desktop nguồn. Các frame gốc được giữ nguyên. Ba trang nghiệp vụ điều chỉnh theo SRS; form bên phải trên desktop. Responsive web 402px dùng một cột và menu drawer.\nMỗi frame ghi rõ nguồn; chỉ các bản đề xuất có nội dung điều chỉnh. Dữ liệu minh họa không phải giao dịch thật hoặc xác nhận đã lưu máy chủ."
+    ]
+  },
+  {
+    "id": "785:6670",
+    "name": "Notes / Responsive Web contract",
+    "text": [
+      "RESPONSIVE WEB · 402px\n\nBốn frame tham chiếu: Home Guest, Quỹ nhóm, Theo dõi giá vé và Dress code. Các companion dùng logo, màu, font và hình ảnh của Desktop; điều hướng qua drawer riêng. Không dùng thanh trạng thái hoặc tab bar iOS.\n\nNội dung cuộn theo tài liệu, form xếp dưới vùng chính. Bản Desktop giữ form bên phải. Thẻ thống kê xếp dọc; bảng chi quỹ chuyển thành thẻ có đủ hạng mục, số tiền, người và trạng thái.\n\nTypography có chiều cao theo nội dung; ảnh giữ tỉ lệ; các lớp mây là trang trí, không quyết định kích thước nội dung. Khung 1440px là chuẩn đối chiếu Desktop; 402px là chuẩn reflow. Các viewport trung gian và 320px phải được kiểm tra không tràn ngang, không che nút, focus và cuộn đến cuối.\n\nGiao diện preview chỉ kiểm tra bản nháp. Các trạng thái đã lưu, lỗi, loading và quyền dùng fixture riêng; không khẳng định mutation hay giao dịch máy chủ đã hoàn thành."
+    ]
+  },
+  {
+    "id": "777:6442",
+    "name": "Notes / Quỹ nhóm · điều chỉnh nghiệp vụ",
+    "text": [
+      "Quỹ nhóm · điều chỉnh nghiệp vụ",
+      "Nguồn: 23:506. Người giữ quỹ được chọn khi bật và cố định đến CLOSED; bỏ bàn giao Holder. Owner quản lý ngân sách, hoàn dư và đóng quỹ; Holder xác nhận đóng góp/chi; Member báo chuyển, đề nghị chi và xác nhận đóng.\nBáo chuyển/đề nghị chưa cập nhật ledger. Đã ghi sổ điều chỉnh bằng bút toán đảo có lý do. Số dư khả dụng = số dư ghi sổ − khoản đang giữ. Chi ngoài quỹ chỉ là ghi chú. TEST/sandbox.\nTrạng thái cần có: loading, empty, error, unavailable, permission denied, OPEN, CLOSING, CLOSED; liệt kê điều kiện còn thiếu trước khi đóng."
+    ]
+  },
+  {
+    "id": "777:6445",
+    "name": "Notes / Theo dõi vé · điều chỉnh nghiệp vụ",
+    "text": [
+      "Theo dõi vé · điều chỉnh nghiệp vụ",
+      "Nguồn: 23:657. MVP vé máy bay, theo chuyến đi và người tạo. Chủ theo dõi sửa/tạm dừng/tiếp tục/xóa; Owner chỉ xóa theo dõi người khác.\nForm giữ cột phải, tăng chiều cao để có loại hành trình, ngày về, hành khách, cabin và ngưỡng VND. Chỉ người tạo nhận cảnh báo, theo chính sách tần suất SRS. Nguồn/thời điểm luôn đi với giá; provider lỗi giữ dữ liệu cũ, không dùng 0.\nBiểu đồ sửa đường gãy và nhãn triệu VND. Giao diện preview kiểm tra bản nháp; chưa khẳng định lưu, gửi thông báo hoặc đặt vé."
+    ]
+  },
+  {
+    "id": "777:6448",
+    "name": "Notes / Dress code · điều chỉnh nghiệp vụ",
+    "text": [
+      "Dress code · điều chỉnh nghiệp vụ",
+      "Nguồn: 20:565. Phạm vi TRIP / DAY / ACTIVITY; nhiều mục cùng phạm vi. Tiêu đề và mô tả là dữ liệu chính; ngày/activity phải thuộc chuyến đi.\nThẻ minh họa và bảng màu giữ phong cách gốc, không biểu diễn tính năng upload/lưu palette chưa có contract. Bỏ gán thành viên. Member xem/yêu cầu gợi ý; Owner/Plan Editor tạo/sửa/xóa/áp dụng.\nTách mục đã vào kế hoạch và gợi ý có nguồn, thời điểm, lý do. Xem/bỏ qua gợi ý không ghi Plan. Apply chỉ áp dụng mục chọn; khi chưa có mutation thì unavailable/preview-only. Xử lý version conflict."
+    ]
+  }
+]

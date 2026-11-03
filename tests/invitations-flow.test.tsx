@@ -420,6 +420,44 @@ describe('invitation token and response flow', () => {
 });
 
 describe('Owner invitation management', () => {
+  it.each(['missing', 'denied', 'success'] as const)(
+    'handles %s clipboard without losing the one-time link',
+    async (mode) => {
+      const trip = await ownerTrip();
+      const repo = repository();
+      const link = `http://localhost/invitations/local#token=${token}`;
+      vi.mocked(repo.createInvitation!).mockResolvedValue(
+        success({
+          invitation: { ...item, invitationType: 'LINK', email: null },
+          oneTimeLink: link,
+        }),
+      );
+      mount(repo, <InvitationManagement trip={trip} />);
+      await userEvent.selectOptions(screen.getByLabelText('Loại lời mời'), 'LINK');
+      await userEvent.click(screen.getByRole('button', { name: 'Tạo liên kết' }));
+      await screen.findByText(link);
+      const descriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+      const writeText = vi.fn(() =>
+        mode === 'denied' ? Promise.reject(Error('denied')) : Promise.resolve(),
+      );
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: mode === 'missing' ? undefined : { writeText },
+      });
+      try {
+        await userEvent.click(screen.getByRole('button', { name: 'Sao chép liên kết' }));
+        await screen.findByText(
+          mode === 'success' ? 'Đã sao chép liên kết.' : /Hãy chọn và sao chép liên kết hiển thị/,
+        );
+        expect(screen.getByText(link)).toBeVisible();
+        if (mode !== 'missing') expect(writeText).toHaveBeenCalledWith(link);
+        expect(repo.createInvitation).toHaveBeenCalledTimes(1);
+      } finally {
+        if (descriptor) Object.defineProperty(navigator, 'clipboard', descriptor);
+        else Reflect.deleteProperty(navigator, 'clipboard');
+      }
+    },
+  );
   it('normalizes email and sends current membership revision', async () => {
     const trip = await ownerTrip();
     const repo = repository();

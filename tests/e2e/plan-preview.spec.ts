@@ -32,10 +32,14 @@ for (const size of [
     const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
     await timeline.focus();
     if (size.width > 768) {
-      const scrollable = await timeline.evaluate((element) => element.scrollHeight > element.clientHeight);
+      const scrollable = await timeline.evaluate(
+        (element) => element.scrollHeight > element.clientHeight,
+      );
       if (scrollable) {
         await page.keyboard.press('End');
-        await expect.poll(() => timeline.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+        await expect
+          .poll(() => timeline.evaluate((element) => element.scrollTop))
+          .toBeGreaterThan(0);
       }
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
@@ -55,7 +59,9 @@ for (const size of [
     await expect(pool.getByText('Chỉ lưu trên thiết bị này')).toBeVisible();
     await expect(pool.getByText('Chùa Linh Ứng', { exact: true })).toBeVisible();
     if (size.width <= 1200)
-      await expect(page.getByRole('dialog', { name: 'Thêm hoạt động vào lịch trình' })).toBeVisible();
+      await expect(
+        page.getByRole('dialog', { name: 'Thêm hoạt động vào lịch trình' }),
+      ).toBeVisible();
     await pool.getByRole('button', { name: 'Đóng danh sách hoạt động' }).click();
     await expect(pool).toHaveCount(0);
     await page.getByLabel('Xem hoạt động Bán đảo Sơn Trà').click();
@@ -130,7 +136,9 @@ test('Plan states keep selection and pending/unknown do not claim saved', async 
   await expect(page.getByText(/Plan 1 · Membership 1 · Export 1/)).toBeVisible();
 });
 
-test('keyboard drag moves an activity between the local pool and the selected day', async ({ page }) => {
+test('keyboard drag moves an activity between the local pool and the selected day', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto(route);
   await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
@@ -150,7 +158,7 @@ test('keyboard drag moves an activity between the local pool and the selected da
   await page.waitForTimeout(400);
   await expect(pool.getByText('Chùa Linh Ứng', { exact: true })).toHaveCount(0);
   await expect(timeline.getByText('Chùa Linh Ứng', { exact: true }).first()).toBeVisible();
-  await expect(timeline.locator('time').filter({ hasText: 'Chưa xếp giờ' }).first()).toBeVisible();
+  await expect(timeline.getByText('Chưa xếp giờ', { exact: true }).first()).toBeVisible();
 
   const timelineHandle = timeline.getByRole('button', { name: 'Kéo hoạt động Chùa Linh Ứng' });
   await timelineHandle.focus();

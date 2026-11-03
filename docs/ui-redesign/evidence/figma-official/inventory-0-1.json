@@ -1,0 +1,1447 @@
+{
+  "page": {
+    "id": "0:1",
+    "name": "Wolfari · Desktop"
+  },
+  "roots": [
+    {
+      "id": "3:28",
+      "name": "01 · Trang chủ — Guest",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 2144
+    },
+    {
+      "id": "3:29",
+      "name": "02 · Chuyến đi của tôi",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "3:30",
+      "name": "03 · Tạo chuyến đi",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 1123
+    },
+    {
+      "id": "15:330",
+      "name": "Mascot note",
+      "type": "TEXT",
+      "width": 260,
+      "height": 156
+    },
+    {
+      "id": "3:31",
+      "name": "04 · Tổng quan — mở",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "3:32",
+      "name": "05 · Tổng quan — thu gọn",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "3:33",
+      "name": "Components & Decorations",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 2400
+    },
+    {
+      "id": "20:236",
+      "name": "06 · Lịch trình",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "20:386",
+      "name": "07 · Bản đồ & địa điểm",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "20:565",
+      "name": "08 · Dress code",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "23:312",
+      "name": "09 · Packing list",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "23:506",
+      "name": "10 · Quỹ nhóm",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "23:657",
+      "name": "11 · Theo dõi giá vé",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "25:360",
+      "name": "12 · Thành viên",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "25:518",
+      "name": "13 · Xuất & chia sẻ",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "25:676",
+      "name": "14 · Cài đặt",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "26:406",
+      "name": "15 · Overlay & Modal states",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 1660
+    },
+    {
+      "id": "30:804",
+      "name": " 4",
+      "type": "RECTANGLE",
+      "width": 1431,
+      "height": 2147
+    },
+    {
+      "id": "30:808",
+      "name": "Item gợi ý",
+      "type": "RECTANGLE",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "id": "135:483",
+      "name": "Wolfari/Header",
+      "type": "COMPONENT_SET",
+      "width": 1488,
+      "height": 528
+    },
+    {
+      "id": "135:1357",
+      "name": "Wolfari/Trip Sidebar",
+      "type": "COMPONENT_SET",
+      "width": 1600,
+      "height": 2812
+    },
+    {
+      "id": "224:1253",
+      "name": "07.1 · Bản đồ & địa điểm — sau khi chọn",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "256:1996",
+      "name": "9.x Packing/Content",
+      "type": "COMPONENT_SET",
+      "width": 4840,
+      "height": 1290
+    },
+    {
+      "id": "269:1234",
+      "name": "14.1 · Cài đặt — Chỉnh sửa thông tin",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "298:1642",
+      "name": "01.1 · Trang chủ — Đã đăng nhập",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 800
+    },
+    {
+      "id": "298:1893",
+      "name": "16 · Đăng nhập",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "298:2007",
+      "name": "17 · Đăng ký",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:1847",
+      "name": "18 · Tài khoản & thông báo",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:1926",
+      "name": "19 · Trung tâm thông báo",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:2010",
+      "name": "20 · Phản hồi lời mời",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:2066",
+      "name": "21 · Public Share — Chỉ xem",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:2133",
+      "name": "21.1 · Public Share — Nhập mật khẩu",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:2173",
+      "name": "21.2 · Public Share — Không khả dụng",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "299:2207",
+      "name": "22 · Luồng hoạt động Web End-user",
+      "type": "FRAME",
+      "width": 3040,
+      "height": 2100
+    },
+    {
+      "id": "439:2028",
+      "name": "06.1 · Lịch trình — Chưa xếp lịch",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "439:2497",
+      "name": "06.2 · Lịch trình — Bản đồ ngày",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "475:2294",
+      "name": "12.1 · Thành viên — Lời mời",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "475:2530",
+      "name": "12.2 · Thành viên — Quyền sửa Plan",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "475:2772",
+      "name": "12.3 · Chuyển Owner — Xác nhận",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "475:2909",
+      "name": "12.4 · Chuyển Owner — Finance CLOSING",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "475:3038",
+      "name": "12.5 · Thành viên — Sau chuyển Owner",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "477:2692",
+      "name": "10.1 · Quỹ nhóm — Quản lý Fund Holder",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "477:2846",
+      "name": "10.2 · Bàn giao Fund Holder — Chờ chấp nhận",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "477:2990",
+      "name": "10.3 · Bàn giao Fund Holder — Đối chiếu",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "477:3153",
+      "name": "10.4 · Bàn giao Fund Holder — Hoàn tất",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "482:3102",
+      "name": "Workflow Label / Owner",
+      "type": "TEXT",
+      "width": 900,
+      "height": 40
+    },
+    {
+      "id": "482:3103",
+      "name": "Workflow Label / Fund Holder",
+      "type": "TEXT",
+      "width": 900,
+      "height": 40
+    },
+    {
+      "id": "514:3121",
+      "name": "08.1 · Dress code — Đã lưu",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3252",
+      "name": "10.5 · Quỹ nhóm — Đã ghi khoản chi",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3370",
+      "name": "12.6 · Thành viên — Đã gửi lời mời",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3460",
+      "name": "12.7 · Thành viên — Đã lưu quyền sửa Plan",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3546",
+      "name": "14.2 · Cài đặt — Không thể xóa Trip",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3660",
+      "name": "18.1 · Tài khoản — Đã lưu",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3715",
+      "name": "18.2 · Tài khoản — Đã xóa thiết bị",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "514:3801",
+      "name": "19.1 · Thông báo — Đã đọc",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:3692",
+      "name": "11.0 · Theo dõi giá vé — Tạo mới",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:3849",
+      "name": "11.1 · Theo dõi giá vé — Đã tạo",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4006",
+      "name": "13.1 · Xuất & chia sẻ — Đang tạo file",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4146",
+      "name": "13.2 · Xuất & chia sẻ — Link đã tạo",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4303",
+      "name": "10.6 · Quỹ nhóm — Bắt đầu đóng Finance",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4446",
+      "name": "10.7 · Quỹ nhóm — Finance CLOSING",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4599",
+      "name": "10.8 · Quỹ nhóm — Finance CLOSED",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4741",
+      "name": "14.3 · Cài đặt — Finance CLOSED",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4849",
+      "name": "14.4 · Cài đặt — Trip đã lưu trữ",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "517:4953",
+      "name": "14.5 · Cài đặt — Xác nhận xóa Trip",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "528:4683",
+      "name": "10.9 · Quỹ nhóm — Đóng góp",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "528:4874",
+      "name": "10.10 · Quỹ nhóm — Hoàn tiền & điều chỉnh",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "528:5059",
+      "name": "10.11 · Quỹ nhóm — Lịch sử",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:4973",
+      "name": "A00 · Admin — Đăng nhập",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5007",
+      "name": "A01 · Admin — Tổng quan hệ thống",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5098",
+      "name": "A02 · Admin — Người dùng & Trip",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5195",
+      "name": "A03 · Admin — Provider & quota",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5295",
+      "name": "A04 · Admin — Danh mục & mẫu",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5391",
+      "name": "A05 · Admin — Job & log vận hành",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5489",
+      "name": "A02.1 · Admin — Xác nhận khóa tài khoản",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5597",
+      "name": "A02.2 · Admin — Tài khoản đã khóa",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "538:5696",
+      "name": "A06 · Luồng hoạt động Web Admin",
+      "type": "FRAME",
+      "width": 4640,
+      "height": 1260
+    },
+    {
+      "id": "541:4994",
+      "name": "10.9.1 · Quỹ nhóm — Đã tạo đợt đóng góp",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "541:5205",
+      "name": "10.10.1 · Quỹ nhóm — Đã lưu điều chỉnh",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "541:5410",
+      "name": "12.8 · Thành viên — Đã gửi lại lời mời",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "541:5488",
+      "name": "12.9 · Thành viên — Đã thu hồi lời mời",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "541:5579",
+      "name": "18.3 · Tài khoản — Đã đổi ảnh",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "541:5636",
+      "name": "A04.1 · Admin — Thêm cấu hình",
+      "type": "FRAME",
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "id": "767:5376",
+      "name": "Wolfari · Web alignment",
+      "type": "SECTION",
+      "width": 4780,
+      "height": 11300
+    }
+  ],
+  "components": [
+    {
+      "id": "11:9",
+      "name": "Button/Primary",
+      "type": "COMPONENT",
+      "width": 170,
+      "height": 44,
+      "parentId": "3:33",
+      "properties": {
+        "Label#11:0": {
+          "type": "TEXT",
+          "defaultValue": "Tạo chuyến đi"
+        }
+      }
+    },
+    {
+      "id": "11:14",
+      "name": "Button/Outline",
+      "type": "COMPONENT",
+      "width": 150,
+      "height": 44,
+      "parentId": "3:33",
+      "properties": {
+        "Label#11:1": {
+          "type": "TEXT",
+          "defaultValue": "Xem chi tiết"
+        }
+      }
+    },
+    {
+      "id": "11:16",
+      "name": "Chip/Status",
+      "type": "COMPONENT",
+      "width": 112,
+      "height": 32,
+      "parentId": "3:33",
+      "properties": {
+        "Label#11:2": {
+          "type": "TEXT",
+          "defaultValue": "Sắp tới"
+        }
+      }
+    },
+    {
+      "id": "11:19",
+      "name": "Sidebar/Nav item",
+      "type": "COMPONENT",
+      "width": 196,
+      "height": 44,
+      "parentId": "3:33",
+      "properties": {
+        "Label#11:3": {
+          "type": "TEXT",
+          "defaultValue": "Tổng quan chuyến đi"
+        }
+      }
+    },
+    {
+      "id": "11:23",
+      "name": "Input/Search",
+      "type": "COMPONENT",
+      "width": 360,
+      "height": 44,
+      "parentId": "3:33",
+      "properties": {
+        "Placeholder#11:4": {
+          "type": "TEXT",
+          "defaultValue": "Tìm theo tên chuyến đi hoặc địa điểm"
+        }
+      }
+    },
+    {
+      "id": "11:28",
+      "name": "Tab/Day",
+      "type": "COMPONENT",
+      "width": 132,
+      "height": 62,
+      "parentId": "3:33",
+      "properties": {
+        "Day#11:5": {
+          "type": "TEXT",
+          "defaultValue": "Ngày 1"
+        },
+        "Date#11:6": {
+          "type": "TEXT",
+          "defaultValue": "12/10"
+        }
+      }
+    },
+    {
+      "id": "11:31",
+      "name": "Card/Metric",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 132,
+      "parentId": "3:33",
+      "properties": {
+        "Title#11:7": {
+          "type": "TEXT",
+          "defaultValue": "Ngân sách / Quỹ nhóm"
+        },
+        "Value#11:8": {
+          "type": "TEXT",
+          "defaultValue": "6.250.000đ"
+        },
+        "Sub#11:9": {
+          "type": "TEXT",
+          "defaultValue": "/ 9.000.000đ"
+        }
+      }
+    },
+    {
+      "id": "11:35",
+      "name": "Row/Activity",
+      "type": "COMPONENT",
+      "width": 620,
+      "height": 78,
+      "parentId": "3:33",
+      "properties": {
+        "Time#11:10": {
+          "type": "TEXT",
+          "defaultValue": "08:00"
+        },
+        "Title#11:11": {
+          "type": "TEXT",
+          "defaultValue": "Bán đảo Sơn Trà"
+        },
+        "Sub#11:12": {
+          "type": "TEXT",
+          "defaultValue": "Tham quan, chụp ảnh · Đà Nẵng"
+        }
+      }
+    },
+    {
+      "id": "11:45",
+      "name": "Card/Trip",
+      "type": "COMPONENT",
+      "width": 388,
+      "height": 292,
+      "parentId": "3:33",
+      "properties": {
+        "Title#11:13": {
+          "type": "TEXT",
+          "defaultValue": "Đà Nẵng – Hội An"
+        },
+        "Meta#11:14": {
+          "type": "TEXT",
+          "defaultValue": "22 – 25/09/2026   •   4 thành viên"
+        },
+        "Link#11:15": {
+          "type": "TEXT",
+          "defaultValue": "Mở chuyến đi  →"
+        }
+      }
+    },
+    {
+      "id": "11:58",
+      "name": "Decor/Cloud",
+      "type": "COMPONENT",
+      "width": 120,
+      "height": 56,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "11:62",
+      "name": "Decor/Paper plane",
+      "type": "COMPONENT",
+      "width": 64,
+      "height": 64,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "11:66",
+      "name": "Decor/Tape",
+      "type": "COMPONENT",
+      "width": 110,
+      "height": 36,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "11:67",
+      "name": "Decor/Brush stroke",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 48,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "11:70",
+      "name": "Decor/Mountain strip",
+      "type": "COMPONENT",
+      "width": 500,
+      "height": 120,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "14:2",
+      "name": "Brand/Logo",
+      "type": "COMPONENT",
+      "width": 180,
+      "height": 60,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "14:4",
+      "name": "Brand/Mascot",
+      "type": "COMPONENT",
+      "width": 144,
+      "height": 144,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:435",
+      "name": "Landing/Decor/Blue wash",
+      "type": "COMPONENT",
+      "width": 320,
+      "height": 120,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:439",
+      "name": "Landing/Decor/Mint wash",
+      "type": "COMPONENT",
+      "width": 300,
+      "height": 110,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:443",
+      "name": "Landing/Decor/Yellow wash",
+      "type": "COMPONENT",
+      "width": 250,
+      "height": 84,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:446",
+      "name": "Landing/Decor/Flight path",
+      "type": "COMPONENT",
+      "width": 260,
+      "height": 130,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:450",
+      "name": "Landing/Decor/Tape",
+      "type": "COMPONENT",
+      "width": 150,
+      "height": 34,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:452",
+      "name": "Landing/Decor/Mountain panorama",
+      "type": "COMPONENT",
+      "width": 700,
+      "height": 170,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:457",
+      "name": "Landing/Icon/Calendar",
+      "type": "COMPONENT",
+      "width": 76,
+      "height": 68,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:464",
+      "name": "Landing/Icon/Map",
+      "type": "COMPONENT",
+      "width": 76,
+      "height": 68,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:471",
+      "name": "Landing/Icon/Shirt",
+      "type": "COMPONENT",
+      "width": 76,
+      "height": 68,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:476",
+      "name": "Landing/Icon/Wallet",
+      "type": "COMPONENT",
+      "width": 76,
+      "height": 68,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:482",
+      "name": "Landing/Icon/Bell",
+      "type": "COMPONENT",
+      "width": 76,
+      "height": 68,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:488",
+      "name": "Landing/Icon/Chart",
+      "type": "COMPONENT",
+      "width": 76,
+      "height": 68,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:494",
+      "name": "Landing/Photo/Da Nang",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 124,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:496",
+      "name": "Landing/Photo/Phu Quoc",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 124,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:498",
+      "name": "Landing/Photo/Da Lat",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 124,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:500",
+      "name": "Landing/Photo/Sai Gon",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 124,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:502",
+      "name": "Landing/Mascot/Reading",
+      "type": "COMPONENT",
+      "width": 150,
+      "height": 150,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:504",
+      "name": "Landing/Mascot/Camera",
+      "type": "COMPONENT",
+      "width": 132,
+      "height": 150,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:506",
+      "name": "Landing/Art/App mockup",
+      "type": "COMPONENT",
+      "width": 760,
+      "height": 340,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:508",
+      "name": "Landing/Art/CTA collage",
+      "type": "COMPONENT",
+      "width": 300,
+      "height": 190,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "33:510",
+      "name": "Landing/Art/Hero collage",
+      "type": "COMPONENT",
+      "width": 650,
+      "height": 430,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "49:497",
+      "name": "Landing/Art/Hero photo",
+      "type": "COMPONENT",
+      "width": 600,
+      "height": 200,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "49:498",
+      "name": "Landing/Art/Footer landscape",
+      "type": "COMPONENT",
+      "width": 600,
+      "height": 200,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "51:497",
+      "name": "Landing/Decor/cloud",
+      "type": "COMPONENT",
+      "width": 600,
+      "height": 200,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "51:498",
+      "name": "Landing/Decor/wave",
+      "type": "COMPONENT",
+      "width": 200,
+      "height": 133,
+      "parentId": "3:33",
+      "properties": {}
+    },
+    {
+      "id": "135:483",
+      "name": "Wolfari/Header",
+      "type": "COMPONENT_SET",
+      "width": 1488,
+      "height": 528,
+      "parentId": "0:1",
+      "properties": {
+        "Active": {
+          "type": "VARIANT",
+          "defaultValue": "Home",
+          "variantOptions": [
+            "Trips",
+            "Home",
+            "Schedule",
+            "Guest",
+            "None"
+          ]
+        }
+      }
+    },
+    {
+      "id": "135:406",
+      "name": "Active=Trips",
+      "type": "COMPONENT",
+      "width": 1440,
+      "height": 76,
+      "parentId": "135:483"
+    },
+    {
+      "id": "135:433",
+      "name": "Active=Home",
+      "type": "COMPONENT",
+      "width": 1440,
+      "height": 76,
+      "parentId": "135:483"
+    },
+    {
+      "id": "135:458",
+      "name": "Active=Schedule",
+      "type": "COMPONENT",
+      "width": 1440,
+      "height": 76,
+      "parentId": "135:483"
+    },
+    {
+      "id": "298:1585",
+      "name": "Active=Guest",
+      "type": "COMPONENT",
+      "width": 1440,
+      "height": 76,
+      "parentId": "135:483"
+    },
+    {
+      "id": "298:1617",
+      "name": "Active=None",
+      "type": "COMPONENT",
+      "width": 1440,
+      "height": 76,
+      "parentId": "135:483"
+    },
+    {
+      "id": "135:1357",
+      "name": "Wolfari/Trip Sidebar",
+      "type": "COMPONENT_SET",
+      "width": 1600,
+      "height": 2812,
+      "parentId": "0:1",
+      "properties": {
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Expanded",
+          "variantOptions": [
+            "Expanded",
+            "Collapsed"
+          ]
+        },
+        "Active": {
+          "type": "VARIANT",
+          "defaultValue": "Overview",
+          "variantOptions": [
+            "Overview",
+            "Map",
+            "Schedule",
+            "Dress",
+            "Packing",
+            "Members",
+            "Fund",
+            "Fare",
+            "Settings",
+            "None"
+          ]
+        }
+      }
+    },
+    {
+      "id": "135:484",
+      "name": "State=Expanded, Active=Overview",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:546",
+      "name": "State=Expanded, Active=Map",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:608",
+      "name": "State=Expanded, Active=Schedule",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:670",
+      "name": "State=Expanded, Active=Dress",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:732",
+      "name": "State=Expanded, Active=Packing",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:794",
+      "name": "State=Expanded, Active=Members",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:856",
+      "name": "State=Expanded, Active=Fund",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:918",
+      "name": "State=Expanded, Active=Fare",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:980",
+      "name": "State=Expanded, Active=Settings",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1042",
+      "name": "State=Collapsed, Active=Overview",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1077",
+      "name": "State=Collapsed, Active=Map",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1112",
+      "name": "State=Collapsed, Active=Schedule",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1147",
+      "name": "State=Collapsed, Active=Dress",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1182",
+      "name": "State=Collapsed, Active=Packing",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1217",
+      "name": "State=Collapsed, Active=Members",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1252",
+      "name": "State=Collapsed, Active=Fund",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1287",
+      "name": "State=Collapsed, Active=Fare",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "135:1322",
+      "name": "State=Collapsed, Active=Settings",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "283:1244",
+      "name": "State=Expanded, Active=None",
+      "type": "COMPONENT",
+      "width": 220,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "283:1309",
+      "name": "State=Collapsed, Active=None",
+      "type": "COMPONENT",
+      "width": 72,
+      "height": 884,
+      "parentId": "135:1357"
+    },
+    {
+      "id": "256:1996",
+      "name": "9.x Packing/Content",
+      "type": "COMPONENT_SET",
+      "width": 4840,
+      "height": 1290,
+      "parentId": "0:1",
+      "properties": {
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Closed",
+          "variantOptions": [
+            "Closed",
+            "Open",
+            "ItemSuggestions",
+            "CategorySuggestions",
+            "CategorySelected",
+            "FilledDefault",
+            "FilledCustom",
+            "Added"
+          ]
+        }
+      }
+    },
+    {
+      "id": "256:1407",
+      "name": "State=Closed",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "256:1504",
+      "name": "State=Open",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "256:1648",
+      "name": "State=ItemSuggestions",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "256:1823",
+      "name": "State=CategorySuggestions",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "503:3104",
+      "name": "State=CategorySelected",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "503:3243",
+      "name": "State=FilledDefault",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "503:3382",
+      "name": "State=FilledCustom",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "503:3521",
+      "name": "State=Added",
+      "type": "COMPONENT",
+      "width": 1180,
+      "height": 620,
+      "parentId": "256:1996"
+    },
+    {
+      "id": "771:6405",
+      "name": "Alignment / Labeled field",
+      "type": "COMPONENT",
+      "width": 260,
+      "height": 64,
+      "parentId": "767:5376",
+      "properties": {
+        "Label#771:0": {
+          "type": "TEXT",
+          "defaultValue": "Nhãn trường"
+        },
+        "Value#771:1": {
+          "type": "TEXT",
+          "defaultValue": "Giá trị"
+        }
+      }
+    },
+    {
+      "id": "779:6442",
+      "name": "Alignment / Web header 402",
+      "type": "COMPONENT",
+      "width": 402,
+      "height": 72,
+      "parentId": "767:5376",
+      "properties": {}
+    },
+    {
+      "id": "779:6470",
+      "name": "Alignment / Trip banner 370",
+      "type": "COMPONENT",
+      "width": 370,
+      "height": 160,
+      "parentId": "767:5376",
+      "properties": {}
+    },
+    {
+      "id": "781:6592",
+      "name": "Alignment / Fund ledger mobile row",
+      "type": "COMPONENT",
+      "width": 338,
+      "height": 92,
+      "parentId": "767:5376",
+      "properties": {
+        "Title#781:0": {
+          "type": "TEXT",
+          "defaultValue": "Khách sạn · 3.600.000đ"
+        },
+        "Meta#781:1": {
+          "type": "TEXT",
+          "defaultValue": "Trang Nguyễn · 12/10/2026\nĐã ghi sổ"
+        }
+      }
+    }
+  ],
+  "counts": {
+    "FRAME": 4412,
+    "INSTANCE": 931,
+    "VECTOR": 4644,
+    "TEXT": 6428,
+    "RECTANGLE": 2401,
+    "COMPONENT": 78,
+    "COMPONENT_SET": 3
+  },
+  "reactionNodeCount": 1150
+}

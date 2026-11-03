@@ -1,5 +1,5 @@
 import { ApiError } from './api-error';
-import { parseEnvelope } from './envelope';
+import { parseEnvelope, type GatewayMetadata } from './envelope';
 
 export interface GatewayReadOptions {
   signal?: AbortSignal;
@@ -12,6 +12,7 @@ export interface GatewayRead {
   data: unknown;
   correlationId: string | null;
   status?: number;
+  metadata?: GatewayMetadata;
   contentType?: string | null;
 }
 export interface GatewayWriteOptions {
@@ -45,7 +46,9 @@ function gatewayPath(path: string): string {
 }
 
 function newCorrelationId(): string {
-  return globalThis.crypto?.randomUUID?.() ?? `web-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return (
+    globalThis.crypto?.randomUUID?.() ?? `web-${Date.now()}-${Math.random().toString(16).slice(2)}`
+  );
 }
 
 function requestBody(body: unknown): { body?: BodyInit; contentType?: string } {
@@ -110,24 +113,44 @@ export function createGatewayHttpClient({
       });
       const headerCorrelation = response.headers.get('X-Correlation-Id');
       if (response.status === 204) {
-        return { data: null, correlationId: headerCorrelation };
+        return { data: null, correlationId: headerCorrelation, status: response.status };
       }
       if (requestedResponse === 'bytes') {
         if (!response.ok) {
           try {
             const envelope = parseEnvelope((await response.json()) as unknown);
             if (envelope.kind === 'error') {
-              throw new ApiError(envelope.message, 'http', response.status, envelope.code, envelope.correlationId ?? headerCorrelation, envelope.retryable, envelope.details);
+              throw new ApiError(
+                envelope.message,
+                'http',
+                response.status,
+                envelope.code,
+                envelope.correlationId ?? headerCorrelation,
+                envelope.retryable,
+                envelope.details,
+              );
             }
           } catch (error) {
             if (error instanceof ApiError) throw error;
-            throw new ApiError('Invalid Gateway response', 'invalid-response', response.status, null, headerCorrelation, false);
+            throw new ApiError(
+              'Invalid Gateway response',
+              'invalid-response',
+              response.status,
+              null,
+              headerCorrelation,
+              false,
+            );
           }
         }
-        return { data: await response.arrayBuffer(), correlationId: headerCorrelation, contentType: response.headers.get('Content-Type') };
+        return {
+          data: await response.arrayBuffer(),
+          correlationId: headerCorrelation,
+          status: response.status,
+          contentType: response.headers.get('Content-Type'),
+        };
       }
       if (requestedResponse === 'empty' && response.ok) {
-        return { data: null, correlationId: headerCorrelation };
+        return { data: null, correlationId: headerCorrelation, status: response.status };
       }
       let envelope;
       try {
@@ -165,7 +188,12 @@ export function createGatewayHttpClient({
           false,
         );
       }
-      return { data: envelope.data, correlationId };
+      return {
+        data: envelope.data,
+        correlationId,
+        status: response.status,
+        metadata: envelope.metadata,
+      };
     } catch (error) {
       if (options.signal?.aborted) throw options.signal.reason;
       if (timedOut)

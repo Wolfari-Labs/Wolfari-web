@@ -1,0 +1,13 @@
+.reviewer { padding: 20px; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; background: white; border: 1px solid var(--color-line); padding: 16px; border-radius: 12px; }
+.toolbar p, .note { font-size: 13px; margin: 4px 0; }
+.toolbar label { display: grid; font-size: 13px; gap: 4px; }
+.toolbar select { min-height: 40px; max-width: 260px; color: var(--color-ink); border: 1px solid var(--color-border-control); border-radius: 8px; padding: 8px; background: white; }
+.toolbar input { width: 20px; height: 20px; }
+.note { margin: 12px 0; max-width: 1200px; }
+.boards { display: flex; gap: 24px; align-items: start; overflow: auto; padding: 4px 4px 20px; }
+.boards section { flex-shrink: 0; }
+.boards h2 { font-size: 14px; }
+.stage { overflow: hidden; outline: 1px solid var(--color-line); background: white; }
+.stage iframe { display: block; border: 0; transform-origin: top left; }
+.reference { height: auto; display: block; }

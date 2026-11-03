@@ -1,0 +1,4123 @@
+[
+  {
+    "id": "317:2025",
+    "name": "M01 · Khám phá — Guest",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2059",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2072",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2084",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2086",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 17,
+    "text": [
+      "9:41",
+      "Đăng nhập",
+      "CÙNG NHAU LÊN ĐƯỜNG",
+      "Cho những\nchuyến đi thật đẹp",
+      "Xin chào, Đà Nẵng",
+      "Một điểm đến, thật nhiều kỷ niệm.",
+      "Lên lịch, chuẩn bị hành lý và quản lý quỹ — cả nhóm cùng nhau, trong một nơi.",
+      "Bắt đầu hành trình",
+      "Đã có tài khoản?",
+      "Đăng nhập →",
+      "Mọi thứ trong một nơi",
+      "Lịch trình & bản đồ",
+      "Điểm đến và kế hoạch từng ngày",
+      "Cùng nhau chuẩn bị",
+      "Dress code, hành lý và nhắc việc",
+      "Quỹ nhóm minh bạch",
+      "Theo dõi đóng góp và chi tiêu"
+    ],
+    "fontFamilies": [
+      "SF Pro",
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 15,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Mobile/Button",
+      "Destination illustration",
+      "Mobile/List row",
+      "Leading icon",
+      "Mobile/Icon/chevron"
+    ],
+    "imageCount": 3,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496",
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  },
+  {
+    "id": "317:2026",
+    "name": "M02 · Đăng nhập",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2152",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2165",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2177",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2179",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 11,
+    "text": [
+      "9:41",
+      "Đăng nhập",
+      "Chào mừng\ntrở lại!",
+      "Tiếp tục những hành trình của bạn.",
+      "Email",
+      "name@example.com",
+      "Mật khẩu",
+      "••••••••",
+      "Đăng nhập",
+      "Bạn chưa có tài khoản?",
+      "Đăng ký"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 10,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Button"
+    ],
+    "imageCount": 3,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22",
+      "becd309d3964f1090f30638fb0d675f531e6f72b"
+    ]
+  },
+  {
+    "id": "317:2027",
+    "name": "M03 · Đăng ký",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2200",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2213",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2225",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2227",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 15,
+    "text": [
+      "9:41",
+      "Tạo tài khoản",
+      "Cùng Wolfari\nlên đường",
+      "Lưu kế hoạch và kết nối với nhóm bạn.",
+      "Họ và tên",
+      "Nguyễn Minh Anh",
+      "Email",
+      "name@example.com",
+      "Mật khẩu",
+      "Tối thiểu 8 ký tự",
+      "Nhập lại mật khẩu",
+      "Nhập lại mật khẩu",
+      "Tôi đồng ý với Điều khoản sử dụng\nvà Chính sách bảo mật.",
+      "Tạo tài khoản",
+      "Đã có tài khoản?  Đăng nhập →"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 15,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Mobile/Icon/edit",
+      "Leading icon",
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2028",
+    "name": "M04 · Khám phá — Thành viên",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2255",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2268",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2280",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3461",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "322:2282",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "322:2301",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 24,
+    "text": [
+      "9:41",
+      "CHÀO TRANG,",
+      "Đi đâu tiếp nhỉ?",
+      "CHUYẾN ĐI SẮP TỚI",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10 · 4 bạn đồng hành",
+      "T",
+      "H",
+      "Q",
+      "T",
+      "Tiếp tục lên kế hoạch",
+      "Hành lý",
+      "8 / 12 món",
+      "Quỹ nhóm",
+      "750.000 ₫",
+      "Còn lại trong quỹ",
+      "Cảm hứng lên đường",
+      "Khám phá",
+      "Biển xanh gọi tên",
+      "Sơn Trà · Đà Nẵng · Một ngày xanh",
+      "Gợi ý",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 25,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/bell",
+      "Mobile/Icon/plus",
+      "Mobile/Trip ticket",
+      "Destination illustration",
+      "Mobile/Icon/plane",
+      "Mobile/Icon/chevron",
+      "Mobile/Quick action",
+      "Mobile/Icon/bag",
+      "Mobile/Icon/wallet",
+      "Mobile/Destination card",
+      "Mobile/Illustration/coast",
+      "Mobile/Tab bar · Liquid glass"
+    ],
+    "imageCount": 4,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22",
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496",
+      "eb74fd92235c0b039d64e82ecccf553a46960130"
+    ]
+  },
+  {
+    "id": "317:2029",
+    "name": "M05 · Chuyến đi của tôi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2335",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2348",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2360",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3463",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "322:2362",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "322:2381",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 20,
+    "text": [
+      "9:41",
+      "Chuyến đi của tôi",
+      "Hẹn những ngày thật đẹp.",
+      "Sắp tới · 2",
+      "Đang đi",
+      "Đã đi",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10/2026 · 4 thành viên",
+      "Sắp tới",
+      "Sắp tới",
+      "Đà Lạt cuối tuần",
+      "07–09/11/2026 · 3 thành viên",
+      "Chưa có chuyến đi đang diễn ra",
+      "Chuyến Đà Nẵng của bạn sẽ bắt đầu vào ngày 12/10.",
+      "Kỷ niệm sẽ xuất hiện ở đây",
+      "Các hành trình đã hoàn thành sẽ được lưu lại trong mục này.",
+      "+ Tạo một hành trình mới",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 19,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/bell",
+      "Mobile/Icon/plus",
+      "Mobile/Segmented control",
+      "Trip hero / Đà Nẵng",
+      "Destination illustration",
+      "Mobile/Icon/chevron",
+      "Mobile/Trip compact",
+      "Mobile/Button",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 5,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496",
+      "4930491e1eb00ef91b24ec2dccd0e2e20ea2af47",
+      "4ded9f2f6fa378b433cdc18399207b4b7b8988cb",
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  },
+  {
+    "id": "317:2030",
+    "name": "M06 · Tạo chuyến đi — Thông tin",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2403",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2416",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2428",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2430",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "379:3464",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 20,
+    "text": [
+      "9:41",
+      "Chuyến đi mới",
+      "1",
+      "Thông tin",
+      "2",
+      "Cá nhân hóa",
+      "Hành trình bắt đầu\ntừ một ý tưởng",
+      "Tên chuyến đi",
+      "Đà Nẵng 3N2Đ",
+      "Điểm đến chính",
+      "Đà Nẵng, Việt Nam",
+      "Ngày đi",
+      "12/10/2026",
+      "Ngày về",
+      "14/10/2026",
+      "Số thành viên dự kiến",
+      "4 người",
+      "Đà Nẵng",
+      "Biển xanh, Sơn Trà và những ngày\nkhám phá cùng nhau.",
+      "Tiếp tục"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 18,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Trip stepper",
+      "Mobile/Field",
+      "Leading icon",
+      "Destination illustration",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2031",
+    "name": "M07 · Tạo chuyến đi — Cá nhân hóa",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "322:2462",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2475",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2487",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "322:2489",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "379:3466",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 19,
+    "text": [
+      "9:41",
+      "Chuyến đi mới",
+      "Thông tin",
+      "2",
+      "Cá nhân hóa",
+      "Theo cách của bạn",
+      "Chọn phong cách và ngân sách chung.",
+      "Phong cách chuyến đi",
+      "Khám phá",
+      "Nghỉ dưỡng",
+      "Ẩm thực",
+      "Văn hóa",
+      "Ngân sách dự kiến cả nhóm",
+      "9.000.000 ₫",
+      "Khoảng 2.250.000 ₫ / người · 4 thành viên",
+      "Mô tả ngắn",
+      "Một chuyến đi thật đẹp cùng cả nhóm",
+      "Ảnh bìa chuyến đi",
+      "Tạo chuyến đi"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 17,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Trip stepper",
+      "Mobile/Icon/check",
+      "Mobile/Chip",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Icon/edit",
+      "Destination illustration",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2032",
+    "name": "M08 · Tổng quan chuyến đi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "325:2253",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2266",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2278",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3467",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "325:2280",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "325:2299",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 35,
+    "text": [
+      "9:41",
+      "Chuyến đi của tôi",
+      "Tổng quan",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "Đà Nẵng",
+      "12–14/10/2026 · 3 ngày 2 đêm",
+      "T",
+      "H",
+      "Q",
+      "T",
+      "HẸN NHAU ĐI!",
+      "TRIỆU ĐỒNG ĐÃ CHI",
+      "6,25",
+      "Ngân sách 9.000.000 ₫",
+      "Còn 2.750.000 ₫",
+      "Hành lý",
+      "8 / 12",
+      "4 hoạt động",
+      "Xem lịch trình",
+      "Lịch trình ngày đầu",
+      "Xem tất cả",
+      "08:00",
+      "Bán đảo Sơn Trà",
+      "Ngắm cảnh · 2 giờ 30 phút",
+      "Chuẩn bị cùng nhau",
+      "Dress code",
+      "Tông biển xanh cho ngày đầu tiên",
+      "Theo dõi giá vé",
+      "Đà Nẵng → Hà Nội",
+      "Chia sẻ chuyến đi",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 28,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Trip section switcher",
+      "Mobile/Destination card",
+      "Destination illustration",
+      "Mobile/Icon/chevron",
+      "Mobile/Avatar group",
+      "Mobile/Trip dashboard",
+      "Mobile/Icon/calendar",
+      "Mobile/Activity card",
+      "Mobile/Icon/pin",
+      "Mobile/List row"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2033",
+    "name": "M09 · Lịch trình",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "325:2406",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2419",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2431",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "588:7974",
+        "name": "Pinned itinerary controls",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3469",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "325:2433",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "325:2452",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 39,
+    "text": [
+      "9:41",
+      "Đà Nẵng 3N2Đ",
+      "08:00",
+      "Bán đảo Sơn Trà",
+      "Ngắm cảnh · Hải Vọng Đài",
+      "~20 phút di chuyển",
+      "11:30",
+      "Ăn trưa hải sản",
+      "Nhà hàng Bé Mặn · 90 phút",
+      "~15 phút di chuyển",
+      "14:00",
+      "Bãi biển Mỹ Khê",
+      "Tắm biển · Thư giãn",
+      "~20 phút di chuyển",
+      "19:00",
+      "Cầu Rồng",
+      "Dạo phố · Ngắm cảnh",
+      "08:30",
+      "11:30",
+      "14:00",
+      "19:00",
+      "07:00",
+      "09:00",
+      "11:00",
+      "14:00",
+      "2 địa điểm đang chờ",
+      "Chùa Linh Ứng và Ngũ Hành Sơn chưa có trong lịch trình.",
+      "Sắp xếp vào lịch",
+      "Tổng quan",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "12/10 · Ngày 1",
+      "13/10 · Ngày 2",
+      "14/10 · Ngày 3"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 44,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Activity card",
+      "Mobile/Icon/pin",
+      "Mobile/Travel leg",
+      "Mobile/Icon/clock",
+      "Mobile/Icon/utensils",
+      "Mobile/Icon/sun",
+      "Mobile/Icon/map",
+      "Mobile/Button",
+      "Mobile/Trip section switcher",
+      "Mobile/Segmented control"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2034",
+    "name": "M10 · Bản đồ & địa điểm",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "325:2528",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2541",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2553",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3470",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "325:2555",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "325:2574",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 29,
+    "text": [
+      "9:41",
+      "Đà Nẵng 3N2Đ",
+      "Tổng quan",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "Tìm địa điểm, quán ăn…",
+      "Đã chọn · 6",
+      "Trong lịch · 4",
+      "Bộ lọc",
+      "1",
+      "2",
+      "3",
+      "4",
+      "BIỂN ĐÔNG",
+      "Bãi biển Mỹ Khê",
+      "Ngày 1 · 14:00–16:00",
+      "Xem địa điểm",
+      "Sơn Trà",
+      "Bé Mặn",
+      "Mỹ Khê",
+      "Đã lưu, chưa xếp lịch",
+      "Chùa Linh Ứng",
+      "Tham quan · Sơn Trà",
+      "Ngũ Hành Sơn",
+      "Danh thắng · Ngũ Hành Sơn",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 30,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Trip section switcher",
+      "Mobile/Search bar",
+      "Mobile/Icon/search",
+      "Mobile/Icon/pin",
+      "Mobile/Chip",
+      "Destination illustration",
+      "Mobile/Button",
+      "Map label / Sơn Trà",
+      "Map label / Bé Mặn",
+      "Map label / Mỹ Khê"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "eb74fd92235c0b039d64e82ecccf553a46960130"
+    ]
+  },
+  {
+    "id": "317:2035",
+    "name": "M11 · Chi tiết địa điểm",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "325:2646",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2659",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2671",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2673",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 15,
+    "text": [
+      "9:41",
+      "Chi tiết địa điểm",
+      "Bãi biển Mỹ Khê",
+      "Đã thêm vào ngày 1",
+      "Võ Nguyên Giáp, Sơn Trà, Đà Nẵng",
+      "2 giờ",
+      "Thời gian gợi ý",
+      "Miễn phí",
+      "Tham quan",
+      "Một chiều bên biển",
+      "Bãi cát trắng, làn nước trong xanh và không gian thoáng đãng để cả nhóm cùng thư giãn.",
+      "Trong lịch của bạn",
+      "Ngày 1 · 12/10/2026\n14:00 – 16:00 · Tắm biển, chụp ảnh",
+      "Chỉnh sửa hoạt động",
+      "Xem trong lịch trình"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 12,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Destination illustration",
+      "Mobile/Icon/heart",
+      "Saved",
+      "Mobile/Icon/clock",
+      "Mobile/Icon/wallet",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "eb74fd92235c0b039d64e82ecccf553a46960130"
+    ]
+  },
+  {
+    "id": "317:2036",
+    "name": "M12 · Dress code",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "325:2709",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2722",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2734",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3472",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "325:2736",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "325:2755",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 22,
+    "text": [
+      "9:41",
+      "Dress code",
+      "Diện cùng một tông",
+      "Đà Nẵng 3N2Đ · 4 thành viên",
+      "Ngày 1 · 12/10",
+      "Ngày 2",
+      "Ngày 3",
+      "Một ngày\nbên biển",
+      "Xanh biển · Trắng · Be",
+      "Xanh biển",
+      "Trắng",
+      "Be",
+      "Áo thoáng mát, quần short hoặc váy nhẹ. Mang theo mũ và kính râm.",
+      "Theo thời tiết",
+      "Nắng nhẹ · 28°C",
+      "Ưu tiên chất liệu thoáng và chống nắng",
+      "Ghi chú của nhóm",
+      "“Cả nhóm mặc tông trắng–xanh để chụp ảnh ở Mỹ Khê nhé!”",
+      "Thêm đồ vào packing list",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 20,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Chip",
+      "Mobile/Icon/shirt",
+      "Mobile/List row",
+      "Leading icon",
+      "Mobile/Icon/chevron",
+      "Mobile/Button",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2037",
+    "name": "M13 · Hành lý",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "325:2805",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2818",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "325:2830",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3474",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "325:2832",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "325:2851",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 41,
+    "text": [
+      "9:41",
+      "Hành lý",
+      "Sẵn sàng lên đường",
+      "Cùng chuẩn bị, chẳng lo bỏ sót.",
+      "Sẵn sàng lên đường!",
+      "Cả nhóm đã chuẩn bị đủ 12 món.",
+      "67%",
+      "8 / 12",
+      "Còn 4 món cần chuẩn bị.",
+      "Một chút nữa là xong!",
+      "Tất cả",
+      "Của tôi",
+      "Chưa xong",
+      "Danh sách vật dụng",
+      "Sữa tắm nhỏ",
+      "Hà · Đồ vệ sinh",
+      "Sạc dự phòng",
+      "Tân · Điện tử",
+      "Thuốc cá nhân",
+      "Trang · Thuốc & y tế",
+      "Băng cá nhân",
+      "Hà · Thuốc & y tế",
+      "Áo khoác mỏng",
+      "Trang · 1 chiếc",
+      "Quần dài",
+      "Hà · 1 chiếc",
+      "Đồ ngủ",
+      "Quyên · 1 bộ",
+      "Áo thun",
+      "Tân · 2 chiếc",
+      "Đồ bơi",
+      "Trang · 1 bộ",
+      "Mũ đi biển",
+      "Hà · 1 chiếc",
+      "Bàn chải đánh răng"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 34,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Segmented control",
+      "Mobile/Icon/plus",
+      "Mobile/Checklist item",
+      "Mobile/Icon/check",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  },
+  {
+    "id": "317:2038",
+    "name": "M14 · Quỹ nhóm",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "326:2624",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2637",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2649",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3476",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "326:2651",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "326:2670",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 59,
+    "text": [
+      "9:41",
+      "Quỹ nhóm",
+      "Cùng góp, cùng đi",
+      "Quỹ nhóm · Đà Nẵng 3N2Đ",
+      "QUỸ CÒN LẠI",
+      "750.000 ₫",
+      "Đã đóng góp",
+      "7.000.000 ₫",
+      "Đã chi tiêu",
+      "6.250.000 ₫",
+      "Ngân sách dự kiến 9.000.000 ₫",
+      "+ Ghi nhận khoản chi",
+      "Chi tiêu",
+      "Đóng góp",
+      "Lịch sử",
+      "Chi tiêu gần đây",
+      "Khách sạn",
+      "12/10 · Trang",
+      "3.600.000 ₫",
+      "Di chuyển",
+      "12/10 · Trang",
+      "1.200.000 ₫",
+      "Ăn uống",
+      "13/10 · Trang",
+      "1.000.000 ₫",
+      "Vé tham quan",
+      "13/10 · Trang",
+      "450.000 ₫",
+      "Đóng góp của nhóm",
+      "Trang Nguyễn",
+      "Đã đóng · 01/10",
+      "2.000.000 ₫",
+      "Hà Phạm",
+      "Đã đóng · 01/10",
+      "2.000.000 ₫"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 19,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Icon/wallet",
+      "Mobile/Button",
+      "Mobile/Segmented control",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/plane",
+      "Mobile/Icon/file",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2039",
+    "name": "M15 · Ghi nhận khoản chi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "326:2739",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2752",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2764",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2766",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "379:3478",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 20,
+    "text": [
+      "9:41",
+      "Ghi nhận khoản chi",
+      "Một khoản chi mới",
+      "Khoản chi sẽ được ghi vào quỹ nhóm.",
+      "Hạng mục",
+      "Ăn uống",
+      "Số tiền",
+      "350.000 ₫",
+      "Ngày chi",
+      "13/10/2026",
+      "Người ghi nhận",
+      "Trang Nguyễn",
+      "Ghi chú",
+      "Bữa trưa của cả nhóm",
+      "Thêm ảnh hóa đơn",
+      "Không bắt buộc · JPG, PNG",
+      "Xác nhận trước khi lưu",
+      "Chi từ quỹ nhóm: 350.000 ₫\nQuỹ còn lại sau ghi nhận: 400.000 ₫",
+      "Hủy",
+      "Lưu khoản chi"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 18,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Icon/edit",
+      "Mobile/Icon/file",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2040",
+    "name": "M16 · Thành viên",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "326:2803",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2816",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2828",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3480",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "326:2830",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "326:2849",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 25,
+    "text": [
+      "9:41",
+      "Thành viên",
+      "Bạn đồng hành",
+      "4 thành viên · Đà Nẵng 3N2Đ",
+      "T",
+      "Trang Nguyễn",
+      "Chủ nhóm",
+      "Bạn · Quản lý quỹ",
+      "H",
+      "Hà Nguyễn",
+      "Thành viên · Chỉnh sửa lịch",
+      "Q",
+      "Quyên Trần",
+      "Thành viên · Chỉnh sửa lịch",
+      "T",
+      "Tân Lê",
+      "Thành viên · Chỉnh sửa lịch",
+      "Đang chờ phản hồi · 1",
+      "minh.anh@email.com",
+      "Lời mời gửi ngày 30/09/2026",
+      "Quyền của nhóm",
+      "Cùng xem và chỉnh sửa kế hoạch",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 23,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Icon/plus",
+      "Mobile/Member row",
+      "Mobile/Action row",
+      "Mobile/Icon/mail",
+      "Mobile/Icon/chevron",
+      "Mobile/Icon/gear",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2041",
+    "name": "M17 · Mời thành viên",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "326:2901",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2914",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2926",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2928",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "379:3481",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 14,
+    "text": [
+      "9:41",
+      "Mời thành viên",
+      "Đi cùng nhau,\nvui hơn nhiều!",
+      "Mời bạn bè tham gia Đà Nẵng 3N2Đ.",
+      "Email người được mời",
+      "minh.anh@email.com",
+      "Quyền khi tham gia",
+      "Thành viên",
+      "Cùng xem và chỉnh sửa kế hoạch",
+      "Quyền quản lý quỹ được phân công riêng trong cài đặt chuyến đi.",
+      "Đang chờ phản hồi",
+      "minh.anh@email.com",
+      "Lời mời đã gửi ngày 30/09/2026.",
+      "Gửi lời mời"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 11,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/List row",
+      "Mobile/Icon/chevron",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  },
+  {
+    "id": "317:2042",
+    "name": "M18 · Theo dõi giá vé",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "326:2960",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2973",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:2985",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3483",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "326:2987",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "326:3006",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 23,
+    "text": [
+      "9:41",
+      "Theo dõi giá vé",
+      "Bay với giá tốt hơn",
+      "Nhận thông báo khi giá chạm ngưỡng.",
+      "DAD",
+      "HAN",
+      "Đà Nẵng → Hà Nội · 14/10/2026",
+      "Đang theo dõi",
+      "Giá tham khảo hiện tại",
+      "1.320.000 ₫",
+      "Cập nhật gần nhất lúc 07:30",
+      "Biến động 7 ngày",
+      "25/09",
+      "01/10 · 1,32 triệu",
+      "Báo tôi khi giá thấp hơn",
+      "1.200.000 ₫",
+      "Lưu ngưỡng giá",
+      "Thông báo giá vé",
+      "Qua email và trên ứng dụng",
+      "Giá mang tính tham khảo. Việc đặt vé được thực hiện tại nhà cung cấp.",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 17,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Icon/plane",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Button",
+      "Mobile/Switch",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2043",
+    "name": "M19 · Xuất & chia sẻ",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "326:3046",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:3059",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "326:3071",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3485",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "326:3073",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "326:3092",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 22,
+    "text": [
+      "9:41",
+      "Xuất & chia sẻ",
+      "Chia sẻ hành trình",
+      "Gửi kế hoạch đẹp đến những người bạn.",
+      "Liên kết chỉ xem",
+      "Người nhận có thể xem lịch trình mà không cần tham gia nhóm.",
+      "Liên kết chia sẻ",
+      "wolfari.app/s/da-nang-3n2d",
+      "Mở bản xem trước",
+      "Bảo vệ bằng mật khẩu",
+      "Chỉ người có mật khẩu mới xem được",
+      "Nội dung được chia sẻ",
+      "Lịch trình, địa điểm, dress code và danh sách chuẩn bị chung.",
+      "Quỹ nhóm và thông tin riêng của thành viên không hiển thị.",
+      "Mang kế hoạch theo bạn",
+      "Xuất bản PDF",
+      "Lịch trình và địa điểm của chuyến đi",
+      "Xem trang có mật khẩu",
+      "Trải nghiệm của người nhận liên kết",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 23,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Icon/share",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Button",
+      "Mobile/Switch",
+      "Mobile/List row",
+      "Mobile/Icon/chevron",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2044",
+    "name": "M20 · Cài đặt chuyến đi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "327:2852",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:2865",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:2877",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "379:3486",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "327:2879",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "327:2898",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 27,
+    "text": [
+      "9:41",
+      "Cài đặt chuyến đi",
+      "Một chuyến đi,\ncùng một nhịp",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10/2026 · 4 người",
+      "Chỉnh sửa thông tin",
+      "Quyền trong nhóm",
+      "Cùng chỉnh sửa lịch",
+      "Cho phép thành viên cập nhật kế hoạch",
+      "Người quản lý quỹ",
+      "Trang Nguyễn · Bạn",
+      "Nhắc trước chuyến đi",
+      "Nhắc chuẩn bị hành lý",
+      "Trước ngày khởi hành 1 ngày",
+      "Nhắc hoạt động",
+      "Trước mỗi hoạt động 30 phút",
+      "Lưu cài đặt",
+      "Quản lý chuyến đi",
+      "Lưu trữ chuyến đi",
+      "Giữ lại kỷ niệm sau hành trình",
+      "Chuyển chủ chuyến đi",
+      "Chọn một thành viên trong nhóm",
+      "Xóa chuyến đi",
+      "Cần xác nhận trước khi xóa vĩnh viễn.",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 24,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Destination illustration",
+      "Mobile/Button",
+      "Mobile/Switch",
+      "Mobile/List row",
+      "Leading icon",
+      "Mobile/Icon/chevron",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2045",
+    "name": "M21 · Chỉnh sửa chuyến đi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "327:2964",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:2977",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:2984",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:2986",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "381:3196",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 18,
+    "text": [
+      "9:41",
+      "Chỉnh sửa chuyến đi",
+      "Đà Nẵng 3N2Đ",
+      "Cập nhật thông tin cho cả nhóm.",
+      "Tên chuyến đi",
+      "Đà Nẵng 3N2Đ",
+      "Điểm đến",
+      "Đà Nẵng, Việt Nam",
+      "Ngày đi",
+      "12/10/2026",
+      "Ngày về",
+      "14/10/2026",
+      "Ngân sách cả nhóm",
+      "9.000.000 ₫",
+      "Mô tả",
+      "Cùng nhau khám phá Đà Nẵng",
+      "Hủy",
+      "Lưu thay đổi"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 20,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Destination illustration",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Icon/edit",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2046",
+    "name": "M22 · Tài khoản & thông báo",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "327:3019",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3032",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3039",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "381:3197",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "327:3041",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "327:3060",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 19,
+    "text": [
+      "9:41",
+      "Tài khoản",
+      "Trang Nguyễn",
+      "trang.nguyen@email.com",
+      "Thông báo của bạn",
+      "Thông báo trong ứng dụng",
+      "Lịch trình, lời mời và nhắc việc",
+      "Nhận qua email",
+      "Những cập nhật quan trọng",
+      "Cảnh báo giá vé",
+      "Khi giá đạt ngưỡng đã đặt",
+      "Trung tâm thông báo",
+      "Cập nhật từ những chuyến đi",
+      "Thiết bị đang đăng nhập",
+      "iPhone · Phiên hiện tại",
+      "Đăng xuất",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 20,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/edit",
+      "Mobile/Switch",
+      "Mobile/Action row",
+      "Mobile/Icon/bell",
+      "Mobile/Icon/chevron",
+      "Mobile/Icon/lock",
+      "Mobile/Button",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "317:2047",
+    "name": "M23 · Trung tâm thông báo",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "327:3117",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3130",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3137",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "381:3199",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "327:3139",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "327:3158",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 22,
+    "text": [
+      "9:41",
+      "Thông báo",
+      "Có gì mới?",
+      "3 thông báo chưa đọc",
+      "Tất cả",
+      "Chưa đọc · 3",
+      "Hôm nay",
+      "Bạn được mời đi Đà Nẵng",
+      "Trang Nguyễn mời bạn tham gia\nĐà Nẵng 3N2Đ.",
+      "Vừa xong · Chạm để xem",
+      "Hành lý cần chuẩn bị",
+      "Sạc dự phòng đang chờ Tân\nchuẩn bị trước ngày 12/10.",
+      "Vừa xong · Chạm để xem",
+      "Giá vé vừa giảm",
+      "Đà Nẵng → Hà Nội còn 1.320.000 ₫.\nXem cập nhật theo dõi giá.",
+      "Vừa xong · Chạm để xem",
+      "Trước đó",
+      "Lịch trình được cập nhật",
+      "Hà đã thêm Bãi biển Mỹ Khê · Hôm qua",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 18,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Chip",
+      "Mobile/Icon/people",
+      "Mobile/Icon/bag",
+      "Mobile/Icon/plane",
+      "Mobile/List row",
+      "Leading icon",
+      "Mobile/Icon/chevron",
+      "Mobile/Tab bar · Liquid glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2048",
+    "name": "M24 · Phản hồi lời mời",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "327:3208",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3221",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3228",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "327:3230",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 14,
+    "text": [
+      "9:41",
+      "Lời mời chuyến đi",
+      "Cùng nhau đến\nĐà Nẵng nhé!",
+      "T",
+      "Trang Nguyễn đã mời bạn",
+      "Tham gia với vai trò thành viên",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10/2026",
+      "3 ngày, 2 đêm",
+      "4 bạn đồng hành",
+      "Cùng xem và chỉnh sửa kế hoạch",
+      "Chấp nhận lời mời",
+      "Từ chối",
+      "Bạn có thể thay đổi tùy chọn thông báo\nsau khi tham gia chuyến đi."
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 14,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Destination illustration",
+      "Mobile/List row",
+      "Leading icon",
+      "Mobile/Icon/chevron",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2049",
+    "name": "M25 · Chia sẻ công khai",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3047",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3060",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "387:3180",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3074",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 27,
+    "text": [
+      "9:41",
+      "Đăng nhập",
+      "BẢN CHIA SẺ · CHỈ XEM",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10/2026 · 3 ngày 2 đêm",
+      "Một chuyến đi thật đẹp cùng cả nhóm.",
+      "Ngày 1 · 12/10",
+      "Ngày 2",
+      "Ngày 3",
+      "08:00",
+      "Bán đảo Sơn Trà",
+      "Ngắm cảnh · Hải Vọng Đài",
+      "11:30",
+      "Ăn trưa hải sản",
+      "Nhà hàng Bé Mặn",
+      "14:00",
+      "Bãi biển Mỹ Khê",
+      "Tắm biển · Thư giãn",
+      "19:00",
+      "Cầu Rồng",
+      "Dạo phố · Ngắm cảnh",
+      "Dress code ngày 1",
+      "Trắng · Xanh biển · Be\nMang mũ, kính râm và đồ thoáng mát.",
+      "Cả nhóm nhớ mang",
+      "Đồ bơi · Kem chống nắng\nSạc dự phòng · Thuốc cá nhân",
+      "Tạo hành trình với Wolfari",
+      "Bản chia sẻ chỉ xem. Thông tin riêng và quỹ nhóm được ẩn."
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 17,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Mobile/Button",
+      "Destination illustration",
+      "Mobile/Chip",
+      "Mobile/Activity card",
+      "Mobile/Icon/pin",
+      "Mobile/Icon/utensils",
+      "Mobile/Icon/sun",
+      "Mobile/Icon/map"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2050",
+    "name": "M26 · Nhập mật khẩu chia sẻ",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3124",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3137",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3144",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3146",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 8,
+    "text": [
+      "9:41",
+      "Mở chuyến đi",
+      "Hành trình này\ncó mật khẩu",
+      "Nhập mật khẩu được người chia sẻ gửi cho bạn để xem kế hoạch.",
+      "Mật khẩu",
+      "Nhập mật khẩu",
+      "Mở chuyến đi",
+      "Chưa có mật khẩu? Hãy liên hệ người\nđã gửi liên kết cho bạn."
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/lock",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Button"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "becd309d3964f1090f30638fb0d675f531e6f72b"
+    ]
+  },
+  {
+    "id": "317:2051",
+    "name": "M27 · Liên kết không khả dụng",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3163",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3176",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3183",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3185",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 6,
+    "text": [
+      "9:41",
+      "Liên kết chia sẻ",
+      "Hành trình này\nchưa thể mở",
+      "Liên kết có thể đã hết hạn, được thu hồi hoặc chuyến đi không còn khả dụng.",
+      "Nhờ người chia sẻ gửi lại một liên kết mới để tiếp tục xem kế hoạch.",
+      "Về trang chủ"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 6,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "4ded9f2f6fa378b433cdc18399207b4b7b8988cb"
+    ]
+  },
+  {
+    "id": "328:3072",
+    "name": "Scrollable viewport",
+    "width": 402,
+    "height": 754,
+    "layout": "VERTICAL",
+    "padding": [
+      0,
+      24,
+      0,
+      24
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3073",
+        "name": "Content",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 25,
+    "text": [
+      "BẢN CHIA SẺ · CHỈ XEM",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10/2026 · 3 ngày, 2 đêm",
+      "Một chuyến đi thật đẹp cùng cả nhóm.",
+      "Ngày 1 · 12/10",
+      "Ngày 2",
+      "Ngày 3",
+      "08:00",
+      "Bán đảo Sơn Trà",
+      "Ngắm cảnh · Hải Vọng Đài",
+      "11:30",
+      "Ăn trưa hải sản",
+      "Nhà hàng Bé Mặn",
+      "14:00",
+      "Bãi biển Mỹ Khê",
+      "Tắm biển · Thư giãn",
+      "19:00",
+      "Cầu Rồng",
+      "Dạo phố · Ngắm cảnh",
+      "Dress code ngày 1",
+      "Trắng · Xanh biển · Be\nMang mũ, kính râm và đồ thoáng mát.",
+      "Cả nhóm nhớ mang",
+      "Đồ bơi · Kem chống nắng\nSạc dự phòng · Thuốc cá nhân",
+      "Tạo hành trình với Wolfari",
+      "Đây là kế hoạch được chia sẻ để xem.\nThông tin riêng và quỹ nhóm được ẩn."
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro",
+      "SF Pro"
+    ],
+    "instanceCount": 6,
+    "instanceNames": [
+      "Destination illustration",
+      "Mobile/Chip",
+      "Mobile/Icon/shirt",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "317:2052",
+    "name": "M28 · Tiện ích chuyến đi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3194",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3207",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3214",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "381:3203",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "328:3216",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "328:3235",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 34,
+    "text": [
+      "9:41",
+      "Đà Nẵng 3N2Đ",
+      "Tổng quan",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "Chuẩn bị cùng nhau",
+      "Một nhóm, một chuyến đi đáng nhớ.",
+      "Hành lý",
+      "8 / 12 món",
+      "Quỹ nhóm",
+      "750.000 ₫",
+      "Còn lại trong quỹ",
+      "Dress code",
+      "Tông màu từng ngày",
+      "T",
+      "H",
+      "Q",
+      "T",
+      "Thành viên",
+      "4 người đồng hành",
+      "Theo dõi giá vé",
+      "Đà Nẵng → Hà Nội",
+      "Xuất & chia sẻ",
+      "Gửi lịch trình, PDF",
+      "Cài đặt chuyến đi",
+      "Thông tin, quyền và tùy chọn nhóm",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 31,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Trip section switcher",
+      "Mobile/Quick action",
+      "Mobile/Icon/bag",
+      "Mobile/Icon/chevron",
+      "Mobile/Icon/wallet",
+      "Mobile/Icon/shirt",
+      "Mobile/Icon/plane",
+      "Mobile/Icon/share",
+      "Mobile/Action row",
+      "Mobile/Icon/gear",
+      "Mobile/Tab bar · Liquid glass"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2053",
+    "name": "M29 · Thêm hoạt động",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3335",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3348",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3355",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3357",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "381:3205",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 20,
+    "text": [
+      "9:41",
+      "Thêm hoạt động",
+      "Thêm một trải nghiệm",
+      "Đà Nẵng 3N2Đ · Ngày 1",
+      "Địa điểm / hoạt động",
+      "Chùa Linh Ứng",
+      "Ngày",
+      "12/10/2026",
+      "Bắt đầu",
+      "10:30",
+      "Kết thúc",
+      "11:15",
+      "Di chuyển",
+      "Ô tô · Khoảng 15 phút",
+      "Ghi chú",
+      "Tham quan, chụp ảnh cùng cả nhóm",
+      "Dành thời gian di chuyển",
+      "Cân nhắc khoảng nghỉ giữa hoạt động này và bữa trưa lúc 11:30.",
+      "Hủy",
+      "Thêm vào lịch trình"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 20,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Icon/edit",
+      "Mobile/Icon/clock",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "317:2054",
+    "name": "M30 · Thêm vật dụng",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "328:3396",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3409",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3416",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "328:3418",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "381:3207",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 19,
+    "text": [
+      "9:41",
+      "Thêm vật dụng",
+      "Nhớ mang theo…",
+      "Phân công để cả nhóm cùng sẵn sàng.",
+      "Tên vật dụng",
+      "Kem chống nắng",
+      "Danh mục",
+      "Đồ vệ sinh",
+      "Số lượng",
+      "1 chai",
+      "Người chuẩn bị",
+      "Trang Nguyễn · Tôi",
+      "Hạn chuẩn bị",
+      "11/10/2026",
+      "Ghi chú",
+      "SPF 50, dùng khi đi biển",
+      "Những món dùng chung chỉ cần\nmột người nhận chuẩn bị.",
+      "Hủy",
+      "Thêm vào danh sách"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 19,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Icon/edit",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  },
+  {
+    "id": "317:2055",
+    "name": "Mobile · Components",
+    "width": 2840,
+    "height": 5567,
+    "layout": "VERTICAL",
+    "padding": [
+      32,
+      32,
+      32,
+      32
+    ],
+    "gap": 32,
+    "sections": [
+      {
+        "id": "320:2025",
+        "name": "WOLFARI / MOBILE COMPONENTS",
+        "type": "TEXT"
+      },
+      {
+        "id": "320:2026",
+        "name": "Be Vietnam Pro · Màu gốc từ Desktop · Thanh tab kính nổi theo mẫu",
+        "type": "TEXT"
+      },
+      {
+        "id": "320:2027",
+        "name": "Icons",
+        "type": "FRAME"
+      },
+      {
+        "id": "320:2144",
+        "name": "Mobile/Button",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "320:2154",
+        "name": "Mobile/Field",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "320:2160",
+        "name": "Mobile/Chip",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "320:2163",
+        "name": "Mobile/List row",
+        "type": "COMPONENT"
+      },
+      {
+        "id": "320:2178",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "320:2235",
+        "name": "Mobile/Checklist item",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "387:3243",
+        "name": "Mobile/Destination card",
+        "type": "COMPONENT"
+      },
+      {
+        "id": "387:3248",
+        "name": "Mobile/Activity card",
+        "type": "COMPONENT"
+      },
+      {
+        "id": "403:3254",
+        "name": "Mobile/Segmented control",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "403:3282",
+        "name": "Mobile/Search bar",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "403:3309",
+        "name": "Mobile/Quick action",
+        "type": "COMPONENT_SET"
+      },
+      {
+        "id": "403:3310",
+        "name": "Mobile/Action row",
+        "type": "COMPONENT"
+      },
+      {
+        "id": "403:3322",
+        "name": "Mobile/Avatar group",
+        "type": "COMPONENT"
+      }
+    ],
+    "textCount": 182,
+    "text": [
+      "WOLFARI / MOBILE COMPONENTS",
+      "Be Vietnam Pro · Màu gốc từ Desktop · Thanh tab kính nổi theo mẫu iOS 26",
+      "Tiếp tục",
+      "Tiếp tục",
+      "Tiếp tục",
+      "Tiếp tục",
+      "Tiếp tục",
+      "Tiếp tục",
+      "Nhập thông tin",
+      "Nhập thông tin",
+      "Nhập thông tin",
+      "Bộ lọc",
+      "Bộ lọc",
+      "Tên mục",
+      "Thông tin bổ sung",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản",
+      "Khám phá",
+      "Chuyến đi",
+      "Tài khoản",
+      "Áo khoác mỏng",
+      "Trang · 1 chiếc",
+      "Áo khoác mỏng",
+      "Trang · 1 chiếc",
+      "Phú Quốc đầy nắng",
+      "Biển xanh · Nghỉ dưỡng · 4 ngày",
+      "Khám phá",
+      "Bán đảo Sơn Trà",
+      "Ngắm cảnh · 2 giờ 30 phút",
+      "Sắp tới · 2",
+      "Đang đi"
+    ],
+    "fontFamilies": [
+      "SF Pro",
+      "Inter"
+    ],
+    "instanceCount": 86,
+    "instanceNames": [
+      "Mobile/Icon/chevron",
+      "Leading icon",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/compass",
+      "Mobile/Icon/trip",
+      "Mobile/Icon/user",
+      "Mobile/Icon/check",
+      "Destination illustration",
+      "Mobile/Icon/pin",
+      "Mobile/Icon/search",
+      "Mobile/Icon/close",
+      "Mobile/Icon/plus",
+      "Mobile/Icon/calendar",
+      "Mobile/Action row",
+      "Mobile/Icon/bag",
+      "Mobile/Icon/wallet"
+    ],
+    "imageCount": 6,
+    "imageHashes": [
+      "eb74fd92235c0b039d64e82ecccf553a46960130",
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496",
+      "4930491e1eb00ef91b24ec2dccd0e2e20ea2af47"
+    ]
+  },
+  {
+    "id": "329:3244",
+    "name": "Mobile · Design index",
+    "width": 2840,
+    "height": 121,
+    "layout": "VERTICAL",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 16,
+    "sections": [
+      {
+        "id": "329:3245",
+        "name": "Wolfari · Mobile",
+        "type": "TEXT"
+      },
+      {
+        "id": "329:3246",
+        "name": "30 màn hình · 402 × 874 · Be Vietnam Pro · Thanh tab kính nổi · P",
+        "type": "TEXT"
+      },
+      {
+        "id": "329:3247",
+        "name": "Khám phá → Chuyến đi → Không gian làm việc nhóm → Chia sẻ · Cuộn ",
+        "type": "TEXT"
+      }
+    ],
+    "textCount": 3,
+    "text": [
+      "Wolfari · Mobile",
+      "33 màn hình chính · 15 trạng thái hỗ trợ · iPhone 402 × 874 · SF Pro · Apple iOS 27 linked glass",
+      "Wolfari teal · Chất liệu kính liên kết Apple UI Kit · Giữ nguyên luồng prototype · Phạm vi: Mobile"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "405:3506",
+    "name": "M31 · Thao tác nhanh — Bottom sheet",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "405:3507",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "405:3513",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "405:3519",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "405:3568",
+        "name": "Bottom safe-area fade",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "405:3569",
+        "name": "Mobile/Tab bar · Liquid glass",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "405:3570",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "405:3571",
+        "name": "Dismiss sheet",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "405:3572",
+        "name": "Mobile/Quick action sheet",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "405:3633",
+        "name": "Sheet / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 25,
+    "text": [
+      "9:41",
+      "Chuyến đi của tôi",
+      "Đà Nẵng 3N2Đ",
+      "12–14/10/2026  ·  3 ngày 2 đêm",
+      "4 hoạt động",
+      "Lịch trình",
+      "8 / 12 món",
+      "Hành lý",
+      "Lịch trình ngày đầu",
+      "Xem tất cả",
+      "08:00",
+      "6.250.000 ₫ đã chi",
+      "Ngân sách nhóm 9.000.000 ₫",
+      "Chuẩn bị cùng nhau",
+      "Thêm vào chuyến đi",
+      "Đà Nẵng 3N2Đ",
+      "Hoạt động",
+      "Thêm địa điểm vào lịch trình",
+      "Vật dụng",
+      "Chuẩn bị hành lý cùng nhóm",
+      "Khoản chi",
+      "Ghi nhận chi tiêu từ quỹ nhóm",
+      "Bạn đồng hành",
+      "Mời thêm thành viên",
+      "Xem tất cả tiện ích"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 33,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Icon/more",
+      "Mobile/Trip section switcher",
+      "Destination illustration",
+      "Mobile/Avatar group",
+      "Mobile/Icon/calendar",
+      "Mobile/Icon/bag",
+      "Mobile/Activity card",
+      "Mobile/Icon/wallet",
+      "Mobile/List row",
+      "Mobile/Button",
+      "Mobile/Tab bar · Liquid glass"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496"
+    ]
+  },
+  {
+    "id": "405:3634",
+    "name": "Mobile · Modern component showcase",
+    "width": 1080,
+    "height": 1369,
+    "layout": "VERTICAL",
+    "padding": [
+      32,
+      32,
+      32,
+      32
+    ],
+    "gap": 24,
+    "sections": [
+      {
+        "id": "405:3635",
+        "name": "Mobile / Modern components",
+        "type": "TEXT"
+      },
+      {
+        "id": "405:3636",
+        "name": "8 nhóm component · Auto layout · Trạng thái có thể tái sử dụng · ",
+        "type": "TEXT"
+      },
+      {
+        "id": "405:3637",
+        "name": "Component collections",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 62,
+    "text": [
+      "Mobile / Modern components",
+      "9 nhóm component · Auto layout · Trạng thái có thể tái sử dụng · SF Pro",
+      "01  Bộ lọc & tìm kiếm",
+      "Sắp tới · 2",
+      "Đang đi",
+      "Đã đi",
+      "Sắp tới · 2",
+      "Đang đi",
+      "Đã đi",
+      "Sắp tới · 2",
+      "Đang đi",
+      "Đã đi",
+      "Tìm địa điểm, quán ăn…",
+      "Bãi biển Mỹ Khê",
+      "02  Tiến độ & cộng tác",
+      "67%",
+      "8 / 12 món đã sẵn sàng",
+      "Còn 4 món cần chuẩn bị.",
+      "Một chút nữa là xong!",
+      "100%",
+      "12 / 12 món đã sẵn sàng",
+      "Mọi thứ đã được chuẩn bị.",
+      "Cả nhóm làm tốt lắm!",
+      "T",
+      "H",
+      "Q",
+      "T",
+      "4 bạn đồng hành",
+      "Cùng nhau lên kế hoạch",
+      "03  Nhãn trạng thái",
+      "Còn 11 ngày",
+      "Đã sẵn sàng",
+      "Chờ phản hồi",
+      "06  Danh sách thành viên",
+      "T"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 41,
+    "instanceNames": [
+      "Mobile/Segmented control",
+      "Mobile/Search bar",
+      "Mobile/Icon/search",
+      "Mobile/Icon/pin",
+      "Mobile/Icon/close",
+      "Mobile/Progress summary",
+      "Mobile/Avatar group",
+      "Mobile/Status badge",
+      "Mobile/Member row",
+      "Mobile/Quick action",
+      "Mobile/Icon/plus",
+      "Mobile/Icon/chevron",
+      "Mobile/Icon/people",
+      "Mobile/Action row",
+      "Mobile/Icon/calendar",
+      "Mobile/Quick action sheet"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "424:4048",
+    "name": "M32 · Chỉnh sửa hồ sơ",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "424:4049",
+        "name": "iOS / Status bar",
+        "type": "FRAME"
+      },
+      {
+        "id": "424:4062",
+        "name": "Navigation header",
+        "type": "FRAME"
+      },
+      {
+        "id": "424:4074",
+        "name": "Scrollable viewport",
+        "type": "FRAME"
+      },
+      {
+        "id": "424:4095",
+        "name": "Sticky primary action",
+        "type": "FRAME"
+      },
+      {
+        "id": "424:4076",
+        "name": "iOS / Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 12,
+    "text": [
+      "9:41",
+      "Thông tin cá nhân",
+      "Thông tin của bạn",
+      "Cập nhật để nhóm dễ nhận ra bạn.",
+      "Trang Nguyễn",
+      "Tài khoản Wolfari",
+      "Họ và tên",
+      "Trang Nguyễn",
+      "Email",
+      "trang.nguyen@email.com",
+      "Email được dùng để nhận lời mời và các thông báo về chuyến đi.",
+      "Lưu thay đổi"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 10,
+    "instanceNames": [
+      "Mobile/Icon/signal",
+      "Mobile/Icon/wifi",
+      "Mobile/Icon/battery",
+      "Apple iOS 27 / Linked glass",
+      "Mobile/Icon/back",
+      "Mobile/Field",
+      "Mobile/Icon/edit",
+      "Leading icon",
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "449:4053",
+    "name": "Mobile · Prototype controls",
+    "width": 750,
+    "height": 360,
+    "layout": "VERTICAL",
+    "padding": [
+      24,
+      24,
+      24,
+      24
+    ],
+    "gap": 24,
+    "sections": [
+      {
+        "id": "449:4054",
+        "name": "Prototype · Điều khiển",
+        "type": "TEXT"
+      },
+      {
+        "id": "449:4055",
+        "name": "Công tắc và checkbox có thể tương tác khi chạy prototype.",
+        "type": "TEXT"
+      },
+      {
+        "id": "449:4065",
+        "name": "Switch examples",
+        "type": "FRAME"
+      },
+      {
+        "id": "449:4114",
+        "name": "Mobile/Checklist item",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "449:4119",
+        "name": "Mobile/Checklist item",
+        "type": "INSTANCE"
+      }
+    ],
+    "textCount": 6,
+    "text": [
+      "Prototype · Điều khiển",
+      "Công tắc và checkbox có thể tương tác khi chạy prototype.",
+      "Áo khoác mỏng",
+      "Trang · 1 chiếc",
+      "Áo khoác mỏng",
+      "Trang · 1 chiếc"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 5,
+    "instanceNames": [
+      "Mobile/Switch",
+      "Mobile/Checklist item",
+      "Mobile/Icon/check"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4374",
+    "name": "P01 · Chuyến đi đã sẵn sàng",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4375",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4377",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Chuyến đi đã sẵn sàng",
+      "Đà Nẵng 3N2Đ đã có không gian riêng để cả nhóm cùng lên kế hoạch.",
+      "Mở chuyến đi",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 2,
+    "instanceNames": [
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  },
+  {
+    "id": "450:4392",
+    "name": "P02 · Đã lưu hoạt động",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4393",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4395",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đã lưu hoạt động",
+      "Tiếp tục sắp xếp các hoạt động để cả nhóm có một lịch trình phù hợp.",
+      "Về lịch trình",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4410",
+    "name": "P03 · Đã lưu vật dụng",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4411",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4413",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đã lưu vật dụng",
+      "Tiếp tục chuẩn bị và đánh dấu các món đồ đã sẵn sàng.",
+      "Về hành lý",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4428",
+    "name": "P04 · Đã lưu khoản chi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4429",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4431",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đã lưu khoản chi",
+      "Quay về quỹ nhóm để theo dõi chi tiêu của chuyến đi.",
+      "Về quỹ nhóm",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4446",
+    "name": "P05 · Lời mời đã sẵn sàng",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4447",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4449",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Lời mời đã sẵn sàng",
+      "Mời Minh Anh cùng xem và chuẩn bị cho hành trình Đà Nẵng.",
+      "Xem thành viên",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4464",
+    "name": "P06 · Đã lưu hồ sơ",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4465",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4467",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đã lưu hồ sơ",
+      "Bạn có thể tiếp tục quản lý thông báo và thông tin tài khoản.",
+      "Về tài khoản",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4482",
+    "name": "P07 · Đã lưu cài đặt",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4483",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4485",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đã lưu cài đặt",
+      "Các tùy chọn chuyến đi đã được ghi nhận.",
+      "Về chuyến đi",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4500",
+    "name": "P08 · Đã lưu chuyến đi",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4501",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4503",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đã lưu chuyến đi",
+      "Bạn có thể tiếp tục quản lý các tùy chọn của chuyến đi.",
+      "Về cài đặt",
+      "Tiếp tục chỉnh sửa"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4518",
+    "name": "P09 · Đã lưu ngưỡng giá",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4519",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4521",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 3,
+    "text": [
+      "Đã lưu ngưỡng giá",
+      "Thông báo giá vé sẽ dùng ngưỡng bạn đã chọn.",
+      "Hoàn tất"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 2,
+    "instanceNames": [
+      "Mobile/Icon/check",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4533",
+    "name": "P10 · Xuất lịch trình PDF",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4534",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4536",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Xuất lịch trình PDF",
+      "Bản xuất gồm lịch trình, địa điểm và thông tin chuyến đi. Xem bố cục trước khi chia sẻ.",
+      "Xem bản xuất",
+      "Để sau"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/file",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4551",
+    "name": "P11 · Liên kết chia sẻ",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4552",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4554",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Liên kết chia sẻ",
+      "wolfari.app/s/da-nang-3n2d\n\nBạn có thể mở trang dành cho người nhận để kiểm tra nội dung.",
+      "Mở trang chia sẻ",
+      "Đóng"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/share",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4569",
+    "name": "P12 · Đăng xuất khỏi Wolfari?",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4570",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4572",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Đăng xuất khỏi Wolfari?",
+      "Bạn có thể đăng nhập lại để tiếp tục chuẩn bị các chuyến đi.",
+      "Đăng xuất",
+      "Ở lại"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/user",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4588",
+    "name": "P13 · Lưu trữ chuyến đi?",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4589",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4591",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "Lưu trữ chuyến đi?",
+      "Lịch trình và các kỷ niệm sẽ được giữ lại để bạn xem sau.",
+      "Lưu trữ",
+      "Hủy"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 3,
+    "instanceNames": [
+      "Mobile/Icon/trip",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "450:4607",
+    "name": "P14 · Thiết bị đang đăng nhập",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "450:4608",
+        "name": "Dismiss feedback",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "450:4610",
+        "name": "Feedback",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 3,
+    "text": [
+      "Thiết bị đang đăng nhập",
+      "iPhone · Phiên hiện tại\nĐang hoạt động\n\nĐây là thiết bị dùng để xem thử Wolfari Mobile.",
+      "Đã hiểu"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 2,
+    "instanceNames": [
+      "Mobile/Icon/lock",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "461:5096",
+    "name": "Mobile · Travel journal components",
+    "width": 1174,
+    "height": 1897,
+    "layout": "VERTICAL",
+    "padding": [
+      32,
+      32,
+      32,
+      32
+    ],
+    "gap": 20,
+    "sections": [
+      {
+        "id": "461:5097",
+        "name": "Wolfari Mobile · Fresh components",
+        "type": "TEXT"
+      },
+      {
+        "id": "461:5098",
+        "name": "Ocean gradients · Soft color · Clear states",
+        "type": "TEXT"
+      },
+      {
+        "id": "461:5099",
+        "name": "Component collection",
+        "type": "FRAME"
+      },
+      {
+        "id": "562:7820",
+        "name": "08  Điều hướng dành cho mobile",
+        "type": "TEXT"
+      },
+      {
+        "id": "562:7821",
+        "name": "Glass and native navigation",
+        "type": "FRAME"
+      },
+      {
+        "id": "588:8171",
+        "name": "09  Lịch trình dễ theo dõi",
+        "type": "TEXT"
+      },
+      {
+        "id": "588:8172",
+        "name": "Journey components",
+        "type": "FRAME"
+      },
+      {
+        "id": "603:8667",
+        "name": "10  Một điểm nhấn, nhiều nhịp điệu",
+        "type": "TEXT"
+      },
+      {
+        "id": "603:8668",
+        "name": "Editorial components",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 121,
+    "text": [
+      "Wolfari Mobile · Nhật ký lên đường",
+      "Teal chủ đạo · Coral ấm · Số liệu nổi bật · Minh họa vector",
+      "01  Nút bấm",
+      "Tiếp tục",
+      "Tiếp tục",
+      "Đang nhấn",
+      "Đang nhấn",
+      "Tạm khóa",
+      "Tạm khóa",
+      "02  Ô nhập liệu",
+      "trang.nguyen@email.com",
+      "trang.nguyen@email.com",
+      "Email chưa hợp lệ",
+      "03  Bộ chọn nội dung",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "Lịch trình",
+      "Bản đồ",
+      "Tiện ích",
+      "04  Tiện ích đa sắc",
+      "Hành lý",
+      "8 / 12 món",
+      "Quỹ nhóm",
+      "750.000 ₫",
+      "Còn lại trong quỹ",
+      "T",
+      "H",
+      "Q",
+      "T",
+      "Thành viên",
+      "Những người bạn"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 66,
+    "instanceNames": [
+      "Mobile/Button",
+      "Mobile/Field",
+      "Leading icon",
+      "Mobile/Segmented control",
+      "Mobile/Quick action",
+      "Mobile/Icon/bag",
+      "Mobile/Icon/chevron",
+      "Mobile/Icon/wallet",
+      "Mobile/Icon/plane",
+      "Mobile/Icon/shirt",
+      "Mobile/Icon/share",
+      "Mobile/Trip ticket",
+      "Destination illustration",
+      "Mobile/Activity card",
+      "Mobile/Icon/pin",
+      "Mobile/Trip stepper"
+    ],
+    "imageCount": 3,
+    "imageHashes": [
+      "c1e719de0f04366a97c8361ff1b84f6cf12e1496",
+      "eb74fd92235c0b039d64e82ecccf553a46960130",
+      "4930491e1eb00ef91b24ec2dccd0e2e20ea2af47"
+    ]
+  },
+  {
+    "id": "588:8020",
+    "name": "M33 · Chi tiết hoạt động — Bottom sheet",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "588:8021",
+        "name": "Dismiss activity detail",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "588:8023",
+        "name": "Mobile/Activity detail sheet",
+        "type": "INSTANCE"
+      },
+      {
+        "id": "588:8053",
+        "name": "Home indicator",
+        "type": "RECTANGLE"
+      }
+    ],
+    "textCount": 9,
+    "text": [
+      "Bán đảo Sơn Trà",
+      "Ngày 1 · 12/10/2026",
+      "Bắt đầu",
+      "08:00",
+      "Thời lượng",
+      "2 giờ 30",
+      "Kế hoạch của nhóm",
+      "Ngắm cảnh · Hải Vọng Đài",
+      "Xem trên bản đồ"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 4,
+    "instanceNames": [
+      "Mobile/Activity detail sheet",
+      "Mobile/Icon/close",
+      "Mobile/Icon/calendar",
+      "Mobile/Button"
+    ],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "612:8805",
+    "name": "P15 · Hành lý sẵn sàng",
+    "width": 402,
+    "height": 874,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "612:8806",
+        "name": "Dismiss completion",
+        "type": "RECTANGLE"
+      },
+      {
+        "id": "612:8808",
+        "name": "Completion card",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 4,
+    "text": [
+      "12 / 12 món",
+      "Sẵn sàng lên đường!",
+      "Cả nhóm đã chuẩn bị đủ hành lý.\nGiờ thì đếm ngược đến ngày đi thôi.",
+      "Tuyệt, đi thôi!"
+    ],
+    "fontFamilies": [
+      "SF Pro"
+    ],
+    "instanceCount": 1,
+    "instanceNames": [
+      "Mobile/Button"
+    ],
+    "imageCount": 1,
+    "imageHashes": [
+      "564936d919d6d878e76a9165473f9d8bfd9d9d22"
+    ]
+  }
+]

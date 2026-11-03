@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { App } from '../src/app/App';
@@ -76,12 +76,44 @@ function mountMap(planRepository = createFixturePlanRepository()) {
 
 describe('trip map nearby suggestions', () => {
   it('keeps saved data and reports provider errors without generating suggestions', async () => {
-    searchGooglePlacesMock.mockRejectedValue(new Error('Provider down'));
+    let rejectProvider!: (reason: Error) => void;
+    searchGooglePlacesMock.mockImplementation(
+      () =>
+        new Promise<never>((_resolve, reject) => {
+          rejectProvider = reject;
+        }),
+    );
     const router = mountMap();
-    await screen.findByText('Không thể tải thêm địa điểm từ Google Places. Các địa điểm đã lưu vẫn hiển thị.');
-    expect(screen.getAllByRole('checkbox')).toHaveLength(6);
-    expect(screen.queryByText('Chợ Hàn')).not.toBeInTheDocument();
-    router.dispose();
+    try {
+      const list = await screen.findByRole('list');
+      expect(within(list).getAllByRole('checkbox')).toHaveLength(6);
+      // Cancel the initial discovery and explicitly trigger the same empty-query
+      // search under a controlled debounce clock. Provider-error semantics must
+      // not depend on the host delivering a 300ms timer within waitFor's window.
+      const search = screen.getByRole('searchbox', { name: 'Tìm địa điểm' });
+      fireEvent.change(search, { target: { value: 'x' } });
+      searchGooglePlacesMock.mockClear();
+      vi.useFakeTimers();
+      fireEvent.change(search, { target: { value: '' } });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(300);
+      });
+      expect(searchGooglePlacesMock).toHaveBeenCalledOnce();
+      await act(async () => {
+        rejectProvider(new Error('Provider down'));
+      });
+      expect(
+        screen.getByText(
+          'Không thể tải thêm địa điểm từ Google Places. Các địa điểm đã lưu vẫn hiển thị.',
+        ),
+      ).toBeInTheDocument();
+      expect(within(list).getAllByRole('checkbox')).toHaveLength(6);
+      expect(screen.queryByText('Chợ Hàn')).not.toBeInTheDocument();
+      expect(window.localStorage.length).toBe(0);
+    } finally {
+      router.dispose();
+      vi.useRealTimers();
+    }
   });
 
   it('hides an unscheduled backend Google place instead of trying to remove a local record', async () => {
@@ -90,12 +122,26 @@ describe('trip map nearby suggestions', () => {
     const getPlan = repository.getPlan;
     vi.spyOn(repository, 'getPlan').mockImplementation(async (request) => {
       const result = await getPlan(request);
-      return result.status === 'ready' ? { ...result, data: { ...result.data, selectedLocations: result.data.selectedLocations.map((place) => place.name === 'Chùa Linh Ứng' ? { ...place, provider: 'google', providerPlaceId: 'backend-google' } : place) } } : result;
+      return result.status === 'ready'
+        ? {
+            ...result,
+            data: {
+              ...result.data,
+              selectedLocations: result.data.selectedLocations.map((place) =>
+                place.name === 'Chùa Linh Ứng'
+                  ? { ...place, provider: 'google', providerPlaceId: 'backend-google' }
+                  : place,
+              ),
+            },
+          }
+        : result;
     });
     const router = mountMap(repository);
     const checkbox = await screen.findByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' });
     await userEvent.click(checkbox);
-    expect(screen.queryByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' }),
+    ).not.toBeInTheDocument();
     const stored = readPlaceSelection(fixtureViewerId, previewTripId);
     expect(stored.hiddenLocationIds).toContain('a0000000-0000-4000-8000-000000000005');
     expect(stored.places).toHaveLength(0);
@@ -144,7 +190,9 @@ describe('trip map nearby suggestions', () => {
     expect(await within(list).findByText('Gợi ý địa điểm 31')).toBeInTheDocument();
 
     await userEvent.click(within(list).getByRole('checkbox', { name: 'Chọn Gợi ý địa điểm 01' }));
-    expect(await within(list).findByRole('checkbox', { name: 'Bỏ chọn Gợi ý địa điểm 01' })).toBeChecked();
+    expect(
+      await within(list).findByRole('checkbox', { name: 'Bỏ chọn Gợi ý địa điểm 01' }),
+    ).toBeChecked();
     expect(within(list).getAllByText('Đã chọn · Chưa xếp').length).toBeGreaterThan(0);
     expect(screen.getByRole('button', { name: /Đã chọn \(7\)/ })).toBeInTheDocument();
     router.dispose();

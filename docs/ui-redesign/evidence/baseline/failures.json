@@ -1,0 +1,62 @@
+[
+  {
+    "testFolder": "auth-fixture-Auth-public-layout-1024x600",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nTest timeout of 30000ms exceeded.\n```\n\n```\nError: expect(locator).toBeVisible() failed\n\nLocator: getByRole('form', { name: 'Biểu mẫu đăng ký' })\nExpected: visible\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('form', { name: 'Biểu mẫu đăng ký' }) with timeout 5000ms\n  - waiting for getByRole('form', { name: 'Biểu mẫu đăng ký' })\n  - Test timeout of 30000ms exceeded.\n\n```"
+  },
+  {
+    "testFolder": "auth-fixture-Auth-public-layout-1366x520",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nTest timeout of 30000ms exceeded.\n```\n\n```\nError: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:5173/register\", waiting until \"load\"\n\n```"
+  },
+  {
+    "testFolder": "auth-fixture-Auth-public-layout-1366x600",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nTest timeout of 30000ms exceeded.\n```\n\n```\nError: expect(locator).toBeVisible() failed\n\nLocator: getByRole('heading', { name: 'Tài khoản của tôi', level: 1 })\nExpected: visible\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('heading', { name: 'Tài khoản của tôi', level: 1 }) with timeout 5000ms\n  - waiting for getByRole('heading', { name: 'Tài khoản của tôi', level: 1 })\n  - Test timeout of 30000ms exceeded.\n\n```\n\n```yaml\n- link \"Đến nội dung chính\":\n  - /url: \"#main-content\"\n- banner:\n  - link \"Wolfari · Trang chủ\":\n    - /url: /\n    - img \"Wolfari\"\n  - navigation \"Điều hướng chính\":\n    - link \"Trang chủ\":\n      - /url: /\n    - link \"Chuyến đi của tôi\":\n      - /url: /trips\n    - button \"Lên lịch\" [disabled]\n  - button \"Thông báo\"\n  - link \"Hồ sơ cá nhân · Trang Nguyễn\":\n    - /url: /profile\n    - text: Trang Nguyễn\n  - button \"Mở menu tài khoản\"\n- main:\n  - status:\n    - heading \"Đang tải…\" [level=2]\n    - paragraph: Vui lòng đợi trong giây lát.\n  - group: UI preview · Dữ liệu minh họa\n```"
+  },
+  {
+    "testFolder": "auth-fixture-Auth-public-layout-402x874",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nTest timeout of 30000ms exceeded.\n```\n\n```\nError: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:5173/profile\", waiting until \"load\"\n\n```"
+  },
+  {
+    "testFolder": "auth-fixture-Auth-public-layout-768x600",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nError: expect(locator).toBeVisible() failed\n\nLocator: getByRole('heading', { name: /Cho những/, level: 1 })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('heading', { name: /Cho những/, level: 1 }) with timeout 5000ms\n  - waiting for getByRole('heading', { name: /Cho những/, level: 1 })\n\n```"
+  },
+  {
+    "testFolder": "auth-fixture-Auth-public-layout-820x600",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nTest timeout of 30000ms exceeded.\n```\n\n```\nError: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:5173/login\", waiting until \"load\"\n\n```"
+  },
+  {
+    "testFolder": "auth-fixture-Home-cloud-layers-cover-the-viewport-at-1100px",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nError: expect(received).toBe(expected) // Object.is equality\n\nExpected: 3\nReceived: NaN\n```"
+  },
+  {
+    "testFolder": "members-preview-Members-preview-320x480",
+    "suite": "e2e-fixture",
+    "error": "# Error details\n\n```\nError: expect(locator).toBeVisible() failed\n\nLocator: getByText('User aaaaaaaa…aaaa', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('User aaaaaaaa…aaaa', { exact: true }) with timeout 5000ms\n  - waiting for getByText('User aaaaaaaa…aaaa', { exact: true })\n\n```\n\n```yaml\n- link \"Đến nội dung chính\":\n  - /url: \"#main-content\"\n- banner:\n  - button \"Mở điều hướng chuyến đi\"\n  - link \"Wolfari · Trang chủ\":\n    - /url: /\n    - img \"Wolfari\"\n  - button \"Thông báo\"\n  - link \"Hồ sơ cá nhân · Trang Nguyễn\":\n    - /url: /profile\n- main:\n  - status:\n    - heading \"Đang tải…\" [level=2]\n    - paragraph: Vui lòng đợi trong giây lát.\n  - group: UI preview · Dữ liệu minh họa\n```"
+  },
+  {
+    "testFolder": "trips-HTTP-mock-login-curs-dc70c-nflict-safe-settings-update",
+    "suite": "e2e-gateway",
+    "error": "# Error details\n\n```\nError: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('article[data-trip-id]')\nExpected: 1\nReceived: 0\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveCount\" locator('article[data-trip-id]') with timeout 5000ms\n  - waiting for locator('article[data-trip-id]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n\n```"
+  },
+  {
+    "testFolder": "ui-acceptance-Gateway-visual-and-accessibility-1440x900",
+    "suite": "e2e-gateway",
+    "error": "# Error details\n\n```\nError: expect(locator).toHaveValue(expected) failed\n\nLocator: getByLabel('Tên hiển thị')\nExpected: \"Trang Gateway\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toHaveValue\" getByLabel('Tên hiển thị') with timeout 5000ms\n  - waiting for getByLabel('Tên hiển thị')\n\n```\n\n```yaml\n- link \"Đến nội dung chính\":\n  - /url: \"#main-content\"\n- banner:\n  - link \"Wolfari · Trang chủ\":\n    - /url: /\n    - img \"Wolfari\"\n  - navigation \"Điều hướng chính\":\n    - link \"Trang chủ\":\n      - /url: /\n    - link \"Chuyến đi của tôi\":\n      - /url: /trips\n    - button \"Lên lịch\" [disabled]\n  - link \"Hồ sơ cá nhân · Trang Gateway\":\n    - /url: /profile\n    - text: Trang Gateway\n  - button \"Mở menu tài khoản\"\n- main:\n  - status:\n    - heading \"Đang tải…\" [level=2]\n    - paragraph: Vui lòng đợi trong giây lát.\n```"
+  },
+  {
+    "testFolder": "ui-acceptance-Gateway-visual-and-accessibility-402x874",
+    "suite": "e2e-gateway",
+    "error": "# Error details\n\n```\nError: expect(locator).toHaveValue(expected) failed\n\nLocator: getByLabel('Tên hiển thị')\nExpected: \"Trang Gateway\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toHaveValue\" getByLabel('Tên hiển thị') with timeout 5000ms\n  - waiting for getByLabel('Tên hiển thị')\n\n```\n\n```yaml\n- link \"Đến nội dung chính\":\n  - /url: \"#main-content\"\n- banner:\n  - button \"Mở điều hướng chính\"\n  - link \"Wolfari · Trang chủ\":\n    - /url: /\n    - img \"Wolfari\"\n  - button \"Thông báo\"\n  - link \"Hồ sơ cá nhân · Trang Gateway\":\n    - /url: /profile\n- main:\n  - status:\n    - heading \"Đang tải…\" [level=2]\n    - paragraph: Vui lòng đợi trong giây lát.\n```"
+  },
+  {
+    "testFolder": "ui-acceptance-Gateway-visual-and-accessibility-768x1024",
+    "suite": "e2e-gateway",
+    "error": "# Error details\n\n```\nError: expect(locator).toBeVisible() failed\n\nLocator: getByText('Đà Nẵng Gateway', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('Đà Nẵng Gateway', { exact: true }) with timeout 5000ms\n  - waiting for getByText('Đà Nẵng Gateway', { exact: true })\n\n```\n\n```yaml\n- link \"Đến nội dung chính\":\n  - /url: \"#main-content\"\n- banner:\n  - button \"Mở điều hướng chính\"\n  - link \"Wolfari · Trang chủ\":\n    - /url: /\n    - img \"Wolfari\"\n  - button \"Thông báo\"\n  - link \"Hồ sơ cá nhân · Trang Gateway\":\n    - /url: /profile\n- main:\n  - status:\n    - heading \"Đang tải…\" [level=2]\n    - paragraph: Vui lòng đợi trong giây lát.\n```"
+  }
+]

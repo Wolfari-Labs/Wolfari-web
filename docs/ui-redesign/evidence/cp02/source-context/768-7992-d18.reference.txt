@@ -1,0 +1,489 @@
+Read-only MCP reference 2026-10-30; D18 layouts, not application code. File hdy2sOZk6rfjKXKDJ9HW9y. create_session returned all-zero UUID; rejected by file tool; retry without sessionId per tool error succeeded.
+
+const imgReadingMascot = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconTngQuan = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconBnDDaDim = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconLchTrinh = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconDressCode = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconPackingList = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconThanhVien = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconQuNhom = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconTheoDoiGiaVe = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconCaiDt = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarRouteDeco = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialLogo = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialMascot = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon2 = "[TEMP_ASSET_URL_REMOVED]";
+const imgNotification = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon3 = "[TEMP_ASSET_URL_REMOVED]";
+const imgEllipse = "[TEMP_ASSET_URL_REMOVED]";
+const imgFrame = "[TEMP_ASSET_URL_REMOVED]";
+const imgFrame1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgPriceObservationsConnectedLine = "[TEMP_ASSET_URL_REMOVED]";
+const imgLine = "[TEMP_ASSET_URL_REMOVED]";
+const imgEllipse1 = "[TEMP_ASSET_URL_REMOVED]";
+
+function LandingMascotReading({ className }: { className?: string }) {
+  return (
+    <div className={className || "overflow-clip relative size-[150px]"} data-node-id="33:502" data-name="Landing/Mascot/Reading">
+      <div className="absolute left-0 size-[150px] top-0" data-node-id="33:503" data-name="Reading mascot">
+        <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgReadingMascot} />
+      </div>
+    </div>
+  );
+}
+
+type WolfariTripSidebarProps = {
+  className?: string;
+  active?: "Fare";
+  state?: "Expanded";
+};
+
+function WolfariTripSidebar({ className, active = "Fare", state = "Expanded" }: WolfariTripSidebarProps) {
+  return (
+    <div className={className || "bg-white h-[884px] relative w-[220px]"} data-node-id="135:918">
+      <div className="absolute bg-[#e8f7fa] h-[42px] left-[8px] rounded-[7px] top-[376px] w-[204px]" data-node-id="135:919" data-name="active nav" />
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[23px] w-[156px]" data-node-id="135:921">
+        Tổng quan chuyến đi
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[127px] w-[156px]" data-node-id="135:923">
+        Lịch trình
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[75px] w-[156px]" data-node-id="135:925">
+        Bản đồ địa điểm
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[179px] w-[156px]" data-node-id="135:927">
+        Dress code
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[231px] w-[156px]" data-node-id="135:929">
+        Packing list
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[335px] w-[156px]" data-node-id="135:931">
+        Quỹ nhóm
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#079fc5] text-[13px] top-[387px] w-[156px]" data-node-id="135:933">
+        Theo dõi giá vé
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[283px] w-[156px]" data-node-id="135:935">
+        Thành viên
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[439px] w-[156px]" data-node-id="135:939">
+        Cài đặt
+      </p>
+      <LandingMascotReading className="absolute left-[25px] overflow-clip size-[166px] top-[638px]" />
+      <div className="[word-break:break-word] absolute font-['Caveat:Bold'] font-bold h-[48px] leading-[0] left-[34px] text-[#079cc5] text-[18px] top-[558px] w-[150px]" data-node-id="135:941">
+        <p className="leading-[52px] mb-0">Cùng bạn</p>
+        <p className="leading-[52px]">đi xa hơn!</p>
+      </div>
+      <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[110px] not-italic text-[24px] text-[color:var(--wolfari-color-blue,#0089c7)] text-center top-[808px] w-[64px]" data-node-id="135:942">
+        «
+      </p>
+      <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[115px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-center top-[840px] w-[80px]" data-node-id="135:943">
+        Thu gọn
+      </p>
+      <div className="absolute bg-[#079fc5] h-[42px] left-[8px] rounded-[2px] top-[376px] w-[4px]" data-node-id="135:944" data-name="Sidebar/Active edge" />
+      <div className="absolute left-[24px] size-[22px] top-[22px]" data-node-id="135:949" data-name="Sidebar/Icon Tổng quan">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconTngQuan} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[74px]" data-node-id="135:951" data-name="Sidebar/Icon Bản đồ địa điểm">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconBnDDaDim} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[126px]" data-node-id="135:954" data-name="Sidebar/Icon Lịch trình">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconLchTrinh} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[178px]" data-node-id="135:957" data-name="Sidebar/Icon Dress code">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconDressCode} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[230px]" data-node-id="135:959" data-name="Sidebar/Icon Packing list">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconPackingList} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[282px]" data-node-id="135:962" data-name="Sidebar/Icon Thành viên">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconThanhVien} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[334px]" data-node-id="135:966" data-name="Sidebar/Icon Quỹ nhóm">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconQuNhom} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[386px]" data-node-id="135:969" data-name="Sidebar/Icon Theo dõi giá vé">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconTheoDoiGiaVe} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[438px]" data-node-id="135:972" data-name="Sidebar/Icon Cài đặt">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconCaiDt} />
+      </div>
+      <div className="absolute bg-[#d7eaf2] h-[884px] left-[219px] top-0 w-px" data-node-id="135:975" data-name="Sidebar/Divider" />
+      <div className="absolute h-[40px] left-[42px] top-[606px] w-[145px]" data-node-id="135:976" data-name="Sidebar/Route deco">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarRouteDeco} />
+      </div>
+    </div>
+  );
+}
+
+type WolfariHeaderProps = {
+  className?: string;
+  active?: "Trips";
+};
+
+function WolfariHeader({ className, active = "Trips" }: WolfariHeaderProps) {
+  return (
+    <div className={className || "bg-white border border-[#dff0f7] border-solid h-[76px] overflow-clip relative shadow-[0px_2px_10px_0px_rgba(10,87,138,0.05)] w-[1440px]"} data-node-id="135:406">
+      <div className="absolute h-[51.667px] left-[49px] overflow-clip top-[9px] w-[155px]" data-node-id="135:407" data-name="Brand/Logo">
+        <div className="absolute h-[51.667px] left-0 top-0 w-[155px]" data-node-id="I135:407;14:3" data-name="Official logo">
+          <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialLogo} />
+        </div>
+      </div>
+      <div className="absolute bg-white content-stretch flex gap-[26px] h-[46px] items-center left-[457px] overflow-clip top-[14px] w-[525px]" data-node-id="135:409" data-name="Header / navigation">
+        <div className="bg-white content-stretch flex gap-[8px] items-center justify-center overflow-clip px-[6px] relative shrink-0" data-node-id="135:410" data-name="Nav / Tổng quan">
+          <div className="relative shrink-0 size-[20px]" data-node-id="135:411" data-name="icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon} />
+          </div>
+          <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[#0a55a1] text-[14.5px] whitespace-nowrap" data-node-id="135:413">
+            Trang chủ
+          </p>
+        </div>
+        <div className="bg-white content-stretch flex gap-[8px] items-center justify-center overflow-clip px-[6px] relative shrink-0" data-node-id="135:414" data-name="Nav / Chuyến đi của tôi">
+          <div className="relative shrink-0 size-[20px]" data-node-id="135:415" data-name="icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon1} />
+          </div>
+          <p className="[word-break:break-word] font-['Be_Vietnam_Pro:SemiBold'] leading-[22px] not-italic relative shrink-0 text-[#079fc5] text-[14.5px] whitespace-nowrap" data-node-id="135:417">
+            Chuyến đi của tôi
+          </p>
+        </div>
+        <div className="bg-white content-stretch flex gap-[8px] items-center justify-center overflow-clip px-[6px] relative shrink-0" data-node-id="135:426" data-name="Nav / Lên lịch">
+          <div className="relative shrink-0 size-[20px]" data-node-id="135:427" data-name="icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon2} />
+          </div>
+          <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[#0a55a1] text-[14.5px] w-[60px]" data-node-id="135:429">
+            Lên lịch
+          </p>
+        </div>
+      </div>
+      <div className="absolute bg-[#079fc5] h-[3px] left-[607px] rounded-[2px] top-[71px] w-[166px]" data-node-id="135:418" data-name="Active underline" />
+      <div className="absolute bg-white content-stretch flex gap-[12px] h-[50px] items-center justify-center left-[1139px] overflow-clip top-[12px] w-[260px]" data-node-id="135:419" data-name="Header / account">
+        <div className="relative shrink-0 size-[22px]" data-node-id="135:420" data-name="notification">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgNotification} />
+        </div>
+        <div className="bg-[#fff6ef] border-2 border-[#41b5d2] border-solid overflow-clip relative rounded-[20px] shrink-0 size-[40px]" data-node-id="135:423" data-name="Avatar">
+          <div className="absolute left-[-14px] overflow-clip size-[64px] top-[-9px]" data-node-id="135:424" data-name="Avatar / Wolfari">
+            <div className="absolute left-0 size-[64px] top-0" data-node-id="I135:424;14:5" data-name="Official mascot">
+              <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialMascot} />
+            </div>
+          </div>
+        </div>
+        <p className="[word-break:break-word] font-['Be_Vietnam_Pro:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[#075495] text-[13.5px] whitespace-nowrap" data-node-id="135:425">
+          Trang Nguyễn ⌄
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type ButtonPrimaryProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonPrimary({ className, label = "Tạo chuyến đi" }: ButtonPrimaryProps) {
+  return (
+    <div className={className || "bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[44px] items-center justify-center relative rounded-[18px] to-[#008eaa] w-[170px]"} data-node-id="11:9" data-name="Button/Primary">
+      <div className="relative shrink-0 size-[18px]" data-node-id="11:10" data-name="Icon">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon3} />
+      </div>
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-white,white)] whitespace-nowrap" data-node-id="11:13">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+type AlignmentLabeledFieldProps = {
+  className?: string;
+  label?: string;
+  value?: string;
+};
+
+function AlignmentLabeledField({ className, label = "Nhãn trường", value = "Giá trị" }: AlignmentLabeledFieldProps) {
+  return (
+    <div className={className || "content-stretch flex flex-col gap-[4px] h-[64px] items-start relative w-[260px]"} data-node-id="771:6405" data-name="Alignment / Labeled field">
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Regular'] h-[18px] leading-[20px] not-italic relative shrink-0 text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] w-full" data-node-id="771:6406">
+        {label}
+      </p>
+      <div className="bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[42px] items-center overflow-clip px-[12px] relative rounded-[9px] shrink-0 w-full" data-node-id="771:6407" data-name="Input">
+        <p className="[word-break:break-word] flex-[1_0_0] font-['Be_Vietnam_Pro:Regular'] leading-[20px] min-w-px not-italic relative text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)]" data-node-id="771:6408">
+          {value}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type ButtonOutlineProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonOutline({ className, label = "Xem chi tiết" }: ButtonOutlineProps) {
+  return (
+    <div className={className || "bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[44px] items-center justify-center relative rounded-[18px] w-[150px]"} data-node-id="11:14" data-name="Button/Outline">
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] whitespace-nowrap" data-node-id="11:15">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+type ChipStatusProps = {
+  className?: string;
+  label?: string;
+};
+
+function ChipStatus({ className, label = "Sắp tới" }: ChipStatusProps) {
+  return (
+    <div className={className || "bg-[var(--wolfari-color-pale,#f3fbff)] content-stretch flex gap-[6px] h-[32px] items-center justify-center relative rounded-[var(--wolfari-radius-999,999px)] w-[112px]"} data-node-id="11:16" data-name="Chip/Status">
+      <div className="relative shrink-0 size-[8px]" data-node-id="11:17" data-name="Ellipse">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse} />
+      </div>
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Regular'] leading-[20px] not-italic relative shrink-0 text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] whitespace-nowrap" data-node-id="11:18">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+export default function Component11TheoDoiGiaVeDXutSrs() {
+  return (
+    <div className="bg-[var(--wolfari-color-pale,#f3fbff)] relative size-full" data-node-id="768:7992" data-name="11 · Theo dõi giá vé — Đề xuất SRS">
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[238px] text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[91px] w-[460px] whitespace-pre-wrap" data-node-id="768:7993" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`⌂  Chuyến đi của tôi   ›   Đà Nẵng 3N2Đ   ›   Theo dõi giá vé`}</p>
+      <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[150px] left-[238px] overflow-clip rounded-[16px] top-[120px] w-[1180px]" data-node-id="768:7994" data-name="Trip landscape">
+        <div className="absolute h-[150px] left-0 top-0 w-[1180px]" data-node-id="768:7995" data-name="Frame">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame} />
+        </div>
+        <div className="absolute h-[150px] left-0 top-0 w-[480px]" data-node-id="768:8002" data-name="Frame">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame1} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] font-bold leading-[40px] left-[28px] text-[32px] text-[color:var(--wolfari-color-ink,#06458b)] top-[32px] w-[360px] whitespace-pre-wrap" data-node-id="768:8005" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`Đà Nẵng 3N2Đ  ✎`}</p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] font-medium leading-[22px] left-[30px] text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] top-[87px] w-[390px] whitespace-pre-wrap" data-node-id="768:8006" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`▣  12 – 14/10/2026     ♙  4 thành viên`}</p>
+        <ChipStatus className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] content-stretch flex gap-[6px] h-[32px] items-center justify-center left-[310px] rounded-[var(--wolfari-radius-999,999px)] top-[82px] w-[100px]" />
+        <ButtonOutline className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center left-[880px] rounded-[18px] top-[92px] w-[130px]" label="Chỉnh sửa" />
+        <ButtonPrimary className="absolute bg-gradient-to-r content-stretch cursor-pointer flex from-[#008ac4] gap-[8px] h-[44px] items-center justify-center left-[1025px] rounded-[18px] to-[#008eaa] top-[92px] w-[135px]" label="Chia sẻ" />
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[648px] left-[238px] rounded-[14px] top-[286px] w-[390px]" data-node-id="768:8010" data-name="Watch list">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[15px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[330px]" data-node-id="768:8011">
+          Theo dõi của chuyến đi
+        </p>
+        <ButtonPrimary className="absolute bg-gradient-to-r content-stretch cursor-pointer flex from-[#008ac4] gap-[8px] h-[42px] items-center justify-center left-[203px] rounded-[18px] to-[#008eaa] top-[57px] w-[170px]" label="Tạo theo dõi" />
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[200px] left-[15px] rounded-[12px] top-[117px] w-[358px]" data-node-id="768:8013" data-name="Watcher 0">
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] font-medium leading-[22px] left-[13px] text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] top-[11px] w-[310px] whitespace-pre-wrap" data-node-id="768:8014" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`✈  Hà Nội → Đà Nẵng`}</p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[13px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[39px] w-[218px]" data-node-id="768:8015">
+            12/10/2026 · 1 chiều
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[13px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[95px] w-[100px]" data-node-id="768:8016">
+            Giá quan sát
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[13px] not-italic text-[15px] text-[color:var(--wolfari-color-green,#15b784)] top-[117px] w-[120px]" data-node-id="768:8017">
+            1.250.000đ
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[169px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[95px] w-[80px]" data-node-id="768:8018">
+            Ngưỡng
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[169px] not-italic text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] top-[117px] w-[120px]" data-node-id="768:8019">
+            1.400.000đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[30px] left-[241px] rounded-[17px] top-[41px] w-[102px]" data-node-id="768:8020" data-name="Đạt ngưỡng" />
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[292px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[46px] w-[102px]" data-node-id="768:8021">
+            Đạt ngưỡng
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[13px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[67px] w-[320px]" data-node-id="772:6405">
+            Trang Nguyễn · Theo dõi của bạn
+          </p>
+          <div className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[40px] leading-[0] left-[13px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[330px]" data-node-id="772:6406">
+            <p className="leading-[20px] mb-0">Nguồn: Provider mẫu · 09:00, 10/10/2026</p>
+            <p className="leading-[20px]">Giá quan sát gần nhất; chưa bao gồm thay đổi mới.</p>
+          </div>
+        </div>
+        <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[200px] left-[15px] rounded-[12px] top-[333px] w-[358px]" data-node-id="768:8022" data-name="Watcher 1">
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] font-medium leading-[22px] left-[13px] text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] top-[11px] w-[310px] whitespace-pre-wrap" data-node-id="768:8023" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`✈  Đà Nẵng → Hà Nội`}</p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[13px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[39px] w-[218px]" data-node-id="768:8024">
+            14/10/2026 · 1 chiều
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[13px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[95px] w-[100px]" data-node-id="768:8025">
+            Giá quan sát
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[13px] not-italic text-[15px] text-[color:var(--wolfari-color-red,#e97154)] top-[117px] w-[120px]" data-node-id="768:8026">
+            1.650.000đ
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[169px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[95px] w-[80px]" data-node-id="768:8027">
+            Ngưỡng
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[169px] not-italic text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] top-[117px] w-[120px]" data-node-id="768:8028">
+            1.500.000đ
+          </p>
+          <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[30px] left-[241px] rounded-[17px] top-[41px] w-[102px]" data-node-id="768:8029" data-name="Chưa đạt" />
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[292px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[46px] w-[102px]" data-node-id="768:8030">
+            Chưa đạt
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[13px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[67px] w-[320px]" data-node-id="772:6407">
+            Huy Trần · Bạn có quyền xóa
+          </p>
+          <div className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[40px] leading-[0] left-[13px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[153px] w-[330px]" data-node-id="772:6408">
+            <p className="leading-[20px] mb-0">Nguồn: Provider mẫu · 09:00, 10/10/2026</p>
+            <p className="leading-[20px]">Giá quan sát gần nhất; chưa bao gồm thay đổi mới.</p>
+          </div>
+        </div>
+        <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[80px] left-[15px] rounded-[10px] top-[549px] w-[358px]" data-node-id="768:8031" data-name="Disclaimer">
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[12px] text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[10px] w-[334px]" data-node-id="768:8032" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            ⓘ Giá tham khảo từ provider. Wolfari không đặt vé và không khẳng định đây là giá rẻ nhất thị trường.
+          </p>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[360px] left-[644px] rounded-[14px] top-[286px] w-[470px]" data-node-id="768:8033" data-name="Price chart">
+        <div className="absolute h-[360px] left-[-1px] top-[-1px] w-[470px]" data-node-id="772:6410" data-name="Price observations / connected line">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPriceObservationsConnectedLine} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[15px] not-italic text-[24px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[250px]" data-node-id="768:8034">
+          Lịch sử giá vé
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[34px] left-[15px] rounded-[17px] top-[53px] w-[190px]" data-node-id="768:8035" data-name="Hà Nội → Đà Nẵng" />
+        <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal leading-[20px] left-[110px] text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[60px] w-[190px]" data-node-id="768:8036" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+          Hà Nội → Đà Nẵng
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[34px] left-[355px] rounded-[17px] top-[53px] w-[96px]" data-node-id="768:8037" data-name="30 ngày" />
+        <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[403px] not-italic text-[13px] text-[color:var(--wolfari-color-ink,#06458b)] text-center top-[60px] w-[96px]" data-node-id="768:8038">
+          30 ngày
+        </p>
+        <div className="absolute h-0 left-[49px] top-[119px] w-[390px]" data-node-id="768:8039" data-name="Line">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine} />
+          </div>
+        </div>
+        <p className="-translate-x-full [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[43px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-right top-[110px] w-[32px]" data-node-id="768:8040">
+          2,0
+        </p>
+        <div className="absolute h-0 left-[49px] top-[163px] w-[390px]" data-node-id="768:8041" data-name="Line">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine} />
+          </div>
+        </div>
+        <p className="-translate-x-full [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[43px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-right top-[154px] w-[32px]" data-node-id="768:8042">
+          1,8
+        </p>
+        <div className="absolute h-0 left-[49px] top-[207px] w-[390px]" data-node-id="768:8043" data-name="Line">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine} />
+          </div>
+        </div>
+        <p className="-translate-x-full [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[43px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-right top-[198px] w-[32px]" data-node-id="768:8044">
+          1,6
+        </p>
+        <div className="absolute h-0 left-[49px] top-[251px] w-[390px]" data-node-id="768:8045" data-name="Line">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine} />
+          </div>
+        </div>
+        <p className="-translate-x-full [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[43px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-right top-[242px] w-[32px]" data-node-id="768:8046">
+          1,4
+        </p>
+        <div className="absolute h-0 left-[49px] top-[295px] w-[390px]" data-node-id="768:8047" data-name="Line">
+          <div className="absolute inset-[-1px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine} />
+          </div>
+        </div>
+        <p className="-translate-x-full [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[43px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-right top-[286px] w-[32px]" data-node-id="768:8048">
+          1,2
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[281px] not-italic text-[12px] text-[color:var(--wolfari-color-red,#e97154)] top-[229px] w-[160px]" data-node-id="768:8073">
+          Ngưỡng: 1.400.000đ
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[18px] leading-[20px] left-[15px] not-italic text-[11px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[93px] w-[100px]" data-node-id="772:6409">
+          Triệu VND
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[20px] leading-[20px] left-[59px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[317px] w-[360px] whitespace-pre-wrap" data-node-id="772:6425">{`11/09                         25/09                         10/10`}</p>
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex flex-col gap-[8px] h-[648px] items-start left-[1130px] px-[14px] py-[16px] rounded-[14px] top-[286px] w-[288px]" data-node-id="768:8074" data-name="Create watch">
+        <p className="[word-break:break-word] font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] min-w-full not-italic relative shrink-0 text-[22px] text-[color:var(--wolfari-color-ink,#06458b)] w-[min-content]" data-node-id="772:6426">
+          Tạo theo dõi giá vé
+        </p>
+        <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[260px]" label="Hành trình" value="Một chiều ⌄" />
+        <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[260px]" label="Điểm đi" value="Hà Nội (HAN)" />
+        <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[260px]" label="Điểm đến" value="Đà Nẵng (DAD)" />
+        <div className="content-stretch flex gap-[12px] h-[64px] items-start overflow-clip relative shrink-0 w-full" data-node-id="772:6444" data-name="Frame">
+          <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[124px]" label="Ngày đi" value="12/10/2026" />
+          <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[124px]" label="Ngày về" value="Không áp dụng" />
+        </div>
+        <div className="content-stretch flex gap-[12px] h-[64px] items-start overflow-clip relative shrink-0 w-full" data-node-id="772:6453" data-name="Frame">
+          <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[124px]" label="Hành khách" value="1 người lớn" />
+          <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[124px]" label="Cabin" value="Phổ thông ⌄" />
+        </div>
+        <AlignmentLabeledField className="content-stretch flex flex-col gap-[4px] h-[64px] items-start relative shrink-0 w-[260px]" label="Ngưỡng giá (VND)" value="1.400.000" />
+        <div className="[word-break:break-word] font-['Be_Vietnam_Pro:Regular'] h-[36px] leading-[0] min-w-full not-italic relative shrink-0 text-[11px] text-[color:var(--wolfari-color-muted,#6c8bb2)] w-[min-content]" data-node-id="772:6466">
+          <p className="leading-[20px] mb-0">Bản xem trước · Chưa lưu máy chủ.</p>
+          <p className="leading-[20px]">Cảnh báo dành cho người tạo theo dõi.</p>
+        </div>
+        <ButtonPrimary className="bg-gradient-to-r content-stretch cursor-pointer flex from-[#008ac4] gap-[8px] h-[42px] items-center justify-center relative rounded-[18px] shrink-0 to-[#008eaa] w-full" label="Kiểm tra bản nháp" />
+      </div>
+      <div className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid h-[268px] left-[644px] rounded-[14px] top-[666px] w-[470px]" data-node-id="768:8094" data-name="Price info">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] h-[28px] leading-[32px] left-[17px] not-italic text-[20px] text-[color:var(--wolfari-color-ink,#06458b)] top-[15px] w-[434px]" data-node-id="768:8095">
+          Cách theo dõi hoạt động
+        </p>
+        <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[94px] left-[17px] rounded-[12px] top-[55px] w-[210px]" data-node-id="768:8096" data-name="step 0">
+          <div className="absolute left-[12px] size-[22px] top-[10px]" data-node-id="768:8097" data-name="Ellipse">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[23px] not-italic text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[11px] w-[22px]" data-node-id="768:8098">
+            1
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[44px] not-italic text-[14px] text-[color:var(--wolfari-color-ink,#06458b)] top-[10px] w-[154px]" data-node-id="768:8099">
+            Theo dõi
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[48px] leading-[20px] left-[12px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[40px] w-[186px]" data-node-id="768:8100">
+            Lưu giá, nguồn và thời điểm quan sát.
+          </p>
+        </div>
+        <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[94px] left-[241px] rounded-[12px] top-[55px] w-[210px]" data-node-id="768:8101" data-name="step 1">
+          <div className="absolute left-[12px] size-[22px] top-[10px]" data-node-id="768:8102" data-name="Ellipse">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[23px] not-italic text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[11px] w-[22px]" data-node-id="768:8103">
+            2
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[44px] not-italic text-[14px] text-[color:var(--wolfari-color-ink,#06458b)] top-[10px] w-[154px]" data-node-id="768:8104">
+            So sánh
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[48px] leading-[20px] left-[12px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[40px] w-[186px]" data-node-id="768:8105">
+            So sánh giá mới với ngưỡng VND.
+          </p>
+        </div>
+        <div className="absolute bg-[var(--wolfari-color-pale,#f3fbff)] h-[94px] left-[17px] rounded-[12px] top-[155px] w-[210px]" data-node-id="768:8106" data-name="step 2">
+          <div className="absolute left-[12px] size-[22px] top-[10px]" data-node-id="768:8107" data-name="Ellipse">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[23px] not-italic text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[11px] w-[22px]" data-node-id="768:8108">
+            3
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[44px] not-italic text-[14px] text-[color:var(--wolfari-color-ink,#06458b)] top-[10px] w-[154px]" data-node-id="768:8109">
+            Thông báo
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[48px] leading-[20px] left-[12px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[40px] w-[186px]" data-node-id="768:8110">
+            Chỉ người tạo nhận cảnh báo.
+          </p>
+        </div>
+        <div className="absolute bg-[var(--wolfari-color-cream,#fff7df)] h-[94px] left-[241px] rounded-[12px] top-[155px] w-[210px]" data-node-id="768:8111" data-name="step 3">
+          <div className="absolute left-[12px] size-[22px] top-[10px]" data-node-id="768:8112" data-name="Ellipse">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[23px] not-italic text-[13px] text-[color:var(--wolfari-color-white,white)] text-center top-[11px] w-[22px]" data-node-id="768:8113">
+            4
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] leading-[22px] left-[44px] not-italic text-[14px] text-[color:var(--wolfari-color-ink,#06458b)] top-[10px] w-[154px]" data-node-id="768:8114">
+            Bạn quyết định
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[48px] leading-[20px] left-[12px] not-italic text-[12px] text-[color:var(--wolfari-color-muted,#6c8bb2)] top-[40px] w-[186px]" data-node-id="768:8115">
+            Bạn tự đặt vé ở dịch vụ bên ngoài.
+          </p>
+        </div>
+      </div>
+      <WolfariHeader className="absolute bg-white border border-[#dff0f7] border-solid h-[76px] left-0 overflow-clip shadow-[0px_2px_10px_0px_rgba(10,87,138,0.05)] top-0 w-[1440px]" />
+      <WolfariTripSidebar className="absolute bg-white h-[884px] left-0 top-[76px] w-[220px]" />
+    </div>
+  );
+}

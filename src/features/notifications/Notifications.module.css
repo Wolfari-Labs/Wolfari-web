@@ -1,0 +1,87 @@
+.bell {
+  position: relative;
+}
+.dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #b73c48;
+  border: 2px solid white;
+  border-radius: 50%;
+  top: 8px;
+  right: 8px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.list {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.list li {
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  overflow-wrap: anywhere;
+}
+.list li[data-unread] {
+  background: var(--color-pale);
+  border-left: 3px solid var(--color-action-primary);
+}
+.list p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+.list time {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.list a,
+.preferencesLink {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 14px;
+}
+.preferencesLink {
+  display: block;
+  padding-block: 16px;
+}
+.empty {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 40px 16px;
+}
+.empty svg {
+  margin-inline: auto;
+}
+.preferences {
+  display: grid;
+  gap: 14px;
+}
+.preferences p {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+.preferences summary {
+  cursor: pointer;
+  min-height: 44px;
+}
+.preferences fieldset {
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px 0;
+  min-width: 0;
+}
+.preferences fieldset label {
+  display: grid;
+  gap: 4px;
+  margin-block: 8px;
+  font-size: 14px;
+}

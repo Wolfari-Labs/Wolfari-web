@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import styles from './Alert.module.css';
+import { CircleAlert, CircleCheck, Info } from 'lucide-react';
 
 export function Alert({
   tone = 'info',
@@ -16,7 +17,13 @@ export function Alert({
       {...(live ? { role: tone === 'error' ? 'alert' : 'status' } : {})}
     >
       <span aria-hidden="true" className={styles.marker}>
-        {tone === 'info' ? 'i' : tone === 'success' ? '✓' : '!'}
+        {tone === 'info' ? (
+          <Info size={18} />
+        ) : tone === 'success' ? (
+          <CircleCheck size={18} />
+        ) : (
+          <CircleAlert size={18} />
+        )}
       </span>
       <div>{children}</div>
     </div>

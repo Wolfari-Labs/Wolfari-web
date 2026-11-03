@@ -27,6 +27,7 @@ import { ContentState } from '../../shared/components/ContentState';
 import userIcon from '../../shared/assets/figma/2e748.svg';
 import styles from './MembersPage.module.css';
 import { InvitationManagement } from './InvitationManagement';
+import { GatewayMembersPage } from './GatewayMembersPage';
 type Snapshot<T> = ReadResult<T> | { status: 'loading' };
 function ReadPanel<T>({
   result,
@@ -108,7 +109,10 @@ function PlanPolicyPanel({
                 ? 'Chưa xác định được kết quả. Giữ nguyên yêu cầu; thử lại sẽ dùng cùng nội dung và mã yêu cầu.'
                 : 'Không thể cập nhật quyền sửa lịch trình. Bản chọn hiện tại vẫn được giữ.'}
             {feedback.error.correlationId && (
-              <small> Mã tra cứu: {feedback.error.correlationId}</small>
+              <details>
+                <summary>Chi tiết hỗ trợ</summary>
+                <small>Mã tra cứu: {feedback.error.correlationId}</small>
+              </details>
             )}
           </Alert>
         )}
@@ -525,6 +529,14 @@ export function MembersView({
   );
 }
 export function MembersPage() {
+  const { membership } = useMembersRepositories();
+  return membership.commands ? (
+    <GatewayMembersPage commands={membership.commands} />
+  ) : (
+    <PreviewMembersPage />
+  );
+}
+function PreviewMembersPage() {
   const { tripId = '' } = useParams(),
     { previewEnabled } = useOutletContext<RouteContext>();
   const tripRepository = useTripRepository(),

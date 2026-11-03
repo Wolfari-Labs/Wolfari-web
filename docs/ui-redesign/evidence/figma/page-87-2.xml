@@ -1,0 +1,147 @@
+<canvas id="87:2" name="01 — Foundations" x="0" y="0" width="0" height="0">
+  <frame id="87:82" name="FOUNDATIONS / Wolfari" x="80" y="80" width="1440" height="1674">
+    <text id="87:83" name="Wolfari Foundations" x="64" y="64" width="392" height="48" />
+    <text id="87:84" name="Bright, airy and Vietnam-inspired foundations for a friendly travel planning experience." x="64" y="144" width="651" height="19" />
+    <frame id="87:85" name="Foundation / Colors" x="64" y="195" width="1312" height="389">
+      <text id="87:86" name="Color" x="29" y="29" width="84" height="39" />
+      <frame id="87:87" name="Palette" x="29" y="88" width="1254" height="272">
+        <frame id="87:88" name="Color / Blue" x="0" y="0" width="224" height="128">
+          <rounded-rectangle id="87:89" name="Blue" x="13" y="13" width="200" height="64" />
+          <text id="87:90" name="Blue #078ED0" x="13" y="87" width="85" height="15" />
+        </frame>
+        <frame id="87:91" name="Color / Cyan" x="240" y="0" width="224" height="128">
+          <rounded-rectangle id="87:92" name="Cyan" x="13" y="13" width="200" height="64" />
+          <text id="87:93" name="Cyan #43C6E8" x="13" y="87" width="91" height="15" />
+        </frame>
+        <frame id="87:94" name="Color / Teal" x="480" y="0" width="224" height="128">
+          <rounded-rectangle id="87:95" name="Teal" x="13" y="13" width="200" height="64" />
+          <text id="87:96" name="Teal #10B7A1" x="13" y="87" width="79" height="15" />
+        </frame>
+        <frame id="87:97" name="Color / Green" x="720" y="0" width="224" height="128">
+          <rounded-rectangle id="87:98" name="Green" x="13" y="13" width="200" height="64" />
+          <text id="87:99" name="Green #41BE62" x="13" y="87" width="93" height="15" />
+        </frame>
+        <frame id="87:100" name="Color / Sun" x="960" y="0" width="224" height="128">
+          <rounded-rectangle id="87:101" name="Sun" x="13" y="13" width="200" height="64" />
+          <text id="87:102" name="Sun #FFC62F" x="13" y="87" width="81" height="15" />
+        </frame>
+        <frame id="87:103" name="Color / Orange" x="0" y="144" width="224" height="128">
+          <rounded-rectangle id="87:104" name="Orange" x="13" y="13" width="200" height="64" />
+          <text id="87:105" name="Orange #FF9F2D" x="13" y="87" width="101" height="15" />
+        </frame>
+        <frame id="87:106" name="Color / Ink" x="240" y="144" width="224" height="128">
+          <rounded-rectangle id="87:107" name="Ink" x="13" y="13" width="200" height="64" />
+          <text id="87:108" name="Ink #103C67" x="13" y="87" width="76" height="15" />
+        </frame>
+        <frame id="87:109" name="Color / Sky" x="480" y="144" width="224" height="128">
+          <rounded-rectangle id="87:110" name="Sky" x="13" y="13" width="200" height="64" />
+          <text id="87:111" name="Sky #EAF8FF" x="13" y="87" width="80" height="15" />
+        </frame>
+        <frame id="87:112" name="Color / Border" x="720" y="144" width="224" height="128">
+          <rounded-rectangle id="87:113" name="Border" x="13" y="13" width="200" height="64" />
+          <text id="87:114" name="Border #CDEAF7" x="13" y="87" width="100" height="15" />
+        </frame>
+        <frame id="87:115" name="Color / White" x="960" y="144" width="224" height="128">
+          <rounded-rectangle id="87:116" name="White" x="13" y="13" width="200" height="64" />
+          <text id="87:117" name="White #FFFFFF" x="13" y="87" width="90" height="15" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="87:118" name="Foundation / Typography" x="64" y="616" width="1312" height="555">
+      <text id="87:119" name="Typography" x="29" y="29" width="186" height="39" />
+      <frame id="87:120" name="Frame" x="29" y="88" width="667" height="64">
+        <text id="87:121" name="Display" x="0" y="0" width="160" height="17" />
+        <text id="87:122" name="Plan. Explore. Go." x="192" y="0" width="475" height="64" />
+      </frame>
+      <frame id="87:123" name="Frame" x="29" y="172" width="537" height="48">
+        <text id="87:124" name="Page Title" x="0" y="0" width="160" height="17" />
+        <text id="87:125" name="Wolfari Page Title" x="192" y="0" width="345" height="48" />
+      </frame>
+      <frame id="87:126" name="Frame" x="29" y="240" width="504" height="40">
+        <text id="87:127" name="Section Title" x="0" y="0" width="160" height="17" />
+        <text id="87:128" name="Wolfari Section Title" x="192" y="0" width="312" height="40" />
+      </frame>
+      <frame id="87:129" name="Frame" x="29" y="300" width="360" height="28">
+        <text id="87:130" name="Card Title" x="0" y="0" width="160" height="17" />
+        <text id="87:131" name="Wolfari Card Title" x="192" y="0" width="168" height="28" />
+      </frame>
+      <frame id="87:132" name="Frame" x="29" y="348" width="288" height="24">
+        <text id="87:133" name="Body" x="0" y="0" width="160" height="17" />
+        <text id="87:134" name="Wolfari Body" x="192" y="0" width="96" height="24" />
+      </frame>
+      <frame id="87:135" name="Frame" x="29" y="392" width="315" height="20">
+        <text id="87:136" name="Body Small" x="0" y="0" width="160" height="17" />
+        <text id="87:137" name="Wolfari Body Small" x="192" y="0" width="123" height="20" />
+      </frame>
+      <frame id="87:138" name="Frame" x="29" y="432" width="280" height="20">
+        <text id="87:139" name="Label" x="0" y="0" width="160" height="17" />
+        <text id="87:140" name="Wolfari Label" x="192" y="0" width="88" height="20" />
+      </frame>
+      <frame id="87:141" name="Frame" x="29" y="472" width="281" height="17">
+        <text id="87:142" name="Caption" x="0" y="0" width="160" height="17" />
+        <text id="87:143" name="Wolfari Caption" x="192" y="0" width="89" height="16" />
+      </frame>
+      <frame id="87:144" name="Frame" x="29" y="509" width="272" height="17">
+        <text id="87:145" name="Helper" x="0" y="0" width="160" height="17" />
+        <text id="87:146" name="Wolfari Helper" x="192" y="0" width="80" height="16" />
+      </frame>
+    </frame>
+    <frame id="87:147" name="Layout Tokens" x="64" y="1203" width="1312" height="407">
+      <frame id="87:148" name="Foundation / Spacing" x="0" y="0" width="630" height="407">
+        <text id="87:149" name="Spacing" x="29" y="29" width="126" height="39" />
+        <frame id="87:150" name="Frame" x="29" y="84" width="46" height="15">
+          <rounded-rectangle id="87:151" name="Rectangle" x="0" y="0" width="12" height="8" />
+          <text id="87:152" name="4px" x="24" y="0" width="22" height="15" />
+        </frame>
+        <frame id="87:153" name="Frame" x="29" y="115" width="58" height="15">
+          <rounded-rectangle id="87:154" name="Rectangle" x="0" y="0" width="24" height="8" />
+          <text id="87:155" name="8px" x="36" y="0" width="22" height="15" />
+        </frame>
+        <frame id="87:156" name="Frame" x="29" y="146" width="75" height="15">
+          <rounded-rectangle id="87:157" name="Rectangle" x="0" y="0" width="36" height="8" />
+          <text id="87:158" name="12px" x="48" y="0" width="27" height="15" />
+        </frame>
+        <frame id="87:159" name="Frame" x="29" y="177" width="88" height="15">
+          <rounded-rectangle id="87:160" name="Rectangle" x="0" y="0" width="48" height="8" />
+          <text id="87:161" name="16px" x="60" y="0" width="28" height="15" />
+        </frame>
+        <frame id="87:162" name="Frame" x="29" y="208" width="101" height="15">
+          <rounded-rectangle id="87:163" name="Rectangle" x="0" y="0" width="60" height="8" />
+          <text id="87:164" name="20px" x="72" y="0" width="29" height="15" />
+        </frame>
+        <frame id="87:165" name="Frame" x="29" y="239" width="113" height="15">
+          <rounded-rectangle id="87:166" name="Rectangle" x="0" y="0" width="72" height="8" />
+          <text id="87:167" name="24px" x="84" y="0" width="29" height="15" />
+        </frame>
+        <frame id="87:168" name="Frame" x="29" y="270" width="137" height="15">
+          <rounded-rectangle id="87:169" name="Rectangle" x="0" y="0" width="96" height="8" />
+          <text id="87:170" name="32px" x="108" y="0" width="29" height="15" />
+        </frame>
+        <frame id="87:171" name="Frame" x="29" y="301" width="162" height="15">
+          <rounded-rectangle id="87:172" name="Rectangle" x="0" y="0" width="120" height="8" />
+          <text id="87:173" name="40px" x="132" y="0" width="30" height="15" />
+        </frame>
+        <frame id="87:174" name="Frame" x="29" y="332" width="186" height="15">
+          <rounded-rectangle id="87:175" name="Rectangle" x="0" y="0" width="144" height="8" />
+          <text id="87:176" name="48px" x="156" y="0" width="30" height="15" />
+        </frame>
+        <frame id="87:177" name="Frame" x="29" y="363" width="234" height="15">
+          <rounded-rectangle id="87:178" name="Rectangle" x="0" y="0" width="192" height="8" />
+          <text id="87:179" name="64px" x="204" y="0" width="30" height="15" />
+        </frame>
+      </frame>
+      <frame id="87:180" name="Foundation / Radius &amp; Frames" x="654" y="0" width="630" height="220">
+        <text id="87:181" name="Radius" x="29" y="29" width="105" height="39" />
+        <frame id="87:182" name="Frame" x="29" y="84" width="512" height="72">
+          <rounded-rectangle id="87:183" name="Rectangle" x="0" y="0" width="72" height="72" />
+          <rounded-rectangle id="87:184" name="Rectangle" x="88" y="0" width="72" height="72" />
+          <rounded-rectangle id="87:185" name="Rectangle" x="176" y="0" width="72" height="72" />
+          <rounded-rectangle id="87:186" name="Rectangle" x="264" y="0" width="72" height="72" />
+          <rounded-rectangle id="87:187" name="Rectangle" x="352" y="0" width="72" height="72" />
+          <rounded-rectangle id="87:188" name="Rectangle" x="440" y="0" width="72" height="72" />
+        </frame>
+        <text id="87:189" name="Frames: Desktop 1440 · Tablet 1024 · Mobile 390" x="29" y="172" width="392" height="19" />
+      </frame>
+    </frame>
+  </frame>
+</canvas>

@@ -2,6 +2,7 @@ import type { MembershipRepository } from '../../features/members/model/members'
 import type { GatewayHttpClient } from '../http/http-client';
 import { toDomainError } from '../http/domain-error';
 import { ApiError } from '../http/api-error';
+import type { CommandCoordinator } from '../operations/command-coordinator';
 
 function record(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -10,7 +11,8 @@ function record(value: unknown): Record<string, unknown> | null {
 }
 
 function requiredString(value: unknown): string {
-  if (typeof value !== 'string' || value.trim() === '') throw new Error('Invalid member projection');
+  if (typeof value !== 'string' || value.trim() === '')
+    throw new Error('Invalid member projection');
   return value;
 }
 
@@ -24,12 +26,20 @@ function timestamp(value: unknown): string {
   }
   return result;
 }
+function uuid(value: unknown): string {
+  const id = requiredString(value);
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
+    throw new Error('Invalid member projection');
+  return id;
+}
 
 export function createGatewayMembershipRepository(
   reader?: MembershipRepository['listMembers'],
   client?: GatewayHttpClient,
+  commands?: CommandCoordinator,
 ): MembershipRepository {
   return {
+    ...(commands ? { commands } : {}),
     listMembers:
       reader ??
       (async ({ tripId, signal, cursor, limit = 100, includeLeft = false }) => {
@@ -45,8 +55,8 @@ export function createGatewayMembershipRepository(
             const result = await client.read(
               `/api/v1/trips/${encodeURIComponent(tripId)}/members?${params.toString()}`,
               {
-              signal,
-              includeCredentials: true,
+                signal,
+                includeCredentials: true,
               },
             );
             correlationId = result.correlationId;
@@ -66,23 +76,33 @@ export function createGatewayMembershipRepository(
               if (!item || (item.role !== 'OWNER' && item.role !== 'MEMBER')) {
                 throw new Error('Invalid member projection');
               }
-              const memberTripId = requiredString(item.trip_id);
+              const memberTripId = uuid(item.trip_id);
               const leftAt = item.left_at;
+              if (
+                item.display_name !== undefined &&
+                item.display_name !== null &&
+                typeof item.display_name !== 'string'
+              )
+                throw new Error('Invalid member projection');
               if (
                 memberTripId !== tripId ||
                 !Object.hasOwn(item, 'left_at') ||
-                (leftAt !== null && (typeof leftAt !== 'string' || !Number.isFinite(Date.parse(leftAt))))
+                (leftAt !== null &&
+                  (typeof leftAt !== 'string' || !Number.isFinite(Date.parse(leftAt))))
               ) {
                 throw new Error('Invalid member projection');
               }
               return {
-                id: requiredString(item.id),
+                id: uuid(item.id),
                 tripId: memberTripId,
-                userId: requiredString(item.user_id),
+                userId: uuid(item.user_id),
                 role: item.role as 'OWNER' | 'MEMBER',
                 joinedAt: timestamp(item.joined_at),
                 leftAt: leftAt === null ? null : timestamp(leftAt),
-                presentation: { displayName: null, avatar: null },
+                presentation: {
+                  displayName: typeof item.display_name === 'string' ? item.display_name : null,
+                  avatar: null,
+                },
               };
             });
             if (

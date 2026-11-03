@@ -91,6 +91,7 @@ describe('Shell repository boundary', () => {
           return {
             data: {
               full_name: 'Gateway user',
+              id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
               version: 7,
               system_role: 'USER',
             },
@@ -112,7 +113,12 @@ describe('Shell repository boundary', () => {
     expect(result).toEqual({
       status: 'ready',
       data: {
-        viewer: { fullName: 'Gateway user', version: 7, systemRole: 'USER' },
+        viewer: {
+          id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          fullName: 'Gateway user',
+          version: 7,
+          systemRole: 'USER',
+        },
         trip: {
           id: previewTripId,
           planVersion: 3,

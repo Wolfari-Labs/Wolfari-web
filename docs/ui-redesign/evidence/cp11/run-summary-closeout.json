@@ -1,0 +1,228 @@
+{
+  "evidenceDate": "2026-11-02",
+  "limits": "Local fixture/HTTP-mock reports; not live Backend, CI or manual accessibility. Separate runs are never summed into a fictional all-pass suite.",
+  "scope": "D56 one-line Trip Drawer NavLink end correction; focused post-fix verification only. D55 full suites and performance lab precede this correction and were not rerun.",
+  "checkout": {
+    "branch": "draft/demo-ui-ux",
+    "head": "c73e0ada4c1a846de61aabb93f1bc9f01c3991c6",
+    "initialWorktree": "clean; ahead local origin by 5",
+    "testedSource": "HEAD plus uncommitted AppShell NavLink end correction",
+    "backendWorktree": "clean; no Backend edits"
+  },
+  "builds": [
+    {
+      "directory": ".local/cp11-closeout-build-gateway",
+      "manifestSha256": "676effd4c83f94c53f7bb9a34170b6078765729831c9049f9fe3fa936f1441e7"
+    },
+    {
+      "directory": ".local/cp11-closeout-build-preview",
+      "manifestSha256": "7cd549128581e3c988321c755de7bea40f7c64f621f9112bad4e5072bdb85872"
+    }
+  ],
+  "attemptDisposition": [
+    "closeout-before-unit: exit1; regression reproduced before source fix (6 passed, 1 failed).",
+    "closeout-unit: exit0; all 7 passed after source fix.",
+    "Initial typecheck: FAIL because Playwright does not support getByRole current option. Corrected to explicit a[aria-current=page] selector; final typecheck PASS.",
+    "closeout-fixture: exit1, 0/1 due to unsupported current filter; corrected selector, not application behavior.",
+    "closeout-gateway: setup FAIL/exit1, 0 executed cases, NOT PASS. Build directory collided with output directory; rebuilt to separate closeout-build paths.",
+    "closeout-final-fixture: exit0, 1/1; Drawer composition/current-page/focus.",
+    "closeout-final-gateway: exit0, 1/1; current-page/navigation checks passed. Superseded by guard rerun correcting no-write API path filter.",
+    "closeout-denied-fixture: exit0, 3/3; denied workspace states/account recovery links.",
+    "closeout-guard-gateway: exit0, 1/1; final test with actual /api/v1/trips request prefix, positive read assertion and no Trip writes."
+  ],
+  "runs": [
+    {
+      "file": ".local/cp11-closeout-before-unit.json",
+      "sha256": "377d2700fb203c904bf9ecd44a183f5ce0fa4c07b780b7de618741193451614c",
+      "runner": "vitest",
+      "success": false,
+      "total": 7,
+      "passed": 6,
+      "failed": 1,
+      "pending": 0
+    },
+    {
+      "file": ".local/cp11-closeout-unit.json",
+      "sha256": "5c973c2a7edff1a635ce98de46420b0cc9623eca1bb5c9b149d403a9d8117bb6",
+      "runner": "vitest",
+      "success": true,
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "file": ".local/cp11-closeout-fixture.json",
+      "sha256": "94b4ef6b8f92a51eba8ee2202e5524e48283f15b4a14ade3737cdf784e03a540",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T14:12:31.916Z",
+        "duration": 8710.138,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "app-shell.spec.ts",
+          "line": 592,
+          "title": "CP04 Web trip drawer follows the approved navigation composition",
+          "status": "unexpected",
+          "attempts": [
+            {
+              "status": "failed",
+              "durationMs": 6244
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".local/cp11-closeout-gateway.json",
+      "sha256": "8d569718d1a38072d02b11cc862b1322c18595fddbf51f4b7f9ac7c2cbd612ee",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T14:12:41.861Z",
+        "duration": 370.62199999999996,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": []
+    },
+    {
+      "file": ".local/cp11-closeout-final-fixture.json",
+      "sha256": "19063d2f1f862cad06aa2ec1eea2b7ce5413fbf398b838a878886d7896a5baa4",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T14:13:38.236Z",
+        "duration": 3003.1130000000003,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "app-shell.spec.ts",
+          "line": 592,
+          "title": "CP04 Web trip drawer follows the approved navigation composition",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1239
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".local/cp11-closeout-final-gateway.json",
+      "sha256": "bc905f4e2faae658241201fd0ba45b3be8e0890efe973fb77a708535b2eaf59a",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T14:13:30.381Z",
+        "duration": 6258.821,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "cp11-shell-current.spec.ts",
+          "line": 5,
+          "title": "CP11 HTTP mock: Trip Drawer has one current page and preserves account navigation",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4558
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".local/cp11-closeout-denied-fixture.json",
+      "sha256": "e9fa95872c437ca40ba915ecddc5a94d8896704e698d5266506b274fae25594b",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T14:13:53.071Z",
+        "duration": 8916.731,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips/11111111-1111-4111-8111-111111111111",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2267
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips/11111111-1111-4111-8111-111111111111/plan",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 1950
+            }
+          ]
+        },
+        {
+          "file": "app-shell.spec.ts",
+          "line": 395,
+          "title": "shared state contract /trips/11111111-1111-4111-8111-111111111111/members",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 2396
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".local/cp11-closeout-guard-gateway.json",
+      "sha256": "6d244f7b2a19b893c65b1e7665cc0423fda40a63c9470f6a1898fd31fad10ce6",
+      "runner": "playwright",
+      "stats": {
+        "startTime": "2026-11-02T14:15:24.334Z",
+        "duration": 7255.691999999999,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "cp11-shell-current.spec.ts",
+          "line": 5,
+          "title": "CP11 HTTP mock: Trip Drawer has one current page and preserves account navigation",
+          "status": "expected",
+          "attempts": [
+            {
+              "status": "passed",
+              "durationMs": 4915
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

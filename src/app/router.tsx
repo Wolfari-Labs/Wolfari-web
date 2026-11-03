@@ -2,7 +2,9 @@ import { createBrowserRouter } from 'react-router';
 import { App } from './App';
 import { captureInvitationToken } from '../features/members/invitation-token';
 import { ContentState } from '../shared/components/ContentState';
+import { AdminPlaceholder } from '../features/shell/components/AdminChrome';
 import { lazy, Suspense, type ReactNode } from 'react';
+import { HomeRoute } from './HomeRoute';
 import type { DemoAccess } from '../features/auth/model/demo-access';
 const TripListPage = lazy(async () => ({
   default: (await import('../features/trips/TripListPage')).TripListPage,
@@ -16,7 +18,6 @@ const IdentityActionPage = lazy(async () => ({
 const ProfilePage = lazy(async () => ({
   default: (await import('../features/auth/ProfilePage')).ProfilePage,
 }));
-const HomeRoute = lazy(async () => ({ default: (await import('./HomeRoute')).HomeRoute }));
 const TripOverviewPage = lazy(async () => ({
   default: (await import('../features/trips/TripOverviewPage')).TripOverviewPage,
 }));
@@ -56,7 +57,6 @@ const feature = (element: ReactNode) => (
 
 export function createRouter(previewTripPath: string | null, demoAccess?: DemoAccess) {
   captureInvitationToken();
-  const placeholder = <ContentState state="placeholder" headingLevel={2} />;
   return createBrowserRouter([
     {
       element: <App previewTripPath={previewTripPath} {...(demoAccess ? { demoAccess } : {})} />,
@@ -193,7 +193,11 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
           element: feature(<IdentityActionPage key="reset" action="reset" />),
           handle: { title: 'Đặt lại mật khẩu', contentTitle: true, fullBleed: true },
         },
-        { path: '/admin', element: placeholder, handle: { layout: 'admin', requiresViewer: true } },
+        {
+          path: '/admin',
+          element: <AdminPlaceholder />,
+          handle: { layout: 'admin', requiresViewer: true },
+        },
         {
           path: '*',
           element: <ContentState state="not-found" showHome />,

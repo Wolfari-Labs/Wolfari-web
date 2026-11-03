@@ -1,5 +1,9 @@
+export interface GatewayMetadata {
+  exportRevision?: number;
+  nextCursor?: string | null;
+}
 export type GatewayEnvelope =
-  | { kind: 'success'; data: unknown; correlationId: string | null }
+  | { kind: 'success'; data: unknown; correlationId: string | null; metadata: GatewayMetadata }
   | {
       kind: 'error';
       code: string;
@@ -23,7 +27,23 @@ export function parseEnvelope(value: unknown): GatewayEnvelope {
   const hasData = Object.hasOwn(value, 'data');
   const hasError = Object.hasOwn(value, 'error');
   if (hasData === hasError) throw new Error('Ambiguous Gateway envelope');
-  if (hasData) return { kind: 'success', data: value.data, correlationId };
+  const revision = value.meta.export_revision;
+  const cursor = value.meta.next_cursor;
+  if (cursor !== undefined && cursor !== null && typeof cursor !== 'string')
+    throw new Error('Invalid next cursor');
+  if (revision !== undefined && (!Number.isSafeInteger(revision) || (revision as number) < 1)) {
+    throw new Error('Invalid export revision');
+  }
+  if (hasData)
+    return {
+      kind: 'success',
+      data: value.data,
+      correlationId,
+      metadata: {
+        ...(revision === undefined ? {} : { exportRevision: revision as number }),
+        ...(cursor === undefined ? {} : { nextCursor: cursor as string | null }),
+      },
+    };
   if (
     !record(value.error) ||
     typeof value.error.code !== 'string' ||

@@ -5,13 +5,13 @@ for (const width of [1440, 402])
     await page.setViewportSize({ width, height: 800 });
     await page.goto(tripPath);
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
-    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
     await page.getByRole('link', { name: 'Packing list', exact: true }).click();
     await expect(page.locator('[data-flow="packing-read"]')).toBeVisible();
     await expect(page.locator('[data-flow="trip-overview"]')).toHaveCount(0);
     await expect(page).toHaveURL(tripPath + '/packing');
     await expect(page.locator('main')).toBeFocused();
-    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
     if (width <= 768) {
       await page
         .getByRole('dialog', { name: 'Điều hướng chuyến đi' })
@@ -47,6 +47,8 @@ async function expectRouteContent(page: Page, route: string) {
     await expect(page.locator('[data-flow="members-preview"]')).toBeVisible();
   else if (/^\/trips\/[^/]+$/.test(route))
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
+  else if (route === '/admin')
+    await expect(page.getByText('Chức năng quản trị chưa khả dụng', { exact: true })).toBeVisible();
   else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
 }
 async function choose(page: Page, scenario: string) {
@@ -59,6 +61,23 @@ async function choose(page: Page, scenario: string) {
 }
 async function loadedAssets(page: Page) {
   await page.evaluate(() => document.fonts.ready);
+  // Below-fold images intentionally lazy-load; inspect each after scrolling it
+  // into view, not merely because it has non-zero layout dimensions.
+  for (const img of await page.locator('img:visible').all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        img.evaluate(
+          (e) => (e as HTMLImageElement).complete && (e as HTMLImageElement).naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
+  }
+  await page.evaluate(() => {
+    scrollTo(0, 0);
+    const main = document.querySelector('main');
+    if (main) main.scrollTop = 0;
+  });
   const images = await page.locator('img:visible').evaluateAll((elements) =>
     elements.map((element) => {
       const image = element as HTMLImageElement,
@@ -126,7 +145,7 @@ for (const size of sizes)
     const desktop = size.width > 768;
     const header = page.locator('header:visible');
     await expect(header).toHaveCount(1);
-    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 54);
+    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
     const headerTargets = await header
       .locator('button:visible, a:visible')
       .evaluateAll((elements) =>
@@ -164,7 +183,9 @@ for (const size of sizes)
       await page.screenshot({ path: info.outputPath('desktop-expanded.png') });
       await toggle.focus();
       await page.keyboard.press('Enter');
-      expect(Math.round((await side.boundingBox())!.width)).toBe(72);
+      // The collapse control changes state immediately, while its existing width
+      // transition finishes on the next frames in the built preview.
+      await expect.poll(async () => Math.round((await side.boundingBox())!.width)).toBe(72);
       await expect(page.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toBeFocused();
       await page.screenshot({ path: info.outputPath('desktop-collapsed.png') });
       await page.keyboard.press('Enter');
@@ -188,12 +209,15 @@ for (const size of sizes)
       ).toBeVisible();
     } else {
       const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
-      expect(Math.round(logo.x + logo.width / 2)).toBe(size.width / 2);
-      expect(Math.round(logo.width)).toBe(112);
-      const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+      expect(Math.round(logo.width)).toBe(size.width <= 360 ? 112 : 130);
+      expect(Math.round(logo.x)).toBe(16);
+      const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
-      expect((await menu.boundingBox())!.x).toBeLessThan(logo.x);
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
+      expect((await menu.boundingBox())!.x).toBeGreaterThan(
+        (await account.boundingBox())!.x + (await account.boundingBox())!.width,
+      );
+      await expect(menu).toHaveText('Menu');
       await expect(header.getByRole('heading')).toHaveCount(0);
       const title = page
         .locator('main')
@@ -205,7 +229,11 @@ for (const size of sizes)
       await menu.click();
       const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
       await expect(drawer).toBeVisible();
-      expect((await drawer.boundingBox())!.width).toBeLessThanOrEqual(280);
+      expect(Math.round((await drawer.boundingBox())!.width)).toBe(
+        Math.round(Math.min(300, size.width * 0.86)),
+      );
+      await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' })).toBeVisible();
+      await expect(drawer.getByRole('img', { name: 'Wolfari' })).toBeVisible();
       const settings = drawer.getByRole('link', { name: 'Cài đặt', exact: true });
       await settings.scrollIntoViewIfNeeded();
       const settingBox = (await settings.boundingBox())!,
@@ -275,18 +303,17 @@ test('mobile scroll waits for the lazy Plan route after drawer navigation', asyn
   const planGate = new Promise<void>((resolve) => {
     releasePlan = resolve;
   });
-  await page.route('**/src/features/plan/PlanPage.tsx*', async (route) => {
+  const planModule = /\/(?:src\/features\/plan\/PlanPage\.tsx|assets\/PlanPage-[^/]+\.js)(?:\?|$)/;
+  await page.route(planModule, async (route) => {
     await planGate;
     await route.continue();
   });
   try {
     await page.goto(tripPath);
     await expectRouteContent(page, tripPath);
-    await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+    await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
-    const planRequest = page.waitForRequest(
-      (request) => new URL(request.url()).pathname === '/src/features/plan/PlanPage.tsx',
-    );
+    const planRequest = page.waitForRequest((request) => planModule.test(request.url()));
     await drawer.getByRole('link', { name: 'Lịch trình', exact: true }).click();
     await planRequest;
     await expect(drawer).not.toBeVisible();
@@ -320,21 +347,29 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
   await expect(page.getByRole('link', { name: 'Đến nội dung chính' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
-  const menu = page.getByRole('button', { name: 'Mở điều hướng chuyến đi' });
+  const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
   await menu.click();
   const drawer = page.getByRole('dialog'),
     close = drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' });
   await expect(close).toBeFocused();
   for (let i = 0; i < 12; i++) {
     await page.keyboard.press('Tab');
-    expect(await page.evaluate(() => !!document.activeElement?.closest('dialog[open]'))).toBe(true);
+    expect(
+      await page.evaluate(
+        () => !!document.activeElement?.closest('[role="dialog"][data-state="open"]'),
+      ),
+    ).toBe(true);
   }
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   await page.keyboard.press('Escape');
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe('hidden');
   await menu.click();
+  await expect(close).toBeFocused();
+  // A raw mouse click has no locator actionability checks. Wait for the reopened
+  // drawer to be interactive before exercising dismissal through its backdrop.
+  await close.click({ trial: true });
   await page.mouse.click(390, 200);
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
@@ -407,11 +442,22 @@ for (const route of routes)
     if (route.startsWith('/trips/')) {
       await choose(page, 'forbidden-snapshot');
       await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
-      await page.getByRole('button', { name: 'Mở điều hướng chuyến đi' }).click();
+      await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
       const drawer = page.getByRole('dialog');
-      for (const button of await drawer.getByRole('navigation').getByRole('button').all())
+      const drawerNav = drawer.getByRole('navigation');
+      await expect(drawerNav.getByRole('link', { name: 'Chuyến đi của tôi' })).toBeVisible();
+      await expect(drawerNav.getByRole('link', { name: 'Hồ sơ cá nhân' })).toBeVisible();
+      await expect(drawerNav.locator('a[aria-current="page"]')).toHaveCount(0);
+      for (const button of await drawerNav.getByRole('button').all())
         await expect(button).toBeDisabled();
       await page.keyboard.press('Escape');
+      if (route === tripPath) {
+        await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
+        await drawerNav.getByRole('link', { name: 'Chuyến đi của tôi' }).click();
+        await expect(page).toHaveURL('/trips');
+        await expect(drawer).not.toBeVisible();
+        await expect(page.locator('main')).toBeFocused();
+      }
     }
   });
 
@@ -425,7 +471,7 @@ for (const size of [
     await page.goto('/admin');
     await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
     await choose(page, 'admin');
-    await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
+    await expect(page.getByText('Chức năng quản trị chưa khả dụng', { exact: true })).toBeVisible();
     await loadedAssets(page);
     if (size.width > 768) {
       await page.screenshot({ path: info.outputPath('admin.png') });
@@ -484,6 +530,96 @@ test('Guest public/auth pages have responsive header and natural scrolling', asy
       expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
     }
   }
+});
+
+test('CP04 Web Home guest menu and 404 recovery keep public routes distinct', async ({
+  page,
+}, info) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.goto('/');
+  for (const section of ['hero', 'features', 'about', 'inspiration', 'footer'])
+    await expect(page.locator(`[data-layout="home-${section}"]`)).toBeVisible();
+  await expect(page.getByText(/Trên trình duyệt máy tính hoặc điện thoại/)).toBeVisible();
+  const header = page.locator('header:visible').first();
+  const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
+  const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
+  expect(Math.round(logo.x)).toBe(16);
+  expect((await menu.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
+  await expect(header.getByRole('link', { name: 'Đăng nhập' })).toHaveCount(0);
+  await menu.click();
+  const drawer = page.getByRole('dialog', { name: 'Điều hướng chính' });
+  await expect(drawer).toBeVisible();
+  await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chính' })).toBeFocused();
+  const nav = drawer.getByRole('navigation', { name: 'Điều hướng chính' });
+  await expect(nav.getByRole('link', { name: 'Đăng nhập' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Đăng ký' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Quỹ nhóm' })).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('cp04-home-guest-menu-402.png') });
+  await page.keyboard.press('Escape');
+  await expect(drawer).not.toBeVisible();
+  await expect(menu).toBeFocused();
+
+  await page.goto('/missing-shell-page');
+  await expect(page.locator('main')).toBeFocused();
+  await expect(page.getByRole('heading', { name: 'Không tìm thấy trang' })).toBeVisible();
+  await page.screenshot({ path: info.outputPath('cp04-404-402.png') });
+  await page.locator('main').getByRole('link', { name: 'Về trang chủ' }).click();
+  await expect(page).toHaveURL('/');
+  await expect(page.getByRole('heading', { level: 1, name: /Cho những/ })).toBeVisible();
+});
+
+test('CP04 authenticated Web Home keeps account and inbox access beside Menu', async ({
+  page,
+}, info) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.goto('/login');
+  await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
+  await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
+  await expect(page).toHaveURL('/');
+  const header = page.locator('header:visible').first();
+  await expect(header.getByRole('button', { name: 'Thông báo' })).toBeVisible();
+  await expect(header.getByRole('link', { name: /Hồ sơ cá nhân/ })).toBeVisible();
+  const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
+  await expect(menu).toHaveText('Menu');
+  expect((await menu.boundingBox())!.x).toBeGreaterThan(
+    (await header.getByRole('link', { name: /Hồ sơ cá nhân/ }).boundingBox())!.x,
+  );
+  await page.screenshot({ path: info.outputPath('cp04-home-user-402.png') });
+  await menu.click();
+  await expect(
+    page
+      .getByRole('dialog', { name: 'Điều hướng chính' })
+      .getByRole('link', { name: 'Chuyến đi của tôi' }),
+  ).toBeVisible();
+});
+
+test('CP04 Web trip drawer follows the approved navigation composition', async ({ page }, info) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.goto(tripPath + '/fund');
+  const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
+  await menu.click();
+  const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
+  await expect(drawer.getByRole('img', { name: 'Wolfari' })).toBeVisible();
+  await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' })).toBeFocused();
+  const nav = drawer.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
+  await expect(nav.getByRole('link')).toHaveCount(11);
+  await expect(nav.getByRole('link', { name: 'Chuyến đi của tôi' })).toHaveAttribute(
+    'href',
+    '/trips',
+  );
+  await expect(nav.getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute(
+    'href',
+    '/profile',
+  );
+  await expect(nav.getByRole('link', { name: 'Quỹ nhóm' })).toHaveAttribute('aria-current', 'page');
+  await expect(nav.locator('a[aria-current="page"]')).toHaveCount(1);
+  await expect(nav.getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
+    'aria-current',
+  );
+  await expect(drawer.locator('img[class*="drawerMascot"]')).toBeVisible();
+  await page.screenshot({ path: info.outputPath('cp04-trip-menu-402.png') });
+  await drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' }).click();
+  await expect(menu).toBeFocused();
 });
 
 test('guest assets and expanded sidebar decorations retain source geometry', async ({

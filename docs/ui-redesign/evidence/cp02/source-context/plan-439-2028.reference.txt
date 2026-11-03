@@ -1,0 +1,777 @@
+# Read-only MCP get_design_context evidence
+Date: 2026-10-30 Asia/Saigon
+File: hdy2sOZk6rfjKXKDJ9HW9y
+Node: 439:2028
+Session: 4b9d8dd5-c1dd-4b8f-80ac-52e8fa71bfac
+Purpose: CP02 spec only, not executable app source. Screenshot excluded because four same-day source captures already inspected; see ../figma-plan-review-2026-10-30/. Temporary URLs removed; resolve original assets again before implementation.
+
+const imgIcon = "[TEMP_ASSET_URL_REMOVED]";
+const imgReadingMascot = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconTngQuan = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconBnDDaDim = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconLchTrinh = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconDressCode = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconPackingList = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconThanhVien = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconQuNhom = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconTheoDoiGiaVe = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarIconCaiDt = "[TEMP_ASSET_URL_REMOVED]";
+const imgSidebarRouteDeco = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialLogo = "[TEMP_ASSET_URL_REMOVED]";
+const imgOfficialMascot = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon2 = "[TEMP_ASSET_URL_REMOVED]";
+const imgIcon3 = "[TEMP_ASSET_URL_REMOVED]";
+const imgNotification = "[TEMP_ASSET_URL_REMOVED]";
+const imgScheduleHeroImage = "[TEMP_ASSET_URL_REMOVED]";
+const imgImage = "[TEMP_ASSET_URL_REMOVED]";
+const imgImage1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgImage2 = "[TEMP_ASSET_URL_REMOVED]";
+const imgImage3 = "[TEMP_ASSET_URL_REMOVED]";
+const imgScheduleHeroCloud = "[TEMP_ASSET_URL_REMOVED]";
+const imgStatusDot = "[TEMP_ASSET_URL_REMOVED]";
+const imgPresence0 = "[TEMP_ASSET_URL_REMOVED]";
+const imgPresence1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgPresence2 = "[TEMP_ASSET_URL_REMOVED]";
+const imgPresence3 = "[TEMP_ASSET_URL_REMOVED]";
+const imgPlus = "[TEMP_ASSET_URL_REMOVED]";
+const imgMetricIcon0Icon = "[TEMP_ASSET_URL_REMOVED]";
+const imgMetricIcon1Icon = "[TEMP_ASSET_URL_REMOVED]";
+const imgMetricIcon2Icon = "[TEMP_ASSET_URL_REMOVED]";
+const imgMetricIcon3Icon = "[TEMP_ASSET_URL_REMOVED]";
+const imgStep1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgDrag = "[TEMP_ASSET_URL_REMOVED]";
+const imgTypeIcon = "[TEMP_ASSET_URL_REMOVED]";
+const imgMore = "[TEMP_ASSET_URL_REMOVED]";
+const imgCar = "[TEMP_ASSET_URL_REMOVED]";
+const imgTypeIcon1 = "[TEMP_ASSET_URL_REMOVED]";
+const imgTypeIcon2 = "[TEMP_ASSET_URL_REMOVED]";
+const imgTypeIcon3 = "[TEMP_ASSET_URL_REMOVED]";
+const imgProgressRing = "[TEMP_ASSET_URL_REMOVED]";
+const imgProgressInner = "[TEMP_ASSET_URL_REMOVED]";
+const imgIconIcon = "[TEMP_ASSET_URL_REMOVED]";
+
+type ButtonPrimaryProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonPrimary({ className, label = "Tạo chuyến đi" }: ButtonPrimaryProps) {
+  return (
+    <div className={className || "bg-gradient-to-r content-stretch flex from-[#008ac4] gap-[8px] h-[44px] items-center justify-center relative rounded-[18px] to-[#008eaa] w-[170px]"} data-node-id="11:9" data-name="Button/Primary">
+      <div className="relative shrink-0 size-[18px]" data-node-id="11:10" data-name="Icon">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon} />
+      </div>
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-white,white)] whitespace-nowrap" data-node-id="11:13">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+type ButtonOutlineProps = {
+  className?: string;
+  label?: string;
+};
+
+function ButtonOutline({ className, label = "Xem chi tiết" }: ButtonOutlineProps) {
+  return (
+    <div className={className || "bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch flex h-[44px] items-center justify-center relative rounded-[18px] w-[150px]"} data-node-id="11:14" data-name="Button/Outline">
+      <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[15px] text-[color:var(--wolfari-color-ink,#06458b)] whitespace-nowrap" data-node-id="11:15">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function LandingMascotReading({ className }: { className?: string }) {
+  return (
+    <div className={className || "overflow-clip relative size-[150px]"} data-node-id="33:502" data-name="Landing/Mascot/Reading">
+      <div className="absolute left-0 size-[150px] top-0" data-node-id="33:503" data-name="Reading mascot">
+        <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgReadingMascot} />
+      </div>
+    </div>
+  );
+}
+
+type WolfariTripSidebarProps = {
+  className?: string;
+  active?: "Schedule";
+  state?: "Expanded";
+};
+
+function WolfariTripSidebar({ className, active = "Schedule", state = "Expanded" }: WolfariTripSidebarProps) {
+  return (
+    <div className={className || "bg-white h-[884px] relative w-[220px]"} data-node-id="135:608">
+      <div className="absolute bg-[#e8f7fa] h-[42px] left-[8px] rounded-[7px] top-[116px] w-[204px]" data-node-id="135:609" data-name="active nav" />
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[23px] w-[156px]" data-node-id="135:611">
+        Tổng quan chuyến đi
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#079fc5] text-[13px] top-[127px] w-[156px]" data-node-id="135:613">
+        Lịch trình
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[75px] w-[156px]" data-node-id="135:615">
+        Bản đồ địa điểm
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[179px] w-[156px]" data-node-id="135:617">
+        Dress code
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[231px] w-[156px]" data-node-id="135:619">
+        Packing list
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[335px] w-[156px]" data-node-id="135:621">
+        Quỹ nhóm
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[387px] w-[156px]" data-node-id="135:623">
+        Theo dõi giá vé
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[283px] w-[156px]" data-node-id="135:625">
+        Thành viên
+      </p>
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[52px] not-italic text-[#0a55a1] text-[13px] top-[439px] w-[156px]" data-node-id="135:629">
+        Cài đặt
+      </p>
+      <LandingMascotReading className="absolute left-[25px] overflow-clip size-[166px] top-[638px]" />
+      <div className="[word-break:break-word] absolute font-['Caveat:Bold'] font-bold h-[48px] leading-[0] left-[34px] text-[#079cc5] text-[18px] top-[558px] w-[150px]" data-node-id="135:631">
+        <p className="leading-[52px] mb-0">Cùng bạn</p>
+        <p className="leading-[52px]">đi xa hơn!</p>
+      </div>
+      <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] leading-[32px] left-[110px] not-italic text-[24px] text-[color:var(--wolfari-color-blue,#0089c7)] text-center top-[808px] w-[64px]" data-node-id="135:632">
+        «
+      </p>
+      <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] leading-[20px] left-[115px] not-italic text-[13px] text-[color:var(--wolfari-color-muted,#6c8bb2)] text-center top-[840px] w-[80px]" data-node-id="135:633">
+        Thu gọn
+      </p>
+      <div className="absolute bg-[#079fc5] h-[42px] left-[8px] rounded-[2px] top-[116px] w-[4px]" data-node-id="135:634" data-name="Sidebar/Active edge" />
+      <div className="absolute left-[24px] size-[22px] top-[22px]" data-node-id="135:639" data-name="Sidebar/Icon Tổng quan">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconTngQuan} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[74px]" data-node-id="135:641" data-name="Sidebar/Icon Bản đồ địa điểm">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconBnDDaDim} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[126px]" data-node-id="135:644" data-name="Sidebar/Icon Lịch trình">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconLchTrinh} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[178px]" data-node-id="135:647" data-name="Sidebar/Icon Dress code">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconDressCode} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[230px]" data-node-id="135:649" data-name="Sidebar/Icon Packing list">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconPackingList} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[282px]" data-node-id="135:652" data-name="Sidebar/Icon Thành viên">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconThanhVien} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[334px]" data-node-id="135:656" data-name="Sidebar/Icon Quỹ nhóm">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconQuNhom} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[386px]" data-node-id="135:659" data-name="Sidebar/Icon Theo dõi giá vé">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconTheoDoiGiaVe} />
+      </div>
+      <div className="absolute left-[24px] size-[22px] top-[438px]" data-node-id="135:662" data-name="Sidebar/Icon Cài đặt">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarIconCaiDt} />
+      </div>
+      <div className="absolute bg-[#d7eaf2] h-[884px] left-[219px] top-0 w-px" data-node-id="135:665" data-name="Sidebar/Divider" />
+      <div className="absolute h-[40px] left-[42px] top-[606px] w-[145px]" data-node-id="135:666" data-name="Sidebar/Route deco">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSidebarRouteDeco} />
+      </div>
+    </div>
+  );
+}
+
+type WolfariHeaderProps = {
+  className?: string;
+  active?: "Trips";
+};
+
+function WolfariHeader({ className, active = "Trips" }: WolfariHeaderProps) {
+  return (
+    <div className={className || "bg-white border border-[#dff0f7] border-solid h-[76px] overflow-clip relative shadow-[0px_2px_10px_0px_rgba(10,87,138,0.05)] w-[1440px]"} data-node-id="135:406">
+      <div className="absolute h-[51.667px] left-[49px] overflow-clip top-[9px] w-[155px]" data-node-id="135:407" data-name="Brand/Logo">
+        <div className="absolute h-[51.667px] left-0 top-0 w-[155px]" data-node-id="I135:407;14:3" data-name="Official logo">
+          <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialLogo} />
+        </div>
+      </div>
+      <div className="absolute bg-white content-stretch flex gap-[26px] h-[46px] items-center left-[457px] overflow-clip top-[14px] w-[525px]" data-node-id="135:409" data-name="Header / navigation">
+        <div className="bg-white content-stretch flex gap-[8px] items-center justify-center overflow-clip px-[6px] relative shrink-0" data-node-id="135:410" data-name="Nav / Tổng quan">
+          <div className="relative shrink-0 size-[20px]" data-node-id="135:411" data-name="icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon1} />
+          </div>
+          <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[#0a55a1] text-[14.5px] whitespace-nowrap" data-node-id="135:413">
+            Trang chủ
+          </p>
+        </div>
+        <div className="bg-white content-stretch flex gap-[8px] items-center justify-center overflow-clip px-[6px] relative shrink-0" data-node-id="135:414" data-name="Nav / Chuyến đi của tôi">
+          <div className="relative shrink-0 size-[20px]" data-node-id="135:415" data-name="icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon2} />
+          </div>
+          <p className="[word-break:break-word] font-['Be_Vietnam_Pro:SemiBold'] leading-[22px] not-italic relative shrink-0 text-[#079fc5] text-[14.5px] whitespace-nowrap" data-node-id="135:417">
+            Chuyến đi của tôi
+          </p>
+        </div>
+        <div className="bg-white content-stretch flex gap-[8px] items-center justify-center overflow-clip px-[6px] relative shrink-0" data-node-id="135:426" data-name="Nav / Lên lịch">
+          <div className="relative shrink-0 size-[20px]" data-node-id="135:427" data-name="icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIcon3} />
+          </div>
+          <p className="[word-break:break-word] font-['Be_Vietnam_Pro:Medium'] leading-[22px] not-italic relative shrink-0 text-[#0a55a1] text-[14.5px] w-[60px]" data-node-id="135:429">
+            Lên lịch
+          </p>
+        </div>
+      </div>
+      <div className="absolute bg-[#079fc5] h-[3px] left-[607px] rounded-[2px] top-[71px] w-[166px]" data-node-id="135:418" data-name="Active underline" />
+      <div className="absolute bg-white content-stretch flex gap-[12px] h-[50px] items-center justify-center left-[1139px] overflow-clip top-[12px] w-[260px]" data-node-id="135:419" data-name="Header / account">
+        <div className="relative shrink-0 size-[22px]" data-node-id="135:420" data-name="notification">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgNotification} />
+        </div>
+        <div className="bg-[#fff6ef] border-2 border-[#41b5d2] border-solid overflow-clip relative rounded-[20px] shrink-0 size-[40px]" data-node-id="135:423" data-name="Avatar">
+          <div className="absolute left-[-14px] overflow-clip size-[64px] top-[-9px]" data-node-id="135:424" data-name="Avatar / Wolfari">
+            <div className="absolute left-0 size-[64px] top-0" data-node-id="I135:424;14:5" data-name="Official mascot">
+              <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" src={imgOfficialMascot} />
+            </div>
+          </div>
+        </div>
+        <p className="[word-break:break-word] font-['Be_Vietnam_Pro:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[#075495] text-[13.5px] whitespace-nowrap" data-node-id="135:425">
+          Trang Nguyễn ⌄
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function Component061LchTrinhChaXpLch() {
+  return (
+    <div className="bg-[#f6fdff] relative size-full" data-node-id="439:2028" data-name="06.1 · Lịch trình — Chưa xếp lịch">
+      <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] font-medium h-[10px] leading-[normal] left-[238px] text-[#547aad] text-[14px] top-[88px] w-[650px] whitespace-pre-wrap" data-node-id="439:2029" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`⌂   Chuyến đi của tôi   ›   Đà Nẵng 3N2Đ   ›   Lịch trình`}</p>
+      <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[150px] left-[238px] overflow-clip rounded-[10px] top-[116px] w-[1180px]" data-node-id="439:2030" data-name="Schedule/Hero">
+        <div className="absolute h-[150px] left-[-1px] rounded-[10px] top-[-1px] w-[1180px]" data-node-id="439:2031" data-name="Schedule/Hero image">
+          <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[10px] size-full" src={imgScheduleHeroImage} />
+        </div>
+        <div className="absolute h-[150px] left-[-1px] top-[-1px] w-[610px]" data-node-id="439:2032" data-name="Schedule/Hero cloud">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgScheduleHeroCloud} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[33px] not-italic text-[#044791] text-[32px] top-[33px] w-[330px]" data-node-id="439:2034">
+          Đà Nẵng 3N2Đ
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] font-semibold h-[10px] leading-[normal] left-[33px] text-[#044791] text-[15px] top-[85px] w-[210px] whitespace-pre-wrap" data-node-id="439:2035" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`▣  12 – 14/10/2026`}</p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] font-semibold h-[10px] leading-[normal] left-[249px] text-[#044791] text-[15px] top-[85px] w-[170px] whitespace-pre-wrap" data-node-id="439:2036" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`♙  4 thành viên`}</p>
+        <div className="absolute bg-[#e5faf0] h-[34px] left-[431px] overflow-clip rounded-[17px] top-[77px] w-[112px]" data-node-id="439:2037" data-name="Trip status">
+          <div className="absolute left-[12px] size-[12px] top-[11px]" data-node-id="439:2038" data-name="status dot">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStatusDot} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:SemiBold'] h-[10px] leading-[normal] left-[32px] not-italic text-[#0ea67d] text-[13px] top-[7px] w-[68px]" data-node-id="439:2039">
+            Sắp tới
+          </p>
+        </div>
+        <ButtonOutline className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center left-[864px] rounded-[8px] top-[85px] w-[132px]" label="Chỉnh sửa" />
+        <ButtonPrimary className="absolute bg-gradient-to-r content-stretch cursor-pointer flex from-[#008ac4] gap-[8px] h-[44px] items-center justify-center left-[1011px] rounded-[8px] to-[#008eaa] top-[85px] w-[138px]" label="Chia sẻ" />
+        <div className="absolute h-[26px] left-[33px] overflow-clip top-[117px] w-[190px]" data-node-id="439:2042" data-name="Presence stack">
+          <div className="absolute left-0 size-[26px] top-0" data-node-id="439:2043" data-name="presence 0">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPresence0} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[13px] not-italic text-[10px] text-center text-white top-[5px] w-[26px]" data-node-id="439:2044">
+            T
+          </p>
+          <div className="absolute left-[22px] size-[26px] top-0" data-node-id="439:2045" data-name="presence 1">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPresence1} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[10px] text-center text-white top-[5px] w-[26px]" data-node-id="439:2046">
+            H
+          </p>
+          <div className="absolute left-[44px] size-[26px] top-0" data-node-id="439:2047" data-name="presence 2">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPresence2} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[57px] not-italic text-[10px] text-center text-white top-[5px] w-[26px]" data-node-id="439:2048">
+            Q
+          </p>
+          <div className="absolute left-[66px] size-[26px] top-0" data-node-id="439:2049" data-name="presence 3">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPresence3} />
+          </div>
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[79px] not-italic text-[10px] text-center text-white top-[5px] w-[26px]" data-node-id="439:2050">
+            +1
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[94px] not-italic text-[#547aad] text-[10px] top-[5px] w-[96px]" data-node-id="439:2051">
+            + 3 đang online
+          </p>
+        </div>
+      </div>
+      <div className="absolute h-[54px] left-[238px] overflow-clip top-[282px] w-[1180px]" data-node-id="439:2052" data-name="Schedule/Day selector">
+        <div className="[word-break:break-word] absolute bg-[#009da9] border border-[#bfe5f5] border-solid h-[54px] leading-[normal] left-0 not-italic overflow-clip rounded-[8px] text-center text-white top-0 w-[128px]" data-node-id="439:2053" data-name="Day/Ngày 1">
+          <p className="-translate-x-1/2 absolute font-['Be_Vietnam_Pro:SemiBold'] h-[10px] left-[63px] text-[14px] top-[7px] w-[128px]" data-node-id="439:2054">
+            Ngày 1
+          </p>
+          <p className="-translate-x-1/2 absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] left-[63px] text-[11px] top-[28px] w-[128px]" data-node-id="439:2055">
+            12/10
+          </p>
+        </div>
+        <div className="[word-break:break-word] absolute bg-white border border-[#bfe5f5] border-solid h-[54px] leading-[normal] left-[140px] not-italic overflow-clip rounded-[8px] text-center top-0 w-[128px]" data-node-id="439:2056" data-name="Day/Ngày 2">
+          <p className="-translate-x-1/2 absolute font-['Be_Vietnam_Pro:SemiBold'] h-[10px] left-[63px] text-[#044791] text-[14px] top-[7px] w-[128px]" data-node-id="439:2057">
+            Ngày 2
+          </p>
+          <p className="-translate-x-1/2 absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] left-[63px] text-[#547aad] text-[11px] top-[28px] w-[128px]" data-node-id="439:2058">
+            13/10
+          </p>
+        </div>
+        <div className="[word-break:break-word] absolute bg-white border border-[#bfe5f5] border-solid h-[54px] leading-[normal] left-[280px] not-italic overflow-clip rounded-[8px] text-center top-0 w-[128px]" data-node-id="439:2059" data-name="Day/Ngày 3">
+          <p className="-translate-x-1/2 absolute font-['Be_Vietnam_Pro:SemiBold'] h-[10px] left-[63px] text-[#044791] text-[14px] top-[7px] w-[128px]" data-node-id="439:2060">
+            Ngày 3
+          </p>
+          <p className="-translate-x-1/2 absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] left-[63px] text-[#547aad] text-[11px] top-[28px] w-[128px]" data-node-id="439:2061">
+            14/10
+          </p>
+        </div>
+        <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[54px] left-[424px] overflow-clip rounded-[8px] top-0 w-[142px]" data-node-id="439:2062" data-name="Day/Add">
+          <div className="absolute left-[15px] size-[22px] top-[14px]" data-node-id="439:2063" data-name="plus">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPlus} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] h-[10px] leading-[normal] left-[43px] not-italic text-[#044791] text-[14px] top-[14px] w-[84px]" data-node-id="439:2065">
+            Thêm ngày
+          </p>
+        </div>
+      </div>
+      <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[74px] left-[238px] overflow-clip rounded-[10px] top-[350px] w-[1180px]" data-node-id="439:2066" data-name="Schedule/Day overview">
+        <div className="absolute bg-[#e5faf7] left-[17px] overflow-clip rounded-[23px] size-[46px] top-[13px]" data-node-id="439:2067" data-name="metric icon 0">
+          <div className="absolute left-[11px] size-[24px] top-[11px]" data-node-id="439:2068" data-name="metric icon 0/icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMetricIcon0Icon} />
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[75px] not-italic text-[#009da9] text-[18px] top-[13px] w-[170px]" data-node-id="439:2070">
+          6
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[75px] not-italic text-[#547aad] text-[12.5px] top-[38px] w-[190px]" data-node-id="439:2071">
+          Hoạt động
+        </p>
+        <div className="absolute bg-[#d6edf7] h-[40px] left-[287px] top-[16px] w-px" data-node-id="439:2072" data-name="divider 1" />
+        <div className="absolute bg-[#ffedf0] left-[299px] overflow-clip rounded-[23px] size-[46px] top-[13px]" data-node-id="439:2073" data-name="metric icon 1">
+          <div className="absolute left-[11px] size-[24px] top-[11px]" data-node-id="439:2074" data-name="metric icon 1/icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMetricIcon1Icon} />
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[357px] not-italic text-[#f04752] text-[18px] top-[13px] w-[170px]" data-node-id="439:2077">
+          6
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[357px] not-italic text-[#547aad] text-[12.5px] top-[38px] w-[190px]" data-node-id="439:2078">
+          Địa điểm
+        </p>
+        <div className="absolute bg-[#d6edf7] h-[40px] left-[553px] top-[16px] w-px" data-node-id="439:2079" data-name="divider 2" />
+        <div className="absolute bg-[#fff2de] left-[565px] overflow-clip rounded-[23px] size-[46px] top-[13px]" data-node-id="439:2080" data-name="metric icon 2">
+          <div className="absolute left-[11px] size-[24px] top-[11px]" data-node-id="439:2081" data-name="metric icon 2/icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMetricIcon2Icon} />
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[623px] not-italic text-[#ffb014] text-[18px] top-[13px] w-[170px]" data-node-id="439:2084">
+          ~9h15
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[623px] not-italic text-[#547aad] text-[12.5px] top-[38px] w-[190px]" data-node-id="439:2085">
+          Trải nghiệm
+        </p>
+        <div className="absolute bg-[#d6edf7] h-[40px] left-[833px] top-[16px] w-px" data-node-id="439:2086" data-name="divider 3" />
+        <div className="absolute bg-[#e5f7ff] left-[845px] overflow-clip rounded-[23px] size-[46px] top-[13px]" data-node-id="439:2087" data-name="metric icon 3">
+          <div className="absolute left-[11px] size-[24px] top-[11px]" data-node-id="439:2088" data-name="metric icon 3/icon">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMetricIcon3Icon} />
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[903px] not-italic text-[#0ea67d] text-[18px] top-[13px] w-[170px]" data-node-id="439:2092">
+          1h20
+        </p>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[903px] not-italic text-[#547aad] text-[12.5px] top-[38px] w-[190px]" data-node-id="439:2093">
+          Di chuyển (tổng)
+        </p>
+      </div>
+      <WolfariHeader className="absolute bg-white border border-[#dff0f7] border-solid h-[76px] left-0 overflow-clip shadow-[0px_2px_10px_0px_rgba(10,87,138,0.05)] top-0 w-[1440px]" />
+      <WolfariTripSidebar className="absolute bg-white h-[884px] left-0 top-[76px] w-[220px]" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[56px] left-[50px] rounded-[6px] top-[8px] w-[160px]" data-node-id="439:2222" data-name="Prototype/Header/Logo" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[60px] left-[450px] rounded-[6px] top-[8px] w-[126px]" data-node-id="439:2223" data-name="Prototype/Header/Home" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[60px] left-[585px] rounded-[6px] top-[8px] w-[178px]" data-node-id="439:2224" data-name="Prototype/Header/Trips" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[60px] left-[777px] rounded-[6px] top-[8px] w-[120px]" data-node-id="439:2225" data-name="Prototype/Header/Schedule" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[56px] left-[1165px] rounded-[6px] top-[10px] w-[55px]" data-node-id="439:2226" data-name="Prototype/Header/Bell" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[60px] left-[1218px] rounded-[6px] top-[8px] w-[180px]" data-node-id="439:2227" data-name="Prototype/Header/Profile" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[88px] w-[206px]" data-node-id="439:2228" data-name="Prototype/Sidebar/Overview" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[140px] w-[206px]" data-node-id="439:2229" data-name="Prototype/Sidebar/Map" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[244px] w-[206px]" data-node-id="439:2230" data-name="Prototype/Sidebar/Dress" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[296px] w-[206px]" data-node-id="439:2231" data-name="Prototype/Sidebar/Packing" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[348px] w-[206px]" data-node-id="439:2232" data-name="Prototype/Sidebar/Members" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[400px] w-[206px]" data-node-id="439:2233" data-name="Prototype/Sidebar/Fund" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[452px] w-[206px]" data-node-id="439:2234" data-name="Prototype/Sidebar/Fare" />
+      <a className="absolute bg-[rgba(255,255,255,0)] block cursor-pointer h-[44px] left-[8px] rounded-[6px] top-[504px] w-[206px]" data-node-id="439:2235" data-name="Prototype/Sidebar/Settings" />
+      <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[498px] left-[238px] overflow-clip rounded-[10px] top-[438px] w-[680px]" data-node-id="439:2321" data-name="Schedule/Main timeline">
+        <div className="absolute h-[414px] left-[-1px] overflow-x-clip overflow-y-auto top-[67px] w-[666px]" data-node-id="486:3174" data-name="Schedule/Timeline viewport">
+          <div className="absolute h-[612px] left-0 overflow-clip top-0 w-[666px]" data-node-id="486:3175" data-name="Schedule/Timeline scroll content">
+            <div className="absolute bg-[#0488cc] h-[574px] left-[35px] top-[8px] w-[2px]" data-node-id="439:2333" data-name="spine" />
+            <div className="absolute left-[18px] size-[34px] top-[19px]" data-node-id="439:2334" data-name="step 1">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStep1} />
+            </div>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[12px] text-center text-white top-[26px] w-[34px]" data-node-id="439:2335">
+              1
+            </p>
+            <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[70px] left-[62px] overflow-clip rounded-[8px] top-0 w-[600px]" data-node-id="439:2336" data-name="Activity row 1">
+              <div className="absolute h-[24px] left-[11px] top-[21px] w-[16px]" data-node-id="439:2337" data-name="drag">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+              </div>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[37px] top-[15px] w-px" data-node-id="439:2344" data-name="sep1" />
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[51px] not-italic text-[#044791] text-[12.5px] top-[21px] w-[112px]" data-node-id="439:2345">
+                08:00 – 10:30
+              </p>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[163px] top-[15px] w-px" data-node-id="439:2346" data-name="sep2" />
+              <div className="absolute bg-[#e5faf2] left-[177px] overflow-clip rounded-[21px] size-[42px] top-[13px]" data-node-id="439:2347" data-name="type">
+                <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="439:2348" data-name="type/icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[231px] not-italic text-[#044791] text-[13.5px] top-[12px] w-[210px]" data-node-id="439:2351">
+                Bán đảo Sơn Trà
+              </p>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[231px] text-[#547aad] text-[10.5px] top-[37px] w-[250px]" data-node-id="439:2352" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                ⌖ Hoàng Sa, Sơn Trà
+              </p>
+              <div className="absolute h-[52px] left-[444px] rounded-[6px] top-[8px] w-[110px]" data-node-id="439:2353" data-name="image">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgImage} />
+              </div>
+              <div className="absolute left-[565px] size-[20px] top-[22px]" data-node-id="439:2354" data-name="more">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+              </div>
+            </div>
+            <div className="absolute h-[28px] left-[130px] overflow-clip top-[70px] w-[360px]" data-node-id="439:2358" data-name="travel 140">
+              <div className="absolute bg-[#0488cc] h-px left-0 top-[13px] w-[72px]" data-node-id="439:2359" data-name="line" />
+              <div className="absolute left-[84px] size-[20px] top-[3px]" data-node-id="439:2360" data-name="car">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCar} />
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[112px] not-italic text-[#547aad] text-[10.5px] top-[6px] w-[220px]" data-node-id="439:2364">
+                20 phút di chuyển (12 km)
+              </p>
+            </div>
+            <div className="absolute left-[18px] size-[34px] top-[123px]" data-node-id="439:2365" data-name="step 2">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStep1} />
+            </div>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[12px] text-center text-white top-[130px] w-[34px]" data-node-id="439:2366">
+              2
+            </p>
+            <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[70px] left-[62px] overflow-clip rounded-[8px] top-[104px] w-[600px]" data-node-id="439:2367" data-name="Activity row 2">
+              <div className="absolute h-[24px] left-[11px] top-[21px] w-[16px]" data-node-id="439:2368" data-name="drag">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+              </div>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[37px] top-[15px] w-px" data-node-id="439:2375" data-name="sep1" />
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[51px] not-italic text-[#044791] text-[12.5px] top-[21px] w-[112px]" data-node-id="439:2376">
+                11:30 – 13:00
+              </p>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[163px] top-[15px] w-px" data-node-id="439:2377" data-name="sep2" />
+              <div className="absolute bg-[#fff0e0] left-[177px] overflow-clip rounded-[21px] size-[42px] top-[13px]" data-node-id="439:2378" data-name="type">
+                <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="439:2379" data-name="type/icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon1} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[231px] not-italic text-[#044791] text-[13.5px] top-[12px] w-[210px]" data-node-id="439:2381">
+                Ăn trưa hải sản
+              </p>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[231px] text-[#547aad] text-[10.5px] top-[37px] w-[250px]" data-node-id="439:2382" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                ⌖ Võ Nguyên Giáp, Đà Nẵng
+              </p>
+              <div className="absolute h-[52px] left-[444px] rounded-[6px] top-[8px] w-[110px]" data-node-id="439:2383" data-name="image">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgScheduleHeroImage} />
+              </div>
+              <div className="absolute left-[565px] size-[20px] top-[22px]" data-node-id="439:2384" data-name="more">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+              </div>
+            </div>
+            <div className="absolute h-[28px] left-[130px] overflow-clip top-[174px] w-[360px]" data-node-id="439:2388" data-name="travel 244">
+              <div className="absolute bg-[#0488cc] h-px left-0 top-[13px] w-[72px]" data-node-id="439:2389" data-name="line" />
+              <div className="absolute left-[84px] size-[20px] top-[3px]" data-node-id="439:2390" data-name="car">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCar} />
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[112px] not-italic text-[#547aad] text-[10.5px] top-[6px] w-[220px]" data-node-id="439:2394">
+                15 phút di chuyển (7 km)
+              </p>
+            </div>
+            <div className="absolute left-[18px] size-[34px] top-[227px]" data-node-id="439:2395" data-name="step 3">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStep1} />
+            </div>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[12px] text-center text-white top-[234px] w-[34px]" data-node-id="439:2396">
+              3
+            </p>
+            <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[70px] left-[62px] overflow-clip rounded-[8px] top-[208px] w-[600px]" data-node-id="439:2397" data-name="Activity row 3">
+              <div className="absolute h-[24px] left-[11px] top-[21px] w-[16px]" data-node-id="439:2398" data-name="drag">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+              </div>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[37px] top-[15px] w-px" data-node-id="439:2405" data-name="sep1" />
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[51px] not-italic text-[#044791] text-[12.5px] top-[21px] w-[112px]" data-node-id="439:2406">
+                14:00 – 16:00
+              </p>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[163px] top-[15px] w-px" data-node-id="439:2407" data-name="sep2" />
+              <div className="absolute bg-[#fff7db] left-[177px] overflow-clip rounded-[21px] size-[42px] top-[13px]" data-node-id="439:2408" data-name="type">
+                <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="439:2409" data-name="type/icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon2} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[231px] not-italic text-[#044791] text-[13.5px] top-[12px] w-[210px]" data-node-id="439:2413">
+                Bãi biển Mỹ Khê
+              </p>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[231px] text-[#547aad] text-[10.5px] top-[37px] w-[250px]" data-node-id="439:2414" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                ⌖ Phước Mỹ, Đà Nẵng
+              </p>
+              <div className="absolute h-[52px] left-[444px] rounded-[6px] top-[8px] w-[110px]" data-node-id="439:2415" data-name="image">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgImage1} />
+              </div>
+              <div className="absolute left-[565px] size-[20px] top-[22px]" data-node-id="439:2416" data-name="more">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+              </div>
+            </div>
+            <div className="absolute h-[28px] left-[130px] overflow-clip top-[278px] w-[360px]" data-node-id="439:2420" data-name="travel 348">
+              <div className="absolute bg-[#0488cc] h-px left-0 top-[13px] w-[72px]" data-node-id="439:2421" data-name="line" />
+              <div className="absolute left-[84px] size-[20px] top-[3px]" data-node-id="439:2422" data-name="car">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCar} />
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[112px] not-italic text-[#547aad] text-[10.5px] top-[6px] w-[220px]" data-node-id="439:2426">
+                20 phút di chuyển (9 km)
+              </p>
+            </div>
+            <div className="absolute left-[18px] size-[34px] top-[331px]" data-node-id="439:2427" data-name="step 4">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStep1} />
+            </div>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[12px] text-center text-white top-[338px] w-[34px]" data-node-id="439:2428">
+              4
+            </p>
+            <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[70px] left-[62px] overflow-clip rounded-[8px] top-[312px] w-[600px]" data-node-id="439:2429" data-name="Activity row 4">
+              <div className="absolute h-[24px] left-[11px] top-[21px] w-[16px]" data-node-id="439:2430" data-name="drag">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+              </div>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[37px] top-[15px] w-px" data-node-id="439:2437" data-name="sep1" />
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[51px] not-italic text-[#044791] text-[12.5px] top-[21px] w-[112px]" data-node-id="439:2438">
+                19:00 – 20:30
+              </p>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[163px] top-[15px] w-px" data-node-id="439:2439" data-name="sep2" />
+              <div className="absolute bg-[#f2ebff] left-[177px] overflow-clip rounded-[21px] size-[42px] top-[13px]" data-node-id="439:2440" data-name="type">
+                <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="439:2441" data-name="type/icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon3} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[231px] not-italic text-[#044791] text-[13.5px] top-[12px] w-[210px]" data-node-id="439:2443">
+                Cầu Rồng
+              </p>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[231px] text-[#547aad] text-[10.5px] top-[37px] w-[250px]" data-node-id="439:2444" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                ⌖ Hải Châu, Đà Nẵng
+              </p>
+              <div className="absolute h-[52px] left-[444px] rounded-[6px] top-[8px] w-[110px]" data-node-id="439:2445" data-name="image">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgImage2} />
+              </div>
+              <div className="absolute left-[565px] size-[20px] top-[22px]" data-node-id="439:2446" data-name="more">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+              </div>
+            </div>
+            <div className="absolute h-[28px] left-[130px] overflow-clip top-[382px] w-[360px]" data-node-id="486:3176" data-name="travel 382">
+              <div className="absolute bg-[#0488cc] h-px left-0 top-[13px] w-[72px]" data-node-id="486:3177" data-name="line" />
+              <div className="absolute left-[84px] size-[20px] top-[3px]" data-node-id="486:3178" data-name="car">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCar} />
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[112px] not-italic text-[#547aad] text-[10.5px] top-[6px] w-[220px]" data-node-id="486:3182">
+                10 phút di chuyển (4 km)
+              </p>
+            </div>
+            <div className="absolute left-[18px] size-[34px] top-[435px]" data-node-id="486:3183" data-name="step 5">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStep1} />
+            </div>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[12px] text-center text-white top-[442px] w-[34px]" data-node-id="486:3184">
+              5
+            </p>
+            <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[70px] left-[62px] overflow-clip rounded-[8px] top-[416px] w-[600px]" data-node-id="486:3185" data-name="Activity row 5">
+              <div className="absolute h-[24px] left-[11px] top-[21px] w-[16px]" data-node-id="486:3186" data-name="drag">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+              </div>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[37px] top-[15px] w-px" data-node-id="486:3193" data-name="sep1" />
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[51px] not-italic text-[#044791] text-[12.5px] top-[21px] w-[112px]" data-node-id="486:3194">
+                21:00 – 22:00
+              </p>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[163px] top-[15px] w-px" data-node-id="486:3195" data-name="sep2" />
+              <div className="absolute bg-[#fff0e0] left-[177px] overflow-clip rounded-[21px] size-[42px] top-[13px]" data-node-id="486:3206" data-name="type">
+                <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="486:3207" data-name="type/icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon1} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[231px] not-italic text-[#044791] text-[13.5px] top-[12px] w-[210px]" data-node-id="486:3199">
+                Chợ đêm Sơn Trà
+              </p>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[231px] not-italic text-[#547aad] text-[10.5px] top-[37px] w-[250px]" data-node-id="486:3200">
+                Mai Hắc Đế, Sơn Trà, Đà Nẵng
+              </p>
+              <div className="absolute h-[52px] left-[444px] rounded-[6px] top-[8px] w-[110px]" data-node-id="486:3201" data-name="image">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgScheduleHeroImage} />
+              </div>
+              <div className="absolute left-[565px] size-[20px] top-[22px]" data-node-id="486:3202" data-name="more">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+              </div>
+            </div>
+            <div className="absolute h-[28px] left-[130px] overflow-clip top-[486px] w-[360px]" data-node-id="486:3209" data-name="travel 486">
+              <div className="absolute bg-[#0488cc] h-px left-0 top-[13px] w-[72px]" data-node-id="486:3210" data-name="line" />
+              <div className="absolute left-[84px] size-[20px] top-[3px]" data-node-id="486:3211" data-name="car">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCar} />
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[112px] not-italic text-[#547aad] text-[10.5px] top-[6px] w-[220px]" data-node-id="486:3215">
+                15 phút di chuyển (5 km)
+              </p>
+            </div>
+            <div className="absolute left-[18px] size-[34px] top-[539px]" data-node-id="486:3216" data-name="step 6">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgStep1} />
+            </div>
+            <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[35px] not-italic text-[12px] text-center text-white top-[546px] w-[34px]" data-node-id="486:3217">
+              6
+            </p>
+            <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[70px] left-[62px] overflow-clip rounded-[8px] top-[520px] w-[600px]" data-node-id="486:3218" data-name="Activity row 6">
+              <div className="absolute h-[24px] left-[11px] top-[21px] w-[16px]" data-node-id="486:3219" data-name="drag">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+              </div>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[37px] top-[15px] w-px" data-node-id="486:3226" data-name="sep1" />
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[51px] not-italic text-[#044791] text-[12.5px] top-[21px] w-[112px]" data-node-id="486:3227">
+                22:15 – 23:00
+              </p>
+              <div className="absolute bg-[#d6edf7] h-[38px] left-[163px] top-[15px] w-px" data-node-id="486:3228" data-name="sep2" />
+              <div className="absolute bg-[#fff7db] left-[177px] overflow-clip rounded-[21px] size-[42px] top-[13px]" data-node-id="486:3239" data-name="type">
+                <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="486:3240" data-name="type/icon">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon2} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[231px] not-italic text-[#044791] text-[13.5px] top-[12px] w-[210px]" data-node-id="486:3232">
+                Dạo biển Mỹ Khê
+              </p>
+              <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[231px] not-italic text-[#547aad] text-[10.5px] top-[37px] w-[250px]" data-node-id="486:3233">
+                Võ Nguyên Giáp, Đà Nẵng
+              </p>
+              <div className="absolute h-[52px] left-[444px] rounded-[6px] top-[8px] w-[110px]" data-node-id="486:3234" data-name="image">
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgImage1} />
+              </div>
+              <div className="absolute left-[565px] size-[20px] top-[22px]" data-node-id="486:3235" data-name="more">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bg-[#d6edf7] h-[396px] left-[671px] rounded-[2px] top-[75px] w-[4px]" data-node-id="486:3244" data-name="Schedule/Scrollbar track" />
+        <div className="absolute bg-[rgba(20,140,199,0.72)] h-[112px] left-[670px] rounded-[3px] top-[79px] w-[6px]" data-node-id="486:3245" data-name="Schedule/Scrollbar thumb" />
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[15px] not-italic text-[#044791] text-[22px] top-[17px] w-[190px]" data-node-id="439:2322">
+          Lịch trình ngày 1
+        </p>
+        <div className="absolute left-[205px] size-[20px] top-[20px]" data-node-id="439:2323" data-name="progress ring">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgProgressRing} />
+        </div>
+        <div className="absolute left-[210px] size-[10px] top-[25px]" data-node-id="439:2324" data-name="progress inner">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgProgressInner} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] h-[10px] leading-[normal] left-[237px] not-italic text-[#547aad] text-[11.5px] top-[21px] w-[108px]" data-node-id="439:2325">
+          0/6 hoàn thành
+        </p>
+        <ButtonOutline className="absolute bg-[var(--wolfari-color-white,white)] border border-[var(--wolfari-color-line,#cdebf7)] border-solid content-stretch cursor-pointer flex h-[40px] items-center justify-center left-[381px] rounded-[8px] top-[11px] w-[128px]" label="Hiện bản đồ" />
+        <ButtonPrimary className="absolute bg-gradient-to-r content-stretch cursor-pointer flex from-[#008ac4] gap-[8px] h-[40px] items-center justify-center left-[517px] rounded-[8px] to-[#008eaa] top-[11px] w-[146px]" label="Thêm hoạt động" />
+      </div>
+      <div className="absolute bg-white border border-[#bfe5f5] border-solid h-[498px] left-[930px] overflow-clip rounded-[10px] top-[438px] w-[488px]" data-node-id="439:2450" data-name="Schedule/Selected pool">
+        <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[15px] not-italic text-[#044791] text-[21px] top-[17px] w-[270px]" data-node-id="439:2451">
+          Đã chọn · Chưa xếp lịch
+        </p>
+        <div className="absolute bg-[#fff2de] h-[30px] left-[299px] overflow-clip rounded-[15px] top-[15px] w-[88px]" data-node-id="439:2452" data-name="count">
+          <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Be_Vietnam_Pro:Medium'] h-[10px] leading-[normal] left-[44px] not-italic text-[#fa7d14] text-[11px] text-center top-[7px] w-[88px]" data-node-id="439:2453">
+            2 địa điểm
+          </p>
+        </div>
+        <a className="-translate-x-full [word-break:break-word] absolute block cursor-pointer font-['Be_Vietnam_Pro:Medium'] h-[10px] leading-[0] left-[467px] not-italic text-[#044791] text-[12px] text-right top-[19px] w-[70px]" data-node-id="439:2454">
+          <p className="leading-[normal] whitespace-pre-wrap">{`×  Đóng`}</p>
+        </a>
+        <div className="absolute bg-[#f9fdff] border border-[#bfe5f5] border-solid h-[48px] left-[15px] overflow-clip rounded-[8px] top-[61px] w-[456px]" data-node-id="439:2455" data-name="search">
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[13px] text-[#547aad] text-[11.5px] top-[13px] w-[420px] whitespace-pre-wrap" data-node-id="439:2456" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`⌕  Tìm trong địa điểm/hoạt động đã chọn...`}</p>
+        </div>
+        <div className="absolute bg-[#e5f7ff] h-[38px] left-[15px] overflow-clip rounded-[7px] top-[119px] w-[456px]" data-node-id="439:2457" data-name="hint">
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[12px] text-[#547aad] text-[10.5px] top-[10px] w-[430px] whitespace-pre-wrap" data-node-id="439:2458" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>{`ⓘ  Kéo hoạt động sang lịch trình bên trái để thêm vào chuyến đi.`}</p>
+        </div>
+        <div className="absolute bg-white border border-[#f2c75c] border-solid h-[86px] left-[15px] overflow-clip rounded-[8px] top-[177px] w-[456px]" data-node-id="439:2459" data-name="pool item Chùa Linh Ứng">
+          <div className="absolute h-[24px] left-[9px] top-[29px] w-[16px]" data-node-id="439:2460" data-name="drag">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+          </div>
+          <div className="absolute bg-[#ebf5ff] left-[35px] overflow-clip rounded-[21px] size-[42px] top-[19px]" data-node-id="439:2467" data-name="icon">
+            <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="439:2468" data-name="icon/icon">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconIcon} />
+            </div>
+          </div>
+          <div className="absolute h-[60px] left-[87px] rounded-[6px] top-[12px] w-[82px]" data-node-id="439:2471" data-name="image">
+            <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgImage} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[181px] not-italic text-[#044791] text-[13.5px] top-[17px] w-[210px]" data-node-id="439:2472">
+            Chùa Linh Ứng
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[181px] text-[#547aad] text-[10.5px] top-[43px] w-[230px]" data-node-id="439:2473" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            ⌖ Bán đảo Sơn Trà, Đà Nẵng
+          </p>
+          <div className="absolute left-[419px] size-[20px] top-[30px]" data-node-id="439:2474" data-name="more">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+          </div>
+        </div>
+        <div className="absolute bg-white border border-[#f2c75c] border-solid h-[86px] left-[15px] overflow-clip rounded-[8px] top-[275px] w-[456px]" data-node-id="439:2478" data-name="pool item Ngũ Hành Sơn">
+          <div className="absolute h-[24px] left-[9px] top-[29px] w-[16px]" data-node-id="439:2479" data-name="drag">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgDrag} />
+          </div>
+          <div className="absolute bg-[#e5faf2] left-[35px] overflow-clip rounded-[21px] size-[42px] top-[19px]" data-node-id="439:2486" data-name="icon">
+            <div className="absolute left-[9px] size-[24px] top-[9px]" data-node-id="439:2487" data-name="icon/icon">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTypeIcon} />
+            </div>
+          </div>
+          <div className="absolute h-[60px] left-[87px] rounded-[6px] top-[12px] w-[82px]" data-node-id="439:2490" data-name="image">
+            <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={imgImage3} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Bold'] h-[10px] leading-[normal] left-[181px] not-italic text-[#044791] text-[13.5px] top-[17px] w-[210px]" data-node-id="439:2491">
+            Ngũ Hành Sơn
+          </p>
+          <p className="[word-break:break-word] absolute font-['Be_Vietnam_Pro:Regular'] font-normal h-[10px] leading-[normal] left-[181px] text-[#547aad] text-[10.5px] top-[43px] w-[230px]" data-node-id="439:2492" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            ⌖ Hoà Hải, Ngũ Hành Sơn, Đà Nẵng
+          </p>
+          <div className="absolute left-[419px] size-[20px] top-[30px]" data-node-id="439:2493" data-name="more">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMore} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+These styles are contained in the design: Wolfari/Label: Font(family: "Be Vietnam Pro", style: Medium, size: 15, weight: 500, lineHeight: 22, letterSpacing: 0), Wolfari/Small: Font(family: "Be Vietnam Pro", style: Regular, size: 13, weight: 400, lineHeight: 20, letterSpacing: 0), Wolfari/Title: Font(family: "Be Vietnam Pro", style: SemiBold, size: 24, weight: 600, lineHeight: 32, letterSpacing: 0).
+
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Button/Outline
+**Node ID:** 11:14
+
+Wolfari reusable component
+
+## Button/Primary
+**Node ID:** 11:9
+
+Wolfari reusable component
+
+## Wolfari/Header
+**Node ID:** 135:483
+
+Shared Wolfari application header. Use the Active variant to highlight Trang chủ, Chuyến đi của tôi, or Lên lịch.
+
+## Brand/Logo
+**Node ID:** 14:2
+
+Official Wolfari wordmark — do not redraw or modify.
+
+## Brand/Mascot
+**Node ID:** 14:4
+
+Official Wolfari mascot — keep appearance unchanged.
+
+## Wolfari/Trip Sidebar
+**Node ID:** 135:1357
+
+Shared trip navigation. Variants cover Expanded/Collapsed states and the active trip section.
+
+## Landing/Mascot/Reading
+**Node ID:** 33:502
+
+Wolfari landing-page reusable asset
+
+The generated code contains image and SVG URL constants, e.g. const image = '[TEMP_ASSET_URL_REMOVED]'. These URLs are temporary download sources and expire after 7 days. Download each asset into the project with curl -L, then replace its URL in the generated code with a reference to the downloaded asset. Never use the temporary URLs as runtime image sources.

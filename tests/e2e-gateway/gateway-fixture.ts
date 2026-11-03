@@ -91,6 +91,7 @@ export interface GatewayModel {
   planPolicyConflictOnce: boolean;
   planPolicyUnknownOnce: boolean;
   planPolicyReceipts: Map<string, { fingerprint: string; data: unknown }>;
+  editorAssignments: Map<string, string[]>;
   invitations: Array<{
     id: string;
     trip_id: string;
@@ -117,6 +118,7 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       planPolicyConflictOnce: false,
       planPolicyUnknownOnce: false,
       planPolicyReceipts: new Map(),
+      editorAssignments: new Map(),
       invitations: [
         {
           id: '77777777-7777-4777-8777-777777777777',
@@ -197,13 +199,20 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path === '/api/v1/auth/refresh') {
         expect(request.headers()['x-csrf-token']).toBe('e2e-csrf-token-long-enough');
         return model.authenticated
-            ? json(route, { access_token: 'e2e-memory-token', session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' })
+          ? json(route, {
+              access_token: 'e2e-memory-token',
+              session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+            })
           : error(route, 401);
       }
       if (method !== 'GET') await model.writeGate;
       if (path === '/api/v1/auth/login') {
         model.authenticated = true;
-          return json(route, { access_token: 'e2e-memory-token', session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', profile: model.profile });
+        return json(route, {
+          access_token: 'e2e-memory-token',
+          session_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          profile: model.profile,
+        });
       }
       if (path === '/api/v1/auth/register' || path === '/api/v1/auth/password-reset-requests')
         return json(route, { message_code: 'REQUEST_ACCEPTED' }, 202);
@@ -216,6 +225,17 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path.startsWith('/api/v1/me') || path === '/api/v1/auth/email-verifications') {
         if (!model.authenticated) return error(route, 401);
         expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        if (path === '/api/v1/me/notifications' && method === 'GET')
+          return route.fulfill({
+            json: { data: [], meta: { correlation_id: 'gateway-e2e', next_cursor: null } },
+          });
+        if (path === '/api/v1/me/notification-preferences' && method === 'GET')
+          return json(route, {
+            push_enabled: false,
+            email_enabled: true,
+            group_overrides: {},
+            version: 1,
+          });
         if (path === '/api/v1/auth/email-verifications')
           return json(route, { message_code: 'REQUEST_ACCEPTED' }, 202);
         if (path === '/api/v1/me' && method === 'GET') return json(route, model.profile);
@@ -399,7 +419,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
             model.invitations.push(created);
             return json(route, {
               invitation: created,
-              one_time_link: `http://127.0.0.1:5174/invitations/local#token=inv1_${'z'.repeat(43)}`,
+              // The contract requires a same-origin link in both dev and built-preview runs.
+              one_time_link: `${url.origin}/invitations/local#token=inv1_${'z'.repeat(43)}`,
             });
           }
           const invitation = model.invitations.find(
@@ -433,22 +454,25 @@ export const test = base.extend<{ gateway: GatewayModel }>({
             role: current.current_membership.role,
             joined_at: current.current_membership.joined_at,
             left_at: null,
+            display_name: 'Trang Gateway',
           };
           const member = {
-            id: `membership-member-${tripId.slice(0, 8)}`,
+            id: `b${tripId.slice(1)}`,
             trip_id: tripId,
             user_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
             role: current.current_membership.role === 'OWNER' ? 'MEMBER' : 'OWNER',
             joined_at: '2026-10-02T00:00:00Z',
             left_at: null,
+            display_name: 'Member Gateway',
           };
           const departed = {
-            id: `membership-left-${tripId.slice(0, 8)}`,
+            id: `c${tripId.slice(1)}`,
             trip_id: tripId,
             user_id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
             role: 'MEMBER',
             joined_at: '2026-10-03T00:00:00Z',
             left_at: '2026-10-10T00:00:00Z',
+            display_name: null,
           };
           const cursor = url.searchParams.get('cursor');
           if (cursor === null) {
@@ -461,6 +485,15 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           });
         }
         const policyMatch = /^\/api\/v1\/trips\/([^/]+)\/plan-policy$/.exec(path);
+        if (policyMatch && method === 'GET') {
+          const current = model.trips.find((item) => item.id === policyMatch[1]);
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          return json(route, {
+            policy: current.plan_edit_policy,
+            editor_member_ids: model.editorAssignments.get(current.id) ?? [],
+            membership_revision: current.membership_revision,
+          });
+        }
         if (policyMatch && method === 'PUT') {
           const tripId = decodeURIComponent(policyMatch[1]!);
           const current = model.trips.find((item) => item.id === tripId);
@@ -472,8 +505,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           };
           const key = request.headers()['idempotency-key'];
           expect(key).toBeTruthy();
-          expect(data.policy).toMatch(/^(OWNER_ONLY|ALL_MEMBERS)$/);
-          expect(data.editor_member_ids).toEqual([]);
+          expect(data.policy).toMatch(/^(OWNER_ONLY|ALL_MEMBERS|SELECTED_MEMBERS)$/);
+          if (data.policy !== 'SELECTED_MEMBERS') expect(data.editor_member_ids).toEqual([]);
           const fingerprint = JSON.stringify(data);
           const receipt = model.planPolicyReceipts.get(key!);
           if (receipt) {
@@ -495,9 +528,11 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
           current.plan_edit_policy = data.policy;
           current.membership_revision += 1;
+          if (data.policy === 'SELECTED_MEMBERS')
+            model.editorAssignments.set(tripId, [...data.editor_member_ids]);
           const projection = {
             policy: current.plan_edit_policy,
-            editor_member_ids: [],
+            editor_member_ids: model.editorAssignments.get(tripId) ?? [],
             membership_revision: current.membership_revision,
           };
           model.planPolicyReceipts.set(key!, { fingerprint, data: projection });
@@ -507,6 +542,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
           return json(route, projection);
         }
+        if (/^\/api\/v1\/trips\/[^/]+\/fund$/.test(path) && method === 'GET')
+          return error(route, 404, 'RESOURCE_NOT_FOUND');
         const planMatch = /^\/api\/v1\/trips\/([^/]+)\/plan$/.exec(path);
         if (planMatch && method === 'GET') {
           const tripId = decodeURIComponent(planMatch[1]!);

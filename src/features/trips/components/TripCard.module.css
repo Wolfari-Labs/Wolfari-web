@@ -101,17 +101,15 @@
   top: 17px;
   width: 44px;
   height: 44px;
-  padding: 7px;
+  padding: 0;
   border: 0;
   background: transparent;
 }
-.more img {
-  display: block;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+.more button {
   background: #fffffff0;
-  box-shadow: 0 2px 8px #00598c1f;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-selection);
 }
 .body {
   display: flex;

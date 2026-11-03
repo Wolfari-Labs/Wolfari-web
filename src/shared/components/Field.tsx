@@ -38,15 +38,19 @@ export function Field({
   hintId,
   errorId,
   children,
+  labelHidden = false,
 }: FieldProps & {
   id: string;
   hintId: string | undefined;
   errorId: string | undefined;
   children: ReactNode;
+  labelHidden?: boolean;
 }) {
   return (
     <div className={styles.field}>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id} className={labelHidden ? styles.hiddenLabel : undefined}>
+        {label}
+      </label>
       {children}
       {hint && (
         <span id={hintId} className={styles.hint}>

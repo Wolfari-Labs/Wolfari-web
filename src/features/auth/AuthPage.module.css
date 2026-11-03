@@ -19,7 +19,7 @@
   margin: 0 0 8px 2px;
   color: #0488cc;
   font:
-    400 22px/34px 'Kalam',
+    400 22px/34px 'Patrick Hand',
     cursive;
 }
 .introduction h1 {
@@ -27,7 +27,7 @@
   margin: 0;
   color: #009da9;
   font:
-    700 46px/54px 'Kalam',
+    400 46px/54px 'Patrick Hand',
     cursive;
 }
 .description {
@@ -76,10 +76,11 @@
 .card {
   display: flex;
   flex-direction: column;
-  min-height: 581px;
+  min-height: 0;
   padding: 32px 38px 39px;
   border: 1px solid #bae4f4;
-  border-radius: 14px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-soft);
   background: white;
 }
 .cardHeader {
@@ -93,27 +94,27 @@
 }
 .cardHeader p {
   margin: 0;
-  color: #5980ae;
+  color: var(--color-muted);
   font-size: 13px;
   line-height: 20px;
 }
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 18px;
 }
 .fields label {
-  font-size: 11.5px;
+  font-size: 14px;
   line-height: 18px;
 }
 .fields input {
-  font-size: 12.5px;
+  font-size: 16px;
 }
 .previewNote {
   min-height: 34px;
   margin: 18px 0 0;
-  color: #5980ae;
-  font-size: 10.6px;
+  color: var(--color-muted);
+  font-size: 13px;
   line-height: 17px;
 }
 .card .submit {
@@ -125,12 +126,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   border-top: 1px solid #bae4f4;
   margin-top: 22px;
   padding-top: 15px;
-  color: #5980ae;
-  font-size: 12.3px;
+  color: var(--color-muted);
+  font-size: 13px;
   line-height: 20px;
 }
 .alternative a {
@@ -152,7 +154,7 @@
 .stateNote > div {
   min-height: 60px;
   padding: 10px 13px;
-  font-size: 10.2px;
+  font-size: 13px;
   line-height: 17px;
   background: #f8fcff;
 }
@@ -164,7 +166,7 @@
   padding-inline: 0 !important;
   border: 0 !important;
   color: #044791;
-  font-size: 12px;
+  font-size: 13px;
 }
 .consent {
   display: flex;
@@ -172,8 +174,8 @@
   gap: 8px;
   min-height: 44px;
   margin-top: 12px;
-  color: #5980ae;
-  font-size: 11.5px;
+  color: var(--color-muted);
+  font-size: 13px;
   line-height: 18px;
 }
 .consent input {
@@ -190,7 +192,7 @@
 .error {
   margin: 4px 0 0;
   color: var(--ios-error);
-  font-size: 12px;
+  font-size: 13px;
 }
 .formColumn > :global(.preview) {
   margin-top: 24px;
@@ -221,7 +223,7 @@
   top: 66.7%;
 }
 .register .card {
-  min-height: 655px;
+  min-height: 0;
   padding-top: 29px;
 }
 .register .cardHeader {
@@ -336,22 +338,22 @@
     font-size: 16px;
   }
   .previewNote {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 19px;
   }
   .consent {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 20px;
   }
   .alternative {
     flex-wrap: wrap;
-    font-size: 12px;
+    font-size: 13px;
   }
   .alternative a {
     min-width: 110px;
   }
   .stateNote > div {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 19px;
   }
 }
@@ -369,4 +371,14 @@
     font-size: 31px;
     line-height: 40px;
   }
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

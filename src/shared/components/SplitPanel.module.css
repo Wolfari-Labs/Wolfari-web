@@ -1,0 +1,26 @@
+.group {
+  align-items: stretch;
+  min-height: 260px;
+}
+.stack {
+  display: grid;
+  gap: 20px;
+}
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  color: var(--color-muted);
+  border-radius: 8px;
+  touch-action: none;
+}
+.separator:hover,
+.separator:focus-visible {
+  background: var(--color-selected);
+  color: var(--color-action-primary);
+}
+.reset {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -6,6 +6,7 @@ import { HomePage } from '../features/home/HomePage';
 import { homeScenarios, type HomeScenario, type HomeViewModel } from '../features/home/model/home';
 import { useHomeRepository } from '../features/home/repositories/home-context';
 import { Select } from '../shared/components/Select';
+import { editorialLanding } from '../features/home/editorial-landing';
 export function HomeRoute() {
   const { viewer, previewEnabled } = useOutletContext<RouteContext>();
   const repository = useHomeRepository();
@@ -13,6 +14,7 @@ export function HomeRoute() {
   const landingQuery = useQuery({
     queryKey: ['home', 'landing', scenario],
     queryFn: ({ signal }) => repository.readLanding({ scenario, signal }),
+    enabled: previewEnabled,
   });
   const landing: HomeViewModel['landing'] = landingQuery.isPending
     ? { status: 'loading' }
@@ -25,9 +27,12 @@ export function HomeRoute() {
   return (
     <>
       <HomePage
-        model={{ viewerName: viewer?.fullName ?? null, landing }}
+        model={{
+          viewerName: viewer?.fullName ?? null,
+          landing: previewEnabled ? landing : { status: 'ready', data: editorialLanding },
+        }}
         onRetry={() => {
-          void landingQuery.refetch();
+          if (previewEnabled) void landingQuery.refetch();
         }}
       />
       {previewEnabled && (

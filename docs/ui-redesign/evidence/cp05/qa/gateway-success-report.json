@@ -1,0 +1,19 @@
+{
+  "initialFocus1440": {
+    "tag": "A",
+    "text": "Mở chuyến đi →"
+  },
+  "afterEscape1440": {
+    "tag": "BUTTON",
+    "text": "Tạo chuyến đi"
+  },
+  "blankAfterEscape": "",
+  "postsAfterEscape": 1,
+  "violations402": [],
+  "initialFocus402": {
+    "tag": "A",
+    "text": "Mở chuyến đi →"
+  },
+  "screenshot402": ".local/cp05-d29-gateway-qa/gateway-create-success-d30-402.png",
+  "unexpected": []
+}

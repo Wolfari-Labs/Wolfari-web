@@ -1,0 +1,1338 @@
+[
+  {
+    "pageId": "0:1",
+    "id": "3:28",
+    "name": "01 · Trang chủ — Guest",
+    "route": "/",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "3:29",
+    "name": "02 · Chuyến đi của tôi",
+    "route": "/trips",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "3:30",
+    "name": "03 · Tạo chuyến đi",
+    "route": "/trips/new",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "3:31",
+    "name": "04 · Tổng quan — mở",
+    "route": "/trips/:tripId",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "3:32",
+    "name": "05 · Tổng quan — thu gọn",
+    "route": "/trips/:tripId",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "3:33",
+    "name": "Components & Decorations",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "20:236",
+    "name": "06 · Lịch trình",
+    "route": "/trips/:tripId/plan",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "20:386",
+    "name": "07 · Bản đồ & địa điểm",
+    "route": "/trips/:tripId/map",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "20:565",
+    "name": "08 · Dress code",
+    "route": "/trips/:tripId/dress-code",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "23:312",
+    "name": "09 · Packing list",
+    "route": "/trips/:tripId/packing",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "23:506",
+    "name": "10 · Quỹ nhóm",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "23:657",
+    "name": "11 · Theo dõi giá vé",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "25:360",
+    "name": "12 · Thành viên",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "25:518",
+    "name": "13 · Xuất & chia sẻ",
+    "route": "Figma-only: export/share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "25:676",
+    "name": "14 · Cài đặt",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "26:406",
+    "name": "15 · Overlay & Modal states",
+    "route": "Shared overlays",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "224:1253",
+    "name": "07.1 · Bản đồ & địa điểm — sau khi chọn",
+    "route": "/trips/:tripId/map",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "269:1234",
+    "name": "14.1 · Cài đặt — Chỉnh sửa thông tin",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "298:1642",
+    "name": "01.1 · Trang chủ — Đã đăng nhập",
+    "route": "/",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "298:1893",
+    "name": "16 · Đăng nhập",
+    "route": "/login",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "298:2007",
+    "name": "17 · Đăng ký",
+    "route": "/register",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:1847",
+    "name": "18 · Tài khoản & thông báo",
+    "route": "/profile",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:1926",
+    "name": "19 · Trung tâm thông báo",
+    "route": "Shell notification Drawer",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:2010",
+    "name": "20 · Phản hồi lời mời",
+    "route": "/invitations",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:2066",
+    "name": "21 · Public Share — Chỉ xem",
+    "route": "Figma-only: public share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:2133",
+    "name": "21.1 · Public Share — Nhập mật khẩu",
+    "route": "Figma-only: public share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:2173",
+    "name": "21.2 · Public Share — Không khả dụng",
+    "route": "Figma-only: public share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "299:2207",
+    "name": "22 · Luồng hoạt động Web End-user",
+    "route": "Flow documentation",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "439:2028",
+    "name": "06.1 · Lịch trình — Chưa xếp lịch",
+    "route": "/trips/:tripId/plan",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "439:2497",
+    "name": "06.2 · Lịch trình — Bản đồ ngày",
+    "route": "/trips/:tripId/plan",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "475:2294",
+    "name": "12.1 · Thành viên — Lời mời",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "475:2530",
+    "name": "12.2 · Thành viên — Quyền sửa Plan",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "475:2772",
+    "name": "12.3 · Chuyển Owner — Xác nhận",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "475:2909",
+    "name": "12.4 · Chuyển Owner — Finance CLOSING",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "475:3038",
+    "name": "12.5 · Thành viên — Sau chuyển Owner",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "477:2692",
+    "name": "10.1 · Quỹ nhóm — Quản lý Fund Holder",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "477:2846",
+    "name": "10.2 · Bàn giao Fund Holder — Chờ chấp nhận",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "477:2990",
+    "name": "10.3 · Bàn giao Fund Holder — Đối chiếu",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "477:3153",
+    "name": "10.4 · Bàn giao Fund Holder — Hoàn tất",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3121",
+    "name": "08.1 · Dress code — Đã lưu",
+    "route": "/trips/:tripId/dress-code",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3252",
+    "name": "10.5 · Quỹ nhóm — Đã ghi khoản chi",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3370",
+    "name": "12.6 · Thành viên — Đã gửi lời mời",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3460",
+    "name": "12.7 · Thành viên — Đã lưu quyền sửa Plan",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3546",
+    "name": "14.2 · Cài đặt — Không thể xóa Trip",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3660",
+    "name": "18.1 · Tài khoản — Đã lưu",
+    "route": "/profile",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3715",
+    "name": "18.2 · Tài khoản — Đã xóa thiết bị",
+    "route": "/profile",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "514:3801",
+    "name": "19.1 · Thông báo — Đã đọc",
+    "route": "Shell notification Drawer",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:3692",
+    "name": "11.0 · Theo dõi giá vé — Tạo mới",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:3849",
+    "name": "11.1 · Theo dõi giá vé — Đã tạo",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4006",
+    "name": "13.1 · Xuất & chia sẻ — Đang tạo file",
+    "route": "Figma-only: export/share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4146",
+    "name": "13.2 · Xuất & chia sẻ — Link đã tạo",
+    "route": "Figma-only: export/share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4303",
+    "name": "10.6 · Quỹ nhóm — Bắt đầu đóng Finance",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4446",
+    "name": "10.7 · Quỹ nhóm — Finance CLOSING",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4599",
+    "name": "10.8 · Quỹ nhóm — Finance CLOSED",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4741",
+    "name": "14.3 · Cài đặt — Finance CLOSED",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4849",
+    "name": "14.4 · Cài đặt — Trip đã lưu trữ",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "517:4953",
+    "name": "14.5 · Cài đặt — Xác nhận xóa Trip",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "528:4683",
+    "name": "10.9 · Quỹ nhóm — Đóng góp",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "528:4874",
+    "name": "10.10 · Quỹ nhóm — Hoàn tiền & điều chỉnh",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "528:5059",
+    "name": "10.11 · Quỹ nhóm — Lịch sử",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:4973",
+    "name": "A00 · Admin — Đăng nhập",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5007",
+    "name": "A01 · Admin — Tổng quan hệ thống",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5098",
+    "name": "A02 · Admin — Người dùng & Trip",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5195",
+    "name": "A03 · Admin — Provider & quota",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5295",
+    "name": "A04 · Admin — Danh mục & mẫu",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5391",
+    "name": "A05 · Admin — Job & log vận hành",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5489",
+    "name": "A02.1 · Admin — Xác nhận khóa tài khoản",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5597",
+    "name": "A02.2 · Admin — Tài khoản đã khóa",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "538:5696",
+    "name": "A06 · Luồng hoạt động Web Admin",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "541:4994",
+    "name": "10.9.1 · Quỹ nhóm — Đã tạo đợt đóng góp",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "541:5205",
+    "name": "10.10.1 · Quỹ nhóm — Đã lưu điều chỉnh",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần thiết kế lại theo contract",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "541:5410",
+    "name": "12.8 · Thành viên — Đã gửi lại lời mời",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "541:5488",
+    "name": "12.9 · Thành viên — Đã thu hồi lời mời",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "541:5579",
+    "name": "18.3 · Tài khoản — Đã đổi ảnh",
+    "route": "/profile",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "541:5636",
+    "name": "A04.1 · Admin — Thêm cấu hình",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "767:5377",
+    "name": "Alignment / Design contract",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:5376",
+    "name": "01 · Home Guest — Tham chiếu nguồn",
+    "route": "/",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:5746",
+    "name": "01.1 · Home User — Tham chiếu nguồn",
+    "route": "/",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:6118",
+    "name": "16 · Login — Tham chiếu nguồn",
+    "route": "/login",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:6211",
+    "name": "17 · Register — Tham chiếu nguồn",
+    "route": "/register",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:6309",
+    "name": "02 · Trip List — Tham chiếu nguồn",
+    "route": "/trips",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:6807",
+    "name": "04 · Trip Overview — Tham chiếu nguồn",
+    "route": "/trips/:tripId",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:7123",
+    "name": "06 · Plan — Tham chiếu nguồn",
+    "route": "/trips/:tripId/plan",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:7492",
+    "name": "12 · Members — Tham chiếu nguồn",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:7694",
+    "name": "18 · Profile — Tham chiếu nguồn",
+    "route": "/profile",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:7778",
+    "name": "10 · Quỹ nhóm — Đề xuất SRS",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:7992",
+    "name": "11 · Theo dõi giá vé — Đề xuất SRS",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "768:8228",
+    "name": "08 · Dress code — Đề xuất SRS",
+    "route": "/trips/:tripId/dress-code",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "777:6442",
+    "name": "Notes / Quỹ nhóm · điều chỉnh nghiệp vụ",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "777:6445",
+    "name": "Notes / Theo dõi vé · điều chỉnh nghiệp vụ",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "777:6448",
+    "name": "Notes / Dress code · điều chỉnh nghiệp vụ",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "780:6444",
+    "name": "01 · Home Guest — Web 402",
+    "route": "/",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "781:6554",
+    "name": "10 · Quỹ nhóm — Web 402",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "0:1",
+    "id": "781:6626",
+    "name": "11 · Theo dõi giá vé — Web 402",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "781:6748",
+    "name": "08 · Dress code — Web 402",
+    "route": "/trips/:tripId/dress-code",
+    "classification": "Cần cải tiến",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "783:6655",
+    "name": "Web 402 · Menu drawer",
+    "route": "Shell responsive Drawer",
+    "classification": "Tham khảo trực tiếp; cần focus/reflow states",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "0:1",
+    "id": "785:6670",
+    "name": "Notes / Responsive Web contract",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2025",
+    "name": "M01 · Khám phá — Guest",
+    "route": "/",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2026",
+    "name": "M02 · Đăng nhập",
+    "route": "/login",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2027",
+    "name": "M03 · Đăng ký",
+    "route": "/register",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2028",
+    "name": "M04 · Khám phá — Thành viên",
+    "route": "/",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2029",
+    "name": "M05 · Chuyến đi của tôi",
+    "route": "/trips",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2030",
+    "name": "M06 · Tạo chuyến đi — Thông tin",
+    "route": "/trips/new",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2031",
+    "name": "M07 · Tạo chuyến đi — Cá nhân hóa",
+    "route": "/trips/new",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2032",
+    "name": "M08 · Tổng quan chuyến đi",
+    "route": "/trips/:tripId",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2033",
+    "name": "M09 · Lịch trình",
+    "route": "/trips/:tripId/plan",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2034",
+    "name": "M10 · Bản đồ & địa điểm",
+    "route": "/trips/:tripId/map",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2035",
+    "name": "M11 · Chi tiết địa điểm",
+    "route": "/trips/:tripId/map (detail)",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2036",
+    "name": "M12 · Dress code",
+    "route": "/trips/:tripId/dress-code",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2037",
+    "name": "M13 · Hành lý",
+    "route": "/trips/:tripId/packing",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2038",
+    "name": "M14 · Quỹ nhóm",
+    "route": "/trips/:tripId/fund",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2039",
+    "name": "M15 · Ghi nhận khoản chi",
+    "route": "/trips/:tripId/fund (backlog)",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2040",
+    "name": "M16 · Thành viên",
+    "route": "/trips/:tripId/members",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2041",
+    "name": "M17 · Mời thành viên",
+    "route": "/trips/:tripId/members (invite)",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2042",
+    "name": "M18 · Theo dõi giá vé",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2043",
+    "name": "M19 · Xuất & chia sẻ",
+    "route": "Figma-only: export/share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2044",
+    "name": "M20 · Cài đặt chuyến đi",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2045",
+    "name": "M21 · Chỉnh sửa chuyến đi",
+    "route": "/trips/:tripId/settings",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2046",
+    "name": "M22 · Tài khoản & thông báo",
+    "route": "/profile",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2047",
+    "name": "M23 · Trung tâm thông báo",
+    "route": "Shell notification Drawer",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2048",
+    "name": "M24 · Phản hồi lời mời",
+    "route": "/invitations",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2049",
+    "name": "M25 · Chia sẻ công khai",
+    "route": "Figma-only: public share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2050",
+    "name": "M26 · Nhập mật khẩu chia sẻ",
+    "route": "Figma-only: public share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2051",
+    "name": "M27 · Liên kết không khả dụng",
+    "route": "Figma-only: public share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "328:3072",
+    "name": "Scrollable viewport",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2052",
+    "name": "M28 · Tiện ích chuyến đi",
+    "route": "Shell tools/navigation",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2053",
+    "name": "M29 · Thêm hoạt động",
+    "route": "/trips/:tripId/plan (add)",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2054",
+    "name": "M30 · Thêm vật dụng",
+    "route": "/trips/:tripId/packing (preview)",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "317:2055",
+    "name": "Mobile · Components",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "329:3244",
+    "name": "Mobile · Design index",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "405:3506",
+    "name": "M31 · Thao tác nhanh — Bottom sheet",
+    "route": "Shell quick actions",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "405:3634",
+    "name": "Mobile · Modern component showcase",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "424:4048",
+    "name": "M32 · Chỉnh sửa hồ sơ",
+    "route": "/profile",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "449:4053",
+    "name": "Mobile · Prototype controls",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4374",
+    "name": "P01 · Chuyến đi đã sẵn sàng",
+    "route": "/trips/new",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4392",
+    "name": "P02 · Đã lưu hoạt động",
+    "route": "/trips/:tripId/plan",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4410",
+    "name": "P03 · Đã lưu vật dụng",
+    "route": "/trips/:tripId/packing (preview)",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4428",
+    "name": "P04 · Đã lưu khoản chi",
+    "route": "/trips/:tripId/fund (backlog)",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4446",
+    "name": "P05 · Lời mời đã sẵn sàng",
+    "route": "/trips/:tripId/members",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4464",
+    "name": "P06 · Đã lưu hồ sơ",
+    "route": "/profile",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4482",
+    "name": "P07 · Đã lưu cài đặt",
+    "route": "/trips/:tripId/settings",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4500",
+    "name": "P08 · Đã lưu chuyến đi",
+    "route": "/trips/:tripId/settings",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4518",
+    "name": "P09 · Đã lưu ngưỡng giá",
+    "route": "/trips/:tripId/price-watch",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4533",
+    "name": "P10 · Xuất lịch trình PDF",
+    "route": "Figma-only: export",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4551",
+    "name": "P11 · Liên kết chia sẻ",
+    "route": "Figma-only: share",
+    "classification": "Chưa có route; backlog, không loại bỏ",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4569",
+    "name": "P12 · Đăng xuất khỏi Wolfari?",
+    "route": "Shell logout",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4588",
+    "name": "P13 · Lưu trữ chuyến đi?",
+    "route": "/trips/:tripId/settings (backlog)",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "450:4607",
+    "name": "P14 · Thiết bị đang đăng nhập",
+    "route": "/profile (sessions ≠ push devices)",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "461:5096",
+    "name": "Mobile · Travel journal components",
+    "route": "Foundation / tài liệu",
+    "classification": "Tài nguyên / thử nghiệm; không là route",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "588:8020",
+    "name": "M33 · Chi tiết hoạt động — Bottom sheet",
+    "route": "/trips/:tripId/plan (detail)",
+    "classification": "Cần cải tiến cho Web",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "310:2025",
+    "id": "612:8805",
+    "name": "P15 · Hành lý sẵn sàng",
+    "route": "/trips/:tripId/packing (preview)",
+    "classification": "State tham khảo; chưa đủ lỗi/pending",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "194:1093",
+    "name": "A01 · Admin — Tổng quan",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": true
+  },
+  {
+    "pageId": "194:1073",
+    "id": "194:1094",
+    "name": "A02 · Admin — Tài khoản",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "194:1095",
+    "name": "A03 · Admin — Tích hợp & Provider",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "194:1096",
+    "name": "A04 · Admin — Giám sát hệ thống",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "194:1097",
+    "name": "A05 · Admin — Audit & Hỗ trợ",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "194:1098",
+    "name": "A06 · Admin — Cấu hình hệ thống",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "215:1271",
+    "name": "A02.1 · Admin — Tài khoản · Đã khóa",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "215:1497",
+    "name": "A02.2 · Admin — Tài khoản · Quản trị viên",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1337",
+    "name": "Admin Action · Khóa tài khoản",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1354",
+    "name": "Admin Action · Mở khóa tài khoản",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1371",
+    "name": "Admin Action · Cấu hình Provider",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1392",
+    "name": "Admin Action · Trạng thái Provider",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1409",
+    "name": "Admin Action · Retry Job",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1430",
+    "name": "Admin Action · Chi tiết hỗ trợ",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1451",
+    "name": "Admin Action · Lý do truy cập hỗ trợ",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  },
+  {
+    "pageId": "194:1073",
+    "id": "216:1472",
+    "name": "Admin Action · Feature Flag",
+    "route": "/admin (placeholder; flow Figma-only)",
+    "classification": "Chưa triển khai; canonical chưa chốt",
+    "visuallyInspected": false
+  }
+]

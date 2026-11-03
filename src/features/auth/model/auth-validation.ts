@@ -19,7 +19,7 @@ export function validateAuth(mode: 'login' | 'register', values: AuthFormValues)
       errors.password = 'Mật khẩu cần từ 15 đến 128 ký tự.';
     if (values.confirmation !== values.password || !values.confirmation)
       errors.confirmation = 'Mật khẩu nhập lại chưa khớp.';
-    if (!values.acceptedTerms) errors.acceptedTerms = 'Chọn đồng ý để kiểm tra biểu mẫu xem trước.';
+    if (!values.acceptedTerms) errors.acceptedTerms = 'Chọn đồng ý để tiếp tục đăng ký.';
   }
   return errors;
 }

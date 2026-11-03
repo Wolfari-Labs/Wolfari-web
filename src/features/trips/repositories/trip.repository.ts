@@ -54,6 +54,7 @@ export type UpdateTripResult =
     };
 
 export type PlanEditPolicy = 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS';
+export interface PlanPolicySnapshot { policy: PlanEditPolicy; editorMemberIds: readonly string[]; membershipRevision: number }
 export type UpdatePlanPolicyResult =
   | {
       readonly status: 'updated';
@@ -76,6 +77,7 @@ export interface TripListRequest {
 
 // The adapter is session-scoped; the caller cannot select another viewer through a user ID.
 export interface TripRepository {
+  getPlanPolicy?(request: { tripId: string; signal: AbortSignal }): Promise<ReadResult<PlanPolicySnapshot>>;
   createTrip(request: {
     readonly intent: CreateTripIntent;
     readonly signal: AbortSignal;

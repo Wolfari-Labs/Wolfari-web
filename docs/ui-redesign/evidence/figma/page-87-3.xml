@@ -1,0 +1,116 @@
+<canvas id="87:3" name="02 — Components" x="0" y="0" width="0" height="0">
+  <frame id="87:360" name="COMPONENTS / Wolfari UI Kit" x="80" y="80" width="3200" height="3197">
+    <text id="87:361" name="Wolfari Component Library" x="64" y="64" width="527" height="48" />
+    <frame id="87:362" name="SECTION / Buttons" x="64" y="152" width="3072" height="183">
+      <text id="87:363" name="Buttons" x="29" y="29" width="107" height="34" />
+      <frame id="87:434" name="Button" x="29" y="83" width="3037" height="71">
+        <symbol id="87:364" name="Type=Primary, State=Default" x="21" y="21" width="144" height="39" />
+        <symbol id="87:367" name="Type=Primary, State=Hover" x="177" y="21" width="144" height="39" />
+        <symbol id="87:370" name="Type=Primary, State=Pressed" x="333" y="21" width="144" height="39" />
+        <symbol id="87:373" name="Type=Primary, State=Disabled" x="489" y="21" width="144" height="39" />
+        <symbol id="87:376" name="Type=Primary, State=Loading" x="645" y="21" width="119" height="39" />
+        <symbol id="87:379" name="Type=Secondary, State=Default" x="776" y="21" width="136" height="39" />
+        <symbol id="87:382" name="Type=Secondary, State=Hover" x="924" y="21" width="136" height="39" />
+        <symbol id="87:385" name="Type=Secondary, State=Pressed" x="1072" y="21" width="136" height="39" />
+        <symbol id="87:388" name="Type=Secondary, State=Disabled" x="1220" y="21" width="136" height="39" />
+        <symbol id="87:391" name="Type=Secondary, State=Loading" x="1368" y="21" width="119" height="39" />
+        <symbol id="87:394" name="Type=Ghost, State=Default" x="1499" y="21" width="153" height="39" />
+        <symbol id="87:397" name="Type=Ghost, State=Hover" x="1664" y="21" width="153" height="39" />
+        <symbol id="87:400" name="Type=Ghost, State=Pressed" x="1829" y="21" width="153" height="39" />
+        <symbol id="87:403" name="Type=Ghost, State=Disabled" x="1994" y="21" width="153" height="39" />
+        <symbol id="87:406" name="Type=Ghost, State=Loading" x="2159" y="21" width="119" height="39" />
+        <symbol id="87:409" name="Type=Danger, State=Default" x="2290" y="21" width="82" height="39" />
+        <symbol id="87:412" name="Type=Danger, State=Hover" x="2384" y="21" width="82" height="39" />
+        <symbol id="87:415" name="Type=Danger, State=Pressed" x="2478" y="21" width="82" height="39" />
+        <symbol id="87:418" name="Type=Danger, State=Disabled" x="2572" y="21" width="82" height="39" />
+        <symbol id="87:421" name="Type=Danger, State=Loading" x="2666" y="21" width="119" height="39" />
+        <symbol id="87:424" name="Type=Icon, State=Default" x="2797" y="21" width="35" height="39" />
+        <symbol id="87:426" name="Type=Icon, State=Hover" x="2844" y="21" width="35" height="39" />
+        <symbol id="87:428" name="Type=Icon, State=Pressed" x="2891" y="21" width="35" height="39" />
+        <symbol id="87:430" name="Type=Icon, State=Disabled" x="2938" y="21" width="35" height="39" />
+        <symbol id="87:432" name="Type=Icon, State=Loading" x="2985" y="21" width="31" height="39" />
+      </frame>
+    </frame>
+    <frame id="87:435" name="SECTION / Inputs" x="64" y="375" width="3072" height="224">
+      <text id="87:436" name="Inputs" x="29" y="29" width="86" height="34" />
+      <frame id="87:521" name="Input" x="29" y="83" width="6798" height="112">
+        <symbol id="87:437" name="Type=Text, State=Default" x="21" y="21" width="260" height="64" />
+        <symbol id="87:440" name="Type=Text, State=Focus" x="293" y="21" width="260" height="64" />
+        <symbol id="87:443" name="Type=Text, State=Error" x="565" y="21" width="260" height="64" />
+        <symbol id="87:446" name="Type=Text, State=Disabled" x="837" y="21" width="260" height="64" />
+        <symbol id="87:449" name="Type=Search, State=Default" x="1109" y="21" width="260" height="64" />
+        <symbol id="87:453" name="Type=Search, State=Focus" x="1381" y="21" width="260" height="64" />
+        <symbol id="87:457" name="Type=Search, State=Error" x="1653" y="21" width="260" height="64" />
+        <symbol id="87:461" name="Type=Search, State=Disabled" x="1925" y="21" width="260" height="64" />
+        <symbol id="87:465" name="Type=Date, State=Default" x="2197" y="21" width="260" height="64" />
+        <symbol id="87:469" name="Type=Date, State=Focus" x="2469" y="21" width="260" height="64" />
+        <symbol id="87:473" name="Type=Date, State=Error" x="2741" y="21" width="260" height="64" />
+        <symbol id="87:477" name="Type=Date, State=Disabled" x="3013" y="21" width="260" height="64" />
+        <symbol id="87:481" name="Type=Number, State=Default" x="3285" y="21" width="260" height="64" />
+        <symbol id="87:484" name="Type=Number, State=Focus" x="3557" y="21" width="260" height="64" />
+        <symbol id="87:487" name="Type=Number, State=Error" x="3829" y="21" width="260" height="64" />
+        <symbol id="87:490" name="Type=Number, State=Disabled" x="4101" y="21" width="260" height="64" />
+        <symbol id="87:493" name="Type=Select, State=Default" x="4373" y="21" width="260" height="64" />
+        <symbol id="87:497" name="Type=Select, State=Focus" x="4645" y="21" width="260" height="64" />
+        <symbol id="87:501" name="Type=Select, State=Error" x="4917" y="21" width="260" height="64" />
+        <symbol id="87:505" name="Type=Select, State=Disabled" x="5189" y="21" width="260" height="64" />
+        <symbol id="87:509" name="Type=Textarea, State=Default" x="5461" y="21" width="320" height="112" />
+        <symbol id="87:512" name="Type=Textarea, State=Focus" x="5793" y="21" width="320" height="112" />
+        <symbol id="87:515" name="Type=Textarea, State=Error" x="6125" y="21" width="320" height="112" />
+        <symbol id="87:518" name="Type=Textarea, State=Disabled" x="6457" y="21" width="320" height="112" />
+      </frame>
+    </frame>
+    <frame id="87:522" name="SECTION / Selection &amp; status controls" x="64" y="639" width="3072" height="571">
+      <text id="87:523" name="Selection &amp; status controls" x="29" y="29" width="363" height="34" />
+      <frame id="87:534" name="Checkbox" x="29" y="83" width="456" height="42">
+        <symbol id="87:524" name="State=Unchecked" x="21" y="21" width="130" height="42" />
+        <symbol id="87:527" name="State=Checked" x="163" y="21" width="130" height="42" />
+        <symbol id="87:531" name="State=Disabled" x="305" y="21" width="130" height="42" />
+      </frame>
+      <frame id="87:541" name="Radio" x="29" y="145" width="300" height="42">
+        <symbol id="87:535" name="State=Off" x="21" y="21" width="123" height="42" />
+        <symbol id="87:538" name="State=On" x="156" y="21" width="123" height="42" />
+      </frame>
+      <frame id="87:550" name="Toggle" x="29" y="207" width="270" height="46">
+        <symbol id="87:542" name="State=Off" x="21" y="21" width="107" height="46" />
+        <symbol id="87:546" name="State=On" x="140" y="21" width="109" height="46" />
+      </frame>
+      <frame id="87:559" name="Chip" x="29" y="273" width="386" height="42">
+        <symbol id="87:551" name="Tone=Blue" x="21" y="21" width="77" height="38" />
+        <symbol id="87:553" name="Tone=Teal" x="110" y="21" width="77" height="38" />
+        <symbol id="87:555" name="Tone=Green" x="199" y="21" width="77" height="38" />
+        <symbol id="87:557" name="Tone=Sun" x="288" y="21" width="77" height="38" />
+      </frame>
+      <frame id="87:572" name="Badge" x="29" y="335" width="376" height="42">
+        <symbol id="87:560" name="Tone=Info" x="21" y="21" width="54" height="27" />
+        <symbol id="87:563" name="Tone=Success" x="87" y="21" width="88" height="27" />
+        <symbol id="87:566" name="Tone=Warning" x="187" y="21" width="81" height="27" />
+        <symbol id="87:569" name="Tone=Danger" x="280" y="21" width="75" height="27" />
+      </frame>
+    </frame>
+    <frame id="87:573" name="SECTION / Navigation &amp; identity" x="64" y="1250" width="3072" height="433">
+      <text id="87:574" name="Navigation &amp; identity" x="29" y="29" width="282" height="34" />
+      <frame id="87:584" name="Avatar" x="29" y="83" width="194" height="56">
+        <symbol id="87:575" name="Size=Small" x="21" y="21" width="32" height="32" />
+        <symbol id="87:578" name="Size=Medium" x="65" y="21" width="40" height="40" />
+        <symbol id="87:581" name="Size=Large" x="117" y="21" width="56" height="56" />
+      </frame>
+      <symbol id="87:585" name="Avatar Group" x="29" y="159" width="148" height="58" />
+      <symbol id="87:590" name="Tabs" x="29" y="237" width="270" height="44" />
+      <symbol id="87:597" name="Segment Control" x="29" y="301" width="205" height="44" />
+      <symbol id="87:604" name="Breadcrumb" x="29" y="365" width="296" height="39" />
+    </frame>
+    <frame id="87:610" name="SECTION / Overlays, feedback &amp; data display" x="64" y="1723" width="3072" height="1410">
+      <text id="87:611" name="Overlays, feedback &amp; data display" x="29" y="29" width="458" height="34" />
+      <symbol id="87:612" name="Dropdown" x="29" y="83" width="240" height="132" />
+      <symbol id="87:617" name="Tooltip" x="29" y="235" width="180" height="48" />
+      <symbol id="87:619" name="Popover" x="29" y="303" width="280" height="152" />
+      <symbol id="87:623" name="Modal" x="29" y="475" width="420" height="220" />
+      <symbol id="87:627" name="Toast" x="29" y="715" width="360" height="84" />
+      <symbol id="87:630" name="Progress Bar" x="29" y="819" width="322" height="36" />
+      <symbol id="87:634" name="Upload Area" x="29" y="875" width="360" height="140" />
+      <symbol id="87:637" name="Empty State" x="29" y="1035" width="360" height="180" />
+      <symbol id="87:641" name="Skeleton" x="29" y="1235" width="354" height="146" />
+    </frame>
+  </frame>
+</canvas>

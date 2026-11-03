@@ -1,0 +1,3043 @@
+{
+  "offset": 0,
+  "totalRoots": 121,
+  "edges": [
+    {
+      "from": "3:28",
+      "edges": [
+        {
+          "to": "298:2007",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 4
+        },
+        {
+          "to": "298:1893",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "3:29",
+      "edges": [
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 6
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "3:30",
+      "edges": [
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "3:31",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:32",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "3:32",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "3:33",
+      "edges": []
+    },
+    {
+      "from": "20:236",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "439:2497",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "439:2028",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "20:386",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "224:1253",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "20:565",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "514:3121",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "23:312",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "256:1504",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "23:506",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "477:2692",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "517:4303",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "528:4683",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "528:4874",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "528:5059",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "514:3252",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "23:657",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "517:3692",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "25:360",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "475:2294",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "475:2530",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "475:2772",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "477:2692",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "25:518",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "517:4006",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "517:4146",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "25:676",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "514:3546",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "26:406",
+      "edges": []
+    },
+    {
+      "from": "135:483",
+      "edges": []
+    },
+    {
+      "from": "135:1357",
+      "edges": []
+    },
+    {
+      "from": "224:1253",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "256:1996",
+      "edges": [
+        {
+          "to": "256:1504",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 4
+        },
+        {
+          "to": "256:1407",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 6
+        },
+        {
+          "to": "256:1648",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 5
+        },
+        {
+          "to": "256:1823",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 5
+        },
+        {
+          "to": "503:3243",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "503:3382",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "503:3104",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "503:3521",
+          "type": "NODE",
+          "navigation": "CHANGE_TO",
+          "trigger": "ON_CLICK",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "from": "269:1234",
+      "edges": [
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 3
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "298:1642",
+      "edges": [
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 3
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "298:1893",
+      "edges": [
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:2007",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "from": "298:2007",
+      "edges": [
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1893",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "from": "299:1847",
+      "edges": [
+        {
+          "to": "541:5579",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "514:3660",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "514:3715",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "299:1926",
+      "edges": [
+        {
+          "to": "299:2010",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "514:3801",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "299:2010",
+      "edges": [
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "299:2066",
+      "edges": [
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 4
+        },
+        {
+          "to": "298:1893",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:2007",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "299:2133",
+      "edges": [
+        {
+          "to": "299:2066",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 4
+        },
+        {
+          "to": "298:1893",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:2007",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "299:2173",
+      "edges": [
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 5
+        },
+        {
+          "to": "298:1893",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:2007",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "299:2207",
+      "edges": [
+        {
+          "to": "3:28",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1893",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "298:2007",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:2133",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:2066",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:2010",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:2173",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "439:2028",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "439:2497",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "from": "439:2497",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "439:2028",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "475:2294",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "475:2530",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "514:3370",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "541:5410",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "541:5488",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "475:2530",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "475:2294",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "514:3460",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "475:2772",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "475:3038",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "from": "475:2909",
+      "edges": [
+        {
+          "to": "269:1234",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:518",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:360",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "298:1642",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 2
+        },
+        {
+          "to": "3:29",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:30",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1926",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "299:1847",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "3:31",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:386",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:236",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "20:565",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:312",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:506",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "23:657",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        },
+        {
+          "to": "25:676",
+          "type": "NODE",
+          "navigation": "NAVIGATE",
+          "trigger": "ON_CLICK",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

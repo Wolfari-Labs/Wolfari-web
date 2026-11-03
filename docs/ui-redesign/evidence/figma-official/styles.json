@@ -1,0 +1,1172 @@
+{
+  "textStyles": [
+    {
+      "id": "S:e126559161003180babb6900d80e803dec74b05a,",
+      "name": "Wolfari/Body",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Regular"
+      },
+      "fontSize": 16,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 24
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:b896d18b1495cc754403e243a2fd799264316994,",
+      "name": "Wolfari/Small",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Regular"
+      },
+      "fontSize": 13,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 20
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:d15a7de2d2c3d3b5db9155e48c281fb7a49e0197,",
+      "name": "Wolfari/Label",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Medium"
+      },
+      "fontSize": 15,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 22
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:005a6005e90639988d16eb24f5c95ce7d00f0260,",
+      "name": "Wolfari/Card title",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "SemiBold"
+      },
+      "fontSize": 20,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 28
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:2d44212b0f710f1796e8cb410fdba61aa36a4170,",
+      "name": "Wolfari/Heading",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Bold"
+      },
+      "fontSize": 32,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 40
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:f4f712b329f5004c186f70ff516461974ca3d7c9,",
+      "name": "Wolfari/Handwritten",
+      "fontName": {
+        "family": "Caveat",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700
+        }
+      },
+      "fontSize": 48,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 52
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:36c4cca56eb2a6f3d64419902bc60b91449047af,",
+      "name": "Wolfari/Title",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "SemiBold"
+      },
+      "fontSize": 24,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 32
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:d4b529a2828c3ff466278a88786d3cead0af352b,",
+      "name": "Wolfari/Display",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "ExtraBold"
+      },
+      "fontSize": 56,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 64
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:b246fd8894f9c8efba27dc703e458070fa0c504d,",
+      "name": "Wolfari/Mobile/display",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Bold"
+      },
+      "fontSize": 28,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 36
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:1a337343289fd49a71f02f33156a523202ab729d,",
+      "name": "Wolfari/Mobile/section",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "SemiBold"
+      },
+      "fontSize": 18,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 26
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:c6cabe008cb8d28d024a7aa8e99a17a890fd8576,",
+      "name": "Wolfari/Mobile/body",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Regular"
+      },
+      "fontSize": 15,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 23
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:7bb17b7a0a9a09b540fa1aa49f3be185514e5e06,",
+      "name": "Wolfari/Mobile/label",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "SemiBold"
+      },
+      "fontSize": 15,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 22
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:7638981b8f68b83b12e58f73c14fba132644f34f,",
+      "name": "Wolfari/Mobile/caption",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Medium"
+      },
+      "fontSize": 12,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 18
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:f20d13be954a2fdbf24726bc4328e73ccfe96af6,",
+      "name": "Wolfari/Mobile/hand",
+      "fontName": {
+        "family": "Kalam",
+        "style": "Bold"
+      },
+      "fontSize": 32,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 40
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:f9c85ace53662560d9feaf118e37b451173dc573,",
+      "name": "Mobile/Editorial/Title",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "ExtraBold"
+      },
+      "fontSize": 32,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 40
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:ac37d68d858f732ebabca809ccfaabca74c64265,",
+      "name": "Mobile/Editorial/Hero",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "ExtraBold"
+      },
+      "fontSize": 36,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 44
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:06f03cac38cba294e2c735eb3ae46fa4e97be228,",
+      "name": "Mobile/Editorial/Metric",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "ExtraBold"
+      },
+      "fontSize": 26,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 34
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:a00ed6dc6462abc406c5fb98e2f33d36e1d0c442,",
+      "name": "Mobile/Editorial/Section",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Bold"
+      },
+      "fontSize": 20,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 28
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:001c9055672795af513d0375504c234b7908ba03,",
+      "name": "Mobile/Editorial/Caption",
+      "fontName": {
+        "family": "Be Vietnam Pro",
+        "style": "Medium"
+      },
+      "fontSize": 12,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 18
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:82921938e3dc99df1f27aab33d70e6c1649d7fd4,",
+      "name": "Mobile/iOS 27/Large title",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700,
+          "wdth": 100
+        }
+      },
+      "fontSize": 34,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 41
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": -0.6000000238418579
+      }
+    },
+    {
+      "id": "S:a19a872561e384f367647f53a918c48bd4e5e506,",
+      "name": "Mobile/iOS 27/Title",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700,
+          "wdth": 100
+        }
+      },
+      "fontSize": 28,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 34
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": -0.6000000238418579
+      }
+    },
+    {
+      "id": "S:e988a6396c5365268b30e390651f15d29547313e,",
+      "name": "Mobile/iOS 27/Section",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Semibold",
+        "variationSettings": {
+          "wght": 590,
+          "wdth": 100
+        }
+      },
+      "fontSize": 22,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 28
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:705cc951707e8da48b842dfbf5caf3e52bdacc23,",
+      "name": "Mobile/iOS 27/Headline",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Semibold",
+        "variationSettings": {
+          "wght": 590,
+          "wdth": 100
+        }
+      },
+      "fontSize": 17,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 22
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:5cee3d8ad743a274198f754dc3134ab593350fca,",
+      "name": "Mobile/iOS 27/Body",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400,
+          "wdth": 100
+        }
+      },
+      "fontSize": 17,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 22
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:6eca67ce02dbc7b5231a30a14f4a18d2c20670e1,",
+      "name": "Mobile/iOS 27/Subheadline",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Medium",
+        "variationSettings": {
+          "wght": 510,
+          "wdth": 100
+        }
+      },
+      "fontSize": 15,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 20
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:8482be147c2c22b60f4af0c5944a719a91b9d4a4,",
+      "name": "Mobile/iOS 27/Footnote",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400,
+          "wdth": 100
+        }
+      },
+      "fontSize": 13,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 18
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:f3a2793c3e13f3901dba1fffd0258927e5b9e5ca,",
+      "name": "Mobile/iOS 27/Caption",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Medium",
+        "variationSettings": {
+          "wght": 510,
+          "wdth": 100
+        }
+      },
+      "fontSize": 12,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 16
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "id": "S:98c72d29880994a7e6e2affb8bc35e794984da3f,",
+      "name": "Mobile/iOS 27/Metric",
+      "fontName": {
+        "family": "SF Pro",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700,
+          "wdth": 100
+        }
+      },
+      "fontSize": 40,
+      "lineHeight": {
+        "unit": "PIXELS",
+        "value": 44
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": -0.6000000238418579
+      }
+    }
+  ],
+  "paintStyles": [
+    {
+      "id": "S:839985934b380a70c983efab79cdfeec7d8b8580,",
+      "name": "Wolfari/Mobile/Action gradient",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0,
+                "g": 0.43529412150382996,
+                "b": 0.5215686559677124,
+                "a": 1
+              },
+              "position": 0,
+              "boundVariables": {
+                "color": {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:460:3972"
+                }
+              }
+            },
+            {
+              "color": {
+                "r": 0.0313725508749485,
+                "g": 0.42352941632270813,
+                "b": 0.6901960968971252,
+                "a": 1
+              },
+              "position": 1,
+              "boundVariables": {
+                "color": {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:460:3974"
+                }
+              }
+            }
+          ],
+          "gradientTransform": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S:042767a43fc7eae7fd10410865bdb09ef3414f46,",
+      "name": "Mobile/Editorial/Paper to mint",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "gradientStops": [
+            {
+              "color": {
+                "r": 0.9882352948188782,
+                "g": 0.9725490212440491,
+                "b": 0.9450980424880981,
+                "a": 1
+              },
+              "position": 0,
+              "boundVariables": {
+                "color": {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:599:8025"
+                }
+              }
+            },
+            {
+              "color": {
+                "r": 0.929411768913269,
+                "g": 0.9647058844566345,
+                "b": 0.9490196108818054,
+                "a": 1
+              },
+              "position": 1,
+              "boundVariables": {
+                "color": {
+                  "type": "VARIABLE_ALIAS",
+                  "id": "VariableID:599:8027"
+                }
+              }
+            }
+          ],
+          "gradientTransform": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              -1,
+              0,
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "effectStyles": [
+    {
+      "id": "S:d925c9a34ee49497fa30379c4efc057cba0ca887,",
+      "name": "Wolfari/Soft shadow",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 24,
+          "boundVariables": {},
+          "color": {
+            "r": 0.019999999552965164,
+            "g": 0.27000001072883606,
+            "b": 0.550000011920929,
+            "a": 0.10000000149011612
+          },
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:196cc603c194918e8944870a748176e651b68114,",
+      "name": "Wolfari/Mobile/Liquid glass",
+      "effects": [
+        {
+          "type": "BACKGROUND_BLUR",
+          "visible": true,
+          "radius": 18,
+          "boundVariables": {},
+          "blurType": "NORMAL"
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 24,
+          "boundVariables": {},
+          "color": {
+            "r": 0.03999999910593033,
+            "g": 0.2199999988079071,
+            "b": 0.3199999928474426,
+            "a": 0.15000000596046448
+          },
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "spread": -4,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        },
+        {
+          "type": "INNER_SHADOW",
+          "visible": true,
+          "radius": 1,
+          "boundVariables": {},
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.8999999761581421
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0,
+          "blendMode": "NORMAL"
+        }
+      ]
+    },
+    {
+      "id": "S:74cf933bde62d737e3b4d70e62c86b3a224ba669,",
+      "name": "Wolfari Mobile / Soft surface",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 16,
+          "boundVariables": {},
+          "color": {
+            "r": 0.09000000357627869,
+            "g": 0.23000000417232513,
+            "b": 0.30000001192092896,
+            "a": 0.04500000178813934
+          },
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:730e969020595c0806e00366b5604d58c5ad2496,",
+      "name": "Wolfari/Mobile/Soft lift",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 12,
+          "boundVariables": {},
+          "color": {
+            "r": 0.03500000014901161,
+            "g": 0.18000000715255737,
+            "b": 0.23999999463558197,
+            "a": 0.054999999701976776
+          },
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:eb38cc85de6190d1d888fc8c2fcc24d1e238db98,",
+      "name": "Wolfari/Mobile/Action depth",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 12,
+          "boundVariables": {},
+          "color": {
+            "r": 0,
+            "g": 0.33000001311302185,
+            "b": 0.4699999988079071,
+            "a": 0.1899999976158142
+          },
+          "offset": {
+            "x": 0,
+            "y": 5
+          },
+          "spread": -2,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        },
+        {
+          "type": "INNER_SHADOW",
+          "visible": true,
+          "radius": 1,
+          "boundVariables": {},
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.2199999988079071
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0,
+          "blendMode": "NORMAL"
+        }
+      ]
+    },
+    {
+      "id": "S:4ce1cefae2b91c247d6d7865a033a8d5c66a29b1,",
+      "name": "Wolfari/Mobile/Input focus",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 0,
+          "boundVariables": {},
+          "color": {
+            "r": 0,
+            "g": 0.550000011920929,
+            "b": 0.6700000166893005,
+            "a": 0.12999999523162842
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "spread": 3,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:0702d38d89d8c6da6a6aadcddb479f7ec1910dce,",
+      "name": "Wolfari/Mobile/Liquid glass · Floating",
+      "effects": [
+        {
+          "type": "GLASS",
+          "visible": true,
+          "radius": 12,
+          "boundVariables": {},
+          "refraction": 0.1599999964237213,
+          "depth": 18,
+          "lightAngle": -45,
+          "lightIntensity": 0.6499999761581421,
+          "dispersion": 0.02500000037252903
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 24,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.24313725531101227,
+            "b": 0.3176470696926117,
+            "a": 0.14000000059604645
+          },
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "spread": -5,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:80e1d9b0af128b073dd7b7ba53a5aba7285380e0,",
+      "name": "Wolfari/Mobile/Liquid glass · Sheet",
+      "effects": [
+        {
+          "type": "GLASS",
+          "visible": true,
+          "radius": 20,
+          "boundVariables": {},
+          "refraction": 0.07999999821186066,
+          "depth": 12,
+          "lightAngle": -45,
+          "lightIntensity": 0.6499999761581421,
+          "dispersion": 0.02500000037252903
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 32,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08627451211214066,
+            "g": 0.24313725531101227,
+            "b": 0.3176470696926117,
+            "a": 0.15000000596046448
+          },
+          "offset": {
+            "x": 0,
+            "y": -8
+          },
+          "spread": -8,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:3970fa8c02e25b7b199f2c0fbfab4056331ac84b,",
+      "name": "Wolfari/Mobile/Icon · Sculpted depth",
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "visible": true,
+          "radius": 1,
+          "boundVariables": {},
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 0.6499999761581421
+          },
+          "offset": {
+            "x": 0,
+            "y": 1.5
+          },
+          "spread": 0,
+          "blendMode": "NORMAL"
+        },
+        {
+          "type": "INNER_SHADOW",
+          "visible": true,
+          "radius": 2,
+          "boundVariables": {},
+          "color": {
+            "r": 0.0313725508749485,
+            "g": 0.24705882370471954,
+            "b": 0.3294117748737335,
+            "a": 0.20000000298023224
+          },
+          "offset": {
+            "x": 0,
+            "y": -2
+          },
+          "spread": 0,
+          "blendMode": "NORMAL"
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 0,
+          "boundVariables": {},
+          "color": {
+            "r": 0.0784313753247261,
+            "g": 0.24705882370471954,
+            "b": 0.32156863808631897,
+            "a": 0.14000000059604645
+          },
+          "offset": {
+            "x": 0,
+            "y": 2
+          },
+          "spread": -0.5,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 8,
+          "boundVariables": {},
+          "color": {
+            "r": 0.0784313753247261,
+            "g": 0.24705882370471954,
+            "b": 0.32156863808631897,
+            "a": 0.15000000596046448
+          },
+          "offset": {
+            "x": 0,
+            "y": 6
+          },
+          "spread": -2,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:bbfaddf75a7743067f8f585e9e94d067a73492c7,",
+      "name": "Wolfari/Mobile/Paper lift",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 12,
+          "boundVariables": {},
+          "color": {
+            "r": 0.13725490868091583,
+            "g": 0.24313725531101227,
+            "b": 0.2078431397676468,
+            "a": 0.04500000178813934
+          },
+          "offset": {
+            "x": 0,
+            "y": 3
+          },
+          "spread": -3,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:8b97b4e06e28512ee1921f048086aa256931c692,",
+      "name": "Mobile/Editorial/Paper lift",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 6,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08235294371843338,
+            "g": 0.3019607961177826,
+            "b": 0.3137255012989044,
+            "a": 0.054999999701976776
+          },
+          "offset": {
+            "x": 0,
+            "y": 2
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 22,
+          "boundVariables": {},
+          "color": {
+            "r": 0.08235294371843338,
+            "g": 0.3019607961177826,
+            "b": 0.3137255012989044,
+            "a": 0.03500000014901161
+          },
+          "offset": {
+            "x": 0,
+            "y": 10
+          },
+          "spread": -7,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:8d39cabd9a9366c649514f9fddb2b186832aa1e2,",
+      "name": "Mobile/iOS 27/Floating glass",
+      "effects": [
+        {
+          "type": "GLASS",
+          "visible": true,
+          "radius": 18,
+          "boundVariables": {},
+          "refraction": 0.07999999821186066,
+          "depth": 10,
+          "lightAngle": -45,
+          "lightIntensity": 0.44999998807907104,
+          "dispersion": 0.009999999776482582
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 20,
+          "boundVariables": {},
+          "color": {
+            "r": 0.11999999731779099,
+            "g": 0.20000000298023224,
+            "b": 0.23999999463558197,
+            "a": 0.07999999821186066
+          },
+          "offset": {
+            "x": 0,
+            "y": 5
+          },
+          "spread": -4,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:f5513dd85a9f397db10ee5d3f1b72a65aea73267,",
+      "name": "Mobile/iOS 27/Sheet glass",
+      "effects": [
+        {
+          "type": "GLASS",
+          "visible": true,
+          "radius": 24,
+          "boundVariables": {},
+          "refraction": 0.03999999910593033,
+          "depth": 10,
+          "lightAngle": -45,
+          "lightIntensity": 0.44999998807907104,
+          "dispersion": 0.009999999776482582
+        },
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 32,
+          "boundVariables": {},
+          "color": {
+            "r": 0.11999999731779099,
+            "g": 0.20000000298023224,
+            "b": 0.23999999463558197,
+            "a": 0.10000000149011612
+          },
+          "offset": {
+            "x": 0,
+            "y": 5
+          },
+          "spread": -4,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:b4851edbfff8bdfb37219793fb9517e3936ace1c,",
+      "name": "Mobile/iOS 27/Selection",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 5,
+          "boundVariables": {},
+          "color": {
+            "r": 0.11999999731779099,
+            "g": 0.20000000298023224,
+            "b": 0.23999999463558197,
+            "a": 0.07999999821186066
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    },
+    {
+      "id": "S:8af4074e98a385a7578b653e5bc853b66e0d2ebd,",
+      "name": "Mobile/iOS 27/Card",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "visible": true,
+          "radius": 8,
+          "boundVariables": {},
+          "color": {
+            "r": 0.11999999731779099,
+            "g": 0.20000000298023224,
+            "b": 0.23999999463558197,
+            "a": 0.02500000037252903
+          },
+          "offset": {
+            "x": 0,
+            "y": 2
+          },
+          "spread": 0,
+          "blendMode": "NORMAL",
+          "showShadowBehindNode": true
+        }
+      ]
+    }
+  ],
+  "gridStyles": []
+}

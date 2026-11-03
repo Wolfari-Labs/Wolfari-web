@@ -1,0 +1,1094 @@
+[
+  {
+    "id": "194:1093",
+    "name": "A01 · Admin — Tổng quan",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "197:1073",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 75,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Tổng quan",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Tổng quan hệ thống",
+      "Theo dõi tài khoản, provider, tác vụ nền và trạng thái vận hành của Wolfari.",
+      "Dữ liệu minh họa",
+      "!",
+      "Quyền Admin chỉ áp dụng ở cấp hệ thống; không mặc nhiên có quyền Owner và không được thao tác Finance thay người dùng.",
+      "Tài khoản",
+      "1.248",
+      "1.226 đang hoạt động",
+      "Provider hoạt động",
+      "5/6",
+      "1 provider đang suy giảm",
+      "Job đang chạy",
+      "12",
+      "3 job đang chờ",
+      "Lỗi 24 giờ",
+      "7"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "194:1094",
+    "name": "A02 · Admin — Tài khoản",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "197:1259",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 84,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Tài khoản",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Quản lý tài khoản",
+      "Xem trạng thái tài khoản và thực hiện khóa/mở khóa ở phạm vi hệ thống.",
+      "Dữ liệu minh họa",
+      "Đang hoạt động",
+      "1.226",
+      "+18 trong 7 ngày",
+      "Đã khóa",
+      "22",
+      "4 tài khoản tuần này",
+      "Admin",
+      "3",
+      "Quyền hệ thống",
+      "Lưu ý phân quyền",
+      "Không gán vai trò Owner/Member tại đây.",
+      "Danh sách tài khoản",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "194:1095",
+    "name": "A03 · Admin — Tích hợp & Provider",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "197:1454",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 74,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Tích hợp & Provider",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Tích hợp & Provider",
+      "Theo dõi trạng thái, quota và cấu hình các nguồn dữ liệu bên ngoài.",
+      "Dữ liệu minh họa",
+      "!",
+      "Credential và API key không hiển thị trực tiếp trên client; cấu hình nhạy cảm phải được quản lý ở server hoặc secret manager.",
+      "Map / Places",
+      "Hoạt động",
+      "Quota & mức sử dụng",
+      "Đã sử dụng",
+      "62%",
+      "Cập nhật 20:05 · 30/09/2026",
+      "Cấu hình",
+      "Tạm dừng",
+      "Route",
+      "Hoạt động",
+      "Quota & mức sử dụng"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "194:1096",
+    "name": "A04 · Admin — Giám sát hệ thống",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "197:1640",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 96,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Giám sát hệ thống",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Giám sát hệ thống",
+      "Health check, hiệu năng API, background job và lỗi tích hợp.",
+      "Dữ liệu minh họa",
+      "API p95",
+      "620 ms",
+      "Mục tiêu đề xuất < 2 giây",
+      "Tỷ lệ lỗi",
+      "0,8%",
+      "24 giờ gần nhất",
+      "Queue đang chờ",
+      "3",
+      "Không có dead-letter",
+      "Provider lỗi",
+      "1",
+      "Weather đang suy giảm",
+      "Health check dịch vụ"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "194:1097",
+    "name": "A05 · Admin — Audit & Hỗ trợ",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "197:1872",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 75,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Audit & hỗ trợ",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Audit & hỗ trợ",
+      "Theo dõi thao tác quản trị và các yêu cầu hỗ trợ cần truy cập dữ liệu có kiểm soát.",
+      "Dữ liệu minh họa",
+      "!",
+      "Admin không được tự truy cập dữ liệu Trip riêng tư chỉ vì có quyền Admin; mọi truy cập hỗ trợ phải có lý do hợp lệ và được ghi lịch sử.",
+      "Audit log quản trị",
+      "Tất cả hành động",
+      "Admin: Tất cả",
+      "30/09/2026",
+      "Thời gian",
+      "Admin",
+      "Hành động",
+      "Đối tượng",
+      "20:10",
+      "trang.admin",
+      "Mở khóa tài khoản"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "194:1098",
+    "name": "A06 · Admin — Cấu hình hệ thống",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "197:2056",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 76,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Cấu hình hệ thống",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Cấu hình hệ thống",
+      "Quản lý feature flag, cấu hình vận hành và các thiết lập hệ thống được phép.",
+      "Dữ liệu minh họa",
+      "Feature flags",
+      "Price Watch",
+      "Theo dõi giá qua provider ngoài",
+      "Đã tắt",
+      "Google OAuth",
+      "Đăng nhập Google mở rộng",
+      "Đang bật",
+      "Public Share",
+      "Cho phép tạo link chia sẻ",
+      "Đang bật",
+      "DSS Weather",
+      "Gợi ý dựa trên thời tiết",
+      "Đang bật"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "215:1271",
+    "name": "A02.1 · Admin — Tài khoản · Đã khóa",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "215:1272",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 84,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Tài khoản",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Quản lý tài khoản",
+      "Xem trạng thái tài khoản và thực hiện khóa/mở khóa ở phạm vi hệ thống.",
+      "Dữ liệu minh họa",
+      "Đang hoạt động",
+      "1.226",
+      "+18 trong 7 ngày",
+      "Đã khóa",
+      "22",
+      "4 tài khoản tuần này",
+      "Admin",
+      "3",
+      "Quyền hệ thống",
+      "Lưu ý phân quyền",
+      "Không gán vai trò Owner/Member tại đây.",
+      "Danh sách tài khoản",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "215:1497",
+    "name": "A02.2 · Admin — Tài khoản · Quản trị viên",
+    "width": 1440,
+    "height": 960,
+    "layout": "NONE",
+    "padding": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "gap": 0,
+    "sections": [
+      {
+        "id": "215:1498",
+        "name": "Admin shell",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 84,
+    "text": [
+      "TRUNG TÂM",
+      "QUẢN TRỊ",
+      "T",
+      "Tổng quan",
+      "N",
+      "Tài khoản",
+      "P",
+      "Tích hợp",
+      "G",
+      "Giám sát",
+      "A",
+      "Audit & hỗ trợ",
+      "C",
+      "Cấu hình",
+      "Quản trị hệ thống",
+      "không thay quyền trong Trip",
+      "Quản trị  /  Tài khoản",
+      "A",
+      "Trang Nguyễn · Admin",
+      "Quản lý tài khoản",
+      "Xem trạng thái tài khoản và thực hiện khóa/mở khóa ở phạm vi hệ thống.",
+      "Dữ liệu minh họa",
+      "Đang hoạt động",
+      "1.226",
+      "+18 trong 7 ngày",
+      "Đã khóa",
+      "22",
+      "4 tài khoản tuần này",
+      "Admin",
+      "3",
+      "Quyền hệ thống",
+      "Lưu ý phân quyền",
+      "Không gán vai trò Owner/Member tại đây.",
+      "Danh sách tài khoản",
+      "Tài khoản"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 9,
+    "instanceNames": [
+      "Brand/Logo",
+      "Nav / Tổng quan",
+      "Nav / Tài khoản",
+      "Nav / Tích hợp",
+      "Nav / Giám sát",
+      "Nav / Audit & hỗ trợ",
+      "Nav / Cấu hình",
+      "Brand/Mascot",
+      "Wolfari/Admin Topbar"
+    ],
+    "imageCount": 2,
+    "imageHashes": [
+      "42e2a0eabaf855ee671f3318ac603a494ce18cca",
+      "c675e4c89e0c1f674795daef66665f093218fa08"
+    ]
+  },
+  {
+    "id": "216:1337",
+    "name": "Admin Action · Khóa tài khoản",
+    "width": 520,
+    "height": 316,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1338",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1341",
+        "name": "Prototype field / Tài khoản",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1345",
+        "name": "Prototype field / Lý do",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1349",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 8,
+    "text": [
+      "Khóa tài khoản",
+      "Tài khoản sẽ không thể đăng nhập cho đến khi được mở khóa lại.",
+      "Tài khoản",
+      "minh***@mail.com",
+      "Lý do",
+      "Nhập lý do khóa tài khoản...",
+      "Hủy",
+      "Xác nhận khóa"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1354",
+    "name": "Admin Action · Mở khóa tài khoản",
+    "width": 520,
+    "height": 308,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1355",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1358",
+        "name": "Prototype field / Tài khoản",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1362",
+        "name": "Prototype field / Ghi chú quản trị",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1366",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 8,
+    "text": [
+      "Mở khóa tài khoản",
+      "Cho phép người dùng đăng nhập lại vào hệ thống.",
+      "Tài khoản",
+      "huy***@mail.com",
+      "Ghi chú quản trị",
+      "Đã xác minh yêu cầu hỗ trợ",
+      "Hủy",
+      "Mở khóa"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1371",
+    "name": "Admin Action · Cấu hình Provider",
+    "width": 520,
+    "height": 366,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1372",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1375",
+        "name": "Prototype field / Quota cảnh báo",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1379",
+        "name": "Prototype field / Timeout",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1383",
+        "name": "Prototype field / Retry",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1387",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 10,
+    "text": [
+      "Cấu hình Weather Provider",
+      "Điều chỉnh giới hạn và chính sách gọi provider. Credential không hiển thị ở client.",
+      "Quota cảnh báo",
+      "80%",
+      "Timeout",
+      "8 giây",
+      "Retry",
+      "Tối đa 3 lần",
+      "Hủy",
+      "Lưu cấu hình"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1392",
+    "name": "Admin Action · Trạng thái Provider",
+    "width": 520,
+    "height": 298,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1393",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1396",
+        "name": "Prototype field / Provider",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1400",
+        "name": "Prototype field / Trạng thái mới",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1404",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 8,
+    "text": [
+      "Thay đổi trạng thái Provider",
+      "Tạm dừng provider có thể làm một số chức năng phụ thuộc tạm thời không khả dụng.",
+      "Provider",
+      "Map / Places",
+      "Trạng thái mới",
+      "Tạm dừng",
+      "Hủy",
+      "Xác nhận"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1409",
+    "name": "Admin Action · Retry Job",
+    "width": 520,
+    "height": 366,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1410",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1413",
+        "name": "Prototype field / Job",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1417",
+        "name": "Prototype field / Lần thử hiện tại",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1421",
+        "name": "Prototype field / Lỗi gần nhất",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1425",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 10,
+    "text": [
+      "Retry background job",
+      "Chạy lại tác vụ thất bại theo giới hạn retry của hệ thống.",
+      "Job",
+      "weather-refresh",
+      "Lần thử hiện tại",
+      "2 / 3",
+      "Lỗi gần nhất",
+      "TIMEOUT · provider không phản hồi",
+      "Hủy",
+      "Retry ngay"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1430",
+    "name": "Admin Action · Chi tiết hỗ trợ",
+    "width": 520,
+    "height": 366,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1431",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1434",
+        "name": "Prototype field / Chủ đề",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1438",
+        "name": "Prototype field / Người gửi",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1442",
+        "name": "Prototype field / Phạm vi hiện tại",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1446",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 10,
+    "text": [
+      "Yêu cầu hỗ trợ #SP-042",
+      "Xem nội dung yêu cầu trước khi quyết định có cần truy cập dữ liệu hỗ trợ hay không.",
+      "Chủ đề",
+      "Không tải được file export",
+      "Người gửi",
+      "user_1024",
+      "Phạm vi hiện tại",
+      "Chưa yêu cầu truy cập dữ liệu riêng tư",
+      "Hủy",
+      "Ghi lý do truy cập"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1451",
+    "name": "Admin Action · Lý do truy cập hỗ trợ",
+    "width": 520,
+    "height": 384,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1452",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1455",
+        "name": "Prototype field / Lý do",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1459",
+        "name": "Prototype field / Phạm vi dữ liệu",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1463",
+        "name": "Prototype field / Thời hạn truy cập",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1467",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 10,
+    "text": [
+      "Tạo yêu cầu truy cập dữ liệu",
+      "Chỉ yêu cầu đúng phạm vi cần thiết; hành động này phải được ghi audit.",
+      "Lý do",
+      "Phân tích lỗi export theo ticket #SP-042",
+      "Phạm vi dữ liệu",
+      "Metadata export + log kỹ thuật liên quan",
+      "Thời hạn truy cập",
+      "30 phút",
+      "Hủy",
+      "Tạo yêu cầu"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  },
+  {
+    "id": "216:1472",
+    "name": "Admin Action · Feature Flag",
+    "width": 520,
+    "height": 298,
+    "layout": "VERTICAL",
+    "padding": [
+      22,
+      24,
+      22,
+      24
+    ],
+    "gap": 14,
+    "sections": [
+      {
+        "id": "216:1473",
+        "name": "Modal heading",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1476",
+        "name": "Prototype field / Tính năng",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1480",
+        "name": "Prototype field / Trạng thái hiện tại",
+        "type": "FRAME"
+      },
+      {
+        "id": "216:1484",
+        "name": "Modal actions",
+        "type": "FRAME"
+      }
+    ],
+    "textCount": 8,
+    "text": [
+      "Bật Price Watch",
+      "Bật tính năng chỉ khi provider tương ứng đã được cấu hình và kiểm tra hoạt động.",
+      "Tính năng",
+      "Price Watch",
+      "Trạng thái hiện tại",
+      "Đã tắt",
+      "Hủy",
+      "Bật tính năng"
+    ],
+    "fontFamilies": [
+      "Be Vietnam Pro"
+    ],
+    "instanceCount": 0,
+    "instanceNames": [],
+    "imageCount": 0,
+    "imageHashes": []
+  }
+]

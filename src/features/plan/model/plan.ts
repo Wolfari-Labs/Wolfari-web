@@ -21,6 +21,7 @@ export interface ActivityViewModel {
   readonly selectedLocationId: string | null;
   readonly startsAt: string | null;
   readonly endsAt: string | null;
+  readonly scheduledDate?: string | null;
   readonly position: number;
   readonly status: 'TODO' | 'COMPLETED';
   readonly source: 'MANUAL' | 'PROVIDER' | 'DSS';
@@ -95,6 +96,7 @@ export interface ActivityCreateInput {
   readonly selectedLocationId?: string | null;
   readonly startsAt?: string | null;
   readonly endsAt?: string | null;
+  readonly scheduledDate?: string | null;
   readonly position: number;
 }
 export type ActivityUpdateFields = Partial<ActivityCreateInput>;
