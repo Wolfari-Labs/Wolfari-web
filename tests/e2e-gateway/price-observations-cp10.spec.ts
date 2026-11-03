@@ -12,6 +12,7 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
   const cursors: (string | null)[] = [];
   await page.emulateMedia({ reducedMotion: 'reduce' });
   let allowInitialSuccess = false;
+  let hasHistoricalPrice = false;
   let failNext = true;
   const watch = {
     id: watchId,
@@ -73,6 +74,14 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
         },
       });
     }
+    if (!hasHistoricalPrice) {
+      return route.fulfill({
+        json: {
+          data: [],
+          meta: { next_cursor: null, stale: false, last_error: 'PROVIDER_TIMEOUT' },
+        },
+      });
+    }
     if (next !== null) {
       expect(next).toBe(cursor);
       expect(url.search).toContain('cursor=opaque%2B%2Fcursor%3D');
@@ -90,7 +99,11 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
     return route.fulfill({
       json: {
         data: next === null ? [first] : [second],
-        meta: { next_cursor: next === null ? cursor : null },
+        meta: {
+          next_cursor: next === null ? cursor : null,
+          stale: next === null,
+          last_error: next === null ? 'PROVIDER_TIMEOUT' : null,
+        },
       },
     });
   });
@@ -113,10 +126,17 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
   await expect(history.getByRole('button', { name: 'Tải thêm lịch sử' })).toHaveCount(0);
   allowInitialSuccess = true;
   await history.getByRole('button', { name: 'Thử lại' }).click();
+  await expect(history).toContainText('Chưa có giá quan sát.');
+  await expect(history).toContainText('Chưa lấy được giá mới');
+  await expect(history).not.toContainText('Giá cũ.');
+  hasHistoricalPrice = true;
+  await history.getByRole('button', { name: 'Tải lại lịch sử' }).click();
   await expect(history).toContainText('9.007.199.254.740.993 ₫');
   await expect(history).toContainText('MOCK_FLIGHT');
+  await expect(history).toContainText('Giá cũ.');
+  await expect(history).toContainText('Nguồn giá phản hồi quá thời gian chờ. (PROVIDER_TIMEOUT)');
+  await expect(history).toContainText('Giá lịch sử trước lần lỗi nguồn');
   await expect(history).toContainText('Nhận dữ liệu:');
-  await expect(history).toContainText('Quan sát gần nhất đã tải');
   await expect(history).toContainText('Quan sát:');
   await expect(history).toContainText('Nguồn: MOCK_FLIGHT');
   await expect(history).toContainText('Không xác nhận giá hiện tại');
@@ -132,6 +152,8 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
   await history.screenshot({ path: testInfo.outputPath('price-observations-page-error.png') });
   await history.getByRole('button', { name: 'Thử lại' }).click();
   await expect(history.getByRole('listitem')).toHaveCount(2);
+  await expect(history).toContainText('Quan sát gần nhất đã tải');
+  await expect(history.getByText('Giá lịch sử trước lần lỗi nguồn')).toHaveCount(0);
   await expect(history).toContainText('9.007.199.254.740.992 ₫');
   await expect(history).toContainText('9.007.199.254.740.993 ₫');
   expect(cursors[0]).toBeNull();

@@ -78,13 +78,11 @@ export function createRuntimePriceWatchRepository(client: GatewayHttpClient) {
       );
     },
     async observations(id: string, cursor: string | null, signal?: AbortSignal) {
-      return cursorPage(
-        await client.read(
-          `/api/v1/price-watches/${encodeURIComponent(id)}/observations?${pageQuery(cursor)}`,
-          signal ? { signal } : {},
-        ),
-        decodeObservation,
+      const response = await client.read(
+        `/api/v1/price-watches/${encodeURIComponent(id)}/observations?${pageQuery(cursor)}`,
+        signal ? { signal } : {},
       );
+      return { ...cursorPage(response, decodeObservation), source: response.metadata?.priceSource };
     },
     async command(tripId: string, intent: WatchIntent, signal?: AbortSignal) {
       return decodeWatch(
