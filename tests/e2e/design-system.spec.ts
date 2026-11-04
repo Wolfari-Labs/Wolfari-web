@@ -185,11 +185,19 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
     await dialog.getByRole('button', { name: 'Mở xác nhận' }).click();
     const alert = page.getByRole('alertdialog', { name: 'Xác nhận minh họa?' });
     await expect(alert.getByRole('button', { name: 'Hủy' })).toBeFocused();
+    // Autofocus can precede Radix's layer registration. Wait for the alert to
+    // own interaction before sending document-level keys to the nested popup.
+    await expect(
+      page.getByRole('dialog', { name: 'Popup minh họa', includeHidden: true }),
+    ).toHaveCSS('pointer-events', 'none');
+    await expect(alert).toHaveCSS('pointer-events', 'auto');
     await page.keyboard.press('Tab');
     await expect(alert.getByRole('button', { name: 'Xác nhận', exact: true })).toBeFocused();
     await page.keyboard.press('Escape');
     await expect(alert).not.toBeVisible();
+    await expect(dialog).toBeVisible();
     await expect(dialog.getByRole('button', { name: 'Mở xác nhận' })).toBeFocused();
+    await expect(dialog).toHaveCSS('pointer-events', 'auto');
     await expect
       .poll(() => page.evaluate(() => getComputedStyle(document.body).overflow))
       .toBe('hidden');

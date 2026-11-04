@@ -1,6 +1,7 @@
 export interface GatewayMetadata {
   exportRevision?: number;
   nextCursor?: string | null;
+  priceSource?: { stale: boolean; lastError: string | null };
 }
 export type GatewayEnvelope =
   | { kind: 'success'; data: unknown; correlationId: string | null; metadata: GatewayMetadata }
@@ -42,6 +43,10 @@ export function parseEnvelope(value: unknown): GatewayEnvelope {
       metadata: {
         ...(revision === undefined ? {} : { exportRevision: revision as number }),
         ...(cursor === undefined ? {} : { nextCursor: cursor as string | null }),
+        ...(typeof value.meta.stale === 'boolean' &&
+        (value.meta.last_error === null || typeof value.meta.last_error === 'string')
+          ? { priceSource: { stale: value.meta.stale, lastError: value.meta.last_error } }
+          : {}),
       },
     };
   if (

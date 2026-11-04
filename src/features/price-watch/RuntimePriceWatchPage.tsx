@@ -28,6 +28,13 @@ const labels = {
   STOPPED: 'Đã dừng',
 };
 const money = (s: string) => new Intl.NumberFormat('vi-VN').format(BigInt(s)) + ' ₫';
+const providerErrors = new Map([
+  ['PROVIDER_TIMEOUT', 'Nguồn giá phản hồi quá thời gian chờ.'],
+  ['PROVIDER_RESPONSE_INVALID', 'Dữ liệu nguồn trả về không hợp lệ.'],
+  ['PROVIDER_NOT_SUPPORTED', 'Nguồn giá chưa được hỗ trợ.'],
+  ['PROVIDER_UNAVAILABLE', 'Hiện không thể kết nối với nguồn giá.'],
+  ['LEASE_EXHAUSTED', 'Lượt lấy giá đã hết số lần thử.'],
+]);
 function Observations({
   watch,
   repository,
@@ -49,9 +56,23 @@ function Observations({
     (best, row) => (!best || Date.parse(row.observedAt) > Date.parse(best.observedAt) ? row : best),
     null,
   );
+  const source = query.data?.pages.at(-1)?.source;
   return (
     <>
       <h3>Lịch sử giá quan sát</h3>
+      {source?.lastError && (
+        <Alert tone="warning">
+          {source.stale ? 'Giá cũ. ' : ''}Chưa lấy được giá mới từ nguồn theo dõi.{' '}
+          {providerErrors.has(source.lastError) && (
+            <span>
+              {providerErrors.get(source.lastError)} ({source.lastError}){' '}
+            </span>
+          )}
+          <Button variant="plain" disabled={query.isFetching} onClick={() => void query.refetch()}>
+            Tải lại lịch sử
+          </Button>
+        </Alert>
+      )}
       {query.isPending && <ContentState state="loading" />}
       {query.isError && (
         <Alert tone="error">
@@ -73,10 +94,12 @@ function Observations({
           {money(latest.price)}{' '}
           <Badge
             tone={
-              BigInt(latest.price) <= BigInt(watch.fields.threshold_price) ? 'success' : 'neutral'
+              !source?.stale && BigInt(latest.price) < BigInt(watch.fields.threshold_price)
+                ? 'success'
+                : 'neutral'
             }
           >
-            Quan sát gần nhất đã tải
+            {source?.stale ? 'Giá lịch sử trước lần lỗi nguồn' : 'Quan sát gần nhất đã tải'}
           </Badge>
         </p>
       ) : (
