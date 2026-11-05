@@ -21,8 +21,8 @@ import { createFixtureDemoAccess } from '../src/infrastructure/fixtures/demo-acc
 const valid: AuthFormValues = {
   fullName: 'Trang Nguyễn',
   email: 'name@example.com',
-  password: 'a long preview password',
-  confirmation: 'a long preview password',
+  password: 'Wolfari1',
+  confirmation: 'Wolfari1',
   acceptedTerms: true,
 };
 const request = (
@@ -43,20 +43,27 @@ describe('Auth validation without Identity writes', () => {
     expect(validateAuth('register', valid)).toEqual({});
     expect(validateAuth('login', { ...valid, password: 'old' })).toEqual({});
   });
-  it('counts Unicode code points and applies the runtime 15–128 policy', () => {
+  it('counts Unicode code points and applies the runtime 8–128 policy', () => {
     expect(
       validateAuth('register', {
         ...valid,
-        password: '😀'.repeat(15),
-        confirmation: '😀'.repeat(15),
+        password: '😀'.repeat(8),
+        confirmation: '😀'.repeat(8),
       }),
     ).toEqual({});
-    expect(validateAuth('register', { ...valid, password: '😀'.repeat(14) })).toHaveProperty(
+    expect(validateAuth('register', { ...valid, password: '😀'.repeat(7) })).toHaveProperty(
       'password',
     );
     expect(validateAuth('register', { ...valid, password: 'a'.repeat(129) })).toHaveProperty(
       'password',
     );
+    expect(
+      validateAuth('register', {
+        ...valid,
+        password: '😀'.repeat(128),
+        confirmation: '😀'.repeat(128),
+      }),
+    ).toEqual({});
     // Identity's validName currently limits trimmed JavaScript string length.
     expect(validateAuth('register', { ...valid, fullName: '😀'.repeat(76) })).toHaveProperty(
       'fullName',
