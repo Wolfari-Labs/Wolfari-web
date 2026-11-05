@@ -8,6 +8,10 @@ import type { DomainError } from '../../shared/types/result';
 import type { GatewayHttpClient } from '../http/http-client';
 import { toDomainError } from '../http/domain-error';
 import { validCalendarDate } from '../../shared/lib/calendar';
+import {
+  preparationCapabilities,
+  parsePreparationIntent,
+} from '../../features/plan/model/preparation';
 
 function domainError(error: unknown): DomainError {
   return toDomainError(error);
@@ -150,6 +154,12 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
   }
   return {
     tripId: uuid(data.trip_id),
+    capabilities: Object.fromEntries(
+      preparationCapabilities.map((key) => [
+        key,
+        data.capabilities != null && record(data.capabilities)[key] === true,
+      ]),
+    ),
     planVersion: number(data.plan_version),
     exportRevision: number(data.export_revision),
     activities: activities.map((value) => {
@@ -248,6 +258,90 @@ export function createGatewayPlanRepository(
       }),
   };
   if (!client) return repository;
+
+  repository.mutatePreparation = async ({
+    tripId,
+    expectedPlanVersion,
+    idempotencyKey,
+    intent: input,
+    signal,
+  }) => {
+    const intent = parsePreparationIntent(input);
+    if (!intent)
+      return {
+        status: 'error',
+        error: { code: 'VALIDATION_FAILED', correlationId: null, retryable: false },
+      };
+    const root = `/api/v1/trips/${encodeURIComponent(tripId)}`;
+    const apply = intent.operation === 'recommendation-apply';
+    if (apply && intent.basePlanVersion !== expectedPlanVersion)
+      return {
+        status: 'error',
+        error: { code: 'VERSION_CONFLICT', correlationId: null, retryable: false },
+      };
+    const collection = intent.operation.startsWith('location-')
+      ? 'locations'
+      : intent.operation.startsWith('dress-')
+        ? 'dress-codes'
+        : apply
+          ? 'recommendations'
+          : 'packing-items';
+    const suffix = apply
+      ? '/apply'
+      : intent.operation === 'packing-assignment'
+        ? '/assignment'
+        : intent.operation === 'packing-completion'
+          ? '/completion'
+          : '';
+    const path = `${root}/${collection}${'id' in intent ? `/${encodeURIComponent(intent.id)}` : ''}${suffix}`;
+    const method =
+      apply || intent.operation.endsWith('-create')
+        ? 'POST'
+        : intent.operation.endsWith('-delete')
+          ? 'DELETE'
+          : intent.operation === 'packing-assignment'
+            ? 'PUT'
+            : 'PATCH';
+    const body: Record<string, unknown> = { expected_plan_version: expectedPlanVersion };
+    if ('fields' in intent)
+      for (const [key, value] of Object.entries(intent.fields))
+        body[key.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`)] = value;
+    if (intent.operation === 'packing-assignment')
+      body.assigned_member_id = intent.assignedMemberId;
+    if (intent.operation === 'packing-completion') body.status = intent.status;
+    if (apply) {
+      body.selected_item_ids = intent.selectedItemIds;
+      body.apply_request_id = idempotencyKey;
+    }
+    try {
+      const response = await client.write(path, {
+        method,
+        body,
+        signal,
+        includeCredentials: true,
+        ...(apply ? {} : { idempotencyKey }),
+      });
+      if (response.status === 202) invalid();
+      const data = record(response.data);
+      const version = number(apply ? data.applied_plan_version : data.plan_version);
+      if (
+        version <= expectedPlanVersion ||
+        (data.trip_id !== undefined && data.trip_id !== tripId) ||
+        (apply &&
+          (data.recommendation_id !== intent.id || data.apply_request_id !== idempotencyKey)) ||
+        (!apply && 'id' in intent && data.id !== undefined && data.id !== intent.id)
+      )
+        invalid();
+      return {
+        status: 'success',
+        data: { planVersion: version },
+        correlationId: response.correlationId,
+      };
+    } catch (error) {
+      if (signal.aborted) throw signal.reason;
+      return { status: 'error', error: domainError(error) };
+    }
+  };
 
   const command = async <T>(
     path: string,

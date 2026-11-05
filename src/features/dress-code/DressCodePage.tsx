@@ -25,6 +25,8 @@ import tripLandscapeForeground from '../../shared/assets/figma/25ff8.svg';
 import sendIcon from '../../shared/assets/figma/ac8db.svg';
 import officialLogo from '../../shared/assets/figma/44363.png';
 import { GatewayDressCodePage } from './GatewayDressCodePage';
+import { activePlan, validDressWrite } from '../plan/model/preparation';
+import { planDays } from '../plan/model/plan-presentation';
 
 type DressScope = 'ALL' | 'DAY' | 'ACTIVITY';
 
@@ -161,6 +163,10 @@ function PreviewDressCodePage() {
     'Trang phục thoải mái, phù hợp hoạt động và thời tiết.',
   );
   const [draftChecked, setDraftChecked] = useState(false);
+  const [draftScope, setDraftScope] = useState<'DAY' | 'ACTIVITY'>('DAY');
+  const [draftDate, setDraftDate] = useState(''),
+    [draftActivity, setDraftActivity] = useState('');
+  const [draftError, setDraftError] = useState('');
   const snapshot = useTripPlanSnapshot(tripId, scenario);
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
   const allItems = data?.plan.dressCodes ?? [];
@@ -255,21 +261,49 @@ function PreviewDressCodePage() {
             />
             <Select
               label="Phạm vi"
-              value={scope}
-              onChange={(event) => setScope(event.target.value as DressScope)}
+              value={draftScope}
+              onChange={(event) => {
+                setDraftScope(event.target.value as 'DAY' | 'ACTIVITY');
+                setDraftChecked(false);
+              }}
             >
-              <option value="ALL">Cả chuyến</option>
               <option value="DAY">Theo ngày</option>
               <option value="ACTIVITY">Theo hoạt động</option>
             </Select>
-            <Select label="Hoạt động trong chuyến đi" defaultValue="">
-              <option value="">Chọn hoạt động</option>
-              {data?.plan.activities.map((activity) => (
-                <option key={activity.id} value={activity.id}>
-                  {activity.title}
-                </option>
-              ))}
-            </Select>
+            {draftScope === 'DAY' ? (
+              <Select
+                label="Ngày trong chuyến đi"
+                value={draftDate}
+                onChange={(e) => {
+                  setDraftDate(e.target.value);
+                  setDraftChecked(false);
+                }}
+              >
+                <option value="">Chọn ngày</option>
+                {trip &&
+                  planDays(trip.startAt, trip.endAt, trip.timezone).map((day) => (
+                    <option key={day} value={day}>
+                      {day.split('-').reverse().join('/')}
+                    </option>
+                  ))}
+              </Select>
+            ) : (
+              <Select
+                label="Hoạt động trong chuyến đi"
+                value={draftActivity}
+                onChange={(e) => {
+                  setDraftActivity(e.target.value);
+                  setDraftChecked(false);
+                }}
+              >
+                <option value="">Chọn hoạt động</option>
+                {data?.plan.activities.map((activity) => (
+                  <option key={activity.id} value={activity.id}>
+                    {activity.title}
+                  </option>
+                ))}
+              </Select>
+            )}
             <DraftField
               label="Mô tả"
               value={draftDescription}
@@ -287,10 +321,25 @@ function PreviewDressCodePage() {
             <Button
               className={styles.checkButton}
               icon={<img src={sendIcon} alt="" />}
-              onClick={() => setDraftChecked(true)}
+              disabled={!data || !activePlan(data.trip) || !data.plan.permissions.canEdit}
+              onClick={() => {
+                const valid = validDressWrite({
+                  scopeType: draftScope,
+                  planDate: draftScope === 'DAY' ? draftDate : null,
+                  activityId: draftScope === 'ACTIVITY' ? draftActivity : null,
+                  label: draftTitle.trim(),
+                  description: draftDescription || null,
+                  publicDescription: null,
+                });
+                setDraftChecked(valid);
+                setDraftError(
+                  valid ? '' : 'Nhập tiêu đề (tối đa 100 ký tự) và chọn ngày hoặc Activity hợp lệ.',
+                );
+              }}
             >
               Kiểm tra bản nháp
             </Button>
+            {draftError && <p role="alert">{draftError}</p>}
             <CapabilityNote tone="info">
               Gợi ý và chỉnh sửa chỉ tạo bản nháp cục bộ; chưa gửi thay đổi lên kế hoạch.
             </CapabilityNote>

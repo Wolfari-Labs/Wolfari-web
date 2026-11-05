@@ -32,6 +32,7 @@ import { coordinateBrowserSession } from './infrastructure/session/coordinated-s
 import { createCommandCoordinator } from './infrastructure/operations/command-coordinator';
 import { decodeFinanceReceipt } from './infrastructure/repositories/finance-decoders';
 import { createNotificationRepository } from './infrastructure/repositories/notification.gateway-repository';
+import { createTravelRepository } from './infrastructure/repositories/travel.gateway-repository';
 import { createRuntimePriceWatchRepository } from './infrastructure/repositories/runtime-price-watch.gateway-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
@@ -178,6 +179,7 @@ async function start() {
               ? {
                   sessionManager,
                   runtimeServices: {
+                    travel: createTravelRepository(gatewayHttpClient),
                     notifications: createNotificationRepository(gatewayHttpClient),
                     priceWatch: createRuntimePriceWatchRepository(gatewayHttpClient),
                   },

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useCallback, useEffect, useRef, useState } from 'react';
 import type { DomainError } from '../../../shared/types/result';
 import { useTripRepository } from '../../trips/repositories/repository-context';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
@@ -25,6 +25,12 @@ const unavailable = (retryable: boolean): DomainError => ({
   retryable,
 });
 
+export const TripPlanRefreshContext = createContext<{
+  tripId: string;
+  refreshing: boolean;
+  refreshFailed: boolean;
+} | null>(null);
+
 function projectionMatches(plan: PlanViewModel) {
   return [
     ...plan.activities,
@@ -41,6 +47,11 @@ export function useTripPlanSnapshot(
 ) {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
+  const inheritedRefresh = useContext(TripPlanRefreshContext);
+  const pairRefreshing =
+    refreshing || (inheritedRefresh?.tripId === tripId && inheritedRefresh.refreshing);
+  const pairRefreshFailed =
+    refreshFailed || (inheritedRefresh?.tripId === tripId && inheritedRefresh.refreshFailed);
   const lastReady = useRef<Extract<TripPlanSnapshotState, { status: 'ready' }> | null>(null);
   const generation = useRef(0);
   useEffect(() => {
@@ -117,8 +128,8 @@ export function useTripPlanSnapshot(
   // A pair of independently finishing reads must not temporarily unmount editors.
   if (
     lastReady.current?.trip.id === tripId &&
-    ((refreshing && state.status === 'loading') ||
-      ((refreshing || refreshFailed) &&
+    ((pairRefreshing && state.status === 'loading') ||
+      ((pairRefreshing || pairRefreshFailed) &&
         state.status === 'error' &&
         (state.error.code === 'SERVICE_UNAVAILABLE' || state.error.code === 'VERSION_CONFLICT')))
   ) {
@@ -162,5 +173,5 @@ export function useTripPlanSnapshot(
       }
     }
   }, [tripId, refetchTrip, refetchPlan]);
-  return { state, retry, refreshing, refreshFailed };
+  return { state, retry, refreshing: pairRefreshing, refreshFailed: pairRefreshFailed };
 }

@@ -5,6 +5,7 @@ import {
 } from '../features/members/invitation-token';
 import { invitationManagementAttempt } from '../features/members/invitation-management-attempt';
 import { Link, useLocation, useNavigate, useParams, useMatches, Outlet } from 'react-router';
+import { TripCommandsProvider } from '../features/plan/components/TripCommandsProvider';
 import {
   scenarios,
   type ShellScenario,
@@ -337,6 +338,14 @@ export function App({
           headingLevel={2}
           error={{ code: 'PERMISSION_DENIED', correlationId: null, retryable: false }}
         />
+      ) : tripId && routeContext.viewer?.id && !routeContext.previewEnabled ? (
+        <TripCommandsProvider
+          key={`${tripId}:${routeContext.viewer.id}`}
+          tripId={tripId}
+          actorId={routeContext.viewer.id}
+        >
+          <Outlet context={routeContext} />
+        </TripCommandsProvider>
       ) : (
         <Outlet context={routeContext} />
       )}

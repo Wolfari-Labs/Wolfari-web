@@ -1,5 +1,9 @@
 # Backend compatibility boundary
 
+## Subsequent user-authorized SRS v1.2 workstream
+
+The historical CP records below are unchanged. New Web Map/Dress/Packing/Travel/DSS contracts, capability activation and backend obligations are documented in [Web preparation SRS12](../web-preparation-srs12.md). These are contract-ready client integrations, not evidence that Backend/provider implementations exist. No Backend files are changed.
+
 Snapshot CP-01 29/10/2026. Audit read-only: Frontend repositories/decoders/intents/session, đối chiếu endpoint inventories trong `../Wolfari-backend/docs/api/`. Không sửa Backend. **Không phải xác nhận full schema parity hoặc live Backend acceptance**. Source Figma không được ghi đè contract.
 
 ## 1. Nguồn và endpoint map

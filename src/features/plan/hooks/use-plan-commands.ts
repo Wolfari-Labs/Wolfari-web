@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { DomainError } from '../../../shared/types/result';
 import type { PlanCommandResult } from '../model/plan';
 
@@ -22,18 +22,20 @@ const unavailable: DomainError = {
 };
 
 /** Commands must close over an immutable copy of the user's submitted fields. */
-export function usePlanCommands({
+export function useOwnedPlanCommands({
   tripId,
   planVersion,
   refresh,
   recoveryScope,
   restoreCommand,
+  enabled = true,
 }: {
   tripId: string;
   planVersion: number;
   refresh: () => Promise<boolean>;
   recoveryScope?: string;
   restoreCommand?: (payload: unknown) => PlanCommand | null;
+  enabled?: boolean;
 }) {
   const [status, setStatus] = useState<Status>('idle');
   const [error, setError] = useState<DomainError | null>(null);
@@ -51,6 +53,7 @@ export function usePlanCommands({
   const generation = useRef(0);
   const controller = useRef<AbortController | null>(null);
   useEffect(() => {
+    if (!enabled) return;
     generation.current += 1;
     blockedRef.current = false;
     busy.current = false;
@@ -109,7 +112,7 @@ export function usePlanCommands({
       generation.current += 1;
       controller.current?.abort();
     };
-  }, [tripId, recoveryKey]);
+  }, [tripId, recoveryKey, enabled]);
 
   function clearRecovery() {
     if (!recoveryKey) return;
@@ -252,4 +255,16 @@ export function usePlanCommands({
     canRetryUnknown,
     recoveryAvailable,
   };
+}
+
+export const PlanCommandsContext = createContext<{
+  scope: string;
+  commands: ReturnType<typeof useOwnedPlanCommands>;
+} | null>(null);
+/** Production surfaces share one owner above the route outlet; isolated tests retain a local owner. */
+export function usePlanCommands(options: Parameters<typeof useOwnedPlanCommands>[0]) {
+  const shared = useContext(PlanCommandsContext);
+  const matches = !!shared && shared.scope === options.recoveryScope;
+  const local = useOwnedPlanCommands({ ...options, enabled: !matches });
+  return matches && shared ? shared.commands : local;
 }

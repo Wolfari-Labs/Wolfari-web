@@ -1,7 +1,9 @@
 import type { PlanCommand } from '../hooks/use-plan-commands';
 import type { ActivityCreateInput, ActivityUpdateFields, PlanRepository } from './plan';
+import { parsePreparationIntent, type PreparationIntent } from './preparation';
 
 export type PlanCommandIntent =
+  | { kind: 'preparation'; intent: PreparationIntent }
   | { kind: 'create'; activity: ActivityCreateInput }
   | { kind: 'update'; activityId: string; fields: ActivityUpdateFields }
   | { kind: 'delete'; activityId: string }
@@ -63,6 +65,12 @@ export function restorePlanCommand(
 ): PlanCommand | null {
   if (!identifier(tripId) || !record(payload)) return null;
   switch (payload.kind) {
+    case 'preparation': {
+      if (!keys(payload, ['kind', 'intent']) || !repository.mutatePreparation) return null;
+      const intent = parsePreparationIntent(payload.intent);
+      if (!intent) return null;
+      return (context) => repository.mutatePreparation!({ ...context, tripId, intent });
+    }
     case 'create': {
       if (!keys(payload, ['kind', 'activity']) || !repository.createActivity) return null;
       const activity = fields(payload.activity, true);

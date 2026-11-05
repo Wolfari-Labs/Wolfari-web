@@ -50,6 +50,11 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
   await expect(plan.getByText('0 hoạt động')).toHaveCount(0);
   await expect(packing.getByText('0/0 món')).toHaveCount(0);
 
+  const fundReadsBeforeRetry = gateway.calls.filter(
+    (call) => call.path === `/api/v1/trips/${tripId}/fund`,
+  );
+  expect(fundReadsBeforeRetry.length).toBeGreaterThan(0);
+
   gateway.failures.delete(`GET /api/v1/trips/${tripId}/plan`);
   gateway.failures.delete(`GET /api/v1/trips/${tripId}/members`);
   await plan.getByRole('button', { name: 'Tải lại' }).click();
@@ -58,9 +63,9 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
   await expect(packing.getByText('0/0 món')).toBeVisible();
   await expect(overview.getByText('Đã tải 2 thành viên ở trang đầu.')).toBeVisible();
   await expect(overview.getByRole('link', { name: 'Thành viên', exact: true })).toBeVisible();
-  expect(gateway.calls.filter((call) => call.path === `/api/v1/trips/${tripId}/fund`)).toHaveLength(
-    1,
-  );
+  expect(
+    gateway.calls.filter((call) => call.path === `/api/v1/trips/${tripId}/fund`),
+  ).toHaveLength(fundReadsBeforeRetry.length);
 });
 
 test('HTTP mock: Trip read error does not masquerade as a permission denial or trigger panel reads', async ({
