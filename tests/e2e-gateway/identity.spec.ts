@@ -82,6 +82,27 @@ test('avatar attach error remains explicit and preserves the old picture', async
   expect(gateway.calls.filter((call) => call.method === 'PATCH')).toHaveLength(1);
 });
 
+test('uncertain password change clears inputs, prevents replay and offers sign-in', async ({
+  page,
+  gateway,
+}) => {
+  await login(page);
+  const form = page.getByRole('form', { name: 'Đổi mật khẩu' });
+  await form.getByLabel('Mật khẩu hiện tại', { exact: true }).fill('Current1');
+  await form.getByLabel('Mật khẩu mới', { exact: true }).fill('Change12');
+  await form.getByLabel('Nhập lại mật khẩu mới', { exact: true }).fill('Change12');
+  gateway.failures.set('POST /api/v1/me/password-change', 503);
+  await form.getByRole('button', { name: 'Đổi mật khẩu', exact: true }).click();
+  await expect(form.getByText(/Chưa xác nhận được đổi mật khẩu/)).toBeVisible();
+  await expect(form.getByLabel('Mật khẩu mới', { exact: true })).toHaveValue('');
+  await expect(form.getByRole('button', { name: 'Đổi mật khẩu', exact: true })).toBeDisabled();
+  expect(gateway.calls.filter((call) => call.path.endsWith('/password-change'))).toHaveLength(1);
+  await form.getByRole('button', { name: 'Đến trang đăng nhập' }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.getByText(/Chưa xác nhận được thay đổi mật khẩu/)).toBeVisible();
+  await expect(page.getByLabel('Mật khẩu', { exact: true })).toBeVisible();
+});
+
 test('password change rejects bad credentials, then clears the session on success', async ({
   page,
   gateway,
@@ -209,9 +230,7 @@ test('verification scrubs token, prevents repeat submission, then notifies login
   await expect(page).toHaveURL(/\/verify-email$/);
   await page.getByRole('button', { name: 'Xác minh email' }).dblclick();
   await expect(page).toHaveURL(/\/login$/);
-  await expect(
-    page.getByText('Đăng ký thành công. Email đã được xác minh, bạn có thể đăng nhập.'),
-  ).toBeVisible();
+  await expect(page.getByText('Email đã được xác minh. Bạn có thể đăng nhập.')).toBeVisible();
   expect(gateway.calls.filter((call) => call.path.endsWith('/confirm'))).toHaveLength(1);
   expect(gateway.calls.find((call) => call.path.endsWith('/confirm'))?.body).toEqual({
     token: 'e2e-one-time-token',
@@ -275,6 +294,8 @@ test('registration accepted does not authenticate and runtime pending is truthfu
   await expect(page.getByRole('button', { name: 'Tạo tài khoản' })).toBeDisabled();
   release();
   await expect(page.getByText(/Yêu cầu đăng ký đã được tiếp nhận/)).toBeVisible();
+  await expect(page.getByLabel('Mật khẩu', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Tạo tài khoản' })).toHaveCount(0);
   await expect(page).toHaveURL(/\/register$/);
   expect(gateway.authenticated).toBe(false);
   expect(gateway.calls.filter((call) => call.path === '/api/v1/me')).toHaveLength(0);

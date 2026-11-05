@@ -96,13 +96,11 @@ describe('Identity Gateway adapter', () => {
 
   it('rejects missing upload keys and invalid binary payloads', async () => {
     const repo = createGatewayIdentityRepository(undefined, {
-      read: vi
-        .fn()
-        .mockResolvedValue({
-          data: {},
-          correlationId: 'bad-avatar',
-          contentType: 'application/json',
-        }),
+      read: vi.fn().mockResolvedValue({
+        data: {},
+        correlationId: 'bad-avatar',
+        contentType: 'application/json',
+      }),
       write: vi.fn().mockResolvedValue({ data: {}, correlationId: 'bad-upload' }),
     });
     await expect(
@@ -175,13 +173,11 @@ describe('Identity Gateway adapter', () => {
   });
 
   it('keeps Identity mutation DTOs inside the adapter', async () => {
-    const read = vi
-      .fn()
-      .mockResolvedValue({
-        data: new ArrayBuffer(3),
-        correlationId: 'read',
-        contentType: 'image/png',
-      });
+    const read = vi.fn().mockResolvedValue({
+      data: new ArrayBuffer(3),
+      correlationId: 'read',
+      contentType: 'image/png',
+    });
     const write = vi
       .fn()
       .mockResolvedValueOnce({ data: profile, correlationId: 'profile' })
@@ -272,11 +268,11 @@ describe('Identity token route', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Xác minh email' }));
     expect(confirm).toHaveBeenCalledWith(expect.objectContaining({ token: 'secret-token' }));
     expect(
-      screen.getByText(/Đăng ký thành công.*Đang chuyển tới trang đăng nhập/),
+      screen.getByText(/Email đã được xác minh.*Đang chuyển tới trang đăng nhập/),
     ).toBeInTheDocument();
     await waitFor(() => expect(router.state.location.pathname).toBe('/login'), { timeout: 2_000 });
     expect(
-      await screen.findByText('Đăng ký thành công. Email đã được xác minh, bạn có thể đăng nhập.'),
+      await screen.findByText('Email đã được xác minh. Bạn có thể đăng nhập.'),
     ).toBeInTheDocument();
   });
 });

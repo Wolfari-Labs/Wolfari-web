@@ -88,6 +88,31 @@ afterEach(() => {
 });
 
 describe('Profile Gateway interactions', () => {
+  it.each(['network', 'unavailable'])(
+    'locks uncertain password changes after %s and offers reauthentication',
+    async (mode) => {
+      const changePassword =
+        mode === 'network'
+          ? vi.fn().mockRejectedValue(new Error('lost reply'))
+          : vi.fn().mockResolvedValue(failure());
+      const { clear, router } = mount({ changePassword });
+      const form = within(await screen.findByRole('form', { name: 'Đổi mật khẩu' }));
+      await userEvent.type(form.getByLabelText('Mật khẩu hiện tại'), 'Current1');
+      await userEvent.type(form.getByLabelText('Mật khẩu mới', { exact: true }), 'Change12');
+      await userEvent.type(form.getByLabelText('Nhập lại mật khẩu mới'), 'Change12');
+      await userEvent.click(form.getByRole('button', { name: 'Đổi mật khẩu' }));
+      expect(await form.findByText(/Chưa xác nhận được đổi mật khẩu/)).toBeInTheDocument();
+      expect(form.getByLabelText('Mật khẩu hiện tại')).toHaveValue('');
+      expect(form.getByLabelText('Mật khẩu mới', { exact: true })).toHaveValue('');
+      expect(form.getByRole('button', { name: 'Đổi mật khẩu' })).toBeDisabled();
+      expect(changePassword).toHaveBeenCalledTimes(1);
+      expect(clear).not.toHaveBeenCalled();
+      await userEvent.click(form.getByRole('button', { name: 'Đến trang đăng nhập' }));
+      await screen.findByText('Login destination');
+      await waitFor(() => expect(clear).toHaveBeenCalledTimes(1));
+      expect(router.state.location.state).toEqual({ identityNotice: 'password-uncertain' });
+    },
+  );
   it('validates, serializes writes, applies server version and invalidates shell', async () => {
     const pending =
       deferred<Awaited<ReturnType<NonNullable<IdentityRepository['updateProfile']>>>>();

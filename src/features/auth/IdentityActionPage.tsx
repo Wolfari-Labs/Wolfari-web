@@ -24,6 +24,7 @@ export function IdentityActionPage({ action }: { action: Action }) {
   const [feedback, setFeedback] = useState<string | null>(null);
   const { pending, run } = useIdentityTask();
   const [completed, setCompleted] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
   const sessionManager = useOptionalSessionManager();
   const redirectTimer = useRef<number | null>(null);
   useEffect(
@@ -42,9 +43,18 @@ export function IdentityActionPage({ action }: { action: Action }) {
     }
   }, [location.pathname, location.search, navigate]);
 
+  const unknownReset = () => {
+    setUncertain(true);
+    setToken(null);
+    setPassword('');
+    setConfirmation('');
+    setError(
+      'Chưa xác định được mật khẩu đã đổi hay chưa. Hãy thử đăng nhập bằng mật khẩu mới; nếu không được, yêu cầu email khôi phục. Không gửi lại yêu cầu này.',
+    );
+  };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (pending || completed) return;
+    if (pending || completed || uncertain) return;
     setError(null);
     setFeedback(null);
     if (action === 'forgot') {
@@ -95,13 +105,19 @@ export function IdentityActionPage({ action }: { action: Action }) {
         } catch {
           if (signal.aborted) return;
           failed = true;
-          setError('Chưa thể kết nối. Vui lòng thử lại.');
+          if (action === 'reset') unknownReset();
+          else setError('Chưa thể kết nối. Vui lòng thử lại.');
         }
         signal.throwIfAborted();
         if (failed) return;
         if (!result) {
-          setError('Chưa xác nhận được thay đổi. Vui lòng thử lại.');
+          if (action === 'reset') unknownReset();
+          else setError('Chưa xác nhận được thay đổi. Vui lòng thử lại.');
         } else if (result.status === 'error') {
+          if (action === 'reset' && result.error.code === 'SERVICE_UNAVAILABLE') {
+            unknownReset();
+            return;
+          }
           setError(
             result.error.code === 'VALIDATION_FAILED' || result.error.code === 'UNAUTHENTICATED'
               ? 'Liên kết không còn hiệu lực hoặc thông tin chưa hợp lệ.'
@@ -116,12 +132,18 @@ export function IdentityActionPage({ action }: { action: Action }) {
         } else if (action === 'verify') {
           setToken(null);
           setCompleted(true);
+          const authenticated = sessionManager?.status() === 'authenticated';
           setFeedback(
-            'Đăng ký thành công. Email đã được xác minh. Đang chuyển tới trang đăng nhập…',
+            authenticated
+              ? 'Liên kết xác minh đã được xác nhận. Đang trở về tài khoản…'
+              : 'Email đã được xác minh. Đang chuyển tới trang đăng nhập…',
           );
           redirectTimer.current = window.setTimeout(
             () =>
-              navigate('/login', { replace: true, state: { identityNotice: 'email-verified' } }),
+              navigate(authenticated ? '/profile' : '/login', {
+                replace: true,
+                state: { identityNotice: 'email-verified' },
+              }),
             600,
           );
         } else {
@@ -138,7 +160,10 @@ export function IdentityActionPage({ action }: { action: Action }) {
           );
         }
       },
-      () => setError('Chưa thể kết nối. Vui lòng thử lại.'),
+      () => {
+        if (action === 'reset') unknownReset();
+        else setError('Chưa thể kết nối. Vui lòng thử lại.');
+      },
     );
   };
 
@@ -196,6 +221,7 @@ export function IdentityActionPage({ action }: { action: Action }) {
                   autoComplete="new-password"
                   required
                   value={password}
+                  disabled={!!pending || completed || uncertain}
                   onChange={(event) => setPassword(event.target.value)}
                 />
                 <Input
@@ -206,12 +232,13 @@ export function IdentityActionPage({ action }: { action: Action }) {
                   autoComplete="new-password"
                   required
                   value={confirmation}
+                  disabled={!!pending || completed || uncertain}
                   onChange={(event) => setConfirmation(event.target.value)}
                 />
               </>
             )}
           </div>
-          {action !== 'forgot' && !token && !completed && (
+          {action !== 'forgot' && !token && !completed && !uncertain && (
             <Alert tone="error">
               {action === 'verify'
                 ? 'Liên kết xác minh không có mã token.'
@@ -236,7 +263,7 @@ export function IdentityActionPage({ action }: { action: Action }) {
             className={styles.submit}
             type="submit"
             loading={!!pending}
-            disabled={completed || (action !== 'forgot' && !token)}
+            disabled={completed || uncertain || (action !== 'forgot' && !token)}
           >
             {action === 'forgot'
               ? 'Gửi hướng dẫn'
@@ -246,7 +273,15 @@ export function IdentityActionPage({ action }: { action: Action }) {
           </Button>
           <div className={styles.alternative}>
             <span>Đã có tài khoản?</span>
-            <Link to="/login">Đăng nhập</Link>
+            <Link
+              to="/login"
+              state={uncertain ? { identityNotice: 'password-uncertain' } : undefined}
+              onClick={() => {
+                if (uncertain) sessionManager?.clear?.();
+              }}
+            >
+              Đăng nhập
+            </Link>
           </div>
         </form>
       </div>
