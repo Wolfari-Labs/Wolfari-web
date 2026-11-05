@@ -198,7 +198,16 @@ export function createFixturePlanRepository(
           : [],
         packingItems: seed
           ? [
-              packingItem({ sequence: 1, name: 'Áo khoác mỏng', category: 'Quần áo', status: 'COMPLETED', assignedMemberId: trip.currentMembership.id }),
+              packingItem({
+                sequence: 1,
+                name: 'Áo khoác mỏng',
+                category: 'Quần áo',
+                status: 'COMPLETED',
+                assignedMemberId:
+                  scenario === 'read-only'
+                    ? 'b0000000-0000-4000-8000-000000000002'
+                    : trip.currentMembership.id,
+              }),
               packingItem({ sequence: 2, name: 'Quần dài', category: 'Quần áo', status: 'COMPLETED', assignedMemberId: 'b0000000-0000-4000-8000-000000000002' }),
               packingItem({ sequence: 3, name: 'Đồ ngủ', category: 'Quần áo', status: 'COMPLETED' }),
               packingItem({ sequence: 4, name: 'Áo thun', category: 'Quần áo', status: 'COMPLETED', quantity: '3', unit: 'cái' }),
