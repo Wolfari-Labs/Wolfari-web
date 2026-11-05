@@ -9,6 +9,8 @@ import type { DressCodeViewModel } from '../plan/model/plan';
 import { TripHero } from '../trips/components/TripHero';
 import { groupDressCodes } from './dress-code';
 import styles from './GatewayDressCodePage.module.css';
+import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
+import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 
 type DressFilter = 'ALL' | DressCodeViewModel['scopeType'];
 const filters: readonly { value: DressFilter; label: string }[] = [
@@ -51,6 +53,7 @@ export function GatewayDressCodePage() {
         {data && (
           <>
             <h1 className={styles.visuallyHidden}>Dress code</h1>
+            <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
             {snapshot.refreshFailed && (
               <CapabilityNote tone="warning">
                 Chưa tải được dữ liệu mới. Hướng dẫn đang hiển thị bản đã xem trước đó.
@@ -81,7 +84,7 @@ export function GatewayDressCodePage() {
                         {group.items.map((item) => (
                           <article key={item.id} className={styles.card}>
                             <header className={styles.cardHeader}>
-                            <h3>{item.label}</h3>
+                              <h3>{item.label}</h3>
                               <span>{scopeLabel(item)}</span>
                             </header>
                             <div className={styles.noArtwork} role="note">
@@ -108,6 +111,13 @@ export function GatewayDressCodePage() {
                                 </dd>
                               </div>
                             </dl>
+                            <PreparationActions
+                              module="dress"
+                              item={item}
+                              trip={data.trip}
+                              plan={data.plan}
+                              refresh={snapshot.retry}
+                            />
                           </article>
                         ))}
                       </div>
@@ -130,17 +140,35 @@ export function GatewayDressCodePage() {
               </section>
               <aside className={styles.readOnlyPanel} aria-label="Khả năng Dress code">
                 <h2>Tạo / Chỉnh sửa bộ phối</h2>
-                <p className={styles.badge}>Chỉ xem</p>
-                <p>
-                  Trang này hiển thị hướng dẫn đã lưu trong kế hoạch. Thêm, sửa, tải ảnh và áp dụng
-                  gợi ý chưa khả dụng trong chế độ này.
-                </p>
-                <p>
-                  Ảnh phối đồ và bảng màu trong bản thiết kế là hình minh họa, chưa gắn với từng
-                  hướng dẫn đã lưu.
-                </p>
+                <PreparationActions
+                  module="dress"
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+                {data.plan.capabilities?.dress_codes_write ? (
+                  <p>Hướng dẫn theo ngày hoặc Activity. Ảnh và bảng màu chưa thuộc phạm vi này.</p>
+                ) : (
+                  <>
+                    <p className={styles.badge}>Chỉ xem</p>
+                    <p>
+                      Trang này hiển thị hướng dẫn đã lưu trong kế hoạch. Thêm, sửa, tải ảnh và áp
+                      dụng gợi ý chưa khả dụng trong chế độ này.
+                    </p>
+                    <p>
+                      Ảnh phối đồ và bảng màu trong bản thiết kế là hình minh họa, chưa gắn với từng
+                      hướng dẫn đã lưu.
+                    </p>
+                  </>
+                )}
               </aside>
             </div>
+            <RecommendationPanel
+              type="PACKING_DRESS"
+              trip={data.trip}
+              plan={data.plan}
+              refresh={snapshot.retry}
+            />
           </>
         )}
       </TripPlanBoundary>

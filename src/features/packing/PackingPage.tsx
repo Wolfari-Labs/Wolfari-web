@@ -29,6 +29,14 @@ import {
 import { PackingItemDrawer } from './components/PackingItemDrawer';
 import styles from './PackingPage.module.css';
 import { ActionMenu, ConfirmDialog } from '../../shared/components/Ui';
+import {
+  PreparationActions,
+  PreparationStatus,
+  PackingAssignment,
+  PackingCompletion,
+} from '../plan/components/PreparationActions';
+import { activePlan, canTogglePacking } from '../plan/model/preparation';
+import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 
 export function PackingPage() {
   const { tripId = '' } = useParams();
@@ -55,8 +63,7 @@ export function PackingPage() {
   const viewerUserId = data?.trip.currentMembership.userId ?? '';
   const viewerMemberId = data?.trip.currentMembership.id ?? '';
   const canEdit = data?.plan.permissions.canEdit === true;
-  const canComplete = data?.plan.permissions.canComplete === true;
-  const canWrite = previewEnabled && canEdit && canComplete;
+  const canWrite = previewEnabled && canEdit && !!data && activePlan(data.trip);
   const gatewayItems = useMemo(
     () => data?.plan.packingItems.map((item) => ({ ...item, reminder: null })) ?? [],
     [data?.plan.packingItems],
@@ -122,7 +129,7 @@ export function PackingPage() {
     setDeleting(item);
   };
   const toggle = (item: PackingPreviewItem) => {
-    if (!canWrite) return;
+    if (!previewEnabled || !data || !canTogglePacking(data.trip, data.plan, item)) return;
     setItems((current) =>
       current.map((entry) =>
         entry.id === item.id
@@ -153,7 +160,14 @@ export function PackingPage() {
       <section
         className={`${styles.page} ${drawer.open ? styles.drawerOpen : ''}`}
         data-flow="packing-read"
-        data-mode={previewEnabled ? 'preview' : 'gateway-readonly'}
+        data-mode={
+          previewEnabled
+            ? 'preview'
+            : data?.plan.capabilities?.packing_items_write ||
+                data?.plan.capabilities?.packing_completion
+              ? 'gateway'
+              : 'gateway-readonly'
+        }
       >
         <div className={styles.breadcrumb}>
           <Link to={paths.trips}>Chuyến đi của tôi</Link>
@@ -168,6 +182,9 @@ export function PackingPage() {
         </div>
         {data && <TripHero trip={data.trip} variant="landscape" />}
         <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
+          {data && !previewEnabled && (
+            <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
+          )}
           <section className={styles.summary} aria-label="Tiến độ packing list">
             <div>
               <h2>Packing list</h2>
@@ -190,6 +207,13 @@ export function PackingPage() {
               >
                 <Icon name="plus" size={18} /> Thêm vật dụng
               </Button>
+            ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
+              <PreparationActions
+                module="packing"
+                trip={data.trip}
+                plan={data.plan}
+                refresh={snapshot.retry}
+              />
             ) : !previewEnabled ? (
               <span className={styles.readOnlyBadge}>Chỉ xem</span>
             ) : null}
@@ -241,7 +265,11 @@ export function PackingPage() {
               <span>Số lượng</span>
               <span>Người chuẩn bị</span>
               <span>Hạn chuẩn bị</span>
-              <span>{previewEnabled ? 'Thao tác' : 'Quyền'}</span>
+              <span>
+                {previewEnabled || data?.plan.capabilities?.packing_items_write
+                  ? 'Thao tác'
+                  : 'Quyền'}
+              </span>
             </div>
             {groups.length ? (
               <div className={styles.groups}>
@@ -285,7 +313,7 @@ export function PackingPage() {
                                   className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
                                   aria-label={`Đánh dấu ${item.name}`}
                                   aria-pressed={item.status === 'COMPLETED'}
-                                  disabled={!canWrite}
+                                  disabled={!data || !canTogglePacking(data.trip, data.plan, item)}
                                   onClick={() => toggle(item)}
                                 >
                                   {item.status === 'COMPLETED' ? (
@@ -348,6 +376,36 @@ export function PackingPage() {
                                     },
                                   ]}
                                 />
+                              ) : data?.plan.capabilities?.packing_items_write ||
+                                data?.plan.capabilities?.packing_assignment ||
+                                data?.plan.capabilities?.packing_completion ? (
+                                <div className={styles.gatewayActions}>
+                                  {data && (
+                                    <>
+                                      <PreparationActions
+                                        module="packing"
+                                        item={item}
+                                        trip={data.trip}
+                                        plan={data.plan}
+                                        refresh={snapshot.retry}
+                                      />
+                                      <PackingCompletion
+                                        item={item}
+                                        trip={data.trip}
+                                        plan={data.plan}
+                                        refresh={snapshot.retry}
+                                      />
+                                      {data.plan.capabilities?.packing_assignment && (
+                                        <PackingAssignment
+                                          item={item}
+                                          trip={data.trip}
+                                          plan={data.plan}
+                                          refresh={snapshot.retry}
+                                        />
+                                      )}
+                                    </>
+                                  )}
+                                </div>
                               ) : (
                                 <span className={styles.readOnlyRowLabel}>Chỉ xem</span>
                               )}
@@ -366,17 +424,27 @@ export function PackingPage() {
               </div>
             )}
           </div>
-          {!canWrite && (
-            <CapabilityNote>
-              {previewEnabled
-                ? 'Danh sách hiện chỉ hỗ trợ xem.'
-                : 'Danh sách hiện chỉ hỗ trợ xem. Trạng thái hoàn thành, thêm và sửa vật dụng chưa khả dụng trong chế độ này.'}
-            </CapabilityNote>
-          )}
+          {!canWrite &&
+            !data?.plan.capabilities?.packing_items_write &&
+            !data?.plan.capabilities?.packing_completion && (
+              <CapabilityNote>
+                {previewEnabled
+                  ? 'Danh sách hiện chỉ hỗ trợ xem.'
+                  : 'Danh sách hiện chỉ hỗ trợ xem. Trạng thái hoàn thành, thêm và sửa vật dụng chưa khả dụng trong chế độ này.'}
+              </CapabilityNote>
+            )}
           {feedback && (
             <div className={styles.feedback} role="status">
               {feedback}
             </div>
+          )}
+          {data && !previewEnabled && (
+            <RecommendationPanel
+              type="PACKING_DRESS"
+              trip={data.trip}
+              plan={data.plan}
+              refresh={snapshot.retry}
+            />
           )}
         </TripPlanBoundary>
         <PackingItemDrawer

@@ -15,9 +15,14 @@ import {
   validCoordinates,
 } from './trip-map';
 import styles from './GatewayMapPage.module.css';
+import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
+import { TravelTools } from './TravelTools';
+import { RecommendationPanel } from '../plan/components/RecommendationPanel';
+import type { RouteResult } from '../plan/model/travel';
 
 type MapFilter = 'ALL' | 'SCHEDULED' | 'UNSCHEDULED';
 type GoogleMapsRuntime = {
+  Polyline?: new (options: Record<string, unknown>) => { setMap: (map: null) => void };
   Map: new (
     element: HTMLElement,
     options: Record<string, unknown>,
@@ -42,6 +47,7 @@ export function GatewayMapPage() {
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
   const [query, setQuery] = useState('');
+  const [route, setRoute] = useState<RouteResult | null>(null);
   const [filter, setFilter] = useState<MapFilter>('ALL');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [providerState, setProviderState] = useState<'unavailable' | 'loading' | 'ready'>(
@@ -111,6 +117,17 @@ export function GatewayMapPage() {
       mapTypeControl: false,
     });
     const bounds = new maps.LatLngBounds();
+    const line =
+      route && maps.Polyline
+        ? new maps.Polyline({
+            map,
+            path: route.geometry.map((c) => ({ lat: c.latitude, lng: c.longitude })),
+            strokeColor: '#0e8e69',
+            strokeOpacity: 1,
+            strokeWeight: 4,
+          })
+        : null;
+    route?.geometry.forEach((c) => bounds.extend({ lat: c.latitude, lng: c.longitude }));
     const rendered = markers.map(({ item, coordinates }) => {
       const position = { lat: coordinates.latitude, lng: coordinates.longitude };
       bounds.extend(position);
@@ -132,8 +149,11 @@ export function GatewayMapPage() {
       return marker;
     });
     if (markers.length > 1) map.fitBounds(bounds, 48);
-    return () => rendered.forEach((marker) => marker.setMap(null));
-  }, [providerState, markers]);
+    return () => {
+      rendered.forEach((marker) => marker.setMap(null));
+      line?.setMap(null);
+    };
+  }, [providerState, markers, route]);
 
   return (
     <section className={styles.page} data-flow="gateway-map-read">
@@ -159,6 +179,13 @@ export function GatewayMapPage() {
                 <header className={styles.panelHeader}>
                   <h1 id="gateway-map-list-title">Tìm kiếm & chọn địa điểm</h1>
                   <p>{all.length} địa điểm đã lưu trong chuyến đi · tìm trong danh sách này</p>
+                  <PreparationActions
+                    module="location"
+                    trip={data.trip}
+                    plan={data.plan}
+                    refresh={snapshot.retry}
+                  />
+                  <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
                 </header>
                 <label className={styles.search}>
                   <span className={styles.visuallyHidden}>Tìm địa điểm đã lưu</span>
@@ -235,7 +262,9 @@ export function GatewayMapPage() {
                     </strong>
                     <p>
                       {markers.length
-                        ? 'Danh sách và chi tiết địa điểm vẫn xem được. Chưa có đường đi hoặc thời gian di chuyển được xác nhận.'
+                        ? route
+                          ? 'Danh sách và thông tin tuyến dạng chữ vẫn xem được bên dưới.'
+                          : 'Danh sách và chi tiết địa điểm vẫn xem được. Chưa có đường đi hoặc thời gian di chuyển được xác nhận.'
                         : 'Chưa có địa điểm với tọa độ hợp lệ để hiển thị trên bản đồ.'}
                     </p>
                   </div>
@@ -243,6 +272,13 @@ export function GatewayMapPage() {
                 {selected && (
                   <article className={styles.detail} aria-label="Chi tiết địa điểm đã chọn">
                     <h3>{selected.location.name}</h3>
+                    <PreparationActions
+                      module="location"
+                      item={selected.location}
+                      trip={data.trip}
+                      plan={data.plan}
+                      refresh={snapshot.retry}
+                    />
                     <p>{selected.location.address ?? 'Chưa có địa chỉ'}</p>
                     <p>
                       {selected.scheduled
@@ -257,10 +293,24 @@ export function GatewayMapPage() {
                 )}
               </section>
             </div>
-            <CapabilityNote>
-              Chỉ xem địa điểm đã lưu. Tìm kiếm và lọc chỉ áp dụng trong danh sách hiện tại; chức
-              năng thêm, bỏ chọn hoặc lưu địa điểm chưa khả dụng ở trang này.
-            </CapabilityNote>
+            <TravelTools
+              trip={data.trip}
+              plan={data.plan}
+              refresh={snapshot.retry}
+              onRoute={setRoute}
+            />
+            <RecommendationPanel
+              type="ROUTE_ORDER"
+              trip={data.trip}
+              plan={data.plan}
+              refresh={snapshot.retry}
+            />
+            {!data.plan.capabilities?.locations_write && (
+              <CapabilityNote>
+                Chỉ xem địa điểm đã lưu. Tìm kiếm và lọc chỉ áp dụng trong danh sách hiện tại; chức
+                năng thêm, bỏ chọn hoặc lưu địa điểm chưa khả dụng ở trang này.
+              </CapabilityNote>
+            )}
           </>
         )}
       </TripPlanBoundary>

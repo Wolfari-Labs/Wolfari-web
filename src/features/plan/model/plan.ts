@@ -75,6 +75,7 @@ export interface PackingItemViewModel {
   readonly planVersion: number;
 }
 export interface PlanViewModel {
+  readonly capabilities?: import('./preparation').PlanCapabilities;
   readonly tripId: string;
   readonly planVersion: number;
   readonly exportRevision: number;
@@ -102,6 +103,13 @@ export interface ActivityCreateInput {
 export type ActivityUpdateFields = Partial<ActivityCreateInput>;
 
 export interface PlanRepository {
+  mutatePreparation?(request: {
+    readonly tripId: string;
+    readonly expectedPlanVersion: number;
+    readonly idempotencyKey: string;
+    readonly intent: import('./preparation').PreparationIntent;
+    readonly signal: AbortSignal;
+  }): Promise<PlanCommandResult<{ planVersion: number }>>;
   getPlan(request: {
     readonly tripId: string;
     readonly scenario: PlanScenario;

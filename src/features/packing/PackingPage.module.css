@@ -175,6 +175,20 @@
   border-radius: 18px;
   padding-block: 6px;
 }
+.gatewayActions {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  padding-block: 8px;
+}
+@media (max-width: 768px) {
+  .gatewayRow > .gatewayActions {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+}
 .tableHead,
 .row {
   display: grid;

@@ -8,7 +8,10 @@ type GooglePlaceLike = {
   types?: string[];
 };
 
-type GooglePlaceSearchResponse = { places?: GooglePlaceLike[]; nextPage?: () => Promise<GooglePlaceSearchResponse> };
+type GooglePlaceSearchResponse = {
+  places?: GooglePlaceLike[];
+  nextPage?: () => Promise<GooglePlaceSearchResponse>;
+};
 
 type GooglePlacesLibrary = {
   Place?: {
@@ -39,14 +42,20 @@ export function loadGoogleMapsSdk() {
       script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey())}&libraries=places&loading=async&callback=${callback}`;
       script.async = true;
       script.defer = true;
-      (window as unknown as Record<string, unknown>)[callback] = () => {
+      const finish = (loaded: boolean) => {
+        clearTimeout(timer);
         delete (window as unknown as Record<string, unknown>)[callback];
-        resolve(Boolean(window.google?.maps?.importLibrary));
+        script.onerror = null;
+        if (!loaded) {
+          sdkPromise = null;
+          script.remove();
+        }
+        resolve(loaded);
       };
-      script.onerror = () => {
-        delete (window as unknown as Record<string, unknown>)[callback];
-        resolve(false);
-      };
+      const timer = setTimeout(() => finish(false), 15000);
+      (window as unknown as Record<string, unknown>)[callback] = () =>
+        finish(Boolean(window.google?.maps?.importLibrary));
+      script.onerror = () => finish(false);
       document.head.appendChild(script);
     });
   }
@@ -58,8 +67,14 @@ function coordinate(value: GooglePlaceLike['location']) {
   const latitude = typeof value.lat === 'function' ? value.lat() : value.lat;
   const longitude = typeof value.lng === 'function' ? value.lng() : value.lng;
   return {
-    latitude: Number.isFinite(latitude) ? String(latitude) : null,
-    longitude: Number.isFinite(longitude) ? String(longitude) : null,
+    latitude:
+      typeof latitude === 'number' && Number.isFinite(latitude)
+        ? String(Number(latitude.toFixed(6)))
+        : null,
+    longitude:
+      typeof longitude === 'number' && Number.isFinite(longitude)
+        ? String(Number(longitude.toFixed(6)))
+        : null,
   };
 }
 
@@ -99,26 +114,29 @@ function mapPlaces(
   return rawPlaces.flatMap((place) => {
     if (!place.id || seenProviderIds.has(place.id)) return [];
     seenProviderIds.add(place.id);
-    const name = typeof place.displayName === 'string' ? place.displayName : place.displayName?.text;
+    const name =
+      typeof place.displayName === 'string' ? place.displayName : place.displayName?.text;
     if (!name) return [];
     const coordinates = coordinate(place.location);
-    return [{
-      id: crypto.randomUUID(),
-      tripId,
-      name,
-      address: place.formattedAddress ?? null,
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-      provider: 'google' as const,
-      providerPlaceId: place.id,
-      source: 'PROVIDER' as const,
-      openingHours: null,
-      fetchedAt,
-      metadata: { types: place.types ?? [] },
-      planVersion: 0,
-      category: place.types?.[0] ?? null,
-      local: true as const,
-    }];
+    return [
+      {
+        id: crypto.randomUUID(),
+        tripId,
+        name,
+        address: place.formattedAddress ?? null,
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+        provider: 'google' as const,
+        providerPlaceId: place.id,
+        source: 'PROVIDER' as const,
+        openingHours: null,
+        fetchedAt,
+        metadata: { types: place.types ?? [] },
+        planVersion: 0,
+        category: place.types?.[0] ?? null,
+        local: true as const,
+      },
+    ];
   });
 }
 
@@ -160,30 +178,30 @@ export async function searchGooglePlaces(
   const library = await window.google!.maps!.importLibrary!('places');
   const seenProviderIds = new Set<string>();
   const fields = ['id', 'displayName', 'formattedAddress', 'location', 'types'];
-  const search = query.trim().length >= 2
-    ? library.Place?.searchByText
-    : library.Place?.searchNearby;
+  const search =
+    query.trim().length >= 2 ? library.Place?.searchByText : library.Place?.searchNearby;
   if (!search || !center) return unavailableResult();
 
   const location = { lat: center.latitude, lng: center.longitude };
-  const request = query.trim().length >= 2
-    ? {
-        textQuery: query.trim(),
-        fields,
-        language: 'vi',
-        region: 'VN',
-        maxResultCount: 20,
-        locationBias: { center: location, radius: SEARCH_RADIUS_METERS },
-      }
-    : {
-        fields,
-        language: 'vi',
-        region: 'VN',
-        maxResultCount: 20,
-        rankPreference: 'POPULARITY',
-        includedPrimaryTypes: NEARBY_TYPES,
-        locationRestriction: { center: location, radius: SEARCH_RADIUS_METERS },
-      };
+  const request =
+    query.trim().length >= 2
+      ? {
+          textQuery: query.trim(),
+          fields,
+          language: 'vi',
+          region: 'VN',
+          maxResultCount: 20,
+          locationBias: { center: location, radius: SEARCH_RADIUS_METERS },
+        }
+      : {
+          fields,
+          language: 'vi',
+          region: 'VN',
+          maxResultCount: 20,
+          rankPreference: 'POPULARITY',
+          includedPrimaryTypes: NEARBY_TYPES,
+          locationRestriction: { center: location, radius: SEARCH_RADIUS_METERS },
+        };
   const response = await search(request);
   signal?.throwIfAborted();
   return pageResult(response, tripId, signal, seenProviderIds);

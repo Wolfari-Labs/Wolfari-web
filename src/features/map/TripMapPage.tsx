@@ -35,6 +35,7 @@ import {
 import { searchGooglePlaces, type PlaceSearchResult } from './google-places';
 import styles from './TripMapPage.module.css';
 import { GatewayMapPage } from './GatewayMapPage';
+import { activePlan, validLocationWrite } from '../plan/model/preparation';
 
 export function TripMapPage() {
   const { previewEnabled } = useOutletContext<RouteContext>();
@@ -57,6 +58,7 @@ function PreviewMapPage() {
   const [providerHasMore, setProviderHasMore] = useState(false);
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [mutationId, setMutationId] = useState<string | null>(null);
+  const [writeError, setWriteError] = useState('');
   const providerSessionRef = useRef<NonNullable<PlaceSearchResult['loadMore']> | null>(null);
   const providerRequestRef = useRef(0);
   const placeListRef = useRef<HTMLUListElement>(null);
@@ -243,7 +245,30 @@ function PreviewMapPage() {
     if (openDetail) setDetailOpen(true);
   };
   const togglePlace = (item: (typeof allItems)[number]) => {
-    if (!data || !data.plan.permissions.canEdit || mutationId || item.scheduled) return;
+    if (!data || !data.plan.permissions.canEdit || !activePlan(data.trip) || mutationId) return;
+    if (!previewEnabled && item.selected && item.activities.length) {
+      setWriteError(
+        `Gỡ liên kết Activity trước: ${item.activities.map((a) => a.title).join(', ')}`,
+      );
+      return;
+    }
+    if (!item.selected && selectedCount >= 50) {
+      setWriteError('Tối đa 50 địa điểm trong một chuyến đi.');
+      return;
+    }
+    if (
+      !item.selected &&
+      !validLocationWrite({
+        name: item.location.name,
+        address: item.location.address,
+        latitude: item.location.latitude,
+        longitude: item.location.longitude,
+      })
+    ) {
+      setWriteError('Địa điểm cần tên và tọa độ hợp lệ theo cặp.');
+      return;
+    }
+    setWriteError('');
     setMutationId(item.location.id);
     if (item.selected) {
       if ('local' in item.location && item.location.local === true && item.location.providerPlaceId)
@@ -294,6 +319,7 @@ function PreviewMapPage() {
                       ? 'Không thể lưu vào trình duyệt. Lựa chọn chỉ được giữ trong bộ nhớ của tab này và sẽ mất khi tải lại hoặc đóng tab.'
                       : 'Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.'}
                   </div>
+                  {writeError && <p role="alert">{writeError}</p>}
                   <label className={styles.searchBox}>
                     <span className={styles.visuallyHidden}>Tìm địa điểm</span>
                     <img src={searchIcon} width="18" height="18" alt="" />
@@ -402,7 +428,10 @@ function PreviewMapPage() {
                       {visibleItems.map((item) => {
                         const focused = item.location.id === effectiveSelectedId;
                         const status = placeStatus(item);
-                        const locked = status === 'IN_SCHEDULE' || !data.plan.permissions.canEdit;
+                        const locked =
+                          status === 'IN_SCHEDULE' ||
+                          !data.plan.permissions.canEdit ||
+                          !activePlan(data.trip);
                         return (
                           <li key={item.location.id}>
                             <div
