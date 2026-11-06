@@ -34,8 +34,8 @@ function durationLabel(minutes: number) {
 function scopeLabel(trip: TripDetailViewModel, day: string) {
   if (day === 'ALL') return 'Cả chuyến';
   if (day === 'POOL') return 'Chưa chọn ngày';
-  const index = planDays(trip.startAt, trip.endAt, trip.timezone).indexOf(day);
-  return index >= 0 ? `Ngày ${index + 1} · ${day.slice(8)}/${day.slice(5, 7)}` : day;
+  const inTrip = planDays(trip.startAt, trip.endAt, trip.timezone).includes(day);
+  return inTrip ? `${Number(day.slice(8))}/${Number(day.slice(5, 7))}` : day;
 }
 
 export function PlanMetrics({
@@ -82,9 +82,7 @@ export function PlanMetrics({
           </span>
           <div className={styles.copy}>
             <strong>{locations}</strong>
-            <span>
-              {day === 'ALL' ? 'Địa điểm đã chọn' : 'Địa điểm gắn hoạt động'} · {scope}
-            </span>
+            <span>Địa điểm · {scope}</span>
           </div>
         </div>
         <div className={styles.metric}>
@@ -93,7 +91,7 @@ export function PlanMetrics({
           </span>
           <div className={styles.copy}>
             <strong>{durationLabel(knownMinutes)}</strong>
-            <span>Trải nghiệm có giờ · {scope}</span>
+            <span>Trải nghiệm · {scope}</span>
             {withoutTime > 0 && <small>{withoutTime} hoạt động chưa tính giờ</small>}
           </div>
         </div>
@@ -103,7 +101,7 @@ export function PlanMetrics({
           </span>
           <div className={styles.copy}>
             <strong>—</strong>
-            <span>Di chuyển · Chưa có dữ liệu</span>
+            <span>Di chuyển · {scope}</span>
           </div>
         </div>
       </div>

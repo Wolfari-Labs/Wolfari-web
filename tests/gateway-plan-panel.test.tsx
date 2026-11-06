@@ -212,6 +212,11 @@ describe('Gateway Plan controls', () => {
     expect(refresh).toHaveBeenCalledTimes(2);
     expect(screen.queryByRole('form')).not.toBeInTheDocument();
     expect(add()).toBeEnabled();
+    expect(screen.queryByText('Đã lưu thay đổi.')).not.toBeInTheDocument();
+    expect(screen.queryByText('Đang lưu thay đổi…')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }),
+    ).not.toBeInTheDocument();
   }, 15000);
   it('allows members to complete and reopen only their own completion', async () => {
     const { user, complete } = await setup({ member: true });

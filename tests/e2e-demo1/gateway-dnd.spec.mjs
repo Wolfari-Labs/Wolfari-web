@@ -62,9 +62,26 @@ async function createActivity(page, title, times) {
     await editor.getByLabel('Giờ bắt đầu').fill(times[0]);
     await editor.getByLabel('Giờ kết thúc').fill(times[1]);
   }
+  const snapshotRead = nextPlanRead(page);
   await editor.getByRole('button', { name: 'Lưu', exact: true }).click();
+  const snapshot = await snapshotRead;
+  expect(activity(snapshot, title).title).toBe(title);
   await expect(editor).not.toBeVisible();
-  await expect(page.getByText('Đã lưu thay đổi.', { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true }),
+  ).toBeEnabled();
+  await expect(page.getByText('Đã lưu thay đổi.', { exact: true })).toHaveCount(0);
+}
+
+async function nextPlanRead(page) {
+  const tripId = new URL(page.url()).pathname.split('/')[2];
+  const response = await page.waitForResponse(
+    (response) =>
+      response.request().method() === 'GET' &&
+      new URL(response.url()).pathname === `/api/v1/trips/${tripId}/plan` &&
+      response.status() === 200,
+  );
+  return (await response.json()).data;
 }
 
 async function readPlanAfterReload(page, tripId) {
@@ -100,16 +117,29 @@ async function keyboardDrop(page, title, keys, { waitForOrderReceipt = true } = 
         );
       })
     : null;
+  const snapshotRead = waitForOrderReceipt ? nextPlanRead(page) : null;
   await handle.focus();
   await handle.press('Enter');
   for (const key of keys) await page.keyboard.press(key);
   await page.keyboard.press('Enter');
   if (orderReceipt) expect((await orderReceipt).status()).toBe(200);
   if (!waitForOrderReceipt) return;
+  const snapshot = await snapshotRead;
+  const expectedIds = snapshot.activities
+    .filter((entry) => entry.starts_at || entry.scheduled_date === day)
+    .sort((a, b) => a.position - b.position)
+    .map((entry) => entry.id);
+  await expect
+    .poll(() =>
+      page
+        .locator(`[data-gateway-list="${day}"]:visible > [data-plan-activity]`)
+        .evaluateAll((rows) => rows.map((row) => row.getAttribute('data-plan-activity'))),
+    )
+    .toEqual(expectedIds);
   await expect(handle).toBeFocused();
+  await expect(handle).toBeEnabled();
   await expect(page.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' })).toHaveCount(0);
-  // Serial Gateway PATCH/PUT steps must finish before reload; teardown otherwise aborts the final request.
-  await expect(page.getByText('Đã lưu thay đổi.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Đang lưu thay đổi…', { exact: true })).toHaveCount(0);
 }
 
 test('Gateway DnD live: real receipts, suffix reset, persistent pool and unknown replay without Backend changes', async ({
@@ -196,8 +226,16 @@ test('Gateway DnD live: real receipts, suffix reset, persistent pool and unknown
   await page.getByRole('button', { name: 'Tải lại để đối chiếu', exact: true }).click();
   const retry = page.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ', exact: true });
   await expect(retry).toBeEnabled();
+  const replayRead = nextPlanRead(page);
   await retry.click();
-  await expect(page.getByText('Đã lưu thay đổi.', { exact: true })).toBeVisible();
+  const replaySnapshot = await replayRead;
+  expect(replaySnapshot.activities).toEqual(committed.activities);
+  await expect(retry).toHaveCount(0);
+  await expect(page.getByText(/Chưa xác định thay đổi đã được lưu hay chưa/)).toHaveCount(0);
+  await expect(page.getByText('Đang lưu thay đổi…', { exact: true })).toHaveCount(0);
+  await expect(
+    page.getByRole('button', { name: 'Kéo hoạt động C last', exact: true }),
+  ).toBeEnabled();
   expect(orderWrites).toHaveLength(2);
   expect(orderWrites[1]).toEqual(orderWrites[0]);
   const replayed = await readPlanAfterReload(page, tripId);

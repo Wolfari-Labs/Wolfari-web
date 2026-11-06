@@ -131,11 +131,7 @@
 .activity {
   composes: row from './components/TimelineSurface.module.css';
   --preview-card-inset: 34px;
-  --preview-row-gap: 34px;
-}
-.activity:last-of-type {
-  --preview-row-gap: 0px;
-  padding-bottom: 0;
+  --preview-row-gap: var(--timeline-row-gap);
 }
 .activity[data-dragging='true'],
 .poolCard[data-dragging='true'] {
@@ -761,9 +757,7 @@
   }
   .activity {
     --preview-card-inset: 24px;
-    --preview-row-gap: 20px;
     padding-left: 24px;
-    padding-bottom: 20px;
   }
   .endDrop {
     margin-left: 24px;

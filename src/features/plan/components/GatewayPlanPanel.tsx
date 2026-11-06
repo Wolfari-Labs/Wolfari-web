@@ -359,7 +359,6 @@ export function GatewayPlanPanel({
           .
         </Alert>
       )}
-      {commands.status === 'success' && <Alert tone="success">Đã lưu thay đổi.</Alert>}
       {commands.pending && <Alert>Đang lưu thay đổi…</Alert>}
       {commands.partialFailure && (
         <Alert tone="warning">
@@ -412,7 +411,7 @@ export function GatewayPlanPanel({
           Phiên bản {plan.planVersion}. Kéo vào lịch hoặc đổi thứ tự sẽ xóa giờ của hoạt động vừa
           thả và các hoạt động phía sau trong ngày, giữ giờ của phần phía trước. Kéo về giỏ chỉ bỏ
           ngày và giờ của hoạt động đó. Thay đổi được lưu lần lượt lên máy chủ và chia sẻ với thành
-          viên; chỉ báo đã lưu khi mọi bước hoàn tất.
+          viên; dữ liệu được cập nhật sau khi mọi bước hoàn tất.
         </p>
       </details>
     </>

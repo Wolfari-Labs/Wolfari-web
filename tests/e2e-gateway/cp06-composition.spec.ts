@@ -45,10 +45,15 @@ for (const viewport of [
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
     const days = page.getByRole('group', { name: 'Ngày trong lịch trình' });
-    const metrics = page.getByRole('region', { name: 'Tóm tắt lịch trình · Ngày 1 · 01/11' });
+    const metrics = page.getByRole('region', { name: 'Tóm tắt lịch trình · 1/11' });
     await expect(metrics).toBeVisible();
     expect((await days.boundingBox())!.y).toBeLessThan((await metrics.boundingBox())!.y);
-    await expect(metrics.getByText('Di chuyển · Chưa có dữ liệu')).toBeVisible();
+    for (const label of ['Hoạt động', 'Địa điểm', 'Trải nghiệm', 'Di chuyển'])
+      await expect(metrics.getByText(`${label} · 1/11`, { exact: true })).toBeVisible();
+    await expect(metrics.getByText(/Chưa có dữ liệu|Ngày 1/)).toHaveCount(0);
+    const missingHours = metrics.getByText('1 hoạt động chưa tính giờ');
+    // Keep the note available to assistive technology without visible explanatory copy.
+    await expect(missingHours).toHaveCSS('clip-path', 'inset(50%)');
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);
@@ -104,6 +109,8 @@ for (const viewport of [
       (activity) => activity.selected_location_id === locationIds[1],
     )!.id;
     await expect(handle(page, createdId)).toBeFocused();
+    await expect(handle(page, createdId)).toBeEnabled();
+    await expect(page.getByText('Đã lưu thay đổi.', { exact: true })).toHaveCount(0);
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);

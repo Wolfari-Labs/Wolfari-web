@@ -118,6 +118,18 @@ Sessions/guards/query keys, expected versions/idempotency, timezone/date-only/ov
 
 [Implementation mapping](CP03_FOUNDATIONS.md) giữ source direction và current values. Semantic aliases/normal-motion timing extraction/Card native props không phải visual redesign. Accessibility corrections trong scope CP03: native required metadata trên Auth, disabled Textarea parity, long correlation wrapping, shared Home recovery link với target44/48px, và loại displacement của Button khi người dùng chọn reduced motion. Không đổi normal-motion duration/transform, không approve DLT08 mới120/180/220/240ms, không thay font/palette/radius/layout pending. D18 feature layouts vẫn thuộc checkpoints sau.
 
+## Plan presentation cleanup — approved 06/11/2026
+
+User explicitly requested implementation of the reviewed “Chỉnh lịch trình” plan. This is a bounded maintenance change, not a new checkpoint or reopening CP02 visual QA.
+
+| ID | Source/current presentation | Approved change and boundary |
+|---|---|---|
+| PLN09 | Plan main `20:236`; `PlanMetrics` adds ordinal day labels and long metric captions | Keep four metrics and existing calculations; show `D/M` (for example `6/11`) in each selected-day caption, with short labels Hoạt động/Địa điểm/Trải nghiệm/Di chuyển. Keep Cả chuyến/Chưa chọn ngày scopes, the `—` unknown-duration value and the screen-reader-only missing-hours note; remove visible no-data explanation. Day-filter labels are unchanged. |
+| PLN10 | Gateway success Alert persists after an authoritative save/refetch | Remove only “Đã lưu thay đổi.”; retain pending/error/conflict/partial/unknown/recovery and existing command locking. Tests wait for authoritative data and unlocked controls, not the removed success text. |
+| PLN11 | Shared numbered timeline rail extends through the final row's bottom padding | Only rows followed by another activity keep connecting padding; the final/single row rail ends at the card bottom. Apply to Gateway/Preview, narrow layouts, ALL groups and read-only lists; end-drop targets are not activities. Preserve drag/drop indicators and business behavior. |
+
+[Scoped implementation and verification](PLAN_PRESENTATION_CLEANUP_VERIFICATION.md). Historic checkpoint acceptance and NOT_RUN limits remain unchanged.
+
 ## Review protocol
 
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.

@@ -226,7 +226,7 @@
   top: -5px;
 }
 .row[data-insert-after]::after {
-  bottom: 28px;
+  top: calc(100% - var(--timeline-row-gap));
 }
 .poolCard[data-insert-before]::before,
 .poolCard[data-insert-after]::after {

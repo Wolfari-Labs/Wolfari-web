@@ -38,10 +38,16 @@
   scrollbar-color: #52add4 #e4f5fc;
 }
 .row {
+  --timeline-row-gap: 34px;
   position: relative;
-  padding: 0 0 34px 34px;
+  padding: 0 0 var(--timeline-row-gap) 34px;
   border-left: 2px solid var(--color-active);
   min-width: 0;
+}
+/* A drop target is not another activity. End the rail at the final card,
+   including when it is the only card or a read-only list has no drop target. */
+.row:not(:has(+ .row)) {
+  --timeline-row-gap: 0px;
 }
 .step {
   position: absolute;
@@ -176,8 +182,8 @@
     padding: 4px 12px 16px 20px;
   }
   .row {
+    --timeline-row-gap: 20px;
     padding-left: 24px;
-    padding-bottom: 20px;
   }
   .step {
     width: 28px;
