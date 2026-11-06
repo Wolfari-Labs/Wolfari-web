@@ -86,7 +86,9 @@ describe('trip map nearby suggestions', () => {
     const router = mountMap();
     try {
       const list = await screen.findByRole('list');
-      expect(within(list).getAllByRole('checkbox')).toHaveLength(6);
+      expect(
+        within(list).getAllByRole('img', { name: /Đã thêm vào lịch trình|Đã chọn, chưa xếp lịch/ }),
+      ).toHaveLength(6);
       // Cancel the initial discovery and explicitly trigger the same empty-query
       // search under a controlled debounce clock. Provider-error semantics must
       // not depend on the host delivering a 300ms timer within waitFor's window.
@@ -107,7 +109,9 @@ describe('trip map nearby suggestions', () => {
           'Không thể tải thêm địa điểm từ Google Places. Các địa điểm đã lưu vẫn hiển thị.',
         ),
       ).toBeInTheDocument();
-      expect(within(list).getAllByRole('checkbox')).toHaveLength(6);
+      expect(
+        within(list).getAllByRole('img', { name: /Đã thêm vào lịch trình|Đã chọn, chưa xếp lịch/ }),
+      ).toHaveLength(6);
       expect(screen.queryByText('Chợ Hàn')).not.toBeInTheDocument();
       expect(window.localStorage.length).toBe(0);
     } finally {
@@ -137,15 +141,16 @@ describe('trip map nearby suggestions', () => {
         : result;
     });
     const router = mountMap(repository);
-    const checkbox = await screen.findByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' });
-    await userEvent.click(checkbox);
-    expect(
-      screen.queryByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' }),
-    ).not.toBeInTheDocument();
+    const list = await screen.findByRole('list');
+    const row = within(list).getByText('Chùa Linh Ứng').closest('li')!;
+    await userEvent.click(
+      within(row).getByRole('button', { name: 'Xóa Chùa Linh Ứng khỏi danh sách đã chọn' }),
+    );
+    expect(within(list).queryByText('Chùa Linh Ứng')).not.toBeInTheDocument();
     const stored = readPlaceSelection(fixtureViewerId, previewTripId);
     expect(stored.hiddenLocationIds).toContain('a0000000-0000-4000-8000-000000000005');
     expect(stored.places).toHaveLength(0);
-    expect(screen.getByRole('checkbox', { name: /Bán đảo Sơn Trà/ })).toBeDisabled();
+    expect(within(list).getByRole('img', { name: /Bán đảo Sơn Trà/ })).toBeInTheDocument();
     router.dispose();
   });
 
@@ -156,15 +161,16 @@ describe('trip map nearby suggestions', () => {
     const list = await screen.findByRole('list');
     await screen.findByText('Google Places chưa khả dụng. Các địa điểm đã lưu vẫn hiển thị.');
 
-    const checkboxes = within(list).getAllByRole('checkbox');
-    expect(checkboxes).toHaveLength(6);
-    expect(checkboxes.every((checkbox) => (checkbox as HTMLInputElement).checked)).toBe(true);
+    const states = within(list).getAllByRole('img', {
+      name: /Đã thêm vào lịch trình|Đã chọn, chưa xếp lịch/,
+    });
+    expect(states).toHaveLength(6);
     expect(screen.queryByText('Chợ Hàn')).not.toBeInTheDocument();
     expect(window.localStorage.length).toBe(0);
     router.dispose();
   });
 
-  it('shows unselected nearby results in All, loads more rows, and moves a checked place into selected-unscheduled', async () => {
+  it('adds nearby results through + and keeps both selected states non-interactive', async () => {
     const places = Array.from({ length: 30 }, (_, index) => providerPlace(index + 1));
     const loadMore = vi.fn().mockResolvedValue({
       places: [providerPlace(31)],
@@ -182,19 +188,114 @@ describe('trip map nearby suggestions', () => {
     const list = await screen.findByRole('list');
     await waitFor(() => expect(within(list).getByText('Gợi ý địa điểm 01')).toBeInTheDocument());
 
-    expect(within(list).getAllByText('Chưa chọn')).toHaveLength(30);
+    expect(within(list).getAllByRole('button', { name: /^Chọn Gợi ý địa điểm/ })).toHaveLength(30);
     expect(screen.getByRole('button', { name: /Đã chọn \(6\)/ })).toBeInTheDocument();
 
     fireEvent.scroll(list, { target: { scrollTop: 1000 } });
     await waitFor(() => expect(loadMore).toHaveBeenCalledOnce());
     expect(await within(list).findByText('Gợi ý địa điểm 31')).toBeInTheDocument();
 
-    await userEvent.click(within(list).getByRole('checkbox', { name: 'Chọn Gợi ý địa điểm 01' }));
+    await userEvent.click(within(list).getByRole('button', { name: 'Chọn Gợi ý địa điểm 01' }));
+    const selectedState = await within(list).findByRole('img', {
+      name: 'Đã chọn, chưa xếp lịch: Gợi ý địa điểm 01',
+    });
+    expect(selectedState).toBeInTheDocument();
+    await userEvent.click(selectedState);
     expect(
-      await within(list).findByRole('checkbox', { name: 'Bỏ chọn Gợi ý địa điểm 01' }),
-    ).toBeChecked();
-    expect(within(list).getAllByText('Đã chọn · Chưa xếp').length).toBeGreaterThan(0);
+      within(list).getByRole('img', { name: 'Đã chọn, chưa xếp lịch: Gợi ý địa điểm 01' }),
+    ).toBeInTheDocument();
+    expect(
+      within(list).getByRole('button', { name: 'Xóa Gợi ý địa điểm 01 khỏi danh sách đã chọn' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Đã chọn \(7\)/ })).toBeInTheDocument();
     router.dispose();
+  });
+
+  it('blocks deleting a yellow place while any real Plan activity still references it', async () => {
+    searchGooglePlacesMock.mockResolvedValue({ places: [], unavailable: true, hasMore: false });
+    const repository = createFixturePlanRepository();
+    const getPlan = repository.getPlan;
+    vi.spyOn(repository, 'getPlan').mockImplementation(async (request) => {
+      const result = await getPlan(request);
+      if (result.status !== 'ready') return result;
+      const location = result.data.selectedLocations.find(
+        (place) => place.name === 'Chùa Linh Ứng',
+      )!;
+      const linked = {
+        ...result.data.activities[0]!,
+        id: 'b0000000-0000-4000-8000-000000000099',
+        title: 'Hoạt động ở Chùa Linh Ứng chưa xếp lịch',
+        selectedLocationId: location.id,
+        startsAt: null,
+        endsAt: null,
+        scheduledDate: null,
+        position: 20,
+      };
+      return {
+        ...result,
+        data: { ...result.data, activities: [...result.data.activities, linked] },
+      };
+    });
+    const router = mountMap(repository);
+    try {
+      const list = await screen.findByRole('list');
+      const row = within(list).getByText('Chùa Linh Ứng').closest('li')!;
+      await userEvent.click(
+        within(row).getByRole('button', { name: 'Xóa Chùa Linh Ứng khỏi danh sách đã chọn' }),
+      );
+      const alert = screen.getByRole('alert');
+      expect(alert).toHaveTextContent('Không thể xóa “Chùa Linh Ứng”');
+      expect(alert).toHaveTextContent('Hoạt động ở Chùa Linh Ứng chưa xếp lịch');
+      expect(within(alert).getByRole('link', { name: 'Mở Lịch trình' })).toHaveAttribute(
+        'href',
+        `/trips/${previewTripId}/plan`,
+      );
+      expect(within(list).getByText('Chùa Linh Ứng')).toBeInTheDocument();
+      expect(readPlaceSelection(fixtureViewerId, previewTripId).hiddenLocationIds).not.toContain(
+        'a0000000-0000-4000-8000-000000000005',
+      );
+    } finally {
+      router.dispose();
+    }
+  });
+
+  it('enforces the 50-place limit before writing a new local selection', async () => {
+    searchGooglePlacesMock.mockResolvedValue({
+      places: [providerPlace(1)],
+      unavailable: false,
+      hasMore: false,
+    });
+    const repository = createFixturePlanRepository();
+    const getPlan = repository.getPlan;
+    vi.spyOn(repository, 'getPlan').mockImplementation(async (request) => {
+      const result = await getPlan(request);
+      if (result.status !== 'ready') return result;
+      const filler = Array.from({ length: 44 }, (_, index) => ({
+        ...result.data.selectedLocations[index % result.data.selectedLocations.length]!,
+        id: `capacity-location-${index}`,
+        name: `Địa điểm hiện có ${index + 1}`,
+        provider: null,
+        providerPlaceId: null,
+      }));
+      return {
+        ...result,
+        data: { ...result.data, selectedLocations: [...result.data.selectedLocations, ...filler] },
+      };
+    });
+    const router = mountMap(repository);
+    try {
+      const list = await screen.findByRole('list');
+      const add = await within(list).findByRole('button', {
+        name: 'Chọn Gợi ý địa điểm 01',
+      });
+      await userEvent.click(add);
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Tối đa 50 địa điểm trong một chuyến đi.',
+      );
+      expect(readPlaceSelection(fixtureViewerId, previewTripId).places).toHaveLength(0);
+      expect(window.localStorage.length).toBe(0);
+    } finally {
+      router.dispose();
+    }
   });
 });

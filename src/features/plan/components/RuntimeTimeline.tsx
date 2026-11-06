@@ -390,6 +390,10 @@ export function RuntimeTimeline({
     setPoolQuery('');
     if (day === 'POOL') setDay(days[0] ?? 'ALL');
   };
+  const closePool = () => {
+    setSidePanel('none');
+    window.requestAnimationFrame(() => poolTrigger.current?.focus());
+  };
   const dnd = useGatewayDnd({
     plan,
     timezone: trip.timezone,
@@ -594,10 +598,22 @@ export function RuntimeTimeline({
   const pool = (
     <section className={styles.surface} aria-label="Địa điểm và hoạt động chưa xếp ngày">
       <div className={styles.poolHeader}>
-        <h2>Đã chọn · Chưa xếp lịch</h2>
-        <span>
-          {poolLocations.length} địa điểm · {poolActivities.length} hoạt động
-        </span>
+        <div className={styles.poolHeading}>
+          <h2>Đã chọn · Chưa xếp lịch</h2>
+          <span className={styles.poolCount}>
+            {poolLocations.length} địa điểm · {poolActivities.length} hoạt động
+          </span>
+        </div>
+        <Button
+          variant="outline"
+          size="compact"
+          className={styles.poolClose}
+          icon={<Icon name="close" />}
+          aria-label="Đóng danh sách hoạt động"
+          onClick={closePool}
+        >
+          Đóng
+        </Button>
       </div>
       <Input
         label="Tìm trong địa điểm và hoạt động chưa xếp"
@@ -675,7 +691,7 @@ export function RuntimeTimeline({
               side="right"
               className={styles.plannerDrawer ?? ''}
               returnFocusRef={poolTrigger}
-              onDismiss={() => setSidePanel('none')}
+              onDismiss={closePool}
             >
               <div
                 data-runtime-timeline
@@ -716,8 +732,11 @@ export function RuntimeTimeline({
             secondaryLabel={sidePanel === 'map' ? 'Bản đồ lịch trình' : 'Hoạt động chưa xếp ngày'}
             initialSecondaryOpen
             onSecondaryDismiss={() => {
-              setSidePanel('none');
-              (sidePanel === 'map' ? mapTrigger : poolTrigger).current?.focus();
+              if (sidePanel === 'pool') closePool();
+              else {
+                setSidePanel('none');
+                mapTrigger.current?.focus();
+              }
             }}
           />
         ) : (

@@ -1,5 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import headingPinIcon from '../../shared/assets/figma/trip-map-heading-pin.svg';
+import headingCloudArtwork from '../../shared/assets/figma/trip-map-heading-cloud.svg';
+import mapSearchIcon from '../../shared/assets/figma/trip-map-search.svg';
+import mapFilterIcon from '../../shared/assets/figma/trip-map-filter.svg';
 import { Link, useParams } from 'react-router';
+import controlInIcon from '../../shared/assets/figma/trip-map-control-in.svg';
+import controlSelectedIcon from '../../shared/assets/figma/trip-map-control-selected.svg';
+import controlNoneIcon from '../../shared/assets/figma/trip-map-control-none.svg';
+import checkIcon from '../../shared/assets/figma/trip-map-check.svg';
+import addIcon from '../../shared/assets/figma/trip-map-add.svg';
+import mapPlaceArtwork from '../../shared/assets/figma/a33fd.svg';
 import { paths } from '../../app/route-paths';
 import { Button } from '../../shared/components/Button';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
@@ -15,12 +25,11 @@ import {
   validCoordinates,
 } from './trip-map';
 import styles from './GatewayMapPage.module.css';
-import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
 import { TravelTools } from './TravelTools';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 import type { RouteResult } from '../plan/model/travel';
 
-type MapFilter = 'ALL' | 'SCHEDULED' | 'UNSCHEDULED';
+type MapFilter = 'ALL' | 'SELECTED' | 'SCHEDULED' | 'UNSCHEDULED';
 type GoogleMapsRuntime = {
   Polyline?: new (options: Record<string, unknown>) => { setMap: (map: null) => void };
   Map: new (
@@ -49,6 +58,7 @@ export function GatewayMapPage() {
   const [query, setQuery] = useState('');
   const [route, setRoute] = useState<RouteResult | null>(null);
   const [filter, setFilter] = useState<MapFilter>('ALL');
+  const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [providerState, setProviderState] = useState<'unavailable' | 'loading' | 'ready'>(
     'unavailable',
@@ -110,7 +120,7 @@ export function GatewayMapPage() {
     const map = new maps.Map(canvasRef.current, {
       center: { lat: first.latitude, lng: first.longitude },
       zoom: 12,
-      mapTypeId: 'roadmap',
+      mapTypeId: mapType,
       mapId: (import.meta.env.VITE_GOOGLE_MAPS_MAP_ID as string | undefined) || undefined,
       streetViewControl: false,
       fullscreenControl: false,
@@ -139,9 +149,9 @@ export function GatewayMapPage() {
         icon: {
           path: maps.SymbolPath.CIRCLE,
           scale: 11,
-          fillColor: item.scheduled ? '#0e8e69' : '#da9b0a',
+          fillColor: item.scheduled ? '#0A89F3' : '#FFB800',
           fillOpacity: 1,
-          strokeColor: item.scheduled ? '#087052' : '#9a6900',
+          strokeColor: item.scheduled ? '#066bc3' : '#9a6900',
           strokeWeight: 2,
         },
       });
@@ -153,7 +163,7 @@ export function GatewayMapPage() {
       rendered.forEach((marker) => marker.setMap(null));
       line?.setMap(null);
     };
-  }, [providerState, markers, route]);
+  }, [mapType, providerState, markers, route]);
 
   return (
     <section className={styles.page} data-flow="gateway-map-read">
@@ -177,29 +187,35 @@ export function GatewayMapPage() {
             <div className={styles.workspace}>
               <section className={styles.placePanel} aria-labelledby="gateway-map-list-title">
                 <header className={styles.panelHeader}>
-                  <h1 id="gateway-map-list-title">Tìm kiếm & chọn địa điểm</h1>
-                  <p>{all.length} địa điểm đã lưu trong chuyến đi · tìm trong danh sách này</p>
-                  <PreparationActions
-                    module="location"
-                    trip={data.trip}
-                    plan={data.plan}
-                    refresh={snapshot.retry}
-                  />
-                  <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
+                  <span className={styles.panelIcon} aria-hidden="true">
+                    <img src={headingPinIcon} width="30" height="36" alt="" />
+                  </span>
+                  <div className={styles.panelHeaderCopy}>
+                    <h1 id="gateway-map-list-title">Tìm kiếm & chọn địa điểm</h1>
+                    <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
+                  </div>
+                  <img className={styles.headingCloud} src={headingCloudArtwork} width="74" height="31" alt="" />
                 </header>
-                <label className={styles.search}>
-                  <span className={styles.visuallyHidden}>Tìm địa điểm đã lưu</span>
-                  <input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Tìm địa điểm đã lưu..."
-                    type="search"
-                  />
-                </label>
+                <div className={styles.searchRow}>
+                  <label className={styles.search}>
+                    <span className={styles.visuallyHidden}>Tìm địa điểm đã lưu</span>
+                    <img src={mapSearchIcon} width="22" height="22" alt="" />
+                    <input
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
+                      type="search"
+                    />
+                  </label>
+                  <span className={styles.searchFilterIcon} aria-hidden="true">
+                    <img src={mapFilterIcon} width="23" height="23" alt="" />
+                  </span>
+                </div>
                 <div className={styles.filters} role="group" aria-label="Lọc địa điểm đã lưu">
                   {(
                     [
                       ['ALL', 'Tất cả'],
+                      ['SELECTED', `Đã chọn (${all.length})`],
                       ['SCHEDULED', 'Trong lịch'],
                       ['UNSCHEDULED', 'Chưa xếp'],
                     ] as const
@@ -229,7 +245,25 @@ export function GatewayMapPage() {
                             <strong>{item.location.name}</strong>
                             <small>{item.location.address ?? 'Chưa có địa chỉ'}</small>
                           </span>
-                          <span className={styles.status}>
+                          <span
+                            className={`${styles.status} ${placeStatus(item) === 'IN_SCHEDULE' ? styles.statusScheduled : styles.statusSelected}`}
+                            role="img"
+                            aria-label={`${placeStatus(item) === 'IN_SCHEDULE' ? 'Đã thêm vào lịch trình' : 'Đã chọn, chưa xếp lịch'}: ${item.location.name}`}
+                          >
+                            <img
+                              className={styles.statusCircle}
+                              src={
+                                placeStatus(item) === 'IN_SCHEDULE'
+                                  ? controlInIcon
+                                  : controlSelectedIcon
+                              }
+                              alt=""
+                            />
+                            <img className={styles.statusGlyph} src={checkIcon} alt="" />
+                          </span>
+                          <span
+                            className={`${styles.statusChip} ${placeStatus(item) === 'IN_SCHEDULE' ? styles.statusChipScheduled : styles.statusChipSelected}`}
+                          >
                             {placeStatus(item) === 'IN_SCHEDULE'
                               ? 'Trong lịch'
                               : 'Đã chọn · Chưa xếp'}
@@ -245,40 +279,89 @@ export function GatewayMapPage() {
                       : 'Chuyến đi chưa có địa điểm đã lưu.'}
                   </p>
                 )}
+                <div className={styles.listLegend} aria-label="Chú thích trạng thái địa điểm">
+                  <span>
+                    <span className={styles.legendIcon} aria-hidden="true">
+                      <img src={controlInIcon} width="28" height="28" alt="" />
+                      <img src={checkIcon} width="20" height="20" alt="" />
+                    </span>
+                    Đã thêm vào lịch trình
+                  </span>
+                  <span>
+                    <span className={styles.legendIcon} aria-hidden="true">
+                      <img src={controlSelectedIcon} width="28" height="28" alt="" />
+                      <img src={checkIcon} width="20" height="20" alt="" />
+                    </span>
+                    Đã chọn (chưa xếp lịch)
+                  </span>
+                  <span>
+                    <span className={styles.legendIcon} aria-hidden="true">
+                      <img src={controlNoneIcon} width="28" height="28" alt="" />
+                      <img src={addIcon} width="20" height="20" alt="" />
+                    </span>
+                    Chưa chọn
+                  </span>
+                </div>
               </section>
               <section className={styles.mapPanel} aria-labelledby="gateway-map-panel-title">
                 <header className={styles.mapHeader}>
-                  <h2 id="gateway-map-panel-title">Bản đồ địa điểm đã lưu</h2>
-                  <span>{markers.length} địa điểm có tọa độ hợp lệ</span>
+                  <h2 id="gateway-map-panel-title" className={styles.visuallyHidden}>
+                    Bản đồ địa điểm đã lưu
+                  </h2>
+                  <span className={styles.routeControl}>Hiển thị lịch trình</span>
+                  <div className={styles.mapType} role="group" aria-label="Kiểu bản đồ">
+                    <button
+                      type="button"
+                      aria-pressed={mapType === 'roadmap'}
+                      onClick={() => setMapType('roadmap')}
+                    >
+                      Bản đồ
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={mapType === 'satellite'}
+                      onClick={() => setMapType('satellite')}
+                    >
+                      Vệ tinh
+                    </button>
+                  </div>
                 </header>
                 {providerState === 'ready' ? (
                   <div ref={canvasRef} className={styles.mapCanvas} />
                 ) : (
-                  <div className={styles.unavailable} role="status">
-                    <strong>
-                      {providerState === 'loading'
-                        ? 'Đang tải bản đồ nền'
-                        : 'Bản đồ nền chưa khả dụng'}
-                    </strong>
-                    <p>
-                      {markers.length
+                  <div
+                    className={styles.unavailable}
+                    role="status"
+                    aria-label={
+                      markers.length
                         ? route
                           ? 'Danh sách và thông tin tuyến dạng chữ vẫn xem được bên dưới.'
                           : 'Danh sách và chi tiết địa điểm vẫn xem được. Chưa có đường đi hoặc thời gian di chuyển được xác nhận.'
-                        : 'Chưa có địa điểm với tọa độ hợp lệ để hiển thị trên bản đồ.'}
-                    </p>
+                        : 'Chưa có địa điểm với tọa độ hợp lệ để hiển thị trên bản đồ.'
+                    }
+                  >
+                    <div className={styles.fallbackMapMarkers} aria-hidden="true">
+                      {markers.map(({ item }, index) => (
+                        <span
+                          key={item.location.id}
+                          className={`${styles.fallbackMarker} ${item.scheduled ? styles.fallbackMarkerScheduled : styles.fallbackMarkerUnscheduled} ${styles[`fallbackMarker${Math.min(index + 1, 6)}`]}`}
+                        >
+                          {item.markerNumber}
+                        </span>
+                      ))}
+                    </div>
+                    <span className={styles.fallbackMapLabel}>Bản đồ nền chưa khả dụng</span>
+                    <div className={styles.fallbackLegend}>
+                      <span><i className={styles.legendScheduled} />Trong lịch</span>
+                      <span><i className={styles.legendSelected} />Đã chọn · Chưa xếp</span>
+                    </div>
+                    <p className={styles.fallbackSuggestion}>✴ Khám phá thêm địa điểm gần lộ trình</p>
                   </div>
                 )}
                 {selected && (
                   <article className={styles.detail} aria-label="Chi tiết địa điểm đã chọn">
+                    <img src={mapPlaceArtwork} width="230" height="90" alt="" />
                     <h3>{selected.location.name}</h3>
-                    <PreparationActions
-                      module="location"
-                      item={selected.location}
-                      trip={data.trip}
-                      plan={data.plan}
-                      refresh={snapshot.retry}
-                    />
                     <p>{selected.location.address ?? 'Chưa có địa chỉ'}</p>
                     <p>
                       {selected.scheduled

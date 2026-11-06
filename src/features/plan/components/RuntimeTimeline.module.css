@@ -130,12 +130,19 @@
   gap: 8px;
   margin-bottom: 14px;
 }
+.poolHeading {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.poolClose {
+  flex: 0 0 auto;
+}
 .poolHeader h2 {
   margin: 0;
   font-size: 21px;
   line-height: 28px;
 }
-.poolHeader span {
+.poolCount {
   font-size: 12px;
   color: var(--color-muted);
 }

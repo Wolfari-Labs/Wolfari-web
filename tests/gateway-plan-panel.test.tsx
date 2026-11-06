@@ -144,13 +144,18 @@ async function openManualCreate(user: ReturnType<typeof userEvent.setup>) {
 const save = () => screen.getByRole('button', { name: 'Lưu' });
 
 describe('Gateway Plan controls', () => {
-  it('opens the selected-place pool without opening an editor or writing to the server', async () => {
+  it('opens and closes the selected-place pool without writing, then returns focus', async () => {
     const { user, create, update, reorder } = await setup();
     await user.click(add());
     expect(screen.getByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' })).toBeInTheDocument();
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
     expect(screen.queryByRole('form')).not.toBeInTheDocument();
     expect(screen.queryByRole('dialog', { name: 'Thêm hoạt động' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Đóng danh sách hoạt động' }));
+    expect(
+      screen.queryByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' }),
+    ).not.toBeInTheDocument();
+    await waitFor(() => expect(add()).toHaveFocus());
     expect(create).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
     expect(reorder).not.toHaveBeenCalled();
