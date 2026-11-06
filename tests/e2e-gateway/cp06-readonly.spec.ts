@@ -21,7 +21,7 @@ test('HTTP mock: revoked Plan edit rights keep day and pool navigation read only
   const all = page.getByRole('button', { name: 'Tất cả', exact: true });
   const day = page.getByRole('button', { name: 'Ngày 1 · 01/11', exact: true });
   const pool = page.getByRole('button', { name: 'Chưa chọn ngày', exact: true });
-  await expect(all).toHaveAttribute('aria-pressed', 'true');
+  await expect(day).toHaveAttribute('aria-pressed', 'true');
   await expect(day).toBeEnabled();
   await expect(pool).toBeEnabled();
 

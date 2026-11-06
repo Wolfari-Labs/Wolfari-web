@@ -9,163 +9,396 @@
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 2px 2px 8px;
-  margin-block: 14px 6px;
+  margin-top: 16px;
 }
 .days button {
   flex-shrink: 0;
   min-width: 128px;
-  min-height: 54px;
+  height: 54px;
   border-radius: 8px;
+  padding-block: 4px;
+  font-size: 14px;
+}
+.days small {
+  display: block;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
 }
 .dayUtilities {
   display: flex;
   gap: 8px;
   margin-left: auto;
 }
-.days [data-drop-target],
-.surface [data-drop-target] {
-  outline: 3px solid var(--color-active);
-  outline-offset: 3px;
+.days [data-drop-target] {
+  outline: 2px solid var(--color-active);
+  outline-offset: -3px;
 }
-.help {
-  font-size: 13px;
-  color: var(--color-muted);
+.timeline {
+  composes: panel from './TimelineSurface.module.css';
 }
-.surface {
-  background: white;
-  padding: 16px;
-  border: 1px solid var(--color-line);
-  border-radius: 10px;
-  min-width: 0;
-  min-height: 498px;
-}
-.timelineHeader,
-.poolHeader {
-  display: flex;
-  align-items: center;
+.timelineHeader {
+  composes: toolbar from './TimelineSurface.module.css';
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
 }
 .timelineHeader > div:first-child {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  min-width: 0;
 }
-.timelineHeader h2,
-.poolHeader h2 {
-  margin: 0;
-  font-size: 24px;
-  line-height: 32px;
-}
-.progress,
-.poolHeader span {
-  color: var(--color-muted);
-  font-size: 13px;
+.progress {
+  composes: progress from './TimelineSurface.module.css';
 }
 .timelineActions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 12px;
 }
-.poolGroup {
-  margin-top: 18px;
+.timelineActions > button {
+  min-width: 148px;
+  min-height: 42px;
 }
-.poolGroup h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
+.timelineActions > button:last-of-type {
+  min-width: 198px;
 }
-.placeList {
-  list-style: none;
+.tools {
+  position: relative;
+  flex-shrink: 0;
+}
+.tools summary {
   display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  list-style: none;
+  cursor: pointer;
 }
-.placeList li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-width: 0;
-  padding: 10px;
-  border: 1px solid var(--color-line);
-  border-radius: 8px;
+.tools summary::-webkit-details-marker {
+  display: none;
 }
-.placeList li > div {
-  min-width: 0;
-}
-.placeList strong,
-.placeList small {
-  display: block;
-  overflow-wrap: anywhere;
-}
-.placeList small {
-  margin-top: 4px;
-  color: var(--color-muted);
-  font-size: 13px;
-}
-.list {
+.tools[open] > div {
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  top: 44px;
+  width: min(320px, 70vw);
+  padding: 12px;
   display: grid;
   gap: 10px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  background: white;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  box-shadow: var(--shadow-overlay);
+  font-size: 13px;
+}
+.tools p {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-muted);
+}
+.list {
+  composes: list from './TimelineSurface.module.css';
 }
 .row {
-  min-width: 0;
-  border-radius: 8px;
+  composes: row from './TimelineSurface.module.css';
 }
-.row[data-dragging] {
-  opacity: 0.3;
+.step {
+  composes: step from './TimelineSurface.module.css';
 }
 .handle {
   touch-action: none;
   cursor: grab;
 }
+.surface {
+  container: itinerary / inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 498px;
+  overflow: hidden;
+  background: white;
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+}
+.poolHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.poolHeader h2 {
+  margin: 0;
+  font-size: 21px;
+  line-height: 28px;
+}
+.poolHeader span {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.poolList {
+  flex: 1 1 auto;
+  min-height: 100px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #52add4 #e4f5fc;
+}
+.poolCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 86px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid #f2c75c;
+  border-radius: 8px;
+}
+.poolCard > button,
+.poolCard > div:last-child {
+  flex-shrink: 0;
+}
+.poolCopy {
+  flex: 1;
+  min-width: 0;
+}
+.poolCopy strong,
+.poolCopy small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.poolCopy strong {
+  font-size: 13.5px;
+}
+.poolCopy small {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+.poolIcon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-selected);
+}
+.poolCover {
+  width: 80px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.poolHelp {
+  margin: 10px 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-muted);
+}
+.poolCard[data-dragging] {
+  opacity: 0.4;
+}
+.row[data-insert-before]::before,
+.row[data-insert-after]::after,
+.poolCard[data-insert-before]::before,
+.poolCard[data-insert-after]::after {
+  content: '';
+  position: absolute;
+  left: 26px;
+  right: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-active);
+  box-shadow: 0 0 0 2px var(--color-white);
+  pointer-events: none;
+}
+.row[data-insert-before]::before,
+.poolCard[data-insert-before]::before {
+  top: -5px;
+}
+.row[data-insert-after]::after {
+  bottom: 28px;
+}
+.poolCard[data-insert-before]::before,
+.poolCard[data-insert-after]::after {
+  left: 0;
+}
+.poolCard[data-insert-after]::after {
+  bottom: -7px;
+}
+.dropEnd {
+  min-height: 30px;
+  padding: 6px;
+  border: 1px dashed transparent;
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--color-muted);
+}
+.dropEnd[data-empty] {
+  min-height: 110px;
+  display: grid;
+  place-items: center;
+  border-color: var(--color-line);
+}
+.dropEnd[data-drop-active] {
+  border-color: var(--color-active);
+  background: var(--color-selected);
+  box-shadow: inset 0 3px var(--color-active);
+}
+.allDays {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.allDays h3 {
+  margin: 0 16px 16px;
+  font-size: 14px;
+}
+.allDays .list {
+  overflow: visible;
+  min-height: 100px;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.plannerDrawer {
+  width: min(1180px, 96vw);
+  max-width: 96vw;
+}
+.compactPlanner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-width: 0;
+}
+.compactPlanner > section {
+  height: min(540px, 65dvh);
+  min-height: 300px;
+}
+.recoveryUtilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .overlay {
   display: flex;
   gap: 12px;
-  padding: 20px;
+  padding: 16px;
   border: 1px solid var(--color-active);
-  border-radius: 16px;
+  border-radius: 8px;
   background: white;
   box-shadow: var(--shadow-overlay);
-  transform: rotate(1deg);
   max-width: 450px;
 }
 .empty {
-  padding: 28px 12px;
+  padding: 24px 12px;
   text-align: center;
   color: var(--color-muted);
+}
+@container itinerary (max-width: 800px) {
+  .timelineHeader > div:first-child {
+    gap: 6px;
+  }
+  .timelineActions {
+    gap: 6px;
+  }
+  .timelineActions > button {
+    min-width: 0;
+    padding-inline: 8px;
+  }
+  .timelineActions > button:last-of-type {
+    min-width: 0;
+  }
 }
 @media (max-width: 768px) {
   .days button {
     min-width: 108px;
   }
-  .surface {
-    padding: 12px;
-    min-height: 0;
+  .timelineHeader > div:first-child {
+    flex-wrap: wrap;
   }
-  .timelineHeader h2,
-  .poolHeader h2 {
-    font-size: 20px;
-    line-height: 28px;
+  .timelineActions {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
   }
   .timelineActions > button {
-    flex: 1 1 auto;
+    flex: 1;
+  }
+  .surface {
+    height: auto;
+    min-height: 240px;
+    padding: 12px;
+  }
+  .compactPlanner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .compactPlanner > section {
+    height: auto;
+    min-height: 0;
+  }
+  .compactPlanner .list,
+  .compactPlanner .poolList,
+  .compactPlanner .allDays {
+    max-height: 32dvh;
+    min-height: 100px;
+    overflow-y: auto;
+  }
+  .compactPlanner .allDays .list {
+    max-height: none;
+    overflow: visible;
+  }
+  .allDays {
+    overflow: visible;
+  }
+}
+@media (max-width: 1200px) {
+  .compactPlanner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .compactPlanner > section {
+    height: auto;
+    min-height: 0;
+  }
+  .compactPlanner .list,
+  .compactPlanner .poolList,
+  .compactPlanner .allDays {
+    max-height: 32dvh;
+    min-height: 100px;
+    overflow-y: auto;
+  }
+  .compactPlanner .allDays .list {
+    max-height: none;
+    overflow: visible;
+  }
+  .allDays {
+    overflow: visible;
   }
 }
 @media (max-width: 480px) {
   .dayUtilities {
     margin-left: 0;
   }
-  .placeList li {
-    align-items: flex-start;
-    flex-direction: column;
+  .poolIcon,
+  .poolCover {
+    display: none;
   }
 }

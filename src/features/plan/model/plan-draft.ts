@@ -342,6 +342,9 @@ export function editPlanDraftActivity(
 ) {
   const selected = current.activities.find((activity) => activity.id === edit.activityId);
   if (!selected) return current;
+  const hasTimes = Boolean(edit.startTime && edit.endTime);
+  const startsAt = hasTimes ? localTimeToIso(edit.day, edit.startTime, edit.timezone) : null;
+  const endsAt = hasTimes ? localTimeToIso(edit.day, edit.endTime, edit.timezone) : null;
   const changedDay = selected.scheduledDate !== edit.day;
   if (changedDay) {
     const moved = movePlanDraftActivity(
@@ -359,14 +362,13 @@ export function editPlanDraftActivity(
     return payload(
       current.basePlanVersion,
       moved.activities.map((activity) =>
-        activity.id === selected.id ? { ...activity, title: edit.title.trim() } : activity,
+        activity.id === selected.id
+          ? { ...activity, title: edit.title.trim(), startsAt, endsAt }
+          : activity,
       ),
       now,
     );
   }
-  const hasTimes = Boolean(edit.startTime && edit.endTime);
-  const startsAt = hasTimes ? localTimeToIso(edit.day, edit.startTime, edit.timezone) : null;
-  const endsAt = hasTimes ? localTimeToIso(edit.day, edit.endTime, edit.timezone) : null;
   return payload(
     current.basePlanVersion,
     current.activities.map((activity) => {
@@ -391,11 +393,32 @@ export function validatePlanDraftEdit({
   startTime,
   endTime,
   allowedDays,
-}: Omit<PlanDraftEdit, 'activityId' | 'timezone'> & { readonly allowedDays: readonly string[] }) {
+  timezone,
+  tripStartAt,
+  tripEndAt,
+}: Omit<PlanDraftEdit, 'activityId'> & {
+  readonly allowedDays: readonly string[];
+  readonly tripStartAt: string;
+  readonly tripEndAt: string;
+}) {
   if (!title.trim()) return 'Tên hoạt động là bắt buộc.';
   if (title.trim().length > 255) return 'Tên hoạt động không được vượt quá 255 ký tự.';
   if (!allowedDays.includes(day)) return 'Ngày hoạt động phải nằm trong chuyến đi.';
   if (Boolean(startTime) !== Boolean(endTime)) return 'Hãy nhập cả giờ bắt đầu và giờ kết thúc.';
   if (startTime && endTime && endTime <= startTime) return 'Giờ kết thúc phải sau giờ bắt đầu.';
+  if (startTime && endTime) {
+    try {
+      const startsAt = Date.parse(localTimeToIso(day, startTime, timezone));
+      const endsAt = Date.parse(localTimeToIso(day, endTime, timezone));
+      if (
+        endsAt <= startsAt ||
+        startsAt < Date.parse(tripStartAt) ||
+        endsAt > Date.parse(tripEndAt)
+      )
+        return 'Giờ hoạt động phải nằm trong chuyến đi và kết thúc sau khi bắt đầu.';
+    } catch {
+      return 'Ngày/giờ không hợp lệ trong múi giờ của chuyến đi.';
+    }
+  }
   return null;
 }

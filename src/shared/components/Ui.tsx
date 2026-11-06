@@ -1,5 +1,5 @@
 import { AlertDialog, DropdownMenu, Tooltip, Tabs, Accordion } from 'radix-ui';
-import { useRef, type ComponentProps, type ReactNode } from 'react';
+import { useRef, type ComponentProps, type ReactNode, type RefObject } from 'react';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import styles from './Ui.module.css';
@@ -41,15 +41,19 @@ export function Tip({ label, children }: { label: string; children: ReactNode })
 export function ActionMenu({
   label = 'Thao tác',
   items,
+  triggerRef,
+  icon,
 }: {
   label?: string;
   items: { label: string; action: () => void; disabled?: boolean; danger?: boolean }[];
+  triggerRef?: RefObject<HTMLButtonElement | null>;
+  icon?: ReactNode;
 }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" size="icon" aria-label={label}>
-          <Icon name="more" />
+        <Button ref={triggerRef} variant="ghost" size="icon" aria-label={label}>
+          {icon ?? <Icon name="more" />}
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>

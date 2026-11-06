@@ -13,6 +13,7 @@ import {
   type PlanCommandContext,
 } from '../src/features/plan/hooks/use-plan-commands';
 import type { PlanCommandResult } from '../src/features/plan/model/plan';
+import { restorePlanCommand } from '../src/features/plan/model/plan-command-intent';
 
 const success = { status: 'success' as const, data: {}, correlationId: null };
 const error = (code: 'VERSION_CONFLICT' | 'SERVICE_UNAVAILABLE' | 'PERMISSION_DENIED') => ({
@@ -21,6 +22,106 @@ const error = (code: 'VERSION_CONFLICT' | 'SERVICE_UNAVAILABLE' | 'PERMISSION_DE
 });
 
 describe('Plan command lifecycle', () => {
+  it('refetches partial server changes and blocks even a definitive validation error until review', async () => {
+    const refresh = vi.fn(async () => true);
+    const hook = renderHook(() =>
+      usePlanCommands({ tripId: 'partial-arrangement', planVersion: 7, refresh }),
+    );
+    await act(async () => {
+      expect(
+        await hook.result.current.execute(async () => ({
+          status: 'error',
+          error: { code: 'VALIDATION_FAILED', correlationId: null, retryable: false },
+          partialFailure: true,
+        })),
+      ).toBe(false);
+    });
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(hook.result.current).toMatchObject({
+      status: 'error',
+      blocked: true,
+      partialFailure: true,
+      error: { code: 'VALIDATION_FAILED' },
+    });
+    const next = vi.fn(async () => success);
+    await act(async () => {
+      expect(await hook.result.current.execute(next)).toBe(false);
+    });
+    expect(next).not.toHaveBeenCalled();
+    await act(async () => {
+      expect(await hook.result.current.reconcile()).toBe(true);
+    });
+    expect(hook.result.current).toMatchObject({
+      status: 'idle',
+      blocked: false,
+      partialFailure: false,
+    });
+    hook.unmount();
+  });
+
+  it('warns of possible partial arrangement after reload and retains it if receipt replay loses permission', async () => {
+    const recoveryScope = 'arrangement-recovery:alice';
+    const key = `wolfari:plan-command:${recoveryScope}`;
+    const intent = {
+      kind: 'arrange',
+      basePlanVersion: 7,
+      steps: [
+        { kind: 'schedule', activityId: 'a', scheduledDate: '2026-11-06' },
+        { kind: 'reorder', activityIds: ['a', 'b'] },
+      ],
+    };
+    window.sessionStorage.setItem(
+      key,
+      JSON.stringify({
+        expectedPlanVersion: 7,
+        idempotencyKey: '18bab54a-4296-496f-92d7-69bc8d1a9a3d',
+        payload: intent,
+      }),
+    );
+    const update = vi.fn(async () => error('PERMISSION_DENIED'));
+    const reorder = vi.fn();
+    const refresh = vi.fn(async () => true);
+    const hook = renderHook(() =>
+      usePlanCommands({
+        tripId: 'arrangement-recovery',
+        planVersion: 12,
+        refresh,
+        recoveryScope,
+        restoreCommand: (payload) =>
+          restorePlanCommand(
+            {
+              getPlan: vi.fn(),
+              updateActivity: update,
+              reorderActivities: reorder,
+            },
+            'arrangement-recovery',
+            payload,
+          ),
+      }),
+    );
+    expect(hook.result.current).toMatchObject({
+      status: 'unknown',
+      blocked: true,
+      partialFailure: true,
+    });
+    expect(update).not.toHaveBeenCalled();
+    await act(async () => {
+      await hook.result.current.reconcile();
+    });
+    await act(async () => {
+      expect(await hook.result.current.retryUnknown()).toBe(false);
+    });
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ expectedPlanVersion: 7 }));
+    expect(reorder).not.toHaveBeenCalled();
+    expect(hook.result.current).toMatchObject({
+      status: 'error',
+      blocked: true,
+      partialFailure: true,
+    });
+    expect(window.sessionStorage.getItem(key)).toBeNull();
+    expect(refresh).toHaveBeenCalledTimes(2);
+    hook.unmount();
+  });
   it('writes a terminal marker if deleting a confirmed recovery record fails', async () => {
     const options = {
       tripId: 'terminal',
@@ -278,7 +379,7 @@ describe('Plan command lifecycle', () => {
     expect(hook.result.current.status).toBe('unknown');
     expect(hook.result.current.blocked).toBe(true);
     await act(async () => {
-      expect(await hook.result.current.execute(vi.fn())).toBe(false);
+      expect(await hook.result.current.execute(vi.fn(async () => success))).toBe(false);
       expect(await hook.result.current.retryUnknown()).toBe(false);
     });
     hook.rerender({ version: 10 });

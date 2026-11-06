@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Providers } from '../src/app/providers';
@@ -12,6 +12,25 @@ import type {
   PlanRepository,
   PlanViewModel,
 } from '../src/features/plan/model/plan';
+
+// jsdom does not implement media queries; real responsive planner behavior is
+// exercised by Gateway Chromium tests at desktop, tablet and narrow widths.
+beforeEach(() => {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((query: string) => ({
+      matches: query === '(min-width: 1201px)',
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+});
+afterEach(() => vi.unstubAllGlobals());
 
 async function setup(options: { member?: boolean; archived?: boolean } = {}) {
   const tripRepository = createFixtureTripRepository();
@@ -29,12 +48,23 @@ async function setup(options: { member?: boolean; archived?: boolean } = {}) {
     ...p.data,
     permissions: { canRead: true, canEdit: !options.member, canComplete: true },
     activities: [
-      { ...base, id: 'todo', title: 'Todo activity', position: 0, startsAt: null, endsAt: null },
+      {
+        ...base,
+        id: 'todo',
+        title: 'Todo activity',
+        position: 0,
+        scheduledDate: null,
+        startsAt: null,
+        endsAt: null,
+      },
       {
         ...base,
         id: 'mine',
         title: 'My completed',
         position: 1,
+        scheduledDate: null,
+        startsAt: null,
+        endsAt: null,
         status: 'COMPLETED',
         completedByUserId: trip.currentMembership.userId,
       },
@@ -43,6 +73,9 @@ async function setup(options: { member?: boolean; archived?: boolean } = {}) {
         id: 'theirs',
         title: 'Their completed',
         position: 2,
+        scheduledDate: null,
+        startsAt: null,
+        endsAt: null,
         status: 'COMPLETED',
         completedByUserId: 'other-user',
       },
@@ -84,8 +117,10 @@ async function setup(options: { member?: boolean; archived?: boolean } = {}) {
     </Providers>
   );
   const rendered = render(view());
+  const user = userEvent.setup();
+  await user.click(screen.getByRole('button', { name: 'Tất cả' }));
   return {
-    user: userEvent.setup(),
+    user,
     plan,
     trip,
     create,
@@ -100,13 +135,29 @@ async function setup(options: { member?: boolean; archived?: boolean } = {}) {
 }
 const item = (title: string) => within(screen.getByRole('listitem', { name: title }));
 const add = () => screen.getByRole('button', { name: 'Thêm hoạt động' });
+async function openManualCreate(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(document.querySelector('summary[aria-label="Tùy chọn lịch trình"]')!);
+  const trigger = screen.getByRole('button', { name: 'Tạo hoạt động thủ công' });
+  await user.click(trigger);
+  return trigger;
+}
 const save = () => screen.getByRole('button', { name: 'Lưu' });
 
 describe('Gateway Plan controls', () => {
+  it('opens the selected-place pool without opening an editor or writing to the server', async () => {
+    const { user, create, update, reorder } = await setup();
+    await user.click(add());
+    expect(screen.getByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' })).toBeInTheDocument();
+    expect(screen.getByRole('searchbox')).toBeInTheDocument();
+    expect(screen.queryByRole('form')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: 'Thêm hoạt động' })).not.toBeInTheDocument();
+    expect(create).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+    expect(reorder).not.toHaveBeenCalled();
+  });
   it('opens the approved centered activity dialog with every Gateway field and returns focus', async () => {
     const { user } = await setup();
-    const trigger = add();
-    await user.click(trigger);
+    const trigger = await openManualCreate(user);
     const dialog = screen.getByRole('dialog', { name: 'Thêm hoạt động' });
     for (const label of [
       'Tên hoạt động',
@@ -137,7 +188,7 @@ describe('Gateway Plan controls', () => {
       data: plan.activities[0]!,
       correlationId: 'confirmed',
     });
-    await user.click(add());
+    await openManualCreate(user);
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Uncertain stop');
     await user.click(save());
     expect(create).toHaveBeenCalledTimes(1);
@@ -161,20 +212,22 @@ describe('Gateway Plan controls', () => {
     expect(refresh).toHaveBeenCalledTimes(2);
     expect(screen.queryByRole('form')).not.toBeInTheDocument();
     expect(add()).toBeEnabled();
-  });
+  }, 15000);
   it('allows members to complete and reopen only their own completion', async () => {
     const { user, complete } = await setup({ member: true });
     expect(screen.queryByRole('button', { name: 'Thêm hoạt động' })).not.toBeInTheDocument();
     expect(
-      item('Their completed').queryByRole('button', { name: 'Mở lại' }),
+      item('Their completed').queryByRole('button', { name: 'Thao tác Their completed' }),
     ).not.toBeInTheDocument();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Hoàn tất' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Hoàn tất' }));
     await waitFor(() =>
       expect(complete).toHaveBeenCalledWith(
         expect.objectContaining({ activityId: 'todo', status: 'COMPLETED' }),
       ),
     );
-    await user.click(item('My completed').getByRole('button', { name: 'Mở lại' }));
+    await user.click(item('My completed').getByRole('button', { name: 'Thao tác My completed' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Mở lại' }));
     expect(complete).toHaveBeenLastCalledWith(
       expect.objectContaining({ activityId: 'mine', status: 'TODO' }),
     );
@@ -182,18 +235,18 @@ describe('Gateway Plan controls', () => {
   it('makes archived trips read only even when snapshot permissions allow commands', async () => {
     await setup({ archived: true });
     expect(screen.queryByRole('button', { name: 'Hoàn tất' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Sửa' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Thao tác / })).not.toBeInTheDocument();
   });
   it('blocks empty create and preserves form input', async () => {
     const { user, create } = await setup();
-    await user.click(add());
+    await openManualCreate(user);
     await user.click(save());
     expect(create).not.toHaveBeenCalled();
     expect(screen.getByRole('form', { name: 'Thêm hoạt động' })).toBeInTheDocument();
   });
   it('rejects a day outside the Trip even without times', async () => {
     const { user, create } = await setup();
-    await user.click(add());
+    await openManualCreate(user);
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Lunch');
     fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
       target: { value: '2026-10-01' },
@@ -203,7 +256,7 @@ describe('Gateway Plan controls', () => {
   });
   it('saves a day-only activity with null timestamps', async () => {
     const { user, create } = await setup();
-    await user.click(add());
+    await openManualCreate(user);
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Lịch chưa giờ');
     fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
       target: { value: '2026-09-22' },
@@ -221,7 +274,8 @@ describe('Gateway Plan controls', () => {
   });
   it('schedules a previously unscheduled activity overnight', async () => {
     const { user, update } = await setup();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động' }));
     fireEvent.change(screen.getByLabelText('Ngày bắt đầu hoặc ngày chưa có giờ'), {
       target: { value: '2026-09-22' },
     });
@@ -248,7 +302,7 @@ describe('Gateway Plan controls', () => {
   });
   it('creates unscheduled activities and offers only server selected locations', async () => {
     const { user, create, plan, refresh } = await setup();
-    await user.click(add());
+    await openManualCreate(user);
     const select = screen.getByRole('combobox');
     expect(within(select).getAllByRole('option')).toHaveLength(plan.selectedLocations.length + 1);
     await user.type(screen.getByLabelText('Tên hoạt động'), 'New stop');
@@ -270,7 +324,8 @@ describe('Gateway Plan controls', () => {
   });
   it('blocks invalid edited title without sending a PATCH', async () => {
     const { user, update } = await setup();
-    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động' }));
     await user.clear(screen.getByLabelText('Tên hoạt động'));
     await user.click(save());
     expect(update).not.toHaveBeenCalled();
@@ -311,7 +366,7 @@ describe('Gateway Plan controls', () => {
           resolve = done;
         }),
     );
-    await user.click(add());
+    await openManualCreate(user);
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Pending');
     await user.dblClick(save());
     expect(create).toHaveBeenCalledTimes(1);
@@ -330,7 +385,8 @@ describe('Gateway Plan controls', () => {
       status: 'error',
       error: { code: 'VERSION_CONFLICT', retryable: false, correlationId: 'conflict-trace' },
     });
-    await user.click(item('Todo activity').getByRole('button', { name: 'Sửa' }));
+    await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động' }));
     await user.clear(screen.getByLabelText('Tên hoạt động'));
     await user.type(screen.getByLabelText('Tên hoạt động'), 'Keep my edit');
     await user.click(save());

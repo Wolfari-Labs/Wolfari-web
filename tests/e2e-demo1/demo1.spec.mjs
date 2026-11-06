@@ -53,6 +53,18 @@ async function fund(page, tripId) {
   await page.goto(`/trips/${tripId}/fund`);
   await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
 }
+async function manualCreate(page) {
+  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+  await page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true }).click();
+}
+async function editActivity(page, title) {
+  const trigger = page
+    .getByRole('listitem', { name: title, exact: true })
+    .getByRole('button', { name: `Thao tác ${title}`, exact: true });
+  await trigger.click();
+  await page.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động', exact: true }).click();
+  return trigger;
+}
 async function confirmForm(page, label) {
   const dialog = page.getByRole('form', { name: label, exact: true });
   await dialog.getByRole('button', { name: 'Xác nhận · ' + label, exact: true }).click();
@@ -365,24 +377,25 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
     });
     await test.step('day-only, timed overnight, delete, reorder, completion, reload and editor revocation', async () => {
       await editor.goto(`/trips/${tripId}/plan`);
-      await editor.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+      await manualCreate(editor);
       const drawer = editor.getByRole('dialog', { name: /^(Thêm hoạt động|Chỉnh sửa hoạt động)$/ });
       await drawer.getByLabel('Tên hoạt động', { exact: true }).fill('Tham quan ngày-only');
       await drawer.getByLabel('Ngày bắt đầu hoặc ngày chưa có giờ').fill('2026-11-03');
       await drawer.getByRole('button', { name: 'Lưu' }).click();
       await expect(drawer).not.toBeVisible();
       await editor.reload();
+      await editor.getByRole('button', { name: 'Ngày 2 · 03/11', exact: true }).click();
       const item = editor.getByRole('listitem', { name: 'Tham quan ngày-only', exact: true });
       await expect(item).toContainText('2026-11-03 · Chưa xếp giờ');
       await member.reload();
       await expect(member.getByRole('listitem', { name: 'Tham quan ngày-only' })).toBeVisible();
-      await item.getByRole('button', { name: 'Sửa' }).click();
+      await editActivity(editor, 'Tham quan ngày-only');
       await drawer.getByLabel('Giờ bắt đầu').fill('23:00');
       await drawer.getByLabel('Ngày kết thúc (nếu có giờ)').fill('2026-11-04');
       await drawer.getByLabel('Giờ kết thúc').fill('01:00');
       await drawer.getByRole('button', { name: 'Lưu' }).click();
       await expect(drawer).not.toBeVisible();
-      await editor.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+      await manualCreate(editor);
       await drawer.getByLabel('Tên hoạt động', { exact: true }).fill('Hoạt động chưa chọn ngày');
       await drawer.getByRole('button', { name: 'Lưu' }).click();
       await expect(drawer).not.toBeVisible();
@@ -401,7 +414,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(item).toContainText('Đã hoàn tất');
       await item.getByRole('button', { name: 'Mở lại', exact: true }).click();
       await expect(item).toContainText('Chưa hoàn tất');
-      await editor.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+      await manualCreate(editor);
       await drawer.getByLabel('Tên hoạt động', { exact: true }).fill('TEST temporary delete');
       await drawer.getByRole('button', { name: 'Lưu' }).click();
       await expect(drawer).not.toBeVisible();
@@ -417,7 +430,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(
         editor.getByRole('listitem', { name: 'TEST temporary delete', exact: true }),
       ).toHaveCount(0);
-      await expect(item.getByRole('button', { name: 'Sửa' })).toBeEnabled();
+      await item.getByRole('button', { name: 'Thao tác Tham quan ngày-only' }).click();
+      await expect(editor.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động' })).toHaveCount(1);
+      await editor.keyboard.press('Escape');
       await editor.reload();
       await expect(
         editor.getByRole('listitem', { name: 'TEST temporary delete', exact: true }),
@@ -426,7 +441,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(
         member.getByRole('listitem', { name: 'TEST temporary delete', exact: true }),
       ).toHaveCount(0);
-      await item.getByRole('button', { name: 'Sửa' }).click();
+      await editActivity(editor, 'Tham quan ngày-only');
       await drawer
         .getByLabel('Tên hoạt động', { exact: true })
         .fill('Không được lưu sau thu hồi quyền');
@@ -438,24 +453,22 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(
         editor
           .getByRole('listitem', { name: 'Tham quan ngày-only' })
-          .getByRole('button', { name: 'Sửa' }),
+          .getByRole('button', { name: 'Thao tác Tham quan ngày-only' }),
       ).toHaveCount(0);
       await setEditors(owner, tripId, ['Editor C']);
     });
     await test.step('two-actor Plan conflict preserves draft; keyboard drawer focus and explicit reconciliation', async () => {
       await editor.reload();
-      const item = editor.getByRole('listitem', { name: 'Tham quan ngày-only' });
-      const edit = item.getByRole('button', { name: 'Sửa' });
-      await edit.focus();
-      await edit.press('Enter');
+      const edit = await editActivity(editor, 'Tham quan ngày-only');
       const drawer = editor.getByRole('dialog', { name: 'Chỉnh sửa hoạt động', exact: true });
       await expect(drawer.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
       await drawer.getByLabel('Mô tả', { exact: true }).fill('Draft Editor conflict');
       await owner.goto(`/trips/${tripId}/plan`);
       await owner
         .getByRole('listitem', { name: 'Tham quan ngày-only' })
-        .getByRole('button', { name: 'Sửa' })
+        .getByRole('button', { name: 'Thao tác Tham quan ngày-only' })
         .click();
+      await owner.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động' }).click();
       await owner
         .getByRole('dialog')
         .getByLabel('Mô tả', { exact: true })
@@ -867,16 +880,14 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await owner.evaluate(() => {
         document.documentElement.style.zoom = '2';
       });
-      await owner.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
-      const drawer = owner.getByRole('dialog', { name: 'Thêm hoạt động', exact: true });
-      await expect(drawer.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
-      await drawer.getByRole('button', { name: 'Lưu', exact: true }).scrollIntoViewIfNeeded();
-      await expect(drawer.getByRole('button', { name: 'Lưu', exact: true })).toBeInViewport();
+      const poolTrigger = owner.getByRole('button', { name: 'Thêm hoạt động', exact: true });
+      await poolTrigger.click();
+      await expect(owner.getByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' })).toBeVisible();
+      await expect(owner.getByRole('dialog', { name: 'Thêm hoạt động', exact: true })).toHaveCount(
+        0,
+      );
       await owner.keyboard.press('Escape');
-      await expect(drawer).not.toBeVisible();
-      await expect(
-        owner.getByRole('button', { name: 'Thêm hoạt động', exact: true }),
-      ).toBeFocused();
+      await expect(poolTrigger).toBeFocused();
       await owner.evaluate(() => {
         document.documentElement.style.zoom = '';
       });

@@ -26,15 +26,26 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     activity('55555555-1111-4111-8111-111111111111', 'Đi dạo', 0),
     activity('55555555-2222-4222-8222-222222222222', 'Ăn sáng', 1),
   ];
-  const controls = { conflictNext: false, forbidden: false };
+  const controls = {
+    conflictNext: false,
+    forbidden: false,
+    failAtWrite: 0,
+    failureCode: 'VERSION_CONFLICT',
+    unknownAfterCommitAtWrite: 0,
+  };
   const selectedLocations: Record<string, unknown>[] = [];
-  const writes: { method: string; body: Record<string, unknown>; key: string }[] = [];
+  const writes: { method: string; path: string; body: Record<string, unknown>; key: string }[] = [];
+  const receipts = new Map<
+    string,
+    { fingerprint: string; data: unknown; exportRevision: number }
+  >();
+  let createdCount = 0;
   await page.route(`**/api/v1/trips/${tripId}/**`, async (route) => {
     const request = route.request();
     const path = new URL(request.url()).pathname;
-    const respond = (data: unknown) =>
+    const respond = (data: unknown, exportRevision = trip.export_revision) =>
       route.fulfill({
-        json: { data, meta: { correlation_id: 'plan-e2e', export_revision: trip.export_revision } },
+        json: { data, meta: { correlation_id: 'plan-e2e', export_revision: exportRevision } },
       });
     if (path.endsWith('/plan'))
       return respond({
@@ -59,18 +70,34 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     const key = request.headers()['idempotency-key']!;
     expect(key).toBeTruthy();
     expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
-    expect(body.expected_plan_version).toBe(trip.plan_version);
-    writes.push({ method: request.method(), body, key });
-    if (controls.forbidden || controls.conflictNext) {
-      const status = controls.forbidden ? 403 : 409;
+    writes.push({ method: request.method(), path, body, key });
+    const fingerprint = JSON.stringify({ method: request.method(), path, body });
+    const receipt = receipts.get(key);
+    if (receipt) {
+      expect(fingerprint, 'An idempotent retry must keep the exact command').toBe(
+        receipt.fingerprint,
+      );
+      return respond(receipt.data, receipt.exportRevision);
+    }
+    expect(body.expected_plan_version, 'Commands must chain confirmed server versions').toBe(
+      trip.plan_version,
+    );
+    if (controls.forbidden || controls.conflictNext || controls.failAtWrite === writes.length) {
+      const code = controls.forbidden
+        ? 'PERMISSION_DENIED'
+        : controls.failAtWrite === writes.length
+          ? controls.failureCode
+          : 'VERSION_CONFLICT';
+      const status =
+        code === 'PERMISSION_DENIED' ? 403 : code === 'SERVICE_UNAVAILABLE' ? 503 : 409;
       controls.conflictNext = false;
       return route.fulfill({
         status,
         json: {
           error: {
-            code: status === 403 ? 'PERMISSION_DENIED' : 'VERSION_CONFLICT',
+            code,
             message: 'test',
-            retryable: false,
+            retryable: status === 503,
           },
           meta: {},
         },
@@ -80,19 +107,20 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     trip.export_revision++;
     const id = path.split('/').at(-1)!;
     if (request.method() === 'POST') {
+      createdCount += 1;
       activities.push({
         ...activity(
-          '55555555-3333-4333-8333-333333333333',
+          `55555555-3333-4333-8333-${String(createdCount).padStart(12, '0')}`,
           String(body.title),
           Number(body.position),
         ),
         activity_type: String(body.activity_type),
-        selected_location_id: body.selected_location_id as string | null,
-        scheduled_date: body.scheduled_date as string | null,
-        starts_at: body.starts_at as string | null,
-        ends_at: body.ends_at as string | null,
-        description: body.description as string | null,
-        public_description: body.public_description as string | null,
+        selected_location_id: (body.selected_location_id ?? null) as string | null,
+        scheduled_date: (body.scheduled_date ?? null) as string | null,
+        starts_at: (body.starts_at ?? null) as string | null,
+        ends_at: (body.ends_at ?? null) as string | null,
+        description: (body.description ?? null) as string | null,
+        public_description: (body.public_description ?? null) as string | null,
       });
     } else if (id === 'order') {
       const ids = body.activity_ids as string[];
@@ -127,15 +155,35 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
       }
     }
     activities = activities.map((item) => ({ ...item, plan_version: trip.plan_version }));
-    if (request.method() === 'DELETE' || id === 'order')
-      return respond({ plan_version: trip.plan_version, export_revision: trip.export_revision });
-    return respond(
-      request.method() === 'POST'
-        ? activities.at(-1)
-        : activities.find(
-            (item) => item.id === (id === 'completion' ? path.split('/').at(-2) : id),
-          ),
-    );
+    const data =
+      request.method() === 'DELETE' || id === 'order'
+        ? { plan_version: trip.plan_version, export_revision: trip.export_revision }
+        : request.method() === 'POST'
+          ? activities.at(-1)
+          : activities.find(
+              (item) => item.id === (id === 'completion' ? path.split('/').at(-2) : id),
+            );
+    receipts.set(key, {
+      fingerprint,
+      data: structuredClone(data),
+      exportRevision: trip.export_revision,
+    });
+    if (controls.unknownAfterCommitAtWrite === writes.length)
+      return route.fulfill({
+        status: 503,
+        json: {
+          error: { code: 'SERVICE_UNAVAILABLE', message: 'Receipt lost', retryable: true },
+          meta: {},
+        },
+      });
+    return respond(data);
   });
-  return { writes, controls, activities, selectedLocations };
+  return {
+    writes,
+    controls,
+    get activities() {
+      return activities;
+    },
+    selectedLocations,
+  };
 }

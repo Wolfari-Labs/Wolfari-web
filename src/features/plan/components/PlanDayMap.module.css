@@ -1,11 +1,12 @@
 .panel {
+  height: 498px;
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--color-white);
   color: var(--color-ink);
 }

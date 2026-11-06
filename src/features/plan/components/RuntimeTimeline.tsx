@@ -1,14 +1,21 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { DragDropProvider, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/react';
-import { TimelineKeyboardSensor } from './TimelineKeyboardSensor';
 import { Accessibility, PointerSensor } from '@dnd-kit/dom';
 import { useReducedMotion } from 'motion/react';
 import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from '../model/plan';
+import type { GatewayPlanMove } from '../model/plan-arrangement';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { localDate, planDays } from '../model/plan-presentation';
+import {
+  gatewayActivityDay,
+  gatewayDragKey,
+  useGatewayDnd,
+  type GatewayDndControls,
+} from '../hooks/use-gateway-dnd';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
 import { Icon } from '../../../shared/components/Icon';
+import { Drawer } from '../../../shared/components/Drawer';
 import { ActionMenu } from '../../../shared/components/Ui';
 import { SplitPanel } from '../../../shared/components/SplitPanel';
 import { TimelineCard } from './TimelineCard';
@@ -19,51 +26,62 @@ import meal from '../../../shared/assets/figma/41563.svg';
 import beach from '../../../shared/assets/figma/e9568.svg';
 import walk from '../../../shared/assets/figma/9c64a.svg';
 import styles from './RuntimeTimeline.module.css';
+import dragIcon from '../../../shared/assets/figma/56e25.svg';
+import moreIcon from '../../../shared/assets/figma/ca9fb.svg';
+
 const activityIcons: Record<string, string> = {
   SIGHTSEEING: mountain,
   MEAL: meal,
   BEACH: beach,
   WALK: walk,
 };
-const activityDay = (a: ActivityViewModel, timezone: string) =>
-  a.startsAt ? localDate(a.startsAt, timezone) : (a.scheduledDate ?? 'POOL');
 const formatClock = (value: string, timezone: string) =>
   new Intl.DateTimeFormat('vi-VN', {
     timeZone: timezone,
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(value));
+
 function DayTarget({
   day,
   label,
   selected,
-  dropDisabled,
+  disabled,
+  dnd,
   onClick,
 }: {
   day: string;
   label: string;
   selected: boolean;
-  dropDisabled: boolean;
+  disabled: boolean;
+  dnd: GatewayDndControls;
   onClick: () => void;
 }) {
-  const drop = useDroppable({
-    id: `day:${day}`,
-    data: { day, label },
-    disabled: dropDisabled || day === 'ALL',
-  });
+  const targetDay = day === 'POOL' ? null : day;
+  const drop = useDroppable({ id: `day:${day}`, disabled: disabled || day === 'ALL' });
   return (
     <Button
-      ref={drop.ref}
+      ref={(element) => {
+        drop.ref(element);
+        if (day !== 'ALL') dnd.registerDay(targetDay, element);
+      }}
       data-plan-day={day !== 'ALL' ? day : undefined}
       variant={selected ? 'primary' : 'outline'}
       aria-pressed={selected}
-      data-drop-target={drop.isDropTarget || undefined}
+      data-drop-target={dnd.intent?.target.day === targetDay || undefined}
       onClick={onClick}
     >
-      {label}
+      {day !== 'ALL' && day !== 'POOL' ? (
+        <span>
+          {label.split(' · ')[0]} ·<small>{label.split(' · ')[1]}</small>
+        </span>
+      ) : (
+        label
+      )}
     </Button>
   );
 }
+
 function ActivityRow({
   activity,
   trip,
@@ -77,6 +95,9 @@ function ActivityRow({
   onMove,
   index,
   length,
+  showDate,
+  inPool = false,
+  dnd,
 }: {
   activity: ActivityViewModel;
   trip: TripDetailViewModel;
@@ -90,108 +111,239 @@ function ActivityRow({
   onMove: (offset: number) => void;
   index: number;
   length: number;
+  showDate: boolean;
+  inPool?: boolean;
+  dnd: GatewayDndControls;
 }) {
+  const menuTrigger = useRef<HTMLButtonElement>(null);
+  const edit = () => {
+    menuTrigger.current?.focus();
+    onEdit();
+  };
+  const source: GatewayPlanMove['source'] = { type: 'ACTIVITY', id: activity.id };
+  const dragKey = gatewayDragKey(source);
   const drag = useDraggable({
-    id: activity.id,
+    id: dragKey,
     data: { label: activity.title },
     disabled: !editable || disabled,
   });
-  const drop = useDroppable({
-    id: `activity:${activity.id}`,
-    data: { activityId: activity.id, label: activity.title },
-    disabled: !editable || disabled,
-  });
   const time = activity.startsAt
-    ? `${localDate(activity.startsAt, trip.timezone)} · ${formatClock(activity.startsAt, trip.timezone)}${activity.endsAt ? ' – ' + (localDate(activity.endsAt, trip.timezone) !== localDate(activity.startsAt, trip.timezone) ? localDate(activity.endsAt, trip.timezone) + ' · ' : '') + formatClock(activity.endsAt, trip.timezone) : ''}`
+    ? `${showDate ? localDate(activity.startsAt, trip.timezone) + ' · ' : ''}${formatClock(activity.startsAt, trip.timezone)}${activity.endsAt ? ' – ' + (localDate(activity.endsAt, trip.timezone) !== localDate(activity.startsAt, trip.timezone) ? localDate(activity.endsAt, trip.timezone) + ' · ' : '') + formatClock(activity.endsAt, trip.timezone) : ''}`
     : activity.scheduledDate
-      ? activity.scheduledDate + ' · Chưa xếp giờ'
+      ? (showDate ? activity.scheduledDate + ' · ' : '') + 'Chưa xếp giờ'
       : 'Chưa xếp lịch';
+  const selectedLocation = plan.selectedLocations.find((p) => p.id === activity.selectedLocationId);
+  const handle = (
+    <Button
+      ref={drag.handleRef}
+      hidden={!editable}
+      variant="ghost"
+      size="icon"
+      disabled={!editable || disabled}
+      className={styles.handle}
+      aria-label={`Kéo hoạt động ${activity.title}`}
+      data-gateway-handle={dragKey}
+      aria-pressed={dnd.draggingKey === dragKey}
+      onKeyDown={(event) => dnd.onHandleKeyDown(source, event)}
+    >
+      <img src={dragIcon} alt="" />
+    </Button>
+  );
+  const actions = (editable || completable) && (
+    <ActionMenu
+      triggerRef={menuTrigger}
+      icon={<img src={moreIcon} alt="" />}
+      label={`Thao tác ${activity.title}`}
+      items={[
+        ...(completable
+          ? [
+              {
+                label: activity.status === 'TODO' ? 'Hoàn tất' : 'Mở lại',
+                action: onComplete,
+                disabled,
+              },
+            ]
+          : []),
+        ...(editable
+          ? [
+              { label: 'Chỉnh sửa hoạt động', action: edit, disabled },
+              { label: 'Di chuyển sang ngày khác', action: edit, disabled },
+              { label: 'Đưa lên', action: () => onMove(-1), disabled: disabled || index === 0 },
+              {
+                label: 'Đưa xuống',
+                action: () => onMove(1),
+                disabled: disabled || index === length - 1,
+              },
+              {
+                label: 'Xóa',
+                action: () => {
+                  menuTrigger.current?.focus();
+                  onDelete();
+                },
+                disabled,
+                danger: true,
+              },
+            ]
+          : []),
+      ]}
+    />
+  );
   return (
     <li
       data-plan-activity={activity.id}
-      data-activity-day={activityDay(activity, trip.timezone)}
-      ref={(el) => {
-        drag.ref(el);
-        drop.ref(el);
-      }}
+      data-activity-day={gatewayActivityDay(activity, trip.timezone) ?? 'POOL'}
+      ref={drag.ref}
       aria-label={activity.title}
-      data-dragging={drag.isDragging || undefined}
-      data-drop-target={drop.isDropTarget || undefined}
-      className={styles.row}
+      data-dragging={dnd.draggingKey === dragKey || undefined}
+      data-insert-before={dnd.intent?.beforeId === activity.id || undefined}
+      data-insert-after={
+        (dnd.intent?.beforeId === null && dnd.intent?.afterId === activity.id) || undefined
+      }
+      className={inPool ? styles.poolCard : styles.row}
     >
-      <TimelineCard
-        compact
-        title={activity.title}
-        description={activity.description}
-        time={time}
-        completed={activity.status === 'COMPLETED'}
-        location={
-          plan.selectedLocations.find((p) => p.id === activity.selectedLocationId)?.name ?? null
-        }
-        cover={activity.presentation.cover}
-        typeIcon={activityIcons[activity.activityType] ?? null}
-        handle={
-          <Button
-            ref={drag.handleRef}
-            hidden={!editable}
-            variant="ghost"
-            size="icon"
-            disabled={!editable || disabled}
-            className={styles.handle}
-            aria-label={`Kéo hoạt động ${activity.title}`}
-          >
-            <Icon name="grip" />
-          </Button>
-        }
-        actions={
-          <>
-            {completable && (
-              <Button
-                variant="ghost"
-                disabled={disabled}
-                onClick={onComplete}
-                icon={<Icon name="check" size={16} />}
-              >
-                {activity.status === 'TODO' ? 'Hoàn tất' : 'Mở lại'}
-              </Button>
-            )}
-            {editable && (
-              <>
-                <Button
-                  variant="outline"
-                  disabled={disabled}
-                  onClick={(event) => {
-                    event.currentTarget.focus();
-                    onEdit();
-                  }}
-                >
-                  Sửa
-                </Button>
-                <ActionMenu
-                  label={`Thao tác ${activity.title}`}
-                  items={[
-                    { label: 'Di chuyển sang ngày khác', action: onEdit, disabled },
-                    {
-                      label: 'Đưa lên',
-                      action: () => onMove(-1),
-                      disabled: disabled || index === 0,
-                    },
-                    {
-                      label: 'Đưa xuống',
-                      action: () => onMove(1),
-                      disabled: disabled || index === length - 1,
-                    },
-                    { label: 'Xóa', action: onDelete, disabled, danger: true },
-                  ]}
-                />
-              </>
-            )}
-          </>
-        }
-      />
+      {inPool ? (
+        <>
+          {handle}
+          <span className={styles.poolIcon} aria-hidden="true">
+            <img src={activityIcons[activity.activityType] ?? mountain} alt="" />
+          </span>
+          <div className={styles.poolCopy}>
+            <strong>{activity.title}</strong>
+            <small>{selectedLocation?.address ?? activity.description ?? 'Chưa có địa chỉ'}</small>
+            <small>Chưa xếp lịch</small>
+          </div>
+          {activity.presentation.cover && (
+            <img
+              className={styles.poolCover}
+              src={activity.presentation.cover.src}
+              alt={activity.presentation.cover.alt}
+            />
+          )}
+          {actions}
+        </>
+      ) : (
+        <>
+          <span className={styles.step} aria-hidden="true">
+            {activity.status === 'COMPLETED' ? '✓' : index + 1}
+          </span>
+          <TimelineCard
+            compact
+            title={activity.title}
+            description={activity.description}
+            time={time}
+            completed={activity.status === 'COMPLETED'}
+            location={selectedLocation?.address ?? selectedLocation?.name ?? null}
+            cover={activity.presentation.cover}
+            typeIcon={activityIcons[activity.activityType] ?? null}
+            handle={handle}
+            actions={actions}
+          />
+        </>
+      )}
     </li>
   );
 }
+
+function LocationRow({
+  location,
+  disabled,
+  editable,
+  dnd,
+}: {
+  location: SelectedLocationViewModel;
+  disabled: boolean;
+  editable: boolean;
+  dnd: GatewayDndControls;
+}) {
+  const source: GatewayPlanMove['source'] = { type: 'LOCATION', id: location.id };
+  const key = gatewayDragKey(source);
+  const drag = useDraggable({
+    id: key,
+    data: { label: location.name },
+    disabled: !editable || disabled,
+  });
+  return (
+    <li
+      ref={drag.ref}
+      className={styles.poolCard}
+      data-plan-location={location.id}
+      aria-label={location.name}
+      data-dragging={dnd.draggingKey === key || undefined}
+    >
+      <Button
+        ref={drag.handleRef}
+        hidden={!editable}
+        variant="ghost"
+        size="icon"
+        className={styles.handle}
+        disabled={disabled || !editable}
+        data-gateway-handle={key}
+        aria-label={`Kéo địa điểm ${location.name}`}
+        aria-pressed={dnd.draggingKey === key}
+        onKeyDown={(event) => dnd.onHandleKeyDown(source, event)}
+      >
+        <img src={dragIcon} alt="" />
+      </Button>
+      <span className={styles.poolIcon} aria-hidden="true">
+        <Icon name="map" />
+      </span>
+      <div className={styles.poolCopy}>
+        <strong>{location.name}</strong>
+        <small>{location.address ?? 'Chưa có địa chỉ'}</small>
+        <small>Chưa xếp lịch</small>
+      </div>
+    </li>
+  );
+}
+
+function DropList({
+  day,
+  dnd,
+  disabled,
+  children,
+  pool = false,
+  empty = false,
+  label,
+}: {
+  day: string | null;
+  dnd: GatewayDndControls;
+  disabled: boolean;
+  children: ReactNode;
+  pool?: boolean;
+  empty?: boolean;
+  label: string;
+}) {
+  const drop = useDroppable({ id: `list:${day ?? 'POOL'}`, disabled });
+  const active = dnd.intent?.target.day === day;
+  return (
+    <ol
+      ref={(element) => {
+        drop.ref(element);
+        dnd.registerList(day, element);
+      }}
+      className={pool ? styles.poolList : styles.list}
+      data-gateway-list={day ?? 'POOL'}
+      data-insertion-slot={active ? dnd.intent?.target.index : undefined}
+      aria-label={label}
+      tabIndex={0}
+    >
+      {children}
+      <li
+        className={styles.dropEnd}
+        data-gateway-drop-end
+        data-drop-active={(active && !dnd.intent?.beforeId) || undefined}
+        data-empty={empty || undefined}
+      >
+        {empty
+          ? pool
+            ? 'Chưa có hoạt động phù hợp trong giỏ. Thả vào đây để bỏ ngày và giờ.'
+            : 'Ngày chưa có hoạt động. Kéo hoạt động vào đây.'
+          : 'Thả vào cuối danh sách'}
+      </li>
+    </ol>
+  );
+}
+
 export function RuntimeTimeline({
   trip,
   plan,
@@ -201,11 +353,10 @@ export function RuntimeTimeline({
   onDelete,
   onComplete,
   onMove,
-  onReorder,
-  onDay,
-  onCreateFromLocation,
+  onArrange,
   actions,
   feedback,
+  utilities,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
@@ -215,23 +366,49 @@ export function RuntimeTimeline({
   onDelete: (a: ActivityViewModel) => void;
   onComplete: (a: ActivityViewModel) => void;
   onMove: (id: string, offset: number) => void;
-  onReorder: (ids: string[]) => void;
-  onDay: (a: ActivityViewModel, day: string) => void;
-  onCreateFromLocation?: (location: SelectedLocationViewModel) => void;
+  onArrange: (move: GatewayPlanMove) => Promise<boolean>;
   actions?: ReactNode;
   feedback?: ReactNode;
+  utilities?: ReactNode;
 }) {
-  const [day, setDay] = useState('ALL'),
-    [sidePanel, setSidePanel] = useState<'none' | 'pool' | 'map'>('none'),
-    [poolQuery, setPoolQuery] = useState(''),
-    [dragging, setDragging] = useState<string | null>(null);
+  const days = planDays(trip.startAt, trip.endAt, trip.timezone);
+  const [day, setDay] = useState(days[0] ?? 'ALL');
+  const [sidePanel, setSidePanel] = useState<'none' | 'pool' | 'map'>('none');
+  const [poolQuery, setPoolQuery] = useState('');
+  const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1201px)').matches);
   const mapTrigger = useRef<HTMLButtonElement>(null);
-  const reduced = useReducedMotion(),
-    days = planDays(trip.startAt, trip.endAt, trip.timezone),
-    items = [...plan.activities].sort(
-      (a, b) => a.position - b.position || a.id.localeCompare(b.id),
-    );
-  const row = (activity: ActivityViewModel) => (
+  const poolTrigger = useRef<HTMLButtonElement>(null);
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 1201px)');
+    const update = () => setWide(media.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+  const openPool = () => {
+    setSidePanel('pool');
+    setPoolQuery('');
+    if (day === 'POOL') setDay(days[0] ?? 'ALL');
+  };
+  const dnd = useGatewayDnd({
+    plan,
+    timezone: trip.timezone,
+    day,
+    canEdit: canEdit && !disabled,
+    poolOpen: sidePanel === 'pool',
+    openPool,
+    revealDay: setDay,
+    onArrange,
+  });
+  const items = [...plan.activities].sort(
+    (a, b) => a.position - b.position || a.id.localeCompare(b.id),
+  );
+  const row = (
+    activity: ActivityViewModel,
+    index: number,
+    group: ActivityViewModel[],
+    inPool = false,
+  ) => (
     <ActivityRow
       key={activity.id}
       activity={activity}
@@ -252,32 +429,30 @@ export function RuntimeTimeline({
       onDelete={() => onDelete(activity)}
       onComplete={() => onComplete(activity)}
       onMove={(offset) => onMove(activity.id, offset)}
-      index={items.indexOf(activity)}
-      length={items.length}
+      index={index}
+      length={group.length}
+      showDate={day === 'ALL'}
+      inPool={inPool}
+      dnd={dnd}
     />
   );
   const visible = items.filter(
     (a) =>
-      (day === 'ALL' || activityDay(a, trip.timezone) === day) &&
-      (sidePanel !== 'pool' || activityDay(a, trip.timezone) !== 'POOL'),
+      (day === 'ALL' || (gatewayActivityDay(a, trip.timezone) ?? 'POOL') === day) &&
+      (sidePanel !== 'pool' || gatewayActivityDay(a, trip.timezone) !== null),
   );
-  const scheduledLocationIds = new Set(
-    items
-      .filter((activity) => activityDay(activity, trip.timezone) !== 'POOL')
-      .map((activity) => activity.selectedLocationId)
-      .filter((id): id is string => id !== null),
-  );
+  const linkedLocationIds = new Set(items.map((activity) => activity.selectedLocationId));
   const normalizedQuery = poolQuery.trim().toLocaleLowerCase('vi');
   const poolLocations = plan.selectedLocations.filter(
     (location) =>
-      !scheduledLocationIds.has(location.id) &&
+      !linkedLocationIds.has(location.id) &&
       `${location.name} ${location.address ?? ''}`
         .toLocaleLowerCase('vi')
         .includes(normalizedQuery),
   );
   const poolActivities = items.filter(
     (activity) =>
-      activityDay(activity, trip.timezone) === 'POOL' &&
+      gatewayActivityDay(activity, trip.timezone) === null &&
       `${activity.title} ${activity.description ?? ''}`
         .toLocaleLowerCase('vi')
         .includes(normalizedQuery),
@@ -288,14 +463,45 @@ export function RuntimeTimeline({
       : day === 'POOL'
         ? 'Hoạt động chưa xếp ngày'
         : `Lịch trình ngày ${days.indexOf(day) + 1}`;
+  const compactPool = sidePanel === 'pool' && !wide;
+  const dayBar = (
+    <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
+      {days.map((value, index) => (
+        <DayTarget
+          key={value}
+          day={value}
+          label={`Ngày ${index + 1} · ${value.slice(8)}/${value.slice(5, 7)}`}
+          selected={day === value}
+          disabled={!canEdit || disabled}
+          dnd={dnd}
+          onClick={() => setDay(value)}
+        />
+      ))}
+      <span className={styles.dayUtilities}>
+        {(['ALL', 'POOL'] as const).map((value) => (
+          <DayTarget
+            key={value}
+            day={value}
+            label={value === 'ALL' ? 'Tất cả' : 'Chưa chọn ngày'}
+            selected={day === value}
+            disabled={!canEdit || disabled}
+            dnd={dnd}
+            onClick={() => {
+              setDay(value);
+              if (value === 'POOL') setSidePanel('none');
+            }}
+          />
+        ))}
+      </span>
+    </div>
+  );
   const timeline = (
-    <section className={styles.surface}>
+    <section className={styles.timeline}>
       <div className={styles.timelineHeader}>
         <div>
           <h2>{timelineTitle}</h2>
           <span className={styles.progress}>
-            {visible.filter((activity) => activity.status === 'COMPLETED').length}/{visible.length}{' '}
-            hoàn tất
+            {visible.filter((a) => a.status === 'COMPLETED').length}/{visible.length} hoàn tất
           </span>
         </div>
         <div className={styles.timelineActions}>
@@ -307,28 +513,82 @@ export function RuntimeTimeline({
           >
             {sidePanel === 'map' ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
           </Button>
-          <Button
-            variant="outline"
-            aria-pressed={sidePanel === 'pool'}
-            onClick={() => {
-              setSidePanel(sidePanel === 'pool' ? 'none' : 'pool');
-              if (day === 'POOL') setDay('ALL');
-            }}
-          >
-            {sidePanel === 'pool' ? 'Ẩn danh sách' : 'Sắp xếp lịch trình'}
-          </Button>
-          {actions}
+          {canEdit && (
+            <Button
+              ref={poolTrigger}
+              icon={<Icon name="plus" />}
+              disabled={disabled}
+              aria-pressed={sidePanel === 'pool'}
+              onClick={openPool}
+            >
+              Thêm hoạt động
+            </Button>
+          )}
+          <details className={styles.tools}>
+            <summary aria-label="Tùy chọn lịch trình">
+              <img src={moreIcon} alt="" />
+            </summary>
+            <div>
+              {actions}
+              {!compactPool && utilities}
+              {!canEdit && sidePanel !== 'pool' && (
+                <Button variant="outline" onClick={openPool}>
+                  Xem hoạt động chưa xếp lịch
+                </Button>
+              )}
+              {sidePanel === 'pool' && (
+                <Button variant="outline" onClick={() => setSidePanel('none')}>
+                  Ẩn danh sách
+                </Button>
+              )}
+              <p>
+                Kéo để sắp xếp. Hoạt động vừa thả và phần phía sau trong ngày sẽ chưa xếp giờ. Chọn
+                menu hoạt động để chỉnh sửa sau.
+              </p>
+            </div>
+          </details>
         </div>
       </div>
-      {feedback}
-      {canEdit && (
-        <p className={styles.help}>
-          Kéo thẻ để đổi thứ tự, thả vào ngày để chuyển lịch. Giờ không tự thay đổi; hoạt động có
-          giờ sẽ cần xác nhận.
-        </p>
+      <p role="status" aria-live="polite" className={styles.srOnly}>
+        {dnd.announcement}
+      </p>
+      {day === 'ALL' ? (
+        <div className={styles.allDays}>
+          {[...days, ...(sidePanel === 'pool' ? [] : ['POOL'])].map((value) => {
+            const group = visible.filter(
+              (activity) => (gatewayActivityDay(activity, trip.timezone) ?? 'POOL') === value,
+            );
+            return (
+              <section key={value}>
+                <h3>
+                  {value === 'POOL'
+                    ? 'Chưa xếp lịch'
+                    : `Ngày ${days.indexOf(value) + 1} · ${value}`}
+                </h3>
+                <DropList
+                  day={value === 'POOL' ? null : value}
+                  dnd={dnd}
+                  disabled={disabled || !canEdit}
+                  empty={!group.length}
+                  label={value === 'POOL' ? 'Hoạt động chưa xếp lịch' : `Hoạt động ngày ${value}`}
+                >
+                  {group.map((activity, index) => row(activity, index, group))}
+                </DropList>
+              </section>
+            );
+          })}
+        </div>
+      ) : (
+        <DropList
+          day={day === 'POOL' ? null : day}
+          dnd={dnd}
+          disabled={disabled || !canEdit}
+          empty={!visible.length}
+          label="Các hoạt động trong lịch trình"
+        >
+          {visible.map((activity, index) => row(activity, index, visible))}
+        </DropList>
       )}
-      <ol className={styles.list}>{visible.map(row)}</ol>
-      {!visible.length && <p className={styles.empty}>Chưa có hoạt động trong nhóm này.</p>}
     </section>
   );
   const pool = (
@@ -345,125 +605,96 @@ export function RuntimeTimeline({
         value={poolQuery}
         onChange={(event) => setPoolQuery(event.target.value)}
       />
-      <div className={styles.poolGroup}>
-        <h3>Địa điểm đã chọn · chưa xếp</h3>
-        {poolLocations.length ? (
-          <ul className={styles.placeList}>
-            {poolLocations.map((location) => (
-              <li key={location.id}>
-                <div>
-                  <strong>{location.name}</strong>
-                  <small>{location.address ?? 'Chưa có địa chỉ'}</small>
-                </div>
-                {canEdit && onCreateFromLocation && (
-                  <Button
-                    variant="outline"
-                    size="compact"
-                    disabled={disabled}
-                    onClick={() => onCreateFromLocation(location)}
-                  >
-                    Thêm vào lịch
-                  </Button>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className={styles.empty}>Không có địa điểm phù hợp chưa xếp lịch.</p>
-        )}
-      </div>
-      <div className={styles.poolGroup}>
-        <h3>Hoạt động chưa xếp ngày</h3>
-        <DayTarget
-          day="POOL"
-          label="Đưa về nhóm chưa xếp ngày"
-          selected={false}
-          dropDisabled={!canEdit || disabled}
-          onClick={() => {
-            setDay('POOL');
-            setSidePanel('none');
-          }}
-        />
-        {poolActivities.length ? (
-          <ol className={styles.list}>{poolActivities.map(row)}</ol>
-        ) : (
-          <p className={styles.empty}>Không có hoạt động phù hợp chưa xếp ngày.</p>
-        )}
-      </div>
+      <p className={styles.poolHelp}>
+        {canEdit
+          ? 'Kéo hoạt động sang lịch trình để thêm vào ngày đang chọn. Có thể tiếp tục sắp xếp rồi chọn chỉnh sửa sau.'
+          : 'Các địa điểm đã chọn và hoạt động chưa được xếp vào ngày. Bạn đang xem lịch trình ở chế độ chỉ đọc.'}
+      </p>
+      <DropList
+        day={null}
+        dnd={dnd}
+        disabled={disabled || !canEdit}
+        pool
+        empty={!poolActivities.length && !poolLocations.length}
+        label="Đã chọn · Chưa xếp lịch"
+      >
+        {poolActivities.map((activity, index) => row(activity, index, poolActivities, true))}
+        {poolLocations.map((location) => (
+          <LocationRow
+            key={location.id}
+            location={location}
+            disabled={disabled}
+            editable={canEdit}
+            dnd={dnd}
+          />
+        ))}
+      </DropList>
     </section>
   );
+  const draggedTitle = dnd.draggingKey?.startsWith('activity:')
+    ? items.find(
+        (activity) => gatewayDragKey({ type: 'ACTIVITY', id: activity.id }) === dnd.draggingKey,
+      )?.title
+    : plan.selectedLocations.find(
+        (location) => gatewayDragKey({ type: 'LOCATION', id: location.id }) === dnd.draggingKey,
+      )?.name;
   return (
     <DragDropProvider
-      sensors={[PointerSensor, TimelineKeyboardSensor]}
+      sensors={[
+        PointerSensor.configure({ preventActivation: (event) => event.pointerType === 'touch' }),
+      ]}
       plugins={(defaults) => [
         ...defaults,
         Accessibility.configure({
           screenReaderInstructions: {
             draggable:
-              'Nhấn Enter để kéo, dùng mũi tên lên xuống để chọn thẻ, trái phải để chọn ngày, Enter để thả, Escape để hủy. Có thể dùng menu Di chuyển thay thế.',
+              'Nhấn Enter để kéo, lên xuống để chọn vị trí, trái về giỏ, phải sang ngày đang chọn, Enter thả, Escape hủy.',
           },
         }),
       ]}
-      onDragStart={(event) => setDragging(String(event.operation.source?.id ?? ''))}
-      onDragEnd={(event) => {
-        setDragging(null);
-        const { source, target, canceled } = event.operation;
-        if (canceled || !source || !target || disabled || !canEdit) return;
-        const activity = items.find((a) => a.id === source.id);
-        if (!activity) return;
-        const targetDay = target.data.day as string | undefined,
-          targetActivity = items.find((a) => a.id === target.data.activityId);
-        const destination =
-          targetDay ?? (targetActivity ? activityDay(targetActivity, trip.timezone) : null);
-        if (
-          destination &&
-          destination !== 'ALL' &&
-          activityDay(activity, trip.timezone) !== destination
-        ) {
-          onDay(activity, destination);
-          return;
-        }
-        if (targetActivity && activity.id !== targetActivity.id) {
-          const ids = items.map((a) => a.id),
-            from = ids.indexOf(activity.id),
-            to = ids.indexOf(targetActivity.id);
-          ids.splice(from, 1);
-          ids.splice(to, 0, activity.id);
-          onReorder(ids);
-        }
-      }}
+      onDragStart={dnd.onDragStart}
+      onDragMove={dnd.onDragMove}
+      onDragEnd={dnd.onDragEnd}
     >
-      <div data-runtime-timeline className={styles.workspace}>
-        <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
-          {days.map((d, index) => (
-            <DayTarget
-              key={d}
-              day={d}
-              label={`Ngày ${index + 1} · ${d.slice(8)}/${d.slice(5, 7)}`}
-              selected={day === d}
-              dropDisabled={!canEdit || disabled}
-              onClick={() => setDay(d)}
-            />
-          ))}
-          <span className={styles.dayUtilities}>
-            {(['ALL', 'POOL'] as const).map((d) => (
-              <DayTarget
-                key={d}
-                day={d}
-                label={d === 'ALL' ? 'Tất cả' : 'Chưa chọn ngày'}
-                selected={day === d}
-                dropDisabled={!canEdit || disabled}
-                onClick={() => {
-                  setDay(d);
-                  if (d === 'POOL') setSidePanel('none');
-                }}
-              />
-            ))}
-          </span>
-        </div>
+      <div
+        data-runtime-timeline
+        className={styles.workspace}
+        onTouchStartCapture={dnd.onTouchStartCapture}
+      >
+        {!compactPool && dayBar}
         <PlanMetrics trip={trip} plan={plan} day={day} />
-        {sidePanel !== 'none' ? (
+        {!compactPool && feedback}
+        {compactPool ? (
+          <>
+            <Button ref={poolTrigger} variant="outline" onClick={openPool}>
+              Thêm hoạt động
+            </Button>
+            <Drawer
+              open
+              label="Sắp xếp lịch trình"
+              side="right"
+              className={styles.plannerDrawer ?? ''}
+              returnFocusRef={poolTrigger}
+              onDismiss={() => setSidePanel('none')}
+            >
+              <div
+                data-runtime-timeline
+                className={styles.workspace}
+                onTouchStartCapture={dnd.onTouchStartCapture}
+              >
+                {dayBar}
+                {feedback}
+                <div className={styles.compactPlanner}>
+                  {timeline}
+                  {pool}
+                </div>
+                <div className={styles.recoveryUtilities}>{utilities}</div>
+              </div>
+            </Drawer>
+          </>
+        ) : sidePanel !== 'none' ? (
           <SplitPanel
+            variant="itinerary"
             key={sidePanel}
             storageKey={`wolfari:ui:plan-${sidePanel}-split`}
             primary={timeline}
@@ -483,25 +714,21 @@ export function RuntimeTimeline({
               )
             }
             secondaryLabel={sidePanel === 'map' ? 'Bản đồ lịch trình' : 'Hoạt động chưa xếp ngày'}
-            initialSecondaryOpen={sidePanel === 'map'}
-            {...(sidePanel === 'map'
-              ? {
-                  onSecondaryDismiss: () => {
-                    setSidePanel('none');
-                    mapTrigger.current?.focus();
-                  },
-                }
-              : {})}
+            initialSecondaryOpen
+            onSecondaryDismiss={() => {
+              setSidePanel('none');
+              (sidePanel === 'map' ? mapTrigger : poolTrigger).current?.focus();
+            }}
           />
         ) : (
           timeline
         )}
       </div>
       <DragOverlay dropAnimation={reduced ? null : { duration: 180, easing: 'ease-out' }}>
-        {dragging && (
+        {dnd.draggingKey && (
           <div className={styles.overlay}>
             <Icon name="grip" />
-            <strong>{items.find((a) => a.id === dragging)?.title}</strong>
+            <strong>{draggedTitle}</strong>
           </div>
         )}
       </DragOverlay>

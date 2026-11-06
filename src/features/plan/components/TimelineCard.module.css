@@ -1,153 +1,186 @@
 .card {
-  border: 1px solid var(--color-line);
-  border-radius: 16px;
-  background: white;
-  box-shadow: var(--shadow-selection);
-  padding: 18px;
+  display: grid;
+  grid-template-columns: 52px 158px minmax(0, 1fr) 150px 148px;
+  align-items: center;
   min-width: 0;
-  overflow-wrap: anywhere;
+  height: 76px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-white);
+  color: var(--color-ink);
+}
+.handle {
+  display: grid;
+  place-items: center;
+  min-height: 40px;
+  border-right: 1px solid var(--color-line);
+}
+.handle button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
 }
 .schedule {
+  padding: 0 18px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  border-right: 1px solid var(--color-line);
+  min-height: 40px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-muted);
-  font-size: 13px;
-}
-.schedule > button {
-  margin-left: auto;
+  overflow-wrap: anywhere;
 }
 .body {
   display: flex;
-  gap: 16px;
   align-items: center;
-  margin-block: 12px;
-}
-.copy {
-  flex: 1;
+  gap: 18px;
   min-width: 0;
-}
-.copy h3 {
-  margin: 0;
-  font-size: 18px;
-  line-height: 1.5;
-}
-.copy p {
-  font-size: 14px;
-  margin: 6px 0;
-  color: var(--color-muted);
-}
-.body img {
-  object-fit: cover;
-  border-radius: 12px;
-  flex-shrink: 0;
+  padding: 0 20px;
 }
 .typeIcon {
   display: grid;
   place-items: center;
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
+  flex: 0 0 46px;
+  height: 46px;
   border-radius: 50%;
   background: var(--color-selected);
 }
 .typeIcon img {
-  border-radius: 0;
+  display: block;
 }
-.location {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--color-muted);
-}
-.footer,
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.footer {
-  justify-content: space-between;
-}
-.compact {
-  display: grid;
-  grid-template-columns: minmax(125px, 165px) minmax(140px, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  min-height: 78px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  box-shadow: none;
-}
-.compact .schedule {
+.copy {
   min-width: 0;
-  padding-right: 10px;
-  border-right: 1px solid var(--color-line);
 }
-.compact .schedule > button {
-  order: -1;
-  margin-left: 0;
-}
-.compact .body {
-  min-width: 0;
+.copy h3 {
   margin: 0;
-  gap: 10px;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.compact .body > img {
-  width: 90px;
-  height: 54px;
+.copy p {
+  margin: 5px 0 0;
+  font-size: 11.5px;
+  line-height: 18px;
+  color: var(--color-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.media img {
+  display: block;
+  width: 150px;
+  height: 56px;
+  object-fit: cover;
   border-radius: 6px;
 }
-.compact .copy h3 {
-  font-size: 14px;
-  line-height: 20px;
-}
-.compact .copy p {
-  margin: 2px 0;
-  font-size: 12px;
-  line-height: 18px;
-}
-.compact .footer {
-  justify-content: flex-end;
-  max-width: 230px;
-}
-.compact .actions {
+.actions {
+  min-width: 0;
+  padding-right: 16px;
+  justify-self: stretch;
+  display: flex;
   justify-content: flex-end;
 }
-@media (max-width: 1100px) {
-  .compact {
-    grid-template-columns: minmax(110px, 145px) minmax(0, 1fr);
-  }
-  .compact .footer {
-    grid-column: 1 / -1;
-    max-width: none;
-  }
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-@media (max-width: 600px) {
-  .compact {
-    grid-template-columns: minmax(0, 1fr);
+/* Explicitly opened details may grow; closed cards never acquire a footer. */
+.card:has(details[open]) {
+  height: auto;
+  min-height: 76px;
+  padding-block: 9px;
+}
+.actions:has(details[open]) {
+  grid-column: 1 / -1;
+  padding: 0 16px;
+}
+.actions:has(details[open]) > details {
+  width: 100%;
+}
+@container itinerary (max-width: 800px) {
+  .card {
+    grid-template-columns: 38px 126px minmax(0, 1fr) 110px 44px;
+    height: 70px;
   }
-  .compact .schedule {
-    border-right: 0;
+  .schedule {
+    padding-inline: 13px;
+    font-size: 12.5px;
+  }
+  .body {
+    padding-inline: 14px 8px;
+    gap: 12px;
+  }
+  .typeIcon {
+    flex-basis: 42px;
+    height: 42px;
+  }
+  .copy h3 {
+    font-size: 13.5px;
+    line-height: 20px;
+  }
+  .copy p {
+    font-size: 10.5px;
+    margin-top: 3px;
+  }
+  .media img {
+    width: 110px;
+    height: 52px;
+  }
+  .actions {
     padding-right: 0;
   }
-  .compact .footer {
-    grid-column: auto;
-  }
 }
-@media (hover: hover) {
-  .card:hover {
-    box-shadow: var(--shadow-soft);
-  }
-}
-@media (max-width: 600px) {
-  .body > img {
-    width: 72px;
-    height: 64px;
-  }
+@container itinerary (max-width: 560px) {
   .card {
-    padding: 14px;
+    grid-template-columns: 38px minmax(0, 1fr) 44px;
+    height: auto;
+    min-height: 110px;
+    padding: 8px 0;
+  }
+  .handle {
+    grid-row: 1 / 3;
+  }
+  .schedule {
+    border: 0;
+    min-height: 28px;
+    padding-inline: 10px;
+  }
+  .body {
+    grid-column: 2;
+    grid-row: 2;
+    padding-inline: 10px;
+    gap: 8px;
+  }
+  .typeIcon {
+    flex-basis: 32px;
+    height: 32px;
+  }
+  .media {
+    display: none;
+  }
+  .actions {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+  .actions:has(details[open]) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .copy h3,
+  .copy p {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }

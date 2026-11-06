@@ -1,16 +1,8 @@
 .page {
-  padding: 10px 22px 24px 18px;
-  max-width: 1220px;
-  margin-inline: auto;
-  color: var(--color-ink);
+  composes: page from '../trips/components/TripWorkspace.module.css';
 }
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 22px;
-  margin-bottom: 8px;
-  font-size: 13px;
+  composes: breadcrumb from '../trips/components/TripWorkspace.module.css';
 }
 .breadcrumb h1 {
   font-size: 13px;
@@ -107,49 +99,42 @@
   margin-top: 14px;
 }
 .columns.withPlanner {
-  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+  grid-template-columns: minmax(0, 680fr) minmax(0, 488fr);
   align-items: stretch;
 }
-.timeline,
+.timeline {
+  composes: panel from './components/TimelineSurface.module.css';
+}
 .pool {
   min-width: 0;
   min-height: 0;
+  height: 498px;
   display: flex;
   flex-direction: column;
   background: white;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 .toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  min-height: 68px;
-  flex-wrap: wrap;
+  composes: toolbar from './components/TimelineSurface.module.css';
+}
+.progress {
+  composes: progress from './components/TimelineSurface.module.css';
+  margin-right: auto;
 }
 .toolbar h2 {
-  font-size: 24px;
-  line-height: 32px;
-  margin: 0 auto 0 0;
+  margin: 0;
 }
 .timelineViewport {
-  flex: 1 1 auto;
-  min-height: 0;
-  margin: 0;
-  padding: 2px 30px 18px 42px;
-  list-style: none;
-  max-height: 414px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  transition: background-color 120ms ease;
+  composes: list from './components/TimelineSurface.module.css';
 }
 .activity {
-  position: relative;
-  padding: 0 0 32px 34px;
-  border-left: 2px solid var(--color-active);
+  composes: row from './components/TimelineSurface.module.css';
+  --preview-card-inset: 34px;
+  --preview-row-gap: 34px;
 }
 .activity:last-of-type {
+  --preview-row-gap: 0px;
   padding-bottom: 0;
 }
 .activity[data-dragging='true'],
@@ -161,18 +146,72 @@
   border-color: var(--color-active);
   box-shadow: 0 0 0 2px #00a0ae22;
 }
-.step {
+.timelineViewport[data-insertion-slot] .activity[data-drop-target]::before {
+  content: none;
+}
+.timelineViewport[data-insertion-slot] .activity[data-insert-before='true']::before,
+.timelineViewport[data-insertion-slot] .activity[data-insert-after='true']::after,
+.poolList[data-insertion-slot] .poolCard[data-insert-before='true']::before,
+.poolList[data-insertion-slot] .poolCard[data-insert-after='true']::after {
+  content: '';
   position: absolute;
-  left: -20px;
-  top: 20px;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  background: #00a0ae;
-  color: white;
-  font-size: 14px;
+  z-index: 1;
+  right: 0;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-active);
+  pointer-events: none;
+}
+.timelineViewport[data-insertion-slot] .activity[data-insert-before='true']::before,
+.timelineViewport[data-insertion-slot] .activity[data-insert-after='true']::after {
+  left: var(--preview-card-inset);
+}
+.timelineViewport[data-insertion-slot] .activity[data-insert-before='true']::before,
+.poolList[data-insertion-slot] .poolCard[data-insert-before='true']::before {
+  top: 0;
+}
+.timelineViewport[data-insertion-slot] .activity[data-insert-after='true']::after {
+  top: calc(100% - var(--preview-row-gap));
+}
+.poolList[data-insertion-slot] .poolCard[data-insert-before='true']::before,
+.poolList[data-insertion-slot] .poolCard[data-insert-after='true']::after {
+  left: 0;
+}
+.poolList[data-insertion-slot] .poolCard[data-insert-after='true']::after {
+  bottom: 0;
+}
+.poolList[data-insertion-slot]:has(> .poolEmpty) {
+  outline: 2px dashed var(--color-active);
+  outline-offset: -2px;
+  background: var(--color-selected);
+}
+.dragOverlay {
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 10px 14px;
+  border: 1px solid var(--color-active);
+  border-radius: var(--radius-8);
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-raised);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.step {
+  composes: step from './components/TimelineSurface.module.css';
 }
 .card {
   display: flex;
@@ -211,48 +250,7 @@
   max-height: 46px;
 }
 .activityPreview {
-  flex: 1;
-  min-width: 0;
-}
-.activityPreview summary {
-  list-style: none;
-  cursor: pointer;
-  min-height: 46px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-}
-.activityPreview strong {
-  font-size: 15px;
-  line-height: 22px;
-}
-.activityPreview small {
-  font-size: 13px;
-  color: var(--color-muted);
-}
-.activityPreview dl {
-  font-size: 13px;
-  line-height: 22px;
-}
-.activityPreview dd {
-  margin: 0 0 10px;
-}
-.activityPreview p {
-  font-size: 13px;
-  color: var(--color-muted);
-}
-.cover {
-  width: 140px;
-  height: 58px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.card:has(details[open]) {
-  flex-wrap: wrap;
-}
-.activityPreview[open] {
-  min-width: 200px;
+  composes: disclosure from './components/TimelineSurface.module.css';
 }
 .dragHandle {
   width: 44px;
@@ -287,6 +285,13 @@
   margin: 12px 0 0 34px;
   padding: 10px;
 }
+.emptyDrop[data-drop-active='true'],
+.endDrop[data-drop-active='true'] {
+  border-color: var(--color-active);
+  background: var(--color-selected);
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-active);
+}
 .pool {
   padding: 0 16px 16px;
 }
@@ -294,19 +299,50 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  min-height: 68px;
+  gap: 10px;
+  min-height: 62px;
+  flex: 0 0 auto;
 }
 .poolHeader h2 {
   margin: 0;
-  font-size: 18px;
+  min-width: 0;
+  flex: 1 1 auto;
+  font-size: 21px;
+  line-height: 28px;
 }
-.poolHeader p {
-  margin: 4px 0 0;
-  color: var(--color-muted);
-  font-size: 13px;
+.poolCount {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: #fff4df;
+  color: #986000;
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
 }
-.poolHeader > button,
+.poolHeader > button {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.poolHeader > button:hover {
+  background: var(--color-selected);
+}
 .dialogHeader > button {
   width: 44px;
   height: 44px;
@@ -320,38 +356,133 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  margin-bottom: 12px;
+  margin: 10px 0 4px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  background: var(--color-note);
+  color: var(--color-muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+.poolHint {
+  margin: 10px 0 0;
+  min-height: 38px;
+  flex: 0 0 auto;
   padding: 10px 12px;
-  border-radius: 8px;
-  background: #eefafa;
-  color: #286c70;
-  font-size: 13px;
+  border-radius: 7px;
+  background: var(--color-note);
+  font-size: 11px;
   line-height: 18px;
+  color: var(--color-muted);
+}
+.poolSearch {
+  flex: 0 0 auto;
+}
+.poolSearch input {
+  min-height: 48px;
+}
+.poolSearch label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .poolList {
   flex: 1 1 auto;
   min-height: 0;
   list-style: none;
-  margin: 14px 0 0;
-  padding: 4px;
+  margin: 20px 0 0;
+  padding: 0;
   max-height: none;
   overflow: auto;
   border-radius: 8px;
 }
 .poolCard {
+  position: relative;
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) 44px;
+  grid-template-columns: 16px 42px 82px minmax(0, 1fr) 20px;
   align-items: center;
   gap: 10px;
-  padding: 12px;
-  margin-bottom: 10px;
-  border: 1px solid #f4cf82;
+  min-height: 86px;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #f2c75c;
   border-radius: 8px;
-  background: #fffdf8;
+  background: white;
 }
-.poolCard > span:nth-child(2) {
+.poolCover {
+  grid-column: 3;
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-note);
+  color: var(--color-muted);
+  font-size: 10.5px;
+  line-height: 14px;
+  text-align: center;
+}
+.poolCover > img {
+  display: block;
+  grid-column: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+.poolCover > span {
+  padding: 4px;
+}
+.poolCopy {
+  grid-column: 4;
   min-width: 0;
+  font-size: 13.5px;
 }
+.poolCard .dragHandle {
+  grid-column: 1;
+  width: 26px;
+  min-width: 26px;
+  padding: 0;
+  border: 0;
+}
+.poolCard .poolIcon {
+  grid-column: 2;
+  width: 42px;
+  height: 42px;
+}
+.poolCard > .activityPreview {
+  grid-column: 5;
+  width: 20px;
+  justify-self: center;
+}
+.poolCard > .activityPreview > summary {
+  margin-inline: -12px;
+}
+.poolCard > .activityPreview[open] {
+  grid-column: 1 / -1;
+  width: 100%;
+  justify-self: stretch;
+  padding-block: 4px;
+}
+.poolCard > .activityPreview[open] > summary {
+  margin-left: auto;
+  margin-right: -12px;
+}
+.poolCard > .activityPreview[open] > p {
+  margin-block: 4px 10px;
+}
+.poolCard :focus-visible {
+  outline-offset: -2px;
+}
+
 .poolCard strong,
 .poolCard small {
   display: block;
@@ -440,8 +571,9 @@
 }
 .plannerDialogBody > .pool,
 .plannerDialogBody > .timeline {
+  height: 100%;
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
 }
 .plannerDialogBody .timelineViewport,
 .plannerDialogBody .poolList {
@@ -511,12 +643,53 @@
   margin-top: 20px;
 }
 
+@container itinerary (max-width: 800px) {
+  .activity {
+    --preview-card-inset: 26px;
+  }
+  .endDrop {
+    margin-left: 26px;
+  }
+}
 @media (max-width: 1200px) {
   .cover {
     display: none;
   }
   .card {
     gap: 12px;
+  }
+  .plannerDialogBody .poolHeader {
+    flex-wrap: wrap;
+    padding-block: 10px;
+    gap: 4px 10px;
+  }
+  .plannerDialogBody .poolHeader h2 {
+    flex-basis: 100%;
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .plannerDialogBody .poolHeader > button {
+    margin-left: auto;
+  }
+  .plannerDialogBody .poolCard {
+    grid-template-columns: 16px 32px minmax(0, 1fr) 20px;
+    gap: 8px;
+  }
+  .plannerDialogBody .poolCard .poolIcon {
+    width: 32px;
+    height: 32px;
+  }
+  .plannerDialogBody .poolCover {
+    display: none;
+  }
+  .plannerDialogBody .poolCopy {
+    grid-column: 3;
+  }
+  .plannerDialogBody .poolCard > .activityPreview {
+    grid-column: 4;
+  }
+  .plannerDialogBody .poolCard > .activityPreview[open] {
+    grid-column: 1 / -1;
   }
 }
 @media (max-width: 900px) {
@@ -539,12 +712,12 @@
 }
 @media (max-width: 768px) {
   .page {
-    padding: 12px 20px 24px;
+    padding: 12px 14px 24px;
   }
   .breadcrumb {
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   .days {
     margin: 16px 0;
@@ -587,8 +760,13 @@
     padding: 4px 12px 20px 20px;
   }
   .activity {
+    --preview-card-inset: 24px;
+    --preview-row-gap: 20px;
     padding-left: 24px;
     padding-bottom: 20px;
+  }
+  .endDrop {
+    margin-left: 24px;
   }
   .step {
     width: 28px;
@@ -628,14 +806,17 @@
     height: 100dvh;
     padding: 10px;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(250px, 0.8fr) minmax(320px, 1.2fr);
+    grid-template-rows: auto auto;
+    align-content: start;
     overflow: auto;
   }
   .plannerDialogBody > .pool,
   .plannerDialogBody > .timeline {
+    height: auto;
     overflow: visible;
   }
   .plannerDialogBody .poolList {
+    flex: 0 1 auto;
     max-height: 280px;
   }
   .plannerDialogBody .timelineViewport {
@@ -668,11 +849,27 @@
     padding-inline: 12px;
   }
   .poolCard {
-    grid-template-columns: 40px minmax(0, 1fr) 44px;
+    grid-template-columns: 16px 32px minmax(0, 1fr) 20px;
+    gap: 8px;
   }
-  .poolIcon {
-    width: 40px;
-    height: 40px;
+  .poolCover {
+    display: none;
+  }
+  .pool {
+    height: auto;
+  }
+  .poolCard .poolIcon {
+    width: 32px;
+    height: 32px;
+  }
+  .poolCopy {
+    grid-column: 3;
+  }
+  .poolCard > .activityPreview {
+    grid-column: 4;
+  }
+  .poolCard > .activityPreview[open] {
+    grid-column: 1 / -1;
   }
   .timeFields {
     grid-template-columns: 1fr;

@@ -7,7 +7,13 @@ export interface PlanCommandContext {
   readonly idempotencyKey: string;
   readonly signal: AbortSignal;
 }
-export type PlanCommand = (context: PlanCommandContext) => Promise<PlanCommandResult<unknown>>;
+/** Frontend orchestration metadata; never serialized as a Backend response/payload. */
+export type PlanCommandOutcome = PlanCommandResult<unknown> & {
+  readonly partialFailure?: boolean;
+};
+export type PlanCommand = ((context: PlanCommandContext) => Promise<PlanCommandOutcome>) & {
+  arrangement?: true;
+};
 type Status = 'idle' | 'pending' | 'success' | 'error' | 'conflict' | 'unknown';
 interface Attempt {
   command: PlanCommand;
@@ -43,6 +49,7 @@ export function useOwnedPlanCommands({
   const [canRetryUnknown, setCanRetryUnknown] = useState(false);
   const [blocked, setBlocked] = useState(false);
   const [recoveryAvailable, setRecoveryAvailable] = useState(true);
+  const [partialFailure, setPartialFailure] = useState(false);
   const restorer = useRef(restoreCommand);
   restorer.current = restoreCommand;
   const recoveryKey = recoveryScope ? `wolfari:plan-command:${recoveryScope}` : null;
@@ -64,6 +71,7 @@ export function useOwnedPlanCommands({
     setCanRetryUnknown(false);
     setBlocked(false);
     setRecoveryAvailable(true);
+    setPartialFailure(false);
     invalidRecovery.current = false;
     if (recoveryKey) {
       try {
@@ -98,6 +106,8 @@ export function useOwnedPlanCommands({
           setBlocked(true);
           setStatus('unknown');
           setError(unavailable);
+          // A reload cannot know which of a multi-request arrangement's writes committed.
+          setPartialFailure(command.arrangement === true);
         }
       } catch {
         invalidRecovery.current = true;
@@ -139,8 +149,9 @@ export function useOwnedPlanCommands({
     setStatus('pending');
     setError(null);
     setCanRetryUnknown(false);
+    setPartialFailure(false);
     try {
-      let result: PlanCommandResult<unknown>;
+      let result: PlanCommandOutcome;
       try {
         result = await intent.command({ ...intent, signal: controller.current.signal });
       } catch {
@@ -160,6 +171,10 @@ export function useOwnedPlanCommands({
         return true;
       }
       setError(result.error);
+      // A recovered attempt may lose permission before replaying its first receipt; that does
+      // not prove that the original multi-request attempt left the server unchanged.
+      const partiallySaved = result.partialFailure === true || partialFailure;
+      setPartialFailure(partiallySaved);
       if (result.error.code === 'SERVICE_UNAVAILABLE') {
         blockedRef.current = true;
         setBlocked(true);
@@ -171,6 +186,7 @@ export function useOwnedPlanCommands({
           result.error.code,
         );
         const needsRefresh =
+          partiallySaved ||
           conflict ||
           ['PERMISSION_DENIED', 'RESOURCE_NOT_FOUND', 'UNAUTHENTICATED'].includes(
             result.error.code,
@@ -178,6 +194,11 @@ export function useOwnedPlanCommands({
         blockedRef.current = needsRefresh;
         setBlocked(needsRefresh);
         setStatus(conflict ? 'conflict' : 'error');
+      }
+      if (partiallySaved) {
+        // Show authoritative partial state, but keep writes blocked until explicit review/retry.
+        // This read is never a rebase or an automatic replay of any step.
+        await refresh().catch(() => false);
       }
       return false;
     } finally {
@@ -189,7 +210,9 @@ export function useOwnedPlanCommands({
     }
   }
 
-  async function execute(command: PlanCommand, recovery?: Record<string, unknown>) {
+  // A typed intent (including arrange) need only be JSON-serializable; requiring an index
+  // signature here needlessly rejects safe domain objects with explicitly declared fields.
+  async function execute(command: PlanCommand, recovery?: object) {
     if (blockedRef.current || busy.current || flights.has(tripId)) return false;
     const intent = {
       command,
@@ -231,6 +254,7 @@ export function useOwnedPlanCommands({
         setBlocked(false);
         setStatus('idle');
         setError(null);
+        setPartialFailure(false);
       }
       return ready;
     } finally {
@@ -254,6 +278,7 @@ export function useOwnedPlanCommands({
     status,
     canRetryUnknown,
     recoveryAvailable,
+    partialFailure,
   };
 }
 

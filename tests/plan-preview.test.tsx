@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { App } from '../src/app/App';
@@ -15,8 +15,11 @@ import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip
 import { createFixtureShellRepository } from '../src/infrastructure/fixtures/shell.fixture-repository';
 import { createGatewayPlanRepository } from '../src/infrastructure/repositories/plan.gateway-repository';
 import { selectPlanRepository } from '../src/infrastructure/repositories/select-plan-repository';
-import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
+import { fixtureViewerId, previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
 import { planScenarios } from '../src/features/plan/model/plan';
+import { planDraftKey } from '../src/features/plan/model/plan-draft';
+const draftKey = planDraftKey(fixtureViewerId, previewTripId);
+beforeEach(() => localStorage.removeItem(draftKey));
 const req = (scenario: (typeof planScenarios)[number] = 'success', tripId = previewTripId) => ({
   tripId,
   scenario,
@@ -115,7 +118,11 @@ describe('Plan projection and adapters', () => {
     expect(activityTime(null, 'Asia/Ho_Chi_Minh')).toBe('Chưa xếp giờ');
   });
 });
-function mount(guest = false, plan = createFixturePlanRepository()) {
+function mount(
+  guest = false,
+  plan = createFixturePlanRepository(),
+  trips = createFixtureTripRepository(),
+) {
   const shell = createFixtureShellRepository(),
     getPlan = vi.fn(plan.getPlan);
   const router = createMemoryRouter(
@@ -138,7 +145,7 @@ function mount(guest = false, plan = createFixturePlanRepository()) {
       repository={{
         read: (r) => shell.read({ ...r, ...(guest ? { scenario: 'guest' as const } : {}) }),
       }}
-      tripRepository={createFixtureTripRepository()}
+      tripRepository={trips}
       planRepository={{ getPlan }}
     >
       <RouterProvider router={router} />
@@ -166,13 +173,17 @@ it('keeps selected day on error/recovery and no writes/version change in pending
   await userEvent.selectOptions(screen.getByLabelText('Trạng thái thao tác preview'), 'unknown');
   expect(screen.getByText(/Chưa xác nhận thay đổi/)).toBeInTheDocument();
   expect(screen.getByText(/Plan 1 · Membership 1 · Export 1/)).toBeInTheDocument();
-  expect(screen.queryByRole('heading', { name: 'Hoạt động đã chọn' })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' }),
+  ).not.toBeInTheDocument();
   await userEvent.click(screen.getByRole('button', { name: 'Thêm hoạt động' }));
-  expect(screen.getByRole('heading', { name: 'Hoạt động đã chọn' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' })).toBeInTheDocument();
   expect(screen.getByText('Chỉ lưu trên thiết bị này')).toBeInTheDocument();
   expect(screen.getByText('Chùa Linh Ứng')).toBeInTheDocument();
   await userEvent.click(screen.getByRole('button', { name: 'Đóng danh sách hoạt động' }));
-  expect(screen.queryByRole('heading', { name: 'Hoạt động đã chọn' })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' }),
+  ).not.toBeInTheDocument();
 });
 it('opens the local planner in read-only mode without drag or edit controls', async () => {
   mount();
@@ -198,10 +209,118 @@ it('validates, saves and cancels the local activity editor while returning focus
   expect(within(dialog).getAllByText('Tên hoạt động là bắt buộc.').length).toBeGreaterThan(0);
   await userEvent.type(title, 'Khám phá Sơn Trà');
   await userEvent.click(within(dialog).getByRole('button', { name: 'Lưu thay đổi' }));
-  await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument());
+  await waitFor(() =>
+    expect(screen.queryByRole('dialog', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument(),
+  );
   expect(screen.getByText('Khám phá Sơn Trà')).toBeInTheDocument();
   await waitFor(() => expect(trigger).toHaveFocus());
 });
+it.each([
+  {
+    name: 'a time after the Trip ends',
+    timezone: 'Asia/Ho_Chi_Minh',
+    startAt: '2026-09-22T07:00:00+07:00',
+    endAt: '2026-09-23T18:00:00+07:00',
+    activityStart: '2026-09-22T08:00:00+07:00',
+    activityEnd: '2026-09-22T10:30:00+07:00',
+    day: '2026-09-23',
+    startTime: '17:00',
+    endTime: '19:00',
+    message: 'Giờ hoạt động phải nằm trong chuyến đi và kết thúc sau khi bắt đầu.',
+    correctedStart: '17:00',
+    correctedEnd: '18:00',
+    expectedStart: '2026-09-23T10:00:00.000Z',
+    expectedEnd: '2026-09-23T11:00:00.000Z',
+  },
+  {
+    name: 'a nonexistent DST time',
+    timezone: 'America/New_York',
+    startAt: '2026-03-07T00:00:00-05:00',
+    endAt: '2026-03-09T00:00:00-04:00',
+    activityStart: '2026-03-07T08:00:00-05:00',
+    activityEnd: '2026-03-07T10:30:00-05:00',
+    day: '2026-03-08',
+    startTime: '02:30',
+    endTime: '03:30',
+    message: 'Ngày/giờ không hợp lệ trong múi giờ của chuyến đi.',
+    correctedStart: '03:30',
+    correctedEnd: '04:30',
+    expectedStart: '2026-03-08T07:30:00.000Z',
+    expectedEnd: '2026-03-08T08:30:00.000Z',
+  },
+])('keeps entered fields without saving $name and allows correction', async (scenario) => {
+  const trips = createFixtureTripRepository();
+  const plans = createFixturePlanRepository();
+  mount(
+    false,
+    {
+      getPlan: async (request) => {
+        const result = await plans.getPlan(request);
+        return result.status === 'ready'
+          ? {
+              ...result,
+              data: {
+                ...result.data,
+                activities: result.data.activities.map((activity) => ({
+                  ...activity,
+                  startsAt: scenario.activityStart,
+                  endsAt: scenario.activityEnd,
+                })),
+              },
+            }
+          : result;
+      },
+    },
+    {
+      ...trips,
+      getTrip: async (request) => {
+        const result = await trips.getTrip(request);
+        return result.status === 'ready'
+          ? {
+              ...result,
+              data: {
+                ...result.data,
+                timezone: scenario.timezone,
+                startAt: scenario.startAt,
+                endAt: scenario.endAt,
+              },
+            }
+          : result;
+      },
+    },
+  );
+  await screen.findByText('Bán đảo Sơn Trà');
+  await userEvent.click(screen.getByLabelText('Xem hoạt động Bán đảo Sơn Trà'));
+  await userEvent.click(screen.getAllByRole('button', { name: 'Chỉnh sửa hoạt động' })[0]!);
+  const dialog = screen.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' });
+  await userEvent.selectOptions(within(dialog).getByLabelText('Ngày'), scenario.day);
+  const start = within(dialog).getByLabelText('Giờ bắt đầu');
+  const end = within(dialog).getByLabelText('Giờ kết thúc');
+  fireEvent.change(start, { target: { value: scenario.startTime } });
+  fireEvent.change(end, { target: { value: scenario.endTime } });
+  const savedBefore = localStorage.getItem(draftKey);
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Lưu thay đổi' }));
+  expect(within(dialog).getByText(scenario.message)).toBeInTheDocument();
+  expect(start).toHaveValue(scenario.startTime);
+  expect(end).toHaveValue(scenario.endTime);
+  expect(localStorage.getItem(draftKey)).toBe(savedBefore);
+
+  fireEvent.change(start, { target: { value: scenario.correctedStart } });
+  fireEvent.change(end, { target: { value: scenario.correctedEnd } });
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Lưu thay đổi' }));
+  await waitFor(() => expect(dialog).not.toBeInTheDocument());
+  expect(JSON.parse(localStorage.getItem(draftKey)!).activities).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        title: 'Bán đảo Sơn Trà',
+        scheduledDate: scenario.day,
+        startsAt: scenario.expectedStart,
+        endsAt: scenario.expectedEnd,
+      }),
+    ]),
+  );
+});
+
 it('does not read Plan for Guest', async () => {
   const getPlan = mount(true);
   await screen.findByText('Bạn không có quyền truy cập');

@@ -15,8 +15,10 @@ for (const viewport of [
     const mock = await mockPlan(page, gateway);
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
+    await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
 
-    const trigger = page.getByRole('button', { name: 'Thêm hoạt động', exact: true });
+    await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+    const trigger = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
     await trigger.click();
     const dialog = page.getByRole('dialog', { name: 'Thêm hoạt động' });
     await expect(dialog.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
