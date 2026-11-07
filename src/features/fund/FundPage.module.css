@@ -147,8 +147,8 @@
 .financeStateBar h2 {
   margin: 2px 0 0;
   color: var(--color-ink);
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 20px;
+  line-height: 28px;
 }
 .financeStateBar p {
   margin: 2px 0 0;
