@@ -4,6 +4,15 @@ import styles from './FinanceDesktop.module.css';
 export type FinanceTransactionType = 'CONTRIBUTION' | 'EXPENSE' | 'REFUND' | 'REVERSAL';
 export type FinanceTransactionFilter = 'ALL' | FinanceTransactionType;
 
+const financeAssets = {
+  goal: '/assets/finance-v12/e761e.svg',
+  all: '/assets/finance-v12/6170f.svg',
+  contribution: '/assets/finance-v12/514da.svg',
+  expense: '/assets/finance-v12/f8a51.svg',
+  refund: '/assets/finance-v12/0ff3f.svg',
+  download: '/assets/finance-v12/23b0f.svg',
+} as const;
+
 export interface FinanceTransactionRow {
   readonly id: string;
   readonly type: FinanceTransactionType;
@@ -49,7 +58,7 @@ export function FinanceGoal({
 
   return (
     <section className={styles.goal} aria-label="Mục tiêu quỹ" data-finance-goal>
-      <div className={styles.goalIcon} aria-hidden="true">◎</div>
+      <div className={styles.goalIcon} aria-hidden="true"><img src={financeAssets.goal} alt="" /></div>
       <div className={styles.goalLabel}>
         <span>Mục tiêu quỹ</span>
         <small>{amountLabel}</small>
@@ -68,12 +77,12 @@ export function FinanceGoal({
   );
 }
 
-const filterLabels: Record<FinanceTransactionFilter, string> = {
-  ALL: '◷ Tất cả',
-  CONTRIBUTION: '▤ Đóng góp',
-  EXPENSE: '▣ Chi tiêu',
-  REFUND: '⇄ Hoàn tiền',
-  REVERSAL: '↶ Đảo bút toán',
+const filterLabels: Record<FinanceTransactionFilter, { label: string; icon?: string }> = {
+  ALL: { label: 'Tất cả', icon: financeAssets.all },
+  CONTRIBUTION: { label: 'Đóng góp', icon: financeAssets.contribution },
+  EXPENSE: { label: 'Chi tiêu', icon: financeAssets.expense },
+  REFUND: { label: 'Hoàn tiền', icon: financeAssets.refund },
+  REVERSAL: { label: 'Đảo bút toán' },
 };
 
 function transactionLabel(type: FinanceTransactionType) {
@@ -146,13 +155,14 @@ export function FinanceTransactionPanel({
                 tabs[next]?.click();
               }}
             >
-              {filterLabels[value]}
+              {filterLabels[value].icon && <img src={filterLabels[value].icon} alt="" aria-hidden="true" />}
+              {filterLabels[value].label}
             </button>
           ))}
         </div>
         <label className={styles.selectLabel}>Thành viên<select aria-label="Thành viên" value={member} onChange={(event) => setMember(event.target.value)}><option value="ALL">Mọi thành viên</option>{members.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
         <label className={styles.selectLabel}>Loại giao dịch<select aria-label="Loại giao dịch" value={kind} onChange={(event) => setKind(event.target.value)}><option value="ALL">Tất cả giao dịch</option><option value="IN">Tiền vào</option><option value="OUT">Tiền ra</option><option value="REVERSAL">Đảo bút toán</option></select></label>
-        <button type="button" className={styles.export} disabled title="Xuất dữ liệu chưa có trong contract Finance">⇩<span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span></button>
+        <button type="button" className={styles.export} disabled title="Xuất dữ liệu chưa có trong contract Finance"><img src={financeAssets.download} alt="" aria-hidden="true" /><span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span></button>
       </div>
       <p className={styles.loadedOnly}>Bộ lọc áp dụng trên các giao dịch đã tải.</p>
       {feedback}
