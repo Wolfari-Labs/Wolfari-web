@@ -29,10 +29,14 @@ import type { MembershipViewModel } from '../members/model/members';
 import {
   FinanceKpis,
   FinanceStateBar,
-  FinanceTabs,
   FinanceUnavailable,
-  type FinanceTab,
 } from './components/FinancePresentation';
+import {
+  FinanceGoal,
+  FinanceTransactionPanel,
+  type FinanceTransactionRow,
+} from './components/FinanceDesktop';
+import { FinanceOverlay, type FinanceSection } from './components/FinanceOverlay';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import fundStyles from './FundPage.module.css';
 
@@ -388,8 +392,10 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   }, [qc, actor, trip.id]);
   const op = useCommandSession(session, refresh);
   const [form, setForm] = useState<FormSpec | null>(null);
-  const [financeTab, setFinanceTab] = useState<FinanceTab>('contributions');
+  const [financeOverlayOpen, setFinanceOverlayOpen] = useState(false);
+  const [financeSection, setFinanceSection] = useState<FinanceSection>('general');
   const [instructionId, setInstructionId] = useState<string | null>(null);
+  const financeSettingsRef = useRef<HTMLButtonElement>(null);
   const formHeadingRef = useRef<HTMLHeadingElement>(null);
   const formTriggerRef = useRef<HTMLElement | null>(null);
   const formContextRef = useRef<HTMLElement>(null);
@@ -513,6 +519,21 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   const data = <T extends { id: string }>(pages: { items: T[] }[] | undefined): T[] => [
     ...new Map((pages?.flatMap((p) => p.items) ?? []).map((row) => [row.id, row])).values(),
   ];
+  const transactionRows: FinanceTransactionRow[] = data(ledger.data?.pages).map((row) => ({
+    id: row.id,
+    type: row.transaction_type,
+    title: row.reason ??
+      ({ CONTRIBUTION: 'Đợt đóng góp', EXPENSE: 'Khoản chi', REFUND: 'Hoàn tiền', REVERSAL: 'Điều chỉnh' }[row.transaction_type]),
+    timeLabel: new Date(row.created_at).toLocaleString('vi-VN', { timeZone: trip.timezone }),
+    memberId: row.actor_user_id,
+    memberName: row.actor_user_id ? name(row.actor_user_id) : null,
+    actorName: row.actor_user_id ? name(row.actor_user_id) : 'Chưa xác định',
+    amount: row.amount,
+    direction: row.direction,
+    sequence: row.sequence,
+    balanceAfter: row.balance_after,
+    reason: row.reason,
+  }));
   const renderContext = () => (
     <aside
       ref={formContextRef}
@@ -589,6 +610,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       )}
       {fundQuery.isSuccess && fund && (
         <>
+          <FinanceGoal
+            budget={fund.budget_amount}
+            amount={fund.current_balance}
+            format={formatVnd}
+            onSettings={() => setFinanceOverlayOpen(true)}
+            settingsRef={financeSettingsRef}
+          />
           <FinanceStateBar
             status={fund.status}
             holderName={name(fund.holder_user_id)}
@@ -610,28 +638,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             available={fund.available_balance}
             format={formatVnd}
           />
+          <FinanceTransactionPanel
+            rows={transactionRows}
+            format={formatVnd}
+            loading={ledger.isPending}
+            feedback={ledger.isError ? <QueryError error={ledger.error} retry={() => void ledger.refetch()} /> : undefined}
+            hasMore={ledger.hasNextPage}
+            loadingMore={ledger.isFetchingNextPage}
+            onLoadMore={() => void ledger.fetchNextPage()}
+            footer={<p>Chỉ các giao dịch đã tải được lọc. Số dư và tổng tiền lấy từ projection Finance.</p>}
+          />
         </>
-      )}
-      {/* Keep the context at a stable position so read-state changes cannot reset its draft. */}
-      {fundQuery.isSuccess && fund && (
-        <FinanceTabs
-          value={financeTab}
-          onChange={(next) => {
-            setFinanceTab(next);
-            const target =
-              next === 'contributions'
-                ? 'finance-contributions'
-                : next === 'history'
-                  ? 'finance-history'
-                  : 'finance-unsupported';
-            document.getElementById(target)?.scrollIntoView({
-              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                ? 'auto'
-                : 'smooth',
-              block: 'start',
-            });
-          }}
-        />
       )}
       <div className={fundQuery.isSuccess || form ? fundStyles.gatewayWorkspace : undefined}>
         <div className={fundQuery.isSuccess || form ? fundStyles.gatewayMain : undefined}>
@@ -651,6 +668,12 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             </section>
           ) : (
             <>
+              <section className={fundStyles.legacyFinance} aria-label="Thao tác chi tiết Finance">
+                <div className={fundStyles.legacyFinanceHeading}>
+                  <span>FINANCE WORKSPACE</span>
+                  <h2>Thao tác chi tiết</h2>
+                  <p>Quản lý đích nhận, đợt đóng góp và các trạng thái đối soát theo quyền hiện tại.</p>
+                </div>
               <section className={styles.panel} aria-label="Đích nhận">
                 <h2>Đích nhận TEST</h2>
                 {destinations.isError ? (
@@ -954,11 +977,57 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   hiển thị trung thực.
                 </FinanceUnavailable>
               </div>
+              </section>
             </>
           )}
         </div>
         {(fundQuery.isSuccess || form) && renderContext()}
       </div>
+      <FinanceOverlay
+          open={financeOverlayOpen}
+          onDismiss={() => setFinanceOverlayOpen(false)}
+          section={financeSection}
+          onSectionChange={setFinanceSection}
+          tripName={trip.name}
+          status={fund?.status ?? 'NOT_ENABLED'}
+          role={holder ? 'Fund Holder' : owner ? 'Owner' : 'Member'}
+          returnFocusRef={financeSettingsRef}
+          context={
+            <>
+              <h3>Tình trạng &amp; mục tiêu</h3>
+              <p>Finance {fund?.status ?? 'NOT_ENABLED'} · VND</p>
+              <p>Người giữ quỹ: {fund ? name(fund.holder_user_id) : 'Chưa chỉ định'}</p>
+              <p>Số dư ghi sổ: {fund ? formatVnd(fund.current_balance) : 'Chưa có dữ liệu'}</p>
+            </>
+          }
+        >
+          {financeSection === 'general' ? (
+            <>
+              <h3>Cấu hình quỹ chung</h3>
+              <dl>
+                <div><dt>Trạng thái quỹ</dt><dd>{fund?.status ?? 'NOT_ENABLED'}</dd></div>
+                <div><dt>Ngân sách mục tiêu</dt><dd>{formatVnd(fund?.budget_amount ?? null)}</dd></div>
+                <div><dt>Tiền tệ</dt><dd>VND</dd></div>
+              </dl>
+              <p>Thay đổi cấu hình dùng command hiện hữu và chỉ hoàn tất sau khi Backend xác nhận.</p>
+            </>
+          ) : financeSection === 'contributions' ? (
+            <>
+              <h3>Đợt đóng góp</h3>
+              <p>Đã tải {data(requests.data?.pages).length} đợt đóng góp và {data(contributions.data?.pages).length} khoản.</p>
+              <p>Report transfer không ghi sổ; Holder confirm mới tạo một ledger entry.</p>
+            </>
+          ) : financeSection === 'receiving' ? (
+            <>
+              <h3>Thông tin nhận tiền</h3>
+              <p>{destinations.data?.length ?? 0} đích nhận đã tải. Consent của Holder chỉ xác nhận trách nhiệm, không xác minh tài khoản ngân hàng.</p>
+            </>
+          ) : (
+            <FinanceUnavailable title={financeSection === 'members' ? 'Thành viên & quyền' : financeSection === 'expenses' ? 'Khoản chi' : financeSection === 'refunds' ? 'Hoàn tiền' : financeSection === 'handover' ? 'Bàn giao Fund Holder' : 'Đóng Finance'}>
+              Gateway chưa có contract mutation cho vùng này. Nội dung được giữ read-only để không tạo trạng thái hoặc bút toán giả.
+            </FinanceUnavailable>
+          )}
+        </FinanceOverlay>
       <Drawer
         open={instructionId !== null}
         label="Hướng dẫn chuyển TEST"

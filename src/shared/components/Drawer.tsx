@@ -8,6 +8,7 @@ export function Drawer({
   onDismiss,
   side = 'left',
   className = '',
+  overlayClassName = '',
   initialFocusRef,
   returnFocusRef,
   showHeader = true,
@@ -18,6 +19,7 @@ export function Drawer({
   onDismiss: () => void;
   side?: 'left' | 'right' | 'center';
   className?: string;
+  overlayClassName?: string;
   initialFocusRef?: RefObject<HTMLElement | null>;
   returnFocusRef?: RefObject<HTMLElement | null>;
   showHeader?: boolean;
@@ -35,7 +37,7 @@ export function Drawer({
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className={styles.backdrop} />
+        <Dialog.Overlay className={`${styles.backdrop} ${overlayClassName}`} />
         <Dialog.Content
           aria-describedby={undefined}
           className={`${styles.drawer} ${side === 'center' ? styles.center : side === 'right' ? styles.right : ''} ${className}`}
