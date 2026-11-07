@@ -74,3 +74,29 @@ test('Fund preview states stay truthful and do not claim a ledger mutation', asy
   await expect(page.getByText('Closure: COMPLETED', { exact: true })).toBeVisible();
   await expect(page.getByText('Không còn blocker', { exact: true })).toBeVisible();
 });
+
+test('Fund preview tabs keep panel semantics and expose the complete ledger', async ({ page }) => {
+  await page.goto(route);
+
+  const tabs = page.getByRole('tab');
+  const panel = page.getByRole('tabpanel');
+  await expect(tabs).toHaveCount(5);
+  await expect(page.locator('#fund-tab-expenses')).toHaveAttribute('aria-selected', 'true');
+  await expect(panel).toHaveAttribute('aria-labelledby', 'fund-tab-expenses');
+  await expect(panel.getByRole('row')).toHaveCount(5);
+
+  const contributions = page.locator('#fund-tab-contributions');
+  await contributions.click();
+  await expect(contributions).toHaveAttribute('aria-selected', 'true');
+  await expect(panel).toHaveAttribute('aria-labelledby', 'fund-tab-contributions');
+  await expect(panel.getByRole('listitem')).toHaveCount(1);
+
+  await contributions.press('ArrowRight');
+  await expect(page.locator('#fund-tab-outside')).toHaveAttribute('aria-selected', 'true');
+  await page.locator('#fund-tab-history').press('End');
+  await expect(page.locator('#fund-tab-history')).toBeFocused();
+  await page.locator('#fund-tab-history').press('Enter');
+  await expect(panel).toHaveAttribute('aria-labelledby', 'fund-tab-history');
+  await expect(panel.getByRole('listitem')).toHaveCount(5);
+  await expect(panel.getByRole('listitem').first()).toContainText('#1');
+});

@@ -16,7 +16,6 @@ import { useMembersRepositories } from '../members/repositories/members-context'
 import { TripHero } from '../trips/components/TripHero';
 import { paths } from '../../app/route-paths';
 import { Icon } from '../../shared/components/Icon';
-import { Badge } from '../../shared/components/Ui';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
@@ -27,6 +26,13 @@ import { OperationStatus, useCommandSession } from '../../shared/components/Oper
 import { toDomainError, money } from '../../shared/lib/runtime-validation';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import type { MembershipViewModel } from '../members/model/members';
+import {
+  FinanceKpis,
+  FinanceStateBar,
+  FinanceTabs,
+  FinanceUnavailable,
+  type FinanceTab,
+} from './components/FinancePresentation';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import fundStyles from './FundPage.module.css';
 
@@ -382,6 +388,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   }, [qc, actor, trip.id]);
   const op = useCommandSession(session, refresh);
   const [form, setForm] = useState<FormSpec | null>(null);
+  const [financeTab, setFinanceTab] = useState<FinanceTab>('contributions');
   const [instructionId, setInstructionId] = useState<string | null>(null);
   const formHeadingRef = useRef<HTMLHeadingElement>(null);
   const formTriggerRef = useRef<HTMLElement | null>(null);
@@ -581,61 +588,51 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
         <QueryError error={membersQuery.error} retry={() => void membersQuery.refetch()} />
       )}
       {fundQuery.isSuccess && fund && (
-        <section className={styles.panel} aria-label="Trạng thái quỹ">
-          <h2>
-            <Icon name="fund" />
-            Quỹ nhóm{' '}
-            <Badge>
-              {(
-                { OPEN: 'Đang mở', CLOSED: 'Đã đóng', CLOSING: 'Đang chốt' } as Record<
-                  string,
-                  string
-                >
-              )[fund.status] ?? fund.status}
-            </Badge>
-          </h2>
-          <p>
-            <Badge tone="warning">TEST</Badge> · Chỉ ghi nhận thủ công, không chuyển tiền thật.
-          </p>
-          <p>
-            Người giữ quỹ: {name(fund.holder_user_id)} · {owner ? 'Bạn là chủ chuyến. ' : ''}
-            {holder ? 'Bạn là người giữ quỹ.' : ''}
-          </p>
+        <>
+          <FinanceStateBar
+            status={fund.status}
+            holderName={name(fund.holder_user_id)}
+            owner={owner}
+            holder={holder}
+            balance={fund.current_balance}
+            format={formatVnd}
+            disabled={blocked}
+            onBudget={() => open('budget')}
+            onDestination={() => open('destination-create')}
+          />
           {fund.status !== 'OPEN' && (
             <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
           )}
-          <div className={styles.grid}>
-            {[
-              ['Ngân sách', fund.budget_amount],
-              ['Số dư ghi sổ', fund.current_balance],
-              ['Đang giữ cho hoàn dư', fund.reserved_refund],
-              ['Số dư khả dụng', fund.available_balance],
-            ].map(([label, value]) => (
-              <div key={label} className={styles.stat}>
-                <p>{label}</p>
-                <strong className={styles.money}>{formatVnd(value ?? null)}</strong>
-              </div>
-            ))}
-          </div>
-          {owner && (
-            <div className={styles.actions}>
-              <Button disabled={blocked} onClick={() => open('budget')}>
-                Sửa ngân sách
-              </Button>
-              <Button disabled={blocked} onClick={() => open('destination-create')}>
-                Thêm đích nhận TEST
-              </Button>
-            </div>
-          )}
-          <details>
-            <summary>Chi tiết hỗ trợ</summary>
-            <p>
-              Mã quỹ: {fund.id} · Finance version: {fund.finance_version}
-            </p>
-          </details>
-        </section>
+          <FinanceKpis
+            budget={fund.budget_amount}
+            balance={fund.current_balance}
+            reserved={fund.reserved_refund}
+            available={fund.available_balance}
+            format={formatVnd}
+          />
+        </>
       )}
       {/* Keep the context at a stable position so read-state changes cannot reset its draft. */}
+      {fundQuery.isSuccess && fund && (
+        <FinanceTabs
+          value={financeTab}
+          onChange={(next) => {
+            setFinanceTab(next);
+            const target =
+              next === 'contributions'
+                ? 'finance-contributions'
+                : next === 'history'
+                  ? 'finance-history'
+                  : 'finance-unsupported';
+            document.getElementById(target)?.scrollIntoView({
+              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                ? 'auto'
+                : 'smooth',
+              block: 'start',
+            });
+          }}
+        />
+      )}
       <div className={fundQuery.isSuccess || form ? fundStyles.gatewayWorkspace : undefined}>
         <div className={fundQuery.isSuccess || form ? fundStyles.gatewayMain : undefined}>
           {fundQuery.isError ? (
@@ -780,7 +777,11 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   </Button>
                 )}
               </section>
-              <section className={styles.panel} aria-label="Các khoản đóng góp">
+              <section
+                id="finance-contributions"
+                className={styles.panel}
+                aria-label="Các khoản đóng góp"
+              >
                 <h2>
                   <Icon name="members" />
                   Các khoản đóng góp
@@ -876,7 +877,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   </Button>
                 )}
               </section>
-              <section className={styles.panel} aria-label="Lịch sử quỹ">
+              <section id="finance-history" className={styles.panel} aria-label="Lịch sử quỹ">
                 <h2>
                   <Icon name="fund" />
                   Lịch sử quỹ
@@ -909,7 +910,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                         · {row.direction === 'IN' ? '+ ' : '− '}
                         {formatVnd(row.amount)}
                       </strong>
-                      <p>Số dư sau bút toán: {formatVnd(row.balance_after)}</p>
+                      <p>
+                        Số dư sau bút toán: {formatVnd(row.balance_after)} ·{' '}
+                        {row.actor_user_id
+                          ? `Người thực hiện: ${name(row.actor_user_id)}`
+                          : 'Hệ thống'}{' '}
+                        ·{' '}
+                        {new Date(row.created_at).toLocaleString('vi-VN', {
+                          timeZone: trip.timezone,
+                        })}
+                      </p>
+                      {row.reason && <p>Chi tiết: {row.reason}</p>}
                     </li>
                   ))}
                 </ul>
@@ -925,6 +936,24 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   Lịch sử ghi nhận của quỹ. Các nghiệp vụ chi, hoàn dư và đóng quỹ chưa khả dụng.
                 </p>
               </section>
+              <div id="finance-unsupported" className={fundStyles.financeUnsupportedGrid}>
+                <FinanceUnavailable title="Thành viên & quyền">
+                  Quyền Owner và Fund Holder được lấy từ phiên hiện tại. Quản lý thành viên của
+                  chuyến đi nằm ở trang Thành viên.
+                </FinanceUnavailable>
+                <FinanceUnavailable title="Khoản chi">
+                  Gateway Finance hiện chưa có command tạo hoặc xác nhận khoản chi; màn hình này chỉ
+                  giữ chỗ theo thiết kế.
+                </FinanceUnavailable>
+                <FinanceUnavailable title="Hoàn tiền">
+                  Chưa có contract hoàn tiền trên Web. Không hiển thị số dư giả hoặc thao tác thanh
+                  toán.
+                </FinanceUnavailable>
+                <FinanceUnavailable title="Bàn giao Fund Holder">
+                  Holder không thể bàn giao trong phiên Finance hiện tại; quyền hiện tại vẫn được
+                  hiển thị trung thực.
+                </FinanceUnavailable>
+              </div>
             </>
           )}
         </div>
@@ -975,8 +1004,13 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
   const trip = query.data?.status === 'ready' ? query.data.data : null;
   return (
     <section className={styles.page}>
-      <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-      <h1>Quỹ nhóm</h1>
+      <div className={fundStyles.breadcrumb}>
+        <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
+        <span aria-hidden="true">›</span>
+        <span>{trip?.name ?? 'Chuyến đi'}</span>
+        <span aria-hidden="true">›</span>
+        <h1>Quỹ nhóm</h1>
+      </div>
       {trip && trip.permissions.canRead && !trip.currentMembership.leftAt ? (
         <>
           <TripHero trip={trip} compact variant="landscape" />
