@@ -1,5 +1,13 @@
 # Trạng thái thực thi
 
+## Price Watch maintenance — 07/11/2026
+
+READY_FOR_REVIEW: compact layout, create action beside heading and centered
+create/edit overlay implemented in Runtime/Preview. Typecheck/lint/both builds,
+unit5/5, Gateway HTTP-mock2/2 and Preview9/9 PASS.
+[Evidence and limits](PRICE_WATCH_OVERLAY_VERIFICATION.md). Historical CP10 unchanged;
+live Backend NOT_RUN. No commit/push. Stop for review.
+
 ## Finance maintenance — 07/11/2026
 
 User-approved Finance Desktop work is in progress on `feat/fund-figma-v12-desktop`.

@@ -18,6 +18,7 @@ import {
 } from './model/price-watch';
 import { Button } from '../../shared/components/Button';
 import { PriceWatchForm } from './PriceWatchForm';
+import { PriceWatchOverlay } from './PriceWatchOverlay';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
@@ -401,15 +402,7 @@ function WatchForm({
 }) {
   const [checked, setChecked] = useState(false);
   return (
-    <section
-      className={styles.formPanel}
-      id="new-watch-form"
-      aria-labelledby="new-watch-title"
-      tabIndex={-1}
-    >
-      <div className={styles.panelHeading}>
-        <h2 id="new-watch-title">Tạo theo dõi giá vé</h2>
-      </div>
+    <section id="new-watch-form" aria-label="Bản nháp theo dõi giá" tabIndex={-1}>
       <PriceWatchForm
         initial={null}
         timezone={timezone}
@@ -428,6 +421,7 @@ function WatchForm({
 }
 
 function PriceWatchWorkspace({ data, timezone }: { data: PriceWatchViewModel; timezone: string }) {
+  const [creating, setCreating] = useState(false);
   const [selectedId, setSelectedId] = useState(data.watches[0]?.id ?? '');
   const selected = useMemo(
     () => data.watches.find((item) => item.id === selectedId) ?? data.watches[0],
@@ -435,14 +429,7 @@ function PriceWatchWorkspace({ data, timezone }: { data: PriceWatchViewModel; ti
   );
   if (!selected) return <ContentState state="empty" headingLevel={2} />;
   const focusCreateForm = () => {
-    const target = document.getElementById('new-watch-form');
-    const behavior =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'auto'
-        : 'smooth';
-    target?.scrollIntoView({ behavior, block: 'start' });
-    target?.focus({ preventScroll: true });
+    setCreating(true);
   };
   return (
     <div className={styles.workspace}>
@@ -458,7 +445,13 @@ function PriceWatchWorkspace({ data, timezone }: { data: PriceWatchViewModel; ti
         <TrendChart watch={selected} />
         <PriceInfo watch={selected} view={data} />
       </div>
-      <WatchForm permissions={data.permissions} timezone={timezone} />
+      <PriceWatchOverlay
+        open={creating}
+        title="Tạo theo dõi giá vé"
+        onDismiss={() => setCreating(false)}
+      >
+        {creating && <WatchForm permissions={data.permissions} timezone={timezone} />}
+      </PriceWatchOverlay>
     </div>
   );
 }

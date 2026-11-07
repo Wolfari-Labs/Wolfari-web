@@ -142,6 +142,16 @@ User explicitly requested implementation of the reviewed “Chỉnh lịch trìn
 
 [Scoped implementation and verification](PLAN_PRESENTATION_CLEANUP_VERIFICATION.md). Historic checkpoint acceptance and NOT_RUN limits remain unchanged.
 
+## Price Watch compact overlay — approved user request 07/11/2026
+
+User explicitly supersedes the inline form placement in D18/XRT05 for this surface
+(desktop source `768:7992`, reference `23:657`, responsive `781:6626`): reduce vertical
+spacing, chart radius to 6px, create action opposite title, form only on demand in
+a centered Finance-style overlay. Existing cards fit content; remaining workspace
+uses two columns in Preview and one in Runtime (no fixture chart promoted to Gateway).
+Shared Drawer preserves keyboard/focus behavior; existing contracts/recovery unchanged.
+[Verification](PRICE_WATCH_OVERLAY_VERIFICATION.md). Not a new CP10 acceptance.
+
 ## Review protocol
 
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.

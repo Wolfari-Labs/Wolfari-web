@@ -84,3 +84,19 @@
 @media (max-width: 1250px) { .workspace { gap:12px; }.page { padding-right:16px; }.watchCard { padding-inline:10px; }.watchBottom { gap:5px; }.watchBottom em { padding-inline:6px; }.formPanel .twoFields { grid-template-columns:1fr; } }
 @media (max-width: 1024px) { .workspace { grid-template-columns:minmax(280px,36%) minmax(0,1fr); gap:14px; }.formPanel { grid-column:1 / -1; width:min(100%, 420px); min-height:0; }.listPanel { min-height:648px; }.formPanel .twoFields { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width: 680px) { .page { padding:8px 16px 24px; }.breadcrumb { margin:8px 0 16px; }.breadcrumb a,.breadcrumb > span { display:none; }.breadcrumb h1 { color:var(--color-ink); font-size:24px; line-height:32px; font-weight:600; }.page :global(.hero[data-variant='landscape']) { min-height:160px; }.page :global(.hero[data-variant='landscape'] .actions) { display:none; }.workspace { grid-template-columns:1fr; gap:16px; margin-top:0; }.listPanel,.chartPanel,.infoPanel,.formPanel { width:100%; }.listPanel { min-height:0; padding:0; border:0; background:transparent; }.panelHeading h2 { font-size:24px; line-height:32px; }.panelHeading > button { flex-basis:145px; }.watchList { gap:16px; margin-top:16px; }.watchCard { min-height:200px; }.listNote { min-height:80px; }.middleColumn { display:contents; }.chartPanel { order:2; min-height:360px; }.infoPanel { order:4; min-height:268px; }.formPanel { order:3; min-height:0; }.chartRoute span { max-width:70%; }.chartWrap svg { height:230px; }.actionStrip button { flex:1 1 auto; }.formPanel form { gap:8px; }.formPanel .twoFields { grid-template-columns:1fr 1fr; gap:12px; } }
+.page .workspace { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 12px; margin-top: 12px; }
+.page .listPanel { min-height: 0; }
+.page .listHeading { align-items: center; }
+.page .titleRow { flex: 1 1 auto; flex-wrap: wrap; }
+.page .listHeading h2 { font-size: 20px; line-height: 28px; }
+.page .listHeading > button { flex: 0 0 auto; border-radius: 5px; }
+.page .chartPanel { min-height: 0; border-radius: 6px; }
+.page .infoPanel { min-height: 0; }
+.page .watchCard { min-height: 0; grid-template-rows: auto; }
+.page .watchList { gap: 12px; margin-top: 12px; }
+.page .middleColumn { gap: 12px; }
+.page .listNote { min-height: 0; }
+@media (max-width: 680px) {
+  .page .workspace { grid-template-columns: minmax(0, 1fr); }
+  .page .chartWrap svg { height: auto; }
+}
