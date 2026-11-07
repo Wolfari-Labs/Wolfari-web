@@ -350,8 +350,8 @@
   min-width: 0;
   margin: 8px 0 2px;
   color: #06458b;
-  font-size: 30px;
-  line-height: 38px;
+  font-size: 24px;
+  line-height: 32px;
   overflow-wrap: anywhere;
 }
 
@@ -375,6 +375,21 @@
   color: var(--color-action-primary);
   font-size: 12px;
   text-align: center;
+}
+
+.introActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.introActions button {
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 12px;
 }
 
 .contentGrid {
@@ -408,6 +423,12 @@
   padding: 18px;
 }
 
+.content.unframed {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
 .footer {
   display: flex;
   align-items: center;
@@ -420,7 +441,10 @@
 }
 
 @keyframes finance-in {
-  from { opacity: 0; transform: scale(.985); }
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -445,25 +469,98 @@
     padding: 10px 14px;
   }
 
-  .headerCopy strong { font-size: 18px; line-height: 24px; }
-  .headerCopy span { font-size: 11px; }
+  .headerCopy strong {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .headerCopy span {
+    font-size: 11px;
+  }
   .sidebar {
     flex-basis: 164px;
     padding: 10px 8px;
   }
-  .tripSummary { padding: 8px; }
-  .nav { gap: 4px; }
-  .nav button { min-height: 42px; padding-inline: 8px; }
-  .nav button span { overflow-wrap: anywhere; }
-  .permissionNote { display: none; }
-  .mainIntro { padding: 12px 14px 0; }
-  .titleLine { align-items: flex-start; flex-direction: column; gap: 6px; }
-  .titleLine h2 { font-size: 24px; line-height: 32px; }
-  .contentGrid { padding: 14px; }
-  .footer { flex-basis: 56px; padding: 0 14px; font-size: 11px; }
+  .tripSummary {
+    padding: 8px;
+  }
+  .nav {
+    gap: 4px;
+  }
+  .nav button {
+    min-height: 42px;
+    padding-inline: 8px;
+  }
+  .nav button span {
+    overflow-wrap: anywhere;
+  }
+  .permissionNote {
+    display: none;
+  }
+  .mainIntro {
+    padding: 12px 14px 0;
+  }
+  .titleLine {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .titleLine h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .contentGrid {
+    padding: 14px;
+  }
+  .footer {
+    flex-basis: 56px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .financeDrawer,
-  .enableDrawer { animation: none; }
+  .enableDrawer {
+    animation: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .body {
+    flex-direction: column;
+  }
+  .sidebar {
+    flex: 0 0 auto;
+  }
+  .tripSummary {
+    display: none;
+  }
+  .sidebar .nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 180px;
+    overflow-y: auto;
+    margin-top: 0;
+  }
+  .nav button {
+    min-width: 0;
+  }
+  .main {
+    min-height: 0;
+  }
+  .contentGrid {
+    padding: 10px;
+  }
+  .content,
+  .context {
+    padding: 12px;
+    overflow-wrap: anywhere;
+  }
+  .headerIcon {
+    display: none;
+  }
+  .footer {
+    flex-basis: auto;
+    padding-block: 10px;
+  }
 }

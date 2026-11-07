@@ -164,7 +164,9 @@ export function FinanceTransactionPanel({
         <label className={styles.selectLabel}>Loại giao dịch<select aria-label="Loại giao dịch" value={kind} onChange={(event) => setKind(event.target.value)}><option value="ALL">Tất cả giao dịch</option><option value="IN">Tiền vào</option><option value="OUT">Tiền ra</option><option value="REVERSAL">Đảo bút toán</option></select></label>
         <button type="button" className={styles.export} disabled title="Xuất dữ liệu chưa có trong contract Finance"><img src={financeAssets.download} alt="" aria-hidden="true" /><span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span></button>
       </div>
-      <p className={styles.loadedOnly}>Bộ lọc áp dụng trên các giao dịch đã tải.</p>
+      <div className={styles.loadedOnly} data-finance-filter-note="true">
+        {footer ?? <p>Bộ lọc áp dụng trên các giao dịch đã tải.</p>}
+      </div>
       {feedback}
       {loading ? <div className={styles.empty} role="status">Đang tải lịch sử quỹ…</div> : visible.length === 0 ? <div className={styles.empty}>Chưa có giao dịch phù hợp.</div> : (
         <div className={styles.tableWrap}>
@@ -185,7 +187,6 @@ export function FinanceTransactionPanel({
         </div>
       )}
       {hasMore && <button type="button" className={styles.loadMore} disabled={loadingMore} onClick={onLoadMore}>{loadingMore ? 'Đang tải…' : 'Tải thêm giao dịch'}</button>}
-      {footer}
     </section>
   );
 }

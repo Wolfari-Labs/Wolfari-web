@@ -79,6 +79,8 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel = 'Xác nhận',
+  cancelLabel = 'Hủy',
+  returnFocusRef,
   busy = false,
   disabled = false,
   onCancel,
@@ -88,6 +90,8 @@ export function ConfirmDialog({
   title: string;
   description: string;
   confirmLabel?: string;
+  cancelLabel?: string;
+  returnFocusRef?: RefObject<HTMLElement | null>;
   busy?: boolean;
   disabled?: boolean;
   onCancel: () => void;
@@ -115,7 +119,8 @@ export function ConfirmDialog({
           }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
-            if (returnFocus.current?.isConnected) returnFocus.current.focus();
+            const target = returnFocusRef?.current ?? returnFocus.current;
+            if (target?.isConnected) target.focus();
           }}
         >
           <AlertDialog.Title>{title}</AlertDialog.Title>
@@ -123,7 +128,7 @@ export function ConfirmDialog({
           <div className={styles.actions}>
             <AlertDialog.Cancel asChild>
               <Button variant="outline" disabled={busy}>
-                Hủy
+                {cancelLabel}
               </Button>
             </AlertDialog.Cancel>
             <Button variant="destructive" loading={busy} disabled={disabled} onClick={onConfirm}>

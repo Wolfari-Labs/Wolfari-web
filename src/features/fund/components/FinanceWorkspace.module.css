@@ -1,0 +1,300 @@
+.workspace {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.sectionStack:not([hidden]) {
+  display: grid;
+  gap: 16px;
+}
+
+.sectionStack > p {
+  margin: 0;
+}
+
+.workspace h3,
+.summary h3 {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+}
+
+.general {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 26px 22px;
+  margin: 0;
+}
+
+.fields > div {
+  min-width: 0;
+}
+
+.fields dt {
+  margin-bottom: 5px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fields dd {
+  min-height: 45px;
+  margin: 0;
+  padding: 11px;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  background: var(--color-pale);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  margin: 16px 0;
+  padding: 12px 14px;
+  border-radius: 5px;
+  background: var(--color-pale);
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.general > .note {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.workspace button {
+  min-height: 41px;
+  max-width: 100%;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: normal;
+}
+
+.actions > button {
+  flex: 0 1 245px;
+}
+
+.summary {
+  min-height: 0;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.panelHeader > button {
+  margin-left: auto;
+}
+
+.workspace .destinationList > li,
+.workspace .destinationList > li:nth-child(odd) {
+  padding: 16px 0 0;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.summary h3 {
+  font-size: 17px;
+}
+
+.rules {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+}
+
+.rules > div {
+  position: relative;
+  min-height: 58px;
+  padding: 9px 12px 9px 39px;
+  border-radius: 5px;
+  background: var(--color-pale);
+  overflow-wrap: anywhere;
+}
+
+.rules img {
+  position: absolute;
+  left: 13px;
+  top: 18px;
+}
+
+.rules dt {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rules dd {
+  margin: 2px 0 0;
+  color: var(--color-muted);
+  font-size: 11px;
+  line-height: 17px;
+}
+
+.workspace section {
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  box-shadow: none;
+}
+
+.workspace .panel {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+.workspace .panel > h2,
+.workspace .panel > p {
+  margin: 0;
+}
+
+.workspace .panel > button,
+.sectionStack > button {
+  justify-self: start;
+}
+
+.workspace .panel > div:first-child:has(h2) {
+  margin: 0;
+}
+
+.workspace .panel > div:first-child h2 {
+  margin: 0;
+}
+
+.workspace .sectionStack > h3 {
+  margin: 0;
+}
+
+.workspace section h2 {
+  margin: 0 0 20px;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.workspace ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.workspace ul > li {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  background: var(--color-white);
+}
+
+.workspace li > p {
+  margin: 0;
+}
+
+.workspace li > .fields {
+  margin-block: 8px;
+}
+
+.workspace li > div:last-child {
+  margin: 4px 0 0;
+}
+
+.workspace ul:empty {
+  display: none;
+}
+
+.workspace ul > li:nth-child(odd) {
+  border-radius: 5px;
+  background: var(--color-pale);
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  padding: 14px 12px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.table th {
+  background: #eaf5fc;
+  font-weight: 600;
+}
+
+.table tbody tr:nth-child(even) {
+  background: var(--color-pale);
+}
+
+@media (max-width: 1024px) {
+  .summary,
+  .general {
+    min-height: 0;
+  }
+
+  .general > .note {
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 700px) {
+  .fields {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .general {
+    min-height: 0;
+  }
+  .workspace section {
+    padding: 12px;
+  }
+  .table thead {
+    display: none;
+  }
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+  .table tr {
+    margin-bottom: 12px;
+    padding: 8px;
+    border: 1px solid var(--color-line);
+    border-radius: 5px;
+  }
+  .table td {
+    padding: 5px;
+  }
+  .table td::before {
+    content: attr(data-label) ': ';
+    font-weight: 600;
+  }
+}

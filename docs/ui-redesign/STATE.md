@@ -1,5 +1,23 @@
 # Trạng thái thực thi
 
+## Finance maintenance — 07/11/2026
+
+User-approved Finance Desktop work is in progress on `feat/fund-figma-v12-desktop`.
+Checkpoint 1 moves existing commands into settings and fixes the breadcrumb;
+[evidence and remaining work](FINANCE_OVERLAY_WORKSPACE_VERIFICATION.md).
+Status: READY_FOR_REVIEW. Expense/Refund/Closure/History integration remains pending
+the next checkpoint. Historical CP09/CP11 acceptance below is unchanged.
+07/11 visual correction: restored Figma field boxes/status tiles and compact card
+styling, full-width member/contribution sections, responsive member table. Gateway
+3/3, finance unit26/26, lint/typecheck/build PASS; see checkpoint evidence above.
+Follow-up vertical spacing correction: explicit section/list spacing replaces mixed
+margins; stacked layouts remove desktop blank spacer. Fresh Gateway3/3 (measured
+16px gaps), unit26/26 and lint/typecheck/build PASS.
+Latest requested refinement: merged receiving header/card, unframed outer workspace
+for lists/forms, content-height general/context, Back action and discard confirmation
+on Finance section change/close. Gateway3/3 including confirmation AXE/focus/draft
+PASS; see current checkpoint evidence. Backend integration remains pending.
+
 ## Hiện tại — CP11 APPROVED / DONE_WITH_EXCEPTIONS theo D56, 02/11/2026
 
 - User đã duyệt sửa lỗi current-page của Trip Drawer và yêu cầu “tiếp tục. và chốt đóng sẵn sàng cho tôi”. Sau focused post-fix gates PASS, D56 đóng **APPROVED/DONE_WITH_EXCEPTIONS**. Full direct visual/live Backend/provider/delivery/manual screen reader/CI/device vẫn là giới hạn được chấp nhận, không chuyển NOT_RUN thành PASS hoặc tuyên bố production-ready.

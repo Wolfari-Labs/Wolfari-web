@@ -24,11 +24,14 @@ const sections: readonly { id: FinanceSection; label: string; icon: IconName }[]
   { id: 'closure', label: 'Đóng Finance', icon: 'close' },
 ];
 
-const sectionMeta: Record<FinanceSection, { eyebrow: string; heading: string; description: string }> = {
+const sectionMeta: Record<
+  FinanceSection,
+  { eyebrow: string; heading: string; description: string }
+> = {
   general: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / THÔNG TIN CHUNG',
     heading: 'Thông tin chung',
-    description: 'Cập nhật ngân sách, mô tả và trạng thái quỹ của chuyến đi.',
+    description: 'Xem trạng thái và cập nhật ngân sách quỹ của chuyến đi.',
   },
   members: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / THÀNH VIÊN & QUYỀN',
@@ -43,12 +46,12 @@ const sectionMeta: Record<FinanceSection, { eyebrow: string; heading: string; de
   expenses: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / KHOẢN CHI',
     heading: 'Khoản chi',
-    description: 'Khu vực khoản chi sẽ hiển thị khi Gateway có contract tương ứng.',
+    description: 'Theo dõi đề nghị chi và xác nhận của người giữ quỹ.',
   },
   refunds: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / HOÀN TIỀN',
     heading: 'Hoàn tiền',
-    description: 'Khu vực hoàn tiền sẽ hiển thị khi Gateway có contract tương ứng.',
+    description: 'Theo dõi các khoản hoàn tiền và xác nhận của người nhận.',
   },
   receiving: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / THÔNG TIN NHẬN TIỀN',
@@ -80,6 +83,8 @@ export function FinanceOverlay({
   heading,
   description,
   returnFocusRef,
+  toolbar,
+  unframed = false,
 }: {
   open: boolean;
   onDismiss: () => void;
@@ -93,6 +98,8 @@ export function FinanceOverlay({
   heading?: string;
   description?: string;
   returnFocusRef?: RefObject<HTMLElement | null>;
+  toolbar?: ReactNode;
+  unframed?: boolean;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const meta = sectionMeta[section];
@@ -110,6 +117,7 @@ export function FinanceOverlay({
       className={styles.financeDrawer ?? ''}
       overlayClassName={styles.financeBackdrop ?? ''}
       showHeader={false}
+      initialFocusRef={headingRef}
       {...(returnFocusRef ? { returnFocusRef } : {})}
     >
       <div className={styles.frame} data-finance-overlay="true">
@@ -121,7 +129,12 @@ export function FinanceOverlay({
             <strong>Cài đặt quỹ nhóm</strong>
             <span>Quản lý trách nhiệm quỹ · {tripName} · Dữ liệu TEST</span>
           </div>
-          <button className={styles.close} type="button" onClick={onDismiss} aria-label="Đóng cài đặt quỹ">
+          <button
+            className={styles.close}
+            type="button"
+            onClick={onDismiss}
+            aria-label="Đóng cài đặt quỹ"
+          >
             <Icon name="close" size={20} />
           </button>
         </header>
@@ -159,15 +172,25 @@ export function FinanceOverlay({
                 <h2 ref={headingRef} tabIndex={-1}>
                   {heading ?? meta.heading}
                 </h2>
-                <span className={styles.role}>{role}</span>
+                <div className={styles.introActions}>
+                  {toolbar}
+                  <span className={styles.role}>{role}</span>
+                </div>
               </div>
               <p>{description ?? meta.description}</p>
             </div>
             <div className={`${styles.contentGrid} ${context ? styles.withContext : ''}`}>
-              <section className={styles.content} aria-label={heading ?? meta.heading}>
+              <section
+                className={`${styles.content} ${unframed ? styles.unframed : ''}`}
+                aria-label={heading ?? meta.heading}
+              >
                 {children}
               </section>
-              {context && <aside className={styles.context} aria-label="Tình trạng và mục tiêu">{context}</aside>}
+              {context && (
+                <aside className={styles.context} aria-label="Tình trạng và mục tiêu">
+                  {context}
+                </aside>
+              )}
             </div>
           </main>
         </div>

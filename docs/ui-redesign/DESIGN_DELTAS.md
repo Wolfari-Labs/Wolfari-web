@@ -1,5 +1,17 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## Finance workspace maintenance — 07/11/2026
+
+User approved the Finance Desktop implementation plan. Existing command forms/lists move
+into corresponding settings sections; page retains summary/ledger. This authorizes the
+placement change for current work without rewriting historical CP09/CP11 acceptance.
+At narrow widths settings navigation becomes a scrollable two-column grid to leave
+usable content space. Scoped AXE corrections: active transaction tab uses existing
+`--color-action-primary` instead of #008cac (white text was 3.92:1); incoming amount/percent
+uses #00795a instead of #008a66 (12px amount was 4.35:1); outgoing amount uses existing
+`--color-status-danger`. No global palette change. Full pixel parity/native zoom remain
+unverified; see [checkpoint evidence](FINANCE_OVERLAY_WORKSPACE_VERIFICATION.md).
+
 Ngày30/10/2026. User chốt: “oke. chốt điều đó. Bạn tiếp tục thiết kế. CP-02”. **APPROVED_POLICY**: bám thiết kế Web có sẵn; mọi thay đổi khác nguồn cần trình riêng. Không phải approve các thay đổi dưới đây, không mở CP03 hoặc quyền write Figma.
 
 ## Phân loại bắt buộc
@@ -133,3 +145,22 @@ User explicitly requested implementation of the reviewed “Chỉnh lịch trìn
 ## Review protocol
 
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.
+
+## Finance overlay box correction — 07/11/2026
+
+User requested correction of missing boxes/layout against Figma. General and receiving
+now use bordered pale fields and status tiles, members/contributions full-width content.
+Contract-safe retained differences: derived trip fund name, VND instead of unsupported
+description, actual balance rather than fabricated cumulative receipts; no totals from
+partial pages, no unsupported mutation controls. Existing budget form remains the only
+budget write path. No change to historical acceptance or pending domain integration.
+
+User-requested spacing follow-up: preserve desktop Figma action area, but remove
+its fixed-height spacer when cards stack at <=1024px. Use explicit 16px block gaps
+instead of collapsed/cumulative legacy margins; no business behavior changes.
+
+Subsequent explicit user approval supersedes fixed desktop card height: General and
+context fit their content, receiving add action sits right of title in one card,
+list/form outer wrappers lose redundant borders. FIN/26 discard semantics use the
+shared compact confirmation dialog rather than a full-page mockup; Back replaces
+Close form. Only local draft is discarded; sent operations/recovery are preserved.
