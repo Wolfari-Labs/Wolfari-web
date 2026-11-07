@@ -37,6 +37,7 @@ import {
   type FinanceTransactionRow,
 } from './components/FinanceDesktop';
 import { FinanceOverlay, type FinanceSection } from './components/FinanceOverlay';
+import financeOverlayStyles from './components/FinanceOverlay.module.css';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import fundStyles from './FundPage.module.css';
 
@@ -398,6 +399,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   const financeSettingsRef = useRef<HTMLButtonElement>(null);
   const formHeadingRef = useRef<HTMLHeadingElement>(null);
   const formTriggerRef = useRef<HTMLElement | null>(null);
+  const enableTriggerRef = useRef<HTMLButtonElement>(null);
   const formContextRef = useRef<HTMLElement>(null);
   const refreshButtonRef = useRef<HTMLButtonElement>(null);
   const fundQuery = useQuery({
@@ -462,6 +464,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     members.find((m) => m.userId === id)?.presentation.displayName ?? `User ${id.slice(0, 8)}`;
   const owner = trip.currentMembership.role === 'OWNER',
     holder = fund?.holder_user_id === actor;
+  const showContext = fund !== null || (form !== null && form.kind !== 'enable');
   const blocked =
     op.busy ||
     unresolved(op) ||
@@ -499,7 +502,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     });
   };
   const closeForm = useCallback(() => {
-    const trigger = formTriggerRef.current;
+    const trigger = formTriggerRef.current ?? enableTriggerRef.current;
     formTriggerRef.current = null;
     setForm(null);
     window.requestAnimationFrame(() => {
@@ -541,7 +544,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       aria-label="Ngữ cảnh thao tác quỹ"
       tabIndex={-1}
     >
-      {form ? (
+      {form && form.kind !== 'enable' ? (
         <>
           <div className={styles.actions}>
             <h2 ref={formHeadingRef} tabIndex={-1}>
@@ -650,8 +653,8 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
           />
         </>
       )}
-      <div className={fundQuery.isSuccess || form ? fundStyles.gatewayWorkspace : undefined}>
-        <div className={fundQuery.isSuccess || form ? fundStyles.gatewayMain : undefined}>
+      <div className={showContext ? fundStyles.gatewayWorkspace : undefined}>
+        <div className={showContext ? fundStyles.gatewayMain : undefined}>
           {fundQuery.isError ? (
             <QueryError error={fundQuery.error} retry={() => void fundQuery.refetch()} />
           ) : fundQuery.isPending ? (
@@ -661,7 +664,11 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
               <h2>Chuyến đi chưa bật quỹ</h2>
               <p>Chủ chuyến có thể chọn người giữ quỹ và thêm thông tin nhận tiền thử nghiệm.</p>
               {owner && (
-                <Button disabled={blocked || !members.length} onClick={() => open('enable')}>
+                <Button
+                  ref={enableTriggerRef}
+                  disabled={blocked || !members.length}
+                  onClick={() => open('enable')}
+                >
                   Bật quỹ TEST
                 </Button>
               )}
@@ -981,8 +988,56 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             </>
           )}
         </div>
-        {(fundQuery.isSuccess || form) && renderContext()}
+        {showContext && renderContext()}
       </div>
+      {form?.kind === 'enable' && (
+        <Drawer
+          open
+          label="Thiết lập bật quỹ"
+          onDismiss={closeForm}
+          side="center"
+          className={financeOverlayStyles.enableDrawer ?? ''}
+          overlayClassName={financeOverlayStyles.enableBackdrop ?? ''}
+          showHeader={false}
+          initialFocusRef={formHeadingRef}
+          returnFocusRef={enableTriggerRef}
+        >
+          <div className={financeOverlayStyles.enableFrame}>
+            <header className={financeOverlayStyles.enableHeader}>
+              <div className={financeOverlayStyles.enableHeaderIcon} aria-hidden="true">
+                <Icon name="fund" size={26} />
+              </div>
+              <div className={financeOverlayStyles.enableHeaderCopy}>
+                <strong>Cài đặt quỹ nhóm</strong>
+                <span>Thiết lập Finance · {trip.name} · Dữ liệu TEST</span>
+              </div>
+              <button
+                className={financeOverlayStyles.enableClose}
+                type="button"
+                onClick={closeForm}
+                aria-label="Đóng biểu mẫu bật quỹ"
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </header>
+            <main className={financeOverlayStyles.enableBody}>
+              <h2 ref={formHeadingRef} tabIndex={-1}>
+                {labels[form.kind]}
+              </h2>
+              <FundCommandForm
+                key={form.kind + ':' + (form.resource?.id ?? '')}
+                spec={form}
+                trip={trip}
+                fund={fund}
+                destinations={destinations.data ?? []}
+                members={members}
+                session={session}
+                onClose={closeForm}
+              />
+            </main>
+          </div>
+        </Drawer>
+      )}
       <FinanceOverlay
           open={financeOverlayOpen}
           onDismiss={() => setFinanceOverlayOpen(false)}

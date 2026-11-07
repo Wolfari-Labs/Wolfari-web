@@ -156,48 +156,64 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await page.screenshot({ path: test.info().outputPath('fund-review-mobile.png'), fullPage: true });
 });
 
-test('HTTP mock: a not-enabled Fund shows the setup form and stacks context on narrow Web', async ({
+test('HTTP mock: a not-enabled Fund opens a centered setup overlay and retains its draft', async ({
   page,
   gateway,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 960 });
   await login(page);
   expect(gateway.authenticated).toBe(true);
   await page.goto(`/trips/${tripId}/fund`);
   const setupHeading = page.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' });
   const setupButton = page.getByRole('button', { name: 'Bật quỹ TEST', exact: true });
-  const context = page.getByRole('complementary', { name: 'Ngữ cảnh thao tác quỹ' });
   await expect(setupHeading).toBeVisible();
   await expect(setupButton).toBeEnabled();
   await setupButton.click();
-  await expect(page.getByRole('heading', { name: 'Bật quỹ TEST', exact: true })).toBeFocused();
-  await expect(page.getByLabel('Người giữ quỹ (Holder)')).toBeVisible();
-  await expect(page.getByLabel('Mã ngân hàng TEST')).toBeVisible();
-  const desktopSetup = await setupHeading.locator('..').boundingBox();
-  const desktopContext = await context.boundingBox();
-  expect(desktopSetup).not.toBeNull();
-  expect(desktopContext).not.toBeNull();
-  expect(desktopContext!.x).toBeGreaterThanOrEqual(desktopSetup!.x + desktopSetup!.width);
+  const dialog = page.getByRole('dialog', { name: 'Thiết lập bật quỹ', exact: true });
+  const form = dialog.getByRole('form', { name: 'Bật quỹ TEST', exact: true });
+  const heading = dialog.getByRole('heading', { name: 'Bật quỹ TEST', exact: true });
+  await expect(dialog).toBeVisible();
+  await expect(heading).toBeFocused();
+  await expect(form).toBeVisible();
+  await expect(dialog.getByLabel('Người giữ quỹ (Holder)')).toBeVisible();
+  await expect(dialog.getByLabel('Ngân sách (VND)')).toBeVisible();
+  await expect(dialog.getByLabel('Mã ngân hàng TEST')).toBeVisible();
+  await expect(dialog.getByLabel('Số tài khoản TEST')).toBeVisible();
+  await expect(dialog.getByLabel('Tên người nhận TEST')).toBeVisible();
+  const desktopBounds = await dialog.boundingBox();
+  expect(desktopBounds).not.toBeNull();
+  expect(Math.abs(desktopBounds!.x + desktopBounds!.width / 2 - 720)).toBeLessThanOrEqual(2);
+  expect(Math.abs(desktopBounds!.y + desktopBounds!.height / 2 - 480)).toBeLessThanOrEqual(2);
+  await expect(page.getByRole('complementary', { name: 'Ngữ cảnh thao tác quỹ' })).toHaveCount(0);
   await page.screenshot({ path: test.info().outputPath('fund-setup-desktop.png'), fullPage: true });
-  await page.setViewportSize({ width: 900, height: 700 });
-  const narrowSetup = await setupHeading.locator('..').boundingBox();
-  const narrowContext = await context.boundingBox();
-  expect(narrowSetup).not.toBeNull();
-  expect(narrowContext).not.toBeNull();
-  expect(narrowContext!.y).toBeGreaterThanOrEqual(narrowSetup!.y + narrowSetup!.height);
-  await expect
-    .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
-    .toBe(true);
-  await page.getByRole('button', { name: 'Đóng biểu mẫu' }).click();
+
+  await page.getByRole('button', { name: 'Đóng biểu mẫu bật quỹ' }).click();
+  await expect(dialog).not.toBeVisible();
   await expect(setupButton).toBeFocused();
   await setupButton.click();
-  await page.getByLabel('Ngân sách (VND)').fill('2500000');
-  await page.getByLabel('Mã ngân hàng TEST').fill('TESTBANK');
+  await dialog.getByLabel('Ngân sách (VND)').fill('2500000');
+  await dialog.getByLabel('Mã ngân hàng TEST').fill('TESTBANK');
   gateway.failures.set(`GET /api/v1/trips/${tripId}/fund`, 503);
-  await page.getByRole('button', { name: 'Tải lại quỹ' }).click();
+  await page.getByRole('button', { name: 'Tải lại quỹ' }).evaluate((button) => {
+    (button as HTMLButtonElement).click();
+  });
   await expect(page.getByRole('heading', { name: 'Chưa thể tải nội dung' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Bật quỹ TEST', exact: true })).toBeVisible();
-  await expect(page.getByLabel('Ngân sách (VND)')).toHaveValue('2500000');
-  await expect(page.getByLabel('Mã ngân hàng TEST')).toHaveValue('TESTBANK');
-  await page.getByRole('button', { name: 'Đóng biểu mẫu' }).click();
-  await expect(page.getByRole('button', { name: 'Tải lại quỹ' })).toBeFocused();
+  await expect(heading).toBeVisible();
+  await expect(dialog.getByLabel('Ngân sách (VND)')).toHaveValue('2500000');
+  await expect(dialog.getByLabel('Mã ngân hàng TEST')).toHaveValue('TESTBANK');
+
+  for (const width of [402, 320]) {
+    await page.setViewportSize({ width, height: 760 });
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
+    const bounds = await dialog.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    await page.screenshot({ path: test.info().outputPath(`fund-setup-${width}.png`), fullPage: true });
+  }
+
+  await page.getByRole('button', { name: 'Đóng biểu mẫu bật quỹ' }).click();
+  await expect(setupButton).toBeFocused();
 });
