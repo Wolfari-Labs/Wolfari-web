@@ -25,6 +25,7 @@ import {
   validCoordinates,
 } from './trip-map';
 import styles from './GatewayMapPage.module.css';
+import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
 import { TravelTools } from './TravelTools';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 import type { RouteResult } from '../plan/model/travel';
@@ -196,6 +197,13 @@ export function GatewayMapPage() {
                   </div>
                   <img className={styles.headingCloud} src={headingCloudArtwork} width="74" height="31" alt="" />
                 </header>
+                <PreparationActions
+                  module="location"
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+                <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
                 <div className={styles.searchRow}>
                   <label className={styles.search}>
                     <span className={styles.visuallyHidden}>Tìm địa điểm đã lưu</span>
@@ -362,6 +370,13 @@ export function GatewayMapPage() {
                   <article className={styles.detail} aria-label="Chi tiết địa điểm đã chọn">
                     <img src={mapPlaceArtwork} width="230" height="90" alt="" />
                     <h3>{selected.location.name}</h3>
+                    <PreparationActions
+                      module="location"
+                      item={selected.location}
+                      trip={data.trip}
+                      plan={data.plan}
+                      refresh={snapshot.retry}
+                    />
                     <p>{selected.location.address ?? 'Chưa có địa chỉ'}</p>
                     <p>
                       {selected.scheduled

@@ -1,5 +1,14 @@
 # Trạng thái thực thi
 
+## PR25 CI repair — 08/11/2026
+
+Unit selector repaired (full716/716 PASS); stale browser selectors/timing updated;
+Gateway Map's existing guarded location actions restored. Final focused built
+fixture23/23 and Gateway HTTP-mock29/29 PASS; lint/typecheck/both builds PASS.
+Completed original CI runs also expose six contrast-failing browser cases;
+palette unchanged pending user decision, AXE assertions retained. Not all-green.
+[Diagnosis, verification and limits](PR25_CI_REPAIR.md). User authorizes commit/push.
+
 ## Overview light-blue border trial — 08/11/2026
 
 READY_FOR_REVIEW: user-requested1px #a6d9f2 outlines on overview panels/postcard;

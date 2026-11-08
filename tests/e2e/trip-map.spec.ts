@@ -113,7 +113,8 @@ test('Map filters use semantic status colors and accessible targets', async ({ p
 
   await expect(all).toHaveCSS('background-color', 'rgb(0, 140, 172)');
   await expect(selected).toHaveCSS('background-color', 'rgb(233, 248, 251)');
-  await expect(scheduled).toHaveCSS('background-color', 'rgb(234, 249, 244)');
+  await expect(scheduled).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+  await expect(scheduled).toHaveCSS('border-color', 'rgb(205, 231, 242)');
   await expect(unscheduled).toHaveCSS('background-color', 'rgb(255, 247, 222)');
   for (const target of [all, selected, scheduled, unscheduled]) {
     expect((await target.boundingBox())!.height).toBe(26);
@@ -148,6 +149,8 @@ test('Preview map selection uses +, status-only checks, and a separate removable
   const deleteButton = page.getByRole('button', {
     name: 'Xóa Gợi ý Đà Nẵng 01 khỏi danh sách đã chọn',
   });
+  // The add operation briefly locks write actions; disabled buttons are skipped by Tab.
+  await expect(deleteButton).toBeEnabled();
   const row = list.locator('[data-location-id]').filter({ has: deleteButton });
   await row.locator('[data-place-main]').focus();
   await expect(deleteButton).toBeVisible();

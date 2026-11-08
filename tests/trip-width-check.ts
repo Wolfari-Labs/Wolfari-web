@@ -22,7 +22,10 @@ export async function checkTripWidths(
     await page.goto(`/trips/11111111-1111-4111-8111-111111111111/${route}`);
     const hero = page.locator('[data-region="trip-hero"]');
     await expect(hero).toBeVisible();
-    if (collapsed) await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
+    if (collapsed) {
+      await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
+      await expect(page.getByRole('complementary')).toHaveCSS('width', '72px');
+    }
     const box = (await hero.boundingBox())!;
     if (route === 'plan') plan = box;
     else {
