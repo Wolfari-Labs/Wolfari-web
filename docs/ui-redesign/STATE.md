@@ -1,5 +1,16 @@
 # Trạng thái thực thi
 
+## Vietnamese Create Trip dates — 08/11/2026
+
+User-requested fixed dd/mm/yyyy display for departure/return in Preview and Gateway.
+Shared accessible text field retains native calendar, ISO draft/API serialization,
+timezone conversion, exclusive end boundary and existing validation/recovery.
+Typecheck/scoped lint/format and both built browser bundles PASS; Preview fixture
+6/6 responsive Create Trip tests, Gateway HTTP-mock5/5 (including axe), and scoped
+unit/component25/25 PASS. Initial new serialization assertion used equivalent
+offset timestamps instead of canonical UTC strings; corrected expectation and reran.
+Full suites/live Backend/manual screen reader NOT_RUN. Commit/push authorized.
+
 ## PR25 CI repair — 08/11/2026
 
 Unit selector repaired (full716/716 PASS); stale browser selectors/timing updated;

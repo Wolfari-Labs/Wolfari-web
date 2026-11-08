@@ -18,8 +18,9 @@ for (const viewport of [
     await expect(page.locator('[data-flow="create-trip"]')).toBeVisible();
     await page.getByLabel('Tên chuyến đi').fill('Miền Trung');
     await page.getByLabel('Điểm đến chính').fill('Đà Nẵng');
-    await page.getByLabel('Ngày đi').fill('2026-10-20');
-    await page.getByLabel('Ngày về').fill('2026-10-20');
+    await page.getByLabel('Ngày đi').fill('20/10/2026');
+    await page.getByLabel('Ngày về').fill('20/10/2026');
+    await expect(page.getByLabel('Ngày đi')).toHaveValue('20/10/2026');
     if (viewport.width <= 768) await page.getByRole('button', { name: /Tiếp tục/ }).click();
     await page.getByRole('button', { name: 'Tạo chuyến đi', exact: true }).click();
     await expect(page.getByText(/Dịch vụ tạo chuyến đi hiện chưa khả dụng/)).toBeVisible();

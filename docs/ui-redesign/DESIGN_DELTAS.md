@@ -204,6 +204,15 @@ uses two columns in Preview and one in Runtime (no fixture chart promoted to Gat
 Shared Drawer preserves keyboard/focus behavior; existing contracts/recovery unchanged.
 [Verification](PRICE_WATCH_OVERLAY_VERIFICATION.md). Not a new CP10 acceptance.
 
+## Vietnamese Create Trip dates — approved user request 08/11/2026
+
+User explicitly requests dd/mm/yyyy instead of browser-locale-dependent date text
+on Create Trip. Both Preview and Gateway use a shared text field with an explicit
+format hint and keyboard-accessible native calendar control. Existing field styling,
+date validation, draft recovery and ISO/timezone API semantics are preserved.
+No official Figma writes, Backend or dependency changes; no new checkpoint.
+Built Preview responsive6/6 and Gateway HTTP-mock5/5 (including axe) PASS.
+
 ## Review protocol
 
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.

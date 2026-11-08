@@ -17,8 +17,10 @@ for (const viewport of [
     const create = page.getByRole('button', { name: 'Tạo chuyến đi', exact: true });
     const fillAndCreate = async (tripName: string) => {
       await name.fill(tripName);
-      await page.getByLabel('Ngày đi').fill('2026-12-10');
-      await page.getByLabel('Ngày về').fill('2026-12-12');
+      await page.getByLabel('Ngày đi').fill('10/12/2026');
+      await page.getByLabel('Ngày về').fill('12/12/2026');
+      await expect(page.getByLabel('Ngày đi')).toHaveValue('10/12/2026');
+      await expect(page.getByLabel('Ngày về')).toHaveValue('12/12/2026');
       await create.click();
       const dialog = page.getByRole('dialog', { name: 'Chuyến đi đã sẵn sàng' });
       await expect(dialog).toBeVisible();

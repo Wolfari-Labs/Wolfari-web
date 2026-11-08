@@ -4,6 +4,7 @@ import { useTripRepository } from '../repositories/repository-context';
 import type { CreateTripIntent } from '../repositories/trip.repository';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
+import { VietnameseDateInput } from '../../../shared/components/VietnameseDateInput';
 import { Select } from '../../../shared/components/Select';
 import { Textarea } from '../../../shared/components/Textarea';
 import { Alert } from '../../../shared/components/Alert';
@@ -302,24 +303,24 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
               onChange={(e) => edit('name', e.target.value)}
             />
             <div className={styles.dates}>
-              <Input
+              <VietnameseDateInput
                 id="gateway-create-trip-startDate"
                 label="Ngày đi"
-                type="date"
+                pickerLabel="Lịch khởi hành"
                 value={draft.startDate}
                 required
                 error={errors.startDate}
-                onChange={(e) => edit('startDate', e.target.value)}
+                onValueChange={(value) => edit('startDate', value)}
               />
-              <Input
+              <VietnameseDateInput
                 id="gateway-create-trip-endDate"
                 label="Ngày về"
-                type="date"
+                pickerLabel="Lịch kết thúc"
                 value={draft.endDate}
                 min={draft.startDate}
                 required
                 error={errors.endDate}
-                onChange={(e) => edit('endDate', e.target.value)}
+                onValueChange={(value) => edit('endDate', value)}
               />
             </div>
             <Select
