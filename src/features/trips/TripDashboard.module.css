@@ -282,7 +282,7 @@
   color: #798bc2;
 }
 .summaryLink {
-  color: #00a5dc;
+  color: #00799f;
   font-size: 13px;
 }
 .progressTrack {
@@ -436,7 +436,7 @@
 .fareContent a {
   display: inline-block;
   padding-block: 5px;
-  color: #00a5dc;
+  color: #00799f;
 }
 .farePanel {
   overflow: hidden;

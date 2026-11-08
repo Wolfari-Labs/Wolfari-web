@@ -5,8 +5,8 @@
 Unit selector repaired (full716/716 PASS); stale browser selectors/timing updated;
 Gateway Map's existing guarded location actions restored. Final focused built
 fixture23/23 and Gateway HTTP-mock29/29 PASS; lint/typecheck/both builds PASS.
-Completed original CI runs also expose six contrast-failing browser cases;
-palette unchanged pending user decision, AXE assertions retained. Not all-green.
+Original CI exposed six contrast cases; accessible replacement colors now pass
+focused Overview/CP05 and Gateway UI/Map reruns. Full CI rerun is pending.
 [Diagnosis, verification and limits](PR25_CI_REPAIR.md). User authorizes commit/push.
 
 ## Overview light-blue border trial — 08/11/2026

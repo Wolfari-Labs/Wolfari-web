@@ -1,7 +1,7 @@
 .page {
   composes: page from '../trips/components/TripWorkspace.module.css';
-  --map-teal: #008cac;
-  --map-scheduled: #0a89f3;
+  --map-teal: #007f99;
+  --map-scheduled: #076ac0;
   --map-scheduled-surface: #eaf5ff;
   --map-scheduled-line: #b9dcff;
   --map-warning: #f6b82e;
@@ -271,7 +271,7 @@
 .filterUnscheduled {
   border-color: #f4d88a !important;
   background: #fff7de !important;
-  color: #9b6a00 !important;
+  color: #906100 !important;
 }
 
 .filterUnscheduled[aria-pressed='true'] {
@@ -438,7 +438,7 @@
 .statusUnscheduled {
   border-color: #f4d88a;
   background: #fff7de;
-  color: #9b6a00;
+  color: #906100;
 }
 
 .rowChevron {
@@ -1535,7 +1535,7 @@
 .filterSelect[data-filter='UNSCHEDULED'] select {
   border-color: #f4d88a;
   background-color: #fff7de;
-  color: #9b6a00;
+  color: #906100;
 }
 
 @media (max-width: 360px) {

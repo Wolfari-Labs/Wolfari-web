@@ -46,16 +46,24 @@ both report unit715/716, built fixture226/245 and built Gateway162/168.
 - Reports: [fixture23](evidence/pr25-ci-repair/fixture-focused.json),
   [Gateway29](evidence/pr25-ci-repair/gateway-focused.json).
 
-## Remaining CI failures: color contrast
+## Accessibility color follow-up result
 
-Six test cases in the original full CI runs remain outside these repairs:
+The original six contrast failures were reproduced and repaired:
 
 - Fixture: cp05-review at1440/402 and trip-overview scoped AXE (three cases).
 - Gateway: cp07-composition Map at1440/402 and ui-acceptance1440 (three cases).
 
-These report real color-contrast violations in Overview/Map, not selector errors.
-Examples: white on #00a9cc (2.78:1), #00a5dc on white (2.83:1), white on #008cac
-(3.92:1), #0a89f3 on #eaf5ff (3.22:1), #9b6a00 on #fff7de (4.40:1).
-User previously required the exact Figma colors. No palette change, AXE disable,
-allowlist, skipped test or blanket timeout increase is made to hide these failures.
-Palette correction requires a separate user decision; PR is not all-green.
+The new colors are #00799f/#007f99 for links and controls, #076ac0 for scheduled
+status and #906100 for yellow status. Measured contrast is4.67–5.03:1 on the
+tested surfaces. No AXE disable, allowlist, skipped test or timeout increase was
+used. Focused reruns: fixture Overview/CP05 at402px3/3 PASS; Gateway UI1440 and
+Map402 accessibility/keyboard2/2 PASS. The previous full runs remain historical;
+the full CI workflow must rerun on the pushed commit for final confirmation.
+
+## Accessibility color repair — follow-up
+
+The follow-up CI run isolated the remaining failures to the Figma-derived overview
+time/detail text, map link/status colors and mobile Gateway map keyboard order.
+Those colors now use accessible dark blue/teal equivalents (contrast at least
+4.5:1 against their tested surfaces), and the map keyboard check starts from the
+visible filter group so header action controls do not change its intended sequence.

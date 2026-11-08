@@ -175,10 +175,12 @@ async function checkKeyboard(page: Page, root: Locator, route: (typeof routes)[n
           ? 'Lọc phạm vi dress code'
           : 'Bộ lọc vật dụng',
   });
-  if (route === 'map') await root.getByRole('searchbox', { name: 'Tìm địa điểm đã lưu' }).focus();
-  else await group.getByRole('button', { name: 'Tất cả', exact: true }).focus();
-  if (route === 'map') await page.keyboard.press('Tab');
+  await group.getByRole('button', { name: 'Tất cả', exact: true }).focus();
   await page.keyboard.press('Tab');
+  if (route === 'map') {
+    await expect(group.getByRole('button', { name: /Đã chọn \(/ })).toBeFocused();
+    await page.keyboard.press('Tab');
+  }
   const next = group.getByRole('button', {
     name: route === 'map' ? 'Trong lịch' : route === 'dress-code' ? 'Cả chuyến' : 'Của tôi',
     exact: true,

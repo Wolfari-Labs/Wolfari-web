@@ -274,7 +274,7 @@ for (const [region, name, route] of [
   });
 }
 
-test('Card links keep middle-click semantics and source colors with compact fare and map content', async ({
+test('Card links keep middle-click semantics and accessible colors with compact fare and map content', async ({
   page,
 }) => {
   await openOverview(page);
@@ -293,10 +293,10 @@ test('Card links keep middle-click semantics and source colors with compact fare
   await expect(map.getByText(/Xem chi tiết/)).toHaveCount(0);
   await expect(itinerary(page).locator('button[aria-pressed="true"]')).toHaveCSS(
     'background-color',
-    'rgb(0, 169, 204)',
+    'rgb(0, 127, 153)',
   );
-  await expect(itinerary(page).locator('time').first()).toHaveCSS('color', 'rgb(0, 170, 221)');
-  await expect(map.getByRole('link')).toHaveCSS('color', 'rgb(0, 165, 220)');
+  await expect(itinerary(page).locator('time').first()).toHaveCSS('color', 'rgb(0, 121, 159)');
+  await expect(map.getByRole('link')).toHaveCSS('color', 'rgb(0, 121, 159)');
   const progress = page.locator('[data-region="trip-overview-packing"]').getByRole('progressbar');
   await expect(progress).toBeVisible();
   await expect(progress).toHaveCSS('height', '12px');

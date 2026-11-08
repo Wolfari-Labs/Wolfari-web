@@ -129,7 +129,7 @@
   font-weight: 700;
 }
 .summary[data-overview] .days button[aria-pressed='true'] {
-  background: #00a9cc;
+  background: #007f99;
   color: white;
 }
 .summary[data-overview] ol {
@@ -161,7 +161,7 @@
   outline-offset: -2px;
 }
 .summary[data-overview] time {
-  color: #00aadd;
+  color: #00799f;
   flex: 0 0 56px;
   font-size: 14px;
   font-weight: 800;
@@ -188,7 +188,7 @@
 }
 .summary[data-overview] .activityCopy small {
   font-size: 13.5px;
-  color: #8092c8;
+  color: #6374a5;
   font-weight: 700;
 }
 .summary[data-overview] .cover {
@@ -202,7 +202,7 @@
   align-self: flex-start;
   margin: 0;
   padding: 7px 0;
-  color: #00a5dc;
+  color: #00799f;
   font-size: 13px;
 }
 .summary[data-overview] > section {

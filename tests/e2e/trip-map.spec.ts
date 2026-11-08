@@ -111,7 +111,7 @@ test('Map filters use semantic status colors and accessible targets', async ({ p
   const scheduled = filters.getByRole('button', { name: /Trong lịch/ });
   const unscheduled = filters.getByRole('button', { name: /Chưa xếp/ });
 
-  await expect(all).toHaveCSS('background-color', 'rgb(0, 140, 172)');
+  await expect(all).toHaveCSS('background-color', 'rgb(0, 127, 153)');
   await expect(selected).toHaveCSS('background-color', 'rgb(233, 248, 251)');
   await expect(scheduled).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(scheduled).toHaveCSS('border-color', 'rgb(205, 231, 242)');
