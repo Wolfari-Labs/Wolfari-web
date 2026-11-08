@@ -6,6 +6,7 @@ import { paths } from '../../../app/route-paths';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
+import { VietnameseDateInput } from '../../../shared/components/VietnameseDateInput';
 import { browserStorage, type StorageStatus } from '../../../shared/lib/browser-storage';
 import { Textarea } from '../../../shared/components/Textarea';
 import banner from '../../../shared/assets/figma/32882.svg';
@@ -350,24 +351,24 @@ function PreviewCreateTripPage() {
               </div>
 
               <div className={styles.dates}>
-                <Input
+                <VietnameseDateInput
                   id="create-trip-startDate"
                   label="Ngày đi"
-                  type="date"
+                  pickerLabel="Lịch khởi hành"
                   value={draft.startDate}
                   required
                   error={errors.startDate}
-                  onChange={(event) => update('startDate', event.target.value)}
+                  onValueChange={(value) => update('startDate', value)}
                 />
-                <Input
+                <VietnameseDateInput
                   id="create-trip-endDate"
                   label="Ngày về"
-                  type="date"
+                  pickerLabel="Lịch kết thúc"
                   min={draft.startDate || undefined}
                   value={draft.endDate}
                   required
                   error={errors.endDate}
-                  onChange={(event) => update('endDate', event.target.value)}
+                  onValueChange={(value) => update('endDate', value)}
                 />
               </div>
 

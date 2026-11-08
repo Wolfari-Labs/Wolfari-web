@@ -14,20 +14,24 @@ for (const viewport of [
     const mock = await mockPlan(page, gateway);
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
+    await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
-    await page.getByRole('button', { name: 'Thêm hoạt động' }).click();
+    await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+    await page.getByRole('button', { name: 'Tạo hoạt động thủ công' }).click();
     await page.getByLabel('Tên hoạt động', { exact: true }).fill('Tham quan bảo tàng');
     await page.getByLabel('Loại hoạt động', { exact: true }).fill('SIGHTSEEING');
     await page.getByRole('button', { name: 'Lưu' }).click();
     const created = page.getByRole('listitem', { name: 'Tham quan bảo tàng', exact: true });
     await expect(created).toBeVisible();
-    await created.getByRole('button', { name: 'Sửa' }).click();
+    await created.getByRole('button', { name: 'Thao tác Tham quan bảo tàng' }).click();
+    await page.getByRole('menuitem', { name: 'Chỉnh sửa hoạt động' }).click();
     await page.getByLabel('Tên hoạt động', { exact: true }).fill('Bảo tàng lịch sử');
     await page.getByRole('button', { name: 'Lưu' }).click();
     const edited = page.getByRole('listitem', { name: 'Bảo tàng lịch sử', exact: true });
     await expect(edited).toBeVisible();
-    await edited.getByRole('button', { name: 'Hoàn tất', exact: true }).click();
-    await expect(edited.getByRole('button', { name: 'Hoàn tất', exact: true })).toHaveCount(0);
+    await edited.getByRole('button', { name: 'Thao tác Bảo tàng lịch sử' }).click();
+    await page.getByRole('menuitem', { name: 'Hoàn tất' }).click();
+    await expect(edited.getByRole('button', { name: 'Thao tác Bảo tàng lịch sử' })).toBeVisible();
     await edited.getByRole('button', { name: 'Thao tác Bảo tàng lịch sử' }).click();
     await page.getByRole('menuitem', { name: 'Đưa lên' }).click();
     await expect.poll(() => mock.writes.filter((write) => write.method === 'PUT').length).toBe(1);
@@ -45,6 +49,7 @@ for (const viewport of [
     expect(mock.writes.map((write) => write.body.expected_plan_version)).toEqual([1, 2, 3, 4, 5]);
     expect(new Set(mock.writes.map((write) => write.key)).size).toBe(5);
     await page.reload();
+    await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
     await expect(page.getByRole('listitem', { name: 'Bảo tàng lịch sử', exact: true })).toHaveCount(
       0,
@@ -59,6 +64,7 @@ test('HTTP mock: Gateway exposes only the shared server Plan, never a competing 
   const mock = await mockPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
+  await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
   await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Bản nháp trên thiết bị' })).toHaveCount(0);
@@ -73,7 +79,8 @@ test('HTTP mock: Plan editor dialog remains scrollable at 2x CSS zoom and return
   await mockPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
-  const trigger = page.getByRole('button', { name: 'Thêm hoạt động', exact: true });
+  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+  const trigger = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
   await expect(trigger).toBeVisible();
   await page.evaluate(() => {
     document.documentElement.style.zoom = '2';
@@ -82,7 +89,8 @@ test('HTTP mock: Plan editor dialog remains scrollable at 2x CSS zoom and return
   const dialog = page.getByRole('dialog', { name: 'Thêm hoạt động' });
   await expect(dialog.getByLabel('Tên hoạt động', { exact: true })).toBeFocused();
   const save = dialog.getByRole('button', { name: 'Lưu', exact: true });
-  await save.scrollIntoViewIfNeeded();
+  await expect(save).toBeVisible();
+  await save.evaluate((button) => button.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
   await expect(save).toBeInViewport();
   await page.keyboard.press('Escape');
   await expect(dialog).not.toBeVisible();

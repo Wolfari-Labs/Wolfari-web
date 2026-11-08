@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useOutletContext, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
@@ -23,6 +23,8 @@ import { ContentState } from '../../shared/components/ContentState';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import type { DomainError } from '../../shared/types/result';
 import styles from './FundPage.module.css';
+import { FinanceGoal, FinanceTransactionPanel, type FinanceTransactionRow } from './components/FinanceDesktop';
+import { FinanceOverlay, type FinanceSection } from './components/FinanceOverlay';
 import { GatewayFundPage } from './GatewayFundPage';
 
 /** Keep Finance decimal strings as strings; null is an intentional unknown value. */
@@ -78,6 +80,9 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
   const [paidAt, setPaidAt] = useState('2026-10-12');
   const [note, setNote] = useState('');
   const [draftMessage, setDraftMessage] = useState('');
+  const [financeOverlayOpen, setFinanceOverlayOpen] = useState(false);
+  const [financeSection, setFinanceSection] = useState<FinanceSection>('general');
+  const financeSettingsRef = useRef<HTMLButtonElement>(null);
   const readOnly = data.fund.status !== 'OPEN' || !data.permissions.canCreateExpense;
   const submitDraft = () => {
     if (!category || !isMoneyVnd(amount) || amount === '0') {
@@ -87,6 +92,20 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
     setDraftMessage('Bản nháp hợp lệ · Chưa gửi, chưa trừ số dư.');
   };
   const closure = data.closure;
+  const transactionRows: FinanceTransactionRow[] = data.ledger.map((row) => ({
+    id: row.id,
+    type: row.transactionType,
+    title: row.presentation.title,
+    timeLabel: date(row.createdAt),
+    memberId: row.actorUserId,
+    memberName: row.presentation.actor.displayName,
+    actorName: row.presentation.actor.displayName ?? 'Chưa xác định',
+    amount: row.amount,
+    direction: row.direction,
+    sequence: row.sequence,
+    balanceAfter: row.balanceAfter,
+    reason: row.reason,
+  }));
   return (
     <>
       <section className={styles.stateBar} aria-label="Trạng thái quỹ">
@@ -108,6 +127,13 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
           {closure.blockers.length ? <ul>{closure.blockers.map((blocker) => <li key={blocker.code}>{blocker.label}{blocker.amount ? ` · ${formatMoneyVnd(blocker.amount)}` : ''}</li>)}</ul> : <span className={styles.clear}>Không còn blocker</span>}
         </section>
       )}
+      <FinanceGoal
+        budget={data.fund.budgetAmount}
+        amount={data.fund.currentBalance}
+        format={formatMoneyVnd}
+        onSettings={() => setFinanceOverlayOpen(true)}
+        settingsRef={financeSettingsRef}
+      />
       <section className={styles.metrics} aria-label="Tổng hợp quỹ">
         <div><span>Ngân sách mục tiêu</span><strong>{formatMoneyVnd(data.fund.budgetAmount)}</strong></div>
         <div><span>Đóng góp đã xác nhận</span><strong className={styles.green}>{formatMoneyVnd(data.totals.confirmedContributions)}</strong></div>
@@ -166,6 +192,24 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
           <Button onClick={submitDraft} disabled={readOnly}>Kiểm tra bản nháp</Button>
         </section>
       </div>
+      <FinanceTransactionPanel
+        rows={transactionRows}
+        format={formatMoneyVnd}
+        footer={<p>Preview chỉ lọc các giao dịch ledger có sẵn trong fixture.</p>}
+      />
+      <FinanceOverlay
+        open={financeOverlayOpen}
+        onDismiss={() => setFinanceOverlayOpen(false)}
+        section={financeSection}
+        onSectionChange={setFinanceSection}
+        tripName="Đà Nẵng 3N2Đ"
+        status={data.fund.status}
+        role={data.viewerRole}
+        returnFocusRef={financeSettingsRef}
+        context={<><h3>Tình trạng &amp; mục tiêu</h3><p>{data.environment} · {data.fund.status} · VND</p><p>Người giữ quỹ: {data.viewerRole === 'HOLDER' ? 'Bạn' : 'Được chỉ định trong dữ liệu'}</p></>}
+      >
+        {financeSection === 'general' ? <><h3>Cấu hình quỹ chung</h3><p>Fixture hiển thị cấu hình theo SRS, không gửi mutation.</p></> : financeSection === 'contributions' ? <><h3>Đợt đóng góp</h3><p>{data.contributions.length} khoản đóng góp trong dữ liệu minh họa.</p></> : <CapabilityNote tone="warning">Vùng này chưa có Gateway contract; fixture chỉ hiển thị read-only, không tạo bút toán giả.</CapabilityNote>}
+      </FinanceOverlay>
     </>
   );
 }

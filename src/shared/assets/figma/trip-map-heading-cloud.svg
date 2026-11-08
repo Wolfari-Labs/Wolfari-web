@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="74" height="31" viewBox="0 0 74 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Heading / soft clouds" opacity="0.16" clip-path="url(#clip0_0_113)">
+<circle id="Cloud left" cx="20" cy="22" r="10" fill="#7BCCEA"/>
+<circle id="Cloud center" cx="39" cy="17" r="14" fill="#7BCCEA"/>
+<circle id="Cloud right" cx="58.5" cy="20.5" r="9.5" fill="#7BCCEA"/>
+<rect id="Cloud base" x="10" y="22" width="57" height="9" rx="4" fill="#7BCCEA"/>
+</g>
+<defs>
+<clipPath id="clip0_0_113">
+<rect width="74" height="31" fill="white"/>
+</clipPath>
+</defs>
+</svg>

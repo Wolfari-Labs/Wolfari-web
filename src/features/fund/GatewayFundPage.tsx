@@ -16,8 +16,8 @@ import { useMembersRepositories } from '../members/repositories/members-context'
 import { TripHero } from '../trips/components/TripHero';
 import { paths } from '../../app/route-paths';
 import { Icon } from '../../shared/components/Icon';
-import { Badge } from '../../shared/components/Ui';
 import { Button } from '../../shared/components/Button';
+import { ConfirmDialog } from '../../shared/components/Ui';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Drawer } from '../../shared/components/Drawer';
@@ -27,8 +27,18 @@ import { OperationStatus, useCommandSession } from '../../shared/components/Oper
 import { toDomainError, money } from '../../shared/lib/runtime-validation';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import type { MembershipViewModel } from '../members/model/members';
+import { FinanceKpis, FinanceStateBar, FinanceUnavailable } from './components/FinancePresentation';
+import {
+  FinanceGoal,
+  FinanceTransactionPanel,
+  type FinanceTransactionRow,
+} from './components/FinanceDesktop';
+import { FinanceOverlay, type FinanceSection } from './components/FinanceOverlay';
+import financeOverlayStyles from './components/FinanceOverlay.module.css';
+import workspaceStyles from './components/FinanceWorkspace.module.css';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import fundStyles from './FundPage.module.css';
+import tripWorkspaceStyles from '../trips/components/TripWorkspace.module.css';
 
 export const formatVnd = (value: string | null) =>
   value === null ? 'Chưa đặt' : value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
@@ -382,9 +392,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   }, [qc, actor, trip.id]);
   const op = useCommandSession(session, refresh);
   const [form, setForm] = useState<FormSpec | null>(null);
+  const instructionTriggerRef = useRef<HTMLElement | null>(null);
+  const instructionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const [financeOverlayOpen, setFinanceOverlayOpen] = useState(false);
+  const [financeSection, setFinanceSection] = useState<FinanceSection>('general');
+  const [exitIntent, setExitIntent] = useState<FinanceSection | 'back' | 'dismiss' | null>(null);
+  const exitReturnFocusRef = useRef<HTMLElement | null>(null);
   const [instructionId, setInstructionId] = useState<string | null>(null);
+  const financeSettingsRef = useRef<HTMLButtonElement>(null);
   const formHeadingRef = useRef<HTMLHeadingElement>(null);
   const formTriggerRef = useRef<HTMLElement | null>(null);
+  const enableTriggerRef = useRef<HTMLButtonElement>(null);
   const formContextRef = useRef<HTMLElement>(null);
   const refreshButtonRef = useRef<HTMLButtonElement>(null);
   const fundQuery = useQuery({
@@ -476,6 +494,16 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       return;
     }
     rememberFormTrigger();
+    if (kind !== 'enable') {
+      setFinanceSection(
+        kind === 'budget'
+          ? 'general'
+          : kind.startsWith('destination-')
+            ? 'receiving'
+            : 'contributions',
+      );
+      setFinanceOverlayOpen(true);
+    }
     setForm({
       kind,
       resource,
@@ -486,15 +514,52 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     });
   };
   const closeForm = useCallback(() => {
-    const trigger = formTriggerRef.current;
+    setExitIntent(null);
+    const trigger = formTriggerRef.current ?? enableTriggerRef.current;
     formTriggerRef.current = null;
     setForm(null);
     window.requestAnimationFrame(() => {
-      if (trigger?.isConnected && !trigger.hasAttribute('disabled')) trigger.focus();
-      else if (formContextRef.current) formContextRef.current.focus();
+      if (
+        trigger?.isConnected &&
+        !trigger.hasAttribute('disabled') &&
+        (!financeOverlayOpen || trigger.closest('[data-finance-overlay]'))
+      )
+        trigger.focus();
+      else if (financeOverlayOpen)
+        document.querySelector<HTMLElement>('[data-finance-overlay] h2')?.focus();
       else refreshButtonRef.current?.focus();
     });
-  }, []);
+  }, [financeOverlayOpen]);
+  const cancelExit = () => {
+    exitReturnFocusRef.current = formHeadingRef.current;
+    setExitIntent(null);
+    window.requestAnimationFrame(focusOpenForm);
+  };
+  const confirmExit = () => {
+    if (!exitIntent || op.busy) return;
+    const target = exitIntent;
+    exitReturnFocusRef.current =
+      target === 'back'
+        ? formTriggerRef.current
+        : target === 'dismiss'
+          ? financeSettingsRef.current
+          : document.querySelector<HTMLElement>('[data-finance-overlay] h2');
+    setExitIntent(null);
+    if (target === 'back') {
+      closeForm();
+      return;
+    }
+    setForm(null);
+    setInstructionId(null);
+    formTriggerRef.current = null;
+    if (target === 'dismiss') setFinanceOverlayOpen(false);
+    else {
+      setFinanceSection(target);
+      window.requestAnimationFrame(() =>
+        document.querySelector<HTMLElement>('[data-finance-overlay] h2')?.focus(),
+      );
+    }
+  };
   useEffect(() => {
     if (!form) return;
     const frame = window.requestAnimationFrame(() => {
@@ -506,21 +571,42 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   const data = <T extends { id: string }>(pages: { items: T[] }[] | undefined): T[] => [
     ...new Map((pages?.flatMap((p) => p.items) ?? []).map((row) => [row.id, row])).values(),
   ];
+  const transactionRows: FinanceTransactionRow[] = data(ledger.data?.pages).map((row) => ({
+    id: row.id,
+    type: row.transaction_type,
+    title:
+      row.reason ??
+      {
+        CONTRIBUTION: 'Đợt đóng góp',
+        EXPENSE: 'Khoản chi',
+        REFUND: 'Hoàn tiền',
+        REVERSAL: 'Điều chỉnh',
+      }[row.transaction_type],
+    timeLabel: new Date(row.created_at).toLocaleString('vi-VN', { timeZone: trip.timezone }),
+    memberId: row.actor_user_id,
+    memberName: row.actor_user_id ? name(row.actor_user_id) : null,
+    actorName: row.actor_user_id ? name(row.actor_user_id) : 'Chưa xác định',
+    amount: row.amount,
+    direction: row.direction,
+    sequence: row.sequence,
+    balanceAfter: row.balance_after,
+    reason: row.reason,
+  }));
   const renderContext = () => (
     <aside
       ref={formContextRef}
-      className={`${styles.panel} ${fundStyles.gatewayContext}`}
+      className={`${styles.panel} ${fundStyles.gatewayContext} ${workspaceStyles.panel}`}
       aria-label="Ngữ cảnh thao tác quỹ"
       tabIndex={-1}
     >
-      {form ? (
+      {form && form.kind !== 'enable' ? (
         <>
-          <div className={styles.actions}>
+          <div className={workspaceStyles.panelHeader}>
             <h2 ref={formHeadingRef} tabIndex={-1}>
               {labels[form.kind]}
             </h2>
-            <Button variant="outline" onClick={closeForm}>
-              Đóng biểu mẫu
+            <Button variant="outline" onClick={() => setExitIntent('back')}>
+              <span aria-hidden="true">←</span> Trở lại
             </Button>
           </div>
           <FundCommandForm
@@ -546,27 +632,77 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       )}
     </aside>
   );
+  const renderInstruction = () => (
+    <section aria-label="Hướng dẫn chuyển TEST">
+      <h3 tabIndex={-1} ref={instructionHeadingRef}>
+        Hướng dẫn chuyển TEST
+      </h3>
+      <Button
+        variant="outline"
+        onClick={() => {
+          setInstructionId(null);
+          window.requestAnimationFrame(() => instructionTriggerRef.current?.focus());
+        }}
+      >
+        Đóng hướng dẫn
+      </Button>
+      {instruction.isError ? (
+        <QueryError error={instruction.error} retry={() => void instruction.refetch()} />
+      ) : instruction.data ? (
+        <>
+          <Alert tone="warning">
+            TEST — không chuyển tiền thật. Không tải QR hoặc gửi thông tin tới provider bên ngoài.
+          </Alert>
+          <dl>
+            {[
+              ['Ngân hàng', instruction.data.bank_code],
+              ['Tài khoản TEST', instruction.data.account_number],
+              ['Người nhận', instruction.data.recipient_name],
+              ['Số tiền', formatVnd(instruction.data.amount)],
+              ['Nội dung', instruction.data.reference],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </>
+      ) : (
+        <ContentState state="loading" />
+      )}
+    </section>
+  );
+  const reenterCommand = () => {
+    const i = op.intent;
+    if (!i) return;
+    if (form) {
+      focusOpenForm();
+      return;
+    }
+    rememberFormTrigger();
+    if (i.kind !== 'enable') {
+      setFinanceSection(
+        i.kind === 'budget'
+          ? 'general'
+          : i.kind.startsWith('destination-')
+            ? 'receiving'
+            : 'contributions',
+      );
+      setFinanceOverlayOpen(true);
+    }
+    setForm({
+      kind: i.kind,
+      recovery: true,
+      versions: i.versions,
+      resource: destinations.data?.find((d) => d.id === i.resourceId),
+    });
+  };
   return (
     <>
-      <OperationStatus
-        session={session}
-        onReenter={() => {
-          const i = op.intent;
-          if (i) {
-            if (form) {
-              focusOpenForm();
-              return;
-            }
-            rememberFormTrigger();
-            setForm({
-              kind: i.kind,
-              recovery: true,
-              versions: i.versions,
-              resource: destinations.data?.find((d) => d.id === i.resourceId),
-            });
-          }
-        }}
-      />
+      <div hidden={financeOverlayOpen}>
+        <OperationStatus session={session} onReenter={reenterCommand} />
+      </div>
       <div className={styles.actions}>
         <Button ref={refreshButtonRef} variant="outline" onClick={refresh}>
           Tải lại quỹ
@@ -581,63 +717,62 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
         <QueryError error={membersQuery.error} retry={() => void membersQuery.refetch()} />
       )}
       {fundQuery.isSuccess && fund && (
-        <section className={styles.panel} aria-label="Trạng thái quỹ">
-          <h2>
-            <Icon name="fund" />
-            Quỹ nhóm{' '}
-            <Badge>
-              {(
-                { OPEN: 'Đang mở', CLOSED: 'Đã đóng', CLOSING: 'Đang chốt' } as Record<
-                  string,
-                  string
-                >
-              )[fund.status] ?? fund.status}
-            </Badge>
-          </h2>
-          <p>
-            <Badge tone="warning">TEST</Badge> · Chỉ ghi nhận thủ công, không chuyển tiền thật.
-          </p>
-          <p>
-            Người giữ quỹ: {name(fund.holder_user_id)} · {owner ? 'Bạn là chủ chuyến. ' : ''}
-            {holder ? 'Bạn là người giữ quỹ.' : ''}
-          </p>
+        <>
+          <FinanceGoal
+            budget={fund.budget_amount}
+            amount={fund.current_balance}
+            format={formatVnd}
+            onSettings={() => setFinanceOverlayOpen(true)}
+            settingsRef={financeSettingsRef}
+          />
+          <FinanceStateBar
+            status={fund.status}
+            holderName={name(fund.holder_user_id)}
+            owner={owner}
+            holder={holder}
+            balance={fund.current_balance}
+            format={formatVnd}
+            disabled={blocked}
+            onBudget={() => open('budget')}
+            onDestination={() => open('destination-create')}
+          />
           {fund.status !== 'OPEN' && (
             <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
           )}
-          <div className={styles.grid}>
-            {[
-              ['Ngân sách', fund.budget_amount],
-              ['Số dư ghi sổ', fund.current_balance],
-              ['Đang giữ cho hoàn dư', fund.reserved_refund],
-              ['Số dư khả dụng', fund.available_balance],
-            ].map(([label, value]) => (
-              <div key={label} className={styles.stat}>
-                <p>{label}</p>
-                <strong className={styles.money}>{formatVnd(value ?? null)}</strong>
-              </div>
-            ))}
-          </div>
-          {owner && (
-            <div className={styles.actions}>
-              <Button disabled={blocked} onClick={() => open('budget')}>
-                Sửa ngân sách
-              </Button>
-              <Button disabled={blocked} onClick={() => open('destination-create')}>
-                Thêm đích nhận TEST
-              </Button>
-            </div>
-          )}
-          <details>
-            <summary>Chi tiết hỗ trợ</summary>
-            <p>
-              Mã quỹ: {fund.id} · Finance version: {fund.finance_version}
-            </p>
-          </details>
-        </section>
+          <FinanceKpis
+            budget={fund.budget_amount}
+            balance={fund.current_balance}
+            reserved={fund.reserved_refund}
+            available={fund.available_balance}
+            format={formatVnd}
+          />
+          <FinanceTransactionPanel
+            rows={transactionRows}
+            format={formatVnd}
+            loading={ledger.isPending}
+            feedback={
+              ledger.isError ? (
+                <QueryError
+                  error={ledger.error}
+                  retry={() =>
+                    void (ledger.isFetchNextPageError ? ledger.fetchNextPage() : ledger.refetch())
+                  }
+                />
+              ) : undefined
+            }
+            hasMore={ledger.hasNextPage}
+            loadingMore={ledger.isFetchingNextPage}
+            onLoadMore={() => void ledger.fetchNextPage()}
+            footer={
+              <p>
+                Chỉ các giao dịch đã tải được lọc. Số dư và tổng tiền lấy từ projection Finance.
+              </p>
+            }
+          />
+        </>
       )}
-      {/* Keep the context at a stable position so read-state changes cannot reset its draft. */}
-      <div className={fundQuery.isSuccess || form ? fundStyles.gatewayWorkspace : undefined}>
-        <div className={fundQuery.isSuccess || form ? fundStyles.gatewayMain : undefined}>
+      <div>
+        <div>
           {fundQuery.isError ? (
             <QueryError error={fundQuery.error} retry={() => void fundQuery.refetch()} />
           ) : fundQuery.isPending ? (
@@ -647,321 +782,523 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
               <h2>Chuyến đi chưa bật quỹ</h2>
               <p>Chủ chuyến có thể chọn người giữ quỹ và thêm thông tin nhận tiền thử nghiệm.</p>
               {owner && (
-                <Button disabled={blocked || !members.length} onClick={() => open('enable')}>
+                <Button
+                  ref={enableTriggerRef}
+                  disabled={blocked || !members.length}
+                  onClick={() => open('enable')}
+                >
                   Bật quỹ TEST
                 </Button>
               )}
             </section>
           ) : (
-            <>
-              <section className={styles.panel} aria-label="Đích nhận">
-                <h2>Đích nhận TEST</h2>
-                {destinations.isError ? (
-                  <QueryError
-                    error={destinations.error}
-                    retry={() => void destinations.refetch()}
-                  />
-                ) : destinations.isPending ? (
-                  <ContentState state="loading" />
-                ) : (
+            <>{/* Operational lists live in the Finance overlay. */}</>
+          )}
+        </div>
+      </div>
+      {form?.kind === 'enable' && (
+        <Drawer
+          open
+          label="Thiết lập bật quỹ"
+          onDismiss={closeForm}
+          side="center"
+          className={financeOverlayStyles.enableDrawer ?? ''}
+          overlayClassName={financeOverlayStyles.enableBackdrop ?? ''}
+          showHeader={false}
+          initialFocusRef={formHeadingRef}
+          returnFocusRef={enableTriggerRef}
+        >
+          <div className={financeOverlayStyles.enableFrame}>
+            <header className={financeOverlayStyles.enableHeader}>
+              <div className={financeOverlayStyles.enableHeaderIcon} aria-hidden="true">
+                <Icon name="fund" size={26} />
+              </div>
+              <div className={financeOverlayStyles.enableHeaderCopy}>
+                <strong>Cài đặt quỹ nhóm</strong>
+                <span>Thiết lập Finance · {trip.name} · Dữ liệu TEST</span>
+              </div>
+              <button
+                className={financeOverlayStyles.enableClose}
+                type="button"
+                onClick={closeForm}
+                aria-label="Đóng biểu mẫu bật quỹ"
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </header>
+            <main className={financeOverlayStyles.enableBody}>
+              <h2 ref={formHeadingRef} tabIndex={-1}>
+                {labels[form.kind]}
+              </h2>
+              <FundCommandForm
+                key={form.kind + ':' + (form.resource?.id ?? '')}
+                spec={form}
+                trip={trip}
+                fund={fund}
+                destinations={destinations.data ?? []}
+                members={members}
+                session={session}
+                onClose={closeForm}
+              />
+            </main>
+          </div>
+        </Drawer>
+      )}
+      <FinanceOverlay
+        open={financeOverlayOpen}
+        onDismiss={() => {
+          if (exitIntent) return;
+          if (instructionId) {
+            setInstructionId(null);
+            return;
+          }
+          if (form) {
+            setExitIntent('dismiss');
+            return;
+          }
+          setFinanceOverlayOpen(false);
+        }}
+        section={financeSection}
+        onSectionChange={(section) => {
+          if (form) {
+            if (section === financeSection) focusOpenForm();
+            else setExitIntent(section);
+            return;
+          }
+          setInstructionId(null);
+          setFinanceSection(section);
+        }}
+        tripName={trip.name}
+        status={fund?.status ?? 'NOT_ENABLED'}
+        role={holder ? 'Fund Holder' : owner ? 'Owner' : 'Member'}
+        returnFocusRef={financeSettingsRef}
+        unframed={
+          !!form ||
+          !!instructionId ||
+          financeSection === 'receiving' ||
+          financeSection === 'contributions'
+        }
+        toolbar={
+          <Button variant="outline" onClick={refresh}>
+            Tải lại quỹ
+          </Button>
+        }
+        context={
+          financeSection === 'general' || financeSection === 'receiving' || form ? (
+            <div className={workspaceStyles.summary}>
+              <h3>Tình trạng &amp; mục tiêu</h3>
+              <dl className={workspaceStyles.rules}>
+                {[
+                  ['Fund Holder', fund ? name(fund.holder_user_id) : 'Chưa chỉ định'],
+                  ['Số dư ghi sổ', fund ? formatVnd(fund.current_balance) : 'Chưa có dữ liệu'],
+                  ['Trạng thái quỹ', `Finance ${fund?.status ?? 'NOT_ENABLED'} · VND`],
+                  ['Bật Finance', 'Chỉ Owner · Không tạo bút toán thu'],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <dt>
+                      <img src="/assets/finance-v12/a013d.svg" alt="" />
+                      {label}
+                    </dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ) : undefined
+        }
+      >
+        <div className={workspaceStyles.workspace}>
+          <OperationStatus session={session} onReenter={reenterCommand} />
+          {fundQuery.isError && (
+            <QueryError error={fundQuery.error} retry={() => void fundQuery.refetch()} />
+          )}
+          {form && form.kind !== 'enable' && renderContext()}
+          {instructionId && renderInstruction()}
+          <div className={workspaceStyles.sectionStack} hidden={!!form || !!instructionId}>
+            {financeSection === 'general' ? (
+              <div className={workspaceStyles.general}>
+                <h3>Cấu hình quỹ chung</h3>
+                <dl className={workspaceStyles.fields}>
+                  <div>
+                    <dt>Tên quỹ</dt>
+                    <dd>Quỹ nhóm – {trip.name}</dd>
+                  </div>
+                  <div>
+                    <dt>Ngân sách mục tiêu</dt>
+                    <dd>{formatVnd(fund?.budget_amount ?? null)}</dd>
+                  </div>
+                  <div>
+                    <dt>Tiền tệ</dt>
+                    <dd>VND</dd>
+                  </div>
+                  <div>
+                    <dt>Trạng thái quỹ</dt>
+                    <dd>{fund?.status ?? 'NOT_ENABLED'}</dd>
+                  </div>
+                </dl>
+                <p className={workspaceStyles.note}>
+                  Bật Finance không tạo bút toán thu. Báo chuyển tiền chưa làm tăng số dư; chỉ xác
+                  nhận hợp lệ mới được ghi sổ.
+                </p>
+                <div className={workspaceStyles.actions}>
+                  {owner && fund && (
+                    <Button disabled={blocked} onClick={() => open('budget')}>
+                      Sửa ngân sách
+                    </Button>
+                  )}
+                  <Button variant="outline" onClick={() => setFinanceSection('receiving')}>
+                    Xem thông tin nhận tiền
+                  </Button>
+                </div>
+              </div>
+            ) : financeSection === 'receiving' ? (
+              <>
+                <section
+                  className={`${styles.panel} ${workspaceStyles.panel}`}
+                  aria-label="Đích nhận"
+                >
+                  <div className={workspaceStyles.panelHeader}>
+                    <h2>Đích nhận TEST</h2>
+                    {owner && (
+                      <Button disabled={blocked} onClick={() => open('destination-create')}>
+                        <Icon name="plus" size={16} /> Thêm đích nhận TEST
+                      </Button>
+                    )}
+                  </div>
+                  {destinations.isError ? (
+                    <QueryError
+                      error={destinations.error}
+                      retry={() => void destinations.refetch()}
+                    />
+                  ) : destinations.isPending ? (
+                    <ContentState state="loading" />
+                  ) : (
+                    <ul className={`${styles.list} ${workspaceStyles.destinationList}`}>
+                      {destinations.data.map((d) => (
+                        <li key={d.id}>
+                          <strong>
+                            {d.destination_type === 'VIETQR'
+                              ? 'Tài khoản ngân hàng'
+                              : 'MOMO SANDBOX'}{' '}
+                            · {d.active ? 'Đang hoạt động' : 'Đã tắt'}
+                          </strong>
+                          <p>
+                            {d.confirmed_by_holder_at
+                              ? 'Người giữ quỹ đã xác nhận'
+                              : 'Chờ người giữ quỹ xác nhận'}
+                          </p>
+                          <dl className={workspaceStyles.fields}>
+                            <div>
+                              <dt>Ngân hàng / Ví</dt>
+                              <dd>{d.bank_code ?? 'MOMO SANDBOX'}</dd>
+                            </div>
+                            <div>
+                              <dt>Chủ tài khoản</dt>
+                              <dd>{d.account_name ?? 'Chưa cung cấp'}</dd>
+                            </div>
+                            <div>
+                              <dt>Số tài khoản / Điện thoại</dt>
+                              <dd>{d.account_number ?? d.momo_phone ?? 'Chưa cung cấp'}</dd>
+                            </div>
+                            <div>
+                              <dt>Đơn vị tiền</dt>
+                              <dd>VND</dd>
+                            </div>
+                          </dl>
+                          <div className={styles.actions}>
+                            {owner && d.destination_type === 'VIETQR' && (
+                              <Button
+                                variant="outline"
+                                disabled={blocked}
+                                onClick={() => open('destination-edit', d)}
+                              >
+                                Sửa đích nhận
+                              </Button>
+                            )}
+                            {holder && d.active && !d.confirmed_by_holder_at && (
+                              <Button
+                                disabled={blocked}
+                                onClick={() => open('destination-confirm', d)}
+                              >
+                                Xác nhận đích nhận
+                              </Button>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              </>
+            ) : financeSection === 'contributions' ? (
+              <>
+                <section
+                  className={`${styles.panel} ${workspaceStyles.panel}`}
+                  aria-label="Đợt thu"
+                >
+                  <h2>
+                    <Icon name="plan" />
+                    Đợt thu
+                  </h2>
+                  {owner && (
+                    <Button
+                      disabled={
+                        blocked ||
+                        !destinations.data?.some(
+                          (d) =>
+                            d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
+                        )
+                      }
+                      onClick={() => open('request-create')}
+                    >
+                      Tạo đợt thu
+                    </Button>
+                  )}
+                  {requests.isPending && <ContentState state="loading" />}
+                  {requests.isSuccess && !data(requests.data?.pages).length && (
+                    <p>Chưa có đợt thu.</p>
+                  )}
+                  {requests.isError && (
+                    <QueryError
+                      error={requests.error}
+                      retry={() =>
+                        void (requests.isFetchNextPageError
+                          ? requests.fetchNextPage()
+                          : requests.refetch())
+                      }
+                    />
+                  )}
                   <ul className={styles.list}>
-                    {destinations.data.map((d) => (
-                      <li key={d.id}>
+                    {data(requests.data?.pages).map((r) => (
+                      <li key={r.id}>
                         <strong>
-                          {d.destination_type === 'VIETQR' ? 'Tài khoản ngân hàng' : 'MOMO SANDBOX'}{' '}
-                          · {d.active ? 'Đang hoạt động' : 'Đã tắt'}
+                          {r.title} ·{' '}
+                          {r.status === 'OPEN'
+                            ? 'Đang thu'
+                            : r.status === 'CANCELLED'
+                              ? 'Đã hủy'
+                              : 'Đã đóng'}
                         </strong>
                         <p>
-                          {d.confirmed_by_holder_at
-                            ? 'Người giữ quỹ đã xác nhận'
-                            : 'Chờ người giữ quỹ xác nhận'}
+                          {r.note ?? 'Không có ghi chú'} · {r.contributions.length} khoản trong đợt
                         </p>
-                        {d.account_name && (
-                          <p>
-                            {d.bank_code} · {d.account_number} · {d.account_name}
-                          </p>
+                        <p>
+                          {r.due_at
+                            ? 'Hạn thu: ' +
+                              new Date(r.due_at).toLocaleString('vi-VN', {
+                                timeZone: trip.timezone,
+                              })
+                            : 'Chưa đặt hạn thu'}
+                        </p>
+                        {owner && r.status === 'OPEN' && (
+                          <Button
+                            variant="outline"
+                            disabled={blocked}
+                            onClick={() => open('request-edit', r)}
+                          >
+                            Sửa đợt thu
+                          </Button>
                         )}
-                        {d.momo_phone && <p>MOMO SANDBOX · {d.momo_phone}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                  {requests.hasNextPage && (
+                    <Button
+                      loading={requests.isFetchingNextPage}
+                      onClick={() => void requests.fetchNextPage()}
+                    >
+                      Tải thêm đợt thu
+                    </Button>
+                  )}
+                </section>
+                <section
+                  id="finance-contributions"
+                  className={`${styles.panel} ${workspaceStyles.panel}`}
+                  aria-label="Các khoản đóng góp"
+                >
+                  <h2>
+                    <Icon name="members" />
+                    Các khoản đóng góp
+                  </h2>
+                  {contributions.isPending && <ContentState state="loading" />}
+                  {contributions.isSuccess && !data(contributions.data?.pages).length && (
+                    <p>Chưa có khoản đóng góp.</p>
+                  )}
+                  {contributions.isError && (
+                    <QueryError
+                      error={contributions.error}
+                      retry={() =>
+                        void (contributions.isFetchNextPageError
+                          ? contributions.fetchNextPage()
+                          : contributions.refetch())
+                      }
+                    />
+                  )}
+                  <ul className={styles.list}>
+                    {data(contributions.data?.pages).map((c) => (
+                      <li key={c.id} data-testid={'contribution-' + c.member_user_id}>
+                        <strong>
+                          {name(c.member_user_id)} · {formatVnd(c.amount)}
+                        </strong>
+                        <p>{statusLabels[c.status]}</p>
+                        {c.rejected_reason && <p>Lý do từ chối gần nhất: {c.rejected_reason}</p>}
+                        {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
+                        {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
                         <div className={styles.actions}>
-                          {owner && d.destination_type === 'VIETQR' && (
-                            <Button
-                              variant="outline"
-                              disabled={blocked}
-                              onClick={() => open('destination-edit', d)}
-                            >
-                              Sửa đích nhận
-                            </Button>
+                          {c.status === 'PENDING' && c.member_user_id === actor && (
+                            <>
+                              <Button
+                                variant="outline"
+                                disabled={blocked}
+                                onClick={() => {
+                                  instructionTriggerRef.current =
+                                    document.activeElement as HTMLElement;
+                                  setInstructionId(c.id);
+                                  window.requestAnimationFrame(() =>
+                                    instructionHeadingRef.current?.focus(),
+                                  );
+                                }}
+                              >
+                                Xem hướng dẫn TEST
+                              </Button>
+                              <Button disabled={blocked} onClick={() => open('report', c)}>
+                                Báo đã chuyển TEST
+                              </Button>
+                            </>
                           )}
-                          {holder && d.active && !d.confirmed_by_holder_at && (
-                            <Button
-                              disabled={blocked}
-                              onClick={() => open('destination-confirm', d)}
-                            >
-                              Xác nhận đích nhận
-                            </Button>
+                          {c.status === 'TRANSFER_REPORTED' && holder && (
+                            <>
+                              <Button disabled={blocked} onClick={() => open('confirm', c)}>
+                                Xác nhận đã nhận TEST
+                              </Button>
+                              <Button
+                                variant="outline"
+                                disabled={blocked}
+                                onClick={() => open('reject', c)}
+                              >
+                                Từ chối báo chuyển
+                              </Button>
+                            </>
+                          )}
+                          {c.status === 'PENDING' && owner && (
+                            <>
+                              <Button
+                                variant="outline"
+                                disabled={blocked}
+                                onClick={() => open('amount', c)}
+                              >
+                                Sửa số tiền
+                              </Button>
+                              <Button
+                                variant="outline"
+                                disabled={blocked}
+                                onClick={() => open('waive', c)}
+                              >
+                                Miễn khoản đóng
+                              </Button>
+                              <Button
+                                variant="outline"
+                                disabled={blocked}
+                                onClick={() => open('cancel', c)}
+                              >
+                                Hủy khoản đóng
+                              </Button>
+                            </>
                           )}
                         </div>
                       </li>
                     ))}
                   </ul>
-                )}
-              </section>
-              <section className={styles.panel} aria-label="Đợt thu">
-                <h2>
-                  <Icon name="plan" />
-                  Đợt thu
-                </h2>
-                {owner && (
-                  <Button
-                    disabled={
-                      blocked ||
-                      !destinations.data?.some(
-                        (d) =>
-                          d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
-                      )
-                    }
-                    onClick={() => open('request-create')}
-                  >
-                    Tạo đợt thu
-                  </Button>
-                )}
-                {requests.isPending && <ContentState state="loading" />}
-                {requests.isSuccess && !data(requests.data?.pages).length && (
-                  <p>Chưa có đợt thu.</p>
-                )}
-                {requests.isError && (
-                  <QueryError
-                    error={requests.error}
-                    retry={() =>
-                      void (requests.isFetchNextPageError
-                        ? requests.fetchNextPage()
-                        : requests.refetch())
-                    }
-                  />
-                )}
-                <ul className={styles.list}>
-                  {data(requests.data?.pages).map((r) => (
-                    <li key={r.id}>
-                      <strong>
-                        {r.title} ·{' '}
-                        {r.status === 'OPEN'
-                          ? 'Đang thu'
-                          : r.status === 'CANCELLED'
-                            ? 'Đã hủy'
-                            : 'Đã đóng'}
-                      </strong>
-                      <p>
-                        {r.note ?? 'Không có ghi chú'} · {r.contributions.length} khoản trong đợt
-                      </p>
-                      <p>
-                        {r.due_at
-                          ? 'Hạn thu: ' +
-                            new Date(r.due_at).toLocaleString('vi-VN', { timeZone: trip.timezone })
-                          : 'Chưa đặt hạn thu'}
-                      </p>
-                      {owner && r.status === 'OPEN' && (
-                        <Button
-                          variant="outline"
-                          disabled={blocked}
-                          onClick={() => open('request-edit', r)}
-                        >
-                          Sửa đợt thu
-                        </Button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {requests.hasNextPage && (
-                  <Button
-                    loading={requests.isFetchingNextPage}
-                    onClick={() => void requests.fetchNextPage()}
-                  >
-                    Tải thêm đợt thu
-                  </Button>
-                )}
-              </section>
-              <section className={styles.panel} aria-label="Các khoản đóng góp">
-                <h2>
-                  <Icon name="members" />
-                  Các khoản đóng góp
-                </h2>
-                {contributions.isPending && <ContentState state="loading" />}
-                {contributions.isSuccess && !data(contributions.data?.pages).length && (
-                  <p>Chưa có khoản đóng góp.</p>
-                )}
-                {contributions.isError && (
-                  <QueryError
-                    error={contributions.error}
-                    retry={() =>
-                      void (contributions.isFetchNextPageError
-                        ? contributions.fetchNextPage()
-                        : contributions.refetch())
-                    }
-                  />
-                )}
-                <ul className={styles.list}>
-                  {data(contributions.data?.pages).map((c) => (
-                    <li key={c.id} data-testid={'contribution-' + c.member_user_id}>
-                      <strong>
-                        {name(c.member_user_id)} · {formatVnd(c.amount)}
-                      </strong>
-                      <p>{statusLabels[c.status]}</p>
-                      {c.rejected_reason && <p>Lý do từ chối gần nhất: {c.rejected_reason}</p>}
-                      {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
-                      {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
-                      <div className={styles.actions}>
-                        {c.status === 'PENDING' && c.member_user_id === actor && (
-                          <>
-                            <Button
-                              variant="outline"
-                              disabled={blocked}
-                              onClick={() => setInstructionId(c.id)}
-                            >
-                              Xem hướng dẫn TEST
-                            </Button>
-                            <Button disabled={blocked} onClick={() => open('report', c)}>
-                              Báo đã chuyển TEST
-                            </Button>
-                          </>
-                        )}
-                        {c.status === 'TRANSFER_REPORTED' && holder && (
-                          <>
-                            <Button disabled={blocked} onClick={() => open('confirm', c)}>
-                              Xác nhận đã nhận TEST
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={blocked}
-                              onClick={() => open('reject', c)}
-                            >
-                              Từ chối báo chuyển
-                            </Button>
-                          </>
-                        )}
-                        {c.status === 'PENDING' && owner && (
-                          <>
-                            <Button
-                              variant="outline"
-                              disabled={blocked}
-                              onClick={() => open('amount', c)}
-                            >
-                              Sửa số tiền
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={blocked}
-                              onClick={() => open('waive', c)}
-                            >
-                              Miễn khoản đóng
-                            </Button>
-                            <Button
-                              variant="outline"
-                              disabled={blocked}
-                              onClick={() => open('cancel', c)}
-                            >
-                              Hủy khoản đóng
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                {contributions.hasNextPage && (
-                  <Button
-                    loading={contributions.isFetchingNextPage}
-                    onClick={() => void contributions.fetchNextPage()}
-                  >
-                    Tải thêm khoản đóng
-                  </Button>
-                )}
-              </section>
-              <section className={styles.panel} aria-label="Lịch sử quỹ">
-                <h2>
-                  <Icon name="fund" />
-                  Lịch sử quỹ
-                </h2>
-                {ledger.isPending && <ContentState state="loading" />}
-                {ledger.isSuccess && !data(ledger.data?.pages).length && (
-                  <p>Chưa có giao dịch được ghi nhận.</p>
-                )}
-                {ledger.isError && (
-                  <QueryError
-                    error={ledger.error}
-                    retry={() =>
-                      void (ledger.isFetchNextPageError ? ledger.fetchNextPage() : ledger.refetch())
-                    }
-                  />
-                )}
-                <ul className={styles.list}>
-                  {data(ledger.data?.pages).map((row) => (
-                    <li key={row.id}>
-                      <strong>
-                        #{row.sequence} ·{' '}
-                        {
-                          {
-                            CONTRIBUTION: 'Đóng góp',
-                            EXPENSE: 'Chi quỹ',
-                            REFUND: 'Hoàn tiền',
-                            REVERSAL: 'Điều chỉnh',
-                          }[row.transaction_type]
-                        }{' '}
-                        · {row.direction === 'IN' ? '+ ' : '− '}
-                        {formatVnd(row.amount)}
-                      </strong>
-                      <p>Số dư sau bút toán: {formatVnd(row.balance_after)}</p>
-                    </li>
-                  ))}
-                </ul>
-                {ledger.hasNextPage && (
-                  <Button
-                    loading={ledger.isFetchingNextPage}
-                    onClick={() => void ledger.fetchNextPage()}
-                  >
-                    Tải thêm lịch sử
-                  </Button>
-                )}
+                  {contributions.hasNextPage && (
+                    <Button
+                      loading={contributions.isFetchingNextPage}
+                      onClick={() => void contributions.fetchNextPage()}
+                    >
+                      Tải thêm khoản đóng
+                    </Button>
+                  )}
+                </section>
+              </>
+            ) : financeSection === 'members' ? (
+              <>
+                <h3>Thành viên &amp; quyền</h3>
                 <p>
-                  Lịch sử ghi nhận của quỹ. Các nghiệp vụ chi, hoàn dư và đóng quỹ chưa khả dụng.
+                  Owner quản lý cấu hình và khoản đóng; Holder xác nhận nhận tiền; thành viên báo
+                  chuyển khoản của mình.
                 </p>
-              </section>
-            </>
-          )}
+                {membersQuery.isError && (
+                  <QueryError
+                    error={membersQuery.error}
+                    retry={() => void membersQuery.refetch()}
+                  />
+                )}
+                <table className={workspaceStyles.table} aria-label="Vai trò thành viên">
+                  <thead>
+                    <tr>
+                      <th>Thành viên</th>
+                      <th>Vai trò Trip</th>
+                      <th>Vai trò Finance</th>
+                      <th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {members
+                      .filter((m) => m.leftAt === null)
+                      .map((m) => (
+                        <tr key={m.userId}>
+                          <td data-label="Thành viên">{name(m.userId)}</td>
+                          <td data-label="Vai trò Trip">
+                            {m.role === 'OWNER' ? 'Owner' : 'Member'}
+                          </td>
+                          <td data-label="Vai trò Finance">
+                            {fund?.holder_user_id === m.userId ? 'Fund Holder' : 'Member'}
+                          </td>
+                          <td data-label="Trạng thái">Đang hoạt động</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                {membersQuery.hasNextPage && (
+                  <Button
+                    onClick={() => void membersQuery.fetchNextPage()}
+                    loading={membersQuery.isFetchingNextPage}
+                  >
+                    Tải thêm thành viên
+                  </Button>
+                )}
+                <Link to={paths.trip(trip.id) + '/members'}>Quản lý thành viên chuyến đi</Link>
+              </>
+            ) : (
+              <FinanceUnavailable
+                title={
+                  financeSection === 'expenses'
+                    ? 'Khoản chi'
+                    : financeSection === 'refunds'
+                      ? 'Hoàn tiền'
+                      : financeSection === 'handover'
+                        ? 'Bàn giao Fund Holder'
+                        : 'Đóng Finance'
+                }
+              >
+                {financeSection === 'handover'
+                  ? 'Bàn giao người giữ quỹ chưa được hỗ trợ.'
+                  : 'Chức năng này đang được tích hợp trên Web, hiện chỉ có thể xem tổng quan giao dịch.'}
+              </FinanceUnavailable>
+            )}
+          </div>
         </div>
-        {(fundQuery.isSuccess || form) && renderContext()}
-      </div>
-      <Drawer
-        open={instructionId !== null}
-        label="Hướng dẫn chuyển TEST"
-        side="right"
-        onDismiss={() => setInstructionId(null)}
-      >
-        {instruction.isError ? (
-          <QueryError error={instruction.error} retry={() => void instruction.refetch()} />
-        ) : instruction.data ? (
-          <>
-            <Alert tone="warning">
-              TEST — không chuyển tiền thật. Không tải QR hoặc gửi thông tin tới provider bên ngoài.
-            </Alert>
-            <dl>
-              {[
-                ['Ngân hàng', instruction.data.bank_code],
-                ['Tài khoản TEST', instruction.data.account_number],
-                ['Người nhận', instruction.data.recipient_name],
-                ['Số tiền', formatVnd(instruction.data.amount)],
-                ['Nội dung', instruction.data.reference],
-              ].map(([k, v]) => (
-                <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </>
-        ) : (
-          <ContentState state="loading" />
-        )}
-      </Drawer>
+      </FinanceOverlay>
+      <ConfirmDialog
+        open={exitIntent !== null}
+        title="Thoát và bỏ bản nháp?"
+        description="Thông tin đang nhập trong biểu mẫu sẽ bị xóa nếu bạn rời khỏi. Thao tác đã gửi lên hệ thống vẫn được giữ để theo dõi và đối soát; việc thoát không hủy giao dịch."
+        cancelLabel="Tiếp tục chỉnh sửa"
+        confirmLabel="Bỏ bản nháp và thoát"
+        disabled={op.busy}
+        onCancel={cancelExit}
+        onConfirm={confirmExit}
+        returnFocusRef={exitReturnFocusRef}
+      />
     </>
   );
 }
@@ -974,9 +1311,14 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
   });
   const trip = query.data?.status === 'ready' ? query.data.data : null;
   return (
-    <section className={styles.page}>
-      <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-      <h1>Quỹ nhóm</h1>
+    <section className={`${styles.page} ${tripWorkspaceStyles.fullWidth}`} data-flow="fund-server">
+      <div className={fundStyles.breadcrumb}>
+        <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
+        <span aria-hidden="true">›</span>
+        <span>{trip?.name ?? 'Chuyến đi'}</span>
+        <span aria-hidden="true">›</span>
+        <h1>Quỹ nhóm</h1>
+      </div>
       {trip && trip.permissions.canRead && !trip.currentMembership.leftAt ? (
         <>
           <TripHero trip={trip} compact variant="landscape" />

@@ -65,11 +65,13 @@ test('HTTP mock: Finance waits for authoritative refresh before a new intent and
   try {
     await login(page);
     await page.goto(`/trips/${tripId}/fund`);
-    const action = page.getByRole('button', { name: 'Sửa ngân sách', exact: true });
+    await page.getByRole('button', { name: 'Cài đặt quỹ', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: 'Cài đặt quỹ nhóm', exact: true });
+    const action = dialog.getByRole('button', { name: 'Sửa ngân sách', exact: true });
     await action.click();
     await page.getByLabel('Ngân sách (VND)').fill('1000000');
     await page.getByRole('button', { name: 'Xác nhận · Sửa ngân sách', exact: true }).click();
-    await expect(page.getByText('Đã hoàn tất thao tác.', { exact: true })).toBeVisible();
+    await expect(dialog.getByText('Đã hoàn tất thao tác.', { exact: true })).toBeVisible();
     await expect.poll(() => refreshEntered).toBe(true);
     // A successful receipt does not imply that the read projection is current.
     await expect(action).toBeDisabled();
@@ -88,10 +90,10 @@ test('HTTP mock: Finance waits for authoritative refresh before a new intent and
     fund.finance_version++; // Another actor advances the server after this draft was opened.
     holdRefresh = false;
     const refreshed = page.waitForResponse((r) => r.url().endsWith(`/trips/${tripId}/fund`));
-    await page.getByRole('button', { name: 'Tải lại quỹ' }).click();
+    await dialog.getByRole('button', { name: 'Tải lại quỹ' }).click();
     await refreshed;
     await page.getByRole('button', { name: 'Xác nhận · Sửa ngân sách', exact: true }).click();
-    await expect(page.getByText(/Dữ liệu đã thay đổi/)).toBeVisible();
+    await expect(dialog.getByText(/Dữ liệu đã thay đổi/)).toBeVisible();
     await expect(page.getByLabel('Ngân sách (VND)')).toHaveValue('3000000');
     expect(writes.map((body) => body.expected_finance_version)).toEqual([3, 4, 5]);
     expect(fund.finance_version).toBe(6);

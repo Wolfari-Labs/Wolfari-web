@@ -1,4 +1,5 @@
 .page {
+  composes: page from '../components/TripWorkspace.module.css';
   width: 100%;
   max-width: none;
   margin: 0;
@@ -7,10 +8,7 @@
 }
 
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 32px;
+  composes: breadcrumb from '../components/TripWorkspace.module.css';
   font-size: 13px;
   line-height: 20px;
   color: var(--color-muted);

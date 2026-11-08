@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { restorePlanCommand, type PlanCommandIntent } from '../model/plan-command-intent';
+import { buildPlanArrangement, type GatewayPlanMove } from '../model/plan-arrangement';
 import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { usePlanRepository } from '../repositories/plan-context';
@@ -325,11 +326,24 @@ export function GatewayPlanPanel({
     RESOURCE_EXHAUSTED: 'Quá nhiều yêu cầu. Vui lòng thử lại sau.',
     FINANCE_OBLIGATION_BLOCKED: 'Thao tác bị chặn bởi trạng thái chuyến đi.',
   };
+  const arrange = async (move: GatewayPlanMove) => {
+    if (!canEdit || locked || editing || confirm) return false;
+    if (
+      move.target.day !== null &&
+      !planDays(trip.startAt, trip.endAt, trip.timezone).includes(move.target.day)
+    )
+      return false;
+    const intent = buildPlanArrangement(plan, trip.timezone, move);
+    return intent ? execute(intent) : false;
+  };
   const move = async (id: string, offset: number) => {
-    if (!canEdit || locked || !repository.reorderActivities) return;
+    // The explicit menu command remains the Gateway reorder contract: submit the
+    // complete permutation and preserve all existing times. Only pointer/keyboard
+    // drag arrangements use the suffix-time reset rules.
+    if (!canEdit || locked || editing || confirm || !repository.reorderActivities) return;
     const ids = items.map((item) => item.id);
-    const index = ids.indexOf(id),
-      target = index + offset;
+    const index = ids.indexOf(id);
+    const target = index + offset;
     if (index < 0 || target < 0 || target >= ids.length) return;
     [ids[index], ids[target]] = [ids[target]!, ids[index]!];
     await execute({ kind: 'reorder', activityIds: ids });
@@ -345,8 +359,13 @@ export function GatewayPlanPanel({
           .
         </Alert>
       )}
-      {commands.status === 'success' && <Alert tone="success">Đã lưu thay đổi.</Alert>}
       {commands.pending && <Alert>Đang lưu thay đổi…</Alert>}
+      {commands.partialFailure && (
+        <Alert tone="warning">
+          Thao tác sắp xếp chưa hoàn tất; một phần thay đổi có thể đã được lưu. Tải lại để đối chiếu
+          trước khi tiếp tục. Nếu kết quả chưa xác định, chỉ thử lại đúng yêu cầu cũ.
+        </Alert>
+      )}
       {!commands.recoveryAvailable && (
         <Alert tone="error">
           Không thể lưu yêu cầu để phục hồi an toàn trong phiên này. Hãy bật bộ nhớ phiên rồi tải
@@ -363,16 +382,9 @@ export function GatewayPlanPanel({
           )}
         </Alert>
       )}
-      <details className={styles.syncDetails}>
-        <summary>Chi tiết đồng bộ</summary>
-        <p>
-          Phiên bản {plan.planVersion}. Đổi thứ tự giữ nguyên giờ. Ngày chưa có giờ cũng được lưu và
-          chia sẻ với thành viên.
-        </p>
-      </details>
     </div>
   );
-  const actions = (
+  const utilities = (
     <>
       {!editing && (
         <Button
@@ -393,6 +405,20 @@ export function GatewayPlanPanel({
           Thử lại đúng yêu cầu cũ
         </Button>
       )}
+      <details className={styles.syncDetails}>
+        <summary>Chi tiết đồng bộ</summary>
+        <p>
+          Phiên bản {plan.planVersion}. Kéo vào lịch hoặc đổi thứ tự sẽ xóa giờ của hoạt động vừa
+          thả và các hoạt động phía sau trong ngày, giữ giờ của phần phía trước. Kéo về giỏ chỉ bỏ
+          ngày và giờ của hoạt động đó. Thay đổi được lưu lần lượt lên máy chủ và chia sẻ với thành
+          viên; dữ liệu được cập nhật sau khi mọi bước hoàn tất.
+        </p>
+      </details>
+    </>
+  );
+  const actions = (
+    <>
+      {' '}
       {canEdit && repository.createActivity && (
         <Button
           icon={<Icon name="plus" />}
@@ -403,7 +429,7 @@ export function GatewayPlanPanel({
             setEditing({ activity: null, version: plan.planVersion });
           }}
         >
-          Thêm hoạt động
+          Tạo hoạt động thủ công
         </Button>
       )}
     </>
@@ -522,11 +548,8 @@ export function GatewayPlanPanel({
         disabled={locked || !!editing || !!confirm}
         canEdit={canEdit}
         actions={actions}
+        utilities={utilities}
         feedback={feedback}
-        onCreateFromLocation={(location) => {
-          trigger.current = document.activeElement as HTMLElement;
-          setEditing({ activity: null, version: plan.planVersion, suggestedLocation: location });
-        }}
         onEdit={(activity) => {
           trigger.current = document.activeElement as HTMLElement;
           setEditing({ activity, version: plan.planVersion });
@@ -544,23 +567,7 @@ export function GatewayPlanPanel({
           });
         }}
         onMove={(id, offset) => void move(id, offset)}
-        onReorder={(activityIds) => {
-          void execute({ kind: 'reorder', activityIds });
-        }}
-        onDay={(activity, day) => {
-          if (activity.startsAt) {
-            setEditing({
-              activity,
-              targetDay: day === 'POOL' ? '' : day,
-              version: plan.planVersion,
-            });
-          } else
-            void execute({
-              kind: 'update',
-              activityId: activity.id,
-              fields: { startsAt: null, endsAt: null, scheduledDate: day === 'POOL' ? null : day },
-            });
-        }}
+        onArrange={arrange}
       />
     </section>
   );

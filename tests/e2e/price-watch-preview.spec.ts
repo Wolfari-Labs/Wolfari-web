@@ -28,6 +28,20 @@ for (const size of [
     await expect(page.getByText('Hà Nội → Đà Nẵng', { exact: true }).last()).toBeVisible();
     await expect(page.getByRole('button', { name: 'Dừng theo dõi này' })).toBeEnabled();
     await page.screenshot({ path: info.outputPath('price-watch.png'), fullPage: true });
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('region', { name: 'Lịch sử giá vé' })).toHaveCSS(
+      'border-radius',
+      '6px',
+    );
+    const create = page.getByRole('button', { name: 'Tạo theo dõi', exact: true });
+    await create.click();
+    const modal = page.getByRole('dialog', { name: 'Tạo theo dõi giá vé' });
+    await expect(modal.locator('h2[tabindex="-1"]')).toBeFocused();
+    await modal.getByLabel('Sân bay đi (IATA)').fill('DAD');
+    await expect.poll(() => modal.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+    await page.screenshot({ path: info.outputPath('price-create-overlay.png') });
+    await page.keyboard.press('Escape');
+    await expect(create).toBeFocused();
     expect(api).toEqual([]);
   });
 }

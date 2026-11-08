@@ -110,6 +110,25 @@ test('CP07 Map reads only saved locations and filters scheduled/unscheduled loca
   await expect(map.getByText('Bãi biển Mỹ Khê', { exact: true }).first()).toBeVisible();
   await expect(map.getByText('Ngũ Hành Sơn', { exact: true }).first()).toBeVisible();
   await expect(map.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
+  const routeControl = map.getByText('Hiển thị lịch trình', { exact: true });
+  await expect(routeControl).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(routeControl).toHaveCSS('background-color', 'rgb(0, 107, 146)');
+  await expect(routeControl).toHaveCSS('font-weight', '600');
+  const icons = map.getByLabel('Chú thích trạng thái địa điểm').locator('[aria-hidden]');
+  await expect(icons).toHaveCount(3);
+  for (const icon of await icons.all()) {
+    const circle = (await icon.locator('img').nth(0).boundingBox())!;
+    const glyph = (await icon.locator('img').nth(1).boundingBox())!;
+    expect(Math.abs(circle.x + circle.width / 2 - glyph.x - glyph.width / 2)).toBeLessThan(0.5);
+    expect(Math.abs(circle.y + circle.height / 2 - glyph.y - glyph.height / 2)).toBeLessThan(0.5);
+  }
+  await expect(
+    map.getByRole('img', { name: /Đã thêm vào lịch trình: Bãi biển Mỹ Khê/ }),
+  ).toBeVisible();
+  await expect(
+    map.getByRole('img', { name: /Đã chọn, chưa xếp lịch: Ngũ Hành Sơn/ }),
+  ).toBeVisible();
+  await expect(map.getByRole('button', { name: /Chọn |Xóa / })).toHaveCount(0);
   await map.getByRole('button', { name: 'Trong lịch', exact: true }).click();
   await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toBeVisible();
   await expect(map.getByRole('button', { name: /Ngũ Hành Sơn/ })).toHaveCount(0);

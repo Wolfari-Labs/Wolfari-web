@@ -181,14 +181,27 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto(`/trips/${tripId}/price-watch`);
   const main = page.getByRole('region', { name: 'Danh sách theo dõi giá' });
-  const form = page.getByRole('complementary', { name: 'Biểu mẫu theo dõi giá' });
+  const form = page.getByRole('dialog', { name: /^(Tạo|Sửa) theo dõi giá$/ });
+  await expect(form).toHaveCount(0);
+  const create = page.getByRole('button', { name: 'Tạo theo dõi', exact: true });
+  await expect(create).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Theo dõi giá vé', exact: true })).toBeVisible();
+  const titleBox = await page
+    .getByRole('heading', { name: 'Theo dõi giá vé', exact: true })
+    .boundingBox();
+  const createBox = await create.boundingBox();
+  expect(createBox!.x).toBeGreaterThan(titleBox!.x + titleBox!.width);
   await page.getByRole('button', { name: 'Tạo theo dõi', exact: true }).click();
-  await expect(form.getByRole('heading', { name: 'Tạo theo dõi giá' })).toBeFocused();
-  const desktopMain = await main.boundingBox();
+  await expect(form.locator('h2[tabindex="-1"]')).toBeFocused();
   const desktopForm = await form.boundingBox();
-  expect(desktopMain).not.toBeNull();
   expect(desktopForm).not.toBeNull();
-  expect(desktopForm!.x).toBeGreaterThanOrEqual(desktopMain!.x + desktopMain!.width);
+  expect(Math.abs(desktopForm!.x + desktopForm!.width / 2 - 720)).toBeLessThan(2);
+  await expect(page.getByRole('dialog')).toHaveCount(1);
+  const modalScan = await new AxeBuilder({ page })
+    .include('[role="dialog"]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(modalScan.violations).toEqual([]);
   await page.screenshot({ path: testInfo.outputPath('price-layout-desktop1440.png') });
   await form.getByLabel('Sân bay đi (IATA)').fill('DAD');
   await form.getByLabel('Sân bay đến (IATA)').fill('SGN');
@@ -202,11 +215,10 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   expect(keys).toHaveLength(2);
   expect(keys[0]).toBe(keys[1]);
   await page.getByRole('button', { name: 'Sửa', exact: true }).click();
-  await expect(form.getByRole('heading', { name: 'Sửa theo dõi giá' })).toBeFocused();
+  await expect(form.locator('h2[tabindex="-1"]')).toBeFocused();
   await page.screenshot({ path: testInfo.outputPath('price-populated-desktop1440.png') });
   await form.getByLabel('Ngưỡng cảnh báo (VND)').fill('1600000');
-  await page.getByRole('button', { name: 'Tạo theo dõi', exact: true }).click();
-  await expect(form.getByRole('heading', { name: 'Sửa theo dõi giá' })).toBeFocused();
+  await expect(create).toHaveCount(0); // Background controls are inert while editing.
   await expect(form.getByLabel('Ngưỡng cảnh báo (VND)')).toHaveValue('1600000');
   await form.getByRole('button', { name: 'Lưu theo dõi' }).click();
   await expect(form.locator('form')).toHaveCount(0);
@@ -221,21 +233,21 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await page.getByRole('button', { name: 'Xác nhận', exact: true }).click();
   await expect(page.getByText('Đã dừng', { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 900, height: 700 });
-  const narrowMain = await main.boundingBox();
-  const narrowForm = await form.boundingBox();
-  expect(narrowMain).not.toBeNull();
-  expect(narrowForm).not.toBeNull();
-  expect(narrowForm!.y).toBeGreaterThanOrEqual(narrowMain!.y + narrowMain!.height);
+  await expect(form).toHaveCount(0);
   await page.setViewportSize({ width: 402, height: 874 });
   await expect
     .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
     .toBe(true);
-  await main.getByRole('button', { name: 'Tạo theo dõi', exact: true }).click();
+  await create.click();
   await form.scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath('price-web402.png') });
-  await form.getByRole('button', { name: 'Đóng biểu mẫu' }).click();
-  await expect(main.getByRole('button', { name: 'Tạo theo dõi', exact: true })).toBeFocused();
+  await form.getByRole('button', { name: '← Trở lại' }).click();
+  await expect(create).toBeFocused();
   await page.setViewportSize({ width: 320, height: 600 });
+  await create.click();
+  await expect.poll(() => form.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(create).toBeFocused();
   await expect
     .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
     .toBe(true);

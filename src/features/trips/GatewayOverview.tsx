@@ -12,10 +12,9 @@ import { Alert } from '../../shared/components/Alert';
 import { Button } from '../../shared/components/Button';
 import { paths } from '../../app/route-paths';
 import { toDomainError } from '../../shared/lib/runtime-validation';
-import { formatVnd } from '../fund/GatewayFundPage';
-import styles from './TripOverviewPage.module.css';
-
-const fundStatus = { OPEN: 'Đang mở', CLOSING: 'Đang chốt', CLOSED: 'Đã đóng' } as const;
+import { OverviewFundSummary } from './components/OverviewFundSummary';
+import { OverviewFareSummary } from './components/OverviewFareSummary';
+import styles from './TripDashboard.module.css';
 
 export function GatewayOverview() {
   const { tripId = '' } = useParams();
@@ -92,27 +91,8 @@ export function GatewayOverview() {
       onRetry={() => void fundQuery.refetch()}
       headingLevel={2}
     />
-  ) : fundQuery.data === null ? (
-    <>
-      <p className={styles.summaryDetail}>Chưa bật quỹ nhóm.</p>
-      <Link className={styles.summaryLink} to={paths.fund(tripId)}>
-        Mở quỹ nhóm
-      </Link>
-    </>
-  ) : fundQuery.data ? (
-    <>
-      <p className={styles.summaryValue}>{formatVnd(fundQuery.data.budget_amount)}</p>
-      <p className={styles.summaryDetail}>Quỹ TEST · {fundStatus[fundQuery.data.status]}</p>
-      <p className={styles.summaryDetail}>
-        Số dư ghi sổ: {formatVnd(fundQuery.data.current_balance)}
-      </p>
-      <p className={styles.summaryDetail}>
-        Khả dụng: {formatVnd(fundQuery.data.available_balance)}
-      </p>
-      <Link className={styles.summaryLink} to={paths.fund(tripId)}>
-        Mở quỹ nhóm
-      </Link>
-    </>
+  ) : fundQuery.data !== undefined ? (
+    <OverviewFundSummary fund={fundQuery.data} />
   ) : (
     <ContentState state="unavailable" headingLevel={2} />
   );
@@ -157,21 +137,12 @@ export function GatewayOverview() {
           onRetry={() => void planQuery.refetch()}
           fundContent={fundContent}
           memberFeedback={memberFeedback}
-          mapContent={
-            <>
-              <p>Xem các địa điểm có trong lịch trình trên trang bản đồ.</p>
-              <Link className={styles.summaryLink} to={paths.map(tripId)}>
-                Xem bản đồ địa điểm
-              </Link>
-            </>
-          }
           fareContent={
-            <>
-              <p>Dữ liệu giá và ngưỡng theo dõi được hiển thị ở trang riêng khi có bản ghi.</p>
-              <Link className={styles.summaryLink} to={paths.priceWatch(tripId)}>
-                Xem dữ liệu theo dõi giá vé
-              </Link>
-            </>
+            <OverviewFareSummary
+              key={`${tripId}:${actor}`}
+              tripId={tripId}
+              actor={displayTrip.currentMembership.userId}
+            />
           }
         />
       )}

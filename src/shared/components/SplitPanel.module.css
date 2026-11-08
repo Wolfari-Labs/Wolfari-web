@@ -24,3 +24,16 @@
   display: flex;
   justify-content: flex-end;
 }
+.reset[hidden] {
+  display: none;
+}
+.itinerary .separator {
+  width: 12px;
+}
+.itinerary .separator svg {
+  opacity: 0;
+}
+.itinerary .separator:hover svg,
+.itinerary .separator:focus-visible svg {
+  opacity: 1;
+}

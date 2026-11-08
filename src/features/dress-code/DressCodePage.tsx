@@ -20,8 +20,7 @@ import beachSwatch3 from '../../shared/assets/figma/7e261.svg';
 import eveningSwatch1 from '../../shared/assets/figma/87080.svg';
 import eveningSwatch2 from '../../shared/assets/figma/85af1.svg';
 import eveningSwatch3 from '../../shared/assets/figma/41300.svg';
-import tripLandscape from '../../shared/assets/figma/bd989.svg';
-import tripLandscapeForeground from '../../shared/assets/figma/25ff8.svg';
+import { TripHero } from '../trips/components/TripHero';
 import sendIcon from '../../shared/assets/figma/ac8db.svg';
 import officialLogo from '../../shared/assets/figma/44363.png';
 import { GatewayDressCodePage } from './GatewayDressCodePage';
@@ -37,22 +36,6 @@ const scopeLabels: Record<DressScope, string> = {
 };
 
 const tags = ['Tắm biển', 'Tham quan', 'Ăn uống'];
-
-function formatDate(value: string | null | undefined) {
-  if (!value) return '--/--/----';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value.slice(0, 10);
-  return new Intl.DateTimeFormat('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(date);
-}
-
-function tripTitle(name: string) {
-  const destination = name.split(' – ')[0]?.trim() || name;
-  return `${destination} 3N2Đ`;
-}
 
 function sourceLabel(source: DressCodeViewModel['source']) {
   return source === 'DSS' ? 'Gợi ý từ mẫu du lịch' : 'Đã đưa vào kế hoạch';
@@ -177,11 +160,7 @@ function PreviewDressCodePage() {
   const groups = data ? groupDressCodes(filteredItems, data.plan.activities) : [];
   const items = groups.flatMap((group) => group.items);
   const trip = data?.trip;
-  const title = trip ? tripTitle(trip.name) : 'Đà Nẵng 3N2Đ';
-  const dateRange = trip
-    ? `${formatDate(trip.startAt)} – ${formatDate(trip.endAt)}`
-    : '12 – 14/10/2026';
-  const memberCount = trip?.presentation.memberCount ?? 4;
+  const title = trip?.name;
 
   return (
     <section className={styles.page} data-flow="dress-code-read">
@@ -203,27 +182,9 @@ function PreviewDressCodePage() {
         <span aria-hidden="true">›</span>
         <span>{title}</span>
         <span aria-hidden="true">›</span>
-        <strong>Dress code</strong>
+        <h1 className={styles.pageTitle}>Dress code</h1>
       </div>
-      <div className={styles.tripBanner}>
-        <img className={styles.tripLandscape} src={tripLandscape} alt="" />
-        <img className={styles.tripLandscapeForeground} src={tripLandscapeForeground} alt="" />
-        <div className={styles.tripDetails}>
-          <h1>
-            {title} <span aria-hidden="true">✎</span>
-          </h1>
-          <p>
-            ▣&nbsp; {dateRange} &nbsp;&nbsp; ♙&nbsp; {memberCount} thành viên
-          </p>
-        </div>
-        <span className={styles.statusChip}>
-          <i /> Sắp tới
-        </span>
-        <div className={styles.bannerActions}>
-          <span className={styles.outlineAction}>Chỉnh sửa</span>
-          <Button icon={<img src={sendIcon} alt="" />}>Chia sẻ</Button>
-        </div>
-      </div>
+      {trip && <TripHero trip={trip} compact />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi dress code">
           {(['ALL', 'DAY', 'ACTIVITY'] as DressScope[]).map((value) => (

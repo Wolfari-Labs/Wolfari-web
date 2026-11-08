@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
-import { m } from 'motion/react';
-import { Badge } from '../../../shared/components/Ui';
-import { Icon } from '../../../shared/components/Icon';
 import styles from './TimelineCard.module.css';
+
+/** Presentation only: Preview drafts and Gateway commands remain separate. */
 export function TimelineCard({
   title,
   time,
@@ -26,42 +25,32 @@ export function TimelineCard({
   typeIcon?: string | null;
   compact?: boolean;
 }) {
+  const subtitle = location || description;
   return (
-    <m.div
-      className={`${styles.card} ${compact ? styles.compact : ''}`}
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.22 }}
+    <div
+      className={styles.card}
+      data-timeline-card
+      data-completed={completed || undefined}
+      data-compact={compact || undefined}
     >
-      <div className={styles.schedule}>
-        <Icon name="plan" size={18} />
-        <span>{time}</span>
-        {handle}
-      </div>
+      <div className={styles.handle}>{handle}</div>
+      <div className={styles.schedule}>{time}</div>
       <div className={styles.body}>
         {typeIcon && (
           <span className={styles.typeIcon} aria-hidden="true">
-            <img src={typeIcon} alt="" width="24" height="24" />
+            <img src={typeIcon} alt="" />
           </span>
         )}
         <div className={styles.copy}>
-          <h3>{title}</h3>
-          {description && <p>{description}</p>}
-          {location && (
-            <span className={styles.location}>
-              <Icon name="map" size={16} />
-              {location}
-            </span>
-          )}
+          <h3 title={title}>{title}</h3>
+          {subtitle && <p title={subtitle}>{subtitle}</p>}
+          <span className={styles.srOnly}>{completed ? 'Đã hoàn tất' : 'Chưa hoàn tất'}</span>
         </div>
-        {cover && <img src={cover.src} alt={cover.alt} loading="lazy" width="120" height="80" />}
       </div>
-      <div className={styles.footer}>
-        <Badge tone={completed ? 'success' : 'neutral'}>
-          {completed ? 'Đã hoàn tất' : 'Chưa hoàn tất'}
-        </Badge>
-        <div className={styles.actions}>{actions}</div>
+      <div className={styles.media}>
+        {cover && <img src={cover.src} alt={cover.alt} loading="lazy" />}
       </div>
-    </m.div>
+      <div className={styles.actions}>{actions}</div>
+    </div>
   );
 }

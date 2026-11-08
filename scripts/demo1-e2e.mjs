@@ -34,6 +34,9 @@ if (runtimeArg && !['dev', 'preview'].includes(runtimeArg)) throw Error('INVALID
 // Run one runtime in a fresh isolated stack on memory-constrained machines.
 // The default still accepts both; all business assertions remain identical.
 const runtimes = runtimeArg ? [runtimeArg] : ['dev', 'preview'];
+// A scoped live run still uses the same disposable, ownership-checked stack.
+const grepArg = process.argv.find((arg) => arg.startsWith('--grep='))?.slice('--grep='.length);
+if (grepArg === '') throw Error('INVALID_TEST_FILTER');
 const port = createTestPortAllocator(),
   appValues = {},
   children = new Map();
@@ -351,7 +354,7 @@ async function main() {
   for (const runtime of runtimes)
     await run(
       resolve(web, 'node_modules/@playwright/test/cli.js'),
-      ['test', '--config', 'playwright.demo1.config.ts'],
+      ['test', '--config', 'playwright.demo1.config.ts', ...(grepArg ? ['--grep', grepArg] : [])],
       { ...env, WOLFARI_DEMO1_RUNTIME: runtime },
     );
   const finalSource = {

@@ -1,5 +1,69 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## Overview light-blue border trial — 08/11/2026
+
+User requests a more visible light-blue outline for review. Overview panels and
+postcard use1px #a6d9f2 instead of #dceffa; radius6px, geometry, shadow and all
+shell/hero/other-page styles stay unchanged. This is a local user-requested trial,
+not approval of unrelated palette deltas.
+
+## Overview corners and column alignment — 08/11/2026
+
+Explicit user request authorizes5–7px corners: use6px for overview cards,
+postcard, itinerary rows, map label and description popup; existing5–6px inner
+controls stay unchanged. Header/sidebar/shared TripHero remain untouched.
+Both desktop rows now share the existing KPI column ratios and13px gaps;
+itinerary spans the first two columns, Map aligns with Fund, Fare with Packing.
+Narrow viewport reflow is preserved. This supersedes the independent lower-row
+ratios and larger overview corners only, not other pending design deltas.
+
+
+## Trip geometry refinement — 08/11/2026
+
+User explicitly requests20–25px below overview progress: choose22px (current Figma
+source19px), retain162px cards on short desktops with internal workspace scrolling.
+Fare empty state adds a dash like Weather. Fund/Price Watch use the existing Plan
+horizontal geometry instead of their legacy1220px cap; vertical layouts unchanged.
+[Verification](TRIP_GEOMETRY_VERIFICATION.md). No approval of unrelated pending deltas.
+
+## Trip overview follow-up — 08/11/2026
+
+Explicit user correction: clickable function cards, concise fund/fare/map content,
+visible fund/packing progress and source-accurate overview text/button colors.
+Restored current Figma colors locally; this supersedes07/11's darker-color choice
+below, not global palette or historical checkpoint decisions. Known consequence:
+AXE color-contrast FAIL remains recorded and the strict assertion is retained;
+source fidelity is not WCAG approval. Fund progress means current balance/budget;
+unknown budget is not a fabricated zero. Runtime errors/version/permission guards
+remain intact. [Evidence](TRIP_OVERVIEW_FOLLOWUP_VERIFICATION.md).
+
+## Trip overview maintenance — 07/11/2026
+
+User explicitly requested current Figma Desktop overview fidelity, unchanged header/sidebar,
+a browser-bounded overview and Plan-style banner across all trip feature pages.
+This authorizes the refreshed overview visual treatment and internal scrolling needed to
+keep short/narrow browser viewports bounded. The shared Plan landscape banner supersedes
+the Overview Figma city hero for this task. Preview Dress code now uses the same banner
+and real trip title/dates/lifecycle rather than its previous synthesized3N2Đ summary.
+Source Nunito is local to overview content; global font and shell styling are unchanged.
+PRESERVE_RUNTIME: existing accessible action/muted colors, permissions, unavailable data,
+member pagination feedback and real navigation. Map illustration is visibly labelled;
+source sample weather/fare/fund numbers are not runtime data. See
+[comparison and verification](TRIP_OVERVIEW_REFRESH_VERIFICATION.md). No blanket approval
+of historical pending deltas, no Figma writes and no reopening of closed checkpoints.
+
+## Finance workspace maintenance — 07/11/2026
+
+User approved the Finance Desktop implementation plan. Existing command forms/lists move
+into corresponding settings sections; page retains summary/ledger. This authorizes the
+placement change for current work without rewriting historical CP09/CP11 acceptance.
+At narrow widths settings navigation becomes a scrollable two-column grid to leave
+usable content space. Scoped AXE corrections: active transaction tab uses existing
+`--color-action-primary` instead of #008cac (white text was 3.92:1); incoming amount/percent
+uses #00795a instead of #008a66 (12px amount was 4.35:1); outgoing amount uses existing
+`--color-status-danger`. No global palette change. Full pixel parity/native zoom remain
+unverified; see [checkpoint evidence](FINANCE_OVERLAY_WORKSPACE_VERIFICATION.md).
+
 Ngày30/10/2026. User chốt: “oke. chốt điều đó. Bạn tiếp tục thiết kế. CP-02”. **APPROVED_POLICY**: bám thiết kế Web có sẵn; mọi thay đổi khác nguồn cần trình riêng. Không phải approve các thay đổi dưới đây, không mở CP03 hoặc quyền write Figma.
 
 ## Phân loại bắt buộc
@@ -118,6 +182,56 @@ Sessions/guards/query keys, expected versions/idempotency, timezone/date-only/ov
 
 [Implementation mapping](CP03_FOUNDATIONS.md) giữ source direction và current values. Semantic aliases/normal-motion timing extraction/Card native props không phải visual redesign. Accessibility corrections trong scope CP03: native required metadata trên Auth, disabled Textarea parity, long correlation wrapping, shared Home recovery link với target44/48px, và loại displacement của Button khi người dùng chọn reduced motion. Không đổi normal-motion duration/transform, không approve DLT08 mới120/180/220/240ms, không thay font/palette/radius/layout pending. D18 feature layouts vẫn thuộc checkpoints sau.
 
+## Plan presentation cleanup — approved 06/11/2026
+
+User explicitly requested implementation of the reviewed “Chỉnh lịch trình” plan. This is a bounded maintenance change, not a new checkpoint or reopening CP02 visual QA.
+
+| ID | Source/current presentation | Approved change and boundary |
+|---|---|---|
+| PLN09 | Plan main `20:236`; `PlanMetrics` adds ordinal day labels and long metric captions | Keep four metrics and existing calculations; show `D/M` (for example `6/11`) in each selected-day caption, with short labels Hoạt động/Địa điểm/Trải nghiệm/Di chuyển. Keep Cả chuyến/Chưa chọn ngày scopes, the `—` unknown-duration value and the screen-reader-only missing-hours note; remove visible no-data explanation. Day-filter labels are unchanged. |
+| PLN10 | Gateway success Alert persists after an authoritative save/refetch | Remove only “Đã lưu thay đổi.”; retain pending/error/conflict/partial/unknown/recovery and existing command locking. Tests wait for authoritative data and unlocked controls, not the removed success text. |
+| PLN11 | Shared numbered timeline rail extends through the final row's bottom padding | Only rows followed by another activity keep connecting padding; the final/single row rail ends at the card bottom. Apply to Gateway/Preview, narrow layouts, ALL groups and read-only lists; end-drop targets are not activities. Preserve drag/drop indicators and business behavior. |
+
+[Scoped implementation and verification](PLAN_PRESENTATION_CLEANUP_VERIFICATION.md). Historic checkpoint acceptance and NOT_RUN limits remain unchanged.
+
+## Price Watch compact overlay — approved user request 07/11/2026
+
+User explicitly supersedes the inline form placement in D18/XRT05 for this surface
+(desktop source `768:7992`, reference `23:657`, responsive `781:6626`): reduce vertical
+spacing, chart radius to 6px, create action opposite title, form only on demand in
+a centered Finance-style overlay. Existing cards fit content; remaining workspace
+uses two columns in Preview and one in Runtime (no fixture chart promoted to Gateway).
+Shared Drawer preserves keyboard/focus behavior; existing contracts/recovery unchanged.
+[Verification](PRICE_WATCH_OVERLAY_VERIFICATION.md). Not a new CP10 acceptance.
+
+## Vietnamese Create Trip dates — approved user request 08/11/2026
+
+User explicitly requests dd/mm/yyyy instead of browser-locale-dependent date text
+on Create Trip. Both Preview and Gateway use a shared text field with an explicit
+format hint and keyboard-accessible native calendar control. Existing field styling,
+date validation, draft recovery and ISO/timezone API semantics are preserved.
+No official Figma writes, Backend or dependency changes; no new checkpoint.
+Built Preview responsive6/6 and Gateway HTTP-mock5/5 (including axe) PASS.
+
 ## Review protocol
 
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.
+
+## Finance overlay box correction — 07/11/2026
+
+User requested correction of missing boxes/layout against Figma. General and receiving
+now use bordered pale fields and status tiles, members/contributions full-width content.
+Contract-safe retained differences: derived trip fund name, VND instead of unsupported
+description, actual balance rather than fabricated cumulative receipts; no totals from
+partial pages, no unsupported mutation controls. Existing budget form remains the only
+budget write path. No change to historical acceptance or pending domain integration.
+
+User-requested spacing follow-up: preserve desktop Figma action area, but remove
+its fixed-height spacer when cards stack at <=1024px. Use explicit 16px block gaps
+instead of collapsed/cumulative legacy margins; no business behavior changes.
+
+Subsequent explicit user approval supersedes fixed desktop card height: General and
+context fit their content, receiving add action sits right of title in one card,
+list/form outer wrappers lose redundant borders. FIN/26 discard semantics use the
+shared compact confirmation dialog rather than a full-page mockup; Back replaces
+Close form. Only local draft is discarded; sent operations/recovery are preserved.

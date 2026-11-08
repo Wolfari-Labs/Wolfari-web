@@ -1,0 +1,45 @@
+/* Shared workspace geometry: 1440 - sidebar220 - gutters18/22 = 1180. */
+/* fullWidth specificity overrides legacy feature-page caps/gutters without changing their vertical layout. */
+.page,
+.fullWidth.fullWidth {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 18px 22px;
+}
+/* Opt-in horizontal geometry for feature pages that retain their own vertical layout. */
+.page {
+  padding-block: 8px 24px;
+  color: var(--color-ink);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 36px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+}
+.breadcrumb h1 {
+  margin: 0;
+  font: inherit;
+}
+.breadcrumb a {
+  color: var(--color-action-primary);
+}
+@media (max-width: 768px) {
+  .page,
+  .fullWidth.fullWidth {
+    padding-inline: 14px;
+  }
+  .page {
+    padding-block: 12px 24px;
+  }
+  .breadcrumb {
+    min-height: 36px;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+}

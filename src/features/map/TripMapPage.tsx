@@ -1,12 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useOutletContext, useParams } from 'react-router';
+import { Trash2 } from 'lucide-react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { Select } from '../../shared/components/Select';
-import searchIcon from '../../shared/assets/figma/ce7fc.svg';
-import pinIcon from '../../shared/assets/figma/8efc8.svg';
+import headingPinIcon from '../../shared/assets/figma/trip-map-heading-pin.svg';
+import headingCloudArtwork from '../../shared/assets/figma/trip-map-heading-cloud.svg';
+import mapSearchIcon from '../../shared/assets/figma/trip-map-search.svg';
+import mapFilterIcon from '../../shared/assets/figma/trip-map-filter.svg';
 import chevronIcon from '../../shared/assets/figma/ad884.svg';
+import controlInIcon from '../../shared/assets/figma/trip-map-control-in.svg';
+import controlSelectedIcon from '../../shared/assets/figma/trip-map-control-selected.svg';
+import controlNoneIcon from '../../shared/assets/figma/trip-map-control-none.svg';
+import checkIcon from '../../shared/assets/figma/trip-map-check.svg';
+import addIcon from '../../shared/assets/figma/trip-map-add.svg';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import { planScenarios, type PlanScenario } from '../plan/model/plan';
@@ -59,9 +68,23 @@ function PreviewMapPage() {
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [mutationId, setMutationId] = useState<string | null>(null);
   const [writeError, setWriteError] = useState('');
+  const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
+  const [deleteBlock, setDeleteBlock] = useState<{
+    locationName: string;
+    activities: readonly { id: string; title: string }[];
+  } | null>(null);
+  const [focusDeleteSuppressedId, setFocusDeleteSuppressedId] = useState<string | null>(null);
+  const suppressRowClickRef = useRef(false);
   const providerSessionRef = useRef<NonNullable<PlaceSearchResult['loadMore']> | null>(null);
   const providerRequestRef = useRef(0);
   const placeListRef = useRef<HTMLUListElement>(null);
+  const gestureRef = useRef<{
+    locationId: string;
+    pointerId: number;
+    startX: number;
+    startY: number;
+    timer: number;
+  } | null>(null);
   const snapshot = useTripPlanSnapshot(tripId, scenario);
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
   const dataReady = snapshot.state.status === 'ready';
@@ -244,20 +267,21 @@ function PreviewMapPage() {
     setSelectedLocationId(locationId);
     if (openDetail) setDetailOpen(true);
   };
-  const togglePlace = (item: (typeof allItems)[number]) => {
+  const actualLinkedActivities = (item: (typeof allItems)[number]) =>
+    effectiveActivities?.filter(
+      (activity) =>
+        activity.selectedLocationId === item.location.id &&
+        (activity.origin === 'PLAN' || activity.scheduledDate !== null),
+    ) ?? [];
+
+  const addPlace = (item: (typeof allItems)[number]) => {
     if (!data || !data.plan.permissions.canEdit || !activePlan(data.trip) || mutationId) return;
-    if (!previewEnabled && item.selected && item.activities.length) {
-      setWriteError(
-        `Gỡ liên kết Activity trước: ${item.activities.map((a) => a.title).join(', ')}`,
-      );
-      return;
-    }
-    if (!item.selected && selectedCount >= 50) {
+    if (item.selected) return;
+    if (selectedCount >= 50) {
       setWriteError('Tối đa 50 địa điểm trong một chuyến đi.');
       return;
     }
     if (
-      !item.selected &&
       !validLocationWrite({
         name: item.location.name,
         address: item.location.address,
@@ -269,19 +293,111 @@ function PreviewMapPage() {
       return;
     }
     setWriteError('');
+    setDeleteBlock(null);
+    setDeleteOpenId(null);
     setMutationId(item.location.id);
-    if (item.selected) {
-      if ('local' in item.location && item.location.local === true && item.location.providerPlaceId)
-        removePlaceSelection(userId, tripId, item.location.providerPlaceId);
-      else hideSavedLocation(userId, tripId, item.location.id);
-    } else {
-      const place = providerPlaces.find(
-        (candidate) => candidate.providerPlaceId === item.location.providerPlaceId,
-      );
-      if (place) savePlaceSelection(userId, tripId, place);
-    }
+    const place = providerPlaces.find(
+      (candidate) => candidate.providerPlaceId === item.location.providerPlaceId,
+    );
+    if (place) savePlaceSelection(userId, tripId, place);
     window.setTimeout(() => setMutationId(null), 120);
   };
+
+  const deletePlace = (item: (typeof allItems)[number]) => {
+    if (!data || !item.selected || placeStatus(item) !== 'SELECTED_UNSCHEDULED') return;
+    if (!data.plan.permissions.canEdit || !activePlan(data.trip) || mutationId) return;
+    const linked = actualLinkedActivities(item);
+    if (linked.length) {
+      setDeleteBlock({ locationName: item.location.name, activities: linked });
+      setWriteError('');
+      setDeleteOpenId(null);
+      return;
+    }
+    setWriteError('');
+    setDeleteBlock(null);
+    setMutationId(item.location.id);
+    if ('local' in item.location && item.location.local === true && item.location.providerPlaceId)
+      removePlaceSelection(userId, tripId, item.location.providerPlaceId);
+    else hideSavedLocation(userId, tripId, item.location.id);
+    setDeleteOpenId(null);
+    window.setTimeout(() => setMutationId(null), 120);
+  };
+
+  const clearGesture = () => {
+    const gesture = gestureRef.current;
+    if (gesture) window.clearTimeout(gesture.timer);
+    gestureRef.current = null;
+  };
+
+  const beginDeleteGesture = (
+    event: ReactPointerEvent<HTMLButtonElement>,
+    item: (typeof allItems)[number],
+  ) => {
+    if (!previewEnabled || placeStatus(item) !== 'SELECTED_UNSCHEDULED') return;
+    clearGesture();
+    const timer = window.setTimeout(() => {
+      if (gestureRef.current?.pointerId === event.pointerId) setDeleteOpenId(item.location.id);
+      if (gestureRef.current?.pointerId === event.pointerId) suppressRowClickRef.current = true;
+    }, 500);
+    gestureRef.current = {
+      locationId: item.location.id,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      timer,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const moveDeleteGesture = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const gesture = gestureRef.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    const dx = event.clientX - gesture.startX;
+    const dy = event.clientY - gesture.startY;
+    if (Math.abs(dy) > 8 || (dx > 8 && Math.abs(dx) > Math.abs(dy))) {
+      clearGesture();
+      return;
+    }
+    if (dx <= -88) {
+      setDeleteOpenId(gesture.locationId);
+      suppressRowClickRef.current = true;
+      clearGesture();
+    }
+  };
+
+  useEffect(() => {
+    const close = (event: PointerEvent) => {
+      const target = event.target as Node;
+      const openRow = placeListRef.current?.querySelector('[data-delete-open="true"]');
+      if (openRow && !openRow.contains(target)) setDeleteOpenId(null);
+      if (!placeListRef.current?.contains(target)) {
+        const focusedRow = placeListRef.current?.querySelector<HTMLElement>(
+          '[data-deletable="true"]:focus-within',
+        );
+        if (focusedRow?.dataset.locationId)
+          setFocusDeleteSuppressedId(focusedRow.dataset.locationId);
+        setDeleteOpenId(null);
+      }
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      const row = (event.target as HTMLElement).closest<HTMLElement>('[data-deletable="true"]');
+      if (row) {
+        const mainButton = row.querySelector<HTMLButtonElement>('[data-place-main]');
+        mainButton?.focus();
+        setFocusDeleteSuppressedId(row.dataset.locationId ?? null);
+      }
+      setDeleteOpenId(null);
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', close);
+      document.removeEventListener('keydown', escape);
+    };
+  }, [deleteOpenId]);
+
+  useEffect(() => () => clearGesture(), []);
 
   return (
     <section
@@ -311,26 +427,53 @@ function PreviewMapPage() {
                   data-region="place-panel"
                 >
                   <header className={styles.panelHeader}>
-                    <h2>Tìm kiếm &amp; chọn địa điểm</h2>
-                    <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
+                    <span className={styles.panelIcon} aria-hidden="true">
+                      <img src={headingPinIcon} width="30" height="36" alt="" />
+                    </span>
+                    <div className={styles.panelHeaderCopy}>
+                      <h2>Tìm kiếm &amp; chọn địa điểm</h2>
+                      <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
+                    </div>
+                    <img className={styles.headingCloud} src={headingCloudArtwork} width="74" height="31" alt="" />
                   </header>
-                  <div className={styles.localNotice} role="status">
+                  <div
+                    className={`${styles.localNotice} ${storageStatus === 'saved' ? styles.visuallyHidden : ''}`}
+                    role="status"
+                  >
                     {storageStatus === 'memory'
                       ? 'Không thể lưu vào trình duyệt. Lựa chọn chỉ được giữ trong bộ nhớ của tab này và sẽ mất khi tải lại hoặc đóng tab.'
                       : 'Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.'}
                   </div>
                   {writeError && <p role="alert">{writeError}</p>}
-                  <label className={styles.searchBox}>
-                    <span className={styles.visuallyHidden}>Tìm địa điểm</span>
-                    <img src={searchIcon} width="18" height="18" alt="" />
-                    <input
-                      type="search"
-                      value={query}
-                      onChange={(event) => setQuery(event.target.value)}
-                      placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
-                    />
-                    <img src={pinIcon} width="16" height="16" alt="" />
-                  </label>
+                  {deleteBlock && (
+                    <div className={styles.deleteBlock} role="alert">
+                      <p>
+                        Không thể xóa “{deleteBlock.locationName}” vì còn hoạt động liên kết. Hãy gỡ
+                        hoặc đổi địa điểm trong Lịch trình trước.
+                      </p>
+                      <ul>
+                        {deleteBlock.activities.map((activity) => (
+                          <li key={activity.id}>{activity.title}</li>
+                        ))}
+                      </ul>
+                      <Link to={paths.plan(tripId)}>Mở Lịch trình</Link>
+                    </div>
+                  )}
+                  <div className={styles.searchRow}>
+                    <label className={styles.searchBox}>
+                      <span className={styles.visuallyHidden}>Tìm địa điểm</span>
+                      <img src={mapSearchIcon} width="22" height="22" alt="" />
+                      <input
+                        type="search"
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
+                      />
+                    </label>
+                    <span className={styles.searchFilterIcon} aria-hidden="true">
+                      <img src={mapFilterIcon} width="23" height="23" alt="" />
+                    </span>
+                  </div>
                   <div className={styles.desktopFilters} role="group" aria-label="Lọc địa điểm">
                     <button
                       className={styles.filterAll}
@@ -428,39 +571,68 @@ function PreviewMapPage() {
                       {visibleItems.map((item) => {
                         const focused = item.location.id === effectiveSelectedId;
                         const status = placeStatus(item);
-                        const locked =
-                          status === 'IN_SCHEDULE' ||
-                          !data.plan.permissions.canEdit ||
-                          !activePlan(data.trip);
+                        const locked = !data.plan.permissions.canEdit || !activePlan(data.trip);
+                        const deletable = status === 'SELECTED_UNSCHEDULED';
+                        const deleteOpen = deleteOpenId === item.location.id;
                         return (
                           <li key={item.location.id}>
                             <div
-                              className={`${styles.placeRow} ${focused ? styles.placeRowActive : ''}`}
+                              className={styles.placeRowShell}
+                              data-deletable={previewEnabled && deletable ? 'true' : undefined}
+                              data-delete-open={deleteOpen || undefined}
+                              data-focus-suppressed={
+                                focusDeleteSuppressedId === item.location.id || undefined
+                              }
+                              data-location-id={item.location.id}
+                              onFocusCapture={() => setFocusDeleteSuppressedId(null)}
                             >
-                              <button
-                                type="button"
-                                className={styles.placeMainButton}
-                                aria-pressed={focused}
-                                onClick={() => chooseLocation(item.location.id, true)}
+                              <div
+                                className={`${styles.placeRow} ${focused ? styles.placeRowActive : ''}`}
                               >
-                                {item.selected ? (
-                                  <span
-                                    className={`${styles.pinBadge} ${status === 'IN_SCHEDULE' ? styles.pinScheduled : styles.pinUnscheduled}`}
-                                  >
-                                    {item.markerNumber}
+                                <button
+                                  type="button"
+                                  className={styles.placeMainButton}
+                                  data-place-main
+                                  aria-pressed={focused}
+                                  onPointerDown={(event) => beginDeleteGesture(event, item)}
+                                  onPointerMove={moveDeleteGesture}
+                                  onPointerUp={clearGesture}
+                                  onPointerCancel={clearGesture}
+                                  onLostPointerCapture={clearGesture}
+                                  onClick={() => {
+                                    if (suppressRowClickRef.current) {
+                                      suppressRowClickRef.current = false;
+                                      return;
+                                    }
+                                    chooseLocation(item.location.id, true);
+                                  }}
+                                >
+                                  {item.selected ? (
+                                    <span
+                                      className={`${styles.pinBadge} ${status === 'IN_SCHEDULE' ? styles.pinScheduled : styles.pinUnscheduled}`}
+                                    >
+                                      {item.markerNumber}
+                                    </span>
+                                  ) : (
+                                    <span className={styles.unselectedDot} aria-hidden="true" />
+                                  )}
+                                  <span className={styles.placeCopy}>
+                                    <strong>{item.location.name}</strong>
+                                    <small>
+                                      {item.activities[0]?.activityType === 'MEAL'
+                                        ? 'Ẩm thực'
+                                        : 'Tham quan'}{' '}
+                                      · {item.location.address ?? 'Chưa có địa chỉ'}
+                                    </small>
                                   </span>
-                                ) : (
-                                  <span className={styles.unselectedDot} aria-hidden="true" />
-                                )}
-                                <span className={styles.placeCopy}>
-                                  <strong>{item.location.name}</strong>
-                                  <small>
-                                    {item.activities[0]?.activityType === 'MEAL'
-                                      ? 'Ẩm thực'
-                                      : 'Tham quan'}{' '}
-                                    · {item.location.address ?? 'Chưa có địa chỉ'}
-                                  </small>
-                                </span>
+                                  <img
+                                    className={styles.rowChevron}
+                                    src={chevronIcon}
+                                    width="22"
+                                    height="22"
+                                    alt=""
+                                  />
+                                </button>
                                 <span
                                   className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
                                 >
@@ -470,24 +642,56 @@ function PreviewMapPage() {
                                       ? 'Đã chọn · Chưa xếp'
                                       : 'Chưa chọn'}
                                 </span>
-                                <img
-                                  className={styles.rowChevron}
-                                  src={chevronIcon}
-                                  width="22"
-                                  height="22"
-                                  alt=""
-                                />
-                              </button>
-                              <label className={styles.checkboxTarget}>
-                                <input
-                                  className={`${styles.placeCheckbox} ${status === 'SELECTED_UNSCHEDULED' ? styles.placeCheckboxUnscheduled : ''}`}
-                                  type="checkbox"
-                                  checked={item.selected}
+                                {item.selected ? (
+                                  <span
+                                    className={`${styles.placeState} ${status === 'IN_SCHEDULE' ? styles.placeStateScheduled : styles.placeStateSelected}`}
+                                    role="img"
+                                    aria-label={`${status === 'IN_SCHEDULE' ? 'Đã thêm vào lịch trình' : 'Đã chọn, chưa xếp lịch'}: ${item.location.name}`}
+                                  >
+                                    <img
+                                      className={styles.placeStateCircle}
+                                      src={
+                                        status === 'IN_SCHEDULE'
+                                          ? controlInIcon
+                                          : controlSelectedIcon
+                                      }
+                                      alt=""
+                                    />
+                                    <img
+                                      className={styles.placeStateGlyph}
+                                      src={checkIcon}
+                                      alt=""
+                                    />
+                                  </span>
+                                ) : (
+                                  <button
+                                    className={styles.addPlaceButton}
+                                    type="button"
+                                    disabled={locked || mutationId === item.location.id}
+                                    onClick={() => addPlace(item)}
+                                    aria-label={`Chọn ${item.location.name}`}
+                                  >
+                                    <img
+                                      className={styles.placeStateCircle}
+                                      src={controlNoneIcon}
+                                      alt=""
+                                    />
+                                    <img className={styles.placeStateGlyph} src={addIcon} alt="" />
+                                  </button>
+                                )}
+                              </div>
+                              {previewEnabled && deletable && (
+                                <button
+                                  type="button"
+                                  className={styles.deletePlaceButton}
                                   disabled={locked || mutationId === item.location.id}
-                                  onChange={() => togglePlace(item)}
-                                  aria-label={`${item.selected ? 'Bỏ chọn' : 'Chọn'} ${item.location.name}`}
-                                />
-                              </label>
+                                  onClick={() => deletePlace(item)}
+                                  aria-label={`Xóa ${item.location.name} khỏi danh sách đã chọn`}
+                                >
+                                  <Trash2 size={16} aria-hidden="true" />
+                                  <span>Xóa</span>
+                                </button>
+                              )}
                             </div>
                           </li>
                         );
@@ -504,6 +708,29 @@ function PreviewMapPage() {
                       <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
                     </div>
                   )}
+                  <div className={styles.listLegend} aria-label="Chú thích trạng thái địa điểm">
+                    <span>
+                      <span className={styles.legendIcon} aria-hidden="true">
+                        <img src={controlInIcon} width="28" height="28" alt="" />
+                        <img src={checkIcon} width="20" height="20" alt="" />
+                      </span>
+                      Đã thêm vào lịch trình
+                    </span>
+                    <span>
+                      <span className={styles.legendIcon} aria-hidden="true">
+                        <img src={controlSelectedIcon} width="28" height="28" alt="" />
+                        <img src={checkIcon} width="20" height="20" alt="" />
+                      </span>
+                      Đã chọn (chưa xếp lịch)
+                    </span>
+                    <span>
+                      <span className={styles.legendIcon} aria-hidden="true">
+                        <img src={controlNoneIcon} width="28" height="28" alt="" />
+                        <img src={addIcon} width="20" height="20" alt="" />
+                      </span>
+                      Chưa chọn
+                    </span>
+                  </div>
                 </section>
                 <section
                   className={styles.mapPanel}

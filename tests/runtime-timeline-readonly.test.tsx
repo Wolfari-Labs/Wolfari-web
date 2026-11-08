@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RuntimeTimeline } from '../src/features/plan/components/RuntimeTimeline';
@@ -6,6 +6,23 @@ import { planDays } from '../src/features/plan/model/plan-presentation';
 import { createFixturePlanRepository } from '../src/infrastructure/fixtures/plan.fixture-repository';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
 import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
+
+beforeEach(() => {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((query: string) => ({
+      matches: query === '(min-width: 1201px)',
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+});
+afterEach(() => vi.unstubAllGlobals());
 
 describe('read-only Gateway timeline navigation', () => {
   it('keeps day and unassigned filters available without enabling Plan writes', async () => {
@@ -53,8 +70,7 @@ describe('read-only Gateway timeline navigation', () => {
       onDelete = vi.fn(),
       onComplete = vi.fn(),
       onMove = vi.fn(),
-      onReorder = vi.fn(),
-      onDay = vi.fn();
+      onArrange = vi.fn<() => Promise<boolean>>().mockResolvedValue(true);
 
     render(
       <RuntimeTimeline
@@ -66,8 +82,7 @@ describe('read-only Gateway timeline navigation', () => {
         onDelete={onDelete}
         onComplete={onComplete}
         onMove={onMove}
-        onReorder={onReorder}
-        onDay={onDay}
+        onArrange={onArrange}
       />,
     );
 
@@ -76,6 +91,10 @@ describe('read-only Gateway timeline navigation', () => {
     const poolButton = days.getByRole('button', { name: 'Chưa chọn ngày' });
     expect(dayButton).toBeEnabled();
     expect(poolButton).toBeEnabled();
+    expect(dayButton).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('listitem', { name: 'Trong ngày' })).toBeInTheDocument();
+    expect(screen.queryByRole('listitem', { name: 'Chưa xếp ngày' })).not.toBeInTheDocument();
+    await user.click(days.getByRole('button', { name: 'Tất cả' }));
     expect(screen.getByRole('listitem', { name: 'Trong ngày' })).toBeInTheDocument();
     expect(screen.getByRole('listitem', { name: 'Chưa xếp ngày' })).toBeInTheDocument();
 
@@ -90,8 +109,8 @@ describe('read-only Gateway timeline navigation', () => {
     expect(screen.getByRole('listitem', { name: 'Chưa xếp ngày' })).toBeInTheDocument();
     expect(screen.queryByRole('listitem', { name: 'Trong ngày' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Kéo hoạt động/ })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Sửa' })).not.toBeInTheDocument();
-    for (const action of [onEdit, onDelete, onComplete, onMove, onReorder, onDay])
+    expect(screen.queryByRole('menuitem', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument();
+    for (const action of [onEdit, onDelete, onComplete, onMove, onArrange])
       expect(action).not.toHaveBeenCalled();
   });
 });

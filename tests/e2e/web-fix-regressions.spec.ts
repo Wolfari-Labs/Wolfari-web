@@ -117,8 +117,12 @@ for (const failure of ['getter', 'quota'] as const) {
     await expect(page.getByText('Memory only activity', { exact: true })).toBeVisible();
     await expect(page.getByText(/Bản nháp chỉ được giữ trong bộ nhớ của tab này/)).toBeVisible();
     await page.goto(`${trip}/map`);
-    await page.getByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' }).click();
-    await expect(page.getByRole('checkbox', { name: 'Bỏ chọn Chùa Linh Ứng' })).toHaveCount(0);
+    const removePlace = page.getByRole('button', {
+      name: 'Xóa Chùa Linh Ứng khỏi danh sách đã chọn',
+    });
+    await page.locator('[data-place-main]').filter({ hasText: 'Chùa Linh Ứng' }).focus();
+    await removePlace.click();
+    await expect(removePlace).toHaveCount(0);
     await expect(page.getByText(/Lựa chọn chỉ được giữ trong bộ nhớ của tab này/)).toBeVisible();
     await page.goto('/trips/new');
     await page.getByLabel('Tên chuyến đi', { exact: true }).fill('Memory only trip');

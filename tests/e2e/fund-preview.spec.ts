@@ -32,8 +32,9 @@ for (const size of [
       expect(Math.abs(box.width - 1180)).toBeLessThanOrEqual(4);
       expect(Math.abs(box.height - 150)).toBeLessThanOrEqual(4);
     }
-    await page.getByRole('tab', { name: 'Đóng góp' }).click();
-    await expect(page.getByRole('tab', { name: 'Đóng góp' })).toHaveAttribute(
+    const transactions = page.locator('[data-finance-transactions]');
+    await transactions.getByRole('tab', { name: /Đóng góp/ }).click();
+    await expect(transactions.getByRole('tab', { name: /Đóng góp/ })).toHaveAttribute(
       'aria-selected',
       'true',
     );
@@ -68,9 +69,24 @@ test('Fund preview states stay truthful and do not claim a ledger mutation', asy
   await expect(page.getByText('Đang chờ', { exact: true })).toBeVisible();
   await scenario.selectOption('read-only');
   await expect(page.getByText('SANDBOX · OPEN', { exact: true })).toBeVisible();
-  await expect(page.getByText('—', { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Mục tiêu quỹ' }).getByText('—', { exact: true })).toBeVisible();
   await scenario.selectOption('closed');
   await expect(page.getByText('TEST · CLOSED', { exact: true })).toBeVisible();
   await expect(page.getByText('Closure: COMPLETED', { exact: true })).toBeVisible();
   await expect(page.getByText('Không còn blocker', { exact: true })).toBeVisible();
+});
+
+test('Fund preview transaction shell exposes Figma filters and ledger details', async ({ page }) => {
+  await page.goto(route);
+
+  const transactions = page.locator('[data-finance-transactions]');
+  await expect(page.locator('[data-finance-goal]')).toBeVisible();
+  await expect(transactions.getByRole('tab')).toHaveCount(4);
+  await expect(transactions.getByRole('columnheader', { name: 'Thời gian' })).toBeVisible();
+  await expect(transactions.getByRole('row')).toHaveCount(6);
+  await transactions.getByRole('tab', { name: /Đóng góp/ }).click();
+  await expect(transactions.getByRole('tab', { name: /Đóng góp/ })).toHaveAttribute('aria-selected', 'true');
+  await expect(transactions.getByRole('row')).toHaveCount(2);
+  await transactions.getByRole('button', { name: /Đóng góp/ }).first().click();
+  await expect(transactions.getByText('Số dư sau')).toBeVisible();
 });

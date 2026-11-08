@@ -25,6 +25,11 @@
 .breadcrumb strong { color: var(--color-ink); font-weight: 400; }
 .breadcrumb a:hover { color: var(--color-blue); }
 
+.pageTitle {
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+}
 .tripBanner {
   position: relative;
   height: 150px;

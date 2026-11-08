@@ -14,6 +14,7 @@ import { commandFailure } from '../../shared/lib/command-failure';
 import { Button } from '../../shared/components/Button';
 import { Drawer } from '../../shared/components/Drawer';
 import { PriceWatchForm } from './PriceWatchForm';
+import { PriceWatchOverlay } from './PriceWatchOverlay';
 import { SuccessToast } from '../../shared/components/SuccessToast';
 import { Icon } from '../../shared/components/Icon';
 import { Alert } from '../../shared/components/Alert';
@@ -21,6 +22,7 @@ import { Badge, ConfirmDialog } from '../../shared/components/Ui';
 import { ContentState } from '../../shared/components/ContentState';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import priceStyles from './RuntimePriceWatchPage.module.css';
+import tripWorkspaceStyles from '../trips/components/TripWorkspace.module.css';
 const labels = {
   ACTIVE: 'Đang theo dõi',
   PAUSED: 'Tạm dừng',
@@ -183,7 +185,7 @@ function WatchWorkspace({
     alive = useRef(true),
     formHeadingRef = useRef<HTMLHeadingElement>(null),
     formTriggerRef = useRef<HTMLElement | null>(null),
-    formContextRef = useRef<HTMLElement>(null);
+    formContextRef = useRef<HTMLHeadingElement>(null);
   const journalKey = `wolfari:price-watch:${trip.currentMembership.userId}:${trip.id}`;
   useEffect(() => {
     alive.current = true;
@@ -359,28 +361,33 @@ function WatchWorkspace({
     </>
   );
   return (
-    <section className={styles.page}>
+    <section
+      className={`${styles.page} ${priceStyles.page} ${tripWorkspaceStyles.fullWidth}`}
+      data-flow="price-watch-server"
+    >
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
       <TripHero trip={trip} compact variant="landscape" />
       <div className={priceStyles.heading}>
         <div>
           <p className={styles.metadata}>CHỦ ĐỘNG CHO CHUYẾN ĐI</p>
-          <h1>Theo dõi giá vé</h1>
+          <h1 ref={formContextRef} tabIndex={-1}>
+            Theo dõi giá vé
+          </h1>
         </div>
-        <Badge tone="warning">MOCK_FLIGHT · Mô phỏng</Badge>
+        <Button
+          icon={<Icon name="plus" />}
+          disabled={!writable || busy || blocked}
+          onClick={() => openForm(null)}
+        >
+          Tạo theo dõi
+        </Button>
       </div>
       <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
       {!editing && recovery}
-      <div className={priceStyles.workspace}>
+      <div className={priceStyles.workspace} data-region="price-watch-workspace">
         <section className={priceStyles.workspaceMain} aria-label="Danh sách theo dõi giá">
           <div className={styles.actions}>
-            <Button
-              icon={<Icon name="plus" />}
-              disabled={!writable || busy || blocked}
-              onClick={() => openForm(null)}
-            >
-              Tạo theo dõi
-            </Button>
+            <Badge tone="warning">MOCK_FLIGHT · Mô phỏng</Badge>
             <Button variant="outline" onClick={() => void query.refetch()} disabled={busy}>
               Làm mới
             </Button>
@@ -479,22 +486,16 @@ function WatchWorkspace({
             </Button>
           )}
         </section>
-        <aside
-          ref={formContextRef}
-          className={priceStyles.context}
-          aria-label="Biểu mẫu theo dõi giá"
-          tabIndex={-1}
+        <PriceWatchOverlay
+          open={!!editing}
+          title={editing?.item ? 'Sửa theo dõi giá' : 'Tạo theo dõi giá'}
+          busy={busy}
+          onDismiss={closeForm}
+          headingRef={formHeadingRef}
+          returnFocusRef={formTriggerRef}
         >
           {editing && (
             <>
-              <div className={priceStyles.contextHeader}>
-                <h2 ref={formHeadingRef} tabIndex={-1}>
-                  {editing.item ? 'Sửa theo dõi giá' : 'Tạo theo dõi giá'}
-                </h2>
-                <Button variant="outline" disabled={busy} onClick={closeForm}>
-                  Đóng biểu mẫu
-                </Button>
-              </div>
               {recovery}
               <PriceWatchForm
                 key={editing.item?.id ?? 'new'}
@@ -529,12 +530,7 @@ function WatchWorkspace({
               />
             </>
           )}
-          {!editing && (
-            <div className={priceStyles.contextEmpty}>
-              <h2>Tạo theo dõi giá</h2>
-            </div>
-          )}
-        </aside>
+        </PriceWatchOverlay>
       </div>
       <Drawer
         open={!!current}

@@ -1,5 +1,5 @@
 import { AlertDialog, DropdownMenu, Tooltip, Tabs, Accordion } from 'radix-ui';
-import { useRef, type ComponentProps, type ReactNode } from 'react';
+import { useRef, type ComponentProps, type ReactNode, type RefObject } from 'react';
 import { Button } from './Button';
 import { Icon } from './Icon';
 import styles from './Ui.module.css';
@@ -41,15 +41,19 @@ export function Tip({ label, children }: { label: string; children: ReactNode })
 export function ActionMenu({
   label = 'Thao tác',
   items,
+  triggerRef,
+  icon,
 }: {
   label?: string;
   items: { label: string; action: () => void; disabled?: boolean; danger?: boolean }[];
+  triggerRef?: RefObject<HTMLButtonElement | null>;
+  icon?: ReactNode;
 }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" size="icon" aria-label={label}>
-          <Icon name="more" />
+        <Button ref={triggerRef} variant="ghost" size="icon" aria-label={label}>
+          {icon ?? <Icon name="more" />}
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -75,6 +79,8 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel = 'Xác nhận',
+  cancelLabel = 'Hủy',
+  returnFocusRef,
   busy = false,
   disabled = false,
   onCancel,
@@ -84,6 +90,8 @@ export function ConfirmDialog({
   title: string;
   description: string;
   confirmLabel?: string;
+  cancelLabel?: string;
+  returnFocusRef?: RefObject<HTMLElement | null>;
   busy?: boolean;
   disabled?: boolean;
   onCancel: () => void;
@@ -111,7 +119,8 @@ export function ConfirmDialog({
           }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
-            if (returnFocus.current?.isConnected) returnFocus.current.focus();
+            const target = returnFocusRef?.current ?? returnFocus.current;
+            if (target?.isConnected) target.focus();
           }}
         >
           <AlertDialog.Title>{title}</AlertDialog.Title>
@@ -119,7 +128,7 @@ export function ConfirmDialog({
           <div className={styles.actions}>
             <AlertDialog.Cancel asChild>
               <Button variant="outline" disabled={busy}>
-                Hủy
+                {cancelLabel}
               </Button>
             </AlertDialog.Cancel>
             <Button variant="destructive" loading={busy} disabled={disabled} onClick={onConfirm}>

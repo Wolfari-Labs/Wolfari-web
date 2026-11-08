@@ -12,10 +12,7 @@ import {
   selectMapLocations,
   validCoordinates,
 } from '../src/features/map/trip-map';
-import type {
-  ActivityViewModel,
-  SelectedLocationViewModel,
-} from '../src/features/plan/model/plan';
+import type { ActivityViewModel, SelectedLocationViewModel } from '../src/features/plan/model/plan';
 import { createFixturePlanRepository } from '../src/infrastructure/fixtures/plan.fixture-repository';
 import { createFixtureShellRepository } from '../src/infrastructure/fixtures/shell.fixture-repository';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
@@ -81,7 +78,11 @@ describe('trip map projection', () => {
 
   it('validates coordinates and filters saved locations without changing Plan data', () => {
     const locations = [
-      { ...location('beach', '16.05', '108.24'), name: 'Bãi biển Mỹ Khê', address: 'Võ Nguyên Giáp, Sơn Trà' },
+      {
+        ...location('beach', '16.05', '108.24'),
+        name: 'Bãi biển Mỹ Khê',
+        address: 'Võ Nguyên Giáp, Sơn Trà',
+      },
       { ...location('mountain', '16.0', '108.25'), name: 'Ngũ Hành Sơn' },
       location('invalid', '91', '0'),
     ];
@@ -103,9 +104,7 @@ describe('trip map projection', () => {
         query: 'võ nguyên giáp',
       }).map((item) => item.id),
     ).toEqual(['beach']);
-    expect(activityScheduleLabel(scheduled, 'Asia/Ho_Chi_Minh')).toBe(
-      '2026-09-22 · 14:00–16:30',
-    );
+    expect(activityScheduleLabel(scheduled, 'Asia/Ho_Chi_Minh')).toBe('2026-09-22 · 14:00–16:30');
     expect(activityDurationLabel(scheduled)).toBe('2 giờ 30 phút');
   });
 
@@ -139,21 +138,20 @@ describe('trip map projection', () => {
     expect(
       await screen.findByText('Bản đồ nền chưa được cấu hình', { selector: 'strong' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' })).toBeInTheDocument();
     expect(
       screen.getByText(
         'Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.',
       ),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('searchbox', { name: 'Tìm địa điểm' }),
-    ).toHaveAttribute('placeholder', 'Tìm địa điểm, quán ăn, điểm tham quan...');
+    expect(screen.getByRole('searchbox', { name: 'Tìm địa điểm' })).toHaveAttribute(
+      'placeholder',
+      'Tìm địa điểm, quán ăn, điểm tham quan...',
+    );
     expect(screen.getByRole('group', { name: 'Lọc địa điểm' })).toHaveTextContent('Tất cả');
     expect(screen.queryByText(/(?:Ã|Â|Ä‘|áº)/)).not.toBeInTheDocument();
     const list = screen.getByRole('region', { name: /^Địa điểm/ });
-    await userEvent.click(within(list).getByRole('button', { name: /Ngũ Hành Sơn/ }));
+    await userEvent.click(within(list).getByRole('button', { name: /^6Ngũ Hành Sơn/ }));
     expect(screen.getByRole('complementary', { name: 'Chi tiết địa điểm' })).toHaveTextContent(
       'Chưa có tọa độ hợp lệ',
     );

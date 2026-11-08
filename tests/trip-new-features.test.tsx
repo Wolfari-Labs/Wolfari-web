@@ -118,7 +118,8 @@ describe('new trip workspace routes', () => {
       await screen.findByText('Bản đồ nền chưa được cấu hình', { selector: 'strong' }),
     ).toBeInTheDocument();
     const list = screen.getByRole('region', { name: /^Địa điểm/ });
-    await userEvent.click(within(list).getByRole('button', { name: /Ngũ Hành Sơn/ }));
+    // Select the place, not the separate delete action with the same place name.
+    await userEvent.click(within(list).getByRole('button', { name: /Ngũ Hành Sơn/, pressed: false }));
     expect(screen.getByRole('complementary', { name: 'Chi tiết địa điểm' })).toHaveTextContent('Chưa có tọa độ hợp lệ');
     await userEvent.selectOptions(screen.getByLabelText('Sắp xếp lịch'), 'UNSCHEDULED');
     expect(within(list).queryByRole('button', { name: /Bán đảo Sơn Trà/ })).not.toBeInTheDocument();

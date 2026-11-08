@@ -24,8 +24,9 @@ function setup(actor = 'actor-A') {
 }
 async function fill(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText('Tên chuyến đi'), 'Demo riêng');
-  fireEvent.change(screen.getByLabelText('Ngày đi'), { target: { value: '2026-11-01' } });
-  fireEvent.change(screen.getByLabelText('Ngày về'), { target: { value: '2026-11-03' } });
+  fireEvent.change(screen.getByLabelText('Ngày đi'), { target: { value: '01/11/2026' } });
+  fireEvent.change(screen.getByLabelText('Ngày về'), { target: { value: '03/11/2026' } });
+  expect(screen.getByLabelText('Ngày đi')).toHaveValue('01/11/2026');
 }
 describe('Gateway Create Trip', () => {
   it('focuses invalid fields before making a request and accepts a corrected timezone', async () => {
@@ -54,6 +55,10 @@ describe('Gateway Create Trip', () => {
     await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
     await waitFor(() => expect(createTrip).toHaveBeenCalledOnce());
     expect(createTrip.mock.calls[0]![0].intent.timezone).toBe('Asia/Ho_Chi_Minh');
+    expect(createTrip.mock.calls[0]![0].intent).toMatchObject({
+      startAt: '2026-10-31T17:00:00.000Z',
+      endAt: '2026-11-03T17:00:00.000Z',
+    });
   });
 
   it('shows server field errors without discarding the editable draft', async () => {

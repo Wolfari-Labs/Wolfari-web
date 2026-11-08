@@ -6,13 +6,15 @@ import {
   type FormEvent,
   type ReactNode,
   type RefObject,
+  type KeyboardEvent,
 } from 'react';
 import { Link, useParams, useOutletContext } from 'react-router';
 import { Accessibility } from '@dnd-kit/dom';
 import {
   DragDropProvider,
-  useDragDropManager,
   useDroppable,
+  DragOverlay,
+  PointerSensor,
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent,
@@ -24,6 +26,7 @@ import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
 import { useTripPlanSnapshot } from './hooks/use-trip-plan-snapshot';
 import { usePlanDraft } from './hooks/use-plan-draft';
+import { usePreviewDnd, type PreviewDndControls } from './hooks/use-preview-dnd';
 import { usePlanRepository } from './repositories/plan-context';
 import { GatewayPlanPanel } from './components/GatewayPlanPanel';
 import { planScenarios, type PlanScenario, type PlanViewModel } from './model/plan';
@@ -37,7 +40,6 @@ import {
 } from './model/plan-draft';
 import { activityTime, planDays } from './model/plan-presentation';
 import { Drawer } from '../../shared/components/Drawer';
-import { Icon } from '../../shared/components/Icon';
 import { TimelineCard } from './components/TimelineCard';
 import { MotionProvider } from '../../shared/components/MotionProvider';
 import { Button } from '../../shared/components/Button';
@@ -49,10 +51,9 @@ import mountain from '../../shared/assets/figma/eb8f3.svg';
 import meal from '../../shared/assets/figma/41563.svg';
 import beach from '../../shared/assets/figma/e9568.svg';
 import walk from '../../shared/assets/figma/9c64a.svg';
-import activityMetric from '../../shared/assets/figma/b75a6.svg';
-import locationMetric from '../../shared/assets/figma/12507.svg';
-import timeMetric from '../../shared/assets/figma/13a40.svg';
-import travelMetric from '../../shared/assets/figma/a6d01.svg';
+import { PlanMetrics } from './components/PlanMetrics';
+import dragIcon from '../../shared/assets/figma/56e25.svg';
+import moreIcon from '../../shared/assets/figma/ca9fb.svg';
 import styles from './PlanPage.module.css';
 import { mergePlaceSelections, usePlaceSelection } from '../map/place-selection-store';
 
@@ -126,36 +127,26 @@ function PlannerDialog({
 
 function DragHandle({
   label,
+  activityId,
   handleRef,
-  onKeyMove,
+  onKeyDown,
 }: {
   label: string;
+  activityId: string;
   handleRef: (element: Element | null) => void;
-  onKeyMove?: (direction: 'to-day' | 'to-pool') => void;
+  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
 }) {
-  const manager = useDragDropManager();
   return (
     <button
       ref={handleRef}
       type="button"
       className={styles.dragHandle}
       aria-label={label}
+      data-draft-handle={activityId}
       title="Kéo để sắp xếp"
-      onKeyDownCapture={(event) => {
-        const direction =
-          event.key === 'ArrowRight' ? 'to-day' : event.key === 'ArrowLeft' ? 'to-pool' : null;
-        if (direction && onKeyMove) {
-          event.preventDefault();
-          event.stopPropagation();
-          // This shortcut owns the move. Cancel the sensor's drag so its later
-          // drop cannot overwrite the asynchronous draft update.
-          if (manager?.dragOperation.source)
-            manager.actions.stop({ canceled: true, event: event.nativeEvent });
-          onKeyMove(direction);
-        }
-      }}
+      onKeyDown={onKeyDown}
     >
-      <Icon name="grip" />
+      <img src={dragIcon} alt="" />
     </button>
   );
 }
@@ -166,7 +157,7 @@ type TimelineActivityProps = {
   timezone: string;
   canEdit: boolean;
   onEdit: (trigger: HTMLButtonElement) => void;
-  onKeyMove?: (direction: 'to-day' | 'to-pool') => void;
+  dnd: PreviewDndControls;
 };
 
 function TimelineActivityRow({
@@ -175,26 +166,33 @@ function TimelineActivityRow({
   timezone,
   canEdit,
   onEdit,
-  onKeyMove,
+  dnd,
   rowRef,
   handleRef,
   dragging,
-  dropTarget,
 }: TimelineActivityProps & {
   rowRef?: (element: Element | null) => void;
   handleRef?: (element: Element | null) => void;
   dragging?: boolean;
-  dropTarget?: boolean;
 }) {
   const time = activity.startsAt
     ? `${activityTime(activity.startsAt, timezone)}${activity.endsAt ? ' – ' + activityTime(activity.endsAt, timezone) : ''}`
     : 'Chưa xếp giờ';
   return (
     <li
+      data-draft-activity={activity.id}
       ref={rowRef}
       className={styles.activity}
       data-dragging={dragging || undefined}
-      data-drop-target={dropTarget || undefined}
+      data-insert-before={
+        (dnd.intent?.container === 'DAY' && dnd.intent.beforeId === activity.id) || undefined
+      }
+      data-insert-after={
+        (dnd.intent?.container === 'DAY' &&
+          !dnd.intent.beforeId &&
+          dnd.intent.afterId === activity.id) ||
+        undefined
+      }
     >
       <span className={styles.step} aria-hidden="true">
         {index + 1}
@@ -205,18 +203,22 @@ function TimelineActivityRow({
         description={activity.description}
         completed={activity.status === 'COMPLETED'}
         cover={activity.presentation.cover}
+        typeIcon={icons[activity.activityType] ?? null}
         handle={
           handleRef && (
             <DragHandle
               handleRef={handleRef}
+              activityId={activity.id}
               label={`Kéo hoạt động ${activity.title}`}
-              {...(onKeyMove ? { onKeyMove } : {})}
+              onKeyDown={(event) => dnd.onHandleKeyDown(activity.id, event)}
             />
           )
         }
         actions={
           <details className={styles.activityPreview}>
-            <summary aria-label={`Xem hoạt động ${activity.title}`}>Chi tiết hoạt động</summary>
+            <summary aria-label={`Xem hoạt động ${activity.title}`}>
+              <img src={moreIcon} alt="" />
+            </summary>
             <dl>
               <dt>Thời gian</dt>
               <dd>{time}</dd>
@@ -242,7 +244,9 @@ function SortableTimelineActivity(props: TimelineActivityProps) {
   const sortable = useSortable<DropData>({
     id: props.activity.id,
     index: props.index,
-    group: 'ACTIVITIES',
+    group: `DAY:${props.activity.scheduledDate}`,
+    // Preview keeps fixed geometry and commits only on drop, not optimistic DOM sorting.
+    plugins: [],
     data: {
       container: 'DAY',
       index: props.index,
@@ -255,8 +259,7 @@ function SortableTimelineActivity(props: TimelineActivityProps) {
       {...props}
       rowRef={sortable.ref}
       handleRef={sortable.handleRef}
-      dragging={sortable.isDragging}
-      dropTarget={sortable.isDropTarget}
+      dragging={sortable.isDragging || props.dnd.draggingId === props.activity.id}
     />
   );
 }
@@ -268,7 +271,7 @@ function TimelineList({
   canEdit,
   dragEnabled,
   onEdit,
-  onKeyMove,
+  dnd,
 }: {
   items: readonly PlanDraftActivity[];
   day: string;
@@ -276,18 +279,23 @@ function TimelineList({
   canEdit: boolean;
   dragEnabled: boolean;
   onEdit: (activity: PlanDraftActivity, trigger: HTMLButtonElement) => void;
-  onKeyMove?: (activityId: string, direction: 'to-day' | 'to-pool') => void;
+  dnd: PreviewDndControls;
 }) {
   const endDrop = useDroppable<DropData>({
     id: `drop:day:${day}`,
     data: { container: 'DAY', index: items.length, label: 'cuối lịch trình' },
     disabled: !dragEnabled,
   });
-  if (!items.length && !dragEnabled) return <ContentState state="empty" headingLevel={2} />;
+
   return (
     <ol
-      ref={endDrop.ref}
-      className={`${styles.timelineViewport} ${endDrop.isDropTarget ? styles.dropTarget : ''}`}
+      ref={(element) => {
+        endDrop.ref(element);
+        dnd.registerList('DAY', element);
+      }}
+      className={styles.timelineViewport}
+      data-draft-list="DAY"
+      data-insertion-slot={dnd.intent?.container === 'DAY' ? dnd.intent.index : undefined}
       tabIndex={0}
       aria-label="Các hoạt động trong ngày"
     >
@@ -298,7 +306,7 @@ function TimelineList({
           timezone,
           canEdit,
           onEdit: (trigger) => onEdit(activity, trigger),
-          onKeyMove: (direction) => onKeyMove?.(activity.id, direction),
+          dnd,
         };
         return dragEnabled ? (
           <SortableTimelineActivity key={activity.id} {...props} />
@@ -307,10 +315,21 @@ function TimelineList({
         );
       })}
       {!items.length && (
-        <li className={styles.emptyDrop}>Kéo hoạt động vào đây để thêm vào ngày này.</li>
+        <li
+          className={styles.emptyDrop}
+          data-drop-active={dnd.intent?.container === 'DAY' || undefined}
+        >
+          <h3>Chưa có nội dung</h3>
+          {dragEnabled && <p>Kéo hoạt động vào đây để thêm vào ngày này.</p>}
+        </li>
       )}
       {items.length > 0 && dragEnabled && (
-        <li className={styles.endDrop}>Thả ở đây để xếp cuối ngày</li>
+        <li
+          className={styles.endDrop}
+          data-drop-active={(dnd.intent?.container === 'DAY' && !dnd.intent.beforeId) || undefined}
+        >
+          Thả ở đây để xếp cuối ngày
+        </li>
       )}
     </ol>
   );
@@ -320,17 +339,20 @@ function PoolCard({
   activity,
   index,
   canEdit,
-  onKeyMove,
+  dnd,
+  onEdit,
 }: {
   activity: PlanDraftActivity;
   index: number;
   canEdit: boolean;
-  onKeyMove?: (direction: 'to-day' | 'to-pool') => void;
+  dnd: PreviewDndControls;
+  onEdit: (trigger: HTMLButtonElement) => void;
 }) {
   const sortable = useSortable<DropData>({
     id: activity.id,
     index,
-    group: 'ACTIVITIES',
+    group: 'POOL',
+    plugins: [],
     data: { container: 'POOL', index, activityId: activity.id, label: activity.title },
     disabled: !canEdit,
   });
@@ -338,23 +360,55 @@ function PoolCard({
     <li
       ref={sortable.ref}
       className={styles.poolCard}
-      data-dragging={sortable.isDragging || undefined}
-      data-drop-target={sortable.isDropTarget || undefined}
+      data-draft-activity={activity.id}
+      data-dragging={sortable.isDragging || dnd.draggingId === activity.id || undefined}
+      data-insert-before={
+        (dnd.intent?.container === 'POOL' && dnd.intent.beforeId === activity.id) || undefined
+      }
+      data-insert-after={
+        (dnd.intent?.container === 'POOL' &&
+          !dnd.intent.beforeId &&
+          dnd.intent.afterId === activity.id) ||
+        undefined
+      }
     >
-      <span className={styles.poolIcon} aria-hidden="true">
-        {icons[activity.activityType] && <img src={icons[activity.activityType]} alt="" />}
-      </span>
-      <span>
-        <strong>{activity.title}</strong>
-        <small>{activity.description ?? 'Hoạt động chưa xếp lịch'}</small>
-      </span>
       {canEdit && (
         <DragHandle
           handleRef={sortable.handleRef}
+          activityId={activity.id}
           label={`Kéo hoạt động ${activity.title}`}
-          {...(onKeyMove ? { onKeyMove } : {})}
+          onKeyDown={(event) => dnd.onHandleKeyDown(activity.id, event)}
         />
       )}
+      <span className={styles.poolIcon} aria-hidden="true">
+        {icons[activity.activityType] && <img src={icons[activity.activityType]} alt="" />}
+      </span>
+      <span className={styles.poolCover}>
+        {activity.presentation.cover ? (
+          <img
+            className={styles.poolCover}
+            src={activity.presentation.cover.src}
+            alt={activity.presentation.cover.alt}
+          />
+        ) : (
+          <span>Chưa có ảnh</span>
+        )}
+      </span>
+      <span className={styles.poolCopy}>
+        <strong>{activity.title}</strong>
+        <small>{activity.description ?? 'Hoạt động chưa xếp lịch'}</small>
+      </span>
+      <details className={styles.activityPreview}>
+        <summary aria-label={`Xem hoạt động ${activity.title}`}>
+          <img src={moreIcon} alt="" />
+        </summary>
+        <p>Chưa xếp lịch · Chỉ lưu trên thiết bị này.</p>
+        {canEdit && (
+          <Button variant="outline" onClick={(event) => onEdit(event.currentTarget)}>
+            Chỉnh sửa hoạt động
+          </Button>
+        )}
+      </details>
     </li>
   );
 }
@@ -367,7 +421,8 @@ function ActivityPool({
   storageStatus,
   onClose,
   closeRef,
-  onKeyMove,
+  dnd,
+  onEdit,
 }: {
   items: readonly PlanDraftActivity[];
   canEdit: boolean;
@@ -376,7 +431,8 @@ function ActivityPool({
   storageStatus: 'saved' | 'memory';
   onClose: () => void;
   closeRef?: RefObject<HTMLButtonElement | null>;
-  onKeyMove?: (activityId: string, direction: 'to-day' | 'to-pool') => void;
+  dnd: PreviewDndControls;
+  onEdit: (activity: PlanDraftActivity, trigger: HTMLButtonElement) => void;
 }) {
   const poolDrop = useDroppable<DropData>({
     id: 'drop:pool',
@@ -386,39 +442,42 @@ function ActivityPool({
   return (
     <section className={styles.pool} aria-labelledby="activity-pool-title">
       <header className={styles.poolHeader}>
-        <div>
-          <h2 id="activity-pool-title">Hoạt động đã chọn</h2>
-          <p>{items.length} hoạt động chưa xếp lịch</p>
-        </div>
+        <h2 id="activity-pool-title">Đã chọn · Chưa xếp lịch</h2>
+        <span className={styles.poolCount}>{items.length} hoạt động</span>
         <button
           ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label="Đóng danh sách hoạt động"
         >
-          ×
+          × Đóng
         </button>
       </header>
-      <div className={styles.localNotice} role="status">
-        <strong>Chỉ lưu trên thiết bị này</strong>
-        <span>Thay đổi chưa đồng bộ với thành viên khác và sẽ hết hạn sau 30 ngày.</span>
-      </div>
+
       {storageStatus === 'memory' && (
         <Alert live>Chưa thể lưu trên thiết bị. Thay đổi vẫn được giữ trong phiên hiện tại.</Alert>
       )}
       {!canEdit && (
         <Alert>Chế độ chỉ đọc · Bạn có thể xem nhưng không thể kéo thả hoặc chỉnh sửa.</Alert>
       )}
-      <Input
-        label="Tìm trong hoạt động đã chọn"
-        type="search"
-        value={query}
-        onChange={(event) => onQueryChange(event.target.value)}
-        placeholder="Tìm tên hoặc địa điểm"
-      />
+      <div className={styles.poolSearch}>
+        <Input
+          label="Tìm trong hoạt động đã chọn"
+          type="search"
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder="Tìm trong địa điểm/hoạt động đã chọn…"
+        />
+      </div>
+      <p className={styles.poolHint}>Kéo hoạt động sang lịch trình để thêm vào ngày đang chọn.</p>
       <ul
-        ref={poolDrop.ref}
-        className={`${styles.poolList} ${poolDrop.isDropTarget ? styles.dropTarget : ''}`}
+        ref={(element) => {
+          poolDrop.ref(element);
+          dnd.registerList('POOL', element);
+        }}
+        className={styles.poolList}
+        data-draft-list="POOL"
+        data-insertion-slot={dnd.intent?.container === 'POOL' ? dnd.intent.index : undefined}
         aria-label="Hoạt động chưa xếp lịch"
       >
         {items.map((activity, index) => (
@@ -427,7 +486,8 @@ function ActivityPool({
             activity={activity}
             index={index}
             canEdit={canEdit}
-            onKeyMove={(direction) => onKeyMove?.(activity.id, direction)}
+            dnd={dnd}
+            onEdit={(trigger) => onEdit(activity, trigger)}
           />
         ))}
         {!items.length && (
@@ -441,6 +501,10 @@ function ActivityPool({
           </li>
         )}
       </ul>
+      <div className={styles.localNotice} role="status">
+        <strong>Chỉ lưu trên thiết bị này</strong>
+        <span>Chưa đồng bộ với thành viên khác · Nháp hết hạn sau 30 ngày.</span>
+      </div>
     </section>
   );
 }
@@ -451,6 +515,8 @@ function ActivityEditor({
   locationName,
   days,
   timezone,
+  tripStartAt,
+  tripEndAt,
   onSave,
   onDismiss,
 }: {
@@ -459,6 +525,8 @@ function ActivityEditor({
   locationName: string;
   days: readonly string[];
   timezone: string;
+  tripStartAt: string;
+  tripEndAt: string;
   onSave: (edit: PlanDraftEdit, expected: PlanDraftActivity) => Promise<boolean>;
   onDismiss: () => void;
 }) {
@@ -486,7 +554,16 @@ function ActivityEditor({
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (conflict || saving || !baseline) return;
-    const validation = validatePlanDraftEdit({ title, day, startTime, endTime, allowedDays: days });
+    const validation = validatePlanDraftEdit({
+      title,
+      day,
+      startTime,
+      endTime,
+      allowedDays: days,
+      timezone,
+      tripStartAt,
+      tripEndAt,
+    });
     setError(validation);
     if (validation) return;
     setSaving(true);
@@ -589,7 +666,7 @@ function PlannerWorkspace({
   closeRef,
   onClose,
   onEdit,
-  onKeyMove,
+  dnd,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
@@ -603,7 +680,7 @@ function PlannerWorkspace({
   closeRef: RefObject<HTMLButtonElement | null>;
   onClose: () => void;
   onEdit: (activity: PlanDraftActivity, trigger: HTMLButtonElement) => void;
-  onKeyMove: (activityId: string, direction: 'to-day' | 'to-pool') => void;
+  dnd: PreviewDndControls;
 }) {
   const timeline = (
     <section
@@ -614,6 +691,15 @@ function PlannerWorkspace({
         <h2 id={compact ? 'planner-day-title' : 'plan-day-title'}>
           Lịch trình ngày {planDays(trip.startAt, trip.endAt, trip.timezone).indexOf(day) + 1}
         </h2>
+        <span className={styles.progress}>
+          {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
+        </span>
+        <Button variant="outline" disabled title="Bản đồ chưa khả dụng trong Preview">
+          Hiện bản đồ
+        </Button>
+        <Button aria-pressed onClick={() => closeRef.current?.focus()}>
+          Thêm hoạt động
+        </Button>
       </div>
       <TimelineList
         items={items}
@@ -622,7 +708,7 @@ function PlannerWorkspace({
         canEdit={plan.permissions.canEdit}
         dragEnabled={plan.permissions.canEdit}
         onEdit={onEdit}
-        onKeyMove={onKeyMove}
+        dnd={dnd}
       />
     </section>
   );
@@ -635,7 +721,8 @@ function PlannerWorkspace({
       storageStatus={storageStatus}
       onClose={onClose}
       closeRef={closeRef}
-      onKeyMove={onKeyMove}
+      dnd={dnd}
+      onEdit={onEdit}
     />
   );
   if (!compact)
@@ -679,7 +766,6 @@ export function PlanView({
   storageStatus,
   onMove,
   onEdit,
-  onKeyMove,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
@@ -692,13 +778,21 @@ export function PlanView({
   storageStatus: 'saved' | 'memory';
   onMove: (move: PlanDraftMove) => void;
   onEdit: (edit: PlanDraftEdit, expected: PlanDraftActivity) => Promise<boolean>;
-  onKeyMove?: (activityId: string, direction: 'to-day' | 'to-pool') => void;
 }) {
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
   const day = selectedDay && days.includes(selectedDay) ? selectedDay : days[0]!;
   const items = draftActivitiesForDay(activities, day);
   const allPoolItems = unscheduledDraftActivities(activities);
   const [query, setQuery] = useState('');
+  const dnd = usePreviewDnd({
+    activities,
+    day,
+    canEdit: plan.permissions.canEdit,
+    plannerOpen,
+    openPlanner: onPlannerOpen,
+    onMove,
+    revealPoolItem: () => setQuery(''),
+  });
   const [editing, setEditing] = useState<PlanDraftActivity | null>(null);
   const editReturnFocus = useRef<HTMLButtonElement | null>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
@@ -735,30 +829,10 @@ export function PlanView({
     editReturnFocus.current = trigger;
     setEditing(activity);
   };
-  const onDragEnd = ({ canceled, operation }: DragEndEvent) => {
-    if (canceled || !operation.source || !operation.target) return;
-    const target = operation.target.data as DropData | undefined;
-    if (!target || (target.container !== 'POOL' && target.container !== 'DAY')) return;
-    const activityId = String(operation.source.id);
-    if (target.container === 'POOL') {
-      const targetIndex = target.activityId
-        ? allPoolItems.findIndex((activity) => activity.id === target.activityId)
-        : allPoolItems.length;
-      onMove({
-        activityId,
-        target: { type: 'POOL', index: targetIndex < 0 ? allPoolItems.length : targetIndex },
-      });
-      return;
-    }
-    onMove({ activityId, target: { type: 'DAY', day, index: target.index } });
-  };
-  const keyboardMove = (activityId: string, direction: 'to-day' | 'to-pool') => {
-    onKeyMove?.(activityId, direction);
-  };
   return (
     <>
       <div className={styles.hero}>
-        <TripHero trip={trip} compact variant="schedule" />
+        <TripHero trip={trip} compact variant="landscape" />
       </div>
       {storageStatus === 'memory' && (
         <Alert tone="warning" live>
@@ -784,44 +858,9 @@ export function PlanView({
           + Thêm ngày
         </Button>
       </div>
-      <div className={styles.metrics}>
-        <div>
-          <span className={styles.metricIcon}>
-            <img src={activityMetric} alt="" />
-          </span>
-          <span>
-            <strong>{activities.length}</strong>Hoạt động
-          </span>
-        </div>
-        <div>
-          <span className={styles.metricIcon}>
-            <img src={locationMetric} alt="" />
-          </span>
-          <span>
-            <strong>{plan.selectedLocations.length}</strong>Địa điểm
-          </span>
-        </div>
-        <div>
-          <span className={styles.metricIcon}>
-            <img src={timeMetric} alt="" />
-          </span>
-          <span>
-            <strong>
-              {items.filter((activity) => activity.status === 'COMPLETED').length}/{items.length}
-            </strong>
-            Hoàn tất trong ngày
-          </span>
-        </div>
-        <div>
-          <span className={styles.metricIcon}>
-            <img src={travelMetric} alt="" />
-          </span>
-          <span>
-            <strong>—</strong>Di chuyển · Chưa khả dụng
-          </span>
-        </div>
-      </div>
+      <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       <DragDropProvider
+        sensors={[PointerSensor]}
         plugins={(defaults) => [
           ...defaults,
           Accessibility.configure({
@@ -843,13 +882,18 @@ export function PlanView({
             },
           }),
         ]}
-        onDragEnd={onDragEnd}
+        onDragStart={dnd.onDragStart}
+        onDragMove={dnd.onDragMove}
+        onDragEnd={dnd.onDragEnd}
       >
         {!plannerOpen && (
           <div className={styles.columns}>
             <section className={styles.timeline} aria-labelledby="plan-day-title">
               <div className={styles.toolbar}>
                 <h2 id="plan-day-title">Lịch trình ngày {days.indexOf(day) + 1}</h2>
+                <span className={styles.progress}>
+                  {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
+                </span>
                 <Button variant="outline" disabled>
                   Hiện bản đồ
                 </Button>
@@ -862,8 +906,9 @@ export function PlanView({
                 day={day}
                 timezone={trip.timezone}
                 canEdit={plan.permissions.canEdit}
-                dragEnabled={false}
+                dragEnabled={plan.permissions.canEdit}
                 onEdit={beginEdit}
+                dnd={dnd}
               />
             </section>
           </div>
@@ -882,10 +927,20 @@ export function PlanView({
             closeRef={closeRef}
             onClose={closePlanner}
             onEdit={beginEdit}
-            onKeyMove={keyboardMove}
+            dnd={dnd}
           />
         )}
+        <DragOverlay dropAnimation={null}>
+          {dnd.draggingId && (
+            <div className={styles.dragOverlay}>
+              {activities.find((activity) => activity.id === dnd.draggingId)?.title}
+            </div>
+          )}
+        </DragOverlay>
       </DragDropProvider>
+      <span className={styles.srOnly} role="status" aria-live="polite">
+        {dnd.announcement}
+      </span>
       <ActivityEditor
         key={editing?.id ?? 'closed'}
         activity={editing}
@@ -896,6 +951,8 @@ export function PlanView({
         }
         days={days}
         timezone={trip.timezone}
+        tripStartAt={trip.startAt}
+        tripEndAt={trip.endAt}
         onSave={async (edit, expected) => {
           const saved = await onEdit(edit, expected);
           if (saved) closeEditor();
@@ -1073,7 +1130,7 @@ function PreviewPlanPage() {
               <PlanView
                 trip={trip}
                 plan={
-                  draft.needsReview || gatewayBusy
+                  draft.needsReview || gatewayBusy || trip.lifecycle === 'ARCHIVED'
                     ? {
                         ...effectivePlan,
                         permissions: { ...effectivePlan.permissions, canEdit: false },
@@ -1089,20 +1146,6 @@ function PreviewPlanPage() {
                 storageStatus={draft.storageStatus}
                 onMove={draft.move}
                 onEdit={draft.edit}
-                onKeyMove={(activityId, direction) =>
-                  draft.move(
-                    direction === 'to-pool'
-                      ? { activityId, target: { type: 'POOL' } }
-                      : {
-                          activityId,
-                          target: {
-                            type: 'DAY',
-                            day: day ?? planDays(trip.startAt, trip.endAt, trip.timezone)[0]!,
-                            index: 0,
-                          },
-                        },
-                  )
-                }
               />
             </>
           )}

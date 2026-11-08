@@ -1,5 +1,98 @@
 # Trạng thái thực thi
 
+## Vietnamese Create Trip dates — 08/11/2026
+
+User-requested fixed dd/mm/yyyy display for departure/return in Preview and Gateway.
+Shared accessible text field retains native calendar, ISO draft/API serialization,
+timezone conversion, exclusive end boundary and existing validation/recovery.
+Typecheck/scoped lint/format and both built browser bundles PASS; Preview fixture
+6/6 responsive Create Trip tests, Gateway HTTP-mock5/5 (including axe), and scoped
+unit/component25/25 PASS. Initial new serialization assertion used equivalent
+offset timestamps instead of canonical UTC strings; corrected expectation and reran.
+Full suites/live Backend/manual screen reader NOT_RUN. Commit/push authorized.
+
+## PR25 CI repair — 08/11/2026
+
+Unit selector repaired (full716/716 PASS); stale browser selectors/timing updated;
+Gateway Map's existing guarded location actions restored. Final focused built
+fixture23/23 and Gateway HTTP-mock29/29 PASS; lint/typecheck/both builds PASS.
+Original CI exposed six contrast cases; accessible replacement colors now pass
+focused Overview/CP05 and Gateway UI/Map reruns. Full CI rerun is pending.
+[Diagnosis, verification and limits](PR25_CI_REPAIR.md). User authorizes commit/push.
+
+## Overview light-blue border trial — 08/11/2026
+
+READY_FOR_REVIEW: user-requested1px #a6d9f2 outlines on overview panels/postcard;
+6px corners, spacing, shell and hero unchanged. Scoped format/lint/typecheck,
+unit16/16, production build and Preview layout1/1 (expanded/collapsed) PASS.
+Desktop screenshot reviewed. Initial temporary E2E config had wrong server cwd;
+corrected config and rerun PASS. Full E2E/AXE/Gateway NOT_RERUN; prior contrast
+limitation remains. Evidence: test-results/overview-border. No new checkpoint.
+
+## Overview corners and column alignment — 08/11/2026
+
+READY_FOR_REVIEW: overview corners reduced to6px; desktop Map/Fare align exactly
+with Fund/Packing using shared columns and13px gutters. Header/sidebar/hero and
+narrow reflow preserved. Typecheck/full lint/format/production build/unit16 PASS.
+Preview dev overview27 PASS/1 existing contrast FAIL; Gateway HTTP-mock11/11 PASS.
+All15 viewport checks and expanded/collapsed alignment pass. No live Backend or
+full-suite rerun. [Evidence](evidence/overview-alignment-20261108/README.md).
+
+
+## Trip geometry refinement — 08/11/2026
+
+READY_FOR_REVIEW_WITH_CONTRAST_LIMITATION: implemented requested22px bottom clearance for overview progress, fare empty dash,
+and shared full-width Fund/Price Watch gutters in Preview and Gateway. Layout and
+workflow checks recorded in [verification](TRIP_GEOMETRY_VERIFICATION.md).
+Previous source-color contrast limitation remains; no palette/shell changes.
+Final built overview27 PASS/1 known contrast FAIL; Gateway recovery13/13 PASS.
+Width checks Preview8/8 and Gateway8/8 PASS; temporary5183/5184 servers stopped.
+
+## Trip overview follow-up — 08/11/2026
+
+IMPLEMENTED / READY_FOR_REVIEW_WITH_CONTRAST_LIMITATION: native clickable feature
+cards, compact fund summary, fund/packing progress, concise fare empty state,
+one map action and exact scoped Figma colors. Header/sidebar/Plan banner preserved.
+Typecheck/lint/both builds/unit90/90/Gateway HTTP-mock10/10 PASS. Preview dev and
+built runs each27 PASS/1 FAIL: source-color AXE contrast; rule not disabled.
+[Current evidence and limits](TRIP_OVERVIEW_FOLLOWUP_VERIFICATION.md).
+07/11 zero-AXE result below is historical, not current. No new checkpoint/release.
+
+## Trip overview maintenance — 07/11/2026
+
+READY_FOR_REVIEW: refreshed current Figma Desktop overview cards/timeline/map/story,
+bounded viewport layout and Plan banner consistency across nine trip feature routes.
+Header/sidebar unchanged. Typecheck/full lint/both builds, scoped unit83/83,
+Preview E2E21/21 and Gateway HTTP-mock6/6 PASS; overview AXE zero violations.
+[Comparison, evidence and limits](TRIP_OVERVIEW_REFRESH_VERIFICATION.md).
+No Backend/Figma/dependency/history changes; no new checkpoint or release.
+
+## Price Watch maintenance — 07/11/2026
+
+READY_FOR_REVIEW: compact layout, create action beside heading and centered
+create/edit overlay implemented in Runtime/Preview. Typecheck/lint/both builds,
+unit5/5, Gateway HTTP-mock2/2 and Preview9/9 PASS.
+[Evidence and limits](PRICE_WATCH_OVERLAY_VERIFICATION.md). Historical CP10 unchanged;
+live Backend NOT_RUN. No commit/push. Stop for review.
+
+## Finance maintenance — 07/11/2026
+
+User-approved Finance Desktop work is in progress on `feat/fund-figma-v12-desktop`.
+Checkpoint 1 moves existing commands into settings and fixes the breadcrumb;
+[evidence and remaining work](FINANCE_OVERLAY_WORKSPACE_VERIFICATION.md).
+Status: READY_FOR_REVIEW. Expense/Refund/Closure/History integration remains pending
+the next checkpoint. Historical CP09/CP11 acceptance below is unchanged.
+07/11 visual correction: restored Figma field boxes/status tiles and compact card
+styling, full-width member/contribution sections, responsive member table. Gateway
+3/3, finance unit26/26, lint/typecheck/build PASS; see checkpoint evidence above.
+Follow-up vertical spacing correction: explicit section/list spacing replaces mixed
+margins; stacked layouts remove desktop blank spacer. Fresh Gateway3/3 (measured
+16px gaps), unit26/26 and lint/typecheck/build PASS.
+Latest requested refinement: merged receiving header/card, unframed outer workspace
+for lists/forms, content-height general/context, Back action and discard confirmation
+on Finance section change/close. Gateway3/3 including confirmation AXE/focus/draft
+PASS; see current checkpoint evidence. Backend integration remains pending.
+
 ## Hiện tại — CP11 APPROVED / DONE_WITH_EXCEPTIONS theo D56, 02/11/2026
 
 - User đã duyệt sửa lỗi current-page của Trip Drawer và yêu cầu “tiếp tục. và chốt đóng sẵn sàng cho tôi”. Sau focused post-fix gates PASS, D56 đóng **APPROVED/DONE_WITH_EXCEPTIONS**. Full direct visual/live Backend/provider/delivery/manual screen reader/CI/device vẫn là giới hạn được chấp nhận, không chuyển NOT_RUN thành PASS hoặc tuyên bố production-ready.

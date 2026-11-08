@@ -49,6 +49,7 @@ for (const size of [
       ['create', '/trips/new'],
     ]) {
       await page.goto(path!);
+      if (name === 'plan') await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
       await expect(page.locator('main h1').first()).toBeVisible();
       await expect(page.locator('[data-preview]')).toHaveCount(0);
       if (name === 'profile')

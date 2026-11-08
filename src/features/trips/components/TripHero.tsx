@@ -19,7 +19,7 @@ const labels = {
 export function TripHero({
   trip,
   compact = false,
-  variant = 'photo',
+  variant = 'landscape',
 }: {
   trip: TripDetailViewModel;
   compact?: boolean;
@@ -28,6 +28,7 @@ export function TripHero({
   return (
     <section
       className={styles.hero}
+      data-region="trip-hero"
       data-compact={compact}
       data-variant={variant}
       aria-label="Thông tin chuyến đi"

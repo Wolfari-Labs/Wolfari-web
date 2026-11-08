@@ -143,7 +143,7 @@ for (const size of sizes)
       true,
     );
     const desktop = size.width > 768;
-    const header = page.locator('header:visible');
+    const header = page.getByRole('banner');
     await expect(header).toHaveCount(1);
     expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
     const headerTargets = await header

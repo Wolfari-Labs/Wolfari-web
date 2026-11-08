@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, login, test } from './gateway-fixture';
 import { mockPlan } from './plan-fixture';
+import { handle, list } from './plan-dnd-fixture';
 
 const tripId = '11111111-1111-4111-8111-111111111111';
 const locationIds = [
@@ -44,10 +45,15 @@ for (const viewport of [
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
     const days = page.getByRole('group', { name: 'Ngày trong lịch trình' });
-    const metrics = page.getByRole('region', { name: 'Tóm tắt lịch trình · Cả chuyến' });
+    const metrics = page.getByRole('region', { name: 'Tóm tắt lịch trình · 1/11' });
     await expect(metrics).toBeVisible();
     expect((await days.boundingBox())!.y).toBeLessThan((await metrics.boundingBox())!.y);
-    await expect(metrics.getByText('Di chuyển · Chưa có dữ liệu')).toBeVisible();
+    for (const label of ['Hoạt động', 'Địa điểm', 'Trải nghiệm', 'Di chuyển'])
+      await expect(metrics.getByText(`${label} · 1/11`, { exact: true })).toBeVisible();
+    await expect(metrics.getByText(/Chưa có dữ liệu|Ngày 1/)).toHaveCount(0);
+    const missingHours = metrics.getByText('1 hoạt động chưa tính giờ');
+    // Keep the note available to assistive technology without visible explanatory copy.
+    await expect(missingHours).toHaveCSS('clip-path', 'inset(50%)');
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);
@@ -71,30 +77,43 @@ for (const viewport of [
     await map.getByRole('button', { name: 'Ẩn bản đồ', exact: true }).click();
     await expect(map).toHaveCount(0);
 
-    await page.getByRole('button', { name: 'Sắp xếp lịch trình', exact: true }).click();
-    if (viewport.width <= 1200)
-      await page.getByRole('button', { name: 'Hoạt động chưa xếp ngày', exact: true }).click();
-    const pool = page.getByRole('region', { name: 'Địa điểm và hoạt động chưa xếp ngày' });
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+
+    const pool = list(page, 'POOL').locator('xpath=ancestor::section[1]');
     await expect(pool.getByText('Địa điểm chưa xếp', { exact: true })).toBeVisible();
     await expect(pool.getByText('Địa điểm trong ngày', { exact: true })).toHaveCount(0);
     await page.screenshot({ path: testInfo.outputPath('pool.png'), fullPage: true });
-    await pool.getByRole('button', { name: 'Thêm vào lịch', exact: true }).click();
-    const editor = page.getByRole('dialog', { name: 'Thêm hoạt động', exact: true });
-    await expect(editor.getByLabel('Tên hoạt động', { exact: true })).toHaveValue(
-      'Địa điểm chưa xếp',
-    );
-    await expect(editor.getByLabel('Địa điểm', { exact: true })).toHaveValue(locationIds[1]!);
+    await handle(page, locationIds[1]!, 'location').focus();
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('ArrowRight');
     expect(mock.writes).toEqual([]);
-    await editor.getByLabel('Ngày bắt đầu hoặc ngày chưa có giờ').fill('2026-11-01');
-    await editor.getByRole('button', { name: 'Lưu', exact: true }).click();
-    await expect(editor).not.toBeVisible();
-    expect(mock.writes).toHaveLength(1);
-    expect(mock.writes[0]!.body).toMatchObject({
+    await page.keyboard.press('Enter');
+    await expect
+      .poll(
+        () =>
+          mock.activities.filter((activity) => activity.selected_location_id === locationIds[1])
+            .length,
+      )
+      .toBe(1);
+    await expect(page.getByRole('dialog', { name: 'Thêm hoạt động', exact: true })).toHaveCount(0);
+    const creates = mock.writes.filter((write) => write.method === 'POST');
+    expect(creates).toHaveLength(1);
+    expect(creates[0]!.body).toMatchObject({
       selected_location_id: locationIds[1],
       scheduled_date: '2026-11-01',
       starts_at: null,
       ends_at: null,
     });
+    await expect(pool).toBeVisible();
+    const createdId = mock.activities.find(
+      (activity) => activity.selected_location_id === locationIds[1],
+    )!.id;
+    await expect(handle(page, createdId)).toBeFocused();
+    await expect(handle(page, createdId)).toBeEnabled();
+    await expect(page.getByText('Đã lưu thay đổi.', { exact: true })).toHaveCount(0);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
     if (viewport.width <= 1200) await page.keyboard.press('Escape');
     await expect(
       page.getByRole('listitem', { name: 'Địa điểm chưa xếp', exact: true }),
