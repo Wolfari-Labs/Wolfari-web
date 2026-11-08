@@ -1,5 +1,57 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## Overview light-blue border trial — 08/11/2026
+
+User requests a more visible light-blue outline for review. Overview panels and
+postcard use1px #a6d9f2 instead of #dceffa; radius6px, geometry, shadow and all
+shell/hero/other-page styles stay unchanged. This is a local user-requested trial,
+not approval of unrelated palette deltas.
+
+## Overview corners and column alignment — 08/11/2026
+
+Explicit user request authorizes5–7px corners: use6px for overview cards,
+postcard, itinerary rows, map label and description popup; existing5–6px inner
+controls stay unchanged. Header/sidebar/shared TripHero remain untouched.
+Both desktop rows now share the existing KPI column ratios and13px gaps;
+itinerary spans the first two columns, Map aligns with Fund, Fare with Packing.
+Narrow viewport reflow is preserved. This supersedes the independent lower-row
+ratios and larger overview corners only, not other pending design deltas.
+
+
+## Trip geometry refinement — 08/11/2026
+
+User explicitly requests20–25px below overview progress: choose22px (current Figma
+source19px), retain162px cards on short desktops with internal workspace scrolling.
+Fare empty state adds a dash like Weather. Fund/Price Watch use the existing Plan
+horizontal geometry instead of their legacy1220px cap; vertical layouts unchanged.
+[Verification](TRIP_GEOMETRY_VERIFICATION.md). No approval of unrelated pending deltas.
+
+## Trip overview follow-up — 08/11/2026
+
+Explicit user correction: clickable function cards, concise fund/fare/map content,
+visible fund/packing progress and source-accurate overview text/button colors.
+Restored current Figma colors locally; this supersedes07/11's darker-color choice
+below, not global palette or historical checkpoint decisions. Known consequence:
+AXE color-contrast FAIL remains recorded and the strict assertion is retained;
+source fidelity is not WCAG approval. Fund progress means current balance/budget;
+unknown budget is not a fabricated zero. Runtime errors/version/permission guards
+remain intact. [Evidence](TRIP_OVERVIEW_FOLLOWUP_VERIFICATION.md).
+
+## Trip overview maintenance — 07/11/2026
+
+User explicitly requested current Figma Desktop overview fidelity, unchanged header/sidebar,
+a browser-bounded overview and Plan-style banner across all trip feature pages.
+This authorizes the refreshed overview visual treatment and internal scrolling needed to
+keep short/narrow browser viewports bounded. The shared Plan landscape banner supersedes
+the Overview Figma city hero for this task. Preview Dress code now uses the same banner
+and real trip title/dates/lifecycle rather than its previous synthesized3N2Đ summary.
+Source Nunito is local to overview content; global font and shell styling are unchanged.
+PRESERVE_RUNTIME: existing accessible action/muted colors, permissions, unavailable data,
+member pagination feedback and real navigation. Map illustration is visibly labelled;
+source sample weather/fare/fund numbers are not runtime data. See
+[comparison and verification](TRIP_OVERVIEW_REFRESH_VERIFICATION.md). No blanket approval
+of historical pending deltas, no Figma writes and no reopening of closed checkpoints.
+
 ## Finance workspace maintenance — 07/11/2026
 
 User approved the Finance Desktop implementation plan. Existing command forms/lists move

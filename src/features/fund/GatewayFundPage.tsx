@@ -38,6 +38,7 @@ import financeOverlayStyles from './components/FinanceOverlay.module.css';
 import workspaceStyles from './components/FinanceWorkspace.module.css';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import fundStyles from './FundPage.module.css';
+import tripWorkspaceStyles from '../trips/components/TripWorkspace.module.css';
 
 export const formatVnd = (value: string | null) =>
   value === null ? 'Chưa đặt' : value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
@@ -1310,7 +1311,7 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
   });
   const trip = query.data?.status === 'ready' ? query.data.data : null;
   return (
-    <section className={styles.page}>
+    <section className={`${styles.page} ${tripWorkspaceStyles.fullWidth}`} data-flow="fund-server">
       <div className={fundStyles.breadcrumb}>
         <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
         <span aria-hidden="true">›</span>

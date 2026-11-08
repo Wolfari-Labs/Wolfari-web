@@ -22,6 +22,7 @@ import { Badge, ConfirmDialog } from '../../shared/components/Ui';
 import { ContentState } from '../../shared/components/ContentState';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import priceStyles from './RuntimePriceWatchPage.module.css';
+import tripWorkspaceStyles from '../trips/components/TripWorkspace.module.css';
 const labels = {
   ACTIVE: 'Đang theo dõi',
   PAUSED: 'Tạm dừng',
@@ -360,7 +361,10 @@ function WatchWorkspace({
     </>
   );
   return (
-    <section className={`${styles.page} ${priceStyles.page}`}>
+    <section
+      className={`${styles.page} ${priceStyles.page} ${tripWorkspaceStyles.fullWidth}`}
+      data-flow="price-watch-server"
+    >
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
       <TripHero trip={trip} compact variant="landscape" />
       <div className={priceStyles.heading}>
@@ -380,7 +384,7 @@ function WatchWorkspace({
       </div>
       <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
       {!editing && recovery}
-      <div className={priceStyles.workspace}>
+      <div className={priceStyles.workspace} data-region="price-watch-workspace">
         <section className={priceStyles.workspaceMain} aria-label="Danh sách theo dõi giá">
           <div className={styles.actions}>
             <Badge tone="warning">MOCK_FLIGHT · Mô phỏng</Badge>

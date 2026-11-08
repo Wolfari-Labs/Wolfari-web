@@ -544,6 +544,8 @@ export const test = base.extend<{ gateway: GatewayModel }>({
         }
         if (/^\/api\/v1\/trips\/[^/]+\/fund$/.test(path) && method === 'GET')
           return error(route, 404, 'RESOURCE_NOT_FOUND');
+        if (/^\/api\/v1\/trips\/[^/]+\/price-watches$/.test(path) && method === 'GET')
+          return route.fulfill({ json: { data: [], meta: { next_cursor: null } } });
         const planMatch = /^\/api\/v1\/trips\/([^/]+)\/plan$/.exec(path);
         if (planMatch && method === 'GET') {
           const tripId = decodeURIComponent(planMatch[1]!);

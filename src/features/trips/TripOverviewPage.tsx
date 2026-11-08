@@ -8,7 +8,7 @@ import { ContentState } from '../../shared/components/ContentState';
 import { Select } from '../../shared/components/Select';
 import { paths } from '../../app/route-paths';
 import type { RouteContext } from '../../app/route-context';
-import styles from './TripOverviewPage.module.css';
+import styles from './TripDashboard.module.css';
 import { GatewayOverview } from './GatewayOverview';
 import { TripOverview } from './TripOverviewContent';
 

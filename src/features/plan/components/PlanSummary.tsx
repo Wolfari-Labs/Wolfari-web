@@ -11,16 +11,23 @@ export function PlanSummary({
   trip,
   result,
   compact = false,
+  overview = false,
+  selectedDay: controlledDay,
+  onDayChange,
   onRetry,
 }: {
   trip: TripDetailViewModel;
   result: ReadResult<PlanViewModel> | { status: 'loading' };
   compact?: boolean;
+  overview?: boolean;
+  selectedDay?: string;
+  onDayChange?: (day: string) => void;
   onRetry: () => void;
 }) {
   const plan = result.status === 'ready' ? result.data : null;
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [internalDay, setSelectedDay] = useState<string | null>(null);
+  const selectedDay = controlledDay ?? internalDay;
   const day =
     selectedDay && days.includes(selectedDay)
       ? selectedDay
@@ -31,9 +38,15 @@ export function PlanSummary({
     plan.planVersion === trip.planVersion &&
     plan.exportRevision === trip.exportRevision;
   const items =
-    plan && valid ? activitiesForDay(plan.activities, compact ? days[0]! : day, trip.timezone) : [];
+    plan && valid
+      ? activitiesForDay(plan.activities, compact && !overview ? days[0]! : day, trip.timezone)
+      : [];
   return (
-    <div className={styles.summary}>
+    <div
+      className={styles.summary}
+      data-overview={overview || undefined}
+      data-compact={compact || undefined}
+    >
       {result.status === 'loading' ? (
         <ContentState state="loading" headingLevel={2} />
       ) : result.status === 'error' ? (
@@ -78,7 +91,10 @@ export function PlanSummary({
                     key={value}
                     type="button"
                     aria-pressed={value === day}
-                    onClick={() => setSelectedDay(value)}
+                    onClick={() => {
+                      setSelectedDay(value);
+                      onDayChange?.(value);
+                    }}
                   >
                     Ngày {index + 1}
                     <small>
@@ -88,15 +104,41 @@ export function PlanSummary({
                 ))}
               </div>
               {items.length === 0 && <p>Chưa có hoạt động trong ngày này.</p>}
-              <ol>
+              <ol tabIndex={overview ? 0 : undefined} aria-label="Các hoạt động trong ngày">
                 {items.map((a) => (
                   <li key={a.id}>
+                    {overview && (
+                      <Link
+                        className={styles.activityLink}
+                        to={paths.plan(trip.id)}
+                        aria-label={`Mở lịch trình: ${a.title}`}
+                      />
+                    )}
                     <time dateTime={a.startsAt ?? undefined}>
                       {activityTime(a.startsAt, trip.timezone)}
                     </time>
-                    <span>{a.title}</span>
+                    {overview && (
+                      <img className={styles.stop} src="/assets/overview-v2/504bf.svg" alt="" />
+                    )}
+                    {overview && overviewTypeIcon(a.activityType) && (
+                      <img
+                        className={styles.typeIcon}
+                        src={overviewTypeIcon(a.activityType)}
+                        alt=""
+                      />
+                    )}
+                    <span className={styles.activityCopy}>
+                      <span>{a.title}</span>
+                      {overview && a.startsAt && a.endsAt && (
+                        <small>{durationLabel(a.startsAt, a.endsAt)}</small>
+                      )}
+                    </span>
                     {a.presentation.cover && (
-                      <img src={a.presentation.cover.src} alt={a.presentation.cover.alt} />
+                      <img
+                        className={styles.cover}
+                        src={a.presentation.cover.src}
+                        alt={a.presentation.cover.alt}
+                      />
                     )}
                   </li>
                 ))}
@@ -108,4 +150,22 @@ export function PlanSummary({
       {!compact && <Link to={paths.plan(trip.id)}>Xem chi tiết lịch trình →</Link>}
     </div>
   );
+}
+
+function overviewTypeIcon(type: string) {
+  const icons: Record<string, string> = {
+    SIGHTSEEING: 'e5f05.png',
+    VISIT: 'e26c7.png',
+    MEAL: '4807e.png',
+    FOOD: '4807e.png',
+    BEACH: '8f3a3.png',
+    WALK: 'e5f05.png',
+  };
+  return icons[type] ? `/assets/overview-v2/${icons[type]}` : undefined;
+}
+
+function durationLabel(start: string, end: string) {
+  const minutes = Math.round((Date.parse(end) - Date.parse(start)) / 60000);
+  if (!Number.isFinite(minutes) || minutes < 0) return 'Chưa rõ thời lượng';
+  return `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, '0')}m`;
 }

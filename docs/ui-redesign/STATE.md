@@ -1,5 +1,52 @@
 # Trạng thái thực thi
 
+## Overview light-blue border trial — 08/11/2026
+
+READY_FOR_REVIEW: user-requested1px #a6d9f2 outlines on overview panels/postcard;
+6px corners, spacing, shell and hero unchanged. Scoped format/lint/typecheck,
+unit16/16, production build and Preview layout1/1 (expanded/collapsed) PASS.
+Desktop screenshot reviewed. Initial temporary E2E config had wrong server cwd;
+corrected config and rerun PASS. Full E2E/AXE/Gateway NOT_RERUN; prior contrast
+limitation remains. Evidence: test-results/overview-border. No new checkpoint.
+
+## Overview corners and column alignment — 08/11/2026
+
+READY_FOR_REVIEW: overview corners reduced to6px; desktop Map/Fare align exactly
+with Fund/Packing using shared columns and13px gutters. Header/sidebar/hero and
+narrow reflow preserved. Typecheck/full lint/format/production build/unit16 PASS.
+Preview dev overview27 PASS/1 existing contrast FAIL; Gateway HTTP-mock11/11 PASS.
+All15 viewport checks and expanded/collapsed alignment pass. No live Backend or
+full-suite rerun. [Evidence](evidence/overview-alignment-20261108/README.md).
+
+
+## Trip geometry refinement — 08/11/2026
+
+READY_FOR_REVIEW_WITH_CONTRAST_LIMITATION: implemented requested22px bottom clearance for overview progress, fare empty dash,
+and shared full-width Fund/Price Watch gutters in Preview and Gateway. Layout and
+workflow checks recorded in [verification](TRIP_GEOMETRY_VERIFICATION.md).
+Previous source-color contrast limitation remains; no palette/shell changes.
+Final built overview27 PASS/1 known contrast FAIL; Gateway recovery13/13 PASS.
+Width checks Preview8/8 and Gateway8/8 PASS; temporary5183/5184 servers stopped.
+
+## Trip overview follow-up — 08/11/2026
+
+IMPLEMENTED / READY_FOR_REVIEW_WITH_CONTRAST_LIMITATION: native clickable feature
+cards, compact fund summary, fund/packing progress, concise fare empty state,
+one map action and exact scoped Figma colors. Header/sidebar/Plan banner preserved.
+Typecheck/lint/both builds/unit90/90/Gateway HTTP-mock10/10 PASS. Preview dev and
+built runs each27 PASS/1 FAIL: source-color AXE contrast; rule not disabled.
+[Current evidence and limits](TRIP_OVERVIEW_FOLLOWUP_VERIFICATION.md).
+07/11 zero-AXE result below is historical, not current. No new checkpoint/release.
+
+## Trip overview maintenance — 07/11/2026
+
+READY_FOR_REVIEW: refreshed current Figma Desktop overview cards/timeline/map/story,
+bounded viewport layout and Plan banner consistency across nine trip feature routes.
+Header/sidebar unchanged. Typecheck/full lint/both builds, scoped unit83/83,
+Preview E2E21/21 and Gateway HTTP-mock6/6 PASS; overview AXE zero violations.
+[Comparison, evidence and limits](TRIP_OVERVIEW_REFRESH_VERIFICATION.md).
+No Backend/Figma/dependency/history changes; no new checkpoint or release.
+
 ## Price Watch maintenance — 07/11/2026
 
 READY_FOR_REVIEW: compact layout, create action beside heading and centered

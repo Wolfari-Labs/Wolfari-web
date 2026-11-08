@@ -432,7 +432,7 @@ function PriceWatchWorkspace({ data, timezone }: { data: PriceWatchViewModel; ti
     setCreating(true);
   };
   return (
-    <div className={styles.workspace}>
+    <div className={styles.workspace} data-region="price-watch-workspace">
       <WatchList
         watches={data.watches}
         selectedId={selected.id}
