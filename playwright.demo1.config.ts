@@ -12,7 +12,7 @@ export default defineConfig({
   use: { baseURL: manifest.webUrl, headless: true, viewport: { width: 1440, height: 1000 },
     actionTimeout: 20000, navigationTimeout: 30000,
     launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ?? chromium.executablePath() },
-    serviceWorkers: 'block', reducedMotion: 'reduce', trace: 'off', screenshot: 'off', video: 'off' },
+    serviceWorkers: 'block', reducedMotion: 'reduce', trace: 'off', screenshot: 'on', video: 'on' },
   webServer: { command: `node node_modules/vite/bin/vite.js ${runtime === 'preview' ? 'preview --outDir dist-demo1' : ''} --mode demo --host localhost --port ${url.port} --strictPort`,
     url: manifest.webUrl, reuseExistingServer: false, timeout: 30000,
     env: { VITE_DATA_MODE: 'gateway', VITE_GATEWAY_PROXY_TARGET: manifest.gatewayUrl } },
