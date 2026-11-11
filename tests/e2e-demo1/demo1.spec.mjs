@@ -45,8 +45,14 @@ async function register(page, label, email = `d1-${randomUUID()}@wolfari.test`) 
   }
   await page.goto(link);
   await page.getByRole('button', { name: 'Xác minh email', exact: true }).click();
-  await expect(page).toHaveURL(/\/login$/);
-  await login(page, account);
+  // The resend case already has a session. Verification preserves it and
+  // returns to Profile; signed-out recipients still return to Login.
+  if (label === 'Outsider X') {
+    await expect(page).toHaveURL(/\/profile$/);
+  } else {
+    await expect(page).toHaveURL(/\/login$/);
+    await login(page, account);
+  }
   return account;
 }
 async function fund(page, tripId) {
@@ -98,7 +104,16 @@ async function linkInvite(owner, tripId) {
 }
 async function accept(page, link, tripId) {
   await page.goto(link);
+  const response = page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname === '/api/v1/invitations/accept' && r.request().method() === 'POST',
+  );
   await page.getByRole('button', { name: 'Chấp nhận', exact: true }).click();
+  const accepted = await response;
+  const result = await accepted.json();
+  // Keep only the non-secret error code in diagnostics, never the invitation token.
+  expect(accepted.status(), result.error?.code ?? 'invitation acceptance').toBe(200);
+  expect(result.data.membership.trip_id).toBe(tripId);
   await expect(page).toHaveURL(`/trips/${tripId}`);
 }
 async function setEditors(owner, tripId, names) {
@@ -565,11 +580,21 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(owner.getByText('Đang theo dõi', { exact: true })).toBeVisible();
       await expect
         .poll(async () => {
+          const loaded = owner.waitForResponse((r) =>
+            /\/api\/v1\/price-watches\/[^/]+\/observations$/.test(new URL(r.url()).pathname),
+          );
           await owner.getByRole('button', { name: 'Lịch sử giá', exact: true }).click();
           const history = owner.getByRole('dialog', { name: 'Chi tiết theo dõi giá', exact: true });
           await expect(
             history.getByRole('heading', { name: 'Lịch sử giá quan sát' }),
           ).toBeVisible();
+          // Opening the dialog renders its heading before the async query settles.
+          // Closing immediately at count=0 aborts that read, especially in dev.
+          expect((await loaded).status()).toBe(200);
+          await expect(history.locator('[aria-busy="true"]')).toHaveCount(0);
+          await expect(
+            history.getByText('Chưa tải được lịch sử quan sát.', { exact: false }),
+          ).toHaveCount(0);
           const count = await history.getByRole('listitem').count();
           if (!count) await owner.keyboard.press('Escape');
           return count;
@@ -746,6 +771,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await owner.getByLabel('Lý do rời/xóa').fill('TEST rejoin');
       await owner.getByRole('button', { name: 'Xác nhận rời/xóa' }).click();
       await expect(owner.getByText('Đã hoàn tất thao tác.', { exact: true })).toBeVisible();
+      await expect(
+        owner.getByRole('button', { name: 'Xóa thành viên · Editor C', exact: true }),
+      ).toHaveCount(0);
       await accept(editor, await linkInvite(owner, tripId), tripId);
       await editor.goto(`/trips/${tripId}/plan`);
       await expect(editor.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
@@ -1048,13 +1076,48 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
           }),
         });
       });
+      const createdInvitation = owner.waitForResponse(
+        (response) =>
+          new URL(response.url()).pathname === `/api/v1/trips/${tripId}/invitations` &&
+          response.request().method() === 'POST',
+      );
       const link = await linkInvite(owner, tripId);
+      const createdResponse = await createdInvitation;
+      expect(createdResponse.status()).toBe(201);
+      const createdExpiry = (await createdResponse.json()).data.invitation.expires_at;
+      expect(Date.parse(createdExpiry)).toBe(expiresAt);
       await owner.unroute(routePattern);
       await outsider.goto(link);
       await expect(outsider.getByRole('button', { name: 'Chấp nhận', exact: true })).toBeVisible();
       await expect.poll(() => Date.now() >= expiresAt, { timeout: 15000 }).toBe(true);
-      await outsider.goto(link);
-      await expect(outsider.getByText('Đã hết hạn', { exact: true })).toBeVisible();
+      // Reopening an identical fragment preserves the current response flow.
+      // Explicitly revalidate through the real API: expired previews are 409,
+      // not successful EXPIRED projections (which the decoder must reject).
+      // PostgreSQL's container clock is authoritative, not the Windows runner
+      // clock. Poll real revalidation for at most 15s; never rewrite expiry/time.
+      await expect
+        .poll(
+          async () => {
+            const responsePromise = outsider.waitForResponse(
+              (response) =>
+                new URL(response.url()).pathname === '/api/v1/invitations/preview' &&
+                response.request().method() === 'POST',
+            );
+            await outsider
+              .getByRole('button', { name: 'Kiểm tra lại lời mời', exact: true })
+              .click();
+            const response = await responsePromise;
+            const body = await response.json();
+            if (response.status() === 200) expect(body.data.expires_at).toBe(createdExpiry);
+            else expect(body.error.code).toBe('STATE_CONFLICT');
+            return response.status();
+          },
+          { timeout: 15000, intervals: [250, 500, 1000] },
+        )
+        .toBe(409);
+      await expect(
+        outsider.getByText(/Lời mời không khả dụng hoặc trạng thái đã thay đổi/),
+      ).toBeVisible();
       await expect(outsider.getByRole('button', { name: 'Chấp nhận', exact: true })).toHaveCount(0);
       await outsider.goto('/admin');
       await expect(
