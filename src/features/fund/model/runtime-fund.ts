@@ -87,6 +87,12 @@ export interface TransferInstruction {
   warning: string;
 }
 export interface FundRuntime {
+  expenses?(
+    fundId: string,
+    cursor?: string,
+    signal?: AbortSignal,
+    status?: Expense['status'],
+  ): Promise<Page<Expense>>;
   commands: CommandCoordinator;
   fund(tripId: string, signal?: AbortSignal): Promise<RuntimeFund | null>;
   destinations(fundId: string, signal?: AbortSignal): Promise<Destination[]>;
@@ -109,4 +115,26 @@ export interface FundRuntime {
     limit?: number,
   ): Promise<Page<LedgerEntry>>;
   instruction(contributionId: string, signal?: AbortSignal): Promise<TransferInstruction>;
+}
+export interface Expense {
+  id: string;
+  fund_id: string;
+  title: string;
+  description: string | null;
+  amount: string;
+  category: string | null;
+  status: 'DRAFT' | 'SUBMITTED' | 'CONFIRMED' | 'REJECTED' | 'REVERSED';
+  created_by_user_id: string;
+  receipt_available: boolean;
+  submitted_at: string | null;
+  paid_at: string | null;
+  payment_method: string | null;
+  paid_by_user_id: string | null;
+  confirmed_at: string | null;
+  confirmed_by_user_id: string | null;
+  rejected_reason: string | null;
+  created_at: string;
+  updated_at: string;
+  version: number;
+  finance_version: number;
 }

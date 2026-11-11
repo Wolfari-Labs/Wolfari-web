@@ -9,7 +9,10 @@ import type {
   ContributionRequest,
 } from './model/runtime-fund';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
-import type { CommandKind, CommandSession } from '../../shared/types/operations';
+import type { CommandSession } from '../../shared/types/operations';
+import type { LegacyCommandKind as CommandKind } from '../../shared/types/operations';
+import { ExpensePanel } from './components/ExpensePanel';
+import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import { useMembersRepositories } from '../members/repositories/members-context';
@@ -675,7 +678,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   );
   const reenterCommand = () => {
     const i = op.intent;
-    if (!i) return;
+    if (!i || isFinanceCommand(i.kind)) return;
     if (form) {
       focusOpenForm();
       return;
@@ -1219,6 +1222,14 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'expenses' && fund && runtime.expenses ? (
+              <ExpensePanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={blocked || fundQuery.isError}
+                name={name}
+              />
             ) : financeSection === 'members' ? (
               <>
                 <h3>Thành viên &amp; quyền</h3>

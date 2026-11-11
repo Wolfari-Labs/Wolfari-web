@@ -3,8 +3,16 @@ import { ApiError } from '../http/api-error';
 import { toDomainError } from '../http/domain-error';
 import type { DomainError } from '../../shared/types/result';
 import * as d from '../http/decode';
+import {
+  financeCommandKinds,
+  isFinanceCommand,
+  validateFinanceCommand,
+  financeCommandRoute,
+  type FinanceCommandKind,
+} from './finance-commands';
 
 export const commandKinds = [
+  ...financeCommandKinds,
   'enable',
   'budget',
   'destination-create',
@@ -22,6 +30,7 @@ export const commandKinds = [
   'remove',
 ] as const;
 export type CommandKind = (typeof commandKinds)[number];
+export type LegacyCommandKind = Exclude<CommandKind, FinanceCommandKind>;
 export type OperationState =
   'PROCESSING' | 'PENDING_RECOVERY' | 'SUCCEEDED' | 'FAILED' | 'NEEDS_REVIEW';
 export interface Operation {
@@ -57,7 +66,8 @@ export const unresolved = (s: CommandSnapshot) =>
   !!s.recoveryBlocked || (!!s.intent && !['SUCCEEDED', 'FAILED'].includes(s.state));
 const sensitiveKinds = new Set<CommandKind>(['enable', 'destination-create', 'destination-edit']);
 export function validateCommandBody(kind: CommandKind, body: Record<string, unknown>) {
-  const fields: Record<CommandKind, string[]> = {
+  if (isFinanceCommand(kind)) return validateFinanceCommand(kind, body);
+  const fields: Record<LegacyCommandKind, string[]> = {
     enable: ['holder_user_id', 'currency', 'destination', 'budget_amount'],
     budget: ['budget_amount', 'expected_finance_version'],
     'destination-create': [
@@ -159,6 +169,7 @@ export function commandRoute(i: Pick<Intent, 'kind' | 'tripId' | 'fundId' | 'res
   method: 'POST' | 'PATCH' | 'DELETE';
 } {
   d.uuid(i.tripId);
+  if (isFinanceCommand(i.kind)) return financeCommandRoute(i.kind, i.fundId, i.resourceId);
   const fund = () => '/api/v1/funds/' + d.uuid(i.fundId);
   const resource = () => d.uuid(i.resourceId);
   switch (i.kind) {
