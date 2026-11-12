@@ -9,7 +9,7 @@ import type {
 } from '../../features/fund/model/runtime-fund';
 import type { Intent } from '../operations/command-coordinator';
 import { decodeOperation } from '../operations/command-coordinator';
-import { decodeExpense } from './finance-extended-decoders';
+import { decodeExpense, decodeFinancialNote } from './finance-extended-decoders';
 export function decodeFund(value: unknown, tripId: string): RuntimeFund {
   const r = d.object(value);
   d.scope(d.uuid(r.trip_id), tripId);
@@ -151,10 +151,17 @@ export function decodeInstruction(value: unknown, contributionId: string): Trans
   };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {
-  if (intent.kind === 'expense-delete') {
+  if (intent.kind === 'expense-delete' || intent.kind === 'note-delete') {
     const operation = decodeOperation(value, intent);
     if (operation.state !== 'SUCCEEDED') throw Error('Unconfirmed delete');
     return operation;
+  }
+  if (intent.kind.startsWith('note-')) {
+    const note = decodeFinancialNote(value, d.uuid(intent.fundId));
+    if (intent.resourceId) d.scope(note.id, intent.resourceId);
+    if (note.finance_version < (intent.versions.expected_finance_version ?? 0))
+      throw Error('Stale note');
+    return note;
   }
   if (intent.kind.startsWith('expense-')) {
     const expense = decodeExpense(value, d.uuid(intent.fundId));

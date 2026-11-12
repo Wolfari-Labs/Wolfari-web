@@ -10,7 +10,7 @@ SRS v1.2 is the requirements reference. The user explicitly selected existing ba
 | --- | --- | --- | --- |
 | Expense | FR-FIN-03/04 | funds/:id/expenses and expenses/:id actions | Implemented; focused automated verification passed |
 | Receipt | Finance evidence | funds/:id/receipts | Blocked: no expense-to-receipt download locator after reload |
-| Outside-fund notes | FR-FIN-03 | funds/:id/notes | Pending |
+| Outside-fund notes | FR-FIN-03 | funds/:id/notes; PATCH/DELETE notes/:id | Implemented; focused automated verification passed |
 | Contribution reversal | FR-FIN-04 | contributions/:id/reverse | Pending |
 | Refund | FR-FIN-05 | funds/:id/refunds and refund actions | Pending |
 | Closure | FR-FIN-07/08 | funds/:id/closures and closure actions | Pending |
@@ -28,8 +28,16 @@ No live backend/provider/manual-screen-reader/physical-device verification has b
 - 402px screenshot inspected; targeted automated WCAG2A/AA scan passed. Browser fixture tests are not live server/ledger verification. Native zoom, physical device, manual screen-reader and full project suites NOT_RUN.
 - Initial attempts: dev-server cold start exceeded the default 30s test deadline; rerun with 120s deadline passed. Type errors and restricted infrastructure imports were corrected before the final passing runs. No rules disabled.
 
-## Receipt integration blocker
+## Outside-fund notes verification — 12 November 2026
+
+- Typecheck, scoped ESLint and production build: PASS (existing PostCSS warning).
+- Focused unit/component: 26/26 PASS across finance-notes, finance-integration, finance-action and demo1-finance. Includes nullable/zero/int64 amount validation and strict scope decoding.
+- Gateway HTTP-mock: expense regression 6/6 PASS; notes 3/3 PASS, including CRUD, null versus zero, unchanged mock balance, loading additional payer candidates, CLOSING/CLOSED read-only states and a 402px WCAG2A/AA scan.
+- Initial notes E2E exposed a disabled create button while member pagination remained. Fixed without requiring all members to be loaded; explicit member pagination is available inside the notes panel. A subsequent exact-optional-property TypeScript error was corrected.
+- These focused checks do not prove backend ledger behavior. Live tests, dedicated notes permission/error matrix, manual screen-reader, full regression and physical-device verification: NOT_RUN. Existing shared command recovery tests passed; notes-specific timeout scenarios have not been separately exercised.
+
+## Receipt API evidence
 
 Backend `expense-http.ts` projects `receipt_available` but intentionally omits `receipt_object_key` (its contract test asserts omission). `finance-receipt-http.ts` download accepts only `object_key`; there is no expense-ID lookup/download endpoint. Upload returns a key, but retaining it only in browser memory does not enable reading existing attachments after reload or by another authorized member.
 
-Do not invent a URL, scrape a storage key, persist private file bytes, or present temporary session-only access as completed receipt integration. Completing the planned durable download requires a backend contract addition or explicit acceptance of a reduced/deferred receipt scope. Await user direction before step 2; steps 3–7 remain pending, not completed or committed.
+Do not invent a URL, scrape a storage key, persist private file bytes, or present temporary session-only access as completed receipt integration. On 12 November the user authorized documenting backend gaps and continuing the remaining Web features while deferring receipts. See [backend gaps](backend-integration-gaps.md). No backend edits authorized.

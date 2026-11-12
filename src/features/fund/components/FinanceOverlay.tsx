@@ -4,6 +4,7 @@ import { Icon, type IconName } from '../../../shared/components/Icon';
 import styles from './FinanceOverlay.module.css';
 
 export type FinanceSection =
+  | 'notes'
   | 'general'
   | 'members'
   | 'contributions'
@@ -14,6 +15,7 @@ export type FinanceSection =
   | 'closure';
 
 const sections: readonly { id: FinanceSection; label: string; icon: IconName }[] = [
+  { id: 'notes', label: 'Ngoài quỹ', icon: 'fund' },
   { id: 'general', label: 'Thông tin chung', icon: 'settings' },
   { id: 'members', label: 'Thành viên & quyền', icon: 'members' },
   { id: 'contributions', label: 'Đợt đóng góp', icon: 'fund' },
@@ -28,6 +30,11 @@ const sectionMeta: Record<
   FinanceSection,
   { eyebrow: string; heading: string; description: string }
 > = {
+  notes: {
+    eyebrow: 'QUỸ NHÓM / NGOÀI QUỸ',
+    heading: 'Chi ngoài quỹ',
+    description: 'Ghi chú riêng, không giảm số dư hoặc tạo công nợ.',
+  },
   general: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / THÔNG TIN CHUNG',
     heading: 'Thông tin chung',

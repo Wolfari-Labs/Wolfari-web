@@ -12,6 +12,7 @@ import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import type { CommandSession } from '../../shared/types/operations';
 import type { LegacyCommandKind as CommandKind } from '../../shared/types/operations';
 import { ExpensePanel } from './components/ExpensePanel';
+import { FinancialNotesPanel } from './components/FinancialNotesPanel';
 import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
@@ -1222,6 +1223,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'notes' && fund && runtime.notes ? (
+              <FinancialNotesPanel
+                loadMoreMembers={
+                  membersQuery.hasNextPage ? () => void membersQuery.fetchNextPage() : undefined
+                }
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={blocked || fundQuery.isError || membersQuery.isError}
+                members={members}
+              />
             ) : financeSection === 'expenses' && fund && runtime.expenses ? (
               <ExpensePanel
                 runtime={runtime}

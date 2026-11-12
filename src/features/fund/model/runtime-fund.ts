@@ -87,6 +87,7 @@ export interface TransferInstruction {
   warning: string;
 }
 export interface FundRuntime {
+  notes?(fundId: string, cursor?: string, signal?: AbortSignal): Promise<Page<FinancialNote>>;
   expenses?(
     fundId: string,
     cursor?: string,
@@ -115,6 +116,18 @@ export interface FundRuntime {
     limit?: number,
   ): Promise<Page<LedgerEntry>>;
   instruction(contributionId: string, signal?: AbortSignal): Promise<TransferInstruction>;
+}
+export interface FinancialNote {
+  id: string;
+  fund_id: string;
+  description: string;
+  amount: string | null;
+  payer_user_id: string | null;
+  created_by_user_id: string;
+  created_at: string;
+  updated_at: string;
+  version: number;
+  finance_version: number;
 }
 export interface Expense {
   id: string;

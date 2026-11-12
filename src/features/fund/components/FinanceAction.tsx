@@ -4,12 +4,14 @@ import { unresolved } from '../../../shared/types/operations';
 import { Button } from '../../../shared/components/Button';
 import { Drawer } from '../../../shared/components/Drawer';
 import { Input } from '../../../shared/components/Input';
+import { Select } from '../../../shared/components/Select';
 import { Alert } from '../../../shared/components/Alert';
 import { ConfirmDialog } from '../../../shared/components/Ui';
 import { OperationStatus } from '../../../shared/components/OperationStatus';
 import styles from './FinanceRecords.module.css';
 
 export interface FinanceField {
+  options?: readonly { value: string; label: string }[];
   key: string;
   label: string;
   initial?: string;
@@ -105,20 +107,40 @@ export function FinanceAction({
                 {error}
               </Alert>
             )}
-            {fields.map((field) => (
-              <Input
-                key={field.key}
-                label={field.label}
-                type={field.type ?? 'text'}
-                required={field.required ?? false}
-                maxLength={field.maxLength}
-                value={draft.values[field.key] ?? ''}
-                disabled={blocked}
-                onChange={(e) =>
-                  setDraft({ ...draft, values: { ...draft.values, [field.key]: e.target.value } })
-                }
-              />
-            ))}
+            {fields.map((field) =>
+              field.options ? (
+                <Select
+                  key={field.key}
+                  label={field.label}
+                  required={field.required ?? false}
+                  value={draft.values[field.key] ?? ''}
+                  disabled={blocked || submitted}
+                  onChange={(e) =>
+                    setDraft({ ...draft, values: { ...draft.values, [field.key]: e.target.value } })
+                  }
+                >
+                  <option value="">Chưa chọn</option>
+                  {field.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <Input
+                  key={field.key}
+                  label={field.label}
+                  type={field.type ?? 'text'}
+                  required={field.required ?? false}
+                  maxLength={field.maxLength}
+                  value={draft.values[field.key] ?? ''}
+                  disabled={blocked}
+                  onChange={(e) =>
+                    setDraft({ ...draft, values: { ...draft.values, [field.key]: e.target.value } })
+                  }
+                />
+              ),
+            )}
             {children}
             <div className={styles.actions}>
               <Button type="submit" disabled={disabled || blocked || submitted}>

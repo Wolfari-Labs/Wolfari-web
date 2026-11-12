@@ -1,6 +1,9 @@
 import * as d from '../http/decode';
 
 export const financeCommandKinds = [
+  'note-create',
+  'note-edit',
+  'note-delete',
   'expense-create',
   'expense-edit',
   'expense-delete',
@@ -25,6 +28,35 @@ const expenseFields = [
   'receipt_object_key',
 ];
 export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<string, unknown>) {
+  if (kind.startsWith('note-')) {
+    const allowed =
+      kind === 'note-delete'
+        ? versions
+        : [
+            'description',
+            'amount',
+            'payer_user_id',
+            ...(kind === 'note-create' ? ['expected_finance_version'] : versions),
+          ];
+    if (Object.keys(body).some((k) => !allowed.includes(k))) throw Error('Invalid note field');
+    for (const k of allowed.filter((k) => k.startsWith('expected_'))) d.version(body[k]);
+    if (kind === 'note-create' || Object.hasOwn(body, 'description')) {
+      if (
+        typeof body.description !== 'string' ||
+        !body.description.trim() ||
+        body.description.includes('\0')
+      )
+        throw Error('Nhập nội dung ghi chú.');
+    }
+    if (body.amount != null) d.money(body.amount);
+    if (body.payer_user_id != null) d.uuid(body.payer_user_id);
+    if (
+      kind === 'note-edit' &&
+      !['description', 'amount', 'payer_user_id'].some((k) => Object.hasOwn(body, k))
+    )
+      throw Error('Empty patch');
+    return;
+  }
   const fields =
     kind === 'expense-create'
       ? [...expenseFields, 'expected_finance_version']
@@ -66,6 +98,12 @@ export function financeCommandRoute(
   resourceId?: string,
 ): { path: string; method: 'POST' | 'PATCH' | 'DELETE' } {
   const root = '/api/v1/funds/' + d.uuid(fundId);
+  if (kind === 'note-create') return { path: root + '/notes', method: 'POST' };
+  if (kind === 'note-edit' || kind === 'note-delete')
+    return {
+      path: '/api/v1/notes/' + d.uuid(resourceId),
+      method: kind === 'note-edit' ? 'PATCH' : 'DELETE',
+    };
   if (kind === 'expense-create') return { path: root + '/expenses', method: 'POST' };
   const action = kind.slice('expense-'.length);
   return {
