@@ -16,6 +16,7 @@ import { FinancialNotesPanel } from './components/FinancialNotesPanel';
 import { FinanceAction } from './components/FinanceAction';
 import { RefundPanel } from './components/RefundPanel';
 import { ClosurePanel } from './components/ClosurePanel';
+import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
 import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
@@ -1256,6 +1257,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'audit' && fund && runtime.history ? (
+              <FinanceHistoryPanel
+                runtime={runtime}
+                fundId={fund.id}
+                trip={trip}
+                members={members}
+              />
             ) : financeSection === 'closure' && fund && runtime.closures && runtime.closure ? (
               <ClosurePanel
                 runtime={runtime}

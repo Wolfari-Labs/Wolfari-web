@@ -4,7 +4,12 @@ import type { CommandCoordinator } from '../operations/command-coordinator';
 import { ApiError } from '../http/api-error';
 import * as d from '../http/decode';
 import { decodeClosure } from './finance-closure-decoder';
-import { decodeExpense, decodeFinancialNote, decodeRefund } from './finance-extended-decoders';
+import {
+  decodeExpense,
+  decodeFinancialNote,
+  decodeRefund,
+  decodeHistory,
+} from './finance-extended-decoders';
 import {
   decodeContribution,
   decodeDestination,
@@ -48,6 +53,12 @@ export function createGatewayFundRepository(
       ? {
           runtime: {
             commands,
+            history: (id, cursor, signal) =>
+              read(
+                root(id) + '/history' + query(cursor, 20),
+                (v) => d.page(v, (item) => decodeHistory(item, id), 20),
+                signal,
+              ),
             closures: (id, tripId, cursor, signal) =>
               read(
                 root(id) + '/closures' + query(cursor, 20),

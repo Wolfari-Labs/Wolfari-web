@@ -14,7 +14,7 @@ SRS v1.2 is the requirements reference. The user explicitly selected existing ba
 | Contribution reversal | FR-FIN-04 | POST contributions/:id/reverse | Implemented; focused automated verification passed |
 | Refund | FR-FIN-05 | funds/:id/refunds and refund actions | Implemented with BE-02/BE-04 limitations |
 | Closure | FR-FIN-07/08 | funds/:id/closures; closures/:id; confirm/cancel/remind | Implemented; focused automated verification passed |
-| Audit history | FR-TR-12 / Finance traceability | funds/:id/history | Pending |
+| Audit history | FR-TR-12 / Finance traceability | GET funds/:id/history, limit/cursor | Implemented; separate from ledger |
 
 Backend authorizes active members to create expense proposals; creator/Owner edits/submits drafts, creator withdraws, Holder alone confirms/rejects/reverses. Draft/proposal is not a ledger payment. Refund self-recipient independent verification required by SRS is not implemented by current backend: record as a known deviation, not independently verified. Holder handover, partial/overpayment, provider transfers, Export/Public Share and missing backend travel/DSS capabilities remain outside this branch.
 
@@ -50,8 +50,6 @@ No live backend/provider/manual-screen-reader/physical-device verification has b
 - BE-02 independent verification and BE-04 absent reversal reason remain documented API/SRS limitations. Holder must re-enter the original reversal-request reason; it is not reconstructed from the refund reason.
 - Dedicated cross-role/refund timeout/insufficient-funds/closed-fund browser matrix, full regression and live backend/provider tests: NOT_RUN. Current evidence is focused HTTP-mock, not end-to-end live certification.
 
-## Receipt API blocker
-
 ## Closure verification — 12 November 2026
 
 - List pagination and explicit detail read; immutable snapshot groups render all returned record fields (technical field names retained), required users and their confirmations. Schema/fund/Trip/version/hash/confirmation-set checks reject mismatched data. Confirmation requires explicit review and submits the selected snapshot hash, not a global current version.
@@ -64,3 +62,27 @@ No live backend/provider/manual-screen-reader/physical-device verification has b
 Backend `expense-http.ts` projects `receipt_available` but intentionally omits `receipt_object_key` (its contract test asserts omission). `finance-receipt-http.ts` download accepts only `object_key`; there is no expense-ID lookup/download endpoint. Upload returns a key, but retaining it only in browser memory does not enable reading existing attachments after reload or by another authorized member.
 
 Do not invent a URL, scrape a storage key, persist private file bytes, or present temporary session-only access as completed receipt integration. On 12 November the user authorized documenting backend gaps and continuing the remaining Web features while deferring receipts. See [backend gaps](backend-integration-gaps.md). No backend edits authorized.
+
+## Audit history and final regression — 12 November 2026
+
+- Separate audit panel with server pagination, actor/system actor, action, timestamp (raw microseconds available in details), entity, versions and reason. Unknown actions retain their original identifier. Ledger retains its legacy accessible region name for existing consumers and now visibly says “Sổ giao dịch”.
+- Typecheck PASS; scoped lint PASS; full `eslint .` PASS; production build PASS (existing PostCSS warning).
+- Full unit/component: **734/734 PASS, 62 files**. Includes all new finance contract tests and existing recovery tests.
+- Finance Gateway HTTP-mock regression: **17/17 PASS** across expense, notes, reversal, refund, closure, history, operations and refresh. History covers read failure/reload, cursor pagination, system actor, CLOSED read access and automated 402px WCAG2A/AA scan.
+- Navigation entries placed in business order (notes after expenses, audit at end); final targeted history check rerun after ordering. This does not change commands/contracts.
+- Live E2E: **NOT_RUN**. Read-only local listener inventory found no service listening on the default Gateway port 3000 at check time; no backend services, database fixtures or provider operations started. No claim that remote environments were inspected.
+- Full Gateway suite outside Finance, Preview fixture suite, manual screen-reader/keyboard/focus review, physical devices, multi-user live race conditions and the per-feature NOT_RUN cases above remain unverified. Automated passing tests are not complete SRS acceptance or production readiness.
+
+## Commit handoff
+
+| Feature | Commit |
+| --- | --- |
+| Expenses | `0d572ad` |
+| Receipts | DEFERRED — BE-01, no completion commit |
+| Financial notes + backend gap report | `de4c074` |
+| Contribution reversal | `4e14013` |
+| Refund workflow | `397b9cf` |
+| Fund closure | `eb75406` |
+| Audit history + final regression | This document's `feat(finance): integrate audit history` commit |
+
+Six feature commits, not seven: the deferred receipt feature is not represented as completed. Backend/mobile/dependencies/database unchanged. No push, merge or deploy. Remaining backend/SRS work is in `backend-integration-gaps.md`; remaining verification is explicitly listed above.

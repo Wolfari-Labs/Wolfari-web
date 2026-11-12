@@ -1,5 +1,34 @@
 import * as d from '../http/decode';
-import type { Expense, FinancialNote, Refund } from '../../features/fund/model/runtime-fund';
+import type {
+  Expense,
+  FinancialNote,
+  Refund,
+  FinanceHistory,
+} from '../../features/fund/model/runtime-fund';
+export function decodeHistory(value: unknown, fundId: string): FinanceHistory {
+  const r = d.object(value);
+  d.scope(d.uuid(r.fund_id), fundId);
+  const action = d.string(r.action),
+    entity = d.string(r.entity_type);
+  if (!/^[A-Z][A-Z_]{0,59}$/.test(action) || !/^[A-Za-z][A-Za-z0-9_]{0,39}$/.test(entity))
+    throw Error('Invalid history action');
+  return {
+    id: d.uuid(r.id),
+    fund_id: fundId,
+    actor_user_id: d.nullable(r.actor_user_id, d.uuid),
+    system_actor: d.nullable(r.system_actor, (v) =>
+      d.enumeration(v, ['MOMO_IPN', 'MOMO_RECONCILIATION']),
+    ),
+    action,
+    entity_type: entity,
+    entity_id: d.nullable(r.entity_id, d.uuid),
+    from_version: d.nullable(r.from_version, d.version),
+    to_version: d.nullable(r.to_version, d.version),
+    reason: d.nullable(r.reason, d.string),
+    occurred_at: d.instant(r.occurred_at),
+    correlation_id: d.uuid(r.correlation_id),
+  };
+}
 export function decodeRefund(value: unknown, fundId: string): Refund {
   const r = d.object(value);
   d.scope(d.uuid(r.fund_id), fundId);

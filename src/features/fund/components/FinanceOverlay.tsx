@@ -4,6 +4,7 @@ import { Icon, type IconName } from '../../../shared/components/Icon';
 import styles from './FinanceOverlay.module.css';
 
 export type FinanceSection =
+  | 'audit'
   | 'notes'
   | 'general'
   | 'members'
@@ -15,21 +16,27 @@ export type FinanceSection =
   | 'closure';
 
 const sections: readonly { id: FinanceSection; label: string; icon: IconName }[] = [
-  { id: 'notes', label: 'Ngoài quỹ', icon: 'fund' },
   { id: 'general', label: 'Thông tin chung', icon: 'settings' },
   { id: 'members', label: 'Thành viên & quyền', icon: 'members' },
   { id: 'contributions', label: 'Đợt đóng góp', icon: 'fund' },
   { id: 'expenses', label: 'Khoản chi', icon: 'down' },
+  { id: 'notes', label: 'Ngoài quỹ', icon: 'fund' },
   { id: 'refunds', label: 'Hoàn tiền', icon: 'refresh' },
   { id: 'receiving', label: 'Thông tin nhận tiền', icon: 'fund' },
   { id: 'handover', label: 'Bàn giao Fund Holder', icon: 'members' },
   { id: 'closure', label: 'Đóng Finance', icon: 'close' },
+  { id: 'audit', label: 'Lịch sử thao tác', icon: 'refresh' },
 ];
 
 const sectionMeta: Record<
   FinanceSection,
   { eyebrow: string; heading: string; description: string }
 > = {
+  audit: {
+    eyebrow: 'QUỸ NHÓM / LỊCH SỬ THAO TÁC',
+    heading: 'Lịch sử thao tác',
+    description: 'Nhật ký nghiệp vụ, tách biệt với sổ giao dịch.',
+  },
   notes: {
     eyebrow: 'QUỸ NHÓM / NGOÀI QUỸ',
     heading: 'Chi ngoài quỹ',

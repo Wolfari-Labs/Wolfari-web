@@ -87,6 +87,7 @@ export interface TransferInstruction {
   warning: string;
 }
 export interface FundRuntime {
+  history?(fundId: string, cursor?: string, signal?: AbortSignal): Promise<Page<FinanceHistory>>;
   closures?(
     fundId: string,
     tripId: string,
@@ -129,6 +130,20 @@ export interface FundRuntime {
     limit?: number,
   ): Promise<Page<LedgerEntry>>;
   instruction(contributionId: string, signal?: AbortSignal): Promise<TransferInstruction>;
+}
+export interface FinanceHistory {
+  id: string;
+  fund_id: string;
+  actor_user_id: string | null;
+  system_actor: 'MOMO_IPN' | 'MOMO_RECONCILIATION' | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  from_version: number | null;
+  to_version: number | null;
+  reason: string | null;
+  occurred_at: string;
+  correlation_id: string;
 }
 export interface Closure {
   id: string;
