@@ -87,6 +87,13 @@ export interface TransferInstruction {
   warning: string;
 }
 export interface FundRuntime {
+  closures?(
+    fundId: string,
+    tripId: string,
+    cursor?: string,
+    signal?: AbortSignal,
+  ): Promise<Page<Closure>>;
+  closure?(id: string, fundId: string, tripId: string, signal?: AbortSignal): Promise<Closure>;
   refunds?(
     fundId: string,
     cursor?: string,
@@ -122,6 +129,35 @@ export interface FundRuntime {
     limit?: number,
   ): Promise<Page<LedgerEntry>>;
   instruction(contributionId: string, signal?: AbortSignal): Promise<TransferInstruction>;
+}
+export interface Closure {
+  id: string;
+  fund_id: string;
+  requested_by_user_id: string;
+  status: 'PENDING_CONFIRMATIONS' | 'CANCELLED' | 'COMPLETED';
+  snapshot_finance_version: number;
+  snapshot_schema_version: 1;
+  snapshot_hash: string;
+  snapshot: {
+    schema_version: 1;
+    fund: {
+      id: string;
+      trip_id: string;
+      holder_user_id: string;
+      currency: 'VND';
+      budget_amount: string | null;
+      current_balance: string;
+      finance_version: number;
+    };
+    required_user_ids: string[];
+    records: Record<string, Record<string, string | number | boolean | null>[]>;
+  };
+  confirmations: { user_id: string; confirmed_at: string | null }[];
+  requested_at: string;
+  cancelled_at: string | null;
+  cancelled_reason: string | null;
+  closed_at: string | null;
+  finance_version: number;
 }
 export interface Refund {
   id: string;

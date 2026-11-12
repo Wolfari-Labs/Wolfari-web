@@ -1,6 +1,10 @@
 import * as d from '../http/decode';
 
 export const financeCommandKinds = [
+  'closure-create',
+  'closure-confirm',
+  'closure-cancel',
+  'closure-remind',
   'refund-create',
   'refund-report-paid',
   'refund-confirm-received',
@@ -37,6 +41,32 @@ const expenseFields = [
   'receipt_object_key',
 ];
 export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<string, unknown>) {
+  if (kind.startsWith('closure-')) {
+    const allowed =
+      kind === 'closure-create'
+        ? ['expected_finance_version']
+        : kind === 'closure-confirm'
+          ? ['snapshot_hash']
+          : kind === 'closure-cancel'
+            ? ['reason']
+            : [];
+    if (Object.keys(body).some((k) => !allowed.includes(k))) throw Error('Invalid closure field');
+    if (kind === 'closure-create') d.version(body.expected_finance_version);
+    if (
+      kind === 'closure-confirm' &&
+      (typeof body.snapshot_hash !== 'string' || !/^[a-f0-9]{64}$/.test(body.snapshot_hash))
+    )
+      throw Error('Invalid snapshot hash');
+    if (
+      kind === 'closure-cancel' &&
+      (typeof body.reason !== 'string' ||
+        !body.reason.trim() ||
+        body.reason.includes('\0') ||
+        [...body.reason.trim()].length > 1024)
+    )
+      throw Error('Nhập lý do hủy (tối đa 1024 ký tự).');
+    return;
+  }
   if (kind.startsWith('refund-')) {
     const create = kind === 'refund-create';
     const reasonRequired =
@@ -149,6 +179,9 @@ export function financeCommandRoute(
   resourceId?: string,
 ): { path: string; method: 'POST' | 'PATCH' | 'DELETE' } {
   const root = '/api/v1/funds/' + d.uuid(fundId);
+  if (kind === 'closure-create') return { path: root + '/closures', method: 'POST' };
+  if (kind.startsWith('closure-'))
+    return { path: '/api/v1/closures/' + d.uuid(resourceId) + '/' + kind.slice(8), method: 'POST' };
   if (kind === 'refund-create') return { path: root + '/refunds', method: 'POST' };
   if (kind.startsWith('refund-'))
     return { path: '/api/v1/refunds/' + d.uuid(resourceId) + '/' + kind.slice(7), method: 'POST' };

@@ -15,6 +15,7 @@ import { ExpensePanel } from './components/ExpensePanel';
 import { FinancialNotesPanel } from './components/FinancialNotesPanel';
 import { FinanceAction } from './components/FinanceAction';
 import { RefundPanel } from './components/RefundPanel';
+import { ClosurePanel } from './components/ClosurePanel';
 import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
@@ -473,7 +474,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     members.find((m) => m.userId === id)?.presentation.displayName ?? `User ${id.slice(0, 8)}`;
   const owner = trip.currentMembership.role === 'OWNER',
     holder = fund?.holder_user_id === actor;
-  const blocked =
+  const baseBlocked =
     op.busy ||
     unresolved(op) ||
     // A receipt settles the command before its invalidated projections finish
@@ -483,8 +484,8 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     requests.isFetching ||
     contributions.isFetching ||
     membersQuery.isFetching ||
-    trip.archivedAt !== null ||
-    (fund !== null && fund.status !== 'OPEN');
+    trip.archivedAt !== null;
+  const blocked = baseBlocked || (fund !== null && fund.status !== 'OPEN');
   const rememberFormTrigger = () => {
     if (document.activeElement instanceof HTMLElement) {
       formTriggerRef.current = document.activeElement;
@@ -1255,6 +1256,14 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'closure' && fund && runtime.closures && runtime.closure ? (
+              <ClosurePanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                members={members}
+                blocked={baseBlocked || fundQuery.isError}
+              />
             ) : financeSection === 'refunds' && fund && runtime.refunds ? (
               <RefundPanel
                 runtime={runtime}

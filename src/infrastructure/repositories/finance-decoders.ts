@@ -1,4 +1,5 @@
 import * as d from '../http/decode';
+import { decodeClosure } from './finance-closure-decoder';
 import type {
   Contribution,
   ContributionRequest,
@@ -151,6 +152,13 @@ export function decodeInstruction(value: unknown, contributionId: string): Trans
   };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {
+  if (intent.kind.startsWith('closure-')) {
+    const row = decodeClosure(value, d.uuid(intent.fundId), intent.tripId);
+    if (intent.resourceId) d.scope(row.id, intent.resourceId);
+    if (intent.kind === 'closure-confirm' && row.snapshot_hash !== intent.body?.snapshot_hash)
+      throw Error('Snapshot changed');
+    return row;
+  }
   if (intent.kind.startsWith('refund-')) {
     const row = decodeRefund(value, d.uuid(intent.fundId));
     if (intent.resourceId) d.scope(row.id, intent.resourceId);

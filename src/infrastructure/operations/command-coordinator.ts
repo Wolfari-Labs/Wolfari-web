@@ -432,7 +432,12 @@ export function createCommandCoordinator(
           includeCredentials: true,
           signal: lifetime.signal,
         });
-        if (r.status === 202 || i.kind === 'leave' || i.kind === 'remove') {
+        if (r.status === 202 && i.kind === 'closure-remind' && d.object(r.data).accepted === true) {
+          const receipt = d.object(r.data);
+          d.scope(d.uuid(receipt.operation_id), i.key);
+          d.scope(d.uuid(receipt.closure_id), d.uuid(i.resourceId));
+          update({ state: 'SUCCEEDED', busy: false, error: null, receipt: { accepted: true } });
+        } else if (r.status === 202 || i.kind === 'leave' || i.kind === 'remove') {
           const op = decodeOperation(r.data, i);
           if (r.status === 202 && ['SUCCEEDED', 'FAILED'].includes(op.state))
             throw Error('Invalid 202');

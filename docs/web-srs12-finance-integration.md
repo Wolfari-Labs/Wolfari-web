@@ -13,7 +13,7 @@ SRS v1.2 is the requirements reference. The user explicitly selected existing ba
 | Outside-fund notes | FR-FIN-03 | funds/:id/notes; PATCH/DELETE notes/:id | Implemented; focused automated verification passed |
 | Contribution reversal | FR-FIN-04 | POST contributions/:id/reverse | Implemented; focused automated verification passed |
 | Refund | FR-FIN-05 | funds/:id/refunds and refund actions | Implemented with BE-02/BE-04 limitations |
-| Closure | FR-FIN-07/08 | funds/:id/closures and closure actions | Pending |
+| Closure | FR-FIN-07/08 | funds/:id/closures; closures/:id; confirm/cancel/remind | Implemented; focused automated verification passed |
 | Audit history | FR-TR-12 / Finance traceability | funds/:id/history | Pending |
 
 Backend authorizes active members to create expense proposals; creator/Owner edits/submits drafts, creator withdraws, Holder alone confirms/rejects/reverses. Draft/proposal is not a ledger payment. Refund self-recipient independent verification required by SRS is not implemented by current backend: record as a known deviation, not independently verified. Holder handover, partial/overpayment, provider transfers, Export/Public Share and missing backend travel/DSS capabilities remain outside this branch.
@@ -42,8 +42,6 @@ No live backend/provider/manual-screen-reader/physical-device verification has b
 - Typecheck/scoped lint/build PASS; focused unit/component 27/27 PASS. Gateway HTTP-mock 2/2 PASS: Holder reversal with exact reason/versions/key, refreshed contribution state and mock balance; Owner who is not Holder cannot reverse.
 - Uses shared unknown-result recovery and finance query invalidation; never deletes the original ledger record or computes balance from a loaded page. Atomic reversal/ledger uniqueness and insufficient-funds enforcement require live backend validation: NOT_RUN. Dedicated reversal timeout/insufficient-funds/closed-fund browser cases and manual accessibility: NOT_RUN.
 
-## Receipt API blocker details
-
 ## Refund verification — 12 November 2026
 
 - Typecheck/scoped lint/build PASS; focused unit/component 29/29 PASS. Gateway HTTP-mock workflow 1/1 PASS, exercising create/report/nonreceipt/cancel, then create/report/receive/request-reversal/consent/reverse after reload, plus 402px automated WCAG2A/AA scan.
@@ -53,6 +51,15 @@ No live backend/provider/manual-screen-reader/physical-device verification has b
 - Dedicated cross-role/refund timeout/insufficient-funds/closed-fund browser matrix, full regression and live backend/provider tests: NOT_RUN. Current evidence is focused HTTP-mock, not end-to-end live certification.
 
 ## Receipt API blocker
+
+## Closure verification — 12 November 2026
+
+- List pagination and explicit detail read; immutable snapshot groups render all returned record fields (technical field names retained), required users and their confirmations. Schema/fund/Trip/version/hash/confirmation-set checks reject mismatched data. Confirmation requires explicit review and submits the selected snapshot hash, not a global current version.
+- Owner creates/cancels/requests reminders; required users confirm in CLOSING; CLOSED is read-only with no reopen action. A reminder's special 202 accepted receipt settles the command without claiming notification delivery.
+- Typecheck/scoped lint/build PASS, focused unit/component 31/31 PASS. Gateway HTTP-mock 1/1 PASS: create, detail, disabled-until-reviewed, accepted reminder, cancel, recreate, confirm and CLOSED; 402px automated WCAG2A/AA scan. Initial ambiguous CLOSED text locator corrected and rerun.
+- Nonempty production snapshots, multi-user concurrency/late provider evidence, live closure lock/atomicity, manual keyboard/screen-reader and full regression: NOT_RUN. Snapshot rows intentionally expose exact field names for traceability; localization polish remains.
+
+## Receipt blocker evidence
 
 Backend `expense-http.ts` projects `receipt_available` but intentionally omits `receipt_object_key` (its contract test asserts omission). `finance-receipt-http.ts` download accepts only `object_key`; there is no expense-ID lookup/download endpoint. Upload returns a key, but retaining it only in browser memory does not enable reading existing attachments after reload or by another authorized member.
 

@@ -3,6 +3,7 @@ import type { GatewayHttpClient } from '../http/http-client';
 import type { CommandCoordinator } from '../operations/command-coordinator';
 import { ApiError } from '../http/api-error';
 import * as d from '../http/decode';
+import { decodeClosure } from './finance-closure-decoder';
 import { decodeExpense, decodeFinancialNote, decodeRefund } from './finance-extended-decoders';
 import {
   decodeContribution,
@@ -47,6 +48,22 @@ export function createGatewayFundRepository(
       ? {
           runtime: {
             commands,
+            closures: (id, tripId, cursor, signal) =>
+              read(
+                root(id) + '/closures' + query(cursor, 20),
+                (v) => d.page(v, (item) => decodeClosure(item, id, tripId), 20),
+                signal,
+              ),
+            closure: (id, fundId, tripId, signal) =>
+              read(
+                '/api/v1/closures/' + d.uuid(id),
+                (v) => {
+                  const row = decodeClosure(v, fundId, tripId);
+                  d.scope(row.id, id);
+                  return row;
+                },
+                signal,
+              ),
             refunds: (id, cursor, signal, status) =>
               read(
                 root(id) +
