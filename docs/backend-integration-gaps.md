@@ -31,6 +31,14 @@ Chưa có route bàn giao trong Finance gateway hiện tại; UI handover chưa 
 - README backend ghi provider giá thật, push/FCM, Reminder API132, export và Finance notification delivery còn giới hạn. Không suy ra email/push đã được gửi từ việc API tiếp nhận yêu cầu.
 - Đóng thiếu/thừa, giao dịch đến muộn và các quy tắc sản phẩm rộng hơn: cần đối chiếu từng contract với SRS, không coi sự tồn tại của endpoint là nghiệm thu toàn bộ yêu cầu.
 
+## BE-04 — Lý do yêu cầu đảo hoàn tiền không có trong API đọc
+
+**Đã xác nhận.** `refund-http.ts/projectRefund` trả thời điểm yêu cầu/đồng ý đảo, nhưng không trả `reversal_reason`. Trong `domain/refund-management.ts`, `REVERSE_REFUND` bắt buộc lý do trùng chính xác với yêu cầu đảo. `reason` trong projection là lý do hoàn tiền ban đầu, không phải lý do đảo.
+
+**Đề xuất:** trả lý do yêu cầu đảo cho thành viên có quyền đọc hoặc cho lệnh đảo tham chiếu yêu cầu đã đồng ý. Cần kiểm thử reload/đổi thiết bị và toàn vẹn consent/version.
+
+**Web:** yêu cầu nhập lại đúng lý do; không dùng lý do gốc hoặc lưu riêng để giả lập API. Việc xem lại lý do trước khi đồng ý/đảo còn phụ thuộc backend.
+
 ## Quy tắc bàn giao
 
 Backend bổ sung contract và tests trên nhánh riêng; Web chỉ nối sau khi thống nhất response/permissions/error/idempotency. HTTP-mock không chứng minh database transaction hoặc provider delivery. Ghi rõ IMPLEMENTED, DEFERRED, DEVIATION và NOT_RUN trong kết quả.

@@ -9,7 +9,7 @@ import type {
 } from '../../features/fund/model/runtime-fund';
 import type { Intent } from '../operations/command-coordinator';
 import { decodeOperation } from '../operations/command-coordinator';
-import { decodeExpense, decodeFinancialNote } from './finance-extended-decoders';
+import { decodeExpense, decodeFinancialNote, decodeRefund } from './finance-extended-decoders';
 export function decodeFund(value: unknown, tripId: string): RuntimeFund {
   const r = d.object(value);
   d.scope(d.uuid(r.trip_id), tripId);
@@ -151,6 +151,16 @@ export function decodeInstruction(value: unknown, contributionId: string): Trans
   };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {
+  if (intent.kind.startsWith('refund-')) {
+    const row = decodeRefund(value, d.uuid(intent.fundId));
+    if (intent.resourceId) d.scope(row.id, intent.resourceId);
+    if (
+      row.finance_version <= (intent.versions.expected_finance_version ?? 0) ||
+      row.version <= (intent.versions.expected_version ?? 0)
+    )
+      throw Error('Stale refund receipt');
+    return row;
+  }
   if (intent.kind === 'contribution-reverse') {
     const row = decodeContribution(value, d.uuid(intent.fundId));
     d.scope(row.id, d.uuid(intent.resourceId));

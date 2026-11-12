@@ -14,6 +14,7 @@ import type { LegacyCommandKind as CommandKind } from '../../shared/types/operat
 import { ExpensePanel } from './components/ExpensePanel';
 import { FinancialNotesPanel } from './components/FinancialNotesPanel';
 import { FinanceAction } from './components/FinanceAction';
+import { RefundPanel } from './components/RefundPanel';
 import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
@@ -1254,6 +1255,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'refunds' && fund && runtime.refunds ? (
+              <RefundPanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                members={members}
+                blocked={blocked || fundQuery.isError || membersQuery.isError}
+                loadMoreMembers={
+                  membersQuery.hasNextPage ? () => void membersQuery.fetchNextPage() : undefined
+                }
+              />
             ) : financeSection === 'notes' && fund && runtime.notes ? (
               <FinancialNotesPanel
                 loadMoreMembers={

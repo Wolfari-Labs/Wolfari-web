@@ -1,6 +1,14 @@
 import * as d from '../http/decode';
 
 export const financeCommandKinds = [
+  'refund-create',
+  'refund-report-paid',
+  'refund-confirm-received',
+  'refund-confirm-nonreceipt',
+  'refund-cancel',
+  'refund-request-reversal',
+  'refund-consent-reversal',
+  'refund-reverse',
   'contribution-reverse',
   'note-create',
   'note-edit',
@@ -29,6 +37,35 @@ const expenseFields = [
   'receipt_object_key',
 ];
 export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<string, unknown>) {
+  if (kind.startsWith('refund-')) {
+    const create = kind === 'refund-create';
+    const reasonRequired =
+      create ||
+      [
+        'refund-confirm-nonreceipt',
+        'refund-cancel',
+        'refund-request-reversal',
+        'refund-reverse',
+      ].includes(kind);
+    const allowed = create
+      ? ['member_user_id', 'amount', 'reason', 'expected_finance_version']
+      : [...versions, ...(reasonRequired ? ['reason'] : [])];
+    if (Object.keys(body).some((k) => !allowed.includes(k))) throw Error('Invalid refund field');
+    for (const key of allowed.filter((k) => k.startsWith('expected_'))) d.version(body[key]);
+    if (
+      reasonRequired &&
+      (typeof body.reason !== 'string' ||
+        !body.reason.trim() ||
+        body.reason.includes('\0') ||
+        [...body.reason.trim()].length > 1024)
+    )
+      throw Error('Nhập lý do (tối đa 1024 ký tự).');
+    if (create) {
+      d.uuid(body.member_user_id);
+      d.money(body.amount, true);
+    }
+    return;
+  }
   if (kind === 'contribution-reverse') {
     if (Object.keys(body).some((k) => ![...versions, 'reason'].includes(k)))
       throw Error('Invalid reversal field');
@@ -112,6 +149,9 @@ export function financeCommandRoute(
   resourceId?: string,
 ): { path: string; method: 'POST' | 'PATCH' | 'DELETE' } {
   const root = '/api/v1/funds/' + d.uuid(fundId);
+  if (kind === 'refund-create') return { path: root + '/refunds', method: 'POST' };
+  if (kind.startsWith('refund-'))
+    return { path: '/api/v1/refunds/' + d.uuid(resourceId) + '/' + kind.slice(7), method: 'POST' };
   if (kind === 'contribution-reverse')
     return { path: '/api/v1/contributions/' + d.uuid(resourceId) + '/reverse', method: 'POST' };
   if (kind === 'note-create') return { path: root + '/notes', method: 'POST' };

@@ -87,6 +87,12 @@ export interface TransferInstruction {
   warning: string;
 }
 export interface FundRuntime {
+  refunds?(
+    fundId: string,
+    cursor?: string,
+    signal?: AbortSignal,
+    status?: Refund['status'],
+  ): Promise<Page<Refund>>;
   notes?(fundId: string, cursor?: string, signal?: AbortSignal): Promise<Page<FinancialNote>>;
   expenses?(
     fundId: string,
@@ -116,6 +122,23 @@ export interface FundRuntime {
     limit?: number,
   ): Promise<Page<LedgerEntry>>;
   instruction(contributionId: string, signal?: AbortSignal): Promise<TransferInstruction>;
+}
+export interface Refund {
+  id: string;
+  fund_id: string;
+  member_user_id: string;
+  amount: string;
+  status: 'PENDING' | 'HOLDER_REPORTED' | 'CONFIRMED' | 'CANCELLED' | 'REVERSED';
+  reason: string;
+  holder_reported_at: string | null;
+  confirmed_at: string | null;
+  nonreceipt_confirmed_at: string | null;
+  reversal_requested_at: string | null;
+  reversal_consented_at: string | null;
+  created_at: string;
+  updated_at: string;
+  version: number;
+  finance_version: number;
 }
 export interface FinancialNote {
   id: string;

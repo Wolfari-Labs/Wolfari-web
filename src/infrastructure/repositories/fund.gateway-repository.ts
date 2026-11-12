@@ -3,7 +3,7 @@ import type { GatewayHttpClient } from '../http/http-client';
 import type { CommandCoordinator } from '../operations/command-coordinator';
 import { ApiError } from '../http/api-error';
 import * as d from '../http/decode';
-import { decodeExpense, decodeFinancialNote } from './finance-extended-decoders';
+import { decodeExpense, decodeFinancialNote, decodeRefund } from './finance-extended-decoders';
 import {
   decodeContribution,
   decodeDestination,
@@ -47,6 +47,15 @@ export function createGatewayFundRepository(
       ? {
           runtime: {
             commands,
+            refunds: (id, cursor, signal, status) =>
+              read(
+                root(id) +
+                  '/refunds' +
+                  query(cursor, 20) +
+                  (status ? '&status=' + encodeURIComponent(status) : ''),
+                (v) => d.page(v, (item) => decodeRefund(item, id), 20),
+                signal,
+              ),
             notes: (id, cursor, signal) =>
               read(
                 root(id) + '/notes' + query(cursor, 20),

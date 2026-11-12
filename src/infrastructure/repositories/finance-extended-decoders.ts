@@ -1,5 +1,32 @@
 import * as d from '../http/decode';
-import type { Expense, FinancialNote } from '../../features/fund/model/runtime-fund';
+import type { Expense, FinancialNote, Refund } from '../../features/fund/model/runtime-fund';
+export function decodeRefund(value: unknown, fundId: string): Refund {
+  const r = d.object(value);
+  d.scope(d.uuid(r.fund_id), fundId);
+  return {
+    id: d.uuid(r.id),
+    fund_id: fundId,
+    member_user_id: d.uuid(r.member_user_id),
+    amount: d.money(r.amount, true),
+    status: d.enumeration(r.status, [
+      'PENDING',
+      'HOLDER_REPORTED',
+      'CONFIRMED',
+      'CANCELLED',
+      'REVERSED',
+    ]),
+    reason: d.string(r.reason),
+    holder_reported_at: d.nullable(r.holder_reported_at, d.instant),
+    confirmed_at: d.nullable(r.confirmed_at, d.instant),
+    nonreceipt_confirmed_at: d.nullable(r.nonreceipt_confirmed_at, d.instant),
+    reversal_requested_at: d.nullable(r.reversal_requested_at, d.instant),
+    reversal_consented_at: d.nullable(r.reversal_consented_at, d.instant),
+    created_at: d.instant(r.created_at),
+    updated_at: d.instant(r.updated_at),
+    version: d.version(r.version),
+    finance_version: d.version(r.finance_version),
+  };
+}
 export function decodeFinancialNote(value: unknown, fundId: string): FinancialNote {
   const r = d.object(value);
   d.scope(d.uuid(r.fund_id), fundId);
