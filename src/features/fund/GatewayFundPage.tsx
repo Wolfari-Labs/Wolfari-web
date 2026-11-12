@@ -13,6 +13,7 @@ import type { CommandSession } from '../../shared/types/operations';
 import type { LegacyCommandKind as CommandKind } from '../../shared/types/operations';
 import { ExpensePanel } from './components/ExpensePanel';
 import { FinancialNotesPanel } from './components/FinancialNotesPanel';
+import { FinanceAction } from './components/FinanceAction';
 import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
@@ -1149,6 +1150,36 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                         {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
                         {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
                         <div className={styles.actions}>
+                          {c.status === 'CONFIRMED' && holder && (
+                            <FinanceAction
+                              label="Đảo khoản đóng"
+                              session={session}
+                              disabled={
+                                blocked ||
+                                fundQuery.isError ||
+                                contributions.isError ||
+                                requests.isError ||
+                                data(requests.data?.pages).some(
+                                  (r) => r.id === c.request_id && r.status !== 'OPEN',
+                                )
+                              }
+                              fields={[
+                                { key: 'reason', label: 'Lý do đảo khoản đóng', required: true },
+                              ]}
+                              description="Giữ giao dịch gốc và tạo giao dịch đảo. Backend kiểm tra đợt đóng còn mở, số dư khả dụng và các giao dịch đang đối chiếu."
+                              definition={{
+                                kind: 'contribution-reverse',
+                                actorId: actor,
+                                tripId: trip.id,
+                                fundId: fund.id,
+                                resourceId: c.id,
+                                body: {
+                                  expected_version: c.version,
+                                  expected_finance_version: fund.finance_version,
+                                },
+                              }}
+                            />
+                          )}
                           {c.status === 'PENDING' && c.member_user_id === actor && (
                             <>
                               <Button

@@ -151,6 +151,17 @@ export function decodeInstruction(value: unknown, contributionId: string): Trans
   };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {
+  if (intent.kind === 'contribution-reverse') {
+    const row = decodeContribution(value, d.uuid(intent.fundId));
+    d.scope(row.id, d.uuid(intent.resourceId));
+    if (
+      row.status !== 'REVERSED' ||
+      row.version <= (intent.versions.expected_version ?? 0) ||
+      row.finance_version <= (intent.versions.expected_finance_version ?? 0)
+    )
+      throw Error('Invalid reversal receipt');
+    return row;
+  }
   if (intent.kind === 'expense-delete' || intent.kind === 'note-delete') {
     const operation = decodeOperation(value, intent);
     if (operation.state !== 'SUCCEEDED') throw Error('Unconfirmed delete');

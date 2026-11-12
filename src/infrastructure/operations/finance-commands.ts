@@ -1,6 +1,7 @@
 import * as d from '../http/decode';
 
 export const financeCommandKinds = [
+  'contribution-reverse',
   'note-create',
   'note-edit',
   'note-delete',
@@ -28,6 +29,19 @@ const expenseFields = [
   'receipt_object_key',
 ];
 export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<string, unknown>) {
+  if (kind === 'contribution-reverse') {
+    if (Object.keys(body).some((k) => ![...versions, 'reason'].includes(k)))
+      throw Error('Invalid reversal field');
+    for (const key of versions) d.version(body[key]);
+    if (
+      typeof body.reason !== 'string' ||
+      !body.reason.trim() ||
+      body.reason.includes('\0') ||
+      [...body.reason.trim()].length > 1024
+    )
+      throw Error('Nhập lý do đảo khoản đóng (tối đa 1024 ký tự).');
+    return;
+  }
   if (kind.startsWith('note-')) {
     const allowed =
       kind === 'note-delete'
@@ -98,6 +112,8 @@ export function financeCommandRoute(
   resourceId?: string,
 ): { path: string; method: 'POST' | 'PATCH' | 'DELETE' } {
   const root = '/api/v1/funds/' + d.uuid(fundId);
+  if (kind === 'contribution-reverse')
+    return { path: '/api/v1/contributions/' + d.uuid(resourceId) + '/reverse', method: 'POST' };
   if (kind === 'note-create') return { path: root + '/notes', method: 'POST' };
   if (kind === 'note-edit' || kind === 'note-delete')
     return {

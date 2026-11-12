@@ -11,7 +11,7 @@ SRS v1.2 is the requirements reference. The user explicitly selected existing ba
 | Expense | FR-FIN-03/04 | funds/:id/expenses and expenses/:id actions | Implemented; focused automated verification passed |
 | Receipt | Finance evidence | funds/:id/receipts | Blocked: no expense-to-receipt download locator after reload |
 | Outside-fund notes | FR-FIN-03 | funds/:id/notes; PATCH/DELETE notes/:id | Implemented; focused automated verification passed |
-| Contribution reversal | FR-FIN-04 | contributions/:id/reverse | Pending |
+| Contribution reversal | FR-FIN-04 | POST contributions/:id/reverse | Implemented; focused automated verification passed |
 | Refund | FR-FIN-05 | funds/:id/refunds and refund actions | Pending |
 | Closure | FR-FIN-07/08 | funds/:id/closures and closure actions | Pending |
 | Audit history | FR-TR-12 / Finance traceability | funds/:id/history | Pending |
@@ -37,6 +37,14 @@ No live backend/provider/manual-screen-reader/physical-device verification has b
 - These focused checks do not prove backend ledger behavior. Live tests, dedicated notes permission/error matrix, manual screen-reader, full regression and physical-device verification: NOT_RUN. Existing shared command recovery tests passed; notes-specific timeout scenarios have not been separately exercised.
 
 ## Receipt API evidence
+
+## Contribution reversal verification — 12 November 2026
+
+- Holder-only action for confirmed contributions, required reason (1–1024 Unicode characters), contribution and fund versions. Known non-OPEN request blocks the action; unloaded request state, reconciliation constraints and sufficient available balance remain server-authoritative.
+- Typecheck/scoped lint/build PASS; focused unit/component 27/27 PASS. Gateway HTTP-mock 2/2 PASS: Holder reversal with exact reason/versions/key, refreshed contribution state and mock balance; Owner who is not Holder cannot reverse.
+- Uses shared unknown-result recovery and finance query invalidation; never deletes the original ledger record or computes balance from a loaded page. Atomic reversal/ledger uniqueness and insufficient-funds enforcement require live backend validation: NOT_RUN. Dedicated reversal timeout/insufficient-funds/closed-fund browser cases and manual accessibility: NOT_RUN.
+
+## Receipt API blocker details
 
 Backend `expense-http.ts` projects `receipt_available` but intentionally omits `receipt_object_key` (its contract test asserts omission). `finance-receipt-http.ts` download accepts only `object_key`; there is no expense-ID lookup/download endpoint. Upload returns a key, but retaining it only in browser memory does not enable reading existing attachments after reload or by another authorized member.
 
