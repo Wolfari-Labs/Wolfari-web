@@ -9,7 +9,15 @@ import type {
   ContributionRequest,
 } from './model/runtime-fund';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
-import type { CommandKind, CommandSession } from '../../shared/types/operations';
+import type { CommandSession } from '../../shared/types/operations';
+import type { LegacyCommandKind as CommandKind } from '../../shared/types/operations';
+import { ExpensePanel } from './components/ExpensePanel';
+import { FinancialNotesPanel } from './components/FinancialNotesPanel';
+import { FinanceAction } from './components/FinanceAction';
+import { RefundPanel } from './components/RefundPanel';
+import { ClosurePanel } from './components/ClosurePanel';
+import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
+import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import { useMembersRepositories } from '../members/repositories/members-context';
@@ -467,7 +475,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     members.find((m) => m.userId === id)?.presentation.displayName ?? `User ${id.slice(0, 8)}`;
   const owner = trip.currentMembership.role === 'OWNER',
     holder = fund?.holder_user_id === actor;
-  const blocked =
+  const baseBlocked =
     op.busy ||
     unresolved(op) ||
     // A receipt settles the command before its invalidated projections finish
@@ -477,8 +485,8 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     requests.isFetching ||
     contributions.isFetching ||
     membersQuery.isFetching ||
-    trip.archivedAt !== null ||
-    (fund !== null && fund.status !== 'OPEN');
+    trip.archivedAt !== null;
+  const blocked = baseBlocked || (fund !== null && fund.status !== 'OPEN');
   const rememberFormTrigger = () => {
     if (document.activeElement instanceof HTMLElement) {
       formTriggerRef.current = document.activeElement;
@@ -675,7 +683,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
   );
   const reenterCommand = () => {
     const i = op.intent;
-    if (!i) return;
+    if (!i || isFinanceCommand(i.kind)) return;
     if (form) {
       focusOpenForm();
       return;
@@ -1145,6 +1153,36 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                         {c.waived_reason && <p>Lý do miễn: {c.waived_reason}</p>}
                         {c.cancelled_reason && <p>Lý do hủy: {c.cancelled_reason}</p>}
                         <div className={styles.actions}>
+                          {c.status === 'CONFIRMED' && holder && (
+                            <FinanceAction
+                              label="Đảo khoản đóng"
+                              session={session}
+                              disabled={
+                                blocked ||
+                                fundQuery.isError ||
+                                contributions.isError ||
+                                requests.isError ||
+                                data(requests.data?.pages).some(
+                                  (r) => r.id === c.request_id && r.status !== 'OPEN',
+                                )
+                              }
+                              fields={[
+                                { key: 'reason', label: 'Lý do đảo khoản đóng', required: true },
+                              ]}
+                              description="Giữ giao dịch gốc và tạo giao dịch đảo. Backend kiểm tra đợt đóng còn mở, số dư khả dụng và các giao dịch đang đối chiếu."
+                              definition={{
+                                kind: 'contribution-reverse',
+                                actorId: actor,
+                                tripId: trip.id,
+                                fundId: fund.id,
+                                resourceId: c.id,
+                                body: {
+                                  expected_version: c.version,
+                                  expected_finance_version: fund.finance_version,
+                                },
+                              }}
+                            />
+                          )}
                           {c.status === 'PENDING' && c.member_user_id === actor && (
                             <>
                               <Button
@@ -1219,6 +1257,51 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'audit' && fund && runtime.history ? (
+              <FinanceHistoryPanel
+                runtime={runtime}
+                fundId={fund.id}
+                trip={trip}
+                members={members}
+              />
+            ) : financeSection === 'closure' && fund && runtime.closures && runtime.closure ? (
+              <ClosurePanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                members={members}
+                blocked={baseBlocked || fundQuery.isError}
+              />
+            ) : financeSection === 'refunds' && fund && runtime.refunds ? (
+              <RefundPanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                members={members}
+                blocked={blocked || fundQuery.isError || membersQuery.isError}
+                loadMoreMembers={
+                  membersQuery.hasNextPage ? () => void membersQuery.fetchNextPage() : undefined
+                }
+              />
+            ) : financeSection === 'notes' && fund && runtime.notes ? (
+              <FinancialNotesPanel
+                loadMoreMembers={
+                  membersQuery.hasNextPage ? () => void membersQuery.fetchNextPage() : undefined
+                }
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={blocked || fundQuery.isError || membersQuery.isError}
+                members={members}
+              />
+            ) : financeSection === 'expenses' && fund && runtime.expenses ? (
+              <ExpensePanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={blocked || fundQuery.isError}
+                name={name}
+              />
             ) : financeSection === 'members' ? (
               <>
                 <h3>Thành viên &amp; quyền</h3>

@@ -345,7 +345,16 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       );
       for (const page of [holder, member]) {
         await page.goto(`/trips/${tripId}/plan`);
-        await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
+        await expect(
+          page.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
+        ).toBeVisible();
+        await page.screenshot({
+          path: test
+            .info()
+            .outputPath(`plan-readonly-${page === holder ? 'holder' : 'member'}.png`),
+          fullPage: true,
+          mask: [page.locator('input, textarea')],
+        });
         await expect(page.getByRole('button', { name: 'Thêm hoạt động', exact: true })).toHaveCount(
           0,
         );
@@ -761,7 +770,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       await expect(owner.getByText('Đã hoàn tất thao tác.', { exact: true })).toBeVisible();
       await accept(editor, await linkInvite(owner, tripId), tripId);
       await editor.goto(`/trips/${tripId}/plan`);
-      await expect(editor.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
+      await expect(
+        editor.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
+      ).toBeVisible();
       await expect(editor.getByRole('button', { name: 'Thêm hoạt động' })).toHaveCount(0);
     });
     await test.step('restart without reset preserves IDs/Plan/ledger; Finance loss does not empty Fund', async () => {
@@ -788,7 +799,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         await expect(owner.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' })).toHaveCount(0);
         await expect(owner.getByRole('region', { name: 'Trạng thái quỹ' })).toHaveCount(0);
         await editor.reload();
-        await expect(editor.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
+        await expect(
+          editor.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
+        ).toBeVisible();
       } finally {
         await control('start', 'finance-service');
       }
@@ -876,7 +889,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       }
       await owner.setViewportSize({ width: 1440, height: 1000 });
       await owner.locator(`a[href="/trips/${tripId}/plan"]:visible`).first().click();
-      await expect(owner.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
+      await expect(
+        owner.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
+      ).toBeVisible();
       await owner.evaluate(() => {
         document.documentElement.style.zoom = '2';
       });
@@ -1113,6 +1128,16 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       if (!page.isClosed()) {
         // Never persist full DOM text: an open form may contain bank/account details.
         diagnostics.push({ role, path: new URL(page.url()).pathname });
+        // Only capture Plan: auth/invitation/Finance screens may contain secrets.
+        if (/^\/trips\/[0-9a-f-]{36}\/plan$/.test(new URL(page.url()).pathname)) {
+          await page
+            .screenshot({
+              path: test.info().outputPath(`failure-plan-${role}.png`),
+              fullPage: true,
+              mask: [page.locator('input, textarea')],
+            })
+            .catch(() => diagnostics.push({ role, screenshotFailed: true }));
+        }
       }
     throw error;
   } finally {

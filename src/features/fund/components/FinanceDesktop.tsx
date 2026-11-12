@@ -124,6 +124,7 @@ export function FinanceTransactionPanel({
 
   return (
     <section className={styles.transactions} aria-label="Lịch sử quỹ" data-finance-transactions>
+      <h2>Sổ giao dịch</h2>
       <div className={styles.toolbar}>
         <div className={styles.filterGroup} role="tablist" aria-label="Bộ lọc giao dịch">
           {(['ALL', 'CONTRIBUTION', 'EXPENSE', 'REFUND'] as const).map((value) => (

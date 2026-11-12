@@ -1,0 +1,42 @@
+.panel,
+.form {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.record {
+  border: 1px solid var(--color-border, #cdebf7);
+  border-radius: 8px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.record h3,
+.record p {
+  margin: 0;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 8px;
+  margin: 0;
+}
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.form input {
+  max-width: 100%;
+}
+@media (max-width: 480px) {
+  .details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
