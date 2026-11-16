@@ -17,7 +17,63 @@ export interface FinanceField {
   initial?: string;
   required?: boolean;
   maxLength?: number;
-  type?: 'text' | 'datetime-local';
+  type?: 'text' | 'datetime-local' | 'file';
+  /** Leave the key out of the body when empty (e.g. keep an existing attachment on edit). */
+  omitWhenEmpty?: boolean;
+  /** For type "file": uploads the chosen file and returns the value sent in the body. */
+  upload?: (file: File) => Promise<string>;
+  accept?: string;
+  hint?: string;
+}
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+function FileField({
+  field,
+  disabled,
+  onValue,
+  onBusy,
+}: {
+  field: FinanceField;
+  disabled: boolean;
+  onValue: (value: string) => void;
+  onBusy: (busy: boolean) => void;
+}) {
+  const [state, setState] = useState<{ tone: 'info' | 'error'; text: string } | null>(null);
+  const id = 'finance-file-' + field.key;
+  return (
+    <div>
+      <label htmlFor={id}>{field.label}</label>
+      <input
+        id={id}
+        type="file"
+        accept={field.accept}
+        disabled={disabled}
+        aria-describedby={id + '-hint'}
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          onValue('');
+          if (!file) return setState(null);
+          if (file.size > MAX_UPLOAD_BYTES)
+            return setState({ tone: 'error', text: 'Tệp vượt quá 10 MB.' });
+          if (!field.upload) return;
+          onBusy(true);
+          setState({ tone: 'info', text: 'Đang tải tệp lên…' });
+          try {
+            onValue(await field.upload(file));
+            setState({ tone: 'info', text: `Đã đính kèm ${file.name}.` });
+          } catch {
+            setState({
+              tone: 'error',
+              text: 'Không tải được tệp. Chỉ nhận JPEG, PNG hoặc PDF tối đa 10 MB; thử lại.',
+            });
+          } finally {
+            onBusy(false);
+          }
+        }}
+      />
+      <p id={id + '-hint'}>{field.hint ?? 'JPEG, PNG hoặc PDF, tối đa 10 MB.'}</p>
+      {state && <p role={state.tone === 'error' ? 'alert' : 'status'}>{state.text}</p>}
+    </div>
+  );
 }
 export function FinanceAction({
   label,
@@ -43,6 +99,7 @@ export function FinanceAction({
   const [discard, setDiscard] = useState(false),
     [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [uploading, setUploading] = useState(false);
   useEffect(() => {
     if (!draft) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -86,6 +143,7 @@ export function FinanceAction({
                 const body = { ...draft.definition.body };
                 for (const field of fields) {
                   const value = draft.values[field.key]?.trim() ?? '';
+                  if (field.omitWhenEmpty && !value) continue;
                   body[field.key] =
                     field.type === 'datetime-local' && value
                       ? new Date(value).toISOString()
@@ -100,7 +158,7 @@ export function FinanceAction({
               }
             }}
           >
-            <p>TEST · Không chuyển tiền thật. {description}</p>
+            <p>Ứng dụng chỉ ghi nhận, không tự chuyển tiền. {description}</p>
             <OperationStatus session={session} />
             {error && (
               <Alert tone="error" live>
@@ -108,7 +166,21 @@ export function FinanceAction({
               </Alert>
             )}
             {fields.map((field) =>
-              field.options ? (
+              field.type === 'file' ? (
+                <FileField
+                  key={field.key}
+                  field={field}
+                  disabled={blocked || submitted || uploading}
+                  onBusy={setUploading}
+                  onValue={(value) =>
+                    setDraft((current) =>
+                      current
+                        ? { ...current, values: { ...current.values, [field.key]: value } }
+                        : current,
+                    )
+                  }
+                />
+              ) : field.options ? (
                 <Select
                   key={field.key}
                   label={field.label}
@@ -143,7 +215,7 @@ export function FinanceAction({
             )}
             {children}
             <div className={styles.actions}>
-              <Button type="submit" disabled={disabled || blocked || submitted}>
+              <Button type="submit" disabled={disabled || blocked || submitted || uploading}>
                 Xác nhận · {label}
               </Button>
               <Button variant="plain" disabled={op.busy} onClick={close}>

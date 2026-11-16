@@ -7,10 +7,12 @@ import { decodeClosure } from './finance-closure-decoder';
 import {
   decodeExpense,
   decodeFinancialNote,
+  decodeHandover,
   decodeRefund,
   decodeHistory,
 } from './finance-extended-decoders';
 import {
+  decodeBank,
   decodeContribution,
   decodeDestination,
   decodeFund,
@@ -151,6 +153,62 @@ export function createGatewayFundRepository(
                 (v) => decodeInstruction(v, id),
                 signal,
               ),
+            handovers: (fundId: string, signal?: AbortSignal) =>
+              read(
+                root(fundId) + '/holder-handovers',
+                (v) => d.list(d.object(v).items, (item) => decodeHandover(item, fundId)),
+                signal,
+              ),
+            banks: (signal?: AbortSignal) =>
+              read('/api/v1/finance/banks', (v) => d.list(d.object(v).items, decodeBank), signal),
+            // Upload has no idempotency contract: a retry may stage another temporary file, which
+            // expires unbound after 24 hours. The key is only usable once an expense binds it.
+            async uploadReceipt(fundId: string, file: File, signal?: AbortSignal) {
+              if (!client) throw Error('No Gateway');
+              const form = new FormData();
+              form.append('file', file, file.name);
+              const r = await client.write(root(fundId) + '/receipts', {
+                method: 'POST',
+                body: form,
+                includeCredentials: true,
+                ...(signal ? { signal } : {}),
+              });
+              const data = d.object(r.data);
+              const key = d.string(data.object_key);
+              if (!key.startsWith('funds/' + fundId + '/receipts/'))
+                throw new ApiError(
+                  'Invalid receipt reference',
+                  'invalid-response',
+                  r.status ?? 201,
+                  null,
+                  r.correlationId,
+                  false,
+                );
+              return { object_key: key, mime_type: d.string(data.mime_type) };
+            },
+            async expenseReceipt(expenseId: string, signal?: AbortSignal) {
+              if (!client) throw Error('No Gateway');
+              const r = await client.read('/api/v1/expenses/' + d.uuid(expenseId) + '/receipt', {
+                responseType: 'bytes',
+                includeCredentials: true,
+                ...(signal ? { signal } : {}),
+              });
+              const type = r.contentType?.split(';')[0]?.trim() ?? '';
+              if (
+                !(r.data instanceof ArrayBuffer) ||
+                !r.data.byteLength ||
+                !['image/jpeg', 'image/png', 'application/pdf'].includes(type)
+              )
+                throw new ApiError(
+                  'Invalid receipt file',
+                  'invalid-response',
+                  r.status ?? 200,
+                  null,
+                  r.correlationId,
+                  false,
+                );
+              return new Blob([r.data], { type });
+            },
           },
         }
       : {}),

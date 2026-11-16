@@ -78,6 +78,23 @@ Giao diện quỹ và Price Watch dùng panel biểu mẫu bên phải desktop/d
 
 Finance delivery mặc định có thể bị tắt bằng feature flags; chỉ trình bày thông báo Finance nếu cấu hình demo và bằng chứng đã xác nhận. Inbox từ Trip không tự chứng minh Finance outbox. Price Watch là observation có timestamp, không cam kết giá hiện tại hoặc booking.
 
+## 4b. Kịch bản Finance mở rộng (16/11/2026) — 8–10 phút
+
+Cần Backend main có PR #19/#20 và Web nhánh `feature/finance-demo-completion`. Đích nhận phải là ngân hàng thật trong danh mục (ví dụ VCB); dữ liệu cũ có mã `TEST` sẽ không mở được QR — tạo Trip/Fund mới.
+
+| Người thao tác | Thao tác | Kết quả cần thấy |
+|---|---|---|
+| Owner | Cài đặt quỹ → Thông tin nhận tiền → chọn ngân hàng từ danh sách, nhập số tài khoản/tên chủ tài khoản | Lưu thành công; Holder xác nhận đích |
+| Member | Khoản đóng → **Mã QR chuyển khoản** | QR thật, tên ngân hàng, số tiền và nội dung điền sẵn; nút sao chép. Có thể quét bằng app ngân hàng (không bấm chuyển nếu không muốn chuyển thật) |
+| Member/Holder | Báo đã chuyển → Holder xác nhận | Sổ quỹ tăng đúng một dòng IN |
+| Member | Khoản chi → Tạo đề nghị chi, đính kèm ảnh/PDF hóa đơn → Gửi | Khoản chi có “Xem chứng từ”; Holder mở được sau khi tải lại trang |
+| Holder | Xác nhận khoản chi | Số dư giảm; lịch sử thao tác ghi tiếng Việt |
+| Owner/Holder/Member | Hoàn tiền cho Member → Holder báo đã hoàn → Member xác nhận | Cách xác nhận hiển thị “Người nhận tự xác nhận” |
+| Owner | Bàn giao Fund Holder → đề cử Member mới; Member đồng ý; Holder cũ và mới cùng xác nhận | Người giữ quỹ đổi sang Member; số dư không đổi |
+| Owner | Đóng Finance (tùy chọn, làm cuối) | Mọi người xác nhận bản tổng kết; quỹ CLOSED chỉ đọc |
+
+Thông báo Finance trong hộp thư chỉ hiện khi bản demo bật `FINANCE_OUTBOX_ENABLED=true` (Finance) và `AUTOMATION_FINANCE_NOTIFICATION_ENABLED=true` (Automation); bản demo đã khởi tạo trước đó cần sửa hai dòng này trong `.local/demo/apps/*/.env` rồi khởi động lại. Dress code: Backend hiện chỉ có phần đọc, trang sẽ trống — không đưa vào kịch bản.
+
 ## 5. Kịch bản phụ — diễn tập trước, không bắt buộc trình bày
 
 - Hai actor cùng sửa Plan: actor thứ hai nhận409, giữ draft, tải để đối chiếu và xác nhận trước khi lưu lại.

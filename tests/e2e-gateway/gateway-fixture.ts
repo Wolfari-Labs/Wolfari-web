@@ -337,6 +337,20 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           },
         });
       }
+      if (path === '/api/v1/finance/banks' && method === 'GET') {
+        if (!model.authenticated) return error(route, 401);
+        return json(route, {
+          items: [
+            {
+              code: 'VCB',
+              bin: '970436',
+              name: 'Ngân hàng TMCP Ngoại Thương Việt Nam',
+              short_name: 'Vietcombank',
+            },
+            { code: 'MB', bin: '970422', name: 'Ngân hàng TMCP Quân đội', short_name: 'MBBank' },
+          ],
+        });
+      }
       if (path === '/api/v1/trips' || path.startsWith('/api/v1/trips/')) {
         if (!model.authenticated) return error(route, 401);
         expect(request.headers().authorization).toBe('Bearer e2e-memory-token');

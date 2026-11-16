@@ -7,6 +7,7 @@ import type {
   Destination,
   Contribution,
   ContributionRequest,
+  Bank,
 } from './model/runtime-fund';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import type { CommandSession } from '../../shared/types/operations';
@@ -17,6 +18,7 @@ import { FinanceAction } from './components/FinanceAction';
 import { RefundPanel } from './components/RefundPanel';
 import { ClosurePanel } from './components/ClosurePanel';
 import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
+import { HandoverPanel } from './components/HandoverPanel';
 import { isFinanceCommand } from '../../shared/types/operations';
 import { unresolved } from '../../shared/types/operations';
 import { useTripRepository } from '../trips/repositories/repository-context';
@@ -50,20 +52,22 @@ import tripWorkspaceStyles from '../trips/components/TripWorkspace.module.css';
 
 export const formatVnd = (value: string | null) =>
   value === null ? 'Chưa đặt' : value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
+// The SVG comes from our own Finance service and was shape-checked by the decoder.
+const svgDataUri = (svg: string) => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 const labels: Record<CommandKind, string> = {
-  enable: 'Bật quỹ TEST',
+  enable: 'Bật quỹ',
   budget: 'Sửa ngân sách',
-  'destination-create': 'Thêm đích nhận TEST',
-  'destination-edit': 'Sửa đích nhận TEST',
+  'destination-create': 'Thêm tài khoản nhận',
+  'destination-edit': 'Sửa tài khoản nhận',
   'destination-confirm': 'Xác nhận đích nhận',
   'request-create': 'Tạo đợt thu',
   'request-edit': 'Sửa đợt thu',
   amount: 'Sửa số tiền',
   waive: 'Miễn khoản đóng',
   cancel: 'Hủy khoản đóng',
-  report: 'Báo đã chuyển TEST',
+  report: 'Báo đã chuyển',
   reject: 'Từ chối báo chuyển',
-  confirm: 'Xác nhận đã nhận TEST',
+  confirm: 'Xác nhận đã nhận',
   leave: 'Rời chuyến đi',
   remove: 'Xóa thành viên',
 };
@@ -94,9 +98,11 @@ function FundCommandForm({
   destinations,
   members,
   session,
+  banks,
   onClose,
 }: {
   spec: FormSpec;
+  banks: readonly Bank[] | null;
   trip: TripDetailViewModel;
   fund: RuntimeFund | null;
   destinations: Destination[];
@@ -137,11 +143,11 @@ function FundCommandForm({
       let body: Record<string, unknown> = { ...spec.versions };
       if (bankForm) {
         if (!bank.trim() || !account.trim() || !recipient.trim())
-          throw Error('Nhập đủ mã ngân hàng, số tài khoản TEST và tên người nhận.');
+          throw Error('Chọn ngân hàng, nhập số tài khoản và tên chủ tài khoản.');
         const config = {
           destination_type: 'VIETQR',
           bank_code: bank.trim(),
-          account_number: account.trim(),
+          account_number: account.replace(/\s+/g, ''),
           account_name: recipient.trim(),
           active,
           is_default: defaultDestination,
@@ -214,9 +220,9 @@ function FundCommandForm({
   };
   return (
     <form className={styles.form} onSubmit={(e) => void submit(e)} aria-label={labels[kind]}>
-      <Alert tone="warning">
-        Môi trường TEST. Không chuyển tiền thật. Chỉ xác nhận nhận tiền mới ghi tăng số dư. Đóng cửa
-        sổ không hủy thao tác đã gửi.
+      <Alert tone="info">
+        Tiền chuyển thẳng vào tài khoản ngân hàng của người giữ quỹ; ứng dụng chỉ ghi nhận và đối
+        chiếu. Chỉ xác nhận đã nhận mới ghi tăng số dư. Đóng cửa sổ không hủy thao tác đã gửi.
       </Alert>
       {error && (
         <Alert tone="error" live>
@@ -251,28 +257,47 @@ function FundCommandForm({
       )}
       {bankForm && (
         <>
+          {banks ? (
+            <Select
+              label="Ngân hàng"
+              value={bank}
+              onChange={(e) => setBank(e.target.value)}
+              required
+              hint="Danh mục ngân hàng nhận chuyển khoản VietQR (NAPAS)."
+            >
+              <option value="">Chọn ngân hàng</option>
+              {banks.map((b) => (
+                <option key={b.code} value={b.code}>
+                  {b.short_name} — {b.name}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <Input
+              label="Mã ngân hàng VietQR"
+              value={bank}
+              maxLength={30}
+              onChange={(e) => setBank(e.target.value)}
+              required
+              hint="Danh mục chưa tải được; nhập mã VietQR (ví dụ VCB, TCB, MB) hoặc BIN 6 số."
+            />
+          )}
           <Input
-            label="Mã ngân hàng TEST"
-            value={bank}
-            maxLength={30}
-            onChange={(e) => setBank(e.target.value)}
-            required
-            hint="Ví dụ: VCB. Chỉ dùng dữ liệu thử nghiệm."
-          />
-          <Input
-            label="Số tài khoản TEST"
+            label="Số tài khoản"
             value={account}
-            maxLength={80}
+            maxLength={30}
             onChange={(e) => setAccount(e.target.value)}
             required
             autoComplete="off"
+            hint="Chữ và số, tối đa 19 ký tự theo chuẩn NAPAS; khoảng trắng sẽ được bỏ."
           />
           <Input
-            label="Tên người nhận TEST"
+            label="Tên chủ tài khoản"
             value={recipient}
             maxLength={150}
             onChange={(e) => setRecipient(e.target.value)}
             required
+            hint="Ghi như ngân hàng in; thành viên thấy tên này khi chuyển khoản."
           />
           <label>
             <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />{' '}
@@ -471,6 +496,29 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     queryFn: ({ signal }) => runtime.instruction(instructionId!, signal),
     gcTime: 0,
   });
+  const [copied, setCopied] = useState('');
+  const copyText = (value: string, done: string) => {
+    if (!navigator.clipboard?.writeText) {
+      setCopied('Trình duyệt không hỗ trợ sao chép; hãy chọn và sao chép thủ công.');
+      return;
+    }
+    void navigator.clipboard.writeText(value).then(
+      () => setCopied(done),
+      () => setCopied('Không sao chép được; hãy chọn và sao chép thủ công.'),
+    );
+  };
+  // Bank directory is static reference data; a failed read falls back to a code field.
+  const bankFormOpen =
+    form?.kind === 'enable' ||
+    form?.kind === 'destination-create' ||
+    form?.kind === 'destination-edit';
+  const banks = useQuery({
+    queryKey: ['finance', 'banks'],
+    enabled: bankFormOpen,
+    queryFn: ({ signal }) => runtime.banks(signal),
+    staleTime: 86_400_000,
+    retry: 1,
+  });
   const name = (id: string) =>
     members.find((m) => m.userId === id)?.presentation.displayName ?? `User ${id.slice(0, 8)}`;
   const owner = trip.currentMembership.role === 'OWNER',
@@ -625,6 +673,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             destinations={destinations.data ?? []}
             members={members}
             session={session}
+            banks={banks.data ?? null}
             onClose={closeForm}
           />
         </>
@@ -635,20 +684,21 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             Chọn một thao tác ở vùng dữ liệu bên trái. Biểu mẫu sẽ giữ nguyên vùng làm việc khi màn
             hình hẹp.
           </p>
-          <p>TEST · Không chuyển tiền thật. Đóng vùng này không hủy thao tác đang chờ đối soát.</p>
+          <p>Đóng vùng này không hủy thao tác đang chờ đối soát.</p>
         </div>
       )}
     </aside>
   );
   const renderInstruction = () => (
-    <section aria-label="Hướng dẫn chuyển TEST">
+    <section aria-label="Mã QR chuyển khoản">
       <h3 tabIndex={-1} ref={instructionHeadingRef}>
-        Hướng dẫn chuyển TEST
+        Mã QR chuyển khoản
       </h3>
       <Button
         variant="outline"
         onClick={() => {
           setInstructionId(null);
+          setCopied('');
           window.requestAnimationFrame(() => instructionTriggerRef.current?.focus());
         }}
       >
@@ -657,25 +707,83 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       {instruction.isError ? (
         <QueryError error={instruction.error} retry={() => void instruction.refetch()} />
       ) : instruction.data ? (
-        <>
-          <Alert tone="warning">
-            TEST — không chuyển tiền thật. Không tải QR hoặc gửi thông tin tới provider bên ngoài.
-          </Alert>
-          <dl>
-            {[
-              ['Ngân hàng', instruction.data.bank_code],
-              ['Tài khoản TEST', instruction.data.account_number],
-              ['Người nhận', instruction.data.recipient_name],
-              ['Số tiền', formatVnd(instruction.data.amount)],
-              ['Nội dung', instruction.data.reference],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+        (() => {
+          const info = instruction.data;
+          const owed = data(contributions.data?.pages).find((c) => c.id === instructionId);
+          return (
+            <div className={fundStyles.qrPanel}>
+              <p className={fundStyles.qrAmount}>
+                <span>Số tiền cần chuyển</span>
+                <strong>{formatVnd(info.amount)}</strong>
+              </p>
+              <div className={fundStyles.qrLayout}>
+                <img
+                  className={fundStyles.qr}
+                  src={svgDataUri(info.qr_svg)}
+                  alt={`Mã VietQR chuyển ${formatVnd(info.amount)} tới ${info.bank_name}`}
+                  width={280}
+                  height={280}
+                />
+                <dl className={fundStyles.qrDetails}>
+                  <div>
+                    <dt>Ngân hàng</dt>
+                    <dd>
+                      {info.bank_name} ({info.bank_code})
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Số tài khoản</dt>
+                    <dd className={fundStyles.qrCopyRow}>
+                      <span className={fundStyles.qrMono}>{info.account_number}</span>
+                      <Button
+                        variant="plain"
+                        aria-label="Sao chép số tài khoản"
+                        onClick={() => copyText(info.account_number, 'Đã sao chép số tài khoản.')}
+                      >
+                        Sao chép
+                      </Button>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Chủ tài khoản</dt>
+                    <dd>{info.recipient_name}</dd>
+                  </div>
+                  <div>
+                    <dt>Nội dung chuyển khoản</dt>
+                    <dd className={fundStyles.qrCopyRow}>
+                      <span className={fundStyles.qrMono}>{info.reference}</span>
+                      <Button
+                        variant="plain"
+                        aria-label="Sao chép nội dung chuyển khoản"
+                        onClick={() =>
+                          copyText(info.reference, 'Đã sao chép nội dung chuyển khoản.')
+                        }
+                      >
+                        Sao chép
+                      </Button>
+                    </dd>
+                  </div>
+                </dl>
               </div>
-            ))}
-          </dl>
-        </>
+              {copied && <p role="status">{copied}</p>}
+              <Alert tone="info">{info.warning}</Alert>
+              {owed?.status === 'PENDING' && owed.member_user_id === actor && (
+                <div className={styles.actions}>
+                  <Button
+                    disabled={blocked}
+                    onClick={() => {
+                      setInstructionId(null);
+                      setCopied('');
+                      open('report', owed);
+                    }}
+                  >
+                    Tôi đã chuyển — Báo đã chuyển
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        })()
       ) : (
         <ContentState state="loading" />
       )}
@@ -795,7 +903,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   disabled={blocked || !members.length}
                   onClick={() => open('enable')}
                 >
-                  Bật quỹ TEST
+                  Bật quỹ
                 </Button>
               )}
             </section>
@@ -823,7 +931,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
               </div>
               <div className={financeOverlayStyles.enableHeaderCopy}>
                 <strong>Cài đặt quỹ nhóm</strong>
-                <span>Thiết lập Finance · {trip.name} · Dữ liệu TEST</span>
+                <span>Thiết lập quỹ · {trip.name}</span>
               </div>
               <button
                 className={financeOverlayStyles.enableClose}
@@ -846,6 +954,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 destinations={destinations.data ?? []}
                 members={members}
                 session={session}
+                banks={banks.data ?? null}
                 onClose={closeForm}
               />
             </main>
@@ -966,10 +1075,10 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   aria-label="Đích nhận"
                 >
                   <div className={workspaceStyles.panelHeader}>
-                    <h2>Đích nhận TEST</h2>
+                    <h2>Tài khoản nhận</h2>
                     {owner && (
                       <Button disabled={blocked} onClick={() => open('destination-create')}>
-                        <Icon name="plus" size={16} /> Thêm đích nhận TEST
+                        <Icon name="plus" size={16} /> Thêm tài khoản nhận
                       </Button>
                     )}
                   </div>
@@ -1197,17 +1306,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                                   );
                                 }}
                               >
-                                Xem hướng dẫn TEST
+                                Mã QR chuyển khoản
                               </Button>
                               <Button disabled={blocked} onClick={() => open('report', c)}>
-                                Báo đã chuyển TEST
+                                Báo đã chuyển
                               </Button>
                             </>
                           )}
                           {c.status === 'TRANSFER_REPORTED' && holder && (
                             <>
                               <Button disabled={blocked} onClick={() => open('confirm', c)}>
-                                Xác nhận đã nhận TEST
+                                Xác nhận đã nhận
                               </Button>
                               <Button
                                 variant="outline"
@@ -1271,6 +1380,14 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 trip={trip}
                 members={members}
                 blocked={baseBlocked || fundQuery.isError}
+              />
+            ) : financeSection === 'handover' && fund && runtime.handovers ? (
+              <HandoverPanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                members={members}
+                blocked={blocked || fundQuery.isError || membersQuery.isError}
               />
             ) : financeSection === 'refunds' && fund && runtime.refunds ? (
               <RefundPanel

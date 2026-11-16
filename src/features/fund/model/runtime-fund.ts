@@ -82,9 +82,56 @@ export interface TransferInstruction {
   recipient_name: string;
   bank_code: string;
   bank_bin: string;
+  bank_name: string;
   account_number: string;
-  environment: 'TEST';
+  /** NAPAS VietQR payload (QRIBFTTA) with CRC; a bank app scanning it prepares this exact transfer. */
+  qr_payload: string;
+  /** Plain SVG of the QR rendered by Finance; embed as an image, never fetched from a provider. */
+  qr_svg: string;
+  environment: 'LIVE';
   warning: string;
+}
+/** Fund state frozen when the nominee accepts; both Holders confirm against this exact snapshot. */
+export interface HandoverSnapshot {
+  current_balance: string;
+  reserved_refund: string;
+  available_balance: string;
+  ledger_sequence: string;
+  fingerprint: string;
+  pending_contribution_ids: string[];
+  pending_refund_ids: string[];
+  pending_expense_ids: string[];
+  pending_payment_ids: string[];
+  payment_destination_ids: string[];
+  pending_payment_exception_ids: string[];
+}
+export interface HolderHandover {
+  id: string;
+  fund_id: string;
+  old_holder_user_id: string;
+  new_holder_user_id: string;
+  nominated_by_user_id: string;
+  status: 'NOMINATED' | 'ACCEPTED' | 'COMPLETED' | 'CANCELLED';
+  version: number;
+  finance_version: number;
+  snapshot_finance_version: number | null;
+  snapshot: HandoverSnapshot | null;
+  /** Finance changed after acceptance; confirmations are hidden until someone refreshes. */
+  snapshot_stale: boolean;
+  accepted_at: string | null;
+  old_holder_confirmed_at: string | null;
+  new_holder_confirmed_at: string | null;
+  completed_at: string | null;
+  cancelled_at: string | null;
+  cancellation_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+export interface Bank {
+  code: string;
+  bin: string;
+  name: string;
+  short_name: string;
 }
 export interface FundRuntime {
   history?(fundId: string, cursor?: string, signal?: AbortSignal): Promise<Page<FinanceHistory>>;
@@ -130,12 +177,24 @@ export interface FundRuntime {
     limit?: number,
   ): Promise<Page<LedgerEntry>>;
   instruction(contributionId: string, signal?: AbortSignal): Promise<TransferInstruction>;
+  /** NAPAS banks that accept VietQR account transfers; the only valid values for bank_code. */
+  banks(signal?: AbortSignal): Promise<Bank[]>;
+  /** Stage a JPEG/PNG/PDF (≤10 MiB); returns a key that an expense write binds. */
+  uploadReceipt?(
+    fundId: string,
+    file: File,
+    signal?: AbortSignal,
+  ): Promise<{ object_key: string; mime_type: string }>;
+  /** Current receipt of an expense, resolved by expense ID (works after reload/other device). */
+  expenseReceipt?(expenseId: string, signal?: AbortSignal): Promise<Blob>;
+  /** Newest-first Holder handovers of a Fund (at most 100). */
+  handovers?(fundId: string, signal?: AbortSignal): Promise<HolderHandover[]>;
 }
 export interface FinanceHistory {
   id: string;
   fund_id: string;
   actor_user_id: string | null;
-  system_actor: 'MOMO_IPN' | 'MOMO_RECONCILIATION' | null;
+  system_actor: 'MOMO_IPN' | 'MOMO_RECONCILIATION' | 'BANK_WEBHOOK:SEPAY' | null;
   action: string;
   entity_type: string;
   entity_id: string | null;
@@ -181,6 +240,15 @@ export interface Refund {
   amount: string;
   status: 'PENDING' | 'HOLDER_REPORTED' | 'CONFIRMED' | 'CANCELLED' | 'REVERSED';
   reason: string;
+  /** Reason given when the Holder requested the reversal; the reverse command must repeat it. */
+  reversal_reason: string | null;
+  /** Independent verifier assigned by the Owner when Owner, Holder and recipient are one person. */
+  verifier_user_id: string | null;
+  verifier_assigned_by_user_id: string | null;
+  verifier_assigned_at: string | null;
+  confirmed_by_user_id: string | null;
+  confirmation_mode: 'RECIPIENT' | 'OWNER' | 'ASSIGNED_MEMBER' | 'SELF_UNVERIFIED' | null;
+  independent_verification: boolean | null;
   holder_reported_at: string | null;
   confirmed_at: string | null;
   nonreceipt_confirmed_at: string | null;

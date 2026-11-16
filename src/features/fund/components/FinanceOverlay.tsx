@@ -75,7 +75,7 @@ const sectionMeta: Record<
   handover: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / BÀN GIAO FUND HOLDER',
     heading: 'Bàn giao Fund Holder',
-    description: 'Khu vực bàn giao sẽ hiển thị khi Gateway có contract tương ứng.',
+    description: 'Đề cử người giữ quỹ mới, chốt số dư và xác nhận bàn giao hai chiều.',
   },
   closure: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / ĐÓNG FINANCE',
@@ -141,7 +141,7 @@ export function FinanceOverlay({
           </div>
           <div className={styles.headerCopy}>
             <strong>Cài đặt quỹ nhóm</strong>
-            <span>Quản lý trách nhiệm quỹ · {tripName} · Dữ liệu TEST</span>
+            <span>Quản lý trách nhiệm quỹ · {tripName}</span>
           </div>
           <button
             className={styles.close}

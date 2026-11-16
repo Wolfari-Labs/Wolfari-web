@@ -6,6 +6,7 @@ export const financeCommandKinds = [
   'closure-cancel',
   'closure-remind',
   'refund-create',
+  'refund-assign-verifier',
   'refund-report-paid',
   'refund-confirm-received',
   'refund-confirm-nonreceipt',
@@ -25,6 +26,11 @@ export const financeCommandKinds = [
   'expense-confirm',
   'expense-reject',
   'expense-reverse',
+  'handover-create',
+  'handover-accept',
+  'handover-refresh-snapshot',
+  'handover-confirm',
+  'handover-cancel',
 ] as const;
 export type FinanceCommandKind = (typeof financeCommandKinds)[number];
 export function isFinanceCommand(kind: string): kind is FinanceCommandKind {
@@ -41,6 +47,32 @@ const expenseFields = [
   'receipt_object_key',
 ];
 export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<string, unknown>) {
+  if (kind.startsWith('handover-')) {
+    const allowed =
+      kind === 'handover-create'
+        ? ['new_holder_user_id', 'expected_finance_version']
+        : [
+            ...versions,
+            ...(kind === 'handover-confirm' ? ['expected_snapshot_finance_version'] : []),
+            ...(kind === 'handover-cancel' ? ['reason'] : []),
+          ];
+    if (Object.keys(body).some((k) => !allowed.includes(k))) throw Error('Invalid handover field');
+    for (const key of allowed.filter((k) => k.startsWith('expected_'))) d.version(body[key]);
+    if (kind === 'handover-create') {
+      if (typeof body.new_holder_user_id !== 'string' || !body.new_holder_user_id)
+        throw Error('Chọn người giữ quỹ mới.');
+      d.uuid(body.new_holder_user_id);
+    }
+    if (
+      kind === 'handover-cancel' &&
+      (typeof body.reason !== 'string' ||
+        !body.reason.trim() ||
+        body.reason.includes('\0') ||
+        [...body.reason.trim()].length > 1024)
+    )
+      throw Error('Nhập lý do hủy bàn giao (tối đa 1024 ký tự).');
+    return;
+  }
   if (kind.startsWith('closure-')) {
     const allowed =
       kind === 'closure-create'
@@ -77,11 +109,21 @@ export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<st
         'refund-request-reversal',
         'refund-reverse',
       ].includes(kind);
+    const verifier = kind === 'refund-assign-verifier';
     const allowed = create
       ? ['member_user_id', 'amount', 'reason', 'expected_finance_version']
-      : [...versions, ...(reasonRequired ? ['reason'] : [])];
+      : [
+          ...versions,
+          ...(reasonRequired ? ['reason'] : []),
+          ...(verifier ? ['verifier_user_id'] : []),
+        ];
     if (Object.keys(body).some((k) => !allowed.includes(k))) throw Error('Invalid refund field');
     for (const key of allowed.filter((k) => k.startsWith('expected_'))) d.version(body[key]);
+    if (verifier) {
+      if (typeof body.verifier_user_id !== 'string' || !body.verifier_user_id)
+        throw Error('Chọn người kiểm chứng.');
+      d.uuid(body.verifier_user_id);
+    }
     if (
       reasonRequired &&
       (typeof body.reason !== 'string' ||
@@ -179,6 +221,12 @@ export function financeCommandRoute(
   resourceId?: string,
 ): { path: string; method: 'POST' | 'PATCH' | 'DELETE' } {
   const root = '/api/v1/funds/' + d.uuid(fundId);
+  if (kind === 'handover-create') return { path: root + '/holder-handovers', method: 'POST' };
+  if (kind.startsWith('handover-'))
+    return {
+      path: '/api/v1/holder-handovers/' + d.uuid(resourceId) + '/' + kind.slice('handover-'.length),
+      method: 'POST',
+    };
   if (kind === 'closure-create') return { path: root + '/closures', method: 'POST' };
   if (kind.startsWith('closure-'))
     return { path: '/api/v1/closures/' + d.uuid(resourceId) + '/' + kind.slice(8), method: 'POST' };

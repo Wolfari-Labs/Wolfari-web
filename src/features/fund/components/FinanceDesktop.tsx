@@ -54,23 +54,41 @@ export function FinanceGoal({
       return null;
     }
   }, [amount, budget]);
-  const percent = ratio === null ? '—' : `${ratio.toLocaleString('vi-VN', { maximumFractionDigits: 1 })}%`;
+  const percent =
+    ratio === null ? '—' : `${ratio.toLocaleString('vi-VN', { maximumFractionDigits: 1 })}%`;
 
   return (
     <section className={styles.goal} aria-label="Mục tiêu quỹ" data-finance-goal>
-      <div className={styles.goalIcon} aria-hidden="true"><img src={financeAssets.goal} alt="" /></div>
+      <div className={styles.goalIcon} aria-hidden="true">
+        <img src={financeAssets.goal} alt="" />
+      </div>
       <div className={styles.goalLabel}>
         <span>Mục tiêu quỹ</span>
         <small>{amountLabel}</small>
       </div>
       <div className={styles.goalProgress}>
-        <strong>{format(amount)} / {format(budget)}</strong>
-        <div className={styles.track} role="progressbar" aria-label="Tiến độ mục tiêu quỹ" aria-valuemin={0} aria-valuemax={100} aria-valuenow={ratio ?? undefined}>
+        <strong>
+          {format(amount)} / {format(budget)}
+        </strong>
+        <div
+          className={styles.track}
+          role="progressbar"
+          aria-label="Tiến độ mục tiêu quỹ"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={ratio ?? undefined}
+        >
           <span style={{ width: ratio === null ? '0%' : `${ratio}%` }} />
         </div>
       </div>
       <span className={styles.percent}>{percent}</span>
-      <button ref={settingsRef} type="button" className={styles.settings} onClick={onSettings} disabled={!onSettings}>
+      <button
+        ref={settingsRef}
+        type="button"
+        className={styles.settings}
+        onClick={onSettings}
+        disabled={!onSettings}
+      >
         <span aria-hidden="true">⚙</span> Cài đặt quỹ
       </button>
     </section>
@@ -86,7 +104,13 @@ const filterLabels: Record<FinanceTransactionFilter, { label: string; icon?: str
 };
 
 function transactionLabel(type: FinanceTransactionType) {
-  return type === 'CONTRIBUTION' ? 'Đóng góp' : type === 'EXPENSE' ? 'Chi tiêu' : type === 'REFUND' ? 'Hoàn tiền' : 'Đảo bút toán';
+  return type === 'CONTRIBUTION'
+    ? 'Đóng góp'
+    : type === 'EXPENSE'
+      ? 'Chi tiêu'
+      : type === 'REFUND'
+        ? 'Hoàn tiền'
+        : 'Đảo bút toán';
 }
 
 export function FinanceTransactionPanel({
@@ -112,7 +136,15 @@ export function FinanceTransactionPanel({
   const [member, setMember] = useState('ALL');
   const [kind, setKind] = useState('ALL');
   const [expanded, setExpanded] = useState<string | null>(null);
-  const members = useMemo(() => Array.from(new Map(rows.filter((r) => r.memberId).map((r) => [r.memberId!, r.memberName ?? r.memberId!])).entries()), [rows]);
+  const members = useMemo(
+    () =>
+      Array.from(
+        new Map(
+          rows.filter((r) => r.memberId).map((r) => [r.memberId!, r.memberName ?? r.memberId!]),
+        ).entries(),
+      ),
+    [rows],
+  );
   const visible = rows.filter((row) => {
     if (filter !== 'ALL' && row.type !== filter) return false;
     if (member !== 'ALL' && row.memberId !== member) return false;
@@ -137,7 +169,9 @@ export function FinanceTransactionPanel({
               onClick={() => setFilter(value)}
               onKeyDown={(event) => {
                 const tabs = Array.from(
-                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [],
+                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+                    '[role="tab"]',
+                  ) ?? [],
                 );
                 const index = tabs.indexOf(event.currentTarget);
                 const next =
@@ -156,38 +190,146 @@ export function FinanceTransactionPanel({
                 tabs[next]?.click();
               }}
             >
-              {filterLabels[value].icon && <img src={filterLabels[value].icon} alt="" aria-hidden="true" />}
+              {filterLabels[value].icon && (
+                <img src={filterLabels[value].icon} alt="" aria-hidden="true" />
+              )}
               {filterLabels[value].label}
             </button>
           ))}
         </div>
-        <label className={styles.selectLabel}>Thành viên<select aria-label="Thành viên" value={member} onChange={(event) => setMember(event.target.value)}><option value="ALL">Mọi thành viên</option>{members.map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
-        <label className={styles.selectLabel}>Loại giao dịch<select aria-label="Loại giao dịch" value={kind} onChange={(event) => setKind(event.target.value)}><option value="ALL">Tất cả giao dịch</option><option value="IN">Tiền vào</option><option value="OUT">Tiền ra</option><option value="REVERSAL">Đảo bút toán</option></select></label>
-        <button type="button" className={styles.export} disabled title="Xuất dữ liệu chưa có trong contract Finance"><img src={financeAssets.download} alt="" aria-hidden="true" /><span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span></button>
+        <label className={styles.selectLabel}>
+          Thành viên
+          <select
+            aria-label="Thành viên"
+            value={member}
+            onChange={(event) => setMember(event.target.value)}
+          >
+            <option value="ALL">Mọi thành viên</option>
+            {members.map(([id, name]) => (
+              <option key={id} value={id}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={styles.selectLabel}>
+          Loại giao dịch
+          <select
+            aria-label="Loại giao dịch"
+            value={kind}
+            onChange={(event) => setKind(event.target.value)}
+          >
+            <option value="ALL">Tất cả giao dịch</option>
+            <option value="IN">Tiền vào</option>
+            <option value="OUT">Tiền ra</option>
+            <option value="REVERSAL">Đảo bút toán</option>
+          </select>
+        </label>
+        <button
+          type="button"
+          className={styles.export}
+          disabled
+          title="Xuất dữ liệu chưa có trong contract Finance"
+        >
+          <img src={financeAssets.download} alt="" aria-hidden="true" />
+          <span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span>
+        </button>
       </div>
       <div className={styles.loadedOnly} data-finance-filter-note="true">
         {footer ?? <p>Bộ lọc áp dụng trên các giao dịch đã tải.</p>}
       </div>
       {feedback}
-      {loading ? <div className={styles.empty} role="status">Đang tải lịch sử quỹ…</div> : visible.length === 0 ? <div className={styles.empty}>Chưa có giao dịch phù hợp.</div> : (
+      {loading ? (
+        <div className={styles.empty} role="status">
+          Đang tải lịch sử quỹ…
+        </div>
+      ) : visible.length === 0 ? (
+        <div className={styles.empty}>Chưa có giao dịch phù hợp.</div>
+      ) : (
         <div className={styles.tableWrap}>
           <table>
             <caption className={styles.srOnly}>Các giao dịch quỹ nhóm</caption>
-            <thead><tr><th>Thời gian</th><th>Giao dịch</th><th>Nội dung</th><th>Thành viên</th><th>Số tiền</th></tr></thead>
-            <tbody>{visible.map((row) => {
-              const isExpanded = expanded === row.id;
-              return <tr key={row.id} className={isExpanded ? styles.expanded : undefined}>
-                <td data-label="Thời gian">{row.timeLabel}</td>
-                <td data-label="Giao dịch"><button type="button" className={styles.rowButton} aria-expanded={isExpanded} onClick={() => setExpanded(isExpanded ? null : row.id)}><span className={row.direction === 'OUT' ? styles.out : styles.in} aria-hidden="true">{row.direction === 'OUT' ? '↑' : '↓'}</span>{transactionLabel(row.type)}</button></td>
-                <td data-label="Nội dung">{row.title}{isExpanded && <dl className={styles.details}><div><dt>Sequence</dt><dd>{row.sequence}</dd></div><div><dt>Số dư sau</dt><dd>{format(row.balanceAfter)}</dd></div><div><dt>Actor</dt><dd>{row.actorName}</dd></div>{row.reason && <div><dt>Lý do</dt><dd>{row.reason}</dd></div>}</dl>}</td>
-                <td data-label="Thành viên">{row.memberName ?? 'Chưa xác định'}</td>
-                <td data-label="Số tiền" className={row.direction === 'OUT' ? styles.out : styles.in}>{row.direction === 'OUT' ? '−' : '+'}{format(row.amount)}</td>
-              </tr>;
-            })}</tbody>
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Giao dịch</th>
+                <th>Nội dung</th>
+                <th>Thành viên</th>
+                <th>Số tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.map((row) => {
+                const isExpanded = expanded === row.id;
+                return (
+                  <tr key={row.id} className={isExpanded ? styles.expanded : undefined}>
+                    <td data-label="Thời gian">{row.timeLabel}</td>
+                    <td data-label="Giao dịch">
+                      <button
+                        type="button"
+                        className={styles.rowButton}
+                        aria-expanded={isExpanded}
+                        onClick={() => setExpanded(isExpanded ? null : row.id)}
+                      >
+                        <span
+                          className={row.direction === 'OUT' ? styles.out : styles.in}
+                          aria-hidden="true"
+                        >
+                          {row.direction === 'OUT' ? '↑' : '↓'}
+                        </span>
+                        {transactionLabel(row.type)}
+                      </button>
+                    </td>
+                    <td data-label="Nội dung">
+                      {row.title}
+                      {isExpanded && (
+                        <dl className={styles.details}>
+                          <div>
+                            <dt>Sequence</dt>
+                            <dd>{row.sequence}</dd>
+                          </div>
+                          <div>
+                            <dt>Số dư sau</dt>
+                            <dd>{format(row.balanceAfter)}</dd>
+                          </div>
+                          <div>
+                            <dt>Actor</dt>
+                            <dd>{row.actorName}</dd>
+                          </div>
+                          {row.reason && (
+                            <div>
+                              <dt>Lý do</dt>
+                              <dd>{row.reason}</dd>
+                            </div>
+                          )}
+                        </dl>
+                      )}
+                    </td>
+                    <td data-label="Thành viên">{row.memberName ?? 'Chưa xác định'}</td>
+                    <td
+                      data-label="Số tiền"
+                      className={row.direction === 'OUT' ? styles.out : styles.in}
+                    >
+                      {row.direction === 'OUT' ? '−' : '+'}
+                      {format(row.amount)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
       )}
-      {hasMore && <button type="button" className={styles.loadMore} disabled={loadingMore} onClick={onLoadMore}>{loadingMore ? 'Đang tải…' : 'Tải thêm giao dịch'}</button>}
+      {hasMore && (
+        <button
+          type="button"
+          className={styles.loadMore}
+          disabled={loadingMore}
+          onClick={onLoadMore}
+        >
+          {loadingMore ? 'Đang tải…' : 'Tải thêm giao dịch'}
+        </button>
+      )}
     </section>
   );
 }

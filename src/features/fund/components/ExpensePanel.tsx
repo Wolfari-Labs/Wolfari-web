@@ -8,7 +8,15 @@ import { Button } from '../../../shared/components/Button';
 import { Select } from '../../../shared/components/Select';
 import { ContentState } from '../../../shared/components/ContentState';
 import { toDomainError } from '../../../shared/lib/runtime-validation';
+import { Badge } from '../../../shared/components/Ui';
 import styles from './FinanceRecords.module.css';
+const tones: Record<Expense['status'], 'neutral' | 'success' | 'warning' | 'danger'> = {
+  DRAFT: 'neutral',
+  SUBMITTED: 'warning',
+  CONFIRMED: 'success',
+  REJECTED: 'danger',
+  REVERSED: 'neutral',
+};
 
 const statuses = {
   DRAFT: 'Bản nháp',
@@ -77,7 +85,46 @@ export function ExpensePanel({
     { key: 'amount', label: 'Số tiền VND', required: true, initial: row?.amount ?? '' },
     { key: 'description', label: 'Mô tả', maxLength: 10000, initial: row?.description ?? '' },
     { key: 'category', label: 'Danh mục', maxLength: 80, initial: row?.category ?? '' },
+    ...(runtime.uploadReceipt
+      ? [
+          {
+            key: 'receipt_object_key',
+            label: row?.receipt_available ? 'Thay chứng từ (tùy chọn)' : 'Chứng từ (tùy chọn)',
+            type: 'file' as const,
+            accept: 'image/jpeg,image/png,application/pdf',
+            omitWhenEmpty: true,
+            hint: row?.receipt_available
+              ? 'Để trống để giữ chứng từ hiện tại. JPEG, PNG hoặc PDF, tối đa 10 MB.'
+              : 'Ảnh hóa đơn hoặc PDF, tối đa 10 MB. Chỉ thành viên chuyến đi xem được.',
+            upload: async (file: File) => (await runtime.uploadReceipt!(fund.id, file)).object_key,
+          },
+        ]
+      : []),
   ];
+  const [receiptState, setReceiptState] = useState<{ id: string; text: string } | null>(null);
+  const openReceipt = async (row: Expense) => {
+    if (!runtime.expenseReceipt) return;
+    // Open the tab synchronously so pop-up blockers allow it, then fill it with the file.
+    const tab = window.open('', '_blank');
+    setReceiptState({ id: row.id, text: 'Đang tải chứng từ…' });
+    try {
+      const blob = await runtime.expenseReceipt(row.id);
+      const url = URL.createObjectURL(blob);
+      if (tab) tab.location.href = url;
+      else window.location.assign(url);
+      window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      setReceiptState(null);
+    } catch (error) {
+      tab?.close();
+      const notFound = toDomainError(error).code === 'RESOURCE_NOT_FOUND';
+      setReceiptState({
+        id: row.id,
+        text: notFound
+          ? 'Không tìm thấy chứng từ (có thể đã được thay hoặc bạn không còn quyền xem).'
+          : 'Không tải được chứng từ; thử lại.',
+      });
+    }
+  };
   return (
     <section aria-label="Danh sách khoản chi" className={styles.panel}>
       <p>
@@ -113,7 +160,8 @@ export function ExpensePanel({
           <article key={row.id} className={styles.record} aria-label={row.title}>
             <h3>{row.title}</h3>
             <p>
-              {row.amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} ₫ · {statuses[row.status]}
+              {row.amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} ₫{' '}
+              <Badge tone={tones[row.status]}>{statuses[row.status]}</Badge>
             </p>
             <p>
               Người đề nghị: {name(row.created_by_user_id)} ·{' '}
@@ -121,6 +169,14 @@ export function ExpensePanel({
             </p>
             {row.description && <p>{row.description}</p>}
             {row.rejected_reason && <p>Lý do: {row.rejected_reason}</p>}
+            {row.receipt_available && runtime.expenseReceipt && (
+              <p>
+                <Button variant="plain" onClick={() => void openReceipt(row)}>
+                  Xem chứng từ
+                </Button>
+                {receiptState?.id === row.id && <span role="status"> {receiptState.text}</span>}
+              </p>
+            )}
             <div className={styles.actions}>
               {row.status === 'DRAFT' && (owner || actor === row.created_by_user_id) && (
                 <>

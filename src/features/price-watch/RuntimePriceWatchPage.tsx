@@ -11,6 +11,7 @@ import {
 } from './model/runtime-price-watch';
 import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
+import { errorReasonMessage } from '../../shared/components/OperationStatus';
 import { Button } from '../../shared/components/Button';
 import { Drawer } from '../../shared/components/Drawer';
 import { PriceWatchForm } from './PriceWatchForm';
@@ -309,11 +310,12 @@ function WatchWorkspace({
         }
       }
       setNotice(
-        commandFailure(error).conflict
-          ? 'Dữ liệu đã thay đổi. Bản nhập được giữ; đối chiếu lại trước khi tạo yêu cầu mới.'
-          : uncertain
-            ? 'Chưa xác nhận kết quả. Không tạo lại yêu cầu mới.'
-            : 'Yêu cầu bị từ chối. Kiểm tra dữ liệu, quyền và tải lại để đối chiếu.',
+        errorReasonMessage(commandFailure(error).details) ??
+          (commandFailure(error).conflict
+            ? 'Dữ liệu đã thay đổi. Bản nhập được giữ; đối chiếu lại trước khi tạo yêu cầu mới.'
+            : uncertain
+              ? 'Chưa xác nhận kết quả. Không tạo lại yêu cầu mới.'
+              : 'Yêu cầu bị từ chối. Kiểm tra dữ liệu, quyền và tải lại để đối chiếu.'),
       );
     } finally {
       inFlight.current = false;
