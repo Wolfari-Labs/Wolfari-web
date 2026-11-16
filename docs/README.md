@@ -11,11 +11,14 @@
 | Route, trạng thái và contract | [Screen inventory](screen-inventory.md), [Screen contracts](screen-contracts.md), [State matrix](state-matrix.md), [Flow map](flow-map.md) |
 | Quy định và trạng thái redesign | [Master plan](ui-redesign/MASTER_PLAN.md), [State](ui-redesign/STATE.md), [CP11 acceptance](ui-redesign/CP11_ACCEPTANCE.md) |
 | Thiết kế và thay đổi đã duyệt | [Design system](ui-redesign/DESIGN_SYSTEM.md), [Design deltas](ui-redesign/DESIGN_DELTAS.md), [Decisions](ui-redesign/DECISIONS.md) |
-| Demo và bàn giao | [Demo trực tiếp](HUONG_DAN_DEMO_TRUC_TIEP.md), [Validation](demo-readiness-validation.md), [Phase D](PHASE_D_HANDOFF.md), [PR/merge](HUONG_DAN_PR_VA_MERGE_MAIN.md) |
+| Demo hiện hành | [Runbook demo](../HUONG_DAN_BUILD_VA_CHAY_DEMO_1.md), [triển khai trial](../deployment/README.md) |
+| Snapshot bàn giao Demo 1 | [Demo trực tiếp](HUONG_DAN_DEMO_TRUC_TIEP.md), [Validation](demo-readiness-validation.md), [Phase D](PHASE_D_HANDOFF.md), [PR/merge lịch sử](HUONG_DAN_PR_VA_MERGE_MAIN.md) |
 
 Hồ sơ CP01–CP11, quyết định và bằng chứng tiếp tục ở [ui-redesign](ui-redesign/README.md). CP11 đã đóng với ngoại lệ; việc dọn repo không mở checkpoint mới hoặc phê duyệt release. Các báo cáo demo/bàn giao có ngày vẫn là snapshot, không chứng minh trạng thái CI/live hiện tại.
 
 ## Tài liệu lịch sử
+
+[Main sync 16/11/2026](../../Wolfari-backend/docs/history/main-sync-2026-11-16.md) ghi cặp SHA, giải quyết conflict, kiểm chứng mới và điều kiện deploy; không thay quyết định CP đã duyệt.
 
 [Kho lưu trữ](archive/README.md) chứa báo cáo triển khai theo phase, roadmap cũ và cách tra prompt cũ trong Git. Dùng để truy nguyên thay đổi; đọc quy định hiện tại trước khi áp dụng hướng dẫn cũ.
 

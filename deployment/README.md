@@ -1,5 +1,11 @@
 # Single-host trial Web
 
+> Các kết quả 11/11 dưới đây là snapshot lịch sử, không xác nhận HEAD sau sync. Đợt 16/11 giữ nhánh trial; remote main `e196652` đã nằm trong nhánh nên không cần merge commit Web. CI/public TLS/provider thật và Linux recovery vẫn cần gate riêng. Không push/deploy trong đợt sync local.
+
+Kết quả mới và blockers: [main-sync verification](../../Wolfari-backend/docs/history/main-sync-2026-11-16.md).
+
+Đợt hoàn tất 17/11/2026: Web unit 620/620; Gateway built HTTP-mock 133 PASS và 1 Leaflet opt-in PASS riêng; E2E Web–Backend thật dev/preview PASS (mỗi lượt 17 bước nghiệp vụ), deploy build PASS. Đã sửa tương thích VietQR LIVE và contrast Map theo phê duyệt. Đây là kiểm chứng local; CI, public TLS/provider thật và phục hồi production chưa được nghiệm thu.
+
 Operator runbook: `../../HUONG_DAN_DEPLOY_WOLFARI_GOOGLE_CLOUD.md` in the PBL6 workspace root (outside Git repositories).
 
 Branch `feat/single-host-trial-deploy`, base `e196652`; no commit/push or public deployment. No UI redesign. `corepack pnpm build:deploy` forces production Gateway mode into `dist-deploy`; existing HTTP client enforces same-origin `/api/v1/`, and unavailable Backend does not select fixture repositories.

@@ -120,6 +120,10 @@ Sessions/guards/query keys, expected versions/idempotency, timezone/date-only/ov
 
 ## Review protocol
 
+### SYNC-MAP-A11Y — 17/11/2026 — APPROVED_BY_USER
+
+Merge-readiness review found existing Gateway Map filter/toolbar text contrast failures (approximately 3.8–4.4:1 against a 4.5:1 requirement). User explicitly approved the bounded contrast repair on 17/11/2026. Applied only to affected filters, status chips and map-type button in `TripMapPage.module.css`: selected text and active button backgrounds use existing `--color-action-primary`; scheduled text uses `#087653`; unscheduled text uses `#8a5d00`. Matching responsive filter variants follow the same text colors. Calculated ratios are 5.19–5.97:1. Active teal button backgrounds are darkened to preserve white labels; other backgrounds, layout, controls and interactions remain unchanged. No backend/API change or new redesign checkpoint. Original failures remain historical; fresh browser verification belongs in the main-sync report. Axe assertions remain enabled.
+
 ### Provider integration correction — 12/11/2026
 
 User explicitly rejected the extra Map panels/forms and requires the approved template to remain intact. The earlier statement that provider integration authorized presentation changes was incorrect and is superseded. Runtime Map now reuses the existing TripMapPage composition, CSS, compact hero, search, filters, selection checkboxes, map toolbar/cards and PlaceDetail. Existing checkbox/heart controls persist selections through the Gateway; the existing itinerary link opens the existing Plan editor flow. Manual coordinates use the existing pin affordance and shared Drawer, not an always-visible panel. Leaflet occupies the existing map canvas. Price form/card layout and design tokens stay unchanged; provider constraints/status labels remain truthful. The satellite control reports unsupported capability rather than substituting another map. No Figma writes, redesign, commit/push or deployment. Earlier tests of the rejected layout remain historical; fresh correction verification is recorded separately in the root report.

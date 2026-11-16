@@ -626,11 +626,18 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
     });
     await test.step('report reject reload report confirm; lost response after commit replays once', async () => {
       await fund(editor, tripId);
-      await editor.getByRole('button', { name: 'Xem hướng dẫn TEST' }).click();
-      await expect(editor.getByRole('dialog', { name: 'Hướng dẫn chuyển TEST' })).toContainText(
+      const instructionResponse = editor.waitForResponse((response) =>
+        /\/api\/v1\/contributions\/[^/]+\/vietqr$/.test(new URL(response.url()).pathname),
+      );
+      await editor.getByRole('button', { name: 'Xem hướng dẫn chuyển khoản' }).click();
+      expect((await instructionResponse).status()).toBe(200);
+      await expect(editor.getByRole('dialog', { name: 'Hướng dẫn chuyển khoản' })).toContainText(
         'HOLDER TEST',
       );
-      await editor.getByRole('button', { name: 'Đóng hướng dẫn chuyển test' }).click();
+      await expect(editor.getByRole('dialog', { name: 'Hướng dẫn chuyển khoản' })).toContainText(
+        'LIVE — thông tin chuyển khoản ngân hàng thật',
+      );
+      await editor.getByRole('button', { name: 'Đóng hướng dẫn chuyển khoản' }).click();
       await editor.getByRole('button', { name: 'Báo đã chuyển TEST', exact: true }).click();
       await confirmForm(editor, 'Báo đã chuyển TEST');
       await holder.reload();
@@ -882,7 +889,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
             path === 'packing'
               ? 'Chưa có hành lý đã lưu'
               : path === 'map'
-                ? 'Chuyến đi chưa có địa điểm đã lưu.'
+                ? 'Không có địa điểm phù hợp'
                 : 'Chưa có hướng dẫn trang phục',
             { exact: true },
           ),

@@ -96,25 +96,35 @@ describe('demo1 Finance wire boundary', () => {
     expect(() => decodeDestination({ ...destination, bank_code: 'VCB' }, fundId)).toThrow();
     expect(() => decodeDestination({ ...destination, active: 1 }, fundId)).toThrow();
   });
-  it('does not return provider QR URL to UI; never fetches it', () => {
-    const result = decodeInstruction(
-      {
-        contribution_id: contributionId,
-        amount: '200000',
-        currency: 'VND',
-        reference: 'TEST',
-        recipient_name: 'TEST',
-        bank_code: 'VCB',
-        bank_bin: '970436',
-        account_number: '123',
-        environment: 'TEST',
-        warning: 'TEST',
-        qr_url: 'https://provider.invalid/private',
-      },
-      contributionId,
-    );
-    expect(result).not.toHaveProperty('qr_url');
-  });
+  it.each(['TEST', 'LIVE'])(
+    'preserves %s instructions without exposing provider QR content',
+    (environment) => {
+      const result = decodeInstruction(
+        {
+          contribution_id: contributionId,
+          amount: '200000',
+          currency: 'VND',
+          reference: 'TEST',
+          recipient_name: 'TEST',
+          bank_code: 'VCB',
+          bank_bin: '970436',
+          account_number: '123',
+          environment,
+          warning: 'TEST',
+          qr_url: 'https://provider.invalid/private',
+          qr_svg: '<svg onload="alert(1)"/>',
+        },
+        contributionId,
+      );
+      expect(result).not.toHaveProperty('qr_url');
+      expect(result).not.toHaveProperty('qr_svg');
+      expect(result.environment).toBe(environment);
+      expect(() =>
+        decodeInstruction({ ...result, environment: 'UNKNOWN' }, contributionId),
+      ).toThrow();
+      expect(() => decodeInstruction(result, id(9))).toThrow();
+    },
+  );
   it('ledger sequence stays a decimal string beyond Number precision', () => {
     const row = {
       id: id(7),

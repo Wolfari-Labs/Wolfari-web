@@ -27,6 +27,10 @@ Quay lại [mục lục tài liệu](../README.md). Quy định hiện hành n�
 - [Hướng dẫn Codex](implementation/codex-web-implementation-guide.md)
 - [Roadmap triển khai Web](implementation/web-implementation-roadmap.md)
 
+## Snapshot Demo 1 giữ nguyên đường dẫn
+
+[PR/merge tháng 11](../HUONG_DAN_PR_VA_MERGE_MAIN.md), [Phase D](../PHASE_D_HANDOFF.md) và [readiness](../demo-readiness-validation.md) là hồ sơ lịch sử. Giữ vị trí để bảo toàn các liên kết/evidence cũ; trạng thái PR, branch và kết quả trong đó không phải chỉ dẫn cho nhánh trial hiện tại. Không tái tạo PR hoặc suy release approval từ các snapshot này.
+
 ## Prompt triển khai đã hết vai trò
 
 11 prompt trước chương trình checkpoint đã bỏ khỏi checkout sau khi đối chiếu với

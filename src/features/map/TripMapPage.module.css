@@ -185,14 +185,14 @@
 
 .filterAll[aria-pressed='true'] {
   border-color: var(--map-teal) !important;
-  background: var(--map-teal) !important;
+  background: var(--color-action-primary) !important;
   color: var(--color-white) !important;
 }
 
 .filterSelected {
   border-color: #b9e7ef !important;
   background: #e9f8fb !important;
-  color: #0b84a8 !important;
+  color: var(--color-action-primary) !important;
 }
 
 .filterSelected[aria-pressed='true'] {
@@ -202,7 +202,7 @@
 .filterScheduled {
   border-color: var(--map-scheduled-line) !important;
   background: var(--map-scheduled-surface) !important;
-  color: var(--map-scheduled) !important;
+  color: #087653 !important;
 }
 
 .filterScheduled[aria-pressed='true'] {
@@ -212,7 +212,7 @@
 .filterUnscheduled {
   border-color: #f4d88a !important;
   background: #fff7de !important;
-  color: #9b6a00 !important;
+  color: #8a5d00 !important;
 }
 
 .filterUnscheduled[aria-pressed='true'] {
@@ -323,13 +323,13 @@
 .statusScheduled {
   border-color: var(--map-scheduled-line);
   background: var(--map-scheduled-surface);
-  color: var(--map-scheduled);
+  color: #087653;
 }
 
 .statusUnscheduled {
   border-color: #f4d88a;
   background: #fff7de;
-  color: #9b6a00;
+  color: #8a5d00;
 }
 
 .rowChevron {
@@ -402,7 +402,7 @@
 .mapType button[aria-pressed='true'] {
   min-width: 76px;
   border-color: var(--map-teal);
-  background: var(--map-teal);
+  background: var(--color-action-primary);
   color: var(--color-white);
 }
 
@@ -785,12 +785,12 @@
 
   .mobileFilters .filterSelected {
     background: #e9f8fb !important;
-    color: #0b84a8 !important;
+    color: var(--color-action-primary) !important;
   }
 
   .mobileFilters .filterScheduled {
     background: var(--map-scheduled-surface) !important;
-    color: var(--map-scheduled) !important;
+    color: #087653 !important;
   }
 
   .mobileFilters .filterSelected[aria-pressed='true'],
@@ -1259,25 +1259,25 @@
 .filterSelect[data-filter='ALL'] select {
   border-color: var(--map-teal);
   background-color: #e9f8fb;
-  color: #0b84a8;
+  color: var(--color-action-primary);
 }
 
 .filterSelect[data-filter='SELECTED'] select {
   border-color: #b9e7ef;
   background-color: #e9f8fb;
-  color: #0b84a8;
+  color: var(--color-action-primary);
 }
 
 .filterSelect[data-filter='SCHEDULED'] select {
   border-color: var(--map-scheduled-line);
   background-color: var(--map-scheduled-surface);
-  color: var(--map-scheduled);
+  color: #087653;
 }
 
 .filterSelect[data-filter='UNSCHEDULED'] select {
   border-color: #f4d88a;
   background-color: #fff7de;
-  color: #9b6a00;
+  color: #8a5d00;
 }
 
 @media (max-width: 360px) {

@@ -45,7 +45,7 @@ export function decodeLedger(value: unknown, fundId: string): LedgerEntry {
 export function decodeInstruction(value: unknown, contributionId: string): TransferInstruction {
   const r = d.object(value); d.scope(d.uuid(r.contribution_id), contributionId);
   // Deliberately omit qr_url: no automatic request to any outside provider.
-  return { contribution_id: contributionId, amount: d.money(r.amount, true), currency: d.enumeration(r.currency, ['VND']), environment: d.enumeration(r.environment, ['TEST']),
+  return { contribution_id: contributionId, amount: d.money(r.amount, true), currency: d.enumeration(r.currency, ['VND']), environment: d.enumeration(r.environment, ['TEST', 'LIVE']),
     reference: d.string(r.reference), recipient_name: d.string(r.recipient_name), bank_code: d.string(r.bank_code), bank_bin: d.string(r.bank_bin), account_number: d.string(r.account_number), warning: d.string(r.warning) };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {

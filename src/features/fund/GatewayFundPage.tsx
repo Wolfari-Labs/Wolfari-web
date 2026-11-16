@@ -817,7 +817,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                               disabled={blocked}
                               onClick={() => setInstructionId(c.id)}
                             >
-                              Xem hướng dẫn TEST
+                              Xem hướng dẫn chuyển khoản
                             </Button>
                             <Button disabled={blocked} onClick={() => open('report', c)}>
                               Báo đã chuyển TEST
@@ -932,7 +932,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       </div>
       <Drawer
         open={instructionId !== null}
-        label="Hướng dẫn chuyển TEST"
+        label="Hướng dẫn chuyển khoản"
         side="right"
         onDismiss={() => setInstructionId(null)}
       >
@@ -941,12 +941,15 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
         ) : instruction.data ? (
           <>
             <Alert tone="warning">
-              TEST — không chuyển tiền thật. Không tải QR hoặc gửi thông tin tới provider bên ngoài.
+              {instruction.data.environment === 'LIVE'
+                ? 'LIVE — thông tin chuyển khoản ngân hàng thật. Trong đợt thử nghiệm, không chuyển tiền thật.'
+                : 'TEST — không chuyển tiền thật.'}{' '}
+              Không tải QR hoặc gửi thông tin tới provider bên ngoài.
             </Alert>
             <dl>
               {[
                 ['Ngân hàng', instruction.data.bank_code],
-                ['Tài khoản TEST', instruction.data.account_number],
+                ['Tài khoản', instruction.data.account_number],
                 ['Người nhận', instruction.data.recipient_name],
                 ['Số tiền', formatVnd(instruction.data.amount)],
                 ['Nội dung', instruction.data.reference],

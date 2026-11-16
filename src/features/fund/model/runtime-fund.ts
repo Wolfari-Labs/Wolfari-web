@@ -83,7 +83,7 @@ export interface TransferInstruction {
   bank_code: string;
   bank_bin: string;
   account_number: string;
-  environment: 'TEST';
+  environment: 'TEST' | 'LIVE';
   warning: string;
 }
 export interface FundRuntime {

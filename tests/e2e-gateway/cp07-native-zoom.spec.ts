@@ -184,10 +184,10 @@ test('CP07 Gateway Map, Dress and Packing fit native Chrome 200% zoom', async ({
     await page.goto(`${tripPath}/map`);
     const map = page.locator('[data-flow="gateway-map-read"]');
     await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toBeVisible();
-    const search = map.getByRole('searchbox', { name: 'Tìm địa điểm đã lưu' });
+    const search = map.getByRole('searchbox', { name: 'Tìm địa điểm', exact: true });
     await search.focus();
     await page.keyboard.press('Tab');
-    await expect(map.getByRole('button', { name: 'Tất cả' })).toBeFocused();
+    await expect(map.getByRole('button', { name: 'Đặt pin thủ công' })).toBeFocused();
     await expect(map.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
