@@ -255,3 +255,20 @@ context fit their content, receiving add action sits right of title in one card,
 list/form outer wrappers lose redundant borders. FIN/26 discard semantics use the
 shared compact confirmation dialog rather than a full-page mockup; Back replaces
 Close form. Only local draft is discarded; sent operations/recovery are preserved.
+
+## Dress code writes on Gateway — user request 16/11/2026
+
+Backend now serves API050–053 and `capabilities.dress_codes_write`, so the Gateway Dress page
+writes for real. User asked for a sensible, demo-ready Dress code screen.
+
+- Removed the dashed "Chưa có ảnh minh họa riêng" placeholder from every saved card: the
+  contract has no image or palette, and the empty box pushed the guidance below the fold.
+- Scope groups (whole Trip, each day, each Activity) flow as columns on wide screens and
+  stack on phones; cards keep header, description, scope/source rows and actions.
+- Editor: scope adds "Cả chuyến"; the day is a list of the Trip's own days instead of a free
+  date input, so an out-of-range day cannot be typed. TRIP rows are no longer read-only.
+- Unchanged: filters, breadcrumb, hero, capability/permission gating, recovery states,
+  suggestion panel gating. No image, palette or upload was added.
+
+Checks: typecheck, lint, unit suite, Gateway HTTP-mock `preparation-srs12` and `cp07`,
+plus a live add/edit/reload/delete run against the local demo backend.

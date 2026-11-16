@@ -29,7 +29,7 @@ export interface LocationWrite {
   fetchedAt?: string | null;
 }
 export interface DressWrite {
-  scopeType: 'DAY' | 'ACTIVITY';
+  scopeType: 'TRIP' | 'DAY' | 'ACTIVITY';
   planDate: string | null;
   activityId: string | null;
   label: string;
@@ -108,10 +108,11 @@ export function validDressWrite(v: unknown): v is DressWrite {
     text(v.label, 100) &&
     nullable(v.description) &&
     nullable(v.publicDescription) &&
-    ((v.scopeType === 'DAY' &&
-      typeof v.planDate === 'string' &&
-      validCalendarDate(v.planDate) &&
-      v.activityId === null) ||
+    ((v.scopeType === 'TRIP' && v.planDate === null && v.activityId === null) ||
+      (v.scopeType === 'DAY' &&
+        typeof v.planDate === 'string' &&
+        validCalendarDate(v.planDate) &&
+        v.activityId === null) ||
       (v.scopeType === 'ACTIVITY' && id(v.activityId) && v.planDate === null))
   );
 }

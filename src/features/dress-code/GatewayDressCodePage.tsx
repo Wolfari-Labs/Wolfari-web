@@ -87,9 +87,6 @@ export function GatewayDressCodePage() {
                               <h3>{item.label}</h3>
                               <span>{scopeLabel(item)}</span>
                             </header>
-                            <div className={styles.noArtwork} role="note">
-                              Chưa có ảnh minh họa riêng cho hướng dẫn này
-                            </div>
                             <p>
                               {item.description ??
                                 item.publicDescription ??
@@ -147,7 +144,10 @@ export function GatewayDressCodePage() {
                   refresh={snapshot.retry}
                 />
                 {data.plan.capabilities?.dress_codes_write ? (
-                  <p>Hướng dẫn theo ngày hoặc Activity. Ảnh và bảng màu chưa thuộc phạm vi này.</p>
+                  <p>
+                    Thêm hướng dẫn cho cả chuyến, một ngày hoặc một hoạt động. Mọi thành viên đều
+                    xem được; người có quyền sửa kế hoạch mới thêm, sửa, xóa.
+                  </p>
                 ) : (
                   <>
                     <p className={styles.badge}>Chỉ xem</p>

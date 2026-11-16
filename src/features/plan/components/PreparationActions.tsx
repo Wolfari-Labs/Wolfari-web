@@ -99,6 +99,7 @@ function initialFields(
   module: Module,
   item?: Item,
   candidate?: LocationWrite,
+  firstDay = '',
 ): Record<string, string> {
   if (module === 'location') {
     const v = candidate ?? (item as SelectedLocationViewModel | undefined);
@@ -112,8 +113,8 @@ function initialFields(
   if (module === 'dress') {
     const v = item as DressCodeViewModel | undefined;
     return {
-      scopeType: v?.scopeType === 'ACTIVITY' ? 'ACTIVITY' : 'DAY',
-      planDate: v?.planDate ?? '',
+      scopeType: v?.scopeType ?? 'DAY',
+      planDate: v?.planDate ?? firstDay,
       activityId: v?.activityId ?? '',
       label: v?.label ?? '',
       description: v?.description ?? '',
@@ -146,8 +147,7 @@ export function PreparationActions({
         : 'packing_items_write';
   const enabled =
     activePlan(trip) && plan.permissions.canEdit && plan.capabilities?.[capability] === true;
-  const legacy =
-    module === 'dress' && (item as DressCodeViewModel | undefined)?.scopeType === 'TRIP';
+  const days = module === 'dress' ? planDays(trip.startAt, trip.endAt, trip.timezone) : [];
   const [draft, setDraft] = useState<{
     fields: Record<string, string>;
     version: number;
@@ -161,7 +161,7 @@ export function PreparationActions({
       : [];
   const label = module === 'location' ? 'địa điểm' : module === 'dress' ? 'dress code' : 'vật dụng';
   const edit = () => {
-    const fields = initialFields(module, item, candidate);
+    const fields = initialFields(module, item, candidate, days[0]);
     const packing = module === 'packing' ? (item as PackingItemViewModel | undefined) : undefined;
     if (packing)
       fields.dueDate = packingFormFromItem({ ...packing, reminder: null }, trip.timezone).dueDate;
@@ -205,10 +205,7 @@ export function PreparationActions({
         return;
       }
     } else if (module === 'dress') {
-      if (
-        f.scopeType === 'DAY' &&
-        (!f.planDate || !planDays(trip.startAt, trip.endAt, trip.timezone).includes(f.planDate))
-      ) {
+      if (f.scopeType === 'DAY' && (!f.planDate || !days.includes(f.planDate))) {
         setError('Ngày phải nằm trong chuyến đi.');
         return;
       }
@@ -259,7 +256,7 @@ export function PreparationActions({
     }
     if (await commands.submit(intent)) setDraft(null);
   };
-  if (!enabled || legacy) return null;
+  if (!enabled) return null;
   return (
     <div className={styles.actions}>
       <Button
@@ -332,17 +329,26 @@ export function PreparationActions({
                     value={draft.fields.scopeType}
                     onChange={(e) => update('scopeType', e.target.value)}
                   >
+                    <option value="TRIP">Cả chuyến</option>
                     <option value="DAY">Theo ngày</option>
                     <option value="ACTIVITY">Theo Activity</option>
                   </Select>
-                  {draft.fields.scopeType === 'DAY' ? (
-                    <Input
+                  {draft.fields.scopeType === 'TRIP' ? null : draft.fields.scopeType === 'DAY' ? (
+                    <Select
                       label="Ngày"
-                      type="date"
                       required
                       value={draft.fields.planDate}
                       onChange={(e) => update('planDate', e.target.value)}
-                    />
+                    >
+                      {/* A saved day outside the current Trip dates stays visible until changed. */}
+                      {[...new Set([draft.fields.planDate ?? '', ...days])].map((day) => (
+                        <option key={day} value={day}>
+                          {day
+                            ? `${day.slice(8, 10)}/${day.slice(5, 7)}/${day.slice(0, 4)}`
+                            : 'Chọn ngày'}
+                        </option>
+                      ))}
+                    </Select>
                   ) : (
                     <Select
                       label="Activity"

@@ -236,6 +236,25 @@ describe('validation and SRS permissions', () => {
       }),
     ).toBe(false),
   );
+  it('accepts exactly one Dress scope: whole Trip, one day or one Activity', () => {
+    const dress = { label: 'A', description: null, publicDescription: null };
+    const activityId = '11111111-1111-4111-8111-111111111111';
+    expect(validDressWrite({ ...dress, scopeType: 'TRIP', planDate: null, activityId: null })).toBe(
+      true,
+    );
+    expect(
+      validDressWrite({ ...dress, scopeType: 'DAY', planDate: '2026-11-02', activityId: null }),
+    ).toBe(true);
+    expect(validDressWrite({ ...dress, scopeType: 'ACTIVITY', planDate: null, activityId })).toBe(
+      true,
+    );
+    expect(validDressWrite({ ...dress, scopeType: 'TRIP', planDate: null, activityId })).toBe(
+      false,
+    );
+    expect(
+      validDressWrite({ ...dress, scopeType: 'DAY', planDate: '2026-11-02', activityId }),
+    ).toBe(false);
+  });
   it.each(['0', '-1', '1.001', '100000000', 'NaN'])('rejects invalid quantity %s', (quantity) =>
     expect(validPackingWrite({ ...fields, quantity })).toBe(false),
   );
