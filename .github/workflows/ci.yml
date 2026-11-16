@@ -17,7 +17,9 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Lint, unit, two builds plus fixture and Gateway browser suites in one job regularly
+    # take 15–20 minutes on hosted runners; 20 cancelled otherwise-passing runs (#74, #75).
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
         with:
