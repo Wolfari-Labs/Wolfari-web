@@ -60,7 +60,7 @@ Các nhãn bằng chứng và mức giới hạn được dùng theo [mục 2.2 
 
 ### UX-002 — Auth, verification branch và recovery
 
-**Bằng chứng — SOURCE-VERIFIED + DOC-CLAIM, tin cậy cao cho contract/source:** [AuthPage.tsx](../src/features/auth/AuthPage.tsx#L43), [router.tsx](../src/app/router.tsx#L93), [runtime evidence](./runtime-evidence-2026-10-15.md#capabilityaction-matrix).  
+**Bằng chứng — SOURCE-VERIFIED + DOC-CLAIM, tin cậy cao cho contract/source:** [AuthPage.tsx](../src/features/auth/AuthPage.tsx#L43), [router.tsx](../src/app/router.tsx#L93), [runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md#capabilityaction-matrix).\
 **Mục tiêu:** Có journey account đúng contract, không đi thẳng từ Register vào session giả; không ép verification trước mọi Login.
 
 | Phương án | Nội dung, lý do và lợi ích | Nhược điểm / tác động Figma | Độ phức tạp / rủi ro |
@@ -85,7 +85,7 @@ Các nhãn bằng chứng và mức giới hạn được dùng theo [mục 2.2 
 
 ### UX-004 — Product promise, demo và sandbox disclosure
 
-**Bằng chứng — SOURCE-VERIFIED + DOC-CLAIM + EXPERT-ASSESSMENT, tin cậy cao cho mismatch, trung bình cho impact:** [HomePage.tsx](../src/features/home/HomePage.tsx#L87), [runtime evidence](./runtime-evidence-2026-10-15.md#capabilityaction-matrix).  
+**Bằng chứng — SOURCE-VERIFIED + DOC-CLAIM + EXPERT-ASSESSMENT, tin cậy cao cho mismatch, trung bình cho impact:** [HomePage.tsx](../src/features/home/HomePage.tsx#L87), [runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md#capabilityaction-matrix).\
 **Mục tiêu:** Người dùng biết đâu là capability thật, preview, sandbox và roadmap.
 
 | Phương án | Nội dung, lý do và lợi ích | Nhược điểm / tác động Figma | Độ phức tạp / rủi ro |
@@ -147,7 +147,7 @@ Các nhãn bằng chứng và mức giới hạn được dùng theo [mục 2.2 
 
 ### UX-009 — Role, permission và member identity
 
-**Bằng chứng — DOC-CLAIM + SOURCE-VERIFIED + EXPERT-ASSESSMENT, tin cậy cao cho contract và trung bình cho comprehension:** [domain architecture](./domain-architecture.md#actor-va-trust-boundary), [MembersPage.tsx](../src/features/members/MembersPage.tsx#L333), [runtime evidence](./runtime-evidence-2026-10-15.md#capabilityaction-matrix).  
+**Bằng chứng — DOC-CLAIM + SOURCE-VERIFIED + EXPERT-ASSESSMENT, tin cậy cao cho contract và trung bình cho comprehension:** [domain architecture](./domain-architecture.md#actor-va-trust-boundary), [MembersPage.tsx](../src/features/members/MembersPage.tsx#L333), [runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md#capabilityaction-matrix).\
 **Mục tiêu:** Người dùng hiểu “tôi làm được gì và vì sao”, không suy quyền từ một badge role duy nhất.
 
 | Phương án | Nội dung, lý do và lợi ích | Nhược điểm / tác động Figma | Độ phức tạp / rủi ro |
@@ -306,7 +306,7 @@ Các nhãn bằng chứng và mức giới hạn được dùng theo [mục 2.2 
 
 ### UX-022 — Figma và runtime contract governance
 
-**Bằng chứng — FIGMA-VERIFIED + DOC-CLAIM + SOURCE-VERIFIED, tin cậy cao:** [figma screen map](./figma-screen-map-2026-10-15.md), [runtime evidence](./runtime-evidence-2026-10-15.md), [router.tsx](../src/app/router.tsx#L35).  
+**Bằng chứng — FIGMA-VERIFIED + DOC-CLAIM + SOURCE-VERIFIED, tin cậy cao:** [figma screen map](archive/implementation/figma-screen-map-2026-10-15.md), [runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md), [router.tsx](../src/app/router.tsx#L35).\
 **Mục tiêu:** Mọi frame/action biết rõ route, actor, capability, data source và success criterion.
 
 | Phương án | Nội dung, lý do và lợi ích | Nhược điểm / tác động Figma | Độ phức tạp / rủi ro |

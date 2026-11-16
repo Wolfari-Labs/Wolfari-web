@@ -1,6 +1,6 @@
 # Figma → Web screen map · 15/10/2026
 
-Phạm vi được người dùng chốt: **toàn bộ dự án**. Snapshot [JSON](figma-inventory-2026-10-15.json) là bằng chứng read-only có node ID, prototype destination/trigger/reset-scroll, variants, overflow và action → capability. Backend HEAD: `d8c02cb256671b281607349ec7a2777e765706f7`; nhánh Web `ui/app-shell`. Không sửa Figma, Backend, Mobile hoặc feature code trong lượt kiểm kê.
+Phạm vi được người dùng chốt: **toàn bộ dự án**. Snapshot [JSON](../../figma-inventory-2026-10-15.json) là bằng chứng read-only có node ID, prototype destination/trigger/reset-scroll, variants, overflow và action → capability. Backend HEAD: `d8c02cb256671b281607349ec7a2777e765706f7`; nhánh Web `ui/app-shell`. Không sửa Figma, Backend, Mobile hoặc feature code trong lượt kiểm kê.
 
 ## Coverage và cách đọc
 
@@ -9,7 +9,7 @@ Phạm vi được người dùng chốt: **toàn bộ dự án**. Snapshot [JSO
 - **110 mẫu control không có reaction**, từ 136 control occurrences; đã phân loại riêng. Danh sách chỉ phản ánh heuristic tên Button/Action/Switch/Checkbox/Save/Delete, không chứng minh mọi text/icon là actionable.
 - Các frame layout/decor nội bộ kế thừa contract của screen bao quanh, không tự tạo route. Nested modal catalog và prototype destination/component ownership được ghi riêng bên dưới và trong JSON.
 - Route hiện có chỉ là shell placeholder. `not-yet-routed` là **chưa có route và chưa chốt URL**, không phải chỉ dẫn thêm route. Data mode `fixture` dưới đây là target preview, chưa có feature UI chạy; production domain adapter vẫn unavailable.
-- State profile/contract của mỗi dòng được định nghĩa trong [screen contracts](screen-contracts.md#inventory-contract-profiles) và [state matrix](state-matrix.md#inventory-state-profiles). READ có conflict chỉ khi endpoint/use-case tương ứng có version behavior; COMPONENT không có server state.
+- State profile/contract của mỗi dòng được định nghĩa trong [screen contracts](../../screen-contracts.md#inventory-contract-profiles) và [state matrix](../../state-matrix.md#inventory-state-profiles). READ có conflict chỉ khi endpoint/use-case tương ứng có version behavior; COMPONENT không có server state.
 - Action prototype và frame tên “Đã lưu/Hoàn tất” không chứng minh server commit. Xem [runtime evidence](runtime-evidence-2026-10-15.md) trước khi mở bất kỳ command nào.
 
 ## Wolfari · Desktop · [0:1](https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari?node-id=0-1)

@@ -68,7 +68,7 @@ Component chỉ nhận domain model và callback intent. Luồng dữ liệu ph�
 
 ### Stage A — Freeze UI contract
 
-Đọc [screen inventory](screen-inventory.md), [screen contracts](screen-contracts.md), [state matrix](state-matrix.md), [flow map](flow-map.md) và mapping Figma. Chốt một flow nhỏ, không chốt cả product trong một branch.
+Đọc [screen inventory](../../screen-inventory.md), [screen contracts](../../screen-contracts.md), [state matrix](../../state-matrix.md), [flow map](../../flow-map.md) và mapping Figma. Chốt một flow nhỏ, không chốt cả product trong một branch.
 
 Output: route, actor, states, component tree, API gap và acceptance checklist.
 

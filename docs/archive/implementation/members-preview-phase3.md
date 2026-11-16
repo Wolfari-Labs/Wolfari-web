@@ -62,5 +62,5 @@ saved-state authority; the refreshed Trip projection does.
 Leave/remove/transfer and invitation writes remain disabled. Fixture mode has no policy writer and
 does not issue HTTP or claim a mutation succeeded. Gateway Playwright coverage intercepts every
 HTTP request and verifies browser contracts only; it is not a live Backend integration test.
-Detailed state transitions are in [state-matrix.md](state-matrix.md), and route/runtime boundaries
-are in [gateway-integration-matrix.md](gateway-integration-matrix.md).
+Detailed state transitions are in [state-matrix.md](../../state-matrix.md), and route/runtime boundaries
+are in [gateway-integration-matrix.md](../../gateway-integration-matrix.md).

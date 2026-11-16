@@ -1,6 +1,6 @@
 # Lộ trình triển khai Wolfari Web từ Figma
 
-Cập nhật: 14/10/2026. Lộ trình này chuyển các phân tích trong [implementation baseline](implementation-baseline.md), [domain architecture](domain-architecture.md) và tài liệu chat đính kèm thành thứ tự công việc có đầu ra và điều kiện hoàn tất. Đây là kế hoạch triển khai Web; không sửa Backend/Mobile và không thiết kế lại giao diện đã có trong Figma.
+Cập nhật: 14/10/2026. Lộ trình này chuyển các phân tích trong [implementation baseline](../../implementation-baseline.md), [domain architecture](../../domain-architecture.md) và tài liệu chat đính kèm thành thứ tự công việc có đầu ra và điều kiện hoàn tất. Đây là kế hoạch triển khai Web; không sửa Backend/Mobile và không thiết kế lại giao diện đã có trong Figma.
 
 ## Những điều chỉnh cần áp dụng cho Wolfari
 
@@ -22,7 +22,7 @@ Cập nhật: 14/10/2026. Lộ trình này chuyển các phân tích trong [impl
 2. **Lập bản đồ trước khi code.** Mỗi frame cần route, feature, actor/quyền, API và trạng thái UI; đánh dấu phần nào chưa xác định.
 3. **Tách prototype giao diện khỏi tích hợp nghiệp vụ.** Giai đoạn UI có thể dùng fixture cục bộ để đối chiếu Figma; khi API integration bắt đầu, mỗi capability đi thành vertical slice từ route tới response thật.
 4. **Tách giao diện khỏi dữ liệu.** Dùng design tokens/components cho giao diện; dùng feature API/hooks cho dữ liệu; không đặt endpoint trong component trình bày.
-5. **Thiết kế theo adapter ngay từ đầu.** UI dùng domain view model và repository interface; fixture adapter phục vụ Web độc lập, Gateway adapter phục vụ tích hợp. Xem [integration-first architecture](integration-first-architecture.md).
+5. **Thiết kế theo adapter ngay từ đầu.** UI dùng domain view model và repository interface; fixture adapter phục vụ Web độc lập, Gateway adapter phục vụ tích hợp. Xem [integration-first architecture](../../integration-first-architecture.md).
 
 ## Ma trận tương thích Figma — Web độc lập — Backend
 
@@ -148,7 +148,7 @@ GitHub Actions chỉ là kiểm tra tự động; ở giai đoạn UI không PR,
 
 **Đầu ra:** `docs/figma-screen-map.md` hoặc bảng tương đương được cập nhật trong tài liệu bàn giao, gồm tối thiểu:
 
-Bộ tài liệu hiện tại được duy trì tại [screen inventory](screen-inventory.md), [flow map](flow-map.md), [screen contracts](screen-contracts.md), [state matrix](state-matrix.md) và [Figma implementation matrix](figma-implementation-matrix.md). Đây là input bắt buộc cho mọi flow mới; không bắt đầu triển khai chỉ từ screenshot hoặc tên frame đơn lẻ.
+Bộ tài liệu hiện tại được duy trì tại [screen inventory](../../screen-inventory.md), [flow map](../../flow-map.md), [screen contracts](../../screen-contracts.md), [state matrix](../../state-matrix.md) và [Figma implementation matrix](../../figma-implementation-matrix.md). Đây là input bắt buộc cho mọi flow mới; không bắt đầu triển khai chỉ từ screenshot hoặc tên frame đơn lẻ.
 
 | Page / Frame / node ID | Flow và actor | Route Web | Feature/component | API cần dùng + trạng thái | States/responsive | Câu hỏi còn mở |
 | --- | --- | --- | --- | --- | --- | --- |

@@ -21,31 +21,31 @@ Phạm vi: Guest, Owner, Member và quyền Fund Holder hiện có. Giữ routes
 
 ## 2. Quy ước component và chuyển động
 
-| Thành phần | Quy ước |
-|---|---|
-| Button/IconButton | `Button`/`ButtonLink`, dùng variant/size/loading; tránh tự vẽ nút bằng div |
-| Form | `Input`, `Select`, `Textarea`, `Field`; nhãn gắn đúng control; lỗi tại trường và focus đầu tiên ở form đã nâng cấp |
-| Menu | `ActionMenu` hoặc Radix DropdownMenu; không dùng mũi tên làm trang trí cho nút chưa hoạt động |
-| Popup | `Drawer`/`ConfirmDialog`; một cơ chế focus và khóa cuộn; returnFocusRef khi trigger cần giữ chắc chắn |
-| Feedback | Toast cho thành công ngắn; lỗi/unknown/recovery giữ trong trang |
-| Timeline | Wrapper dnd-kit bên ngoài, Motion bên trong; reorder gửi đầy đủ ID, không sửa giờ; đổi ngày không ghép request reorder |
-| Motion | press nhẹ; menu 140–180ms; popup khoảng 220–280ms; tôn trọng prefers-reduced-motion |
-| Split | Desktop ≥1201px; tỷ lệ chỉ lưu localStorage; keyboard resize và reset; hẹp hơn dùng sheet |
+| Thành phần        | Quy ước                                                                                                                |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Button/IconButton | `Button`/`ButtonLink`, dùng variant/size/loading; tránh tự vẽ nút bằng div                                             |
+| Form              | `Input`, `Select`, `Textarea`, `Field`; nhãn gắn đúng control; lỗi tại trường và focus đầu tiên ở form đã nâng cấp     |
+| Menu              | `ActionMenu` hoặc Radix DropdownMenu; không dùng mũi tên làm trang trí cho nút chưa hoạt động                          |
+| Popup             | `Drawer`/`ConfirmDialog`; một cơ chế focus và khóa cuộn; returnFocusRef khi trigger cần giữ chắc chắn                  |
+| Feedback          | Toast cho thành công ngắn; lỗi/unknown/recovery giữ trong trang                                                        |
+| Timeline          | Wrapper dnd-kit bên ngoài, Motion bên trong; reorder gửi đầy đủ ID, không sửa giờ; đổi ngày không ghép request reorder |
+| Motion            | press nhẹ; menu 140–180ms; popup khoảng 220–280ms; tôn trọng prefers-reduced-motion                                    |
+| Split             | Desktop ≥1201px; tỷ lệ chỉ lưu localStorage; keyboard resize và reset; hẹp hơn dùng sheet                              |
 
 ## 3. Ma trận màn hình – API – quyền
 
-| Màn hình | Nguồn và thao tác | Quyền/giới hạn |
-|---|---|---|
-| Home/Auth | Nội dung biên tập; Identity/session hiện có | Guest dùng được; không fixture fallback khi dịch vụ lỗi |
-| Profile | `/me`, avatar, sessions, password; notification-preferences | Tài khoản hiện tại; hủy yêu cầu khi đổi actor |
-| Trips/Create/Settings | Trip list/detail/create/update hiện có | Owner sửa trong phạm vi contract; archived/member không được mở writer |
-| Overview | Trip, Plan, Membership, Finance projections | Lỗi từng phần; không dựng số liệu thiếu |
-| Plan | Activity create/update/delete/complete/reorder | Backend quyết định canEdit/canComplete; giữ plan version, command journal, idempotency/recovery |
-| Members/Invitations | Membership, policy, invitation endpoints | Owner quản lý; giữ quyền Fund Holder và giới hạn rời chuyến |
-| Fund | Finance requests/contributions/ledger/operations hiện có | Owner/Holder/Member đúng phạm vi; TEST, đối soát và unknown không bị che |
-| Map/Dress/Packing | Plan projections | Gateway read-only; preview local không trộn vào server |
-| Price Watch | `/trips/:id/price-watches`, `/price-watches/:id`, pause/resume/stop/observations | Thành viên đang có quyền đọc; người tạo sửa/pause/resume; Owner có quyền stop theo contract; archived khóa ghi |
-| Notifications | `/me/notifications`, `/:id/read`, `/me/notification-preferences` | Theo actor; không suy tổng unread từ một trang; không endpoint tưởng tượng |
+| Màn hình              | Nguồn và thao tác                                                                | Quyền/giới hạn                                                                                                 |
+| --------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Home/Auth             | Nội dung biên tập; Identity/session hiện có                                      | Guest dùng được; không fixture fallback khi dịch vụ lỗi                                                        |
+| Profile               | `/me`, avatar, sessions, password; notification-preferences                      | Tài khoản hiện tại; hủy yêu cầu khi đổi actor                                                                  |
+| Trips/Create/Settings | Trip list/detail/create/update hiện có                                           | Owner sửa trong phạm vi contract; archived/member không được mở writer                                         |
+| Overview              | Trip, Plan, Membership, Finance projections                                      | Lỗi từng phần; không dựng số liệu thiếu                                                                        |
+| Plan                  | Activity create/update/delete/complete/reorder                                   | Backend quyết định canEdit/canComplete; giữ plan version, command journal, idempotency/recovery                |
+| Members/Invitations   | Membership, policy, invitation endpoints                                         | Owner quản lý; giữ quyền Fund Holder và giới hạn rời chuyến                                                    |
+| Fund                  | Finance requests/contributions/ledger/operations hiện có                         | Owner/Holder/Member đúng phạm vi; TEST, đối soát và unknown không bị che                                       |
+| Map/Dress/Packing     | Plan projections                                                                 | Gateway read-only; preview local không trộn vào server                                                         |
+| Price Watch           | `/trips/:id/price-watches`, `/price-watches/:id`, pause/resume/stop/observations | Thành viên đang có quyền đọc; người tạo sửa/pause/resume; Owner có quyền stop theo contract; archived khóa ghi |
+| Notifications         | `/me/notifications`, `/:id/read`, `/me/notification-preferences`                 | Theo actor; không suy tổng unread từ một trang; không endpoint tưởng tượng                                     |
 
 ## 4. Rà thiết kế theo ảnh mới
 
@@ -65,15 +65,15 @@ Map preview: full suite phát hiện tràn ngang ở768/402/320px. Nguyên nhân
 
 Quỹ có dữ liệu: đã kiểm tra ảnh desktop và mobile ở `test-results/gateway-final-v5/finance-operations-HTTP-mo-57d33-oes-not-manufacture-balance/`. Số tiền vượt safe integer được giữ chính xác, không tràn màn hình; thông tin kỹ thuật đóng mặc định. Cảnh báo cần đối soát và nhãn TEST vẫn hiện, không bị xóa như “log thừa”. axe trạng thái quỹ có dữ liệu PASS. Desktop chụp phần đầu trong main cuộn; ảnh mobile bao gồm nội dung dài.
 
-![Tạo chuyến đi mobile sau sửa](../test-results/gateway-final-v4/ui-acceptance-Gateway-visual-and-accessibility-402x874/create.png)
+Ảnh `gateway-final-v4/.../create.png` là artifact local đã dọn ngày 16/11/2026. Chạy lại Gateway E2E tạo ảnh mới của checkout hiện tại, không khôi phục ảnh lịch sử này.
 
-![Đăng nhập sau sửa](../test-results/design-audit-after/ui-acceptance-Gateway-visual-and-accessibility-1440x900/login.png)
+Ảnh `design-audit-after/.../login.png` là artifact local đã dọn; kết quả được giữ trong báo cáo này.
 
-![Tạo chuyến đi trước sửa](../test-results/design-audit-before/ui-acceptance-Gateway-visual-and-accessibility-1440x900/create.png)
+Ảnh `design-audit-before/.../create.png` là artifact local đã dọn; kết quả được giữ trong báo cáo này.
 
-![Tạo chuyến đi sau sửa](../test-results/design-audit-after/ui-acceptance-Gateway-visual-and-accessibility-1440x900/create.png)
+Ảnh `design-audit-after/.../create.png` là artifact local đã dọn; kết quả được giữ trong báo cáo này.
 
-![Cài đặt sau sửa](../test-results/design-audit-after/ui-acceptance-Gateway-visual-and-accessibility-1440x900/settings.png)
+Ảnh `design-audit-after/.../settings.png` là artifact local đã dọn; kết quả được giữ trong báo cáo này.
 
 Ảnh tĩnh chỉ chứng minh bố cục/hiển thị tại trạng thái đã chụp; kiểm tra focus, bàn phím, API và reduced motion được ghi tách biệt trong kết quả thử nghiệm.
 
@@ -81,17 +81,17 @@ Quỹ có dữ liệu: đã kiểm tra ảnh desktop và mobile ở `test-result
 
 Đã chạy lại tuần tự; các kết quả mock và tích hợp thật được ghi riêng. Lượt backend production preview mới nhất khớp implementation hash hiện tại (`46a00b47f55fcc7f10008e0518564f1afb9d042f1bf55f13873ec50a0c5bf915`); hash trước và sau lượt chạy bằng nhau.
 
-| Kiểm tra | Trạng thái hiện tại |
-|---|---|
-| Lint/typecheck | PASS khi kiểm tra trước commit; `test-results/ui-upgrade/lint-precommit.log`, `typecheck-precommit.log` |
-| Unit | PASS 545/545; `test-results/ui-upgrade/unit-final-v3.json` |
-| Production/preview build | PASS khi kiểm tra trước commit; `test-results/ui-upgrade/build-precommit.log`, `build-preview-precommit.log`; preview output riêng `test-results/build-preview/` |
-| Fixture E2E | PASS 166/166; `test-results/ui-upgrade/fixture-final-v3.log` |
-| Gateway HTTP-mock E2E | PASS 51/51; `test-results/ui-upgrade/gateway-final-v5.log` |
-| Firefox/WebKit | PASS 14/14; `test-results/ui-upgrade/cross-browser-final.log` |
-| Backend thật cô lập — production preview | PASS 1/1 kịch bản, gồm 15 bước; run `20261029080817-3f5094c9` |
-| Backend thật cô lập — dev | Chưa PASS; lượt trước bị worker crash khi Windows báo thiếu bộ nhớ ảo; chưa chạy lại thành công |
-| Thiết bị cảm ứng vật lý, screen reader người dùng, CI | NOT RUN |
+| Kiểm tra                                              | Trạng thái hiện tại                                                                                                                                              |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lint/typecheck                                        | PASS khi kiểm tra trước commit; `test-results/ui-upgrade/lint-precommit.log`, `typecheck-precommit.log`                                                          |
+| Unit                                                  | PASS 545/545; `test-results/ui-upgrade/unit-final-v3.json`                                                                                                       |
+| Production/preview build                              | PASS khi kiểm tra trước commit; `test-results/ui-upgrade/build-precommit.log`, `build-preview-precommit.log`; preview output riêng `test-results/build-preview/` |
+| Fixture E2E                                           | PASS 166/166; `test-results/ui-upgrade/fixture-final-v3.log`                                                                                                     |
+| Gateway HTTP-mock E2E                                 | PASS 51/51; `test-results/ui-upgrade/gateway-final-v5.log`                                                                                                       |
+| Firefox/WebKit                                        | PASS 14/14; `test-results/ui-upgrade/cross-browser-final.log`                                                                                                    |
+| Backend thật cô lập — production preview              | PASS 1/1 kịch bản, gồm 15 bước; run `20261029080817-3f5094c9`                                                                                                    |
+| Backend thật cô lập — dev                             | Chưa PASS; lượt trước bị worker crash khi Windows báo thiếu bộ nhớ ảo; chưa chạy lại thành công                                                                  |
+| Thiết bị cảm ứng vật lý, screen reader người dùng, CI | NOT RUN                                                                                                                                                          |
 
 Lượt chạy song song bị thiếu RAM (`FATAL ERROR: Zone Allocation failed`, Vite mất kết nối). Không tính các failure hạ tầng đó là bằng chứng lỗi UI, cũng không bỏ qua chúng để báo PASS: chạy lại E2E từng bộ với một worker. Giữ log cũ để đối chiếu, không dừng container dự án khác.
 
@@ -103,7 +103,7 @@ Artifact local: `test-results/demo1/20261029080817-3f5094c9/preview/results.json
 
 Harness hỗ trợ `--runtime=preview` hoặc `--runtime=dev` để chạy từng môi trường trên máy hạn chế RAM; mặc định vẫn chạy cả hai. Không gọi lượt production preview là PASS cho dev. Lượt thất bại trước đó được giữ lại, không thay thế bằng mock. Các lỗi selector của bài kiểm thử được điều chỉnh theo UI hiện tại trước lượt PASS.
 
-Log, screenshot và dữ liệu thử trong `test-results/` là artifact local bị Git ignore; không được đưa vào commit cùng mã nguồn. Báo cáo giữ đường dẫn để đối chiếu trên máy hiện tại; muốn tái tạo trên checkout khác cần chạy các lệnh bên dưới. Không commit `.local/`, thông tin phiên hoặc dữ liệu bí mật.
+Log, screenshot và dữ liệu thử trong `test-results/` là artifact local bị Git ignore; không được đưa vào commit cùng mã nguồn. Raw output cũ đã dọn ngày 16/11/2026; đường dẫn trong báo cáo chỉ ghi vị trí lịch sử. Các lệnh bên dưới tạo evidence mới, không khôi phục raw output đã xóa. Không commit `.local/`, thông tin phiên hoặc dữ liệu bí mật.
 
 Phạm vi bằng chứng tương tác:
 

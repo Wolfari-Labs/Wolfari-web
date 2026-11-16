@@ -156,7 +156,6 @@
 .poolCard[data-dragging='true'] {
   opacity: 0.45;
 }
-.activity[data-drop-target='true'] .card,
 .poolCard[data-drop-target='true'] {
   border-color: var(--color-active);
   box-shadow: 0 0 0 2px #00a0ae22;
@@ -173,42 +172,6 @@
   background: #00a0ae;
   color: white;
   font-size: 14px;
-}
-.card {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  border: 1px solid var(--color-line);
-  border-radius: 8px;
-  min-height: 78px;
-  padding: 12px;
-  background: white;
-}
-.time {
-  font-size: 14px;
-  line-height: 22px;
-  white-space: nowrap;
-}
-.unscheduledTime {
-  display: inline-flex;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: #fff7de;
-  color: #986000;
-  font-size: 13px;
-  font-weight: 600;
-}
-.icon {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;
-}
-.icon img {
-  display: block;
-  max-width: 46px;
-  max-height: 46px;
 }
 .activityPreview {
   flex: 1;
@@ -241,15 +204,6 @@
 .activityPreview p {
   font-size: 13px;
   color: var(--color-muted);
-}
-.cover {
-  width: 140px;
-  height: 58px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.card:has(details[open]) {
-  flex-wrap: wrap;
 }
 .activityPreview[open] {
   min-width: 200px;
@@ -474,21 +428,6 @@
   padding: 20px 22px;
   overflow: auto;
 }
-.nativeField {
-  display: grid;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.nativeField select {
-  min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid var(--color-line);
-  border-radius: 8px;
-  background: white;
-  color: inherit;
-  font: inherit;
-}
 .timeFields {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -509,15 +448,6 @@
 }
 .page > :global(.preview) {
   margin-top: 20px;
-}
-
-@media (max-width: 1200px) {
-  .cover {
-    display: none;
-  }
-  .card {
-    gap: 12px;
-  }
 }
 @media (max-width: 900px) {
   .metrics {
@@ -597,17 +527,6 @@
     top: 18px;
     font-size: 13px;
   }
-  .card {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 8px 10px;
-    padding: 12px;
-  }
-  .time {
-    grid-column: 1 / -1;
-    font-size: 13px;
-  }
   .activityPreview strong {
     font-size: 14px;
     line-height: 22px;
@@ -617,9 +536,6 @@
   }
   .activityPreview[open] {
     min-width: 0;
-  }
-  .cover {
-    display: none;
   }
   .plannerDialogHeader {
     display: none;

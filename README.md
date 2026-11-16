@@ -1,48 +1,45 @@
 # Wolfari Web
 
-Web React/TypeScript/Vite. Bản nghiệm thu localhost ở `feat/demo-1-readiness-web` (nguồn `draft/demo-ui-ux`), ghép với Backend `feat/demo-1-readiness-backend`. Chỉ Web và Backend; không Mobile.
+[Mục lục tài liệu](docs/README.md) · [Hồ sơ redesign](docs/ui-redesign/README.md) · [Tài liệu lịch sử](docs/archive/README.md)
 
-[Hướng dẫn build/chạy demo1](HUONG_DAN_BUILD_VA_CHAY_DEMO_1.md) là runbook chuẩn. Đọc [nghiệm thu hiện hành](docs/demo-readiness-validation.md), [kịch bản demo trực tiếp](docs/HUONG_DAN_DEMO_TRUC_TIEP.md) và [quy trình PR/merge](docs/HUONG_DAN_PR_VA_MERGE_MAIN.md) trước khi trình diễn hoặc đưa lên `main`.
+Frontend React/TypeScript/Vite cho Wolfari. Web dùng repository Gateway cho dữ liệu Backend và repository fixture riêng để phát triển/kiểm thử giao diện.
 
-Đợt nghiệm thu mở ngày02/11, chuyển **PHASE_D_DRAFT / NOT_READY_TO_MERGE** ngày03/11 theo yêu cầu người dùng. [Bàn giao D](docs/PHASE_D_HANDOFF.md) ghi trạng thái commit/PR và gate còn thiếu. [Validation cũ](docs/demo-1-web-validation.md), [phụ lục v1.0](docs/demo-1-web-addendum-v1.0.md) và hồ sơ CP giữ nguyên lịch sử; CI/reviewer không được suy từ test local.
+## Chạy local
 
-Cập nhật03/11: bản trước sửa Finance refresh đạt full fixture208, Gateway127 (dev và built), live dev1 + preview2 và personal restart smoke. Bản cuối đạt lint/typecheck/demo build, **586 unit**, **3 Finance HTTP-mock regressions**. Live mở rộng cuối FAIL tại Delete/reload Plan; test đã chỉnh thứ tự chờ nhưng chưa rerun. Chưa có chuỗi live đầy đủ sau sửa Finance hoặc báo cáo Edge2 lượt/30 phút; giữ Draft đến khi các gate đạt.
-
-## Phạm vi Gateway thật
-
-Auth/verify/reset/logout, Profile/avatar/Sessions; Trip create/list/overview/settings; một timeline Activity server (pool/ngày-only/timed/overnight, reorder/completion); Members/SELECTED_MEMBERS/EMAIL-LINK/leave-remove; quỹ đóng góp thủ công TEST (setup, Holder consent, budget, destination, request, report/reject/confirm, balance/ledger).
-
-Packing/Map/Dress chỉ đọc server. Notification inbox/read/preferences và Price Watch đã có Web Gateway; Price Watch dùng provider `MOCK_FLIGHT`. Finance outbox/inbox mới được nghiệm thu trong stack cô lập; launcher demo cá nhân vẫn giữ mặc định tắt, không mặc định có delivery Finance. DSS/provider thật, Share/Export/Admin CRUD, expense/refund/closure writer trên Web và thanh toán thật chưa thuộc demo. Fixture không thay thế lỗi Backend.
-
-## Khởi động
-
-Node24, Corepack/pnpm10.34.5, Docker Desktop Linux engine; Backend/Web đặt cạnh nhau.
-
-Terminal Backend:
+Yêu cầu Node.js 24.x, Corepack và pnpm được pin trong `package.json`. Đặt hai checkout `Wolfari-web` và `Wolfari-backend` cạnh nhau.
 
 ```powershell
 corepack pnpm install --frozen-lockfile
-corepack pnpm demo:init
-corepack pnpm demo:start
+corepack pnpm dev
 ```
 
-Terminal Backend khác: `corepack pnpm demo:check`, `corepack pnpm demo:accounts`. Seed chỉ khi tạo bộ mẫu lần đầu; không reset/reseed để tìm password.
-
-Terminal Web:
+`dev` mặc định ở cổng 5173 dùng fixture. Để chạy Web với Backend thật, làm theo [runbook demo](HUONG_DAN_BUILD_VA_CHAY_DEMO_1.md): Docker Desktop Linux engine chạy hạ tầng, Backend chạy native Node.
 
 ```powershell
-corepack pnpm install --frozen-lockfile
+# Tại Backend
+corepack pnpm demo:init
+corepack pnpm demo:start
+# Terminal Backend khác
+corepack pnpm demo:check
+corepack pnpm demo:accounts
+# Tại Web
 corepack pnpm demo:build
 corepack pnpm demo:preview
 ```
 
-Mở <http://localhost:5273/>. Mailpit <http://127.0.0.1:18025/>. Không mặc định có `demo-owner@wolfari.test`. Password mẫu sinh ngẫu nhiên ở Backend `.local/demo/seed.json`, không đưa vào chat/log/commit. Đã đổi password thì dùng Quên mật khẩu/Mailpit.
+Web demo: <http://localhost:5273/>; Mailpit: <http://127.0.0.1:18025/>. `demo:dev` là lựa chọn development cùng cổng 5273. Credentials nằm trong journal ignored của Backend; dùng `demo:accounts` để kiểm tra trạng thái, không suy tài khoản còn tồn tại từ báo cáo cũ. Seed chỉ dùng khi tạo bộ mẫu có chủ đích. `demo:stop` tại Backend giữ volume.
 
-Bộ TEST mới của đợt này dùng Backend `.local/demo/readiness-20261102.json`, tách khỏi seed journal cũ đang báo `MISSING`. Xem mục tài khoản trong runbook; không reset/reseed để đổi mật khẩu. Trip trình diễn đang chờ report, Trip smoke đã có 500.000 VND và hai ledger để kiểm persistence.
+## Runtime và contract
 
-Khi phát triển có thể dùng `demo:dev` thay preview, không chạy đồng thời trên 5273. Backend `demo:stop` giữ volumes, không prune/kill toàn bộ.
+Các module Gateway gồm Identity/Profile/Sessions, Trip/Plan/Members/Invitations, quỹ đóng góp TEST, Notification và Price Watch. Map/Places và provider giá có adapter riêng; khả năng chạy phụ thuộc cấu hình Backend/provider, không suy từ fixture hoặc việc đã build thành công.
 
-## Kiểm thử phân lớp
+- [Gateway matrix](docs/gateway-integration-matrix.md), [screen contracts](docs/screen-contracts.md), [flow](docs/flow-map.md).
+- [REST inventory Backend](../Wolfari-backend/docs/api/runtime-inventory.json), [Places](../Wolfari-backend/docs/api/places.openapi.json), [Price Watch](../Wolfari-backend/docs/api/price-watch.openapi.yaml).
+- [Profile single-host trial](deployment/README.md): `build:deploy` tạo bundle Gateway trong `dist-deploy`. Nghiệm thu deployment và provider thật là các bước riêng.
+
+Access token giữ trong memory, refresh cookie HttpOnly. Session/CSRF, quyền Backend, actor-scoped draft, idempotency và versions phải được giữ khi refactor. Timeout/202 chưa có nghĩa mutation đã hoàn tất. Fixture không thay thế lỗi Backend.
+
+## Kiểm tra
 
 ```powershell
 corepack pnpm lint
@@ -50,7 +47,6 @@ corepack pnpm typecheck
 corepack pnpm test --maxWorkers=2
 corepack pnpm build
 corepack pnpm build:preview
-corepack pnpm exec playwright install chromium
 corepack pnpm test:e2e
 corepack pnpm test:e2e:gateway
 corepack pnpm test:e2e:built
@@ -59,23 +55,18 @@ corepack pnpm test:e2e:demo1 --runtime=dev
 corepack pnpm test:e2e:demo1 --runtime=preview
 ```
 
-| Suite | Bằng chứng |
-| --- | --- |
-| test | Unit/jsdom |
-| test:e2e | Browser fixture, không Backend |
-| test:e2e:gateway | Browser HTTP mock, gồm lỗi/202/NEEDS_REVIEW |
-| test:e2e:built / test:e2e:gateway:built | Toàn bộ fixture / HTTP mock trên hai bundle riêng; không Backend thật |
-| test:e2e:demo1 | Backend thật, Docker infra riêng, UI dev + build/preview; không business SQL seed |
-| test:e2e:live | Legacy dùng demo đã seed; không thay gate demo1 |
+| Suite                                        | Phạm vi                                                             |
+| -------------------------------------------- | ------------------------------------------------------------------- |
+| `test`                                       | Unit/component/jsdom                                                |
+| `test:e2e`, `test:e2e:built`                 | Browser fixture, dev/bundle                                         |
+| `test:e2e:gateway`, `test:e2e:gateway:built` | Browser Gateway với HTTP mock, dev/bundle                           |
+| `test:e2e:demo1`                             | Cặp Web–Backend hiện tại, Docker project cô lập, account tạo qua UI |
+| `test:e2e:live`                              | Legacy dùng demo đã seed; đọc runbook trước khi chạy                |
 
-Snapshot và kết quả: `test-results/demo1/<runId>/`. Đọc SHA kèm tree hash của cả hai repo, không dùng HEAD một mình. Cleanup chỉ tài nguyên test có manifest/label; không reset dữ liệu người dùng.
+Playwright cần Chromium đã cài. `build`/`build:preview` cùng output `dist`; demo và harness dùng output riêng. Log/report sinh ra dưới `test-results` và `playwright-report` không phải source.
 
-`dev` ở5173 / `build:preview` là fixture; `demo:*` là Gateway thật. `build` / `build:preview` cùng output dist; demo dùng dist-demo riêng.
+## Tài liệu và lịch sử
 
-Access token giữ memory, refresh cookie HttpOnly. Web Locks phối hợp phiên; broadcast chỉ epoch. Draft/journal theo actor; recipient ngân hàng không persist. 202/timeout chưa xác nhận hoàn tất; retry giữ key/body/version.
+[Danh mục tài liệu](docs/README.md) phân biệt hướng dẫn hiện hành, thiết kế và báo cáo theo snapshot. CP01–CP11 và các quyết định/ngoại lệ đã ghi vẫn là lịch sử được bảo toàn; cleanup không mở checkpoint hoặc phê duyệt thay đổi UI.
 
-**Production phải HTTPS cùng origin SPA + /api/v1.** Local HTTP không phải kiến trúc production. Không deploy Vite preview hoặc bỏ guards Backend. Domain/TLS, Mobile/provider thật và CI sau push chưa nghiệm thu.
-
-Ba DOCX chính thức và audit gốc giữ nguyên. Ngoại lệ Backend đã được duyệt: `rejected_reason` additive qua RPC/REST + contract/test/docs, không migration mới. Các thay đổi Backend rộng hơn là phần công việc Backend đã có trước đợt Web.
-
-Tài liệu: [matrix](docs/gateway-integration-matrix.md), [flow](docs/flow-map.md), [inventory](docs/screen-inventory.md), [states](docs/state-matrix.md), [contracts](docs/screen-contracts.md). Báo cáo phase có ngày là lịch sử.
+Các số test, nhánh, tài khoản demo và trạng thái PR trong [readiness tháng 11](docs/demo-readiness-validation.md), [bàn giao D](docs/PHASE_D_HANDOFF.md) và [validation Demo 1](docs/demo-1-web-validation.md) chỉ áp dụng cho mốc ghi nhận. Kết quả mới cần gắn với source của cả hai repo; local PASS không thay CI, provider thật hoặc production acceptance.

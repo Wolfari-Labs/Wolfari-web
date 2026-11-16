@@ -36,14 +36,6 @@ export interface ShellSnapshot {
   } | null;
 }
 
-// Reserved for future verified write contracts; this read-only shell exposes no mutations.
-export interface MutationIntent {
-  idempotencyKey: string;
-  expectedPlanVersion: number;
-  expectedMembershipRevision: number;
-  expectedExportRevision: number;
-}
-
 export const scenarios: readonly ShellScenario[] = [
   'success',
   'guest',

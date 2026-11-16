@@ -31,4 +31,4 @@ CP11 D56 closeout: [verification](CP11_VERIFICATION.md), [20-item disposition/22
 
 Khảo sát nhầm nguồn trước khi người dùng đính chính được giữ tại [evidence/figma](evidence/figma/README.md), toàn bộ **INVALIDATED**. Không tái sử dụng node ID/ảnh/kết luận từ đó. [Evidence chính thức](evidence/figma-official/README.md) thay thế hoàn toàn nguồn Figma của chương trình này.
 
-Các tài liệu cũ ngoài chương trình như `docs/UI_UX_AUDIT.md`, `docs/figma-screen-map-2026-10-15.md`, `docs/gateway-integration-matrix.md` là lịch sử; không xóa. Những tài liệu vốn trỏ đúng file key mới không bị coi là khảo sát nhầm nguồn, nhưng trạng thái runtime phải đối chiếu code hiện tại. Chương trình này không sửa lại lịch sử để biến kết quả cũ thành bằng chứng mới.
+Các tài liệu cũ ngoài chương trình như `docs/UI_UX_AUDIT.md`, `docs/archive/implementation/figma-screen-map-2026-10-15.md`, `docs/gateway-integration-matrix.md` là lịch sử; không xóa. Những tài liệu vốn trỏ đúng file key mới không bị coi là khảo sát nhầm nguồn, nhưng trạng thái runtime phải đối chiếu code hiện tại. Chương trình này không sửa lại lịch sử để biến kết quả cũ thành bằng chứng mới.

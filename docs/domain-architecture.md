@@ -179,7 +179,7 @@ Không chốt provider bản đồ giữa Google Maps và MapLibre/OSM/OSRM thay
 
 ## Thứ tự triển khai Web và điều kiện mở feature
 
-Lộ trình Figma → source chi tiết, gồm đầu ra từng giai đoạn, điều kiện hoàn tất và cách điều chỉnh các đề xuất trong đoạn chat, nằm trong [web implementation roadmap](web-implementation-roadmap.md). Thứ tự cốt lõi là: Figma/API inventory → nền tảng trong repo hiện có → tokens/components → Identity → Trip/collaboration → Plan → các miền còn lại khi API runtime sẵn sàng → nghiệm thu.
+Lộ trình Figma → source chi tiết, gồm đầu ra từng giai đoạn, điều kiện hoàn tất và cách điều chỉnh các đề xuất trong đoạn chat, nằm trong [web implementation roadmap](archive/implementation/web-implementation-roadmap.md). Thứ tự cốt lõi là: Figma/API inventory → nền tảng trong repo hiện có → tokens/components → Identity → Trip/collaboration → Plan → các miền còn lại khi API runtime sẵn sàng → nghiệm thu.
 
 Mở feature chỉ khi có: (a) endpoint trong Gateway và handler service, (b) request/response/error contract, (c) authorization/projection, (d) version/idempotency/retry behavior nếu ghi dữ liệu, (e) integration test cho luồng quan trọng, (f) staging configuration nếu cần provider. Khi mới chỉ có một phần, giao diện phải thể hiện phần chưa khả dụng và không mô phỏng thành công từ dữ liệu giả.
 

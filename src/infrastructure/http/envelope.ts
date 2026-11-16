@@ -1,7 +1,14 @@
 export interface GatewayMetadata {
   exportRevision?: number;
   nextCursor?: string | null;
-  priceSource?: { stale: boolean; lastError: string | null };
+  priceSource?: {
+    stale: boolean;
+    lastError: string | null;
+    lastCheckedAt?: string | null;
+    nextCheckAt?: string | null;
+    lastCheckStatus?: string | null;
+  };
+  placesSource?: { status: string; stale: boolean; fetchedAt: string | null; warnings: string[] };
 }
 export type GatewayEnvelope =
   | { kind: 'success'; data: unknown; correlationId: string | null; metadata: GatewayMetadata }
@@ -41,11 +48,38 @@ export function parseEnvelope(value: unknown): GatewayEnvelope {
       data: value.data,
       correlationId,
       metadata: {
+        ...(value.meta.provider === 'GEOAPIFY' && typeof value.meta.status === 'string'
+          ? {
+              placesSource: {
+                status: value.meta.status,
+                stale: value.meta.stale === true,
+                fetchedAt: typeof value.meta.fetched_at === 'string' ? value.meta.fetched_at : null,
+                warnings: Array.isArray(value.meta.warnings)
+                  ? value.meta.warnings.filter((v): v is string => typeof v === 'string')
+                  : [],
+              },
+            }
+          : {}),
         ...(revision === undefined ? {} : { exportRevision: revision as number }),
         ...(cursor === undefined ? {} : { nextCursor: cursor as string | null }),
         ...(typeof value.meta.stale === 'boolean' &&
         (value.meta.last_error === null || typeof value.meta.last_error === 'string')
-          ? { priceSource: { stale: value.meta.stale, lastError: value.meta.last_error } }
+          ? {
+              priceSource: {
+                stale: value.meta.stale,
+                lastError: value.meta.last_error,
+                lastCheckedAt:
+                  typeof value.meta.last_checked_at === 'string'
+                    ? value.meta.last_checked_at
+                    : null,
+                nextCheckAt:
+                  typeof value.meta.next_check_at === 'string' ? value.meta.next_check_at : null,
+                lastCheckStatus:
+                  typeof value.meta.last_check_status === 'string'
+                    ? value.meta.last_check_status
+                    : null,
+              },
+            }
           : {}),
       },
     };

@@ -35,8 +35,8 @@ overflow checks.
 
 ## Screenshots
 
-- [Desktop 1440px](evidence/issue-4/profile-1440.png)
-- [Mobile 402px](evidence/issue-4/profile-402.png)
+- [Desktop 1440px](../../evidence/issue-4/profile-1440.png)
+- [Mobile 402px](../../evidence/issue-4/profile-402.png)
 
 ## Dependencies and limits
 

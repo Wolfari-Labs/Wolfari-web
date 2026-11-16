@@ -10,5 +10,5 @@ coverage/
 *.log
 playwright-report/
 test-results/
-.local/demo1/
+.local/
 dist-demo1/

@@ -110,14 +110,17 @@ test('CP07 Map reads only saved locations and filters scheduled/unscheduled loca
   await expect(map.getByText('Bãi biển Mỹ Khê', { exact: true }).first()).toBeVisible();
   await expect(map.getByText('Ngũ Hành Sơn', { exact: true }).first()).toBeVisible();
   await expect(map.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
-  await map.getByRole('button', { name: 'Trong lịch', exact: true }).click();
+  await map.getByRole('button', { name: /^Trong lịch \(/ }).click();
   await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toBeVisible();
   await expect(map.getByRole('button', { name: /Ngũ Hành Sơn/ })).toHaveCount(0);
-  await map.getByRole('button', { name: 'Chưa xếp', exact: true }).click();
+  await map.getByRole('button', { name: /^Chưa xếp \(/ }).click();
   await expect(map.getByRole('button', { name: /Ngũ Hành Sơn/ })).toBeVisible();
   await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toHaveCount(0);
-  await expect(map.getByText('Chưa có tọa độ hợp lệ')).toBeVisible();
-  await expect(map.getByRole('button', { name: /Lưu|Thêm địa điểm|Bỏ chọn/ })).toHaveCount(0);
+  await expect(
+    map.getByRole('article', { name: 'Đang chọn Ngũ Hành Sơn' }).getByText('Chưa có tọa độ hợp lệ'),
+  ).toBeVisible();
+  // Approved provider integration adds explicit writes; browsing/filtering still issues none.
+  await expect(map.getByRole('button', { name: 'Đặt pin thủ công' })).toBeVisible();
   expect(tripWrites(gateway)).toEqual([]);
 });
 
@@ -245,7 +248,7 @@ test('CP07 empty Map/Dress/Packing remain readable and issue no writes', async (
 }) => {
   await login(page);
   for (const [path, emptyText] of [
-    ['map', /Chuyến đi chưa có địa điểm/],
+    ['map', /Không có địa điểm phù hợp/],
     ['dress-code', /Chưa có hướng dẫn trang phục/],
     ['packing', /Chưa có hành lý đã lưu/],
   ] as const) {

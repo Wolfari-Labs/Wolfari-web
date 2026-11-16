@@ -1,269 +1,714 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { paths } from '../../app/route-paths';
+import { useRuntimeServices } from '../../app/gateway-context';
 import { Button } from '../../shared/components/Button';
+import { Input } from '../../shared/components/Input';
+import { Select } from '../../shared/components/Select';
+import { Drawer } from '../../shared/components/Drawer';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
+import searchIcon from '../../shared/assets/figma/ce7fc.svg';
+import pinIcon from '../../shared/assets/figma/8efc8.svg';
+import chevronIcon from '../../shared/assets/figma/ad884.svg';
+import { MapViewport } from './MapViewport';
+import { PlaceDetail } from './PlaceDetail';
+import { useWriteScope } from '../../shared/lib/use-write-scope';
+import { commandFailure } from '../../shared/lib/command-failure';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
+import { planDays } from '../plan/model/plan-presentation';
 import { TripHero } from '../trips/components/TripHero';
-import { loadGoogleMapsSdk } from './google-places';
+import { GeoapifyMap, type MapCenter } from './GeoapifyMap';
 import {
   mapLocationPresentations,
   normalizedPlaceText,
-  placeStatus,
-  sortPlacePresentations,
   validCoordinates,
+  placeStatus,
+  type LocationScheduleFilter,
 } from './trip-map';
-import styles from './GatewayMapPage.module.css';
-
-type MapFilter = 'ALL' | 'SCHEDULED' | 'UNSCHEDULED';
-type GoogleMapsRuntime = {
-  Map: new (
-    element: HTMLElement,
-    options: Record<string, unknown>,
-  ) => {
-    fitBounds: (bounds: unknown, padding: number) => void;
-  };
-  LatLngBounds: new () => { extend: (coordinate: { lat: number; lng: number }) => void };
-  Marker: new (options: Record<string, unknown>) => {
-    setMap: (map: null) => void;
-    addListener: (eventName: string, listener: () => void) => void;
-  };
-  SymbolPath: { CIRCLE: unknown };
-};
-
-function mapsRuntime(): GoogleMapsRuntime | null {
-  const maps = (window as unknown as { google?: { maps?: GoogleMapsRuntime } }).google?.maps;
-  return maps?.Map && maps.Marker && maps.LatLngBounds ? maps : null;
-}
+import { validPlaceIntent, type DiscoveredPlace, type PlaceIntent } from './places';
+import styles from './TripMapPage.module.css';
 
 export function GatewayMapPage() {
   const { tripId = '' } = useParams();
   const snapshot = useTripPlanSnapshot(tripId, 'success');
-  const data = snapshot.state.status === 'ready' ? snapshot.state : null;
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState<MapFilter>('ALL');
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [providerState, setProviderState] = useState<'unavailable' | 'loading' | 'ready'>(
-    'unavailable',
-  );
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const locations = data?.plan.selectedLocations;
-  const activities = data?.plan.activities;
-  const all = useMemo(
-    () => sortPlacePresentations(mapLocationPresentations(locations ?? [], activities ?? [])),
-    [locations, activities],
-  );
-  const visible = useMemo(() => {
-    const search = normalizedPlaceText(query.trim());
-    return all.filter((item) => {
-      if (filter === 'SCHEDULED' && !item.scheduled) return false;
-      if (filter === 'UNSCHEDULED' && item.scheduled) return false;
-      return (
-        !search ||
-        normalizedPlaceText(`${item.location.name} ${item.location.address ?? ''}`).includes(search)
-      );
-    });
-  }, [all, filter, query]);
-  const selected = visible.find((item) => item.location.id === selectedId) ?? visible[0] ?? null;
-  const markers = useMemo(
-    () =>
-      visible.flatMap((item) => {
-        const coordinates = validCoordinates(item.location);
-        return coordinates ? [{ item, coordinates }] : [];
-      }),
-    [visible],
-  );
-  const configured = Boolean(
-    (import.meta.env.VITE_GOOGLE_MAPS_BROWSER_KEY as string | undefined)?.trim(),
-  );
-
-  useEffect(() => {
-    if (!configured || markers.length === 0) {
-      setProviderState('unavailable');
-      return;
-    }
-    let active = true;
-    setProviderState('loading');
-    void loadGoogleMapsSdk().then((loaded) => {
-      if (active) setProviderState(loaded && mapsRuntime() ? 'ready' : 'unavailable');
-    });
-    return () => {
-      active = false;
-    };
-  }, [configured, markers.length]);
-
-  useEffect(() => {
-    if (providerState !== 'ready' || !canvasRef.current) return;
-    const maps = mapsRuntime();
-    if (!maps || !markers.length) {
-      setProviderState('unavailable');
-      return;
-    }
-    const first = markers[0]!.coordinates;
-    const map = new maps.Map(canvasRef.current, {
-      center: { lat: first.latitude, lng: first.longitude },
-      zoom: 12,
-      mapTypeId: 'roadmap',
-      mapId: (import.meta.env.VITE_GOOGLE_MAPS_MAP_ID as string | undefined) || undefined,
-      streetViewControl: false,
-      fullscreenControl: false,
-      mapTypeControl: false,
-    });
-    const bounds = new maps.LatLngBounds();
-    const rendered = markers.map(({ item, coordinates }) => {
-      const position = { lat: coordinates.latitude, lng: coordinates.longitude };
-      bounds.extend(position);
-      const marker = new maps.Marker({
-        map,
-        position,
-        title: item.location.name,
-        label: { text: String(item.markerNumber), color: '#fff', fontWeight: '700' },
-        icon: {
-          path: maps.SymbolPath.CIRCLE,
-          scale: 11,
-          fillColor: item.scheduled ? '#0e8e69' : '#da9b0a',
-          fillOpacity: 1,
-          strokeColor: item.scheduled ? '#087052' : '#9a6900',
-          strokeWeight: 2,
-        },
-      });
-      marker.addListener('click', () => setSelectedId(item.location.id));
-      return marker;
-    });
-    if (markers.length > 1) map.fitBounds(bounds, 48);
-    return () => rendered.forEach((marker) => marker.setMap(null));
-  }, [providerState, markers]);
-
+  if (snapshot.state.status !== 'ready')
+    return (
+      <section className={styles.page} data-flow="gateway-map-read">
+        <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
+          {null}
+        </TripPlanBoundary>
+      </section>
+    );
   return (
-    <section className={styles.page} data-flow="gateway-map-read">
-      <nav className={styles.breadcrumb} aria-label="Đường dẫn">
-        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-        <span aria-hidden="true">›</span>
-        <span>Bản đồ & địa điểm</span>
-      </nav>
-      {data && <TripHero trip={data.trip} variant="landscape" />}
+    <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
+      {snapshot.state.status === 'ready' && (
+        <MapWorkspace
+          key={`${tripId}:${snapshot.state.trip.currentMembership.userId}`}
+          snapshot={snapshot}
+        />
+      )}
+    </TripPlanBoundary>
+  );
+}
+function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSnapshot> }) {
+  const data = snapshot.state.status === 'ready' ? snapshot.state : null;
+  const repo = useRuntimeServices()?.places;
+  const tripId = data?.trip.id ?? '';
+  const actor = data?.trip.currentMembership.userId ?? '';
+  const signal = useWriteScope(`${tripId}:${actor}`);
+  const [query, setQuery] = useState('');
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [manualOpen, setManualOpen] = useState(false);
+  const [center, setCenter] = useState<MapCenter>({ latitude: 16.0544, longitude: 108.2022 });
+  const [focus, setFocus] = useState<MapCenter>();
+  const [results, setResults] = useState<DiscoveredPlace[]>([]),
+    [selected, setSelected] = useState<string | null>(data?.plan.selectedLocations[0]?.id ?? null);
+  const [filter, setFilter] = useState<LocationScheduleFilter>('ALL'),
+    [busy, setBusy] = useState(false),
+    [searching, setSearching] = useState(false);
+  const [notice, setNotice] = useState(''),
+    [source, setSource] = useState('');
+  const [manual, setManual] = useState({
+    name: '',
+    address: '',
+    latitude: '16.0544',
+    longitude: '108.2022',
+  });
+  const [day, setDay] = useState<string | null>(null);
+  const journalKey = `wolfari:map-command:${actor}:${tripId}`;
+  const [journal] = useState(() => {
+    try {
+      const parsed: unknown = JSON.parse(window.sessionStorage.getItem(journalKey) ?? 'null');
+      return {
+        pending: validPlaceIntent(parsed, tripId) ? parsed : null,
+        blocked: parsed !== null && !validPlaceIntent(parsed, tripId),
+      };
+    } catch {
+      return { pending: null, blocked: true };
+    }
+  });
+  const [pending, setPending] = useState<PlaceIntent | null>(journal.pending);
+  const [storageBlocked, setStorageBlocked] = useState(journal.blocked);
+  const writing = useRef(false),
+    searchSequence = useRef(0);
+  const currentPlan = data?.plan;
+  const all = useMemo(() => {
+    if (!currentPlan) return [];
+    const activities = [...currentPlan.activities].sort((a, b) => a.position - b.position);
+    const ordered = [
+      ...new Set(activities.map((a) => a.selectedLocationId).filter((id): id is string => !!id)),
+    ];
+    const locations = [...currentPlan.selectedLocations].sort((a, b) => {
+      const ai = ordered.indexOf(a.id),
+        bi = ordered.indexOf(b.id);
+      return (ai < 0 ? Number.MAX_SAFE_INTEGER : ai) - (bi < 0 ? Number.MAX_SAFE_INTEGER : bi);
+    });
+    return mapLocationPresentations(locations, activities);
+  }, [currentPlan]);
+  const candidates = results.filter(
+    (p) =>
+      !all.some(
+        (item) =>
+          item.location.providerPlaceId === p.id &&
+          item.location.provider?.toUpperCase() === 'GEOAPIFY',
+      ),
+  );
+  const allItems = [
+    ...all,
+    ...candidates.map((p, index) => ({
+      ...mapLocationPresentations(
+        [
+          {
+            id: `result:${p.id}`,
+            tripId,
+            name: p.name,
+            address: p.address,
+            latitude: String(p.latitude),
+            longitude: String(p.longitude),
+            provider: 'GEOAPIFY',
+            providerPlaceId: p.id,
+            source: 'PROVIDER' as const,
+            openingHours: null,
+            fetchedAt: null,
+            metadata: {},
+            planVersion: currentPlan?.planVersion ?? 0,
+          },
+        ],
+        [],
+        false,
+      )[0]!,
+      markerNumber: all.length + index + 1,
+    })),
+  ];
+  const visibleItems = allItems.filter((item) => {
+    if (filter === 'SELECTED' && !item.selected) return false;
+    if (filter === 'SCHEDULED' && !item.scheduled) return false;
+    if (filter === 'UNSCHEDULED' && (!item.selected || item.scheduled)) return false;
+    if (
+      day &&
+      item.scheduled &&
+      !item.activities.some(
+        (a) =>
+          a.scheduledDate === day ||
+          (a.startsAt &&
+            new Date(a.startsAt).toLocaleDateString('en-CA', {
+              timeZone: data?.trip.timezone ?? 'UTC',
+            }) === day),
+      )
+    )
+      return false;
+    return (
+      !item.selected ||
+      normalizedPlaceText(`${item.location.name} ${item.location.address ?? ''}`).includes(
+        normalizedPlaceText(query),
+      )
+    );
+  });
+  const effectiveSelectedId = visibleItems.some((item) => item.location.id === selected)
+    ? selected
+    : (visibleItems[0]?.location.id ?? null);
+  const selectedItem =
+    visibleItems.find((item) => item.location.id === effectiveSelectedId) ?? null;
+  const selectedCount = all.length;
+  const scheduledCount = all.filter((item) => item.scheduled).length;
+  const unscheduledCount = selectedCount - scheduledCount;
+  const points = visibleItems.flatMap((item) => {
+    const c = validCoordinates(item.location);
+    return c
+      ? [
+          {
+            ...c,
+            id: item.location.id,
+            name: item.location.name,
+            number: item.markerNumber,
+            scheduled: item.scheduled,
+          },
+        ]
+      : [];
+  });
+  const chooseLocation = (id: string, open = false) => {
+    setSelected(id);
+    if (open) setDetailOpen(true);
+  };
+  if (!data) return null;
+  const canEdit =
+    data.plan.permissions.canEdit &&
+    !busy &&
+    !pending &&
+    !storageBlocked &&
+    !snapshot.refreshing &&
+    !snapshot.refreshFailed;
+  const days = planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone);
+  const search = async (nearby = false) => {
+    if (!repo) return;
+    const current = signal(),
+      seq = ++searchSequence.current;
+    setSearching(true);
+    setNotice('');
+    try {
+      const found = await repo.search(
+        tripId,
+        new URLSearchParams({
+          q: query,
+          category: 'tourism',
+          geocode: String(!nearby && query.trim().length > 0),
+          latitude: String(center.latitude),
+          longitude: String(center.longitude),
+          radius_m: '5000',
+        }),
+        current,
+      );
+      if (current.aborted || seq !== searchSequence.current) return;
+      setResults(found.items);
+      setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
+      setSource(
+        `${found.source.stale ? 'Cache cũ · ' : ''}Geoapify · ${found.source.fetchedAt ? new Date(found.source.fetchedAt).toLocaleString('vi-VN') : ''}`,
+      );
+      setNotice(
+        found.source.status === 'ERROR'
+          ? 'Nguồn địa điểm chưa khả dụng. Kiểm tra cấu hình/quota hoặc thử lại.'
+          : found.items.length
+            ? 'Đã tải kết quả tìm kiếm.'
+            : 'Không có địa điểm phù hợp. Thử từ khóa khác hoặc đặt pin bằng biểu tượng ghim.',
+      );
+      if (found.items[0] && !nearby)
+        setFocus({ latitude: found.items[0].latitude, longitude: found.items[0].longitude });
+    } catch {
+      if (!current.aborted) setNotice('Không tải được địa điểm. Danh sách đã lưu vẫn được giữ.');
+    } finally {
+      if (!current.aborted && seq === searchSequence.current) setSearching(false);
+    }
+  };
+  const execute = async (intent: PlaceIntent) => {
+    if (!repo || writing.current || storageBlocked || !data.plan.permissions.canEdit) return;
+    const current = signal();
+    writing.current = true;
+    setBusy(true);
+    setNotice('');
+    try {
+      try {
+        window.sessionStorage.setItem(journalKey, JSON.stringify(intent));
+      } catch {
+        setStorageBlocked(true);
+        return;
+      }
+      setPending(intent);
+      const result = await repo.command(intent, current);
+      if (current.aborted) return;
+      try {
+        window.sessionStorage.removeItem(journalKey);
+        setPending(null);
+      } catch {
+        setStorageBlocked(true);
+        return;
+      }
+      if (typeof result.location_id === 'string') setSelected(result.location_id);
+      setNotice(
+        intent.path.includes('/activities')
+          ? 'Đã gắn địa điểm vào hoạt động.'
+          : intent.method === 'DELETE'
+            ? 'Đã bỏ địa điểm đã lưu.'
+            : 'Đã lưu địa điểm. Bạn có thể tiếp tục gắn vào hoạt động/ngày.',
+      );
+      setManualOpen(false);
+      await snapshot.retry();
+    } catch (error) {
+      if (current.aborted) return;
+      const failure = commandFailure(error);
+      if (!failure.uncertain) {
+        try {
+          window.sessionStorage.removeItem(journalKey);
+          setPending(null);
+        } catch {
+          setStorageBlocked(true);
+        }
+      }
+      setNotice(
+        failure.uncertain
+          ? 'Chưa xác định kết quả. Bấm thử lại cùng thao tác; không tạo thao tác khác.'
+          : failure.conflict
+            ? 'Dữ liệu đã thay đổi hoặc địa điểm đang được sử dụng. Tải lại, bỏ liên kết trước khi xóa.'
+            : 'Không lưu được. Kiểm tra quyền, dữ liệu và cấu hình provider.',
+      );
+    } finally {
+      writing.current = false;
+      if (!current.aborted) setBusy(false);
+    }
+  };
+  const command = (method: PlaceIntent['method'], suffix: string, body: Record<string, unknown>) =>
+    void execute({
+      method,
+      path: `/api/v1/trips/${tripId}/${suffix}`,
+      body: { ...body, expected_plan_version: data.plan.planVersion },
+      key: crypto.randomUUID(),
+    });
+  const togglePlace = (item: (typeof allItems)[number]) => {
+    if (!canEdit || item.activities.length) return;
+    if (item.selected) command('DELETE', `selected-locations/${item.location.id}`, {});
+    else {
+      const place = results.find((p) => p.id === item.location.providerPlaceId);
+      if (place) command('POST', 'selected-locations', { selection_token: place.token });
+    }
+  };
+  return (
+    <section
+      className={styles.page}
+      data-flow="gateway-map-read"
+      data-detail-open={detailOpen || undefined}
+      data-node-id="20:386"
+    >
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         {data && (
           <>
-            {snapshot.refreshFailed && (
-              <CapabilityNote tone="warning">
-                Chưa tải được dữ liệu mới. Danh sách đang hiển thị bản đã xem trước đó.
-                <Button variant="outline" onClick={() => void snapshot.retry()}>
-                  Tải lại
-                </Button>
-              </CapabilityNote>
-            )}
-            <div className={styles.workspace}>
-              <section className={styles.placePanel} aria-labelledby="gateway-map-list-title">
-                <header className={styles.panelHeader}>
-                  <h1 id="gateway-map-list-title">Tìm kiếm & chọn địa điểm</h1>
-                  <p>{all.length} địa điểm đã lưu trong chuyến đi · tìm trong danh sách này</p>
-                </header>
-                <label className={styles.search}>
-                  <span className={styles.visuallyHidden}>Tìm địa điểm đã lưu</span>
-                  <input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Tìm địa điểm đã lưu..."
-                    type="search"
-                  />
-                </label>
-                <div className={styles.filters} role="group" aria-label="Lọc địa điểm đã lưu">
-                  {(
-                    [
-                      ['ALL', 'Tất cả'],
-                      ['SCHEDULED', 'Trong lịch'],
-                      ['UNSCHEDULED', 'Chưa xếp'],
-                    ] as const
-                  ).map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      aria-pressed={filter === value}
-                      onClick={() => setFilter(value)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-                {visible.length ? (
-                  <ul className={styles.placeList}>
-                    {visible.map((item) => (
-                      <li key={item.location.id}>
-                        <button
-                          type="button"
-                          className={styles.placeButton}
-                          aria-pressed={selected?.location.id === item.location.id}
-                          onClick={() => setSelectedId(item.location.id)}
-                        >
-                          <span className={styles.markerNumber}>{item.markerNumber}</span>
-                          <span className={styles.placeText}>
-                            <strong>{item.location.name}</strong>
-                            <small>{item.location.address ?? 'Chưa có địa chỉ'}</small>
-                          </span>
-                          <span className={styles.status}>
-                            {placeStatus(item) === 'IN_SCHEDULE'
-                              ? 'Trong lịch'
-                              : 'Đã chọn · Chưa xếp'}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className={styles.empty} role="status">
-                    {all.length
-                      ? 'Không có địa điểm đã lưu phù hợp. Thử tìm hoặc lọc lại.'
-                      : 'Chuyến đi chưa có địa điểm đã lưu.'}
-                  </p>
-                )}
-              </section>
-              <section className={styles.mapPanel} aria-labelledby="gateway-map-panel-title">
-                <header className={styles.mapHeader}>
-                  <h2 id="gateway-map-panel-title">Bản đồ địa điểm đã lưu</h2>
-                  <span>{markers.length} địa điểm có tọa độ hợp lệ</span>
-                </header>
-                {providerState === 'ready' ? (
-                  <div ref={canvasRef} className={styles.mapCanvas} />
-                ) : (
-                  <div className={styles.unavailable} role="status">
-                    <strong>
-                      {providerState === 'loading'
-                        ? 'Đang tải bản đồ nền'
-                        : 'Bản đồ nền chưa khả dụng'}
-                    </strong>
-                    <p>
-                      {markers.length
-                        ? 'Danh sách và chi tiết địa điểm vẫn xem được. Chưa có đường đi hoặc thời gian di chuyển được xác nhận.'
-                        : 'Chưa có địa điểm với tọa độ hợp lệ để hiển thị trên bản đồ.'}
-                    </p>
-                  </div>
-                )}
-                {selected && (
-                  <article className={styles.detail} aria-label="Chi tiết địa điểm đã chọn">
-                    <h3>{selected.location.name}</h3>
-                    <p>{selected.location.address ?? 'Chưa có địa chỉ'}</p>
-                    <p>
-                      {selected.scheduled
-                        ? 'Địa điểm đã gắn với hoạt động trong lịch trình.'
-                        : 'Đã lưu · Chưa xếp vào lịch trình.'}
-                    </p>
-                    {!validCoordinates(selected.location) && <small>Chưa có tọa độ hợp lệ</small>}
-                    {selected.activities.length > 0 && (
-                      <Link to={paths.plan(tripId)}>Xem hoạt động trong lịch trình</Link>
+            <div className={styles.mapContent}>
+              <div className={styles.breadcrumb}>
+                <Link to={paths.trips}>Chuyến đi của tôi</Link>
+                <span aria-hidden="true">›</span>
+                <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
+                <span aria-hidden="true">›</span>
+                <h1>Bản đồ &amp; địa điểm</h1>
+              </div>
+              <div className={styles.hero}>
+                <TripHero trip={data.trip} compact variant="landscape" />
+              </div>
+              <div className={styles.workspace} data-region="map-workspace">
+                <section
+                  className={styles.placePanel}
+                  aria-label="Địa điểm đã lưu"
+                  data-region="place-panel"
+                >
+                  <header className={styles.panelHeader}>
+                    <h2>Tìm kiếm &amp; chọn địa điểm</h2>
+                    <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
+                  </header>
+                  <div className={styles.localNotice} role="status">
+                    {storageBlocked
+                      ? 'Không thể xác minh nhật ký thao tác. Đã khóa ghi để tránh gửi trùng.'
+                      : snapshot.refreshFailed
+                        ? 'Chưa tải được bản mới.'
+                        : busy
+                          ? 'Đang lưu địa điểm…'
+                          : notice ||
+                            'Địa điểm đã chọn được lưu vào chuyến đi và đồng bộ với thành viên.'}
+                    {source && <span> {source}</span>}
+                    {snapshot.refreshFailed && (
+                      <Button onClick={() => void snapshot.retry()}>Tải lại</Button>
                     )}
-                  </article>
-                )}
-              </section>
+                    {pending && (
+                      <Button
+                        disabled={busy || storageBlocked}
+                        onClick={() => void execute(pending)}
+                      >
+                        Thử lại cùng thao tác
+                      </Button>
+                    )}
+                  </div>
+                  <form
+                    className={styles.searchBox}
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void search();
+                    }}
+                  >
+                    <span className={styles.visuallyHidden}>Tìm địa điểm</span>
+                    <button
+                      type="submit"
+                      aria-label="Tìm kiếm"
+                      disabled={!repo || searching}
+                      style={{ border: 0, background: 'none', padding: 0, display: 'flex' }}
+                    >
+                      <img src={searchIcon} width="18" height="18" alt="" />
+                    </button>
+                    <input
+                      type="search"
+                      aria-label="Tìm địa điểm"
+                      maxLength={200}
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
+                    />
+                    <button
+                      type="button"
+                      aria-label="Đặt pin thủ công"
+                      disabled={!canEdit}
+                      onClick={() => setManualOpen(true)}
+                      style={{ border: 0, background: 'none', padding: 0, display: 'flex' }}
+                    >
+                      <img src={pinIcon} width="16" height="16" alt="" />
+                    </button>
+                  </form>
+                  <div className={styles.desktopFilters} role="group" aria-label="Lọc địa điểm">
+                    <button
+                      className={styles.filterAll}
+                      type="button"
+                      aria-pressed={filter === 'ALL'}
+                      onClick={() => setFilter('ALL')}
+                    >
+                      Tất cả
+                    </button>
+                    <button
+                      className={styles.filterSelected}
+                      type="button"
+                      aria-pressed={filter === 'SELECTED'}
+                      onClick={() => setFilter('SELECTED')}
+                    >
+                      Đã chọn ({selectedCount})
+                    </button>
+                    <button
+                      className={styles.filterScheduled}
+                      type="button"
+                      aria-pressed={filter === 'SCHEDULED'}
+                      onClick={() => setFilter('SCHEDULED')}
+                    >
+                      Trong lịch ({scheduledCount})
+                    </button>
+                    <button
+                      className={styles.filterUnscheduled}
+                      type="button"
+                      aria-pressed={filter === 'UNSCHEDULED'}
+                      onClick={() => setFilter('UNSCHEDULED')}
+                    >
+                      Chưa xếp ({unscheduledCount})
+                    </button>
+                  </div>
+                  <div className={styles.mobileFilters}>
+                    <button
+                      className={styles.filterSelected}
+                      type="button"
+                      aria-pressed={filter === 'SELECTED'}
+                      onClick={() => setFilter(filter === 'SELECTED' ? 'ALL' : 'SELECTED')}
+                    >
+                      Đã chọn · {selectedCount}
+                    </button>
+                    <button
+                      className={styles.filterScheduled}
+                      type="button"
+                      aria-pressed={filter === 'SCHEDULED'}
+                      onClick={() => setFilter(filter === 'SCHEDULED' ? 'ALL' : 'SCHEDULED')}
+                    >
+                      Trong lịch · {scheduledCount}
+                    </button>
+                    <div className={styles.filterSelect} data-filter={filter}>
+                      <Select
+                        label="Sắp xếp lịch"
+                        labelHidden
+                        value={filter}
+                        onChange={(event) =>
+                          setFilter(event.target.value as LocationScheduleFilter)
+                        }
+                      >
+                        <option value="ALL">Bộ lọc</option>
+                        <option value="SELECTED">Đã chọn</option>
+                        <option value="SCHEDULED">Trong lịch trình</option>
+                        <option value="UNSCHEDULED">Chưa xếp lịch</option>
+                      </Select>
+                    </div>
+                  </div>
+                  {searching && (
+                    <div className={styles.searchState} role="status">
+                      Đang tìm địa điểm...
+                    </div>
+                  )}
+                  {visibleItems.length ? (
+                    <ul className={styles.placeList} data-region="place-list">
+                      {visibleItems.map((item) => {
+                        const focused = item.location.id === effectiveSelectedId;
+                        const status = placeStatus(item);
+                        const locked = item.activities.length > 0 || !canEdit;
+                        return (
+                          <li key={item.location.id}>
+                            <div
+                              className={`${styles.placeRow} ${focused ? styles.placeRowActive : ''}`}
+                            >
+                              <button
+                                type="button"
+                                className={styles.placeMainButton}
+                                aria-pressed={focused}
+                                onClick={() => chooseLocation(item.location.id, true)}
+                              >
+                                {item.selected ? (
+                                  <span
+                                    className={`${styles.pinBadge} ${status === 'IN_SCHEDULE' ? styles.pinScheduled : styles.pinUnscheduled}`}
+                                  >
+                                    {item.markerNumber}
+                                  </span>
+                                ) : (
+                                  <span className={styles.unselectedDot} aria-hidden="true" />
+                                )}
+                                <span className={styles.placeCopy}>
+                                  <strong>{item.location.name}</strong>
+                                  <small>
+                                    {item.activities[0]?.activityType === 'MEAL'
+                                      ? 'Ẩm thực'
+                                      : 'Tham quan'}{' '}
+                                    · {item.location.address ?? 'Chưa có địa chỉ'}
+                                  </small>
+                                </span>
+                                <span
+                                  className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
+                                >
+                                  {status === 'IN_SCHEDULE'
+                                    ? 'Trong lịch'
+                                    : status === 'SELECTED_UNSCHEDULED'
+                                      ? 'Đã chọn · Chưa xếp'
+                                      : 'Chưa chọn'}
+                                </span>
+                                <img
+                                  className={styles.rowChevron}
+                                  src={chevronIcon}
+                                  width="22"
+                                  height="22"
+                                  alt=""
+                                />
+                              </button>
+                              <label className={styles.checkboxTarget}>
+                                <input
+                                  className={`${styles.placeCheckbox} ${status === 'SELECTED_UNSCHEDULED' ? styles.placeCheckboxUnscheduled : ''}`}
+                                  type="checkbox"
+                                  checked={item.selected}
+                                  disabled={locked}
+                                  onChange={() => togglePlace(item)}
+                                  aria-label={`${item.selected ? 'Bỏ chọn' : 'Chọn'} ${item.location.name}`}
+                                />
+                              </label>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <div className={styles.empty} role="status">
+                      <strong>Không có địa điểm phù hợp</strong>
+                      <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
+                    </div>
+                  )}
+                </section>
+                <section
+                  className={styles.mapPanel}
+                  aria-labelledby="map-panel-title"
+                  data-region="map-panel"
+                >
+                  <div className={styles.mapToolbar}>
+                    <div className={styles.routeSelector}>
+                      <span id="map-panel-title" className={styles.visuallyHidden}>
+                        Bản đồ hành trình
+                      </span>
+                      <Select
+                        label="Ngày"
+                        labelHidden
+                        value={day ?? 'ALL'}
+                        onChange={(event) =>
+                          setDay(event.target.value === 'ALL' ? null : event.target.value)
+                        }
+                      >
+                        <option value="ALL">Hiển thị lịch trình</option>
+                        {days.map((value, index) => (
+                          <option key={value} value={value}>
+                            Ngày {index + 1}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
+                    <div className={styles.mapType} role="group" aria-label="Kiểu bản đồ">
+                      <button
+                        type="button"
+                        aria-pressed={true}
+                        onClick={() => setNotice('Đang hiển thị bản đồ Geoapify.')}
+                      >
+                        Bản đồ
+                      </button>
+                      <button
+                        type="button"
+                        aria-pressed={false}
+                        onClick={() =>
+                          setNotice(
+                            'Nguồn Geoapify hiện tại chưa cung cấp lớp vệ tinh. Bản đồ đường phố vẫn hoạt động.',
+                          )
+                        }
+                      >
+                        Vệ tinh
+                      </button>
+                    </div>
+                  </div>
+                  <MapViewport
+                    items={visibleItems}
+                    selectedLocationId={effectiveSelectedId}
+                    timezone={data.trip.timezone}
+                    previewEnabled={false}
+                    runtimeMap={
+                      <GeoapifyMap
+                        embedded
+                        points={points}
+                        selectedId={effectiveSelectedId}
+                        onSelect={(id) => chooseLocation(id, true)}
+                        onCenter={setCenter}
+                        focus={focus}
+                        onPin={
+                          canEdit
+                            ? (p) => {
+                                setManual({
+                                  ...manual,
+                                  latitude: String(p.latitude),
+                                  longitude: String(p.longitude),
+                                });
+                                setManualOpen(true);
+                              }
+                            : undefined
+                        }
+                      />
+                    }
+                    onSearchArea={() => void search(true)}
+                    onSelect={(locationId) => chooseLocation(locationId)}
+                    onOpenDetail={() => setDetailOpen(true)}
+                  />
+                </section>
+              </div>
+              <CapabilityNote id="map-provider-note">
+                Geoapify / OpenStreetMap · Chọn ô để lưu địa điểm; mở “Xem trong lịch trình” để xếp
+                vào ngày.
+              </CapabilityNote>
             </div>
-            <CapabilityNote>
-              Chỉ xem địa điểm đã lưu. Tìm kiếm và lọc chỉ áp dụng trong danh sách hiện tại; chức
-              năng thêm, bỏ chọn hoặc lưu địa điểm chưa khả dụng ở trang này.
-            </CapabilityNote>
+            <PlaceDetail
+              item={selectedItem}
+              tripId={tripId}
+              timezone={data.trip.timezone}
+              open={detailOpen}
+              onClose={() => setDetailOpen(false)}
+              runtime
+              onToggleSelection={() => selectedItem && togglePlace(selectedItem)}
+              selectionDisabled={!canEdit || !!selectedItem?.activities.length}
+            />
           </>
         )}
       </TripPlanBoundary>
+      <Drawer
+        open={manualOpen}
+        onDismiss={() => setManualOpen(false)}
+        label="Thêm pin thủ công"
+        side="right"
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (canEdit)
+              command('POST', 'selected-locations', {
+                name: manual.name,
+                address: manual.address,
+                latitude: Number(manual.latitude),
+                longitude: Number(manual.longitude),
+              });
+          }}
+        >
+          <h3>Thêm pin thủ công</h3>
+          <p>Bấm vào bản đồ hoặc nhập tọa độ. Đây không phải địa điểm được provider xác minh.</p>
+          {notice && <p role="status">{notice}</p>}
+          {storageBlocked && (
+            <p role="alert">Không thể xác minh nhật ký thao tác. Đã khóa ghi để tránh gửi trùng.</p>
+          )}
+          {pending && (
+            <Button disabled={busy || storageBlocked} onClick={() => void execute(pending)}>
+              Thử lại cùng thao tác
+            </Button>
+          )}
+          <Input
+            label="Tên pin"
+            required
+            maxLength={255}
+            value={manual.name}
+            onChange={(e) => setManual({ ...manual, name: e.target.value })}
+          />
+          <Input
+            label="Địa chỉ pin"
+            maxLength={1000}
+            value={manual.address}
+            onChange={(e) => setManual({ ...manual, address: e.target.value })}
+          />
+          <Input
+            label="Vĩ độ"
+            type="number"
+            required
+            min={-90}
+            max={90}
+            step="any"
+            value={manual.latitude}
+            onChange={(e) => setManual({ ...manual, latitude: e.target.value })}
+          />
+          <Input
+            label="Kinh độ"
+            type="number"
+            required
+            min={-180}
+            max={180}
+            step="any"
+            value={manual.longitude}
+            onChange={(e) => setManual({ ...manual, longitude: e.target.value })}
+          />
+          <Button type="submit" disabled={!repo || !canEdit}>
+            Lưu pin thủ công
+          </Button>
+        </form>
+      </Drawer>
     </section>
   );
 }

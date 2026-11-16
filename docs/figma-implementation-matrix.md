@@ -7,7 +7,7 @@
 - Figma là nguồn cho visual hierarchy, typography, spacing, component variants và prototype intent.
 - Backend runtime là nguồn cho khả năng nghiệp vụ, permission, version, error và mutation behavior.
 
-Lượt [chỉnh chi tiết 15/10/2026](ui-refinement-2026-10-15.md) giữ bố cục Home theo xác nhận người dùng, căn lại header/collage/CTA/footer và màu vai trò Trip List. Header Guest mở các phần trên Home bằng `/#home-features` và `/#home-about`; route Home xử lý hash sau khi lazy load. Khu vực đề xuất giữ nguyên frame nguồn tại section `767:5376`; Home Guest/User `768:5376`/`768:5746`, Web 402px `780:6444`.
+Lượt [chỉnh chi tiết 15/10/2026](archive/implementation/ui-refinement-2026-10-15.md) giữ bố cục Home theo xác nhận người dùng, căn lại header/collage/CTA/footer và màu vai trò Trip List. Header Guest mở các phần trên Home bằng `/#home-features` và `/#home-about`; route Home xử lý hash sau khi lazy load. Khu vực đề xuất giữ nguyên frame nguồn tại section `767:5376`; Home Guest/User `768:5376`/`768:5746`, Web 402px `780:6444`.
 
 Lượt full-width 17/10/2026 giữ foreground Home trong canvas tối đa 1440px và căn giữa, còn gradient, mây và footer landscape phủ toàn viewport. Asset mây local `4bccc.png` 840×280 giữ tỉ lệ 3:1; top/hero/features/app/inspiration dùng layer height, crop, opacity và anchor riêng. Thay đổi crop mây là ngoại lệ đã chốt; hình học foreground 1440px vẫn đối chiếu source. Mobile tiếp tục header Web 54px thay vì 72px của proposal `780:6444`.
 
@@ -48,7 +48,7 @@ Native Mobile tab bar/section switcher không thuộc Mobile Web contract hiện
 
 Các adaptation không sao chép native device chrome/bottom tabs. Map không thêm MapLibre hoặc tile provider ở slice này; viewport là boundary thay thế được và hiển thị provider unavailable trung thực.
 
-Acceptance evidence ngày 15/10/2026: `tests/e2e/app-shell.spec.ts` đạt 24 browser tests với Chromium có sẵn. Đã xem screenshot Desktop 1440×800, Mobile 402×874, Admin 1440×800 và Admin drawer 402×600; ảnh được sinh trong `test-results/` (ignored). Xem [báo cáo reconcile Phase 1](app-shell-reconcile-2026-10-15.md) cho mapping và giới hạn hiện tại.
+Acceptance evidence ngày 15/10/2026: `tests/e2e/app-shell.spec.ts` đạt 24 browser tests với Chromium có sẵn. Đã xem screenshot Desktop 1440×800, Mobile 402×874, Admin 1440×800 và Admin drawer 402×600; ảnh được sinh trong `test-results/` (ignored). Xem [báo cáo reconcile Phase 1](archive/implementation/app-shell-reconcile-2026-10-15.md) cho mapping và giới hạn hiện tại.
 
 ## Frame-to-screen mapping rules
 
@@ -91,7 +91,7 @@ Không dùng label `runtime-ready` chỉ vì Figma đã có frame hoặc OpenAPI
 
 ## Whole-file frame / variant / action mapping
 
-[Full map](figma-screen-map-2026-10-15.md) nối toàn bộ 150 cấp-page source frame/board/set → route/host → actor → domain → fixture → state profile → scroll. [Snapshot](figma-inventory-2026-10-15.json): 17 sets/81 variants, 2.149 prototype entries, 110 unwired patterns, nested modal/target ownership/action readiness. [Runtime matrix](runtime-evidence-2026-10-15.md) là gate trước feature code.
+[Full map](archive/implementation/figma-screen-map-2026-10-15.md) nối toàn bộ 150 cấp-page source frame/board/set → route/host → actor → domain → fixture → state profile → scroll. [Snapshot](figma-inventory-2026-10-15.json): 17 sets/81 variants, 2.149 prototype entries, 110 unwired patterns, nested modal/target ownership/action readiness. [Runtime matrix](archive/implementation/runtime-evidence-2026-10-15.md) là gate trước feature code.
 
 Metadata không node chỉ liệt kê Desktop trong response hiện tại; Plugin API discovery và per-page reads xác nhận Desktop 0:1, Mobile 310:2025 và Admin 194:1073. Không suy ra page mất từ metadata chưa hydrate.
 
@@ -103,7 +103,7 @@ Saved/created/completed và OVERLAY/NAVIGATE/CONDITIONAL không API evidence. Mi
 
 ## Phase 2 — Shared UI foundation
 
-Component-level mapping, không dựng lại toàn bộ showcase canvas hoặc feature screen. Chi tiết token, asset, Web adaptation và kiểm tra ở [bàn giao Phase 2](design-system-phase2.md).
+Component-level mapping, không dựng lại toàn bộ showcase canvas hoặc feature screen. Chi tiết token, asset, Web adaptation và kiểm tra ở [bàn giao Phase 2](archive/implementation/design-system-phase2.md).
 
 | Figma source                                                                 | Shared implementation                           | Variant / adaptation                                                                                                |
 | ---------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
@@ -153,13 +153,13 @@ E2E chạy serial trên fixture preview với external server và Playwright CLI
 
 User-requested demo access extends existing Login `298:1893`/`317:2026` with a labelled sample-account panel, User Home demo banner and exit control. Đây là Web fixture preview extension, không Figma variant hoặc Backend mutation evidence; giữ route, form validation và responsive document flow. Xem [demo contract](screen-contracts.md#contract-auth-fixture--home--self-profile).
 
-[Figma → route → actor/component, domain và runtime gaps](auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header và document scroll thay native bars/tabs; không thêm route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
+[Figma → route → actor/component, domain và runtime gaps](archive/implementation/auth-fixture-phase3.md). Home `3:28`/`298:1642`/M01/M04, Auth `298:1893`/`298:2007`/M02/M03, Self `299:1847`/M22/M32. Web shared header và document scroll thay native bars/tabs; không thêm route. HomeRepository public story projection mock-only; Self/session read runtime-candidate, Gateway unavailable.
 
 Auth fixture acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; 115 unit/component/proxy tests và 57 Chromium E2E pass (serial external preview runner, exit 0). Đã review screenshot desktop, short laptop và Mobile. Production marker scan không có fixture records/IDs; build có warning chunk >500kB, cần tách route khi mở rộng flow. Backend HEAD d8c02cb sạch, chỉ đọc.
 
 ### Trip Overview fixture
 
-`3:31`/`3:32` → Desktop expanded/collapsed; `317:2032` → Mobile Web adaptation của cùng `/trips/:tripId`, Member/Owner. [Component/domain/scroll/runtime mapping](trip-overview-phase3.md). Trip List canonical dates/name giữ nguyên; cover theo Overview frame, unsupported dashboard numbers thay unavailable. Tablet là Web adaptation, không tuyên bố có Figma tablet frame. Router lazy-load feature bodies và shell loading boundary.
+`3:31`/`3:32` → Desktop expanded/collapsed; `317:2032` → Mobile Web adaptation của cùng `/trips/:tripId`, Member/Owner. [Component/domain/scroll/runtime mapping](archive/implementation/trip-overview-phase3.md). Trip List canonical dates/name giữ nguyên; cover theo Overview frame, unsupported dashboard numbers thay unavailable. Tablet là Web adaptation, không tuyên bố có Figma tablet frame. Router lazy-load feature bodies và shell loading boundary.
 
 Overview geometry refinement: nội dung dùng toàn bộ chiều rộng main sau sidebar, với gutter `18px/22px`; hero, summaries và workspace căn cùng mép. Tại 1440px, sidebar mở cho `x=238,width=1180`, sidebar thu cho `x=90,width=1328`. Hero có minimum 170px; workspace dùng tỉ lệ cột `578:314:260`, gap 14px và minimum 408px chỉ trên 1100px. Fare panel và postcard lần lượt có minimum 190px và 204px; itinerary rows/tabs/link giữ vùng bấm theo screen contract nhưng vẫn tăng chiều cao theo dữ liệu. Không đặt nested vertical scroll; desktop cuộn ở main, mobile cuộn document.
 
@@ -167,13 +167,13 @@ Targeted browser contract suite: **17 Chromium cases pass** trên `2560/1920/144
 
 ### Plan Preview fixture
 
-Desktop `20:236`, pool `439:2028`, editor `26:411`, Mobile planner `317:2053` → `/trips/:tripId/plan`, Member/Owner/Plan Editor theo permissions. Pool ẩn mặc định; desktop mở cột phải, ≤1200px mở fullscreen dialog chứa pool + ngày đang chọn. Pointer/touch/keyboard DnD và editor chỉ cập nhật draft local TTL 30 ngày, không Activity/Selected Location write hoặc đồng bộ thành viên. [Domain, state, reset rule và capability mapping](plan-preview-phase3.md). Overview vẫn đọc first-day PlanSummary; không fake travel metrics/presence/write success.
+Desktop `20:236`, pool `439:2028`, editor `26:411`, Mobile planner `317:2053` → `/trips/:tripId/plan`, Member/Owner/Plan Editor theo permissions. Pool ẩn mặc định; desktop mở cột phải, ≤1200px mở fullscreen dialog chứa pool + ngày đang chọn. Pointer/touch/keyboard DnD và editor chỉ cập nhật draft local TTL 30 ngày, không Activity/Selected Location write hoặc đồng bộ thành viên. [Domain, state, reset rule và capability mapping](archive/implementation/plan-preview-phase3.md). Overview vẫn đọc first-day PlanSummary; không fake travel metrics/presence/write success.
 
 Plan acceptance 15/10/2026: lint/typecheck/test/build/build:preview pass; **137 unit/component/proxy và 74 Chromium E2E pass** (two browser workers, stored `.last-run.json` passed/no failed tests). Đã xem screenshot 1440×800 và Mobile402, có kiểm tra 1366×600/520, tablet1024/820/768 và Mobile320. Keyboard timeline scroll assertion đợi browser hoàn tất scroll, không bỏ assertion; local assets giữ intrinsic SVG geometry. Production marker scan không chứa Plan/Trip/Identity fixture records.
 
 ### Members / Invitation Preview
 
-Desktop `25:360`/Mobile `317:2040` → `/trips/:tripId/members`, Member/Owner, MembersPage/MembersView/read repositories. `475:2294`/`317:2041` chỉ Owner local preview panel, không route mới. [Domain/actor/scroll/state/runtime mapping và gaps](members-preview-phase3.md). Không copy sample identities/Holder badges hoặc sent/saved states; shared TripHero cover khác decorative hill source là visual gap được ghi rõ. Native bars/tabs không dùng. Reconcile target-only sidebar hiển thị unavailable đúng title/selection, giữ URL và focus.
+Desktop `25:360`/Mobile `317:2040` → `/trips/:tripId/members`, Member/Owner, MembersPage/MembersView/read repositories. `475:2294`/`317:2041` chỉ Owner local preview panel, không route mới. [Domain/actor/scroll/state/runtime mapping và gaps](archive/implementation/members-preview-phase3.md). Không copy sample identities/Holder badges hoặc sent/saved states; shared TripHero cover khác decorative hill source là visual gap được ghi rõ. Native bars/tabs không dùng. Reconcile target-only sidebar hiển thị unavailable đúng title/selection, giữ URL và focus.
 
 Members/final Phase 3 checks 15/10/2026: lint/typecheck/test/build/build:preview pass; **164 unit/component/proxy và 85 Chromium E2E pass** (full suite, two workers, exit0). Sau chỉnh CSS, **19 Auth/Members browser cases pass** ở output `test-results/review-final`; đã xem screenshot desktop/mobile. CSS slot avatar kiểm tra với blob PNG200×100 → render78×78, không tràn ngang. Browser production kiểm tra8 existing routes unavailable, route lạ404, không fixture UI/API request/token storage; bundle scan không có fixture records/chunks/IDs/emails. Backend HEAD `d8c02cb` sạch, chỉ đọc. Hero decorative Members vẫn là visual gap, không tuyên bố pixel match100% hoặc Backend runtime-ready.
 

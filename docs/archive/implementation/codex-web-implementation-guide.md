@@ -23,7 +23,7 @@ Không được sửa:
 1. `README.md`.
 2. `docs/implementation-baseline.md`.
 3. `docs/domain-architecture.md`.
-4. `docs/web-implementation-roadmap.md`.
+4. `docs/archive/implementation/web-implementation-roadmap.md`.
 5. `docs/integration-first-architecture.md`.
 6. Figma file: `https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-%C2%B7-Travel-Workspace?node-id=194-1073&p=f`.
 7. Backend runtime tại `../Wolfari-backend/` chỉ để đối chiếu, không sửa.

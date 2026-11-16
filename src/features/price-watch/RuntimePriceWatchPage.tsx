@@ -29,6 +29,9 @@ const labels = {
 };
 const money = (s: string) => new Intl.NumberFormat('vi-VN').format(BigInt(s)) + ' ₫';
 const providerErrors = new Map([
+  ['PROVIDER_AUTH_FAILED', 'Token nguồn giá bị từ chối.'],
+  ['PROVIDER_RATE_LIMITED', 'Đang chờ hạn mức nguồn giá.'],
+  ['PROVIDER_NOT_CONFIGURED', 'Nguồn giá chưa vượt qua bước xác minh VND và cấu hình.'],
   ['PROVIDER_TIMEOUT', 'Nguồn giá phản hồi quá thời gian chờ.'],
   ['PROVIDER_RESPONSE_INVALID', 'Dữ liệu nguồn trả về không hợp lệ.'],
   ['PROVIDER_NOT_SUPPORTED', 'Nguồn giá chưa được hỗ trợ.'],
@@ -57,9 +60,40 @@ function Observations({
     null,
   );
   const source = query.data?.pages.at(-1)?.source;
+  const cached = watch.fields.provider === 'TRAVELPAYOUTS_CACHE';
+  const found = latest?.providerFoundAt ? Date.parse(latest.providerFoundAt) : NaN;
+  const freshReference =
+    !cached ||
+    (latest?.dataKind === 'CACHED_REFERENCE' &&
+      Number.isFinite(found) &&
+      found <= Date.now() &&
+      Date.now() - found <= 48 * 3600000 &&
+      (!latest?.providerExpiresAt || Date.parse(latest.providerExpiresAt) > Date.now()));
   return (
     <>
       <h3>Lịch sử giá quan sát</h3>
+      <p>
+        Nguồn: {watch.fields.provider}. Lần kiểm tra mới nhất:{' '}
+        {source?.lastCheckedAt
+          ? new Date(source.lastCheckedAt).toLocaleString('vi-VN')
+          : 'Chưa kiểm tra'}
+        . Lần kế tiếp:{' '}
+        {source?.nextCheckAt
+          ? new Date(source.nextCheckAt).toLocaleString('vi-VN')
+          : 'Chưa lên lịch'}
+        .
+      </p>
+      {source?.lastCheckStatus === 'NO_RESULT' && (
+        <Alert tone="info">
+          Lần kiểm tra gần nhất không có giá đúng tuyến/ngày (NO_RESULT); không phải giá 0.
+        </Alert>
+      )}
+      {cached && (
+        <p>
+          Giá cache tham khảo · 1 người lớn, một chiều, phổ thông. Không phải giá đặt vé trực tiếp.
+          Chu kỳ kiểm tra 6 giờ; lịch sử chưa có dữ liệu có thể do không có giá đúng tuyến/ngày.
+        </p>
+      )}
       {source?.lastError && (
         <Alert tone="warning">
           {source.stale ? 'Giá cũ. ' : ''}Chưa lấy được giá mới từ nguồn theo dõi.{' '}
@@ -94,12 +128,18 @@ function Observations({
           {money(latest.price)}{' '}
           <Badge
             tone={
-              !source?.stale && BigInt(latest.price) < BigInt(watch.fields.threshold_price)
+              !source?.stale &&
+              freshReference &&
+              BigInt(latest.price) < BigInt(watch.fields.threshold_price)
                 ? 'success'
                 : 'neutral'
             }
           >
-            {source?.stale ? 'Giá lịch sử trước lần lỗi nguồn' : 'Quan sát gần nhất đã tải'}
+            {source?.stale
+              ? 'Giá lịch sử trước lần lỗi nguồn'
+              : !freshReference
+                ? 'Giá cũ / chưa rõ tuổi nguồn'
+                : 'Quan sát gần nhất đã tải'}
           </Badge>
         </p>
       ) : (
@@ -120,6 +160,16 @@ function Observations({
               Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn: {row.provider}
             </p>
             <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
+            {row.provider === 'TRAVELPAYOUTS_CACHE' && (
+              <small>
+                {' '}
+                · Nguồn tìm thấy:{' '}
+                {row.providerFoundAt
+                  ? new Date(row.providerFoundAt).toLocaleString('vi-VN')
+                  : 'Không rõ'}{' '}
+                · Giá cache tham khảo
+              </small>
+            )}
           </li>
         ))}
       </ul>
@@ -367,7 +417,11 @@ function WatchWorkspace({
           <p className={styles.metadata}>CHỦ ĐỘNG CHO CHUYẾN ĐI</p>
           <h1>Theo dõi giá vé</h1>
         </div>
-        <Badge tone="warning">MOCK_FLIGHT · Mô phỏng</Badge>
+        <Badge tone="warning">
+          {import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+            ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
+            : 'MOCK_FLIGHT · Mô phỏng'}
+        </Badge>
       </div>
       <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
       {!editing && recovery}

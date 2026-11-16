@@ -120,4 +120,8 @@ Sessions/guards/query keys, expected versions/idempotency, timezone/date-only/ov
 
 ## Review protocol
 
+### Provider integration correction — 12/11/2026
+
+User explicitly rejected the extra Map panels/forms and requires the approved template to remain intact. The earlier statement that provider integration authorized presentation changes was incorrect and is superseded. Runtime Map now reuses the existing TripMapPage composition, CSS, compact hero, search, filters, selection checkboxes, map toolbar/cards and PlaceDetail. Existing checkbox/heart controls persist selections through the Gateway; the existing itinerary link opens the existing Plan editor flow. Manual coordinates use the existing pin affordance and shared Drawer, not an always-visible panel. Leaflet occupies the existing map canvas. Price form/card layout and design tokens stay unchanged; provider constraints/status labels remain truthful. The satellite control reports unsupported capability rather than substituting another map. No Figma writes, redesign, commit/push or deployment. Earlier tests of the rejected layout remain historical; fresh correction verification is recorded separately in the root report.
+
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.

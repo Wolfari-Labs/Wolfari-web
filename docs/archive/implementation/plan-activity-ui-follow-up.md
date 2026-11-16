@@ -13,6 +13,6 @@ Gateway chỉ mount một timeline server trong GatewayPlanPanel, form Drawer; e
 - Unknown giữ key/body/version actor/Trip qua sessionStorage; không lưu được journal thì chặn ghi. Refetch không tự chứng minh mutation commit.
 - Thu hồi Editor khi form mở: server từ chối; không tự áp draft lên version/quyền mới.
 
-Nguồn: [Plan OpenAPI](../../Wolfari-backend/docs/api/plan.openapi.json), Trip V003 và Protobuf scheduled_date đã có ở Backend. Không thêm migration trong đợt Web.
+Nguồn: [Plan OpenAPI](../../../../Wolfari-backend/docs/api/plan.openapi.json), Trip V003 và Protobuf scheduled_date đã có ở Backend. Không thêm migration trong đợt Web.
 
-Test: plan-gateway, plan-commands, gateway-plan-panel, HTTP mock plan.spec, real e2e-demo1. Xem [validation](demo-1-web-validation.md) và [addendum](demo-1-web-addendum-v1.0.md).
+Test: plan-gateway, plan-commands, gateway-plan-panel, HTTP mock plan.spec, real e2e-demo1. Xem [validation](../../demo-1-web-validation.md) và [addendum](../../demo-1-web-addendum-v1.0.md).

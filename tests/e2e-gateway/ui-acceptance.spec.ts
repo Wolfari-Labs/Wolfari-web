@@ -61,7 +61,7 @@ for (const size of [
         await expect(page.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' })).toBeVisible();
       else if (name === 'map')
         await expect(
-          page.getByRole('status').filter({ hasText: /^Chuyến đi chưa có địa điểm đã lưu\.$/ }),
+          page.getByText('Không có địa điểm phù hợp', { exact: true }),
         ).toBeVisible();
       else if (name === 'dress')
         await expect(
