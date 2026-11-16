@@ -31,6 +31,7 @@ import type { MembershipViewModel } from '../../members/model/members';
 import { packingDateToIso, packingFormFromItem } from '../../packing/packing';
 import { validCalendarDate } from '../../../shared/lib/calendar';
 import { planDays } from '../model/plan-presentation';
+import { DressSuggestions } from '../../dress-code/DressSuggestions';
 import styles from './PreparationActions.module.css';
 
 export interface PreparationProps {
@@ -365,6 +366,20 @@ export function PreparationActions({
                     </Select>
                   )}
                 </>
+              )}
+              {module === 'dress' && (
+                <DressSuggestions
+                  trip={trip}
+                  plan={plan}
+                  scopeType={draft.fields.scopeType ?? ''}
+                  planDate={draft.fields.planDate ?? ''}
+                  activityId={draft.fields.activityId ?? ''}
+                  onPick={({ label: title, description }) =>
+                    setDraft((d) =>
+                      d ? { ...d, fields: { ...d.fields, label: title, description } } : d,
+                    )
+                  }
+                />
               )}
               <Input
                 label={module === 'dress' ? 'Tiêu đề' : 'Tên'}

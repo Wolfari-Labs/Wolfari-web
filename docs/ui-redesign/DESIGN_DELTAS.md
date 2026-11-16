@@ -272,3 +272,16 @@ writes for real. User asked for a sensible, demo-ready Dress code screen.
 
 Checks: typecheck, lint, unit suite, Gateway HTTP-mock `preparation-srs12` and `cp07`,
 plus a live add/edit/reload/delete run against the local demo backend.
+
+### Built-in dress code suggestions — user request 16/11/2026
+
+User asked for suggestions that fit the weather and the place, fixed rules being acceptable.
+The editor gains a "Gợi ý nhanh" box (`DressSuggestions`): expected weather is guessed from
+the place (Trip name, saved locations, their latitude) and the month, using a fixed table of
+Vietnamese climate by region, and can be changed by hand. It lists one preset for that weather
+plus presets for places found in the Plan (beach, pagoda, old town, Huế, mountain, highland,
+dinner, boat, city), each with three colours. Picking one only fills title and description;
+nothing is saved until "Lưu dress code". Colours are written into the description because the
+contract has no colour field. No weather provider, no new API; this is not the DSS
+recommendation flow (FR-DS03), whose panel stays capability-gated. `dress-suggestions.ts` is
+kept identical in the mobile repo.
