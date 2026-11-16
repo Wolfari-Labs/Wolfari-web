@@ -8,7 +8,15 @@ import { Button } from '../../../shared/components/Button';
 import { Select } from '../../../shared/components/Select';
 import { ContentState } from '../../../shared/components/ContentState';
 import { toDomainError } from '../../../shared/lib/runtime-validation';
+import { Badge } from '../../../shared/components/Ui';
 import styles from './FinanceRecords.module.css';
+const tones: Record<Expense['status'], 'neutral' | 'success' | 'warning' | 'danger'> = {
+  DRAFT: 'neutral',
+  SUBMITTED: 'warning',
+  CONFIRMED: 'success',
+  REJECTED: 'danger',
+  REVERSED: 'neutral',
+};
 
 const statuses = {
   DRAFT: 'Bản nháp',
@@ -152,7 +160,8 @@ export function ExpensePanel({
           <article key={row.id} className={styles.record} aria-label={row.title}>
             <h3>{row.title}</h3>
             <p>
-              {row.amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} ₫ · {statuses[row.status]}
+              {row.amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} ₫{' '}
+              <Badge tone={tones[row.status]}>{statuses[row.status]}</Badge>
             </p>
             <p>
               Người đề nghị: {name(row.created_by_user_id)} ·{' '}

@@ -8,7 +8,14 @@ import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { ContentState } from '../../../shared/components/ContentState';
 import { toDomainError } from '../../../shared/lib/runtime-validation';
+import { Badge } from '../../../shared/components/Ui';
 import styles from './FinanceRecords.module.css';
+const tones: Record<HolderHandover['status'], 'neutral' | 'success' | 'warning' | 'danger'> = {
+  NOMINATED: 'warning',
+  ACCEPTED: 'warning',
+  COMPLETED: 'success',
+  CANCELLED: 'neutral',
+};
 
 const statusLabels: Record<HolderHandover['status'], string> = {
   NOMINATED: 'Đã đề cử, chờ người được đề cử đồng ý',
@@ -137,13 +144,15 @@ export function HandoverPanel({
             <h3>
               {name(row.old_holder_user_id)} → {name(row.new_holder_user_id)}
             </h3>
-            <p>{statusLabels[row.status]}</p>
+            <p>
+              <Badge tone={tones[row.status]}>{statusLabels[row.status]}</Badge>
+            </p>
             <p>
               Đề cử bởi {name(row.nominated_by_user_id)} ·{' '}
               {new Date(row.created_at).toLocaleString('vi-VN', { timeZone: trip.timezone })}
             </p>
             {s && (
-              <dl>
+              <dl className={styles.details}>
                 <div>
                   <dt>Số dư sổ quỹ khi chốt</dt>
                   <dd>{vnd(s.current_balance)}</dd>

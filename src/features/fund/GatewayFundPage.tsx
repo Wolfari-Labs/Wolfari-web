@@ -707,53 +707,83 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       {instruction.isError ? (
         <QueryError error={instruction.error} retry={() => void instruction.refetch()} />
       ) : instruction.data ? (
-        <>
-          <Alert tone="info">{instruction.data.warning}</Alert>
-          <img
-            className={fundStyles.qr}
-            src={svgDataUri(instruction.data.qr_svg)}
-            alt={`Mã VietQR chuyển ${formatVnd(instruction.data.amount)} tới ${instruction.data.bank_name}`}
-            width={280}
-            height={280}
-          />
-          <dl>
-            {[
-              ['Ngân hàng', `${instruction.data.bank_name} (${instruction.data.bank_code})`],
-              ['Số tài khoản', instruction.data.account_number],
-              ['Chủ tài khoản', instruction.data.recipient_name],
-              ['Số tiền', formatVnd(instruction.data.amount)],
-              ['Nội dung chuyển khoản', instruction.data.reference],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+        (() => {
+          const info = instruction.data;
+          const owed = data(contributions.data?.pages).find((c) => c.id === instructionId);
+          return (
+            <div className={fundStyles.qrPanel}>
+              <p className={fundStyles.qrAmount}>
+                <span>Số tiền cần chuyển</span>
+                <strong>{formatVnd(info.amount)}</strong>
+              </p>
+              <div className={fundStyles.qrLayout}>
+                <img
+                  className={fundStyles.qr}
+                  src={svgDataUri(info.qr_svg)}
+                  alt={`Mã VietQR chuyển ${formatVnd(info.amount)} tới ${info.bank_name}`}
+                  width={280}
+                  height={280}
+                />
+                <dl className={fundStyles.qrDetails}>
+                  <div>
+                    <dt>Ngân hàng</dt>
+                    <dd>
+                      {info.bank_name} ({info.bank_code})
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Số tài khoản</dt>
+                    <dd className={fundStyles.qrCopyRow}>
+                      <span className={fundStyles.qrMono}>{info.account_number}</span>
+                      <Button
+                        variant="plain"
+                        aria-label="Sao chép số tài khoản"
+                        onClick={() => copyText(info.account_number, 'Đã sao chép số tài khoản.')}
+                      >
+                        Sao chép
+                      </Button>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Chủ tài khoản</dt>
+                    <dd>{info.recipient_name}</dd>
+                  </div>
+                  <div>
+                    <dt>Nội dung chuyển khoản</dt>
+                    <dd className={fundStyles.qrCopyRow}>
+                      <span className={fundStyles.qrMono}>{info.reference}</span>
+                      <Button
+                        variant="plain"
+                        aria-label="Sao chép nội dung chuyển khoản"
+                        onClick={() =>
+                          copyText(info.reference, 'Đã sao chép nội dung chuyển khoản.')
+                        }
+                      >
+                        Sao chép
+                      </Button>
+                    </dd>
+                  </div>
+                </dl>
               </div>
-            ))}
-          </dl>
-          <div className={styles.actions}>
-            <Button
-              variant="outline"
-              onClick={() =>
-                copyText(instruction.data!.account_number, 'Đã sao chép số tài khoản.')
-              }
-            >
-              Sao chép số tài khoản
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() =>
-                copyText(instruction.data!.reference, 'Đã sao chép nội dung chuyển khoản.')
-              }
-            >
-              Sao chép nội dung
-            </Button>
-          </div>
-          {copied && <p role="status">{copied}</p>}
-          <p>
-            Quét mã bằng ứng dụng ngân hàng; số tiền và nội dung đã điền sẵn, đừng sửa nội dung để
-            khoản góp được đối chiếu đúng. Sau khi chuyển xong, bấm Báo đã chuyển ở khoản góp.
-          </p>
-        </>
+              {copied && <p role="status">{copied}</p>}
+              <Alert tone="info">{info.warning}</Alert>
+              {owed?.status === 'PENDING' && owed.member_user_id === actor && (
+                <div className={styles.actions}>
+                  <Button
+                    disabled={blocked}
+                    onClick={() => {
+                      setInstructionId(null);
+                      setCopied('');
+                      open('report', owed);
+                    }}
+                  >
+                    Tôi đã chuyển — Báo đã chuyển
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        })()
       ) : (
         <ContentState state="loading" />
       )}

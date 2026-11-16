@@ -9,7 +9,16 @@ import { Button } from '../../../shared/components/Button';
 import { Select } from '../../../shared/components/Select';
 import { ContentState } from '../../../shared/components/ContentState';
 import { toDomainError } from '../../../shared/lib/runtime-validation';
+import { Badge } from '../../../shared/components/Ui';
 import styles from './FinanceRecords.module.css';
+const vnd = (value: string) => value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
+const tones: Record<Refund['status'], 'neutral' | 'success' | 'warning' | 'danger'> = {
+  PENDING: 'warning',
+  HOLDER_REPORTED: 'warning',
+  CONFIRMED: 'success',
+  CANCELLED: 'neutral',
+  REVERSED: 'neutral',
+};
 const labels: Record<Refund['status'], string> = {
   PENDING: 'Chờ Holder chuyển',
   HOLDER_REPORTED: 'Chờ người nhận xác nhận / đối chiếu',
@@ -149,8 +158,8 @@ export function RefundPanel({
   return (
     <section className={styles.panel} aria-label="Quy trình hoàn tiền">
       <p>
-        Khoản giữ hoàn tiền: {fund.reserved_refund} VND · Số dư khả dụng: {fund.available_balance}{' '}
-        VND (theo backend).
+        Đang giữ cho hoàn tiền: <strong>{vnd(fund.reserved_refund)}</strong> · Có thể chi:{' '}
+        <strong>{vnd(fund.available_balance)}</strong>
       </p>
       {owner && action('refund-create', 'Tạo phương án hoàn tiền')}
       {loadMoreMembers && (
@@ -188,9 +197,11 @@ export function RefundPanel({
             aria-label={'Hoàn tiền ' + name(row.member_user_id)}
           >
             <h3>
-              {name(row.member_user_id)} · {row.amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} ₫
+              {name(row.member_user_id)} · {vnd(row.amount)}
             </h3>
-            <p>{labels[row.status]}</p>
+            <p>
+              <Badge tone={tones[row.status]}>{labels[row.status]}</Badge>
+            </p>
             <p>Lý do hoàn tiền: {row.reason}</p>
             {row.nonreceipt_confirmed_at && (
               <p>
