@@ -63,7 +63,7 @@ export function FinanceStateBar({
     <section className={styles.financeStateBar} aria-label="Trạng thái quỹ">
       <div className={styles.financeStateCopy}>
         <div className={styles.financeEyebrow}>
-          <Badge tone="warning">TEST</Badge>
+          <Badge>VietQR</Badge>
           <span>Quỹ nhóm</span>
         </div>
         <h2>Quỹ nhóm · {statusLabel}</h2>
@@ -71,7 +71,7 @@ export function FinanceStateBar({
           Người giữ quỹ: {holderName}. {owner ? 'Bạn là chủ chuyến. ' : ''}
           {holder
             ? 'Bạn là người giữ quỹ.'
-            : 'Dữ liệu chỉ là bản ghi thủ công, không chuyển tiền thật.'}
+            : 'Tiền về thẳng tài khoản người giữ quỹ; ứng dụng ghi nhận và đối chiếu, không giữ tiền.'}
         </p>
         {balance && format && (
           <span className={styles.financeSrOnly}>Số dư ghi sổ {format(balance)}</span>
@@ -90,7 +90,7 @@ export function FinanceStateBar({
       {owner && onDestination && (
         <Button
           variant="outline"
-          aria-label="Thêm đích nhận TEST"
+          aria-label="Thêm tài khoản nhận"
           disabled={disabled}
           onClick={onDestination}
         >

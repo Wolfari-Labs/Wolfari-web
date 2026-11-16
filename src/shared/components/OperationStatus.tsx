@@ -28,6 +28,33 @@ export function useCommandSession(session: CommandSession, onSettled: () => void
   }, [session, state.intent?.key, state.state]);
   return state;
 }
+/**
+ * Optional machine-readable sub-reason from the Gateway (error.details.reason). Unknown or
+ * absent reasons fall back to the generic conflict text; never shown as a raw code alone.
+ */
+const reasonMessages: Record<string, string> = {
+  FUND_NOT_OPEN: 'Quỹ không còn mở nên không thể thực hiện thao tác này.',
+  CLOSURE_PENDING:
+    'Quỹ đang chốt đóng; các thao tác tiền bị khóa cho tới khi chốt xong hoặc chủ chuyến hủy chốt.',
+  FUND_ALREADY_EXISTS: 'Chuyến đi đã có quỹ. Tải lại để xem quỹ hiện tại.',
+  HOLDER_NOT_ACTIVE: 'Người giữ quỹ không còn là thành viên đang hoạt động của chuyến đi.',
+  MEMBER_NOT_ACTIVE: 'Thành viên liên quan không còn hoạt động trong chuyến đi.',
+  TRIP_ARCHIVED: 'Chuyến đi đã lưu trữ nên không thể thay đổi quỹ.',
+  INSUFFICIENT_AVAILABLE_BALANCE:
+    'Số dư có thể chi không đủ (đã trừ phần giữ chỗ hoàn tiền). Tải lại để xem số dư hiện tại.',
+  HANDOVER_IN_PROGRESS:
+    'Đang bàn giao người giữ quỹ; hoàn tất hoặc hủy bàn giao trước khi thực hiện thao tác này.',
+  INVALID_TRANSITION: 'Trạng thái bản ghi đã thay đổi nên thao tác này không còn hợp lệ.',
+  MEMBER_ACTIVE_WATCH_LIMIT:
+    'Bạn đã có tối đa 20 theo dõi giá đang chạy trong chuyến này. Tạm dừng hoặc dừng bớt một theo dõi.',
+  TRIP_ACTIVE_WATCH_LIMIT:
+    'Chuyến đi đã đạt tối đa 200 theo dõi giá đang chạy. Tạm dừng hoặc dừng bớt một theo dõi.',
+};
+export function errorReasonMessage(details: unknown): string | null {
+  if (!details || typeof details !== 'object') return null;
+  const reason = (details as Record<string, unknown>).reason;
+  return typeof reason === 'string' ? (reasonMessages[reason] ?? null) : null;
+}
 export function OperationStatus({
   session,
   onReenter,
@@ -67,11 +94,15 @@ export function OperationStatus({
             mở; kiểm tra các khoản đóng góp còn chờ xử lý.
           </p>
         )}
-        {(s.error?.code === 'STATE_CONFLICT' || s.error?.code === 'VERSION_CONFLICT') && (
-          <p>
-            Dữ liệu đã thay đổi. Đọc lại và xác nhận bản nháp trước khi gửi yêu cầu mới; không tự
-            ghi đè phiên bản.
-          </p>
+        {errorReasonMessage(s.error?.details) ? (
+          <p>{errorReasonMessage(s.error?.details)}</p>
+        ) : (
+          (s.error?.code === 'STATE_CONFLICT' || s.error?.code === 'VERSION_CONFLICT') && (
+            <p>
+              Dữ liệu đã thay đổi. Đọc lại và xác nhận bản nháp trước khi gửi yêu cầu mới; không tự
+              ghi đè phiên bản.
+            </p>
+          )
         )}
         {s.error?.code === 'PERMISSION_DENIED' && (
           <p>Bạn không còn quyền thực hiện. Tải lại quyền chuyến đi.</p>

@@ -839,3 +839,13 @@
     display: none;
   }
 }
+.qr {
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  background: #fff;
+  border: 1px solid var(--color-line, #ddd);
+  border-radius: 8px;
+}

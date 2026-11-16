@@ -96,7 +96,9 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await expect(filterNote).toContainText('Số dư và tổng tiền lấy từ projection Finance.');
   await expect(filterNote).toHaveCount(1);
   const noteBounds = await filterNote.boundingBox();
-  const tableBounds = await page.getByRole('table', { name: 'Các giao dịch quỹ nhóm' }).boundingBox();
+  const tableBounds = await page
+    .getByRole('table', { name: 'Các giao dịch quỹ nhóm' })
+    .boundingBox();
   expect(tableBounds!.y - (noteBounds!.y + noteBounds!.height)).toBeGreaterThanOrEqual(12);
   await filterNote.scrollIntoViewIfNeeded();
   await page.screenshot({ path: test.info().outputPath('fund-filter-note.png') });
@@ -131,11 +133,11 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await page.setViewportSize({ width: 1440, height: 960 });
   await dialog.getByRole('button', { name: 'Thông tin nhận tiền', exact: true }).click();
   await expect(dialog.getByRole('region', { name: 'Đích nhận', exact: true })).toBeVisible();
-  const addDestination = dialog.getByRole('button', { name: 'Thêm đích nhận TEST', exact: true });
+  const addDestination = dialog.getByRole('button', { name: 'Thêm tài khoản nhận', exact: true });
   const receivingPanel = dialog.getByRole('region', { name: 'Đích nhận', exact: true });
   const addBox = await addDestination.boundingBox();
   const receivingTitleBox = await receivingPanel
-    .getByRole('heading', { name: 'Đích nhận TEST' })
+    .getByRole('heading', { name: 'Tài khoản nhận' })
     .boundingBox();
   expect(addBox).not.toBeNull();
   expect(addBox!.x).toBeGreaterThan(receivingTitleBox!.x + receivingTitleBox!.width);
@@ -150,7 +152,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   );
   await page.screenshot({ path: test.info().outputPath('fund-receiving-spacing.png') });
   await addDestination.click();
-  await expect(dialog.getByLabel('Mã ngân hàng TEST')).toBeVisible();
+  await expect(dialog.getByLabel('Ngân hàng', { exact: true })).toBeVisible();
   await expect(page.getByRole('dialog')).toHaveCount(1);
   for (const width of [402, 320]) {
     await page.setViewportSize({ width, height: 760 });
@@ -166,7 +168,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await expect(discardDialog.getByRole('button', { name: 'Tiếp tục chỉnh sửa' })).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(discardDialog).toHaveCount(0);
-  await expect(dialog.getByLabel('Mã ngân hàng TEST')).toBeVisible();
+  await expect(dialog.getByLabel('Ngân hàng', { exact: true })).toBeVisible();
   await dialog.getByRole('button', { name: 'Trở lại', exact: true }).click();
   await discardDialog.getByRole('button', { name: 'Bỏ bản nháp và thoát' }).click();
   await expect(addDestination).toBeFocused();
@@ -219,7 +221,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await discardDialog.getByRole('button', { name: 'Tiếp tục chỉnh sửa' }).click();
   await expect(page.getByRole('heading', { name: 'Sửa ngân sách', exact: true })).toBeFocused();
   await expect(page.getByLabel('Ngân sách (VND)')).toHaveValue('1000000');
-  await expect(page.getByLabel('Mã ngân hàng TEST')).toHaveCount(0);
+  await expect(page.getByLabel('Ngân hàng', { exact: true })).toHaveCount(0);
   await dialog.getByRole('button', { name: 'Thông tin nhận tiền', exact: true }).click();
   await discardDialog.getByRole('button', { name: 'Bỏ bản nháp và thoát' }).click();
   await expect(
@@ -285,21 +287,21 @@ test('HTTP mock: a not-enabled Fund opens a centered setup overlay and retains i
   expect(gateway.authenticated).toBe(true);
   await page.goto(`/trips/${tripId}/fund`);
   const setupHeading = page.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' });
-  const setupButton = page.getByRole('button', { name: 'Bật quỹ TEST', exact: true });
+  const setupButton = page.getByRole('button', { name: 'Bật quỹ', exact: true });
   await expect(setupHeading).toBeVisible();
   await expect(setupButton).toBeEnabled();
   await setupButton.click();
   const dialog = page.getByRole('dialog', { name: 'Thiết lập bật quỹ', exact: true });
-  const form = dialog.getByRole('form', { name: 'Bật quỹ TEST', exact: true });
-  const heading = dialog.getByRole('heading', { name: 'Bật quỹ TEST', exact: true });
+  const form = dialog.getByRole('form', { name: 'Bật quỹ', exact: true });
+  const heading = dialog.getByRole('heading', { name: 'Bật quỹ', exact: true });
   await expect(dialog).toBeVisible();
   await expect(heading).toBeFocused();
   await expect(form).toBeVisible();
   await expect(dialog.getByLabel('Người giữ quỹ (Holder)')).toBeVisible();
   await expect(dialog.getByLabel('Ngân sách (VND)')).toBeVisible();
-  await expect(dialog.getByLabel('Mã ngân hàng TEST')).toBeVisible();
-  await expect(dialog.getByLabel('Số tài khoản TEST')).toBeVisible();
-  await expect(dialog.getByLabel('Tên người nhận TEST')).toBeVisible();
+  await expect(dialog.getByLabel('Ngân hàng', { exact: true })).toBeVisible();
+  await expect(dialog.getByLabel('Số tài khoản')).toBeVisible();
+  await expect(dialog.getByLabel('Tên chủ tài khoản')).toBeVisible();
   const desktopBounds = await dialog.boundingBox();
   expect(desktopBounds).not.toBeNull();
   expect(Math.abs(desktopBounds!.x + desktopBounds!.width / 2 - 720)).toBeLessThanOrEqual(2);
@@ -312,7 +314,7 @@ test('HTTP mock: a not-enabled Fund opens a centered setup overlay and retains i
   await expect(setupButton).toBeFocused();
   await setupButton.click();
   await dialog.getByLabel('Ngân sách (VND)').fill('2500000');
-  await dialog.getByLabel('Mã ngân hàng TEST').fill('TESTBANK');
+  await dialog.getByLabel('Ngân hàng', { exact: true }).selectOption('VCB');
   gateway.failures.set(`GET /api/v1/trips/${tripId}/fund`, 503);
   await page
     .getByRole('button', { name: 'Tải lại quỹ', includeHidden: true })
@@ -324,7 +326,7 @@ test('HTTP mock: a not-enabled Fund opens a centered setup overlay and retains i
   ).toBeVisible();
   await expect(heading).toBeVisible();
   await expect(dialog.getByLabel('Ngân sách (VND)')).toHaveValue('2500000');
-  await expect(dialog.getByLabel('Mã ngân hàng TEST')).toHaveValue('TESTBANK');
+  await expect(dialog.getByLabel('Ngân hàng', { exact: true })).toHaveValue('VCB');
 
   for (const width of [402, 320]) {
     await page.setViewportSize({ width, height: 760 });

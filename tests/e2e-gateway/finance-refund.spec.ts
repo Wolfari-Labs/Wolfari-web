@@ -2,7 +2,8 @@ import { test, expect, login } from './gateway-fixture';
 import AxeBuilder from '@axe-core/playwright';
 const tripId = '11111111-1111-4111-8111-111111111111',
   fundId = '77777777-1111-4111-8111-111111111111',
-  refundId = '22222222-2222-4222-8222-222222222222';
+  refundId = '22222222-2222-4222-8222-222222222222',
+  verifierId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reversal', async ({
   page,
   gateway,
@@ -66,11 +67,17 @@ test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reve
         'confirm-nonreceipt': { nonreceipt_confirmed_at: time },
         cancel: { status: 'CANCELLED' },
         'confirm-received': { status: 'CONFIRMED', confirmed_at: time },
-        'request-reversal': { reversal_requested_at: time },
+        'assign-verifier': {
+          verifier_user_id: body.verifier_user_id,
+          verifier_assigned_by_user_id: gateway.profile.id,
+          verifier_assigned_at: time,
+        },
+        'request-reversal': { reversal_requested_at: time, reversal_reason: body.reason },
         'consent-reversal': { reversal_consented_at: time },
         reverse: { status: 'REVERSED' },
       };
       if (action === 'reverse') expect(body.reason).toBe('Lý do đảo TEST');
+      if (action === 'assign-verifier') expect(body.verifier_user_id).toBe(verifierId);
       Object.assign(row!, changes[action], {
         version: Number(row!.version) + 1,
         finance_version: ++fund.finance_version,
@@ -85,13 +92,7 @@ test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reve
   await page.getByRole('button', { name: 'Hoàn tiền', exact: true }).click();
   const run = async (label: string, reason?: string) => {
     await page.getByRole('button', { name: label, exact: true }).click();
-    if (reason)
-      await page
-        .getByLabel(
-          label === 'Đảo hoàn tiền' ? 'Nhập lại đúng lý do đã yêu cầu đảo' : 'Lý do thao tác',
-          { exact: true },
-        )
-        .fill(reason);
+    if (reason) await page.getByLabel('Lý do thao tác', { exact: true }).fill(reason);
     await page.getByRole('button', { name: 'Xác nhận · ' + label, exact: true }).click();
     await expect(
       page.getByRole('button', { name: 'Xác nhận · ' + label, exact: true }),
@@ -105,19 +106,49 @@ test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reve
     await page.getByRole('button', { name: 'Xác nhận · Tạo phương án hoàn tiền' }).click();
   };
   await create();
-  await run('Báo đã hoàn TEST');
+  await run('Báo đã hoàn tiền');
   await run('Báo chưa nhận hoàn tiền', 'Chưa thấy tiền');
   await expect(page.getByText(/Web không tự giải phóng khoản giữ/)).toBeVisible();
   await run('Hủy hoàn tiền', 'Đã đối chiếu');
   await create();
-  await run('Báo đã hoàn TEST');
-  await run('Xác nhận nhận hoàn tiền');
+  await run('Báo đã hoàn tiền');
+  // Owner = Holder = recipient with another active member: self-confirmation is not offered
+  // (FR-FN07 independent verification); the Owner assigns another member to verify.
+  await expect(page.getByRole('button', { name: 'Xác nhận nhận hoàn tiền' })).toHaveCount(0);
+  await expect(page.getByText(/Cần chủ chuyến chỉ định người kiểm chứng/)).toBeVisible();
+  await page.getByRole('button', { name: 'Chỉ định người kiểm chứng', exact: true }).click();
+  await page.getByLabel('Người kiểm chứng', { exact: true }).selectOption(verifierId);
+  await page
+    .getByRole('button', { name: 'Xác nhận · Chỉ định người kiểm chứng', exact: true })
+    .click();
+  await expect(page.getByText(/Người xác nhận đã nhận: Member Gateway./)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Xác nhận nhận hoàn tiền' })).toHaveCount(0);
+  // The assigned member confirms in their own session; mirror the backend result.
+  Object.assign(row!, {
+    status: 'CONFIRMED',
+    confirmed_at: '2026-11-12T02:00:00Z',
+    confirmed_by_user_id: verifierId,
+    confirmation_mode: 'ASSIGNED_MEMBER',
+    independent_verification: true,
+    version: Number(row!.version) + 1,
+    finance_version: ++fund.finance_version,
+  });
+  await page.reload();
+  await page.getByRole('button', { name: 'Cài đặt quỹ', exact: true }).click();
+  await page.getByRole('button', { name: 'Hoàn tiền', exact: true }).click();
+  await expect(page.getByText(/Thành viên được chỉ định kiểm chứng độc lập/)).toBeVisible();
   await run('Yêu cầu đảo hoàn tiền', 'Lý do đảo TEST');
   await run('Đồng ý đảo hoàn tiền');
   await page.reload();
   await page.getByRole('button', { name: 'Cài đặt quỹ', exact: true }).click();
   await page.getByRole('button', { name: 'Hoàn tiền', exact: true }).click();
-  await run('Đảo hoàn tiền', 'Lý do đảo TEST');
+  // BE-04: the reversal reason comes back from the API and is prefilled.
+  await page.getByRole('button', { name: 'Đảo hoàn tiền', exact: true }).click();
+  await expect(page.getByLabel('Lý do đảo (đã yêu cầu trước đó)')).toHaveValue('Lý do đảo TEST');
+  await page.getByRole('button', { name: 'Xác nhận · Đảo hoàn tiền', exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Xác nhận · Đảo hoàn tiền', exact: true }),
+  ).toHaveCount(0);
   await expect(page.getByRole('article').getByText('Đã đảo', { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 402, height: 850 });
   expect(
@@ -128,7 +159,7 @@ test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reve
     'confirm-nonreceipt',
     'cancel',
     'report-paid',
-    'confirm-received',
+    'assign-verifier',
     'request-reversal',
     'consent-reversal',
     'reverse',

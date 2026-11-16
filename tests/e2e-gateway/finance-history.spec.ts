@@ -70,7 +70,7 @@ test('HTTP mock: audit history paginates independently of ledger and handles rea
   await page.getByRole('button', { name: 'Tải lại lịch sử thao tác' }).click();
   await expect(page.getByText('Lý do: Ghi nhận nháp TEST')).toBeVisible();
   await page.getByRole('button', { name: 'Tải thêm lịch sử thao tác' }).click();
-  await expect(page.getByText('Người thực hiện: Hệ thống · MOMO_IPN')).toBeVisible();
+  await expect(page.getByText('Người thực hiện: Hệ thống · Thông báo từ MoMo')).toBeVisible();
   expect(cursors).toContain('next_page');
   await expect(page.getByRole('button', { name: 'Tải thêm lịch sử thao tác' })).toHaveCount(0);
   await page.setViewportSize({ width: 402, height: 850 });

@@ -1,5 +1,25 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## Finance demo completion — 16/11/2026
+
+User-requested Web/Backend parity for the Finance demo; no new checkpoint, no Figma writes.
+Pending review as visual deltas (behavior follows the merged Backend contracts):
+
+- **VietQR**: transfer instruction shows the Finance-rendered QR image (280px, white
+  plate) above the existing field list, plus copy buttons for account number and transfer
+  content. "TEST" badges/labels are replaced by neutral wording ("Ứng dụng chỉ ghi nhận,
+  không tự chuyển tiền"); the state bar badge reads "VietQR". Bank code becomes a select
+  from `GET /finance/banks` with a typed-code fallback when the list cannot load.
+- **Holder handover**: the existing "Bàn giao Fund Holder" overlay section (previously an
+  unavailable placeholder) renders a record list built from the shared Finance record
+  card, action drawer and Alert primitives — no new tokens or layout patterns.
+- **Expense receipt**: a native file input inside the shared action drawer and a plain
+  "Xem chứng từ" button on the expense card.
+- **Refund verification**: extra text lines on the refund card (who confirms, how it was
+  confirmed) and one more action ("Chỉ định người kiểm chứng").
+- **Conflict reasons**: Operation status shows a specific sentence when the Gateway
+  returns `error.details.reason`; generic text remains the fallback.
+
 ## Overview light-blue border trial — 08/11/2026
 
 User requests a more visible light-blue outline for review. Overview panels and

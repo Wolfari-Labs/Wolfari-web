@@ -10,6 +10,7 @@ import {
   decodeDestination,
   decodeFinanceReceipt,
   decodeFund,
+  decodeBank,
   decodeInstruction,
   decodeLedger,
 } from '../src/infrastructure/repositories/finance-decoders';
@@ -96,24 +97,54 @@ describe('demo1 Finance wire boundary', () => {
     expect(() => decodeDestination({ ...destination, bank_code: 'VCB' }, fundId)).toThrow();
     expect(() => decodeDestination({ ...destination, active: 1 }, fundId)).toThrow();
   });
-  it('does not return provider QR URL to UI; never fetches it', () => {
-    const result = decodeInstruction(
-      {
-        contribution_id: contributionId,
-        amount: '200000',
-        currency: 'VND',
-        reference: 'TEST',
-        recipient_name: 'TEST',
-        bank_code: 'VCB',
-        bank_bin: '970436',
-        account_number: '123',
-        environment: 'TEST',
-        warning: 'TEST',
-        qr_url: 'https://provider.invalid/private',
-      },
-      contributionId,
-    );
+  it('keeps the NAPAS payload and SVG only when they match the printed details, never a provider URL', () => {
+    // Built by Finance for bank 970436, account 123, 200000 VND, content TESTREF (CRC E10D).
+    const qr_payload =
+      '00020101021238470010A0000007270117000697043601031230208QRIBFTTA530370454062000005802VN62110807TESTREF6304E10D';
+    const qr_svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges" role="img" aria-label="VietQR"><rect width="29" height="29" fill="#ffffff"/><path d="M4 4h7v1h-7z" fill="#000000"/></svg>';
+    const row = {
+      contribution_id: contributionId,
+      amount: '200000',
+      currency: 'VND',
+      reference: 'TESTREF',
+      recipient_name: 'NGUYEN VAN A',
+      bank_code: 'VCB',
+      bank_bin: '970436',
+      bank_name: 'Vietcombank',
+      account_number: '123',
+      environment: 'LIVE',
+      warning: 'Quét mã bằng ứng dụng ngân hàng.',
+      qr_payload,
+      qr_svg,
+      qr_url: 'https://provider.invalid/private',
+    };
+    const result = decodeInstruction(row, contributionId);
     expect(result).not.toHaveProperty('qr_url');
+    expect(result.qr_payload).toBe(qr_payload);
+    expect(result.qr_svg).toBe(qr_svg);
+    expect(result.bank_name).toBe('Vietcombank');
+    for (const change of [
+      { amount: '200001' },
+      { account_number: '1234' },
+      { reference: 'OTHER' },
+      { environment: 'TEST' },
+      { qr_svg: '<svg onload="x"></svg>' },
+      { qr_payload: qr_payload.slice(0, -1) + '0' },
+    ])
+      expect(
+        () => decodeInstruction({ ...row, ...change }, contributionId),
+        JSON.stringify(change),
+      ).toThrow();
+    expect(
+      decodeBank({ code: 'VCB', bin: '970436', name: 'Ngân hàng', short_name: 'Vietcombank' }),
+    ).toEqual({
+      code: 'VCB',
+      bin: '970436',
+      name: 'Ngân hàng',
+      short_name: 'Vietcombank',
+    });
+    expect(() => decodeBank({ code: 'VCB', bin: '97043', name: 'x', short_name: 'y' })).toThrow();
   });
   it('ledger sequence stays a decimal string beyond Number precision', () => {
     const row = {

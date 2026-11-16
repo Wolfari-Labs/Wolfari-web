@@ -1,5 +1,7 @@
 # Các thiếu hụt backend ảnh hưởng tích hợp Web
 
+> **Cập nhật 16/11/2026:** BE-01, BE-02, BE-03 và BE-04 đã được backend xử lý (PR backend #19) và Web đã nối ở nhánh `feature/finance-demo-completion` — xem [web-finance-demo-completion.md](web-finance-demo-completion.md). Nội dung dưới đây giữ làm lịch sử.
+
 Ngày rà soát: 12/11/2026. Phạm vi: code backend local và Web Finance SRS v1.2; chưa chạy kiểm chứng live. Báo cáo không phải thay đổi hợp đồng API đã được phê duyệt. Không sửa backend trong nhánh Web này.
 
 ## BE-01 — Không truy xuất chứng từ từ khoản chi sau tải lại

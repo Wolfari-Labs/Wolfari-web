@@ -46,6 +46,29 @@ export function RefundPanel({
   });
   const name = (id: string) =>
     members.find((m) => m.userId === id)?.presentation.displayName ?? `User ${id.slice(0, 8)}`;
+  const active = members.filter((m) => m.leftAt === null);
+  const ownerId = active.find((m) => m.role === 'OWNER')?.userId ?? (owner ? actor : null);
+  // Mirrors the backend rule (FR-FN07): the person who pays a refund never verifies it alone.
+  // The payer is the Holder; after a handover the backend keeps the original reporter as payer,
+  // so this is a display hint only and the server remains authoritative.
+  const confirmerOf = (row: Refund): string | null => {
+    const payer = fund.holder_user_id;
+    if (row.member_user_id !== payer) return row.member_user_id;
+    if (ownerId && ownerId !== payer) return ownerId;
+    if (active.length === 1) return payer;
+    return row.verifier_user_id;
+  };
+  const needsVerifier = (row: Refund) =>
+    row.member_user_id === fund.holder_user_id &&
+    ownerId === fund.holder_user_id &&
+    active.length > 1 &&
+    (row.status === 'PENDING' || row.status === 'HOLDER_REPORTED');
+  const modeLabel: Record<NonNullable<Refund['confirmation_mode']>, string> = {
+    RECIPIENT: 'Người nhận tự xác nhận',
+    OWNER: 'Chủ chuyến kiểm chứng thay người nhận (người nhận là người giữ quỹ)',
+    ASSIGNED_MEMBER: 'Thành viên được chỉ định kiểm chứng độc lập',
+    SELF_UNVERIFIED: 'Tự xác nhận — chuyến chỉ có một thành viên, không có kiểm chứng độc lập',
+  };
   const action = (kind: FinanceCommandKind, label: string, row?: Refund) => {
     const fields: FinanceField[] =
       kind === 'refund-create'
@@ -61,23 +84,38 @@ export function RefundPanel({
             { key: 'amount', label: 'Số tiền hoàn VND', required: true },
             { key: 'reason', label: 'Lý do hoàn tiền', required: true },
           ]
-        : [
-              'refund-confirm-nonreceipt',
-              'refund-cancel',
-              'refund-request-reversal',
-              'refund-reverse',
-            ].includes(kind)
+        : kind === 'refund-assign-verifier'
           ? [
               {
-                key: 'reason',
-                label:
-                  kind === 'refund-reverse'
-                    ? 'Nhập lại đúng lý do đã yêu cầu đảo'
-                    : 'Lý do thao tác',
+                key: 'verifier_user_id',
+                label: 'Người kiểm chứng',
                 required: true,
+                ...(row?.verifier_user_id ? { initial: row.verifier_user_id } : {}),
+                options: active
+                  .filter((m) => m.userId !== fund.holder_user_id)
+                  .map((m) => ({ value: m.userId, label: name(m.userId) })),
               },
             ]
-          : [];
+          : [
+                'refund-confirm-nonreceipt',
+                'refund-cancel',
+                'refund-request-reversal',
+                'refund-reverse',
+              ].includes(kind)
+            ? [
+                {
+                  key: 'reason',
+                  label:
+                    kind === 'refund-reverse'
+                      ? 'Lý do đảo (đã yêu cầu trước đó)'
+                      : 'Lý do thao tác',
+                  required: true,
+                  ...(kind === 'refund-reverse' && row?.reversal_reason
+                    ? { initial: row.reversal_reason }
+                    : {}),
+                },
+              ]
+            : [];
     return (
       <FinanceAction
         key={kind}
@@ -87,8 +125,12 @@ export function RefundPanel({
         fields={fields}
         description={
           kind === 'refund-reverse'
-            ? 'API chưa trả lại lý do yêu cầu đảo. Nhập đúng lý do đã gửi trước đó; không dùng lý do hoàn tiền ban đầu. Sai lý do sẽ bị backend từ chối.'
-            : 'Không tự chuyển tiền hoặc giải phóng khoản giữ. Chỉ xác nhận việc đã thực sự kiểm tra trong dữ liệu TEST.'
+            ? row?.reversal_reason
+              ? 'Lý do đảo được điền sẵn từ yêu cầu đảo mà người nhận đã đồng ý; giữ nguyên để backend chấp nhận.'
+              : 'Nhập đúng lý do đã gửi khi yêu cầu đảo; không dùng lý do hoàn tiền ban đầu.'
+            : kind === 'refund-assign-verifier'
+              ? 'Người nhận đồng thời là chủ chuyến và người giữ quỹ, nên một thành viên khác phải kiểm chứng việc đã hoàn tiền.'
+              : 'Không tự chuyển tiền hoặc giải phóng khoản giữ. Chỉ xác nhận việc đã thực sự kiểm tra.'
         }
         definition={{
           kind,
@@ -155,15 +197,32 @@ export function RefundPanel({
                 Người nhận báo chưa nhận tiền. Chờ đối chiếu; Web không tự giải phóng khoản giữ.
               </p>
             )}
-        {row.reversal_requested_at && (
+            {row.reversal_requested_at && (
               <p>
                 {row.reversal_consented_at
                   ? 'Người nhận đã đồng ý đảo'
                   : 'Đã yêu cầu đảo, chờ người nhận đồng ý'}
+                {row.reversal_reason ? ` · Lý do đảo: ${row.reversal_reason}` : ''}
               </p>
             )}
-            {row.member_user_id === fund.holder_user_id && (
-              <p>Người nhận cũng là Holder. Backend hiện chưa có kiểm chứng độc lập theo SRS.</p>
+            {(row.status === 'PENDING' || row.status === 'HOLDER_REPORTED') &&
+              (() => {
+                const confirmer = confirmerOf(row);
+                return (
+                  <p>
+                    {confirmer
+                      ? `Người xác nhận đã nhận: ${name(confirmer)}${confirmer === actor ? ' (bạn)' : ''}.`
+                      : 'Cần chủ chuyến chỉ định người kiểm chứng trước khi xác nhận.'}
+                    {row.verifier_user_id &&
+                      ` Người kiểm chứng được chỉ định: ${name(row.verifier_user_id)}.`}
+                  </p>
+                );
+              })()}
+            {row.confirmation_mode && (
+              <p>
+                Cách xác nhận: {modeLabel[row.confirmation_mode]}
+                {row.confirmed_by_user_id ? ` · ${name(row.confirmed_by_user_id)}` : ''}
+              </p>
             )}
             <p>
               Cập nhật:{' '}
@@ -173,14 +232,27 @@ export function RefundPanel({
             <div className={styles.actions}>
               {holder &&
                 row.status === 'PENDING' &&
-                action('refund-report-paid', 'Báo đã hoàn TEST', row)}
-              {actor === row.member_user_id && row.status === 'HOLDER_REPORTED' && (
-                <>
-                  {action('refund-confirm-received', 'Xác nhận nhận hoàn tiền', row)}
-                  {!row.nonreceipt_confirmed_at &&
-                    action('refund-confirm-nonreceipt', 'Báo chưa nhận hoàn tiền', row)}
-                </>
-              )}
+                action('refund-report-paid', 'Báo đã hoàn tiền', row)}
+              {owner &&
+                needsVerifier(row) &&
+                action(
+                  'refund-assign-verifier',
+                  row.verifier_user_id ? 'Đổi người kiểm chứng' : 'Chỉ định người kiểm chứng',
+                  row,
+                )}
+              {row.status === 'HOLDER_REPORTED' &&
+                confirmerOf(row) === actor &&
+                action(
+                  'refund-confirm-received',
+                  actor === row.member_user_id
+                    ? 'Xác nhận nhận hoàn tiền'
+                    : 'Xác nhận đã hoàn tiền (kiểm chứng)',
+                  row,
+                )}
+              {actor === row.member_user_id &&
+                row.status === 'HOLDER_REPORTED' &&
+                !row.nonreceipt_confirmed_at &&
+                action('refund-confirm-nonreceipt', 'Báo chưa nhận hoàn tiền', row)}
               {owner &&
                 (row.status === 'PENDING' ||
                   (row.status === 'HOLDER_REPORTED' && row.nonreceipt_confirmed_at)) &&
