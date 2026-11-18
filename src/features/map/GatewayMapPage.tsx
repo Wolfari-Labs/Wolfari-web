@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { paths } from '../../app/route-paths';
 import { useRuntimeServices } from '../../app/gateway-context';
 import { Button } from '../../shared/components/Button';
@@ -30,14 +30,25 @@ import {
 } from './trip-map';
 import {
   activityTypeLabel,
+  parsePlaceGroup,
   placeActivityType,
+  placeSearchParams,
   placeSourceLabel,
+  PLACE_GROUPS,
+  resultProvenance,
+  savedPlaceActivityType,
+  savedProvenance,
   validPlaceIntent,
   type DiscoveredPlace,
+  type PlaceGroup,
   type PlaceIntent,
 } from './places';
+import { PlaceSourceBadges } from './PlaceSourceBadges';
 import type { MapLocationPresentation } from './trip-map';
 import styles from './TripMapPage.module.css';
+
+const groupEmpty = 'Không có địa điểm thuộc nhóm này trong khu vực';
+const groupEmptyHint = 'Phóng nhỏ bản đồ hoặc chọn nhóm khác.';
 
 export function GatewayMapPage() {
   const { tripId = '' } = useParams();
@@ -68,6 +79,10 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   const actor = data?.trip.currentMembership.userId ?? '';
   const signal = useWriteScope(`${tripId}:${actor}`);
   const [query, setQuery] = useState('');
+  // POI-OVERTURE W11: the group chip lives in the URL so a reload keeps it; no storage.
+  const [urlParams, setUrlParams] = useSearchParams();
+  const group = parsePlaceGroup(urlParams.get('group'));
+  const [searchedGroup, setSearchedGroup] = useState<PlaceGroup | null | undefined>(undefined);
   const [detailOpen, setDetailOpen] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
   const [center, setCenter] = useState<MapCenter>({ latitude: 16.0544, longitude: 108.2022 });
@@ -127,6 +142,26 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   );
   const resultFor = (item: MapLocationPresentation) =>
     item.selected ? null : (results.find((p) => `result:${p.id}` === item.location.id) ?? null);
+  /** Current search result for a row, saved or not (same provider + provider id). */
+  const resultOf = (item: MapLocationPresentation) =>
+    item.location.source === 'MANUAL'
+      ? null
+      : (results.find(
+          (p) =>
+            p.id === item.location.providerPlaceId &&
+            p.provider === item.location.provider?.toUpperCase(),
+        ) ?? null);
+  const provenanceOf = (item: MapLocationPresentation) => {
+    const result = resultOf(item);
+    return result ? resultProvenance(result) : savedProvenance(item.location);
+  };
+  const sourceBadges = (item: MapLocationPresentation | null) => {
+    if (!item) return null;
+    const provenance = provenanceOf(item);
+    return (
+      <PlaceSourceBadges dataset={provenance.dataset} coordVerified={provenance.coordVerified} />
+    );
+  };
   const allItems = [
     ...all,
     ...candidates.map((p, index) => ({
@@ -213,22 +248,20 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     !snapshot.refreshing &&
     !snapshot.refreshFailed;
   const days = planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone);
-  const search = async (nearby = false) => {
+  const search = async (
+    nearby = false,
+    options: { group?: PlaceGroup | null; keepView?: boolean } = {},
+  ) => {
     if (!repo) return;
+    const category = options.group === undefined ? group : options.group;
     const current = signal(),
       seq = ++searchSequence.current;
     setSearching(true);
     setNotice('');
     try {
+      // No chip = no `category`: the backend serves its default groups (contract §2.1).
       const params = (geocode: boolean) =>
-        new URLSearchParams({
-          q: query,
-          category: 'tourism',
-          geocode: String(geocode),
-          latitude: String(center.latitude),
-          longitude: String(center.longitude),
-          radius_m: '5000',
-        });
+        placeSearchParams({ mode: 'query', query, center, group: category, geocode });
       // Place mode serves the Wolfari catalogue first (geocode mode bypasses it); fall back to
       // Geoapify geocoding only when nothing matched, so address lookups keep working.
       let found = await repo.search(tripId, params(false), current);
@@ -236,6 +269,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         found = await repo.search(tripId, params(true), current);
       if (current.aborted || seq !== searchSequence.current) return;
       setResults(found.items);
+      setSearchedGroup(category);
       setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
       const provider =
         found.source.provider === 'WOLFARI+GEOAPIFY'
@@ -250,9 +284,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
           ? 'Nguồn địa điểm chưa khả dụng. Kiểm tra cấu hình/quota hoặc thử lại.'
           : found.items.length
             ? 'Đã tải kết quả tìm kiếm.'
-            : 'Không có địa điểm phù hợp. Thử từ khóa khác hoặc đặt pin bằng biểu tượng ghim.',
+            : category
+              ? `${groupEmpty}. ${groupEmptyHint}`
+              : 'Không có địa điểm phù hợp. Thử từ khóa khác hoặc đặt pin bằng biểu tượng ghim.',
       );
-      if (found.items[0] && !nearby)
+      if (found.items[0] && !nearby && !options.keepView)
         setFocus({ latitude: found.items[0].latitude, longitude: found.items[0].longitude });
     } catch {
       if (!current.aborted) setNotice('Không tải được địa điểm. Danh sách đã lưu vẫn được giữ.');
@@ -331,6 +367,20 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       body: { ...body, expected_plan_version: data.plan.planVersion },
       key: crypto.randomUUID(),
     });
+  const chooseGroup = (value: PlaceGroup) => {
+    const next = group === value ? null : value;
+    setUrlParams(
+      (previous) => {
+        const params = new URLSearchParams(previous);
+        if (next) params.set('group', next);
+        else params.delete('group');
+        return params;
+      },
+      { replace: true },
+    );
+    // Keep the keyword and the map frame; only the category changes.
+    if (query.trim()) void search(false, { group: next, keepView: true });
+  };
   const togglePlace = (item: (typeof allItems)[number]) => {
     if (!canEdit || item.activities.length) return;
     if (item.selected) command('DELETE', `selected-locations/${item.location.id}`, {});
@@ -397,7 +447,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         body: {
           expected_plan_version: version,
           title: item.location.name.slice(0, 255),
-          activity_type: placeActivityType(place),
+          activity_type: place
+            ? placeActivityType(place)
+            : savedPlaceActivityType(resultOf(item), item.location.metadata),
           selected_location_id: locationId,
           scheduled_date: target,
           position,
@@ -580,6 +632,22 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       </Select>
                     </div>
                   </div>
+                  <div
+                    className={`${styles.desktopFilters} ${styles.groupFilters}`}
+                    role="group"
+                    aria-label="Nhóm địa điểm"
+                  >
+                    {PLACE_GROUPS.map((item) => (
+                      <button
+                        key={item.value}
+                        type="button"
+                        aria-pressed={group === item.value}
+                        onClick={() => chooseGroup(item.value)}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
                   {searching && (
                     <div className={styles.searchState} role="status">
                       Đang tìm địa điểm...
@@ -591,8 +659,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         const focused = item.location.id === effectiveSelectedId;
                         const status = placeStatus(item);
                         const locked = item.activities.length > 0 || !canEdit;
-                        const result = resultFor(item);
-                        const savedLabel = item.location.metadata.category_label;
+                        const provenance = provenanceOf(item);
                         return (
                           <li key={item.location.id}>
                             <div
@@ -618,33 +685,14 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                                   <small>
                                     {item.activities[0]
                                       ? activityTypeLabel(item.activities[0].activityType)
-                                      : (result?.categoryLabel ??
-                                        (typeof savedLabel === 'string'
-                                          ? savedLabel
-                                          : 'Tham quan'))}{' '}
+                                      : (provenance.categoryLabel ?? 'Tham quan')}{' '}
                                     · {item.location.address ?? 'Chưa có địa chỉ'}
                                   </small>
-                                  <span className={styles.placeMeta}>
-                                    <span
-                                      className={styles.sourceBadge}
-                                      data-source={
-                                        item.location.source === 'MANUAL'
-                                          ? 'MANUAL'
-                                          : (item.location.provider?.toUpperCase() ?? 'MANUAL')
-                                      }
-                                    >
-                                      {item.location.source === 'MANUAL'
-                                        ? 'Thủ công'
-                                        : placeSourceLabel(item.location.provider)}
-                                    </span>
-                                    {/* Gateway defaults coord_verified=false for Geoapify; only curated pins carry a review flag. */}
-                                    {result?.provider === 'WOLFARI' &&
-                                      result.coordVerified === false && (
-                                        <span className={styles.unverifiedBadge}>
-                                          Chưa xác minh vị trí
-                                        </span>
-                                      )}
-                                  </span>
+                                  {/* Only curated Wolfari pins carry the per-row review flag (W10). */}
+                                  <PlaceSourceBadges
+                                    dataset={provenance.dataset}
+                                    coordVerified={provenance.coordVerified}
+                                  />
                                 </span>
                                 <span
                                   className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
@@ -680,8 +728,17 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                     </ul>
                   ) : (
                     <div className={styles.empty} role="status">
-                      <strong>Không có địa điểm phù hợp</strong>
-                      <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
+                      {searchedGroup && !results.length ? (
+                        <>
+                          <strong>{groupEmpty}</strong>
+                          <p>{groupEmptyHint}</p>
+                        </>
+                      ) : (
+                        <>
+                          <strong>Không có địa điểm phù hợp</strong>
+                          <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
+                        </>
+                      )}
                     </div>
                   )}
                 </section>
@@ -761,6 +818,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                     }
                     onSearchArea={() => void search(true)}
                     selectedActions={addToDayMenu(selectedItem)}
+                    selectedMeta={sourceBadges(selectedItem)}
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />
@@ -781,6 +839,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
               onToggleSelection={() => selectedItem && togglePlace(selectedItem)}
               selectionDisabled={!canEdit || !!selectedItem?.activities.length}
               actions={addToDayMenu(selectedItem)}
+              provenance={selectedItem ? provenanceOf(selectedItem) : null}
             />
           </>
         )}

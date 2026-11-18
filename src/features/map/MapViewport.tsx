@@ -43,6 +43,7 @@ export function MapViewport({
   runtimeMap,
   onSearchArea,
   selectedActions,
+  selectedMeta,
 }: {
   items: readonly MapLocationPresentation[];
   selectedLocationId: string | null;
@@ -55,6 +56,8 @@ export function MapViewport({
   onSearchArea?: () => void;
   /** Runtime commands for the selected place, inside the existing selected-place card. */
   selectedActions?: ReactNode;
+  /** Runtime source badge for the selected place (POI-OVERTURE W10). */
+  selectedMeta?: ReactNode;
 }) {
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const [googleMapReady, setGoogleMapReady] = useState(false);
@@ -249,6 +252,7 @@ export function MapViewport({
             />
             <strong>{selected.location.name}</strong>
             <span>⌖ {selected.location.address ?? 'Chưa có địa chỉ'}</span>
+            {selectedMeta}
             <p>
               {(runtimeMap && !validCoordinates(selected.location)
                 ? 'Chưa có tọa độ hợp lệ'
@@ -276,6 +280,7 @@ export function MapViewport({
               <div>
                 <strong>{selected.location.name}</strong>
                 <span>{activityScheduleLabel(primaryActivity, timezone)}</span>
+                {selectedMeta}
               </div>
             </div>
             <Button className={styles.mobileDetailButton} onClick={onOpenDetail}>

@@ -2,6 +2,7 @@ import type { GatewayHttpClient } from '../http/http-client';
 import * as d from '../http/decode';
 import type {
   DiscoveredPlace,
+  PlaceDataset,
   PlaceIntent,
   PlaceProvider,
   PlaceRoute,
@@ -52,8 +53,29 @@ export function decodePlace(value: unknown): DiscoveredPlace {
     typicalDurationMin: duration,
     activityType: optionalText(p.activity_type, 40),
     dressCodeHint: optionalText(p.dress_code_hint, 120),
+    sourceDataset: datasets.includes(p.source_dataset as PlaceDataset)
+      ? (p.source_dataset as PlaceDataset)
+      : null,
+    categoryGroup: optionalText(p.category_group, 40),
+    provinceCode:
+      typeof p.province_code === 'string' && /^\d{1,3}$/.test(p.province_code.trim())
+        ? p.province_code.trim()
+        : null,
+    confidence:
+      typeof p.confidence === 'number' &&
+      Number.isFinite(p.confidence) &&
+      p.confidence >= 0 &&
+      p.confidence <= 1
+        ? p.confidence
+        : null,
+    dataRelease: optionalText(p.data_release, 40),
+    fetchedAt:
+      typeof p.fetched_at === 'string' && Number.isFinite(Date.parse(p.fetched_at))
+        ? p.fetched_at
+        : null,
   };
 }
+const datasets: readonly PlaceDataset[] = ['golden', 'overture', 'geoapify'];
 function coordinate(value: unknown) {
   const c = d.object(value);
   if (
