@@ -242,8 +242,11 @@ test('HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that
   const model = await mockPlan(page, gateway);
   const trip = gateway.trips[0]!;
   const locationId = '77777777-2222-4222-8222-222222222222';
-  await page.route('**/places/search?*', (route) =>
-    route.fulfill({
+  const geocodeModes: (string | null)[] = [];
+  await page.route('**/places/search?*', (route) => {
+    // Text search must use place mode: geocode mode bypasses the Wolfari catalogue.
+    geocodeModes.push(new URL(route.request().url()).searchParams.get('geocode'));
+    return route.fulfill({
       json: {
         data: [
           {
@@ -272,8 +275,8 @@ test('HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that
           warnings: [],
         },
       },
-    }),
-  );
+    });
+  });
   await page.route('**/selected-locations', (route) => {
     expect(route.request().postDataJSON()).toEqual({
       selection_token: 'signed-wolfari',
@@ -323,6 +326,7 @@ test('HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that
     .getByRole('article', { name: 'Đang chọn Chợ Hàn' })
     .getByRole('button', { name: 'Thêm vào ngày…', exact: true })
     .click();
+  expect(geocodeModes).toEqual(['false']);
   await page.getByRole('menuitem', { name: 'Ngày 2 · 02/11' }).click();
   await expect.poll(() => model.writes.length).toBe(1);
   expect(model.writes[0]!.method).toBe('POST');

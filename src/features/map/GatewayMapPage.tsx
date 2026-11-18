@@ -220,18 +220,20 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     setSearching(true);
     setNotice('');
     try {
-      const found = await repo.search(
-        tripId,
+      const params = (geocode: boolean) =>
         new URLSearchParams({
           q: query,
           category: 'tourism',
-          geocode: String(!nearby && query.trim().length > 0),
+          geocode: String(geocode),
           latitude: String(center.latitude),
           longitude: String(center.longitude),
           radius_m: '5000',
-        }),
-        current,
-      );
+        });
+      // Place mode serves the Wolfari catalogue first (geocode mode bypasses it); fall back to
+      // Geoapify geocoding only when nothing matched, so address lookups keep working.
+      let found = await repo.search(tripId, params(false), current);
+      if (!nearby && query.trim() && !found.items.length && !current.aborted)
+        found = await repo.search(tripId, params(true), current);
       if (current.aborted || seq !== searchSequence.current) return;
       setResults(found.items);
       setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
