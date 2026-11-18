@@ -289,7 +289,7 @@ test('HTTP mock (b): group chip sends category, keeps the keyword and survives r
     'Spa',
     'Giao thông',
     'Tiện ích',
-    'Tất cả',
+    'Mọi nhóm',
   ]);
   await chips.getByRole('button', { name: 'Tiện ích', exact: true }).click();
   await expect.poll(() => keyword.at(-1)?.get('category')).toBe('services');
@@ -386,8 +386,16 @@ test('HTTP mock (d): an Overture POI shows its provenance and is added to Day 2'
   const card = page
     .getByRole('article', { name: `Đang chọn ${place.name}` })
     .filter({ visible: true });
-  await expect(card.getByText('Overture', { exact: true })).toBeVisible();
+  // FR-TI01: exactly one extra line "<loại> · <tỉnh> · Nguồn: Overture (dd/MM/yyyy)".
+  const line = card.locator('[data-region="place-provenance"]');
+  await expect(line).toHaveText('Tiện ích cho khách · Đà Nẵng ·Nguồn: Overture (18/11/2026)');
+  const lineBox = (await line.boundingBox())!;
+  expect(lineBox.height).toBeLessThan(24);
+  // Attribution lives in the badge tooltip, opened from the keyboard too.
+  await line.getByText('Overture', { exact: true }).focus();
+  await expect(page.getByRole('tooltip')).toContainText(OVERTURE);
   await card.screenshot({ path: info.outputPath('overture-selected-card.png') });
+  await page.keyboard.press('Escape');
 
   // The detail panel is the compact-layout view in the approved template (<= 768 px).
   await page.setViewportSize({ width: 390, height: 900 });
@@ -486,4 +494,143 @@ test('HTTP mock (e): a pre-Overture backend keeps the previous behaviour', async
     await page.waitForTimeout(600);
     expect(bboxRequests).toBe(1);
   }
+});
+
+test('HTTP mock (f): bbox explore never auto-picks a result; a click or pin does', async ({
+  page,
+  gateway,
+}, info) => {
+  test.skip(!mapRun, 'Needs a build with a fake browser key (WOLFARI_LEAFLET_TEST=true).');
+  await prepareMap(page);
+  await mockPlan(page, gateway);
+  const urls: string[] = [];
+  await page.route('**/places/search?*', (route) => {
+    urls.push(route.request().url());
+    return ok(route, frameResults(bboxOf(route.request().url())!));
+  });
+  await login(page);
+  await page.goto(`/trips/${tripId}/map`);
+  const rows = page.locator('[data-region="place-list"] li');
+  await expect(rows.first()).toBeVisible();
+  const picked = page.getByRole('article', { name: /^Đang chọn / }).filter({ visible: true });
+  await expect(picked).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('overture-bbox-no-pick.png'), fullPage: true });
+
+  // Picking a result row opens the card for that row.
+  await rows.filter({ hasText: 'Nhà thuốc Overture 3' }).getByRole('button').first().click();
+  await expect(
+    page.getByRole('article', { name: 'Đang chọn Nhà thuốc Overture 3' }).filter({ visible: true }),
+  ).toBeVisible();
+  // Picking a pin switches the card to that pin.
+  await page.locator('.leaflet-marker-icon[title="Chợ Hàn"]').click();
+  await expect(
+    page.getByRole('article', { name: 'Đang chọn Chợ Hàn' }).filter({ visible: true }),
+  ).toBeVisible();
+});
+
+for (const [keyword, name, id] of [
+  ['cau rong', 'Cầu Rồng', 'dn-cau-rong'],
+  ['cho han', 'Chợ Hàn', 'dn-cho-han'],
+  ['ba na', 'Bà Nà Hills', 'dn-ba-na'],
+] as const)
+  test(`HTTP mock (g) DoD step 2: "${keyword}" keeps the golden place first, labelled Wolfari and auto-picked`, async ({
+    page,
+    gateway,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    if (mapRun) await prepareMap(page);
+    await mockPlan(page, gateway);
+    const keywords: URLSearchParams[] = [];
+    await page.route('**/places/search?*', (route) => {
+      const params = new URL(route.request().url()).searchParams;
+      if (params.has('bbox')) return ok(route, []);
+      keywords.push(params);
+      // Backend order: golden first, then a same-name Overture POI in another province, then Geoapify.
+      return ok(
+        route,
+        [
+          {
+            ...golden,
+            id,
+            name,
+            selection_token: `signed-${id}`,
+            coordinates: { latitude: 16.061, longitude: 108.227 },
+          },
+          {
+            ...overture(9, 21.03, 105.85),
+            name,
+            province_code: '01',
+            province_name: 'Hà Nội',
+            address: 'Hoàn Kiếm',
+          },
+          {
+            id: `geo-${id}`,
+            name: `${name} (Geoapify)`,
+            address: 'Đà Nẵng',
+            coordinates: { latitude: 16.07, longitude: 108.22 },
+            selection_token: 'signed-geo',
+            attribution: 'Geoapify / OpenStreetMap',
+            provider: 'GEOAPIFY',
+            source_dataset: 'geoapify',
+          },
+        ],
+        { provider: 'WOLFARI+GEOAPIFY' },
+      );
+    });
+    await login(page);
+    await page.goto(`/trips/${tripId}/map`);
+    await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill(keyword);
+    await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+    const rows = page.locator('[data-region="place-list"] li');
+    await expect(rows.first()).toContainText(name);
+    await expect(rows.first().getByText('Wolfari', { exact: true })).toBeVisible();
+    // Keyword mode keeps auto-picking the first result (DoD steps 2–3).
+    await expect(
+      page.getByRole('article', { name: `Đang chọn ${name}` }).filter({ visible: true }),
+    ).toBeVisible();
+    expect(keywords[0]!.get('q')).toBe(keyword);
+    expect(keywords[0]!.get('geocode')).toBe('false');
+    // W14: the same-name place in another province shows its province beside the address.
+    await expect(rows.nth(1)).toContainText('Hoàn Kiếm · Hà Nội');
+    await expect(rows.first().locator('[data-province="other"]')).toHaveCount(0);
+  });
+
+test("HTTP mock (h) W14: search starts from the Trip's first saved place", async ({
+  page,
+  gateway,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  if (mapRun) await prepareMap(page);
+  const model = await mockPlan(page, gateway);
+  const trip = gateway.trips[0]!;
+  model.selectedLocations.push({
+    id: '77777777-4444-4444-8444-444444444444',
+    trip_id: tripId,
+    name: 'Đại Nội Huế',
+    address: 'Huế',
+    latitude: '16.469800',
+    longitude: '107.578800',
+    provider: 'WOLFARI',
+    provider_place_id: 'hue-dai-noi',
+    source: 'PROVIDER',
+    metadata: {},
+    fetched_at: null,
+    plan_version: trip.plan_version,
+  });
+  const keywords: URLSearchParams[] = [];
+  await page.route('**/places/search?*', (route) => {
+    const params = new URL(route.request().url()).searchParams;
+    if (!params.has('bbox')) keywords.push(params);
+    return ok(route, []);
+  });
+  await login(page);
+  await page.goto(`/trips/${tripId}/map`);
+  await expect(page.locator('[data-region="place-list"] li').first()).toContainText('Đại Nội Huế');
+  await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('chua');
+  await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  // No match → a geocode fallback follows (expected); both use the Trip-based centre.
+  await expect.poll(() => keywords.length).toBe(2);
+  expect(keywords.map((p) => p.get('geocode'))).toEqual(['false', 'true']);
+  expect(Number(keywords[0]!.get('latitude'))).toBeCloseTo(16.4698, 1);
+  expect(Number(keywords[0]!.get('longitude'))).toBeCloseTo(107.5788, 1);
 });

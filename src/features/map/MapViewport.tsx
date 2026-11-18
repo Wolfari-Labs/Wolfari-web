@@ -44,6 +44,7 @@ export function MapViewport({
   onSearchArea,
   selectedActions,
   selectedMeta,
+  autoSelectFirst = true,
 }: {
   items: readonly MapLocationPresentation[];
   selectedLocationId: string | null;
@@ -56,8 +57,10 @@ export function MapViewport({
   onSearchArea?: () => void;
   /** Runtime commands for the selected place, inside the existing selected-place card. */
   selectedActions?: ReactNode;
-  /** Runtime source badge for the selected place (POI-OVERTURE W10). */
+  /** Runtime source line for the selected place (POI-OVERTURE W10, FR-TI01). */
   selectedMeta?: ReactNode;
+  /** `false`: no card until the user picks a place (POI-OVERTURE bbox explore). */
+  autoSelectFirst?: boolean;
 }) {
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const [googleMapReady, setGoogleMapReady] = useState(false);
@@ -66,7 +69,9 @@ export function MapViewport({
   >('idle');
   const markerItems = items.filter((item) => validCoordinates(item.location) !== null);
   const selected =
-    items.find((item) => item.location.id === selectedLocationId) ?? items[0] ?? null;
+    items.find((item) => item.location.id === selectedLocationId) ??
+    (autoSelectFirst ? items[0] : null) ??
+    null;
   const primaryActivity = selected?.activities[0];
   const googleConfigured =
     !runtimeMap &&
