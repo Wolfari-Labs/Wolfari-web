@@ -291,15 +291,22 @@ describe('Gateway Plan controls', () => {
       expect.objectContaining({ activityId: 'todo', expectedPlanVersion: 1 }),
     );
   });
-  it('submits a complete reorder permutation and prevents boundary movement', async () => {
+  it('submits a complete reorder permutation within the day and prevents boundary movement', async () => {
     const { user, reorder } = await setup();
+    // "Todo activity" is alone in the unscheduled group, so neither direction applies.
     await user.click(item('Todo activity').getByRole('button', { name: 'Thao tác Todo activity' }));
+    expect(await screen.findByRole('menuitem', { name: 'Đưa lên' })).toHaveAttribute(
+      'data-disabled',
+    );
+    expect(screen.getByRole('menuitem', { name: 'Đưa xuống' })).toHaveAttribute('data-disabled');
+    await user.keyboard('{Escape}');
+    await user.click(item('My completed').getByRole('button', { name: 'Thao tác My completed' }));
     expect(await screen.findByRole('menuitem', { name: 'Đưa lên' })).toHaveAttribute(
       'data-disabled',
     );
     await user.click(screen.getByRole('menuitem', { name: 'Đưa xuống' }));
     expect(reorder).toHaveBeenCalledWith(
-      expect.objectContaining({ activityIds: ['mine', 'todo', 'theirs'] }),
+      expect.objectContaining({ activityIds: ['todo', 'theirs', 'mine'] }),
     );
   });
   it('locks all actions while an operation is pending and prevents duplicate submits', async () => {

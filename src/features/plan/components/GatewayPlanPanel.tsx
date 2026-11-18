@@ -5,7 +5,8 @@ import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { usePlanRepository } from '../repositories/plan-context';
 import { usePlanCommands } from '../hooks/use-plan-commands';
 import { localTimeToIso } from '../model/plan-draft';
-import { localDate, planDays } from '../model/plan-presentation';
+import { activityPlanDay, localDate, planDays } from '../model/plan-presentation';
+import { applyPlacement, globalPositionFor } from '../model/plan-placement';
 import { lastTripDate } from '../../../shared/lib/calendar';
 import { Button } from '../../../shared/components/Button';
 import { Select } from '../../../shared/components/Select';
@@ -280,6 +281,17 @@ export function GatewayPlanPanel({
   } | null>(null);
   const [confirm, setConfirm] = useState<ActivityViewModel | null>(null);
   const [confirmVersion, setConfirmVersion] = useState(0);
+  // Optimistic order shown only while one drop command is in flight; never persisted.
+  const [optimistic, setOptimistic] = useState<{
+    version: number;
+    activities: ActivityViewModel[];
+  } | null>(null);
+  const [timedBlock, setTimedBlock] = useState<{
+    activity: ActivityViewModel;
+    day: string;
+  } | null>(null);
+  const [dropNotice, setDropNotice] = useState('');
+  const reconcileConflict = useRef(false);
   const addRef = useRef<HTMLButtonElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const alive =
@@ -292,6 +304,18 @@ export function GatewayPlanPanel({
     onBusyChange(locked);
     return () => onBusyChange(false);
   }, [locked, onBusyChange]);
+  const { status: commandStatus, error: commandError, pending: commandPending } = commands;
+  const reconcile = commands.reconcile;
+  useEffect(() => {
+    // A drop rejected by VERSION_CONFLICT reloads the Plan once; it is never resent.
+    if (!reconcileConflict.current || commandPending) return;
+    reconcileConflict.current = false;
+    if (commandStatus !== 'conflict' || commandError?.code !== 'VERSION_CONFLICT') return;
+    setDropNotice(
+      'Lịch trình vừa được thành viên khác thay đổi. Đã tải bản mới nhất; kiểm tra rồi kéo lại nếu cần.',
+    );
+    void reconcile();
+  }, [commandStatus, commandError, commandPending, reconcile]);
   useEffect(() => {
     if (!editing) return;
     // A document-level CSS zoom scales fixed dialogs without shrinking viewport units.
@@ -325,15 +349,63 @@ export function GatewayPlanPanel({
     RESOURCE_EXHAUSTED: 'Quá nhiều yêu cầu. Vui lòng thử lại sau.',
     FINANCE_OBLIGATION_BLOCKED: 'Thao tác bị chặn bởi trạng thái chuyến đi.',
   };
+  const dayOf = (activity: ActivityViewModel) => activityPlanDay(activity, trip.timezone);
   const move = async (id: string, offset: number) => {
     if (!canEdit || locked || !repository.reorderActivities) return;
+    const activity = items.find((item) => item.id === id);
+    if (!activity) return;
+    // Swap with the neighbour in the same day so the visible day order changes.
+    const day = items.filter((item) => dayOf(item) === dayOf(activity));
+    const neighbour = day[day.indexOf(activity) + offset];
+    if (!neighbour) return;
     const ids = items.map((item) => item.id);
     const index = ids.indexOf(id),
-      target = index + offset;
-    if (index < 0 || target < 0 || target >= ids.length) return;
+      target = ids.indexOf(neighbour.id);
     [ids[index], ids[target]] = [ids[target]!, ids[index]!];
+    setDropNotice('');
     await execute({ kind: 'reorder', activityIds: ids });
   };
+  const place = async (activity: ActivityViewModel, day: string, index: number) => {
+    if (!canEdit || locked || !repository.updateActivity) return;
+    setDropNotice('');
+    const fromDay = dayOf(activity);
+    if (fromDay !== day && activity.startsAt) {
+      // DB rule: timed activities cannot carry scheduled_date. Block instead of guessing times.
+      setTimedBlock({ activity, day });
+      return;
+    }
+    setTimedBlock(null);
+    const position = globalPositionFor({
+      orderedActivities: items,
+      dayOf: (item) => (dayOf(item) === 'POOL' ? null : dayOf(item)),
+      targetDay: day === 'POOL' ? null : day,
+      targetIndex: index,
+      movingId: activity.id,
+    });
+    if (fromDay === day && position === items.indexOf(activity)) return;
+    const scheduledDate = day === 'POOL' ? null : day;
+    const fields = fromDay === day ? { position } : { scheduledDate, position };
+    setOptimistic({
+      version: plan.planVersion,
+      activities: applyPlacement(
+        items,
+        activity.id,
+        position,
+        fromDay === day ? {} : { scheduledDate },
+      ),
+    });
+    reconcileConflict.current = true;
+    try {
+      await execute({ kind: 'update', activityId: activity.id, fields });
+    } finally {
+      // Success already refreshed the server Plan; failure restores the server order.
+      setOptimistic(null);
+    }
+  };
+  const displayPlan =
+    optimistic && optimistic.version === plan.planVersion
+      ? { ...plan, activities: optimistic.activities }
+      : plan;
   const feedback = (
     <div className={styles.feedback}>
       {!canEdit && (
@@ -347,6 +419,36 @@ export function GatewayPlanPanel({
       )}
       {commands.status === 'success' && <Alert tone="success">Đã lưu thay đổi.</Alert>}
       {commands.pending && <Alert>Đang lưu thay đổi…</Alert>}
+      {dropNotice && <Alert tone="warning">{dropNotice}</Alert>}
+      {timedBlock && (
+        <Alert tone="warning">
+          Hoạt động có giờ cố định — sửa giờ trong chi tiết. “{timedBlock.activity.title}” chưa được
+          chuyển ngày.{' '}
+          <Button
+            variant="outline"
+            size="compact"
+            disabled={locked || !canEdit}
+            onClick={() => {
+              const { activity, day } = timedBlock;
+              // The alert closes with the editor open; return focus to the activity row.
+              trigger.current = document.querySelector<HTMLElement>(
+                `[data-plan-activity="${activity.id}"] button:not([hidden])`,
+              );
+              setTimedBlock(null);
+              setEditing({
+                activity,
+                targetDay: day === 'POOL' ? '' : day,
+                version: plan.planVersion,
+              });
+            }}
+          >
+            Mở chi tiết
+          </Button>
+          <Button variant="plain" size="compact" onClick={() => setTimedBlock(null)}>
+            Bỏ qua
+          </Button>
+        </Alert>
+      )}
       {!commands.recoveryAvailable && (
         <Alert tone="error">
           Không thể lưu yêu cầu để phục hồi an toàn trong phiên này. Hãy bật bộ nhớ phiên rồi tải
@@ -518,7 +620,7 @@ export function GatewayPlanPanel({
       />
       <RuntimeTimeline
         trip={trip}
-        plan={plan}
+        plan={displayPlan}
         disabled={locked || !!editing || !!confirm}
         canEdit={canEdit}
         actions={actions}
@@ -544,23 +646,7 @@ export function GatewayPlanPanel({
           });
         }}
         onMove={(id, offset) => void move(id, offset)}
-        onReorder={(activityIds) => {
-          void execute({ kind: 'reorder', activityIds });
-        }}
-        onDay={(activity, day) => {
-          if (activity.startsAt) {
-            setEditing({
-              activity,
-              targetDay: day === 'POOL' ? '' : day,
-              version: plan.planVersion,
-            });
-          } else
-            void execute({
-              kind: 'update',
-              activityId: activity.id,
-              fields: { startsAt: null, endsAt: null, scheduledDate: day === 'POOL' ? null : day },
-            });
-        }}
+        onPlace={(activity, day, index) => void place(activity, day, index)}
       />
     </section>
   );

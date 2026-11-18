@@ -80,20 +80,28 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     trip.export_revision++;
     const id = path.split('/').at(-1)!;
     if (request.method() === 'POST') {
-      activities.push({
+      // Like the backend: omitted optional fields are stored as null and the new
+      // activity is inserted at the requested Trip-wide position.
+      const created = {
         ...activity(
           '55555555-3333-4333-8333-333333333333',
           String(body.title),
           Number(body.position),
         ),
         activity_type: String(body.activity_type),
-        selected_location_id: body.selected_location_id as string | null,
-        scheduled_date: body.scheduled_date as string | null,
-        starts_at: body.starts_at as string | null,
-        ends_at: body.ends_at as string | null,
-        description: body.description as string | null,
-        public_description: body.public_description as string | null,
-      });
+        selected_location_id: (body.selected_location_id ?? null) as string | null,
+        scheduled_date: (body.scheduled_date ?? null) as string | null,
+        starts_at: (body.starts_at ?? null) as string | null,
+        ends_at: (body.ends_at ?? null) as string | null,
+        description: (body.description ?? null) as string | null,
+        public_description: (body.public_description ?? null) as string | null,
+      };
+      const ordered = [...activities].sort(
+        (a, b) => a.position - b.position || a.id.localeCompare(b.id),
+      );
+      expect(Number(body.position)).toBeLessThanOrEqual(ordered.length);
+      ordered.splice(Number(body.position), 0, created);
+      activities = ordered.map((item, position) => ({ ...item, position }));
     } else if (id === 'order') {
       const ids = body.activity_ids as string[];
       expect([...ids].sort()).toEqual(activities.map((item) => item.id).sort());
@@ -125,13 +133,22 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
       ] as const) {
         if (key in body) selected[key] = body[key] as string | null;
       }
+      if (typeof body.position === 'number') {
+        // Mirror the backend: remove the activity, re-insert at the Trip-wide index.
+        const ordered = [...activities]
+          .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+          .filter((item) => item.id !== id);
+        expect(body.position).toBeLessThanOrEqual(ordered.length);
+        ordered.splice(body.position, 0, selected);
+        activities = ordered.map((item, position) => ({ ...item, position }));
+      }
     }
     activities = activities.map((item) => ({ ...item, plan_version: trip.plan_version }));
     if (request.method() === 'DELETE' || id === 'order')
       return respond({ plan_version: trip.plan_version, export_revision: trip.export_revision });
     return respond(
       request.method() === 'POST'
-        ? activities.at(-1)
+        ? activities.find((item) => item.id === '55555555-3333-4333-8333-333333333333')
         : activities.find(
             (item) => item.id === (id === 'completion' ? path.split('/').at(-2) : id),
           ),

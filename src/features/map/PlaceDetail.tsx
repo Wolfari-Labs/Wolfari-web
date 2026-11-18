@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { paths } from '../../app/route-paths';
 import destinationPhoto from '../../shared/assets/figma/16cac.png';
@@ -23,6 +23,7 @@ export function PlaceDetail({
   runtime = false,
   onToggleSelection,
   selectionDisabled = false,
+  actions,
 }: {
   item: MapLocationPresentation | null;
   tripId: string;
@@ -32,6 +33,8 @@ export function PlaceDetail({
   runtime?: boolean;
   onToggleSelection?: () => void;
   selectionDisabled?: boolean;
+  /** Runtime-only commands such as "Thêm vào ngày…". */
+  actions?: ReactNode;
 }) {
   const [favorite, setFavorite] = useState(false);
   if (!item) return null;
@@ -109,6 +112,7 @@ export function PlaceDetail({
         <h3>Trong lịch của bạn</h3>
         <p>{activityScheduleLabel(activity, timezone)}</p>
         {validCoordinates(item.location) ? null : <small>Chưa có tọa độ hợp lệ</small>}
+        {actions}
         <Link to={paths.plan(tripId)}>Xem trong lịch trình</Link>
       </section>
     </aside>

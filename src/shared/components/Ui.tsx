@@ -41,16 +41,27 @@ export function Tip({ label, children }: { label: string; children: ReactNode })
 export function ActionMenu({
   label = 'Thao tác',
   items,
+  triggerText,
+  disabled = false,
 }: {
   label?: string;
   items: { label: string; action: () => void; disabled?: boolean; danger?: boolean }[];
+  /** Visible text trigger instead of the icon; `label` should start with this text. */
+  triggerText?: string;
+  disabled?: boolean;
 }) {
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" size="icon" aria-label={label}>
-          <Icon name="more" />
-        </Button>
+      <DropdownMenu.Trigger asChild disabled={disabled}>
+        {triggerText ? (
+          <Button variant="outline" size="compact" aria-label={label} disabled={disabled}>
+            {triggerText}
+          </Button>
+        ) : (
+          <Button variant="ghost" size="icon" aria-label={label} disabled={disabled}>
+            <Icon name="more" />
+          </Button>
+        )}
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={styles.menu} sideOffset={6} align="end">

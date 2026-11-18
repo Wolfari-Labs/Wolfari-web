@@ -1305,3 +1305,40 @@
     line-height: 23px;
   }
 }
+
+/* MAP-POI: source/verification badges (see DESIGN_DELTAS MAP-POI). */
+.placeMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+.sourceBadge,
+.unverifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 6px;
+  border: 1px solid #cde7f2;
+  border-radius: 9px;
+  background: #f2fafc;
+  color: #17677b;
+  font-size: 10px;
+  line-height: 16px;
+}
+.sourceBadge[data-source='WOLFARI'] {
+  border-color: #9fd6e6;
+  background: #e3f4f9;
+  color: #0b5466;
+}
+.unverifiedBadge {
+  border-color: var(--map-warning-line);
+  background: #fff8e8;
+  color: #7a4b00;
+}
+@media (max-width: 768px) {
+  .sourceBadge,
+  .unverifiedBadge {
+    font-size: 12px;
+  }
+}

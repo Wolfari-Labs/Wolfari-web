@@ -7,6 +7,7 @@ import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Drawer } from '../../shared/components/Drawer';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
+import { ActionMenu } from '../../shared/components/Ui';
 import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import pinIcon from '../../shared/assets/figma/8efc8.svg';
 import chevronIcon from '../../shared/assets/figma/ad884.svg';
@@ -16,7 +17,8 @@ import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
-import { planDays } from '../plan/model/plan-presentation';
+import { activityPlanDay, planDays } from '../plan/model/plan-presentation';
+import { globalPositionFor } from '../plan/model/plan-placement';
 import { TripHero } from '../trips/components/TripHero';
 import { GeoapifyMap, type MapCenter } from './GeoapifyMap';
 import {
@@ -26,7 +28,15 @@ import {
   placeStatus,
   type LocationScheduleFilter,
 } from './trip-map';
-import { validPlaceIntent, type DiscoveredPlace, type PlaceIntent } from './places';
+import {
+  activityTypeLabel,
+  placeActivityType,
+  placeSourceLabel,
+  validPlaceIntent,
+  type DiscoveredPlace,
+  type PlaceIntent,
+} from './places';
+import type { MapLocationPresentation } from './trip-map';
 import styles from './TripMapPage.module.css';
 
 export function GatewayMapPage() {
@@ -76,6 +86,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     longitude: '108.2022',
   });
   const [day, setDay] = useState<string | null>(null);
+  const [added, setAdded] = useState<{ day: string; label: string } | null>(null);
   const journalKey = `wolfari:map-command:${actor}:${tripId}`;
   const [journal] = useState(() => {
     try {
@@ -111,9 +122,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       !all.some(
         (item) =>
           item.location.providerPlaceId === p.id &&
-          item.location.provider?.toUpperCase() === 'GEOAPIFY',
+          item.location.provider?.toUpperCase() === p.provider,
       ),
   );
+  const resultFor = (item: MapLocationPresentation) =>
+    item.selected ? null : (results.find((p) => `result:${p.id}` === item.location.id) ?? null);
   const allItems = [
     ...all,
     ...candidates.map((p, index) => ({
@@ -126,7 +139,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
             address: p.address,
             latitude: String(p.latitude),
             longitude: String(p.longitude),
-            provider: 'GEOAPIFY',
+            provider: p.provider,
             providerPlaceId: p.id,
             source: 'PROVIDER' as const,
             openingHours: null,
@@ -222,8 +235,13 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       if (current.aborted || seq !== searchSequence.current) return;
       setResults(found.items);
       setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
+      const provider =
+        found.source.provider === 'WOLFARI+GEOAPIFY'
+          ? 'Wolfari + Geoapify'
+          : placeSourceLabel(found.source.provider);
+      const attribution = [...new Set(found.items.map((p) => p.attribution).filter(Boolean))];
       setSource(
-        `${found.source.stale ? 'Cache cũ · ' : ''}Geoapify · ${found.source.fetchedAt ? new Date(found.source.fetchedAt).toLocaleString('vi-VN') : ''}`,
+        `${found.source.stale ? 'Cache cũ · ' : ''}${provider} · ${found.source.fetchedAt ? new Date(found.source.fetchedAt).toLocaleString('vi-VN') : ''}${attribution.length ? ` · ${attribution.join(' · ')}` : ''}`,
       );
       setNotice(
         found.source.status === 'ERROR'
@@ -240,41 +258,48 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       if (!current.aborted && seq === searchSequence.current) setSearching(false);
     }
   };
-  const execute = async (intent: PlaceIntent) => {
-    if (!repo || writing.current || storageBlocked || !data.plan.permissions.canEdit) return;
+  /** Returns the confirmed receipt, or null when nothing was confirmed. */
+  const execute = async (
+    intent: PlaceIntent,
+    success?: string,
+  ): Promise<Record<string, unknown> | null> => {
+    if (!repo || writing.current || storageBlocked || !data.plan.permissions.canEdit) return null;
     const current = signal();
     writing.current = true;
     setBusy(true);
     setNotice('');
+    setAdded(null);
     try {
       try {
         window.sessionStorage.setItem(journalKey, JSON.stringify(intent));
       } catch {
         setStorageBlocked(true);
-        return;
+        return null;
       }
       setPending(intent);
       const result = await repo.command(intent, current);
-      if (current.aborted) return;
+      if (current.aborted) return null;
       try {
         window.sessionStorage.removeItem(journalKey);
         setPending(null);
       } catch {
         setStorageBlocked(true);
-        return;
+        return null;
       }
       if (typeof result.location_id === 'string') setSelected(result.location_id);
       setNotice(
-        intent.path.includes('/activities')
-          ? 'Đã gắn địa điểm vào hoạt động.'
-          : intent.method === 'DELETE'
-            ? 'Đã bỏ địa điểm đã lưu.'
-            : 'Đã lưu địa điểm. Bạn có thể tiếp tục gắn vào hoạt động/ngày.',
+        success ??
+          (intent.path.includes('/activities')
+            ? 'Đã gắn địa điểm vào hoạt động.'
+            : intent.method === 'DELETE'
+              ? 'Đã bỏ địa điểm đã lưu.'
+              : 'Đã lưu địa điểm. Bạn có thể tiếp tục gắn vào hoạt động/ngày.'),
       );
       setManualOpen(false);
       await snapshot.retry();
+      return result;
     } catch (error) {
-      if (current.aborted) return;
+      if (current.aborted) return null;
       const failure = commandFailure(error);
       if (!failure.uncertain) {
         try {
@@ -291,6 +316,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
             ? 'Dữ liệu đã thay đổi hoặc địa điểm đang được sử dụng. Tải lại, bỏ liên kết trước khi xóa.'
             : 'Không lưu được. Kiểm tra quyền, dữ liệu và cấu hình provider.',
       );
+      return null;
     } finally {
       writing.current = false;
       if (!current.aborted) setBusy(false);
@@ -311,6 +337,88 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       if (place) command('POST', 'selected-locations', { selection_token: place.token });
     }
   };
+  const dayLabel = (value: string) =>
+    `Ngày ${days.indexOf(value) + 1} · ${value.slice(8)}/${value.slice(5, 7)}`;
+  /**
+   * Contract 4.3: save the signed place (skipped when already saved), then create the
+   * activity at the end of that day. Each step is one journaled, idempotent command.
+   */
+  const addToDay = async (item: MapLocationPresentation, target: string) => {
+    if (!canEdit || !days.includes(target)) return;
+    const label = `Ngày ${days.indexOf(target) + 1}`;
+    const place = resultFor(item);
+    let locationId = item.selected ? item.location.id : null;
+    let version = data.plan.planVersion;
+    if (!locationId) {
+      if (!place) return;
+      const saved = await execute(
+        {
+          method: 'POST',
+          path: `/api/v1/trips/${tripId}/selected-locations`,
+          body: { selection_token: place.token, expected_plan_version: version },
+          key: crypto.randomUUID(),
+        },
+        `Đã lưu “${place.name}”. Đang thêm vào ${label}…`,
+      );
+      if (!saved) return;
+      const receipt = saved.version as { plan_version?: unknown } | undefined;
+      if (
+        typeof saved.location_id !== 'string' ||
+        !Number.isInteger(receipt?.plan_version) ||
+        Number(receipt?.plan_version) < 1
+      ) {
+        setNotice(
+          `Đã lưu “${place.name}” nhưng chưa xác nhận được phiên bản lịch trình. Chọn địa điểm đã lưu rồi thêm vào ngày lần nữa.`,
+        );
+        return;
+      }
+      locationId = saved.location_id;
+      version = Number(receipt!.plan_version);
+    }
+    const ordered = [...data.plan.activities].sort(
+      (a, b) => a.position - b.position || a.id.localeCompare(b.id),
+    );
+    const dayOf = (activity: (typeof ordered)[number]) => {
+      const value = activityPlanDay(activity, data.trip.timezone);
+      return value === 'POOL' ? null : value;
+    };
+    const position = globalPositionFor({
+      orderedActivities: ordered,
+      dayOf,
+      targetDay: target,
+      targetIndex: ordered.filter((activity) => dayOf(activity) === target).length,
+    });
+    const created = await execute(
+      {
+        method: 'POST',
+        path: `/api/v1/trips/${tripId}/activities`,
+        body: {
+          expected_plan_version: version,
+          title: item.location.name.slice(0, 255),
+          activity_type: placeActivityType(place),
+          selected_location_id: locationId,
+          scheduled_date: target,
+          position,
+        },
+        key: crypto.randomUUID(),
+      },
+      `Đã thêm “${item.location.name}” vào ${label}.`,
+    );
+    if (created) setAdded({ day: target, label });
+  };
+  const addToDayMenu = (item: MapLocationPresentation | null) =>
+    item && data.plan.permissions.canEdit && (item.selected || resultFor(item)) ? (
+      <ActionMenu
+        triggerText="Thêm vào ngày…"
+        label="Thêm vào ngày…"
+        disabled={!canEdit}
+        items={days.map((value) => ({
+          label: dayLabel(value),
+          action: () => void addToDay(item, value),
+          disabled: !canEdit,
+        }))}
+      />
+    ) : null;
   return (
     <section
       className={styles.page}
@@ -352,6 +460,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                           : notice ||
                             'Địa điểm đã chọn được lưu vào chuyến đi và đồng bộ với thành viên.'}
                     {source && <span> {source}</span>}
+                    {added && !busy && (
+                      <Link to={`${paths.plan(tripId)}?day=${added.day}`}>
+                        Xem lịch trình {added.label}
+                      </Link>
+                    )}
                     {snapshot.refreshFailed && (
                       <Button onClick={() => void snapshot.retry()}>Tải lại</Button>
                     )}
@@ -476,6 +589,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         const focused = item.location.id === effectiveSelectedId;
                         const status = placeStatus(item);
                         const locked = item.activities.length > 0 || !canEdit;
+                        const result = resultFor(item);
+                        const savedLabel = item.location.metadata.category_label;
                         return (
                           <li key={item.location.id}>
                             <div
@@ -499,11 +614,35 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                                 <span className={styles.placeCopy}>
                                   <strong>{item.location.name}</strong>
                                   <small>
-                                    {item.activities[0]?.activityType === 'MEAL'
-                                      ? 'Ẩm thực'
-                                      : 'Tham quan'}{' '}
+                                    {item.activities[0]
+                                      ? activityTypeLabel(item.activities[0].activityType)
+                                      : (result?.categoryLabel ??
+                                        (typeof savedLabel === 'string'
+                                          ? savedLabel
+                                          : 'Tham quan'))}{' '}
                                     · {item.location.address ?? 'Chưa có địa chỉ'}
                                   </small>
+                                  <span className={styles.placeMeta}>
+                                    <span
+                                      className={styles.sourceBadge}
+                                      data-source={
+                                        item.location.source === 'MANUAL'
+                                          ? 'MANUAL'
+                                          : (item.location.provider?.toUpperCase() ?? 'MANUAL')
+                                      }
+                                    >
+                                      {item.location.source === 'MANUAL'
+                                        ? 'Thủ công'
+                                        : placeSourceLabel(item.location.provider)}
+                                    </span>
+                                    {/* Gateway defaults coord_verified=false for Geoapify; only curated pins carry a review flag. */}
+                                    {result?.provider === 'WOLFARI' &&
+                                      result.coordVerified === false && (
+                                        <span className={styles.unverifiedBadge}>
+                                          Chưa xác minh vị trí
+                                        </span>
+                                      )}
+                                  </span>
                                 </span>
                                 <span
                                   className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
@@ -619,14 +758,15 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       />
                     }
                     onSearchArea={() => void search(true)}
+                    selectedActions={addToDayMenu(selectedItem)}
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />
                 </section>
               </div>
               <CapabilityNote id="map-provider-note">
-                Geoapify / OpenStreetMap · Chọn ô để lưu địa điểm; mở “Xem trong lịch trình” để xếp
-                vào ngày.
+                Wolfari / Geoapify · © OpenStreetMap contributors · Chọn ô để lưu địa điểm; dùng
+                “Thêm vào ngày…” để xếp thẳng vào lịch trình.
               </CapabilityNote>
             </div>
             <PlaceDetail
@@ -638,6 +778,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
               runtime
               onToggleSelection={() => selectedItem && togglePlace(selectedItem)}
               selectionDisabled={!canEdit || !!selectedItem?.activities.length}
+              actions={addToDayMenu(selectedItem)}
             />
           </>
         )}

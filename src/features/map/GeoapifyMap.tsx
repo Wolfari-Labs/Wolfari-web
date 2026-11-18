@@ -11,6 +11,11 @@ export interface MapPoint {
   scheduled?: boolean;
 }
 export type MapCenter = { latitude: number; longitude: number };
+/** Ordered line between stops; `estimated` draws a dashed straight-line fallback. */
+export interface MapRoute {
+  coordinates: readonly MapCenter[];
+  estimated: boolean;
+}
 export function GeoapifyMap({
   points,
   selectedId,
@@ -18,6 +23,7 @@ export function GeoapifyMap({
   onCenter,
   onPin,
   focus,
+  route,
   embedded = false,
 }: {
   points: readonly MapPoint[];
@@ -26,15 +32,20 @@ export function GeoapifyMap({
   onCenter?: (point: MapCenter) => void;
   onPin?: ((point: MapCenter) => void) | undefined;
   focus?: MapCenter | undefined;
+  route?: MapRoute | null | undefined;
   embedded?: boolean;
 }) {
   const node = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const library = useRef<typeof L | null>(null);
   const layer = useRef<L.LayerGroup | null>(null);
+  const routeLayer = useRef<L.LayerGroup | null>(null);
+  const fittedKey = useRef<string | null>(null);
   // Parent state (map center, notices) must not rebuild marker DOM or steal keyboard focus.
   const pointsKey = JSON.stringify(points);
   const stablePoints = useMemo(() => JSON.parse(pointsKey) as readonly MapPoint[], [pointsKey]);
+  const routeKey = JSON.stringify(route ?? null);
+  const stableRoute = useMemo(() => JSON.parse(routeKey) as MapRoute | null, [routeKey]);
   const handlers = useRef({ onSelect, onCenter, onPin });
   handlers.current = { onSelect, onCenter, onPin };
   const [ready, setReady] = useState(false),
@@ -81,6 +92,8 @@ export function GeoapifyMap({
       map.current?.remove();
       map.current = null;
       layer.current = null;
+      routeLayer.current = null;
+      fittedKey.current = null;
       setReady(false);
     };
   }, [key]);
@@ -104,13 +117,37 @@ export function GeoapifyMap({
         .addTo(layer.current);
     }
     const selected = stablePoints.find((p) => p.id === selectedId);
-    if (selected) m.panTo([selected.latitude, selected.longitude]);
-    else if (stablePoints.length)
-      m.fitBounds(
-        stablePoints.map((p) => [p.latitude, p.longitude] as [number, number]),
-        { padding: [28, 28], maxZoom: 14 },
-      );
-  }, [stablePoints, selectedId, ready]);
+    if (fittedKey.current !== pointsKey && stablePoints.length) {
+      // Fit once per point set; a selection change alone only pans.
+      fittedKey.current = pointsKey;
+      if (selected && stablePoints.length === 1) m.panTo([selected.latitude, selected.longitude]);
+      else
+        m.fitBounds(
+          stablePoints.map((p) => [p.latitude, p.longitude] as [number, number]),
+          { padding: [28, 28], maxZoom: 14 },
+        );
+    } else if (selected) m.panTo([selected.latitude, selected.longitude]);
+  }, [stablePoints, pointsKey, selectedId, ready]);
+  useEffect(() => {
+    const m = map.current,
+      l = library.current;
+    if (!ready || !m || !l) return;
+    routeLayer.current?.remove();
+    routeLayer.current = null;
+    if (!stableRoute || stableRoute.coordinates.length < 2) return;
+    routeLayer.current = l.layerGroup().addTo(m);
+    l.polyline(
+      stableRoute.coordinates.map((c) => [c.latitude, c.longitude] as [number, number]),
+      {
+        className: stableRoute.estimated ? styles.routeEstimated : styles.route,
+        color: '#0b7f99',
+        weight: 4,
+        opacity: 0.85,
+        interactive: false,
+        ...(stableRoute.estimated ? { dashArray: '8 8' } : {}),
+      },
+    ).addTo(routeLayer.current); // overlayPane sits below markerPane, so pins stay on top.
+  }, [stableRoute, ready]);
   useEffect(() => {
     if (ready && focus) map.current?.setView([focus.latitude, focus.longitude], 13);
   }, [focus, ready]);

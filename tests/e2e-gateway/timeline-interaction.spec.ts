@@ -13,7 +13,7 @@ async function drag(page: Page, from: Locator, to: Locator) {
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 16 });
   await page.mouse.up();
 }
-test('Gateway drag reorders full IDs, cancels safely and changes only the day across groups', async ({
+test('Gateway drag saves one PATCH with Trip-wide position, cancels safely and moves across days', async ({
   page,
   gateway,
 }) => {
@@ -29,22 +29,34 @@ test('Gateway drag reorders full IDs, cancels safely and changes only the day ac
   expect(mock.writes).toHaveLength(0);
   await drag(page, handle, page.getByRole('listitem', { name: 'Ăn sáng', exact: true }));
   await expect.poll(() => mock.writes.length).toBe(1);
-  expect(mock.writes[0]!.method).toBe('PUT');
-  expect(mock.writes[0]!.body.activity_ids).toEqual([
-    mock.activities[1]!.id,
-    mock.activities[0]!.id,
-  ]);
+  // Same group: one PATCH carrying only the new Trip-wide position.
+  expect(mock.writes[0]!.method).toBe('PATCH');
+  expect(mock.writes[0]!.body).toEqual({ expected_plan_version: 1, position: 1 });
+  await expect(page.locator('[data-day-list="POOL"] [data-plan-activity]').first()).toHaveAttribute(
+    'aria-label',
+    'Ăn sáng',
+  );
   await drag(page, handle, page.getByRole('button', { name: 'Ngày 1 · 01/11', exact: true }));
   await expect.poll(() => mock.writes.length).toBe(2);
+  // Another day: still one PATCH; day and order travel together.
   expect(mock.writes[1]!.method).toBe('PATCH');
-  expect(mock.writes[1]!.body).toMatchObject({
+  expect(mock.writes[1]!.body).toEqual({
+    expected_plan_version: 2,
     scheduled_date: '2026-11-01',
-    starts_at: null,
-    ends_at: null,
+    position: 0,
   });
-  expect(mock.writes[1]!.body).not.toHaveProperty('activity_ids');
+  await expect(page.locator('[data-day-list="2026-11-01"] [data-plan-activity]')).toHaveAttribute(
+    'aria-label',
+    'Đi dạo',
+  );
+  expect(mock.writes.some((write) => write.method === 'PUT')).toBe(false);
+  await page.reload();
+  await expect(page.locator('[data-day-list="2026-11-01"] [data-plan-activity]')).toHaveAttribute(
+    'aria-label',
+    'Đi dạo',
+  );
 });
-test('Gateway timed drag requires confirmation; a conflict keeps the draft and revoked rights block writes', async ({
+test('Gateway timed drag is blocked with a detail path; a conflict keeps the draft and revoked rights block writes', async ({
   page,
   gateway,
 }) => {
@@ -61,6 +73,9 @@ test('Gateway timed drag requires confirmation; a conflict keeps the draft and r
     page.getByRole('button', { name: 'Kéo hoạt động Đi dạo' }),
     page.getByRole('button', { name: 'Ngày 2 · 02/11', exact: true }),
   );
+  await expect(page.getByText(/Hoạt động có giờ cố định — sửa giờ trong chi tiết/)).toBeVisible();
+  expect(mock.writes).toHaveLength(0);
+  await page.getByRole('button', { name: 'Mở chi tiết', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' });
   await expect(dialog).toBeVisible();
   expect(mock.writes).toHaveLength(0);
@@ -93,7 +108,8 @@ test('Gateway keyboard drag and split resize remain operable without a mouse', a
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect.poll(() => mock.writes.length).toBe(1);
-  expect(mock.writes[0]!.method).toBe('PUT');
+  expect(mock.writes[0]!.method).toBe('PATCH');
+  expect(mock.writes[0]!.body).toMatchObject({ position: 1 });
   await page.getByRole('button', { name: 'Sắp xếp lịch trình' }).click();
   const separator = page.getByRole('separator', { name: 'Đổi chiều rộng lịch trình' });
   await separator.focus();
@@ -109,9 +125,11 @@ test('Gateway touch drag uses the same reorder contract', async ({ page, gateway
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
   const handle = page.getByRole('button', { name: 'Kéo hoạt động Đi dạo' });
-  await handle.scrollIntoViewIfNeeded();
+  const target = page.getByRole('listitem', { name: 'Ăn sáng', exact: true });
+  // Day groups put the pool lower on the page; keep the gesture away from auto-scroll edges.
+  await target.evaluate((element) => element.scrollIntoView({ block: 'center' }));
   const a = (await handle.boundingBox())!,
-    b = (await page.getByRole('listitem', { name: 'Ăn sáng', exact: true }).boundingBox())!;
+    b = (await target.boundingBox())!;
   const cdp = await page.context().newCDPSession(page);
   const point = (x: number, y: number) => ({ x, y, id: 1, radiusX: 5, radiusY: 5, force: 1 });
   await cdp.send('Input.dispatchTouchEvent', {
@@ -133,7 +151,8 @@ test('Gateway touch drag uses the same reorder contract', async ({ page, gateway
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await cdp.detach();
   await expect.poll(() => mock.writes.length).toBe(1);
-  expect(mock.writes[0]!.method).toBe('PUT');
+  expect(mock.writes[0]!.method).toBe('PATCH');
+  expect(mock.writes[0]!.body).toMatchObject({ position: 1 });
 });
 test('Gateway compact organizer uses a sheet with Escape and restored focus', async ({
   page,

@@ -8,7 +8,14 @@ export interface GatewayMetadata {
     nextCheckAt?: string | null;
     lastCheckStatus?: string | null;
   };
-  placesSource?: { status: string; stale: boolean; fetchedAt: string | null; warnings: string[] };
+  placesSource?: {
+    /** `GEOAPIFY`, `WOLFARI` or `WOLFARI+GEOAPIFY` (curated store first, provider appended). */
+    provider: string;
+    status: string;
+    stale: boolean;
+    fetchedAt: string | null;
+    warnings: string[];
+  };
 }
 export type GatewayEnvelope =
   | { kind: 'success'; data: unknown; correlationId: string | null; metadata: GatewayMetadata }
@@ -20,6 +27,8 @@ export type GatewayEnvelope =
       details: unknown;
       correlationId: string | null;
     };
+
+const PLACES_PROVIDERS = new Set(['GEOAPIFY', 'WOLFARI', 'WOLFARI+GEOAPIFY']);
 
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -48,9 +57,12 @@ export function parseEnvelope(value: unknown): GatewayEnvelope {
       data: value.data,
       correlationId,
       metadata: {
-        ...(value.meta.provider === 'GEOAPIFY' && typeof value.meta.status === 'string'
+        ...(typeof value.meta.provider === 'string' &&
+        PLACES_PROVIDERS.has(value.meta.provider) &&
+        typeof value.meta.status === 'string'
           ? {
               placesSource: {
+                provider: value.meta.provider,
                 status: value.meta.status,
                 stale: value.meta.stale === true,
                 fetchedAt: typeof value.meta.fetched_at === 'string' ? value.meta.fetched_at : null,

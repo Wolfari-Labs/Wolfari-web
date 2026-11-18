@@ -42,6 +42,7 @@ export function MapViewport({
   onOpenDetail,
   runtimeMap,
   onSearchArea,
+  selectedActions,
 }: {
   items: readonly MapLocationPresentation[];
   selectedLocationId: string | null;
@@ -52,6 +53,8 @@ export function MapViewport({
   onOpenDetail: () => void;
   runtimeMap?: ReactNode;
   onSearchArea?: () => void;
+  /** Runtime commands for the selected place, inside the existing selected-place card. */
+  selectedActions?: ReactNode;
 }) {
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const [googleMapReady, setGoogleMapReady] = useState(false);
@@ -256,6 +259,7 @@ export function MapViewport({
                     ? 'Địa điểm đã lưu và chưa được xếp vào lịch trình.'
                     : 'Chọn địa điểm để lưu vào chuyến đi.')}
             </p>
+            {selectedActions}
           </article>
 
           <article

@@ -53,8 +53,7 @@ describe('read-only Gateway timeline navigation', () => {
       onDelete = vi.fn(),
       onComplete = vi.fn(),
       onMove = vi.fn(),
-      onReorder = vi.fn(),
-      onDay = vi.fn();
+      onPlace = vi.fn();
 
     render(
       <RuntimeTimeline
@@ -66,8 +65,7 @@ describe('read-only Gateway timeline navigation', () => {
         onDelete={onDelete}
         onComplete={onComplete}
         onMove={onMove}
-        onReorder={onReorder}
-        onDay={onDay}
+        onPlace={onPlace}
       />,
     );
 
@@ -91,7 +89,7 @@ describe('read-only Gateway timeline navigation', () => {
     expect(screen.queryByRole('listitem', { name: 'Trong ngày' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Kéo hoạt động/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Sửa' })).not.toBeInTheDocument();
-    for (const action of [onEdit, onDelete, onComplete, onMove, onReorder, onDay])
+    for (const action of [onEdit, onDelete, onComplete, onMove, onPlace])
       expect(action).not.toHaveBeenCalled();
   });
 });

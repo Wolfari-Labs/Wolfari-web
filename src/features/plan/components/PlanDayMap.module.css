@@ -95,3 +95,11 @@
     margin-inline: 12px;
   }
 }
+.routeSummary {
+  margin: 8px 16px 0;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.routeSummary[data-estimated] {
+  color: #7a4b00;
+}

@@ -5,7 +5,7 @@ import { Accessibility, PointerSensor } from '@dnd-kit/dom';
 import { useReducedMotion } from 'motion/react';
 import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
-import { localDate, planDays } from '../model/plan-presentation';
+import { activityPlanDay, localDate, planDays } from '../model/plan-presentation';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
 import { Icon } from '../../../shared/components/Icon';
@@ -25,8 +25,9 @@ const activityIcons: Record<string, string> = {
   BEACH: beach,
   WALK: walk,
 };
-const activityDay = (a: ActivityViewModel, timezone: string) =>
-  a.startsAt ? localDate(a.startsAt, timezone) : (a.scheduledDate ?? 'POOL');
+const activityDay = activityPlanDay;
+/** Below rows: a row under the pointer wins over its surrounding day list. */
+const LIST_COLLISION_PRIORITY = 1;
 const formatClock = (value: string, timezone: string) =>
   new Intl.DateTimeFormat('vi-VN', {
     timeZone: timezone,
@@ -62,6 +63,39 @@ function DayTarget({
     >
       {label}
     </Button>
+  );
+}
+/** One server-ordered day (or the unscheduled pool); dropping on blank space appends. */
+function DayList({
+  day,
+  label,
+  dropDisabled,
+  emptyText,
+  children,
+}: {
+  day: string;
+  label: string;
+  dropDisabled: boolean;
+  emptyText: string;
+  children: ReactNode[];
+}) {
+  const drop = useDroppable({
+    id: `list:${day}`,
+    data: { day, label },
+    disabled: dropDisabled,
+    collisionPriority: LIST_COLLISION_PRIORITY,
+  });
+  return (
+    <ol
+      ref={drop.ref}
+      className={styles.list}
+      aria-label={label}
+      data-day-list={day}
+      data-drop-target={drop.isDropTarget || undefined}
+    >
+      {children}
+      {!children.length && <li className={styles.emptyDrop}>{emptyText}</li>}
+    </ol>
   );
 }
 function ActivityRow({
@@ -201,8 +235,7 @@ export function RuntimeTimeline({
   onDelete,
   onComplete,
   onMove,
-  onReorder,
-  onDay,
+  onPlace,
   onCreateFromLocation,
   actions,
   feedback,
@@ -214,14 +247,24 @@ export function RuntimeTimeline({
   onEdit: (a: ActivityViewModel) => void;
   onDelete: (a: ActivityViewModel) => void;
   onComplete: (a: ActivityViewModel) => void;
+  /** Keyboard/menu alternative: swap with the neighbour inside the same day. */
   onMove: (id: string, offset: number) => void;
-  onReorder: (ids: string[]) => void;
-  onDay: (a: ActivityViewModel, day: string) => void;
+  /**
+   * Drop result: `day` is a calendar date or `'POOL'`; `index` is the insertion index
+   * inside that day after removing the moving activity (array-move semantics).
+   */
+  onPlace: (a: ActivityViewModel, day: string, index: number) => void;
   onCreateFromLocation?: (location: SelectedLocationViewModel) => void;
   actions?: ReactNode;
   feedback?: ReactNode;
 }) {
-  const [day, setDay] = useState('ALL'),
+  // `?day=YYYY-MM-DD` (e.g. from "Xem lịch trình Ngày N" on the Map) opens that day.
+  const [day, setDay] = useState(() => {
+      const requested = new URLSearchParams(window.location.search).get('day');
+      return requested && planDays(trip.startAt, trip.endAt, trip.timezone).includes(requested)
+        ? requested
+        : 'ALL';
+    }),
     [sidePanel, setSidePanel] = useState<'none' | 'pool' | 'map'>('none'),
     [poolQuery, setPoolQuery] = useState(''),
     [dragging, setDragging] = useState<string | null>(null);
@@ -231,36 +274,68 @@ export function RuntimeTimeline({
     items = [...plan.activities].sort(
       (a, b) => a.position - b.position || a.id.localeCompare(b.id),
     );
-  const row = (activity: ActivityViewModel) => (
-    <ActivityRow
-      key={activity.id}
-      activity={activity}
-      trip={trip}
-      plan={plan}
-      disabled={disabled}
-      editable={canEdit}
-      completable={
-        trip.archivedAt === null &&
-        trip.lifecycle !== 'ARCHIVED' &&
-        !trip.currentMembership.leftAt &&
-        plan.permissions.canComplete &&
-        (activity.status === 'TODO' ||
-          canEdit ||
-          activity.completedByUserId === trip.currentMembership.userId)
+  const groups = new Map<string, ActivityViewModel[]>();
+  for (const activity of items) {
+    const key = activityDay(activity, trip.timezone);
+    groups.set(key, [...(groups.get(key) ?? []), activity]);
+  }
+  const groupOf = (key: string) => groups.get(key) ?? [];
+  const row = (activity: ActivityViewModel) => {
+    const group = groupOf(activityDay(activity, trip.timezone));
+    return (
+      <ActivityRow
+        key={activity.id}
+        activity={activity}
+        trip={trip}
+        plan={plan}
+        disabled={disabled}
+        editable={canEdit}
+        completable={
+          trip.archivedAt === null &&
+          trip.lifecycle !== 'ARCHIVED' &&
+          !trip.currentMembership.leftAt &&
+          plan.permissions.canComplete &&
+          (activity.status === 'TODO' ||
+            canEdit ||
+            activity.completedByUserId === trip.currentMembership.userId)
+        }
+        onEdit={() => onEdit(activity)}
+        onDelete={() => onDelete(activity)}
+        onComplete={() => onComplete(activity)}
+        onMove={(offset) => onMove(activity.id, offset)}
+        index={group.indexOf(activity)}
+        length={group.length}
+      />
+    );
+  };
+  const dayLabel = (d: string) =>
+    d === 'POOL'
+      ? 'Chưa xếp lịch'
+      : days.includes(d)
+        ? `Ngày ${days.indexOf(d) + 1} · ${d.slice(8)}/${d.slice(5, 7)}`
+        : `Ngoài chuyến đi · ${d.slice(8)}/${d.slice(5, 7)}/${d.slice(0, 4)}`;
+  const dayList = (d: string, list: readonly ActivityViewModel[] = groupOf(d)) => (
+    <DayList
+      key={d}
+      day={d}
+      label={`Hoạt động ${dayLabel(d)}`}
+      dropDisabled={!canEdit || disabled || (d !== 'POOL' && !days.includes(d))}
+      emptyText={
+        canEdit ? 'Kéo hoạt động vào đây để xếp vào ngày này.' : 'Chưa có hoạt động trong ngày.'
       }
-      onEdit={() => onEdit(activity)}
-      onDelete={() => onDelete(activity)}
-      onComplete={() => onComplete(activity)}
-      onMove={(offset) => onMove(activity.id, offset)}
-      index={items.indexOf(activity)}
-      length={items.length}
-    />
+    >
+      {list.map(row)}
+    </DayList>
   );
   const visible = items.filter(
     (a) =>
       (day === 'ALL' || activityDay(a, trip.timezone) === day) &&
       (sidePanel !== 'pool' || activityDay(a, trip.timezone) !== 'POOL'),
   );
+  // Activities outside the Trip calendar stay visible but are not drop targets.
+  const outside = [...groups.keys()].filter((d) => d !== 'POOL' && !days.includes(d)).sort();
+  // "Tất cả" keeps one list per day so dropping between days is explicit.
+  const allGroups = [...days, ...outside, ...(sidePanel === 'pool' ? [] : ['POOL'])];
   const scheduledLocationIds = new Set(
     items
       .filter((activity) => activityDay(activity, trip.timezone) !== 'POOL')
@@ -323,12 +398,21 @@ export function RuntimeTimeline({
       {feedback}
       {canEdit && (
         <p className={styles.help}>
-          Kéo thẻ để đổi thứ tự, thả vào ngày để chuyển lịch. Giờ không tự thay đổi; hoạt động có
-          giờ sẽ cần xác nhận.
+          Kéo thẻ để đổi thứ tự hoặc thả sang ngày khác; thay đổi được lưu ngay và đồng bộ với nhóm.
+          Hoạt động có giờ cố định chỉ đổi thứ tự trong ngày.
         </p>
       )}
-      <ol className={styles.list}>{visible.map(row)}</ol>
-      {!visible.length && <p className={styles.empty}>Chưa có hoạt động trong nhóm này.</p>}
+      {day === 'ALL'
+        ? allGroups.map((d) => (
+            <div key={d} className={styles.dayGroup} data-day-group={d}>
+              <h3>
+                {dayLabel(d)}
+                <small>{groupOf(d).length} hoạt động</small>
+              </h3>
+              {dayList(d)}
+            </div>
+          ))
+        : dayList(day, visible)}
     </section>
   );
   const pool = (
@@ -384,8 +468,8 @@ export function RuntimeTimeline({
             setSidePanel('none');
           }}
         />
-        {poolActivities.length ? (
-          <ol className={styles.list}>{poolActivities.map(row)}</ol>
+        {poolActivities.length || canEdit ? (
+          dayList('POOL', poolActivities)
         ) : (
           <p className={styles.empty}>Không có hoạt động phù hợp chưa xếp ngày.</p>
         )}
@@ -411,26 +495,22 @@ export function RuntimeTimeline({
         if (canceled || !source || !target || disabled || !canEdit) return;
         const activity = items.find((a) => a.id === source.id);
         if (!activity) return;
-        const targetDay = target.data.day as string | undefined,
-          targetActivity = items.find((a) => a.id === target.data.activityId);
-        const destination =
-          targetDay ?? (targetActivity ? activityDay(targetActivity, trip.timezone) : null);
-        if (
-          destination &&
-          destination !== 'ALL' &&
-          activityDay(activity, trip.timezone) !== destination
-        ) {
-          onDay(activity, destination);
-          return;
-        }
-        if (targetActivity && activity.id !== targetActivity.id) {
-          const ids = items.map((a) => a.id),
-            from = ids.indexOf(activity.id),
-            to = ids.indexOf(targetActivity.id);
-          ids.splice(from, 1);
-          ids.splice(to, 0, activity.id);
-          onReorder(ids);
-        }
+        const targetActivity =
+          typeof target.data.activityId === 'string'
+            ? items.find((a) => a.id === target.data.activityId)
+            : undefined;
+        if (targetActivity?.id === activity.id) return;
+        const destination = targetActivity
+          ? activityDay(targetActivity, trip.timezone)
+          : (target.data.day as string | undefined);
+        if (!destination || destination === 'ALL') return;
+        if (destination !== 'POOL' && !days.includes(destination)) return;
+        const list = groupOf(destination);
+        // A row target takes that row's place; a day button or blank list space appends.
+        const index = targetActivity
+          ? list.indexOf(targetActivity)
+          : list.filter((a) => a.id !== activity.id).length;
+        onPlace(activity, destination, index);
       }}
     >
       <div data-runtime-timeline className={styles.workspace}>

@@ -37,3 +37,9 @@
     height: 300px;
   }
 }
+/* MAP-POI route line: solid for a routed estimate, dashed for a straight-line fallback. */
+.route,
+.routeEstimated {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

@@ -116,6 +116,36 @@
   margin: 0;
   padding: 0;
 }
+.dayGroup {
+  margin-top: 14px;
+}
+.dayGroup + .dayGroup {
+  margin-top: 18px;
+}
+.dayGroup h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+.dayGroup h3 small {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+.list {
+  min-height: 48px;
+  border-radius: 8px;
+}
+.emptyDrop {
+  padding: 10px 12px;
+  border: 1px dashed var(--color-line);
+  border-radius: 8px;
+  color: var(--color-muted);
+  font-size: 13px;
+  text-align: center;
+}
 .row {
   min-width: 0;
   border-radius: 8px;

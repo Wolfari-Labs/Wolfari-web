@@ -233,3 +233,114 @@ test('HTTP mock: existing checkbox recovers the same save after reload, then rem
   await expect.poll(() => deletes).toBe(1);
   await expect(page.getByRole('checkbox', { name: /Recovery POI/ })).toHaveCount(0);
 });
+
+test('HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that day', async ({
+  page,
+  gateway,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const model = await mockPlan(page, gateway);
+  const trip = gateway.trips[0]!;
+  const locationId = '77777777-2222-4222-8222-222222222222';
+  await page.route('**/places/search?*', (route) =>
+    route.fulfill({
+      json: {
+        data: [
+          {
+            id: 'dn-cho-han',
+            name: 'Chợ Hàn',
+            address: 'Hải Châu, Đà Nẵng',
+            coordinates: { latitude: 16.068, longitude: 108.224 },
+            categories: ['market'],
+            attribution: '© OpenStreetMap contributors',
+            selection_token: 'signed-wolfari',
+            provider: 'WOLFARI',
+            category: 'market',
+            category_label: 'Chợ',
+            tier: 1,
+            coord_verified: false,
+            typical_duration_min: 60,
+            activity_type: 'SHOPPING',
+            dress_code_hint: '',
+          },
+        ],
+        meta: {
+          provider: 'WOLFARI',
+          status: 'SUCCESS',
+          stale: false,
+          fetched_at: null,
+          warnings: [],
+        },
+      },
+    }),
+  );
+  await page.route('**/selected-locations', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      selection_token: 'signed-wolfari',
+      expected_plan_version: trip.plan_version,
+    });
+    trip.plan_version++;
+    trip.export_revision++;
+    for (const item of model.activities) item.plan_version = trip.plan_version;
+    model.selectedLocations.push({
+      id: locationId,
+      trip_id: tripId,
+      name: 'Chợ Hàn',
+      address: 'Hải Châu, Đà Nẵng',
+      latitude: '16.068000',
+      longitude: '108.224000',
+      provider: 'WOLFARI',
+      provider_place_id: 'dn-cho-han',
+      source: 'PROVIDER',
+      metadata: {},
+      fetched_at: null,
+    });
+    return route.fulfill({
+      status: 201,
+      json: {
+        data: {
+          location_id: locationId,
+          version: {
+            trip_id: tripId,
+            plan_version: trip.plan_version,
+            export_revision: trip.export_revision,
+          },
+        },
+        meta: {},
+      },
+    });
+  });
+  await login(page);
+  await page.goto(`/trips/${tripId}/map`);
+  await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('cho han');
+  await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  const row = page.locator('[data-region="place-list"] li').filter({ hasText: 'Chợ Hàn' });
+  await expect(row).toContainText('Chợ · Hải Châu, Đà Nẵng');
+  await expect(row).toContainText('Wolfari');
+  await expect(row).toContainText('Chưa xác minh vị trí');
+  await expect(page.getByText(/© OpenStreetMap contributors/).first()).toBeVisible();
+  await page
+    .getByRole('article', { name: 'Đang chọn Chợ Hàn' })
+    .getByRole('button', { name: 'Thêm vào ngày…', exact: true })
+    .click();
+  await page.getByRole('menuitem', { name: 'Ngày 2 · 02/11' }).click();
+  await expect.poll(() => model.writes.length).toBe(1);
+  expect(model.writes[0]!.method).toBe('POST');
+  expect(model.writes[0]!.body).toEqual({
+    expected_plan_version: 2,
+    title: 'Chợ Hàn',
+    activity_type: 'SHOPPING',
+    selected_location_id: locationId,
+    scheduled_date: '2026-11-02',
+    position: 0,
+  });
+  await page.getByRole('link', { name: 'Xem lịch trình Ngày 2' }).click();
+  await expect(page).toHaveURL(/\/plan\?day=2026-11-02$/);
+  await expect(
+    page.locator('[data-day-list="2026-11-02"]').getByRole('listitem', { name: 'Chợ Hàn' }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.locator('[data-day-list="2026-11-02"]').getByRole('listitem', { name: 'Chợ Hàn' }),
+  ).toBeVisible();
+});
