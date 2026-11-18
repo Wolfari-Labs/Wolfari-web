@@ -230,7 +230,7 @@ export const PLACE_GROUPS = [
   { value: 'wellness', label: 'Spa' },
   { value: 'transport', label: 'Giao thông' },
   { value: 'services', label: 'Tiện ích' },
-  { value: 'all', label: 'Tất cả' },
+  { value: 'all', label: 'Mọi nhóm' },
 ] as const;
 export type PlaceGroup = (typeof PLACE_GROUPS)[number]['value'];
 export function parsePlaceGroup(value: string | null | undefined): PlaceGroup | null {
@@ -459,3 +459,60 @@ export interface PlacesFound {
 /** Explore (bbox) outcome; transport errors still throw. */
 export type PlacesExplore =
   ({ kind: 'found' } & PlacesFound) | { kind: 'too-large' } | { kind: 'unsupported' };
+
+/** FR-TI01 update date for a record: fetch time first, then the dataset release. */
+export function provenanceDate(provenance: Pick<PlaceProvenance, 'fetchedAt' | 'dataRelease'>) {
+  return provenance.fetchedAt ?? provenance.dataRelease;
+}
+/** Tooltip of the selected-place source badge: review note, record attribution. */
+export function provenanceTooltip(provenance: PlaceProvenance) {
+  return [
+    provenance.dataset === 'overture' && `${OVERTURE_NOTE}.`,
+    provenance.dataset === 'golden' &&
+      provenance.coordVerified === false &&
+      'Chưa xác minh vị trí.',
+    provenance.attribution,
+  ]
+    .filter((part): part is string => !!part)
+    .join(' ');
+}
+
+const EARTH_KM = 6371;
+export function distanceKm(
+  a: { latitude: number; longitude: number },
+  b: { latitude: number; longitude: number },
+) {
+  const rad = Math.PI / 180;
+  const dLat = (b.latitude - a.latitude) * rad,
+    dLon = (b.longitude - a.longitude) * rad;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(a.latitude * rad) * Math.cos(b.latitude * rad) * Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_KM * Math.asin(Math.sqrt(h));
+}
+/**
+ * W14: province of the map centre, taken from the nearest result that carries a province code
+ * within `maxKm`; null when no result is close enough to tell.
+ */
+export function centerProvinceCode(
+  places: readonly Pick<DiscoveredPlace, 'latitude' | 'longitude' | 'provinceCode'>[],
+  center: { latitude: number; longitude: number },
+  maxKm = 15,
+) {
+  let best: { code: string; km: number } | null = null;
+  for (const place of places) {
+    if (!place.provinceCode) continue;
+    const km = distanceKm(center, place);
+    if (km <= maxKm && (!best || km < best.km)) best = { code: place.provinceCode, km };
+  }
+  return best?.code ?? null;
+}
+/** W14: province shown beside the address only when it differs from the map centre's. */
+export function otherProvinceName(
+  place: Pick<DiscoveredPlace, 'provinceCode'> & { provinceName?: string | null },
+  centerProvince: string | null,
+) {
+  if (!centerProvince || !place.provinceCode) return null;
+  if (Number(place.provinceCode) === Number(centerProvince)) return null;
+  return place.provinceName ?? provinceName(place.provinceCode);
+}

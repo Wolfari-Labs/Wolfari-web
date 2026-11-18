@@ -30,7 +30,9 @@ import {
 } from './trip-map';
 import {
   activityTypeLabel,
+  centerProvinceCode,
   EXPLORE_LIMIT,
+  otherProvinceName,
   EXPLORE_MIN_ZOOM,
   exploreCacheKey,
   LruCache,
@@ -50,7 +52,7 @@ import {
   type PlaceIntent,
   type PlacesFound,
 } from './places';
-import { PlaceSourceBadges } from './PlaceSourceBadges';
+import { PlaceProvenanceLine, PlaceSourceBadges } from './PlaceSourceBadges';
 import type { MapLocationPresentation } from './trip-map';
 import styles from './TripMapPage.module.css';
 
@@ -104,7 +106,27 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   const [searchedGroup, setSearchedGroup] = useState<PlaceGroup | null | undefined>(undefined);
   const [detailOpen, setDetailOpen] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
-  const [center, setCenter] = useState<MapCenter>({ latitude: 16.0544, longitude: 108.2022 });
+  // W14: start from the Trip's first saved place (in itinerary order); Đà Nẵng otherwise.
+  const [center, setCenter] = useState<MapCenter>(() => {
+    const plan = data?.plan;
+    if (!plan) return { latitude: 16.0544, longitude: 108.2022 };
+    const order = [...plan.activities]
+      .sort((a, b) => a.position - b.position)
+      .map((activity) => activity.selectedLocationId);
+    const first = [...plan.selectedLocations]
+      .map((location) => ({ location, index: order.indexOf(location.id) }))
+      .sort(
+        (a, b) =>
+          (a.index < 0 ? Number.MAX_SAFE_INTEGER : a.index) -
+          (b.index < 0 ? Number.MAX_SAFE_INTEGER : b.index),
+      )
+      .map(({ location }) => validCoordinates(location))
+      .find(Boolean);
+    return first ?? { latitude: 16.0544, longitude: 108.2022 };
+  });
+  const [initialView] = useState(center);
+  /** W14: last known province of the map centre (sticky across keyword searches). */
+  const [centerProvince, setCenterProvince] = useState<string | null>(null);
   const [focus, setFocus] = useState<MapCenter>();
   const [results, setResults] = useState<DiscoveredPlace[]>([]),
     [selected, setSelected] = useState<string | null>(data?.plan.selectedLocations[0]?.id ?? null);
@@ -151,6 +173,12 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   useEffect(() => {
     if (!repo || !viewport || !exploring || exploreUnsupported.current) return;
     const showFound = (found: PlacesFound) => {
+      const middle = {
+        latitude: (viewport.bounds.south + viewport.bounds.north) / 2,
+        longitude: (viewport.bounds.west + viewport.bounds.east) / 2,
+      };
+      const province = centerProvinceCode(found.items, middle);
+      if (province) setCenterProvince(province);
       setResults(found.items);
       setResultMode('bbox');
       setSearchedGroup(group);
@@ -242,13 +270,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     const result = resultOf(item);
     return result ? resultProvenance(result) : savedProvenance(item.location);
   };
-  const sourceBadges = (item: MapLocationPresentation | null) => {
-    if (!item) return null;
-    const provenance = provenanceOf(item);
-    return (
-      <PlaceSourceBadges dataset={provenance.dataset} coordVerified={provenance.coordVerified} />
-    );
-  };
   const allItems = [
     ...all,
     ...candidates.map((p, index) => ({
@@ -300,9 +321,14 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       )
     );
   });
+  // Bbox explore never picks a result for the user; keyword search keeps auto-picking the
+  // first result (DoD steps 2-3).
+  const autoPickOff = exploring && resultMode === 'bbox';
   const effectiveSelectedId = visibleItems.some((item) => item.location.id === selected)
     ? selected
-    : (visibleItems[0]?.location.id ?? null);
+    : autoPickOff
+      ? null
+      : (visibleItems[0]?.location.id ?? null);
   const selectedItem =
     visibleItems.find((item) => item.location.id === effectiveSelectedId) ?? null;
   const selectedCount = all.length;
@@ -362,6 +388,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       if (!nearby && query.trim() && !found.items.length && !current.aborted)
         found = await repo.search(tripId, params(true), current);
       if (current.aborted || seq !== searchSequence.current) return;
+      const province = centerProvinceCode(found.items, center);
+      if (province) setCenterProvince(province);
       setResults(found.items);
       setResultMode(options.keepView ? 'chip' : 'query');
       setSearchedGroup(category);
@@ -765,6 +793,10 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         const status = placeStatus(item);
                         const locked = item.activities.length > 0 || !canEdit;
                         const provenance = provenanceOf(item);
+                        const rowResult = resultOf(item);
+                        const otherProvince = rowResult
+                          ? otherProvinceName(rowResult, centerProvince)
+                          : null;
                         return (
                           <li key={item.location.id}>
                             <div
@@ -792,6 +824,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                                       ? activityTypeLabel(item.activities[0].activityType)
                                       : (provenance.categoryLabel ?? 'Tham quan')}{' '}
                                     · {item.location.address ?? 'Chưa có địa chỉ'}
+                                    {otherProvince && (
+                                      <span data-province="other"> · {otherProvince}</span>
+                                    )}
                                   </small>
                                   {/* Only curated Wolfari pins carry the per-row review flag (W10). */}
                                   <PlaceSourceBadges
@@ -909,6 +944,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         onSelect={(id) => chooseLocation(id, true)}
                         onCenter={setCenter}
                         onViewport={setViewport}
+                        initialView={initialView}
                         autoFit={resultMode === 'none' || resultMode === 'query'}
                         focus={focus}
                         onPin={
@@ -929,7 +965,12 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       exploring ? viewport && setViewport({ ...viewport }) : void search(true)
                     }
                     selectedActions={addToDayMenu(selectedItem)}
-                    selectedMeta={sourceBadges(selectedItem)}
+                    selectedMeta={
+                      selectedItem && (
+                        <PlaceProvenanceLine provenance={provenanceOf(selectedItem)} />
+                      )
+                    }
+                    autoSelectFirst={!autoPickOff}
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />

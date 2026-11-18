@@ -49,6 +49,7 @@ export function GeoapifyMap({
   embedded = false,
   autoFit = true,
   onViewport,
+  initialView,
 }: {
   points: readonly MapPoint[];
   selectedId?: string | null;
@@ -62,6 +63,8 @@ export function GeoapifyMap({
   autoFit?: boolean;
   /** Fired on load and after every move/zoom with the visible bounds. */
   onViewport?: (change: MapViewportChange) => void;
+  /** First centre (W14: the Trip's first place); later changes are ignored. */
+  initialView?: MapCenter;
 }) {
   const node = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -74,6 +77,7 @@ export function GeoapifyMap({
   const stablePoints = useMemo(() => JSON.parse(pointsKey) as readonly MapPoint[], [pointsKey]);
   const routeKey = JSON.stringify(route ?? null);
   const stableRoute = useMemo(() => JSON.parse(routeKey) as MapRoute | null, [routeKey]);
+  const start = useRef(initialView);
   const handlers = useRef({ onSelect, onCenter, onPin, onViewport });
   handlers.current = { onSelect, onCenter, onPin, onViewport };
   const pointsRef = useRef(stablePoints);
@@ -92,7 +96,9 @@ export function GeoapifyMap({
       .then((l) => {
         if (disposed || !node.current) return;
         library.current = l;
-        const m = l.map(node.current, { scrollWheelZoom: false }).setView([16.0544, 108.2022], 12);
+        const m = l
+          .map(node.current, { scrollWheelZoom: false })
+          .setView([start.current?.latitude ?? 16.0544, start.current?.longitude ?? 108.2022], 12);
         map.current = m;
         l.tileLayer(
           `https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}.png?apiKey=${encodeURIComponent(key)}`,

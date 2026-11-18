@@ -320,7 +320,7 @@ describe('POI-OVERTURE W11 search parameters', () => {
       'Spa',
       'Giao thông',
       'Tiện ích',
-      'Tất cả',
+      'Mọi nhóm',
     ]);
     expect(parsePlaceGroup('services')).toBe('services');
     expect(parsePlaceGroup('SERVICES')).toBeNull();

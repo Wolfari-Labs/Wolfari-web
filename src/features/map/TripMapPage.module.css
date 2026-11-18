@@ -1418,3 +1418,28 @@
   font-size: 11px;
   line-height: 16px;
 }
+/* POI-OVERTURE OVW-3: one-line source in the selected-place card (FR-TI01). */
+.cardProvenance {
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+.cardFacts {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cardSource {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+}
+.cardProvenance .sourceBadge:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: 1px;
+}
