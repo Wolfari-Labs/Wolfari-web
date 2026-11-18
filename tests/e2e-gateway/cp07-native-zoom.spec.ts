@@ -188,7 +188,10 @@ test('CP07 Gateway Map, Dress and Packing fit native Chrome 200% zoom', async ({
     await search.focus();
     await page.keyboard.press('Tab');
     await expect(map.getByRole('button', { name: 'Đặt pin thủ công' })).toBeFocused();
-    await expect(map.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
+    // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
+    await expect(
+      map.getByText('Bản đồ nền chưa khả dụng').or(map.locator('.leaflet-container')),
+    ).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );

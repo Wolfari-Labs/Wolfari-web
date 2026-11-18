@@ -209,7 +209,10 @@ for (const route of routes) {
 
       if (route.name === 'map') {
         await expect(root.getByText('Bãi biển Mỹ Khê', { exact: true }).first()).toBeVisible();
-        await expect(root.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
+        // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
+        await expect(
+          root.getByText('Bản đồ nền chưa khả dụng').or(root.locator('.leaflet-container')),
+        ).toBeVisible();
         if (viewport.width > 768) {
           await expectPrimaryBeforeSecondary(
             root.getByRole('region', { name: 'Địa điểm đã lưu' }),
