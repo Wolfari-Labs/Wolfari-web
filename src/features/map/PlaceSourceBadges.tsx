@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Tip } from '../../shared/components/Ui';
 import {
   OVERTURE_NOTE,
@@ -43,15 +44,53 @@ export function PlaceSourceBadges({
   );
 }
 
+/** Below this width a shortened category says nothing useful, so it is hidden instead. */
+const CATEGORY_MIN_PX = 40;
+const GAP_PX = 3;
+
 /**
  * One line in the selected-place card (FR-TI01): "<loại> · <tỉnh> · Nguồn: <badge> (dd/MM/yyyy)".
- * The record attribution and review notes live in the badge tooltip (hover and keyboard focus),
- * so the card grows by one line at most; the category/province part truncates first.
+ * Province and source/date never truncate; when space runs out the category shortens with "…"
+ * first and is hidden entirely below CATEGORY_MIN_PX; if province + source still do not fit,
+ * the "Nguồn:" label becomes screen-reader-only. The full text, review notes and record
+ * attribution live in the badge tooltip (hover and keyboard focus), so the card grows by one
+ * line at most.
  */
 export function PlaceProvenanceLine({ provenance }: { provenance: PlaceProvenance }) {
   const facts = [provenance.categoryLabel, provenance.provinceName].filter(Boolean).join(' · ');
   const date = provenanceDate(provenance);
-  const tooltip = provenanceTooltip(provenance);
+  const tooltip = [facts, provenanceTooltip(provenance)].filter(Boolean).join('. ');
+  const line = useRef<HTMLSpanElement>(null);
+  const category = useRef<HTMLSpanElement>(null);
+  const label = useRef<HTMLSpanElement>(null);
+  const labelWidth = useRef(0);
+  const compactRef = useRef(false);
+  const [categoryFits, setCategoryFits] = useState(true);
+  /** Last resort: "Nguồn:" becomes screen-reader-only; the badge still names the source. */
+  const [compact, setCompact] = useState(false);
+  useLayoutEffect(() => {
+    const node = line.current;
+    if (!node) return;
+    const measure = () => {
+      const width = node.clientWidth;
+      if (!width) return; // not laid out (hidden card, jsdom)
+      if (!compactRef.current && label.current) labelWidth.current = label.current.offsetWidth;
+      const fixed = [...node.children]
+        .filter((child) => child !== category.current)
+        .reduce((sum, child) => sum + (child as HTMLElement).offsetWidth + GAP_PX, 0);
+      // Width of province + source with the "Nguồn:" label shown.
+      const full = fixed + (compactRef.current ? labelWidth.current : 0);
+      const nextCompact = width < full;
+      compactRef.current = nextCompact;
+      setCompact(nextCompact);
+      setCategoryFits(!nextCompact && width - full >= CATEGORY_MIN_PX);
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [provenance.categoryLabel, provenance.provinceName, date]);
   const unverified = provenance.dataset === 'golden' && provenance.coordVerified === false;
   const badge = (
     <span
@@ -63,14 +102,32 @@ export function PlaceProvenanceLine({ provenance }: { provenance: PlaceProvenanc
     </span>
   );
   return (
-    <span className={`${styles.placeMeta} ${styles.cardProvenance}`} data-region="place-provenance">
-      {facts && (
-        <span className={styles.cardFacts} title={facts}>
-          {facts} ·
+    <span
+      ref={line}
+      className={`${styles.placeMeta} ${styles.cardProvenance}`}
+      data-region="place-provenance"
+    >
+      {provenance.categoryLabel && (
+        <span
+          ref={category}
+          className={styles.cardCategory}
+          title={provenance.categoryLabel}
+          hidden={!categoryFits}
+          data-part="category"
+        >
+          {`${provenance.categoryLabel} · `}
         </span>
       )}
-      <span className={styles.cardSource}>
-        Nguồn: {tooltip ? <Tip label={tooltip}>{badge}</Tip> : badge}
+      {provenance.provinceName && (
+        <span className={styles.cardFixed} data-part="province">
+          {`${provenance.provinceName} · `}
+        </span>
+      )}
+      <span className={`${styles.cardFixed} ${styles.cardSource}`} data-part="source">
+        <span ref={label} className={compact ? styles.visuallyHidden : undefined}>
+          Nguồn:
+        </span>{' '}
+        {tooltip ? <Tip label={tooltip}>{badge}</Tip> : badge}
         {date && ` (${date})`}
       </span>
     </span>
