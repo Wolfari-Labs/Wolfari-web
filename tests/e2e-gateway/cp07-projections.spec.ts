@@ -109,7 +109,10 @@ test('CP07 Map reads only saved locations and filters scheduled/unscheduled loca
   const map = page.locator('[data-flow="gateway-map-read"]');
   await expect(map.getByText('Bãi biển Mỹ Khê', { exact: true }).first()).toBeVisible();
   await expect(map.getByText('Ngũ Hành Sơn', { exact: true }).first()).toBeVisible();
-  await expect(map.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
+  // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
+  await expect(
+    map.getByText('Bản đồ nền chưa khả dụng').or(map.locator('.leaflet-container')),
+  ).toBeVisible();
   await map.getByRole('button', { name: /^Trong lịch \(/ }).click();
   await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toBeVisible();
   await expect(map.getByRole('button', { name: /Ngũ Hành Sơn/ })).toHaveCount(0);
