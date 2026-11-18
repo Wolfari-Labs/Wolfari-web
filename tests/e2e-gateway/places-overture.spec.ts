@@ -155,10 +155,18 @@ test('HTTP mock (a): without a keyword the map loads by bbox, clusters and selec
 
   // A cluster zooms into its points: the next frame is narrower.
   const wide = width(bboxOf(urls.at(-1)!)!);
+  // Let the dragged frame's response render before using its markers.
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(500);
   const afterDrag = urls.length;
   // Keyboard activation (Enter) also proves clusters are reachable without a mouse.
-  await clusters.first().click();
-  await expect.poll(() => urls.length).toBeGreaterThan(afterDrag);
+  // Grid clusters near a cell edge may overlap, so activate the marker itself (Enter) rather
+  // than whatever sits on top at its centre. Retry if the markers were rebuilt meanwhile.
+  await expect(async () => {
+    await clusters.first().focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => urls.length, { timeout: 2000 }).toBeGreaterThan(afterDrag);
+  }).toPass({ timeout: 15_000 });
   expect(width(bboxOf(urls.at(-1)!)!)).toBeLessThan(wide);
 
   // Curated pins are never clustered and open the selected-place card (keyboard too).
@@ -388,7 +396,7 @@ test('HTTP mock (d): an Overture POI shows its provenance and is added to Day 2'
     .filter({ visible: true });
   // FR-TI01: exactly one extra line "<loại> · <tỉnh> · Nguồn: Overture (dd/MM/yyyy)".
   const line = card.locator('[data-region="place-provenance"]');
-  await expect(line).toHaveText('Tiện ích cho khách · Đà Nẵng ·Nguồn: Overture (18/11/2026)');
+  await expect(line).toHaveText('Tiện ích cho khách · Đà Nẵng · Nguồn: Overture (18/11/2026)');
   const lineBox = (await line.boundingBox())!;
   expect(lineBox.height).toBeLessThan(24);
   // Attribution lives in the badge tooltip, opened from the keyboard too.
@@ -633,4 +641,159 @@ test("HTTP mock (h) W14: search starts from the Trip's first saved place", async
   expect(keywords.map((p) => p.get('geocode'))).toEqual(['false', 'true']);
   expect(Number(keywords[0]!.get('latitude'))).toBeCloseTo(16.4698, 1);
   expect(Number(keywords[0]!.get('longitude'))).toBeCloseTo(107.5788, 1);
+});
+
+test('HTTP mock (i): a long category shortens or hides; province and source + date never truncate', async ({
+  page,
+  gateway,
+}, info) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  if (mapRun) await prepareMap(page);
+  await mockPlan(page, gateway);
+  const longLabel = 'Spa, massage, xông hơi và chăm sóc sức khỏe toàn diện cao cấp';
+  await page.route('**/places/search?*', (route) =>
+    new URL(route.request().url()).searchParams.has('bbox')
+      ? ok(route, [])
+      : ok(route, [
+          {
+            ...overture(5, 10.7769, 106.7009),
+            name: 'Spa Sài Gòn',
+            category: 'wellness',
+            category_label: longLabel,
+            province_code: '79',
+            province_name: 'TP. Hồ Chí Minh',
+          },
+          { ...golden, coord_verified: false },
+        ]),
+  );
+  await login(page);
+  await page.goto(`/trips/${tripId}/map`);
+  await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('spa');
+  await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  const card = page
+    .getByRole('article', { name: 'Đang chọn Spa Sài Gòn' })
+    .filter({ visible: true });
+  const line = card.locator('[data-region="place-provenance"]');
+  await expect(line).toBeVisible();
+  const truncated = (part: string) =>
+    line.locator(`[data-part="${part}"]`).evaluate((el) => el.scrollWidth > el.clientWidth + 1);
+  // Province and source + date are complete and inside the line.
+  await expect(line.locator('[data-part="province"]')).toHaveText('TP. Hồ Chí Minh ·');
+  await expect(line.locator('[data-part="source"]')).toHaveText('Nguồn: Overture (18/11/2026)');
+  expect(await truncated('province')).toBe(false);
+  expect(await truncated('source')).toBe(false);
+  const lineBox = (await line.boundingBox())!;
+  const sourceBox = (await line.locator('[data-part="source"]').boundingBox())!;
+  expect(sourceBox.x + sourceBox.width).toBeLessThanOrEqual(lineBox.x + lineBox.width + 1);
+  expect(lineBox.height).toBeLessThan(24);
+  // The long category gives way: shortened with an ellipsis or hidden entirely.
+  const category = line.locator('[data-part="category"]');
+  const hidden = !(await category.isVisible());
+  expect(hidden || (await truncated('category'))).toBe(true);
+  // Full text stays reachable in the badge tooltip (keyboard focus).
+  await line.getByText('Overture', { exact: true }).focus();
+  await expect(page.getByRole('tooltip')).toContainText(`${longLabel} · TP. Hồ Chí Minh`);
+  await card.screenshot({ path: info.outputPath('overture-card-long-category.png') });
+  await page.keyboard.press('Escape');
+
+  // A short category fits whole beside its province.
+  await page
+    .locator('[data-region="place-list"] li')
+    .filter({ hasText: 'Chợ Hàn' })
+    .getByRole('button')
+    .first()
+    .click();
+  const goldenLine = page
+    .getByRole('article', { name: 'Đang chọn Chợ Hàn' })
+    .filter({ visible: true })
+    .locator('[data-region="place-provenance"]');
+  await expect(goldenLine.locator('[data-part="category"]')).toBeVisible();
+  await expect(goldenLine.locator('[data-part="category"]')).toHaveText('Chợ ·');
+  await expect(goldenLine.locator('[data-part="source"]')).toHaveText('Nguồn: Wolfari');
+});
+
+test('HTTP mock (e2): a backend that ignores bbox and lacks the new fields still works', async ({
+  page,
+  gateway,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  if (mapRun) await prepareMap(page);
+  await mockPlan(page, gateway);
+  // Pre-Overture shape: golden catalogue around its default centre whatever the frame,
+  // no source_dataset / province_* / data_release, no bbox meta.
+  const legacy = [
+    {
+      id: 'dn-cho-han',
+      name: 'Chợ Hàn',
+      address: 'Hải Châu, Đà Nẵng',
+      coordinates: { latitude: 16.068, longitude: 108.224 },
+      categories: ['market'],
+      attribution: '© OpenStreetMap contributors',
+      selection_token: 'signed-wolfari',
+      provider: 'WOLFARI',
+      category: 'market',
+      category_label: 'Chợ',
+      tier: 1,
+      coord_verified: false,
+      activity_type: 'SHOPPING',
+    },
+    {
+      id: 'dn-cau-rong',
+      name: 'Cầu Rồng',
+      address: 'Sơn Trà, Đà Nẵng',
+      coordinates: { latitude: 16.061, longitude: 108.227 },
+      categories: ['bridge'],
+      attribution: '© OpenStreetMap contributors',
+      selection_token: 'signed-cau-rong',
+      provider: 'WOLFARI',
+      category: 'bridge',
+      category_label: 'Cầu tham quan',
+      tier: 1,
+      coord_verified: true,
+      activity_type: 'SIGHTSEEING',
+    },
+  ];
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  let bboxRequests = 0;
+  await page.route('**/places/search?*', (route) => {
+    if (new URL(route.request().url()).searchParams.has('bbox')) bboxRequests++;
+    return route.fulfill({
+      json: {
+        data: legacy,
+        meta: {
+          provider: 'WOLFARI',
+          status: 'SUCCESS',
+          stale: false,
+          fetched_at: null,
+          warnings: [],
+        },
+      },
+    });
+  });
+  await login(page);
+  await page.goto(`/trips/${tripId}/map`);
+  const rows = page.locator('[data-region="place-list"] li');
+  if (mapRun) {
+    // Frame exploration shows what the old backend returns; map stays rendered, no zoom notice.
+    await expect.poll(() => bboxRequests).toBeGreaterThan(0);
+    await expect(rows.filter({ hasText: 'Chợ Hàn' })).toBeVisible();
+    await expect(page.locator('.leaflet-marker-icon[title="Chợ Hàn"]')).toBeVisible();
+    await expect(page.locator('[data-explore]')).toHaveCount(0);
+  }
+  await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('cho han');
+  await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  await expect(rows.first()).toContainText('Chợ · Hải Châu, Đà Nẵng');
+  await expect(rows.first().getByText('Wolfari', { exact: true })).toBeVisible();
+  await expect(rows.first()).toContainText('Chưa xác minh vị trí');
+  // No province anywhere: the field is optional and simply not shown.
+  await expect(page.locator('[data-province="other"]')).toHaveCount(0);
+  const line = page
+    .getByRole('article', { name: 'Đang chọn Chợ Hàn' })
+    .filter({ visible: true })
+    .locator('[data-region="place-provenance"]');
+  await expect(line.locator('[data-part="province"]')).toHaveCount(0);
+  await expect(line.locator('[data-part="source"]')).toHaveText('Nguồn: Wolfari');
+  await expect(page.getByText('Dữ liệu địa điểm: Wolfari', { exact: true })).toBeVisible();
+  expect(errors).toEqual([]);
 });

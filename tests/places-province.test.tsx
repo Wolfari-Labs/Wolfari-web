@@ -48,7 +48,7 @@ describe('POI-OVERTURE OVW-3 selected-card source line', () => {
     const user = userEvent.setup();
     const { container } = render(<PlaceProvenanceLine provenance={overture} />);
     expect(container.textContent).toBe(
-      'Tiện ích cho khách · Đà Nẵng ·Nguồn: Overture (18/11/2026)',
+      'Tiện ích cho khách · Đà Nẵng · Nguồn: Overture (18/11/2026)',
     );
     const badge = screen.getByText('Overture', { exact: true });
     expect(badge).toHaveAttribute('tabindex', '0');

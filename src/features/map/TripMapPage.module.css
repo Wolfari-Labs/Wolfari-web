@@ -1427,17 +1427,31 @@
   margin-top: 3px;
   white-space: nowrap;
 }
-.cardFacts {
+/* Category shrinks with an ellipsis first and is hidden (JS) when too narrow. */
+.cardCategory {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.cardCategory[hidden] {
+  display: none;
+}
+/* Province and source + date never truncate. */
+.cardFixed {
+  flex: none;
 }
 .cardSource {
   display: inline-flex;
   flex: none;
   align-items: center;
   gap: 3px;
+}
+.cardProvenance {
+  gap: 3px;
+}
+.cardProvenance .sourceBadge {
+  padding: 0 4px;
 }
 .cardProvenance .sourceBadge:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);

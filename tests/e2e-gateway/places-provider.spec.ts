@@ -1,5 +1,7 @@
 import { expect, login, test } from './gateway-fixture';
 import { mockPlan } from './plan-fixture';
+import type { Route } from '@playwright/test';
+const isBbox = (route: Route) => new URL(route.request().url()).searchParams.has('bbox');
 const tripId = '11111111-1111-4111-8111-111111111111';
 for (const width of [1440, 390])
   test(`HTTP mock: explicit POI search, save, attach and reload (${width})`, async ({
@@ -12,6 +14,8 @@ for (const width of [1440, 390])
     let searches = 0,
       saves = 0;
     await page.route('**/places/search?*', (route) => {
+      // Map frame exploration (browser key present) falls back to the fixture default.
+      if (isBbox(route)) return route.fallback();
       searches++;
       return route.fulfill({
         json: {
@@ -125,7 +129,12 @@ for (const width of [1440, 390])
     await expect(
       page.getByRole('checkbox', { name: 'Bỏ chọn Hoi An POI', exact: true }),
     ).toBeDisabled();
-    await expect(page.getByText('Bản đồ nền chưa khả dụng', { exact: true })).toBeVisible();
+    // Without a browser key the map shows its notice; with one (demo machine) Leaflet renders.
+    await expect(
+      page
+        .getByText('Bản đồ nền chưa khả dụng', { exact: true })
+        .or(page.locator('.leaflet-container')),
+    ).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath('places.png'), fullPage: true });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
       true,
@@ -149,27 +158,29 @@ test('HTTP mock: existing checkbox recovers the same save after reload, then rem
   const locationId = '77777777-1111-4111-8111-111111111111';
   const keys: string[] = [];
   await page.route('**/places/search?*', (route) =>
-    route.fulfill({
-      json: {
-        data: [
-          {
-            id: 'poi',
-            name: 'Recovery POI',
-            address: 'Da Nang',
-            coordinates: { latitude: 16.05, longitude: 108.2 },
-            selection_token: 'signed-test',
-            attribution: 'Geoapify',
+    isBbox(route)
+      ? route.fallback()
+      : route.fulfill({
+          json: {
+            data: [
+              {
+                id: 'poi',
+                name: 'Recovery POI',
+                address: 'Da Nang',
+                coordinates: { latitude: 16.05, longitude: 108.2 },
+                selection_token: 'signed-test',
+                attribution: 'Geoapify',
+              },
+            ],
+            meta: {
+              provider: 'GEOAPIFY',
+              status: 'SUCCESS',
+              stale: false,
+              fetched_at: null,
+              warnings: [],
+            },
           },
-        ],
-        meta: {
-          provider: 'GEOAPIFY',
-          status: 'SUCCESS',
-          stale: false,
-          fetched_at: null,
-          warnings: [],
-        },
-      },
-    }),
+        }),
   );
   await page.route('**/selected-locations', (route) => {
     keys.push(route.request().headers()['idempotency-key']!);
@@ -244,6 +255,8 @@ test('HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that
   const locationId = '77777777-2222-4222-8222-222222222222';
   const geocodeModes: (string | null)[] = [];
   await page.route('**/places/search?*', (route) => {
+    // Map frame exploration (browser key present) falls back to the fixture default.
+    if (isBbox(route)) return route.fallback();
     // Text search must use place mode: geocode mode bypasses the Wolfari catalogue.
     geocodeModes.push(new URL(route.request().url()).searchParams.get('geocode'));
     return route.fulfill({
