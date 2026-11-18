@@ -43,3 +43,15 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* POI-OVERTURE W12: numbered grid cluster. */
+.cluster {
+  display: grid;
+  place-items: center;
+  border: 3px solid rgb(255 255 255 / 0.9);
+  border-radius: 50%;
+  background: #006f8a;
+  box-shadow: 0 0 0 4px rgb(0 111 138 / 0.25);
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+}

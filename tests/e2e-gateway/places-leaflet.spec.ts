@@ -25,6 +25,21 @@ test('HTTP mock tiles failure: real Leaflet pins, selection, attribution and man
     plan_version: trip.plan_version,
   });
   await page.route('https://maps.geoapify.com/**', (route) => route.abort());
+  // POI-OVERTURE W12: with no keyword the map explores its frame by bbox.
+  await page.route('**/places/search?*', (route) =>
+    route.fulfill({
+      json: {
+        data: [],
+        meta: {
+          provider: 'WOLFARI',
+          status: 'SUCCESS',
+          stale: false,
+          fetched_at: null,
+          warnings: [],
+        },
+      },
+    }),
+  );
   await login(page);
   await page.goto(`/trips/${trip.id}/map`);
   const pin = page.locator('.leaflet-marker-icon').first();

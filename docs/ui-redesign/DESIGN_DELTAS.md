@@ -140,4 +140,17 @@ Authority: owner task brief `docs/agents/AGENT_PROMPT_MAP_POI_DEMO.md` §3.1 (D5
 | MPOI-04 | “Thêm vào ngày…” (menu Ngày 1..n) nằm trong thẻ “Đang chọn” sẵn có trên bản đồ và trong Chi tiết địa điểm; sau khi thêm hiện liên kết “Xem lịch trình Ngày N” (`/plan?day=YYYY-MM-DD`). | Tôn trọng quyết định 12/11/2026 không thêm panel/form mới trên Map; tái dùng `ActionMenu` với trigger chữ. |
 | MPOI-05 | Bản đồ ngày vẽ polyline theo thứ tự đã sắp: nét liền + “x km · y phút (ước lượng ô tô)” khi OSRM trả kết quả; nét đứt + “Đường chim bay — chưa kiểm tra di chuyển” khi lỗi/503. Không vẽ cho “Tất cả” hay “Chưa xếp lịch”. | Thay quy tắc PLN03 cũ “không vẽ route/travel giả” bằng đường có nhãn trung thực; Leaflet giữ nguyên, MapLibre hoãn. |
 
+### POI-OVERTURE — 18/11/2026 — TASK_AUTHORIZED
+
+Authority: owner task brief `docs/agents/AGENT_PROMPT_POI_OVERTURE_WEB.md` (D58), Web only. Each item is listed separately for review; none approves other pending deltas.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| POV-01 | Thêm một hàng chip “Nhóm địa điểm” (Du lịch · Ăn uống · Cà phê · Lưu trú · Bar · Mua sắm · Giải trí · Spa · Giao thông · Tiện ích · Tất cả) ngay dưới hàng lọc Tất cả/Đã chọn/Trong lịch/Chưa xếp, dùng lại style chip lọc hiện có (chip đang chọn nền `--color-action-primary`, chữ trắng). Bố cục hẹp: hàng chip cuộn ngang dưới bộ lọc mobile. Trạng thái nằm trên URL `?group=`; bấm lại chip đang chọn để bỏ chọn. | W11; không thêm panel. Không chọn chip = không gửi `category` (backend trả 4 nhóm mặc định). |
+| POV-02 | Dòng trạng thái kiểu `searchState` sẵn có dưới hàng chip: “Phóng to để xem địa điểm” (zoom < 11 hoặc `BBOX_TOO_LARGE`), “Đang hiển thị 150 điểm nổi bật, phóng to để xem thêm” (`bbox_truncated`), lỗi tải khung. Empty state theo nhóm: “Không có địa điểm thuộc nhóm này trong khu vực” + “Phóng nhỏ bản đồ hoặc chọn nhóm khác.” | W11/W12; tái dùng `searchState`/`empty`. |
+| POV-03 | Marker cụm tròn có số (nền `#006f8a`, viền trắng, 36/42/48 px theo số điểm) trên Leaflet; marker đơn giữ nguyên. | W12/AC-PL02; gom tự viết, không thêm thư viện. |
+| POV-04 | Huy hiệu nguồn thêm biến thể “Overture” (tím nhạt `#f4f2fc`, chữ `#463a8c`, ≈ 8:1) có tooltip; huy hiệu nguồn cũng hiện trong thẻ “Đang chọn” (desktop và mobile). | W10; tooltip thay cho cảnh báo lặp lại trên từng hàng. |
+| POV-05 | Panel “Chi tiết địa điểm” (bố cục hẹp) thêm danh sách Loại · Tỉnh/thành · Nguồn (huy hiệu + “Bản dữ liệu dd/MM/yyyy · Cập nhật dd/MM/yyyy”, ghi chú Overture) · Ghi nguồn, đặt dưới địa chỉ. Desktop không có panel chi tiết trong template nên chỉ có huy hiệu ở thẻ “Đang chọn”; chưa thêm chi tiết nguồn trên desktop (chờ quyết định). | W10/FR-TI01. |
+| POV-06 | Dòng chữ nhỏ cuối danh sách “Dữ liệu địa điểm: Wolfari, Overture Maps Foundation (bản …), Geoapify / © OpenStreetMap contributors” (chỉ nguồn đang có); attribution Leaflet thêm “© Overture Maps Foundation” khi khung có điểm Overture. | W13. |
+
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.
