@@ -228,7 +228,7 @@ test('SRS12: location and Dress writes survive reload with shared revisions', as
   await expect(page.getByRole('heading', { name: 'Bảo tàng thủ công' })).toBeVisible();
   await page.goto(`${root}/dress-code`);
   await page.getByRole('button', { name: 'Thêm dress code', exact: true }).click();
-  await dialog.getByLabel('Ngày', { exact: true }).fill('2026-11-02');
+  await dialog.getByLabel('Ngày', { exact: true }).selectOption('2026-11-02');
   await dialog.getByLabel('Tiêu đề').fill('Áo chống nắng');
   await dialog.getByRole('button', { name: 'Lưu dress code' }).click();
   await expect(dialog).toHaveCount(0);

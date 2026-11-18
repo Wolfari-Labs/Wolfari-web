@@ -60,10 +60,17 @@
   align-items: start;
 }
 
+/* Each scope group is a column, so three short groups sit side by side on wide screens. */
 .cards {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  align-items: start;
   min-width: 0;
   gap: 16px;
+}
+
+.cards > .empty {
+  grid-column: 1 / -1;
 }
 
 .group {
@@ -78,7 +85,7 @@
 
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -119,17 +126,10 @@
   white-space: nowrap;
 }
 
-.noArtwork {
-  display: grid;
-  place-items: center;
-  min-height: 150px;
-  padding: 18px;
-  border: 1px dashed var(--color-line);
-  border-radius: 8px;
-  background: var(--color-surface);
-  color: var(--color-muted);
-  font-size: 13px;
-  text-align: center;
+.card > p {
+  margin: 0 0 12px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .card > p,
@@ -190,9 +190,5 @@
 @media (max-width: 620px) {
   .page {
     padding: 12px 14px 28px;
-  }
-
-  .cardGrid {
-    grid-template-columns: minmax(0, 1fr);
   }
 }

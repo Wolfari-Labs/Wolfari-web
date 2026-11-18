@@ -255,3 +255,33 @@ context fit their content, receiving add action sits right of title in one card,
 list/form outer wrappers lose redundant borders. FIN/26 discard semantics use the
 shared compact confirmation dialog rather than a full-page mockup; Back replaces
 Close form. Only local draft is discarded; sent operations/recovery are preserved.
+
+## Dress code writes on Gateway — user request 16/11/2026
+
+Backend now serves API050–053 and `capabilities.dress_codes_write`, so the Gateway Dress page
+writes for real. User asked for a sensible, demo-ready Dress code screen.
+
+- Removed the dashed "Chưa có ảnh minh họa riêng" placeholder from every saved card: the
+  contract has no image or palette, and the empty box pushed the guidance below the fold.
+- Scope groups (whole Trip, each day, each Activity) flow as columns on wide screens and
+  stack on phones; cards keep header, description, scope/source rows and actions.
+- Editor: scope adds "Cả chuyến"; the day is a list of the Trip's own days instead of a free
+  date input, so an out-of-range day cannot be typed. TRIP rows are no longer read-only.
+- Unchanged: filters, breadcrumb, hero, capability/permission gating, recovery states,
+  suggestion panel gating. No image, palette or upload was added.
+
+Checks: typecheck, lint, unit suite, Gateway HTTP-mock `preparation-srs12` and `cp07`,
+plus a live add/edit/reload/delete run against the local demo backend.
+
+### Built-in dress code suggestions — user request 16/11/2026
+
+User asked for suggestions that fit the weather and the place, fixed rules being acceptable.
+The editor gains a "Gợi ý nhanh" box (`DressSuggestions`): expected weather is guessed from
+the place (Trip name, saved locations, their latitude) and the month, using a fixed table of
+Vietnamese climate by region, and can be changed by hand. It lists one preset for that weather
+plus presets for places found in the Plan (beach, pagoda, old town, Huế, mountain, highland,
+dinner, boat, city), each with three colours. Picking one only fills title and description;
+nothing is saved until "Lưu dress code". Colours are written into the description because the
+contract has no colour field. No weather provider, no new API; this is not the DSS
+recommendation flow (FR-DS03), whose panel stays capability-gated. `dress-suggestions.ts` is
+kept identical in the mobile repo.
