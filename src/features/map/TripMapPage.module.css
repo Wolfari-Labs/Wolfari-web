@@ -1410,3 +1410,11 @@
     margin-top: 0;
   }
 }
+/* POI-OVERTURE W13: data credit under the place list. */
+.dataCredit {
+  flex: none;
+  margin: 6px 0 0;
+  color: var(--color-muted);
+  font-size: 11px;
+  line-height: 16px;
+}

@@ -26,6 +26,8 @@ export interface DiscoveredPlace {
   sourceDataset: PlaceDataset | null;
   categoryGroup: string | null;
   provinceCode: string | null;
+  /** Backend display name; preferred over the local code table. */
+  provinceName: string | null;
   confidence: number | null;
   dataRelease: string | null;
   fetchedAt: string | null;
@@ -97,16 +99,18 @@ export function placeDataset(
   return place.sourceDataset ?? (place.provider === 'WOLFARI' ? 'golden' : 'geoapify');
 }
 /**
- * Dataset of a saved location. Selection metadata keeps only `categories` and the record
- * attribution, so a saved Overture row is recognised by its Overture attribution.
+ * Dataset of a saved location. Overture `wolfari_key`s are `ov-<gers id>` (stored as
+ * `provider_place_id`); an Overture attribution is only a fallback for older rows.
  */
 export function savedLocationDataset(location: {
   source: string;
   provider: string | null;
+  providerPlaceId?: string | null;
   metadata: Readonly<Record<string, unknown>>;
 }): PlaceDataset | 'manual' {
   if (location.source === 'MANUAL' || !location.provider) return 'manual';
   if (location.provider.toUpperCase() === 'GEOAPIFY') return 'geoapify';
+  if (location.providerPlaceId?.startsWith('ov-')) return 'overture';
   const attribution = location.metadata.attribution;
   return typeof attribution === 'string' && /overture/i.test(attribution) ? 'overture' : 'golden';
 }
@@ -352,7 +356,7 @@ export function resultProvenance(place: DiscoveredPlace): PlaceProvenance {
       place.category || place.categoryLabel
         ? placeCategoryLabel(place.category, place.categoryLabel)
         : null,
-    provinceName: provinceName(place.provinceCode),
+    provinceName: place.provinceName ?? provinceName(place.provinceCode),
     dataRelease: placeDate(place.dataRelease),
     fetchedAt: placeDate(place.fetchedAt),
     attribution: place.attribution || null,
@@ -362,6 +366,7 @@ export function resultProvenance(place: DiscoveredPlace): PlaceProvenance {
 export function savedProvenance(location: {
   source: string;
   provider: string | null;
+  providerPlaceId?: string | null;
   fetchedAt: string | null;
   metadata: Readonly<Record<string, unknown>>;
 }): PlaceProvenance {
@@ -385,3 +390,72 @@ export function savedProvenance(location: {
     coordVerified: null,
   };
 }
+
+/** Explore mode (W12): below this zoom the map frame is too wide to load places. */
+export const EXPLORE_MIN_ZOOM = 11;
+export const EXPLORE_LIMIT = 150;
+/** Cache key for a bbox query: bbox rounded to 3 decimals + chip group. */
+export function exploreCacheKey(bounds: MapBounds, group: PlaceGroup | null) {
+  return `${bboxText(bounds, 3)}|${group ?? ''}`;
+}
+/** Small in-memory LRU (W12: at most 30 bbox results); never persisted. */
+export class LruCache<V> {
+  private readonly entries = new Map<string, V>();
+  constructor(private readonly max = 30) {}
+  get(key: string) {
+    const value = this.entries.get(key);
+    if (value !== undefined) {
+      this.entries.delete(key);
+      this.entries.set(key, value);
+    }
+    return value;
+  }
+  set(key: string, value: V) {
+    this.entries.delete(key);
+    this.entries.set(key, value);
+    while (this.entries.size > this.max) this.entries.delete(this.entries.keys().next().value!);
+  }
+  get size() {
+    return this.entries.size;
+  }
+}
+
+/**
+ * W13 list footer: only the sources present in the results, Overture with its release.
+ * Returns null when there is nothing to credit.
+ */
+export function placeDataCredit(
+  places: readonly Pick<DiscoveredPlace, 'sourceDataset' | 'provider' | 'dataRelease'>[],
+  metaRelease?: string | null,
+) {
+  const datasets = new Set(places.map(placeDataset));
+  const release =
+    metaRelease ??
+    places.find((p) => placeDataset(p) === 'overture' && p.dataRelease)?.dataRelease ??
+    null;
+  const parts = [
+    datasets.has('golden') && 'Wolfari',
+    datasets.has('overture') && `Overture Maps Foundation${release ? ` (bản ${release})` : ''}`,
+    datasets.has('geoapify') && 'Geoapify / © OpenStreetMap contributors',
+  ].filter((part): part is string => !!part);
+  return parts.length ? `Dữ liệu địa điểm: ${parts.join(', ')}` : null;
+}
+
+/** Search response meta as the map consumes it (additive POI-OVERTURE fields optional). */
+export interface PlacesSource {
+  provider: string;
+  status: string;
+  stale: boolean;
+  fetchedAt: string | null;
+  warnings: string[];
+  snapshotId?: string | null;
+  dataRelease?: string | null;
+  bboxTruncated?: boolean;
+}
+export interface PlacesFound {
+  items: DiscoveredPlace[];
+  source: PlacesSource;
+}
+/** Explore (bbox) outcome; transport errors still throw. */
+export type PlacesExplore =
+  ({ kind: 'found' } & PlacesFound) | { kind: 'too-large' } | { kind: 'unsupported' };

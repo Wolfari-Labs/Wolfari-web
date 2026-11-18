@@ -1,8 +1,11 @@
 import type { GatewayHttpClient } from '../http/http-client';
+import { ApiError } from '../http/api-error';
 import * as d from '../http/decode';
 import type {
   DiscoveredPlace,
   PlaceDataset,
+  PlacesExplore,
+  PlacesFound,
   PlaceIntent,
   PlaceProvider,
   PlaceRoute,
@@ -61,6 +64,7 @@ export function decodePlace(value: unknown): DiscoveredPlace {
       typeof p.province_code === 'string' && /^\d{1,3}$/.test(p.province_code.trim())
         ? p.province_code.trim()
         : null,
+    provinceName: optionalText(p.province_name, 80),
     confidence:
       typeof p.confidence === 'number' &&
       Number.isFinite(p.confidence) &&
@@ -110,6 +114,19 @@ export function decodeRoute(value: unknown): PlaceRoute {
   };
 }
 export function createPlacesRepository(client: GatewayHttpClient) {
+  const search = async (
+    tripId: string,
+    params: URLSearchParams,
+    signal: AbortSignal,
+  ): Promise<PlacesFound> => {
+    const result = await client.read(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/places/search?${params}`,
+      { signal },
+    );
+    if (!Array.isArray(result.data) || !result.metadata?.placesSource)
+      throw Error('Invalid places response');
+    return { items: result.data.map(decodePlace), source: result.metadata.placesSource };
+  };
   return {
     /** OSRM car estimate between ordered stops; 503 when routing is not available. */
     async route(
@@ -123,14 +140,25 @@ export function createPlacesRepository(client: GatewayHttpClient) {
       });
       return decodeRoute(result.data);
     },
-    async search(tripId: string, params: URLSearchParams, signal: AbortSignal) {
-      const result = await client.read(
-        `/api/v1/trips/${encodeURIComponent(tripId)}/places/search?${params}`,
-        { signal },
-      );
-      if (!Array.isArray(result.data) || !result.metadata?.placesSource)
-        throw Error('Invalid places response');
-      return { items: result.data.map(decodePlace), source: result.metadata.placesSource };
+    search,
+    /**
+     * POI-OVERTURE W12 bbox query. `BBOX_TOO_LARGE` asks the user to zoom in; any other 400
+     * except `INVALID_BBOX` means the backend predates bbox support (keep the old behaviour).
+     */
+    async explore(
+      tripId: string,
+      params: URLSearchParams,
+      signal: AbortSignal,
+    ): Promise<PlacesExplore> {
+      try {
+        return { kind: 'found', ...(await search(tripId, params, signal)) };
+      } catch (error) {
+        if (error instanceof ApiError && error.kind === 'http') {
+          if (error.code === 'BBOX_TOO_LARGE') return { kind: 'too-large' };
+          if (error.status === 400 && error.code !== 'INVALID_BBOX') return { kind: 'unsupported' };
+        }
+        throw error;
+      }
     },
     async command(intent: PlaceIntent, signal: AbortSignal) {
       const result = await client.write(intent.path, {

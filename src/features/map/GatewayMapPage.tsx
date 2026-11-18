@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { paths } from '../../app/route-paths';
 import { useRuntimeServices } from '../../app/gateway-context';
@@ -20,7 +20,7 @@ import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import { activityPlanDay, planDays } from '../plan/model/plan-presentation';
 import { globalPositionFor } from '../plan/model/plan-placement';
 import { TripHero } from '../trips/components/TripHero';
-import { GeoapifyMap, type MapCenter } from './GeoapifyMap';
+import { GeoapifyMap, type MapCenter, type MapViewportChange } from './GeoapifyMap';
 import {
   mapLocationPresentations,
   normalizedPlaceText,
@@ -30,7 +30,13 @@ import {
 } from './trip-map';
 import {
   activityTypeLabel,
+  EXPLORE_LIMIT,
+  EXPLORE_MIN_ZOOM,
+  exploreCacheKey,
+  LruCache,
   parsePlaceGroup,
+  placeDataCredit,
+  placeDataset,
   placeActivityType,
   placeSearchParams,
   placeSourceLabel,
@@ -42,6 +48,7 @@ import {
   type DiscoveredPlace,
   type PlaceGroup,
   type PlaceIntent,
+  type PlacesFound,
 } from './places';
 import { PlaceSourceBadges } from './PlaceSourceBadges';
 import type { MapLocationPresentation } from './trip-map';
@@ -49,6 +56,18 @@ import styles from './TripMapPage.module.css';
 
 const groupEmpty = 'Không có địa điểm thuộc nhóm này trong khu vực';
 const groupEmptyHint = 'Phóng nhỏ bản đồ hoặc chọn nhóm khác.';
+const zoomInNotice = 'Phóng to để xem địa điểm';
+
+function sourceSummary(found: PlacesFound) {
+  const provider =
+    found.source.provider === 'WOLFARI+GEOAPIFY'
+      ? 'Wolfari + Geoapify'
+      : placeSourceLabel(found.source.provider);
+  const attribution = [...new Set(found.items.map((p) => p.attribution).filter(Boolean))];
+  return `${found.source.stale ? 'Cache cũ · ' : ''}${provider} · ${found.source.fetchedAt ? new Date(found.source.fetchedAt).toLocaleString('vi-VN') : ''}${attribution.length ? ` · ${attribution.join(' · ')}` : ''}`;
+}
+/** Explore (bbox) state shown under the group chips. */
+type ExploreStatus = 'idle' | 'zoom' | 'ready' | 'truncated' | 'error' | 'unsupported';
 
 export function GatewayMapPage() {
   const { tripId = '' } = useParams();
@@ -116,6 +135,74 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   });
   const [pending, setPending] = useState<PlaceIntent | null>(journal.pending);
   const [storageBlocked, setStorageBlocked] = useState(journal.blocked);
+  // POI-OVERTURE W12: explore the visible frame when there is no keyword.
+  const [viewport, setViewport] = useState<MapViewportChange | null>(null);
+  /** Where `results` came from: `query` refits the map once, `chip`/`bbox` keep the frame. */
+  const [resultMode, setResultMode] = useState<'none' | 'query' | 'chip' | 'bbox'>('none');
+  const [exploreStatus, setExploreStatus] = useState<ExploreStatus>('idle');
+  const [dataRelease, setDataRelease] = useState<string | null>(null);
+  const exploreCache = useRef(new LruCache<PlacesFound>(30));
+  const exploreController = useRef<AbortController | null>(null);
+  const exploreUnsupported = useRef(false);
+  // `signal` is a new function each render; the effect reads it through a ref.
+  const scopeSignal = useRef(signal);
+  scopeSignal.current = signal;
+  const exploring = !query.trim();
+  useEffect(() => {
+    if (!repo || !viewport || !exploring || exploreUnsupported.current) return;
+    const showFound = (found: PlacesFound) => {
+      setResults(found.items);
+      setResultMode('bbox');
+      setSearchedGroup(group);
+      setDataRelease(found.source.dataRelease ?? null);
+      setSource(sourceSummary(found));
+      setExploreStatus(found.source.bboxTruncated ? 'truncated' : 'ready');
+    };
+    const clear = (status: ExploreStatus) => {
+      setResults([]);
+      setResultMode('bbox');
+      setExploreStatus(status);
+    };
+    const timer = window.setTimeout(() => {
+      exploreController.current?.abort();
+      if (viewport.zoom < EXPLORE_MIN_ZOOM) return clear('zoom');
+      const key = exploreCacheKey(viewport.bounds, group);
+      const cached = exploreCache.current.get(key);
+      if (cached) return showFound(cached);
+      const controller = new AbortController();
+      exploreController.current = controller;
+      // A newer frame aborts this request; logout/account change aborts the whole scope.
+      const current = AbortSignal.any([scopeSignal.current(), controller.signal]);
+      repo
+        .explore(
+          tripId,
+          placeSearchParams({
+            mode: 'bbox',
+            bounds: viewport.bounds,
+            group,
+            limit: EXPLORE_LIMIT,
+          }),
+          current,
+        )
+        .then((outcome) => {
+          if (current.aborted) return;
+          if (outcome.kind === 'too-large') return clear('zoom');
+          if (outcome.kind === 'unsupported') {
+            // A backend without bbox support: keep the previous keyword-only behaviour.
+            exploreUnsupported.current = true;
+            return setExploreStatus('unsupported');
+          }
+          const found = { items: outcome.items, source: outcome.source };
+          exploreCache.current.set(key, found);
+          showFound(found);
+        })
+        .catch(() => {
+          if (!current.aborted) setExploreStatus('error');
+        });
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [repo, viewport, exploring, group, tripId]);
+  useEffect(() => () => exploreController.current?.abort(), []);
   const writing = useRef(false),
     searchSequence = useRef(0);
   const currentPlan = data?.plan;
@@ -223,6 +310,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   const unscheduledCount = selectedCount - scheduledCount;
   const points = visibleItems.flatMap((item) => {
     const c = validCoordinates(item.location);
+    const result = resultFor(item);
     return c
       ? [
           {
@@ -231,10 +319,15 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
             name: item.location.name,
             number: item.markerNumber,
             scheduled: item.scheduled,
+            // Curated Wolfari pins, saved places and the place the user picked stay single (W12).
+            clusterable:
+              !!result && placeDataset(result) !== 'golden' && item.location.id !== selected,
+            overture: provenanceOf(item).dataset === 'overture',
           },
         ]
       : [];
   });
+  const dataCredit = placeDataCredit(results, dataRelease);
   const chooseLocation = (id: string, open = false) => {
     setSelected(id);
     if (open) setDetailOpen(true);
@@ -254,6 +347,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   ) => {
     if (!repo) return;
     const category = options.group === undefined ? group : options.group;
+    exploreController.current?.abort();
     const current = signal(),
       seq = ++searchSequence.current;
     setSearching(true);
@@ -269,16 +363,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         found = await repo.search(tripId, params(true), current);
       if (current.aborted || seq !== searchSequence.current) return;
       setResults(found.items);
+      setResultMode(options.keepView ? 'chip' : 'query');
       setSearchedGroup(category);
+      setDataRelease(found.source.dataRelease ?? null);
       setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
-      const provider =
-        found.source.provider === 'WOLFARI+GEOAPIFY'
-          ? 'Wolfari + Geoapify'
-          : placeSourceLabel(found.source.provider);
-      const attribution = [...new Set(found.items.map((p) => p.attribution).filter(Boolean))];
-      setSource(
-        `${found.source.stale ? 'Cache cũ · ' : ''}${provider} · ${found.source.fetchedAt ? new Date(found.source.fetchedAt).toLocaleString('vi-VN') : ''}${attribution.length ? ` · ${attribution.join(' · ')}` : ''}`,
-      );
+      setSource(sourceSummary(found));
       setNotice(
         found.source.status === 'ERROR'
           ? 'Nguồn địa điểm chưa khả dụng. Kiểm tra cấu hình/quota hoặc thử lại.'
@@ -648,6 +737,22 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       </button>
                     ))}
                   </div>
+                  {exploring &&
+                    (exploreStatus === 'zoom' ||
+                      exploreStatus === 'truncated' ||
+                      exploreStatus === 'error') && (
+                      <div
+                        className={styles.searchState}
+                        role="status"
+                        data-explore={exploreStatus}
+                      >
+                        {exploreStatus === 'zoom'
+                          ? zoomInNotice
+                          : exploreStatus === 'truncated'
+                            ? `Đang hiển thị ${EXPLORE_LIMIT} điểm nổi bật, phóng to để xem thêm`
+                            : 'Không tải được địa điểm trong khung bản đồ. Danh sách đã lưu vẫn được giữ.'}
+                      </div>
+                    )}
                   {searching && (
                     <div className={styles.searchState} role="status">
                       Đang tìm địa điểm...
@@ -726,7 +831,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         );
                       })}
                     </ul>
-                  ) : (
+                  ) : exploring && exploreStatus === 'zoom' ? null : (
+                    // The "zoom in" status line already explains the empty list.
                     <div className={styles.empty} role="status">
                       {searchedGroup && !results.length ? (
                         <>
@@ -741,6 +847,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       )}
                     </div>
                   )}
+                  {dataCredit && <p className={styles.dataCredit}>{dataCredit}</p>}
                 </section>
                 <section
                   className={styles.mapPanel}
@@ -801,6 +908,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         selectedId={effectiveSelectedId}
                         onSelect={(id) => chooseLocation(id, true)}
                         onCenter={setCenter}
+                        onViewport={setViewport}
+                        autoFit={resultMode === 'none' || resultMode === 'query'}
                         focus={focus}
                         onPin={
                           canEdit
@@ -816,7 +925,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         }
                       />
                     }
-                    onSearchArea={() => void search(true)}
+                    onSearchArea={() =>
+                      exploring ? viewport && setViewport({ ...viewport }) : void search(true)
+                    }
                     selectedActions={addToDayMenu(selectedItem)}
                     selectedMeta={sourceBadges(selectedItem)}
                     onSelect={(locationId) => chooseLocation(locationId)}
