@@ -1342,3 +1342,71 @@
     font-size: 12px;
   }
 }
+
+/* POI-OVERTURE W10/W11 (see DESIGN_DELTAS POI-OVERTURE). */
+.placeMeta .sourceBadge,
+.placeMeta .unverifiedBadge {
+  font-size: 10px;
+  line-height: 16px;
+}
+.placeMeta .sourceBadge {
+  color: #17677b;
+}
+.placeMeta .sourceBadge[data-source='WOLFARI'] {
+  color: #0b5466;
+}
+.placeMeta .unverifiedBadge {
+  color: #7a4b00;
+}
+.placeMeta .sourceBadge[data-source='OVERTURE'] {
+  border-color: #cbc4ec;
+  background: #f4f2fc;
+  color: #463a8c;
+  cursor: help;
+}
+.groupFilters {
+  margin-top: -2px;
+}
+.groupFilters button[aria-pressed='true'] {
+  border-color: var(--map-teal);
+  background: var(--color-action-primary);
+  color: var(--color-white);
+}
+.detailProvenance {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 18px;
+}
+.detailProvenance > div {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 8px;
+}
+.detailProvenance dt {
+  color: var(--color-muted);
+}
+.detailProvenance dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.detailProvenance dd small {
+  flex-basis: 100%;
+  color: var(--color-muted);
+}
+@media (max-width: 768px) {
+  .placeMeta .sourceBadge,
+  .placeMeta .unverifiedBadge {
+    font-size: 12px;
+  }
+  .groupFilters {
+    display: flex;
+    order: 2;
+    margin-top: 0;
+  }
+}

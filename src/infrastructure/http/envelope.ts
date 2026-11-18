@@ -15,6 +15,10 @@ export interface GatewayMetadata {
     stale: boolean;
     fetchedAt: string | null;
     warnings: string[];
+    /** POI-OVERTURE §2.1 additive meta; absent on older backends. */
+    snapshotId?: string | null;
+    dataRelease?: string | null;
+    bboxTruncated?: boolean;
   };
 }
 export type GatewayEnvelope =
@@ -69,6 +73,15 @@ export function parseEnvelope(value: unknown): GatewayEnvelope {
                 warnings: Array.isArray(value.meta.warnings)
                   ? value.meta.warnings.filter((v): v is string => typeof v === 'string')
                   : [],
+                ...(typeof value.meta.snapshot_id === 'string'
+                  ? { snapshotId: value.meta.snapshot_id }
+                  : {}),
+                ...(typeof value.meta.data_release === 'string'
+                  ? { dataRelease: value.meta.data_release }
+                  : {}),
+                ...(typeof value.meta.bbox_truncated === 'boolean'
+                  ? { bboxTruncated: value.meta.bbox_truncated }
+                  : {}),
               },
             }
           : {}),

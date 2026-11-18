@@ -7,6 +7,8 @@ import heartIcon from '../../shared/assets/figma/a50ed.svg';
 import clockIcon from '../../shared/assets/figma/1666f.svg';
 import type { MapLocationPresentation } from './trip-map';
 import { activityDurationLabel, activityScheduleLabel, validCoordinates } from './trip-map';
+import { OVERTURE_NOTE, type PlaceProvenance } from './places';
+import { PlaceSourceBadges } from './PlaceSourceBadges';
 import styles from './TripMapPage.module.css';
 
 function detailPhoto(item: MapLocationPresentation) {
@@ -24,6 +26,7 @@ export function PlaceDetail({
   onToggleSelection,
   selectionDisabled = false,
   actions,
+  provenance,
 }: {
   item: MapLocationPresentation | null;
   tripId: string;
@@ -35,6 +38,8 @@ export function PlaceDetail({
   selectionDisabled?: boolean;
   /** Runtime-only commands such as "Thêm vào ngày…". */
   actions?: ReactNode;
+  /** Runtime-only source/category record (POI-OVERTURE W10, FR-TI01). */
+  provenance?: PlaceProvenance | null;
 }) {
   const [favorite, setFavorite] = useState(false);
   if (!item) return null;
@@ -87,6 +92,44 @@ export function PlaceDetail({
             : 'Chưa chọn'}
       </p>
       <p className={styles.detailAddress}>{item.location.address ?? 'Chưa có địa chỉ'}</p>
+      {provenance && (
+        <dl className={styles.detailProvenance} aria-label="Nguồn dữ liệu địa điểm">
+          {provenance.categoryLabel && (
+            <div>
+              <dt>Loại</dt>
+              <dd>{provenance.categoryLabel}</dd>
+            </div>
+          )}
+          {provenance.provinceName && (
+            <div>
+              <dt>Tỉnh/thành</dt>
+              <dd>{provenance.provinceName}</dd>
+            </div>
+          )}
+          <div>
+            <dt>Nguồn</dt>
+            <dd>
+              <PlaceSourceBadges
+                dataset={provenance.dataset}
+                coordVerified={provenance.coordVerified}
+              />
+              {[
+                provenance.dataRelease && `Bản dữ liệu ${provenance.dataRelease}`,
+                provenance.fetchedAt && `Cập nhật ${provenance.fetchedAt}`,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+              {provenance.dataset === 'overture' && <small>{OVERTURE_NOTE}.</small>}
+            </dd>
+          </div>
+          {provenance.attribution && (
+            <div>
+              <dt>Ghi nguồn</dt>
+              <dd>{provenance.attribution}</dd>
+            </div>
+          )}
+        </dl>
+      )}
       <div className={styles.detailFacts}>
         <div>
           <img src={clockIcon} width="22" height="22" alt="" />
