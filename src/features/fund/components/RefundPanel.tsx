@@ -11,6 +11,7 @@ import { ContentState } from '../../../shared/components/ContentState';
 import { toDomainError } from '../../../shared/lib/runtime-validation';
 import { Badge } from '../../../shared/components/Ui';
 import styles from './FinanceRecords.module.css';
+import { canOfferRefundVerifier, isRefundConfirmationCandidate } from '../model/refund-candidates';
 const vnd = (value: string) => value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' ₫';
 const tones: Record<Refund['status'], 'neutral' | 'success' | 'warning' | 'danger'> = {
   PENDING: 'warning',
@@ -56,22 +57,6 @@ export function RefundPanel({
   const name = (id: string) =>
     members.find((m) => m.userId === id)?.presentation.displayName ?? `User ${id.slice(0, 8)}`;
   const active = members.filter((m) => m.leftAt === null);
-  const ownerId = active.find((m) => m.role === 'OWNER')?.userId ?? (owner ? actor : null);
-  // Mirrors the backend rule (FR-FN07): the person who pays a refund never verifies it alone.
-  // The payer is the Holder; after a handover the backend keeps the original reporter as payer,
-  // so this is a display hint only and the server remains authoritative.
-  const confirmerOf = (row: Refund): string | null => {
-    const payer = fund.holder_user_id;
-    if (row.member_user_id !== payer) return row.member_user_id;
-    if (ownerId && ownerId !== payer) return ownerId;
-    if (active.length === 1) return payer;
-    return row.verifier_user_id;
-  };
-  const needsVerifier = (row: Refund) =>
-    row.member_user_id === fund.holder_user_id &&
-    ownerId === fund.holder_user_id &&
-    active.length > 1 &&
-    (row.status === 'PENDING' || row.status === 'HOLDER_REPORTED');
   const modeLabel: Record<NonNullable<Refund['confirmation_mode']>, string> = {
     RECIPIENT: 'Người nhận tự xác nhận',
     OWNER: 'Chủ chuyến kiểm chứng thay người nhận (người nhận là người giữ quỹ)',
@@ -101,7 +86,7 @@ export function RefundPanel({
                 required: true,
                 ...(row?.verifier_user_id ? { initial: row.verifier_user_id } : {}),
                 options: active
-                  .filter((m) => m.userId !== fund.holder_user_id)
+                  .filter((m) => m.userId !== row?.member_user_id)
                   .map((m) => ({ value: m.userId, label: name(m.userId) })),
               },
             ]
@@ -216,19 +201,15 @@ export function RefundPanel({
                 {row.reversal_reason ? ` · Lý do đảo: ${row.reversal_reason}` : ''}
               </p>
             )}
-            {(row.status === 'PENDING' || row.status === 'HOLDER_REPORTED') &&
-              (() => {
-                const confirmer = confirmerOf(row);
-                return (
-                  <p>
-                    {confirmer
-                      ? `Người xác nhận đã nhận: ${name(confirmer)}${confirmer === actor ? ' (bạn)' : ''}.`
-                      : 'Cần chủ chuyến chỉ định người kiểm chứng trước khi xác nhận.'}
-                    {row.verifier_user_id &&
-                      ` Người kiểm chứng được chỉ định: ${name(row.verifier_user_id)}.`}
-                  </p>
-                );
-              })()}
+            {(row.status === 'PENDING' || row.status === 'HOLDER_REPORTED') && (
+              <p>
+                Hệ thống kiểm tra quyền theo người đã trả tiền và thành viên hiện tại khi xác nhận,
+                kể cả sau bàn giao quỹ. Người trả không tự kiểm chứng khi có người khác đủ điều
+                kiện.
+                {row.verifier_user_id &&
+                  ` Người kiểm chứng được chỉ định: ${name(row.verifier_user_id)}.`}
+              </p>
+            )}
             {row.confirmation_mode && (
               <p>
                 Cách xác nhận: {modeLabel[row.confirmation_mode]}
@@ -244,15 +225,14 @@ export function RefundPanel({
               {holder &&
                 row.status === 'PENDING' &&
                 action('refund-report-paid', 'Báo đã hoàn tiền', row)}
-              {owner &&
-                needsVerifier(row) &&
+              {canOfferRefundVerifier(row, actor, owner) &&
+                active.some((m) => m.userId !== row.member_user_id) &&
                 action(
                   'refund-assign-verifier',
                   row.verifier_user_id ? 'Đổi người kiểm chứng' : 'Chỉ định người kiểm chứng',
                   row,
                 )}
-              {row.status === 'HOLDER_REPORTED' &&
-                confirmerOf(row) === actor &&
+              {isRefundConfirmationCandidate(row, actor, owner) &&
                 action(
                   'refund-confirm-received',
                   actor === row.member_user_id

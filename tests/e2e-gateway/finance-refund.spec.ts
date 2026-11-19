@@ -112,17 +112,17 @@ test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reve
   await run('Hủy hoàn tiền', 'Đã đối chiếu');
   await create();
   await run('Báo đã hoàn tiền');
-  // Owner = Holder = recipient with another active member: self-confirmation is not offered
-  // (FR-FN07 independent verification); the Owner assigns another member to verify.
-  await expect(page.getByRole('button', { name: 'Xác nhận nhận hoàn tiền' })).toHaveCount(0);
-  await expect(page.getByText(/Cần chủ chuyến chỉ định người kiểm chứng/)).toBeVisible();
+  // Current Holder does not identify the historical payer after a handover. The UI
+  // offers candidates; the backend still enforces independent verification.
+  await expect(page.getByRole('button', { name: 'Xác nhận nhận hoàn tiền' })).toBeVisible();
+  await expect(page.getByText(/Hệ thống kiểm tra quyền theo người đã trả tiền/)).toBeVisible();
   await page.getByRole('button', { name: 'Chỉ định người kiểm chứng', exact: true }).click();
   await page.getByLabel('Người kiểm chứng', { exact: true }).selectOption(verifierId);
   await page
     .getByRole('button', { name: 'Xác nhận · Chỉ định người kiểm chứng', exact: true })
     .click();
-  await expect(page.getByText(/Người xác nhận đã nhận: Member Gateway./)).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Xác nhận nhận hoàn tiền' })).toHaveCount(0);
+  await expect(page.getByText(/Người kiểm chứng được chỉ định: Member Gateway./)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Xác nhận nhận hoàn tiền' })).toBeVisible();
   // The assigned member confirms in their own session; mirror the backend result.
   Object.assign(row!, {
     status: 'CONFIRMED',
