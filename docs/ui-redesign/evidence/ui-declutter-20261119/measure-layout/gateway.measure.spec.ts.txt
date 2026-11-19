@@ -1,0 +1,78 @@
+// TEMPORARY (Phase 0 step 4): Gateway (HTTP-mock) layout measurement + screenshots. See measure.ts.
+import type { Page } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { login, test, type GatewayModel } from '../e2e-gateway/gateway-fixture';
+import { mockPlan } from '../e2e-gateway/plan-fixture';
+import {
+  desktopViewports,
+  evidenceRoot,
+  label,
+  measureLayout,
+  mobileViewports,
+  record,
+  routes,
+  tripId,
+} from './measure';
+
+const shotDir = resolve(evidenceRoot, label);
+mkdirSync(shotDir, { recursive: true });
+const fundId = '77777777-1111-4111-8111-111111111111';
+const viewports = [...desktopViewports, ...mobileViewports];
+
+async function mockRest(page: Page, gateway: GatewayModel) {
+  await mockPlan(page, gateway);
+  await page.route('**/api/v1/**', async (route) => {
+    if (route.request().method() !== 'GET') return route.fallback();
+    const path = new URL(route.request().url()).pathname;
+    const respond = (data: unknown) =>
+      route.fulfill({ json: { data, meta: { correlation_id: 'measure-only' } } });
+    if (path === `/api/v1/trips/${tripId}/fund`)
+      return respond({
+        id: fundId,
+        trip_id: tripId,
+        holder_user_id: gateway.profile.id,
+        currency: 'VND',
+        budget_amount: '5000000',
+        current_balance: '1200000',
+        reserved_refund: '0',
+        available_balance: '1200000',
+        status: 'OPEN',
+        finance_version: 3,
+        closed_at: null,
+      });
+    if (path.startsWith(`/api/v1/funds/`)) return respond({ items: [], next_cursor: null });
+    if (path === `/api/v1/trips/${tripId}/price-watches`)
+      return respond({ items: [], next_cursor: null });
+    return route.fallback();
+  });
+}
+
+async function settle(page: Page) {
+  await page.waitForLoadState('networkidle').catch(() => undefined);
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(700);
+}
+
+for (const route of routes) {
+  for (const viewport of viewports) {
+    test(`gateway ${route.key} ${viewport.width}x${viewport.height}`, async ({ page, gateway }) => {
+      await page.setViewportSize(viewport);
+      await mockRest(page, gateway);
+      await login(page);
+      await page.goto(`/trips/${tripId}${route.suffix}`);
+      await settle(page);
+      const mobile = viewport.width <= 768;
+      if (!mobile)
+        record(
+          `layout-${label}.json`,
+          `gateway/${route.key}/${viewport.width}x${viewport.height}`,
+          await measureLayout(page),
+        );
+      await page.screenshot({
+        path: resolve(shotDir, `gateway-${route.key}-${viewport.width}x${viewport.height}.png`),
+        fullPage: mobile,
+      });
+    });
+  }
+}

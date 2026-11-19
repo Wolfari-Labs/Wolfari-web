@@ -1,0 +1,3971 @@
+{
+  "preview/overview/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 960
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1660,
+      "height": 170
+    },
+    "heroVariant": "photo",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "30px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 268,
+      "y": 151,
+      "width": 552,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Tổng quan chuyến đi",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Tổng quan chuyến đi",
+        "box": {
+          "x": 376.66,
+          "y": 85,
+          "width": 129.61,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": {
+      "kpiColumns": [
+        {
+          "left": 238,
+          "right": 642.5,
+          "top": 328,
+          "width": 404.5,
+          "height": 172
+        },
+        {
+          "left": 656.5,
+          "right": 1061,
+          "top": 328,
+          "width": 404.5,
+          "height": 172
+        },
+        {
+          "left": 1075,
+          "right": 1479.5,
+          "top": 328,
+          "width": 404.5,
+          "height": 172
+        },
+        {
+          "left": 1493.5,
+          "right": 1898,
+          "top": 328,
+          "width": 404.5,
+          "height": 172
+        }
+      ],
+      "workspaceColumns": [
+        {
+          "left": 238,
+          "right": 1056.83,
+          "top": 514,
+          "width": 818.83,
+          "height": 408
+        },
+        {
+          "left": 1070.83,
+          "right": 1515.66,
+          "top": 514,
+          "width": 444.83,
+          "height": 408
+        },
+        {
+          "left": 1529.66,
+          "right": 1897.98,
+          "top": 514,
+          "width": 368.33,
+          "height": 408
+        }
+      ],
+      "kpiGrid": {
+        "columns": "404.5px 404.5px 404.5px 404.5px",
+        "gap": "14px / 14px"
+      },
+      "workspaceGrid": {
+        "columns": "818.828px 444.828px 368.328px",
+        "gap": "14px / 14px"
+      },
+      "summaries": {
+        "x": 238,
+        "y": 328,
+        "width": 1660,
+        "height": 172
+      },
+      "workspace": {
+        "x": 238,
+        "y": 514,
+        "width": 1660,
+        "height": 408
+      }
+    }
+  },
+  "preview/overview/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 960
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1180,
+      "height": 170
+    },
+    "heroVariant": "photo",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "30px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 268,
+      "y": 151,
+      "width": 552,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Tổng quan chuyến đi",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Tổng quan chuyến đi",
+        "box": {
+          "x": 376.66,
+          "y": 85,
+          "width": 129.61,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": {
+      "kpiColumns": [
+        {
+          "left": 238,
+          "right": 522.5,
+          "top": 328,
+          "width": 284.5,
+          "height": 172
+        },
+        {
+          "left": 536.5,
+          "right": 821,
+          "top": 328,
+          "width": 284.5,
+          "height": 172
+        },
+        {
+          "left": 835,
+          "right": 1119.5,
+          "top": 328,
+          "width": 284.5,
+          "height": 172
+        },
+        {
+          "left": 1133.5,
+          "right": 1418,
+          "top": 328,
+          "width": 284.5,
+          "height": 172
+        }
+      ],
+      "workspaceColumns": [
+        {
+          "left": 238,
+          "right": 816,
+          "top": 514,
+          "width": 578,
+          "height": 408
+        },
+        {
+          "left": 830,
+          "right": 1144,
+          "top": 514,
+          "width": 314,
+          "height": 408
+        },
+        {
+          "left": 1158,
+          "right": 1418,
+          "top": 514,
+          "width": 260,
+          "height": 408
+        }
+      ],
+      "kpiGrid": {
+        "columns": "284.5px 284.5px 284.5px 284.5px",
+        "gap": "14px / 14px"
+      },
+      "workspaceGrid": {
+        "columns": "578px 314px 260px",
+        "gap": "14px / 14px"
+      },
+      "summaries": {
+        "x": 238,
+        "y": 328,
+        "width": 1180,
+        "height": 172
+      },
+      "workspace": {
+        "x": 238,
+        "y": 514,
+        "width": 1180,
+        "height": 408
+      }
+    }
+  },
+  "preview/overview/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 960
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1106,
+      "height": 170
+    },
+    "heroVariant": "photo",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "30px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 268,
+      "y": 151,
+      "width": 552,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Tổng quan chuyến đi",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Tổng quan chuyến đi",
+        "box": {
+          "x": 376.66,
+          "y": 85,
+          "width": 129.61,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": {
+      "kpiColumns": [
+        {
+          "left": 238,
+          "right": 504,
+          "top": 328,
+          "width": 266,
+          "height": 172
+        },
+        {
+          "left": 518,
+          "right": 784,
+          "top": 328,
+          "width": 266,
+          "height": 172
+        },
+        {
+          "left": 798,
+          "right": 1064,
+          "top": 328,
+          "width": 266,
+          "height": 172
+        },
+        {
+          "left": 1078,
+          "right": 1344,
+          "top": 328,
+          "width": 266,
+          "height": 172
+        }
+      ],
+      "workspaceColumns": [
+        {
+          "left": 238,
+          "right": 778.86,
+          "top": 514,
+          "width": 540.86,
+          "height": 408
+        },
+        {
+          "left": 792.86,
+          "right": 1086.69,
+          "top": 514,
+          "width": 293.83,
+          "height": 408
+        },
+        {
+          "left": 1100.69,
+          "right": 1344,
+          "top": 514,
+          "width": 243.31,
+          "height": 408
+        }
+      ],
+      "kpiGrid": {
+        "columns": "266px 266px 266px 266px",
+        "gap": "14px / 14px"
+      },
+      "workspaceGrid": {
+        "columns": "540.859px 293.828px 243.312px",
+        "gap": "14px / 14px"
+      },
+      "summaries": {
+        "x": 238,
+        "y": 328,
+        "width": 1106,
+        "height": 172
+      },
+      "workspace": {
+        "x": 238,
+        "y": 514,
+        "width": 1106,
+        "height": 408
+      }
+    }
+  },
+  "preview/plan/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/plan",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 965.59
+    },
+    "rootPadding": "10px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 116,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "schedule",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 512,
+      "y": 149,
+      "width": 544,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 478,
+        "y": 86,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Lịch trình",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Lịch trình",
+        "box": {
+          "x": 636.86,
+          "y": 86.59,
+          "width": 59.63,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/plan/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/plan",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 965.59
+    },
+    "rootPadding": "10px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "schedule",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 272,
+      "y": 149,
+      "width": 544,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 86,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Lịch trình",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Lịch trình",
+        "box": {
+          "x": 396.86,
+          "y": 86.59,
+          "width": 59.63,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/plan/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/plan",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 965.59
+    },
+    "rootPadding": "10px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "schedule",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 272,
+      "y": 149,
+      "width": 544,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 86,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Lịch trình",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Lịch trình",
+        "box": {
+          "x": 396.86,
+          "y": 86.59,
+          "width": 59.63,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/map/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/map",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Bản đồ & địa điểm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Bản đồ & địa điểm",
+        "box": {
+          "x": 509.42,
+          "y": 85,
+          "width": 115.17,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/map/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/map",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 1000
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Bản đồ & địa điểm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Bản đồ & địa điểm",
+        "box": {
+          "x": 509.42,
+          "y": 85,
+          "width": 115.17,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/map/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/map",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 1000
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Bản đồ & địa điểm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Bản đồ & địa điểm",
+        "box": {
+          "x": 509.42,
+          "y": 85,
+          "width": 115.17,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/dress-code/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/dress-code",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 238,
+      "y": 91,
+      "width": 1180,
+      "height": 1477
+    },
+    "rootPadding": "0px",
+    "rootMaxWidth": "none",
+    "hero": null,
+    "heroVariant": null,
+    "heroRadius": null,
+    "heroH2": null,
+    "heroH2Box": null,
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 91,
+        "width": 1180,
+        "height": 20
+      },
+      "text": "⌂ Chuyến đi của tôi›Đà Nẵng 3N2Đ›Dress code",
+      "gapBelow": null
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Đà Nẵng 3N2Đ ✎",
+        "box": {
+          "x": 266,
+          "y": 147,
+          "width": 356.72,
+          "height": 43
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "preview/dress-code/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/dress-code",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 238,
+      "y": 91,
+      "width": 1180,
+      "height": 1477
+    },
+    "rootPadding": "0px",
+    "rootMaxWidth": "none",
+    "hero": null,
+    "heroVariant": null,
+    "heroRadius": null,
+    "heroH2": null,
+    "heroH2Box": null,
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 91,
+        "width": 1180,
+        "height": 20
+      },
+      "text": "⌂ Chuyến đi của tôi›Đà Nẵng 3N2Đ›Dress code",
+      "gapBelow": null
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Đà Nẵng 3N2Đ ✎",
+        "box": {
+          "x": 266,
+          "y": 147,
+          "width": 356.72,
+          "height": 43
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "preview/dress-code/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/dress-code",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 238,
+      "y": 91,
+      "width": 1110,
+      "height": 1477
+    },
+    "rootPadding": "0px",
+    "rootMaxWidth": "none",
+    "hero": null,
+    "heroVariant": null,
+    "heroRadius": null,
+    "heroH2": null,
+    "heroH2Box": null,
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 91,
+        "width": 1110,
+        "height": 20
+      },
+      "text": "⌂ Chuyến đi của tôi›Đà Nẵng 3N2Đ›Dress code",
+      "gapBelow": null
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Đà Nẵng 3N2Đ ✎",
+        "box": {
+          "x": 266,
+          "y": 147,
+          "width": 356.72,
+          "height": 43
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "preview/packing/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/packing",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "rootPadding": "14px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 90,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Packing list",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Packing list",
+        "box": {
+          "x": 509.42,
+          "y": 91,
+          "width": 73.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "500"
+      }
+    ],
+    "overview": null
+  },
+  "preview/packing/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/packing",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 925
+    },
+    "rootPadding": "14px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 90,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Packing list",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Packing list",
+        "box": {
+          "x": 509.42,
+          "y": 91,
+          "width": 73.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "500"
+      }
+    ],
+    "overview": null
+  },
+  "preview/packing/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/packing",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 925
+    },
+    "rootPadding": "14px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 90,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Packing list",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Packing list",
+        "box": {
+          "x": 509.42,
+          "y": 91,
+          "width": 73.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "500"
+      }
+    ],
+    "overview": null
+  },
+  "preview/members/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/members",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 1187
+    },
+    "rootPadding": "12px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 507,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 478,
+        "y": 88,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Thành viên",
+      "gapBelow": 10
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Thành viên",
+        "box": {
+          "x": 636.86,
+          "y": 88.59,
+          "width": 68.83,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/members/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/members",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 1187
+    },
+    "rootPadding": "12px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 88,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Thành viên",
+      "gapBelow": 10
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Thành viên",
+        "box": {
+          "x": 396.86,
+          "y": 88.59,
+          "width": 68.83,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/members/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/members",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 1187
+    },
+    "rootPadding": "12px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 88,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Thành viên",
+      "gapBelow": 10
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Thành viên",
+        "box": {
+          "x": 396.86,
+          "y": 88.59,
+          "width": 68.83,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/fund/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/fund",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 1224.39
+    },
+    "rootPadding": "18px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 507,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 478,
+        "y": 94,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Quỹ nhóm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Quỹ nhóm",
+        "box": {
+          "x": 749.42,
+          "y": 95,
+          "width": 63.73,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/fund/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/fund",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 1224.39
+    },
+    "rootPadding": "18px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 94,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Quỹ nhóm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Quỹ nhóm",
+        "box": {
+          "x": 509.42,
+          "y": 95,
+          "width": 63.73,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/fund/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/fund",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 1224.39
+    },
+    "rootPadding": "18px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 94,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Quỹ nhóm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Quỹ nhóm",
+        "box": {
+          "x": 509.42,
+          "y": 95,
+          "width": 63.73,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/price-watch/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/price-watch",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 1357.98
+    },
+    "rootPadding": "18px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 507,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 478,
+        "y": 94,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Theo dõi giá vé",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Theo dõi giá vé",
+        "box": {
+          "x": 632.86,
+          "y": 95,
+          "width": 96.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/price-watch/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/price-watch",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 1357.98
+    },
+    "rootPadding": "18px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 94,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Theo dõi giá vé",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Theo dõi giá vé",
+        "box": {
+          "x": 392.86,
+          "y": 95,
+          "width": 96.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/price-watch/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/price-watch",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 1378.78
+    },
+    "rootPadding": "18px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 94,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Theo dõi giá vé",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Theo dõi giá vé",
+        "box": {
+          "x": 392.86,
+          "y": 95,
+          "width": 96.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/settings/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/settings",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 936
+    },
+    "rootPadding": "8px 22px 26px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 32
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Cài đặt",
+      "gapBelow": 0
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Cài đặt",
+        "box": {
+          "x": 509.42,
+          "y": 90,
+          "width": 47.91,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/settings/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 936
+    },
+    "rootPadding": "8px 22px 26px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 32
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Cài đặt",
+      "gapBelow": 0
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Cài đặt",
+        "box": {
+          "x": 509.42,
+          "y": 90,
+          "width": 47.91,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "preview/settings/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/settings",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 936
+    },
+    "rootPadding": "8px 22px 26px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 32
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng – Hội An›Cài đặt",
+      "gapBelow": 0
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Cài đặt",
+        "box": {
+          "x": 509.42,
+          "y": 90,
+          "width": 47.91,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/overview/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 958.78
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1660,
+      "height": 170
+    },
+    "heroVariant": "photo",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "30px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 268,
+      "y": 151,
+      "width": 552,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Tổng quan chuyến đi",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Tổng quan chuyến đi",
+        "box": {
+          "x": 376.66,
+          "y": 85,
+          "width": 129.61,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": {
+      "kpiColumns": [
+        {
+          "left": 238,
+          "right": 642.5,
+          "top": 359.19,
+          "width": 404.5,
+          "height": 229.59
+        },
+        {
+          "left": 656.5,
+          "right": 1061,
+          "top": 359.19,
+          "width": 404.5,
+          "height": 229.59
+        },
+        {
+          "left": 1075,
+          "right": 1479.5,
+          "top": 359.19,
+          "width": 404.5,
+          "height": 229.59
+        },
+        {
+          "left": 1493.5,
+          "right": 1898,
+          "top": 359.19,
+          "width": 404.5,
+          "height": 229.59
+        }
+      ],
+      "workspaceColumns": [
+        {
+          "left": 238,
+          "right": 1056.83,
+          "top": 602.78,
+          "width": 818.83,
+          "height": 408
+        },
+        {
+          "left": 1070.83,
+          "right": 1515.66,
+          "top": 602.78,
+          "width": 444.83,
+          "height": 408
+        },
+        {
+          "left": 1529.66,
+          "right": 1897.98,
+          "top": 602.78,
+          "width": 368.33,
+          "height": 408
+        }
+      ],
+      "kpiGrid": {
+        "columns": "404.5px 404.5px 404.5px 404.5px",
+        "gap": "14px / 14px"
+      },
+      "workspaceGrid": {
+        "columns": "818.828px 444.828px 368.328px",
+        "gap": "14px / 14px"
+      },
+      "summaries": {
+        "x": 238,
+        "y": 359.19,
+        "width": 1660,
+        "height": 229.59
+      },
+      "workspace": {
+        "x": 238,
+        "y": 602.78,
+        "width": 1660,
+        "height": 408
+      }
+    }
+  },
+  "gateway/overview/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 958.78
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1180,
+      "height": 170
+    },
+    "heroVariant": "photo",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "30px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 268,
+      "y": 151,
+      "width": 552,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Tổng quan chuyến đi",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Tổng quan chuyến đi",
+        "box": {
+          "x": 376.66,
+          "y": 85,
+          "width": 129.61,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": {
+      "kpiColumns": [
+        {
+          "left": 238,
+          "right": 522.5,
+          "top": 359.19,
+          "width": 284.5,
+          "height": 229.59
+        },
+        {
+          "left": 536.5,
+          "right": 821,
+          "top": 359.19,
+          "width": 284.5,
+          "height": 229.59
+        },
+        {
+          "left": 835,
+          "right": 1119.5,
+          "top": 359.19,
+          "width": 284.5,
+          "height": 229.59
+        },
+        {
+          "left": 1133.5,
+          "right": 1418,
+          "top": 359.19,
+          "width": 284.5,
+          "height": 229.59
+        }
+      ],
+      "workspaceColumns": [
+        {
+          "left": 238,
+          "right": 816,
+          "top": 602.78,
+          "width": 578,
+          "height": 408
+        },
+        {
+          "left": 830,
+          "right": 1144,
+          "top": 602.78,
+          "width": 314,
+          "height": 408
+        },
+        {
+          "left": 1158,
+          "right": 1418,
+          "top": 602.78,
+          "width": 260,
+          "height": 408
+        }
+      ],
+      "kpiGrid": {
+        "columns": "284.5px 284.5px 284.5px 284.5px",
+        "gap": "14px / 14px"
+      },
+      "workspaceGrid": {
+        "columns": "578px 314px 260px",
+        "gap": "14px / 14px"
+      },
+      "summaries": {
+        "x": 238,
+        "y": 359.19,
+        "width": 1180,
+        "height": 229.59
+      },
+      "workspace": {
+        "x": 238,
+        "y": 602.78,
+        "width": 1180,
+        "height": 408
+      }
+    }
+  },
+  "gateway/overview/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 958.78
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1106,
+      "height": 170
+    },
+    "heroVariant": "photo",
+    "heroRadius": "8px",
+    "heroH2": {
+      "fontSize": "30px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 268,
+      "y": 151,
+      "width": 552,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Tổng quan chuyến đi",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Tổng quan chuyến đi",
+        "box": {
+          "x": 376.66,
+          "y": 85,
+          "width": 129.61,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": {
+      "kpiColumns": [
+        {
+          "left": 238,
+          "right": 504,
+          "top": 359.19,
+          "width": 266,
+          "height": 229.59
+        },
+        {
+          "left": 518,
+          "right": 784,
+          "top": 359.19,
+          "width": 266,
+          "height": 229.59
+        },
+        {
+          "left": 798,
+          "right": 1064,
+          "top": 359.19,
+          "width": 266,
+          "height": 229.59
+        },
+        {
+          "left": 1078,
+          "right": 1344,
+          "top": 359.19,
+          "width": 266,
+          "height": 229.59
+        }
+      ],
+      "workspaceColumns": [
+        {
+          "left": 238,
+          "right": 778.86,
+          "top": 602.78,
+          "width": 540.86,
+          "height": 408
+        },
+        {
+          "left": 792.86,
+          "right": 1086.69,
+          "top": 602.78,
+          "width": 293.83,
+          "height": 408
+        },
+        {
+          "left": 1100.69,
+          "right": 1344,
+          "top": 602.78,
+          "width": 243.31,
+          "height": 408
+        }
+      ],
+      "kpiGrid": {
+        "columns": "266px 266px 266px 266px",
+        "gap": "14px / 14px"
+      },
+      "workspaceGrid": {
+        "columns": "540.859px 293.828px 243.312px",
+        "gap": "14px / 14px"
+      },
+      "summaries": {
+        "x": 238,
+        "y": 359.19,
+        "width": 1106,
+        "height": 229.59
+      },
+      "workspace": {
+        "x": 238,
+        "y": 602.78,
+        "width": 1106,
+        "height": 408
+      }
+    }
+  },
+  "gateway/plan/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/plan",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 1285.17
+    },
+    "rootPadding": "10px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 116,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 507,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 478,
+        "y": 86,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Lịch trình",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Lịch trình",
+        "box": {
+          "x": 636.86,
+          "y": 86.59,
+          "width": 59.63,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/plan/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/plan",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 1285.17
+    },
+    "rootPadding": "10px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 86,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Lịch trình",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Lịch trình",
+        "box": {
+          "x": 396.86,
+          "y": 86.59,
+          "width": 59.63,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/plan/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/plan",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 1305.17
+    },
+    "rootPadding": "10px 22px 24px 18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 86,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Lịch trình",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Lịch trình",
+        "box": {
+          "x": 396.86,
+          "y": 86.59,
+          "width": 59.63,
+          "height": 20.8
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/map/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/map",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Bản đồ & địa điểm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Bản đồ & địa điểm",
+        "box": {
+          "x": 514.31,
+          "y": 85,
+          "width": 115.17,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/map/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/map",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 914
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Bản đồ & địa điểm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Bản đồ & địa điểm",
+        "box": {
+          "x": 514.31,
+          "y": 85,
+          "width": 115.17,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/map/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/map",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 914
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Bản đồ & địa điểm",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Bản đồ & địa điểm",
+        "box": {
+          "x": 514.31,
+          "y": 85,
+          "width": 115.17,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/dress-code/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/dress-code",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Dress code",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 0,
+    "h1s": [
+      {
+        "text": "Dress code",
+        "box": {
+          "x": 238,
+          "y": 281.44,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/dress-code/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/dress-code",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Dress code",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 0,
+    "h1s": [
+      {
+        "text": "Dress code",
+        "box": {
+          "x": 238,
+          "y": 281.44,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/dress-code/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/dress-code",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 110,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 142,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Tổng quan chuyến đi›Dress code",
+      "gapBelow": 4
+    },
+    "h1Count": 1,
+    "visibleH1Count": 0,
+    "h1s": [
+      {
+        "text": "Dress code",
+        "box": {
+          "x": 238,
+          "y": 281.44,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/packing/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/packing",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "rootPadding": "14px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 90,
+        "width": 1660,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Packing list",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Packing list",
+        "box": {
+          "x": 514.31,
+          "y": 91,
+          "width": 73.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "500"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/packing/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/packing",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 895
+    },
+    "rootPadding": "14px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 90,
+        "width": 1180,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Packing list",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Packing list",
+        "box": {
+          "x": 514.31,
+          "y": 91,
+          "width": 73.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "500"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/packing/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/packing",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 895
+    },
+    "rootPadding": "14px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 120,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 152,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 90,
+        "width": 1106,
+        "height": 22
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Packing list",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Packing list",
+        "box": {
+          "x": 514.31,
+          "y": 91,
+          "width": 73.89,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "500"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/members/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/members",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 112.8,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 144.8,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 20.8
+      },
+      "text": "Tổng quan chuyến đi›Thành viên",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 0,
+    "h1s": [
+      {
+        "text": "Thành viên",
+        "box": {
+          "x": 238,
+          "y": 134.23,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/members/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/members",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 965.72
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 112.8,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 144.8,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 20.8
+      },
+      "text": "Tổng quan chuyến đi›Thành viên",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 0,
+    "h1s": [
+      {
+        "text": "Thành viên",
+        "box": {
+          "x": 238,
+          "y": 134.23,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/members/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/members",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 965.72
+    },
+    "rootPadding": "8px 22px 24px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 112.8,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 144.8,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 20.8
+      },
+      "text": "Tổng quan chuyến đi›Thành viên",
+      "gapBelow": 8
+    },
+    "h1Count": 1,
+    "visibleH1Count": 0,
+    "h1s": [
+      {
+        "text": "Thành viên",
+        "box": {
+          "x": 238,
+          "y": 134.23,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/fund/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/fund",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 1989.78
+    },
+    "rootPadding": "18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 204.06,
+      "width": 1184,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 507,
+      "y": 236.06,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": null,
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Quỹ nhóm",
+        "box": {
+          "x": 478,
+          "y": 141.03,
+          "width": 1184,
+          "height": 41.59
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/fund/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/fund",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 1989.78
+    },
+    "rootPadding": "18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 204.06,
+      "width": 1184,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 236.06,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": null,
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Quỹ nhóm",
+        "box": {
+          "x": 238,
+          "y": 141.03,
+          "width": 1184,
+          "height": 41.59
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/fund/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/fund",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 1989.78
+    },
+    "rootPadding": "18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 204.06,
+      "width": 1110,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 236.06,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": null,
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Quỹ nhóm",
+        "box": {
+          "x": 238,
+          "y": 141.03,
+          "width": 1110,
+          "height": 41.59
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/price-watch/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/price-watch",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 460,
+      "y": 76,
+      "width": 1220,
+      "height": 639.42
+    },
+    "rootPadding": "18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 478,
+      "y": 94,
+      "width": 1184,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 507,
+      "y": 126,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": null,
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Theo dõi giá vé",
+        "box": {
+          "x": 478,
+          "y": 311.44,
+          "width": 233.42,
+          "height": 41.59
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/price-watch/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/price-watch",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 639.42
+    },
+    "rootPadding": "18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 94,
+      "width": 1184,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 126,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": null,
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Theo dõi giá vé",
+        "box": {
+          "x": 238,
+          "y": 311.44,
+          "width": 233.42,
+          "height": 41.59
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/price-watch/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/price-watch",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 639.42
+    },
+    "rootPadding": "18px",
+    "rootMaxWidth": "1220px",
+    "hero": {
+      "x": 238,
+      "y": 94,
+      "width": 1110,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 126,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": null,
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Theo dõi giá vé",
+        "box": {
+          "x": 238,
+          "y": 311.44,
+          "width": 233.42,
+          "height": 41.59
+        },
+        "visible": true,
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/settings/1920x1080": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/settings",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "scrollWidth": 1920,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 1004
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1700,
+      "height": 936
+    },
+    "rootPadding": "8px 22px 26px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1660,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1660,
+        "height": 32
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Cài đặt",
+      "gapBelow": 0
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Cài đặt",
+        "box": {
+          "x": 514.31,
+          "y": 90,
+          "width": 47.91,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/settings/1440x900": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/settings",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scrollWidth": 1440,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 824
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1220,
+      "height": 936
+    },
+    "rootPadding": "8px 22px 26px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1180,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1180,
+        "height": 32
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Cài đặt",
+      "gapBelow": 0
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Cài đặt",
+        "box": {
+          "x": 514.31,
+          "y": 90,
+          "width": 47.91,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  },
+  "gateway/settings/1366x768": {
+    "url": "/trips/11111111-1111-4111-8111-111111111111/settings",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "scrollWidth": 1366,
+    "main": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 692
+    },
+    "root": {
+      "x": 220,
+      "y": 76,
+      "width": 1146,
+      "height": 936
+    },
+    "rootPadding": "8px 22px 26px 18px",
+    "rootMaxWidth": "none",
+    "hero": {
+      "x": 238,
+      "y": 116,
+      "width": 1106,
+      "height": 150
+    },
+    "heroVariant": "landscape",
+    "heroRadius": "16px",
+    "heroH2": {
+      "fontSize": "32px",
+      "lineHeight": "40px"
+    },
+    "heroH2Box": {
+      "x": 267,
+      "y": 148,
+      "width": 554,
+      "height": 40
+    },
+    "breadcrumb": {
+      "box": {
+        "x": 238,
+        "y": 84,
+        "width": 1106,
+        "height": 32
+      },
+      "text": "Chuyến đi của tôi›Đà Nẵng Gateway›Cài đặt",
+      "gapBelow": 0
+    },
+    "h1Count": 1,
+    "visibleH1Count": 1,
+    "h1s": [
+      {
+        "text": "Cài đặt",
+        "box": {
+          "x": 514.31,
+          "y": 90,
+          "width": 47.91,
+          "height": 20
+        },
+        "visible": true,
+        "fontSize": "13px",
+        "fontWeight": "400"
+      }
+    ],
+    "overview": null
+  }
+}

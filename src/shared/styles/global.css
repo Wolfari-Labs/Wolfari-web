@@ -10,7 +10,7 @@ body {
   font-family: var(--font-body);
   background: var(--color-background);
   color: var(--color-ink);
-  font-size: 16px;
+  font-size: var(--font-size-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -45,7 +45,7 @@ a {
 }
 .screen-title {
   color: var(--color-ink);
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 32px;
   margin: 0 0 20px;
   overflow-wrap: anywhere;
@@ -65,7 +65,7 @@ details:not(.preview) > summary {
   min-height: 44px;
   cursor: pointer;
   list-style: none;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   color: var(--color-ink);
 }
 details:not(.preview) > summary::-webkit-details-marker {
@@ -87,10 +87,10 @@ details[open]:not(.preview) > summary::after {
   transform: rotate(225deg);
 }
 .preview {
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   color: var(--color-muted);
   border: 1px dashed var(--color-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 12px;
 }
 .preview summary {

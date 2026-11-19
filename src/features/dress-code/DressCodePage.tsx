@@ -1,10 +1,13 @@
 import { useMemo, useState } from 'react';
-import { Link, useOutletContext, useParams } from 'react-router';
+import { useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
+import { TripHero } from '../trips/components/TripHero';
+import { useDesktopLayout } from '../../shared/lib/use-desktop-layout';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import { planScenarios, type DressCodeViewModel, type PlanScenario } from '../plan/model/plan';
@@ -154,6 +157,7 @@ export function DressCodePage() {
 function PreviewDressCodePage() {
   const { tripId = '' } = useParams();
   const { previewEnabled } = useOutletContext<RouteContext>();
+  const desktop = useDesktopLayout();
   const [scenario, setScenario] = useState<PlanScenario>('success');
   const [scope, setScope] = useState<DressScope>('ALL');
   const [draftTitle, setDraftTitle] = useState('');
@@ -192,34 +196,38 @@ function PreviewDressCodePage() {
           Menu
         </button>
       </div>
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trip(tripId)}>⌂&nbsp; Chuyến đi của tôi</Link>
-        <span aria-hidden="true">›</span>
-        <span>{title}</span>
-        <span aria-hidden="true">›</span>
-        <strong>Dress code</strong>
-      </div>
-      <div className={styles.tripBanner}>
-        <img className={styles.tripLandscape} src={tripLandscape} alt="" />
-        <img className={styles.tripLandscapeForeground} src={tripLandscapeForeground} alt="" />
-        <div className={styles.tripDetails}>
-          <h1>
-            {title} <span aria-hidden="true">✎</span>
-          </h1>
-          <p>
-            ▣&nbsp; {dateRange} &nbsp;&nbsp; ♙&nbsp; {memberCount} thành viên
-          </p>
+      {/* Hidden by CSS and not rendered below the desktop breakpoint: the mobile layout is deferred. */}
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Trang phục"
+        mobile={null}
+      />
+      {desktop && trip ? (
+        <TripHero trip={trip} compact variant="landscape" />
+      ) : (
+        <div className={styles.tripBanner}>
+          <img className={styles.tripLandscape} src={tripLandscape} alt="" />
+          <img className={styles.tripLandscapeForeground} src={tripLandscapeForeground} alt="" />
+          <div className={styles.tripDetails}>
+            <h1>
+              {title} <span aria-hidden="true">✎</span>
+            </h1>
+            <p>
+              ▣&nbsp; {dateRange} &nbsp;&nbsp; ♙&nbsp; {memberCount} thành viên
+            </p>
+          </div>
+          <span className={styles.statusChip}>
+            <i /> Sắp tới
+          </span>
+          <div className={styles.bannerActions}>
+            <span className={styles.outlineAction}>Chỉnh sửa</span>
+            <Button icon={<img src={sendIcon} alt="" />}>Chia sẻ</Button>
+          </div>
         </div>
-        <span className={styles.statusChip}>
-          <i /> Sắp tới
-        </span>
-        <div className={styles.bannerActions}>
-          <span className={styles.outlineAction}>Chỉnh sửa</span>
-          <Button icon={<img src={sendIcon} alt="" />}>Chia sẻ</Button>
-        </div>
-      </div>
+      )}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
-        <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi dress code">
+        <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi trang phục">
           {(['ALL', 'DAY', 'ACTIVITY'] as DressScope[]).map((value) => (
             <button
               key={value}
@@ -240,17 +248,17 @@ function PreviewDressCodePage() {
             ))}
             {!items.length && (
               <div className={styles.empty} role="status">
-                <h2>Chưa có dress code đã lưu</h2>
+                <h2>Chưa có trang phục đã lưu</h2>
                 <p>Chưa có hướng dẫn trong phạm vi đang chọn.</p>
               </div>
             )}
           </div>
-          <aside className={styles.editor} aria-label="Tạo hoặc sửa Dress code">
-            <h2>Tạo / sửa Dress code</h2>
+          <aside className={styles.editor} aria-label="Tạo hoặc sửa trang phục">
+            <h2>Tạo / sửa trang phục</h2>
             <DraftField
               label="Tiêu đề"
               value={draftTitle}
-              placeholder="Nhập tiêu đề Dress code"
+              placeholder="Nhập tiêu đề trang phục"
               onChange={setDraftTitle}
             />
             <Select

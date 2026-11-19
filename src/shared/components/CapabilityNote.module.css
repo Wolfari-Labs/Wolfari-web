@@ -8,6 +8,13 @@
   font-size: var(--font-size-small);
   line-height: var(--line-body);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .note {
+    font-size: var(--font-size-small);
+    border-radius: var(--radius-8);
+  }
+}
 
 .warning {
   border-left-color: var(--color-status-warning);

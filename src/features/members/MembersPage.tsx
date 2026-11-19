@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Link, useParams, useOutletContext } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
@@ -22,6 +22,7 @@ import type { PlanEditPolicy, UpdatePlanPolicyResult } from '../trips/repositori
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Select } from '../../shared/components/Select';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
 import userIcon from '../../shared/assets/figma/2e748.svg';
@@ -778,11 +779,11 @@ function PreviewMembersPage() {
   }
   return (
     <section className={styles.page} data-flow="members-preview" data-node-id="25:360">
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-        <span aria-hidden="true">›</span>
-        <h1>Thành viên</h1>
-      </div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Thành viên"
+      />
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}

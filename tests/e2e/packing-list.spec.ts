@@ -15,7 +15,7 @@ test.describe('Packing List preview suggestions', () => {
     await expect(page.getByRole('menuitem', { name: 'Xóa' })).toBeDisabled();
     await expect(page.getByText('Danh sách hiện chỉ hỗ trợ xem.')).toBeVisible();
     await expect(
-      page.getByRole('region', { name: 'Tiến độ packing list' }).getByText('Chỉ xem'),
+      page.getByRole('region', { name: 'Tiến độ đồ đạc' }).getByText('Chỉ xem'),
     ).toHaveCount(0);
   });
 
@@ -23,7 +23,7 @@ test.describe('Packing List preview suggestions', () => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(route);
     await expect(
-      page.getByRole('heading', { name: 'Packing list', level: 1, exact: true }),
+      page.getByRole('heading', { name: 'Đồ đạc', level: 1, exact: true }),
     ).toBeVisible();
     await page.getByRole('button', { name: /Thêm vật dụng/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Thêm vật dụng' });

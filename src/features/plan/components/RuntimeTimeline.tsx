@@ -396,12 +396,6 @@ export function RuntimeTimeline({
         </div>
       </div>
       {feedback}
-      {canEdit && (
-        <p className={styles.help}>
-          Kéo thẻ để đổi thứ tự hoặc thả sang ngày khác; thay đổi được lưu ngay và đồng bộ với nhóm.
-          Hoạt động có giờ cố định chỉ đổi thứ tự trong ngày.
-        </p>
-      )}
       {day === 'ALL'
         ? allGroups.map((d) => (
             <div key={d} className={styles.dayGroup} data-day-group={d}>

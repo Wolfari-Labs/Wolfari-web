@@ -1,11 +1,12 @@
 import type { PlanViewModel } from '../plan/model/plan';
 import type { ReadResult } from '../../shared/types/result';
 import { useState } from 'react';
-import { Link, useOutletContext, useParams } from 'react-router';
+import { useOutletContext, useParams } from 'react-router';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
 import { tripDetailScenarios, type TripDetailScenario } from './model/trip-detail';
 import { ContentState } from '../../shared/components/ContentState';
 import { Select } from '../../shared/components/Select';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { paths } from '../../app/route-paths';
 import type { RouteContext } from '../../app/route-context';
 import styles from './TripOverviewPage.module.css';
@@ -33,11 +34,11 @@ function PreviewOverviewPage() {
   const error = snapshot.state.status === 'error' ? snapshot.state.error : null;
   return (
     <section className={styles.page} data-flow="trip-overview" data-node-id="3:31">
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trips}>Chuyến đi của tôi</Link>
-        <span aria-hidden="true">›</span>
-        <h1>Tổng quan chuyến đi</h1>
-      </div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Chuyến đi của tôi', to: paths.trips }]}
+        current="Tổng quan chuyến đi"
+      />
       {snapshot.state.status === 'loading' ? (
         <ContentState state="loading" headingLevel={2} />
       ) : error ? (

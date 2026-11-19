@@ -1,0 +1,66 @@
+// TEMPORARY helper: pixel-compare two screenshot folders using Chromium's canvas (no PNG library needed).
+// usage: node tests/_measure/pixdiff.mjs <dirA> <dirB> <filter-regex> [out.json]
+import { chromium } from '@playwright/test';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const [dirA, dirB, filter = '.', out] = process.argv.slice(2);
+const re = new RegExp(filter);
+const names = readdirSync(dirA).filter((n) => n.endsWith('.png') && re.test(n));
+const browser = await chromium.launch({ executablePath: chromium.executablePath() });
+const page = await browser.newPage();
+await page.goto('about:blank');
+const results = [];
+for (const name of names) {
+  let b64b;
+  try {
+    b64b = readFileSync(join(dirB, name)).toString('base64');
+  } catch {
+    results.push({ name, status: 'MISSING_IN_B' });
+    continue;
+  }
+  const b64a = readFileSync(join(dirA, name)).toString('base64');
+  const r = await page.evaluate(
+    async ([a, b]) => {
+      const load = async (s) => {
+        const img = new Image();
+        img.src = 'data:image/png;base64,' + s;
+        await img.decode();
+        const c = document.createElement('canvas');
+        c.width = img.width;
+        c.height = img.height;
+        const ctx = c.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(img, 0, 0);
+        return { w: img.width, h: img.height, d: ctx.getImageData(0, 0, img.width, img.height).data };
+      };
+      const A = await load(a);
+      const B = await load(b);
+      if (A.w !== B.w || A.h !== B.h) return { status: 'SIZE_DIFF', a: [A.w, A.h], b: [B.w, B.h] };
+      let diff = 0,
+        minX = 1e9,
+        minY = 1e9,
+        maxX = -1,
+        maxY = -1;
+      for (let i = 0; i < A.d.length; i += 4) {
+        if (A.d[i] !== B.d[i] || A.d[i + 1] !== B.d[i + 1] || A.d[i + 2] !== B.d[i + 2] || A.d[i + 3] !== B.d[i + 3]) {
+          diff++;
+          const p = i / 4;
+          const x = p % A.w;
+          const y = (p / A.w) | 0;
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+      return diff === 0 ? { status: 'IDENTICAL', size: [A.w, A.h] } : { status: 'DIFF', diffPixels: diff, size: [A.w, A.h], bbox: [minX, minY, maxX, maxY] };
+    },
+    [b64a, b64b],
+  );
+  results.push({ name, ...r });
+}
+await browser.close();
+const summary = results.reduce((acc, r) => ((acc[r.status] = (acc[r.status] || 0) + 1), acc), {});
+console.log(JSON.stringify(summary));
+for (const r of results) if (r.status !== 'IDENTICAL') console.log(r.name, r.status, r.diffPixels ?? '', r.bbox ? r.bbox.join(',') : '', r.a ? r.a.join('x') + ' vs ' + r.b.join('x') : '');
+if (out) writeFileSync(out, JSON.stringify(results, null, 1));

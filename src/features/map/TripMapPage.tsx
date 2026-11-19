@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useOutletContext, useParams } from 'react-router';
+import { useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Select } from '../../shared/components/Select';
 import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import pinIcon from '../../shared/assets/figma/8efc8.svg';
@@ -269,13 +270,11 @@ function PreviewMapPage() {
         {data && (
           <>
             <div className={styles.mapContent}>
-              <div className={styles.breadcrumb}>
-                <Link to={paths.trips}>Chuyến đi của tôi</Link>
-                <span aria-hidden="true">›</span>
-                <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
-                <span aria-hidden="true">›</span>
-                <h1>Bản đồ &amp; địa điểm</h1>
-              </div>
+              <PageBreadcrumb
+                className={styles.breadcrumb}
+                items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+                current="Bản đồ địa điểm"
+              />
               <div className={styles.hero}>
                 <TripHero trip={data.trip} compact variant="landscape" />
               </div>
@@ -287,7 +286,6 @@ function PreviewMapPage() {
                 >
                   <header className={styles.panelHeader}>
                     <h2>Tìm kiếm &amp; chọn địa điểm</h2>
-                    <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
                   </header>
                   <div className={styles.localNotice} role="status">
                     {storageStatus === 'memory'
@@ -531,8 +529,7 @@ function PreviewMapPage() {
                 </section>
               </div>
               <CapabilityNote id="map-provider-note">
-                <strong>Bản đồ nền chưa được cấu hình</strong>. Bản đồ đang là minh họa Figma trong
-                preview; Google Maps sẽ được dùng khi có browser key.
+                <strong>Bản đồ nền chưa được cấu hình</strong>.
               </CapabilityNote>
             </div>
             <PlaceDetail

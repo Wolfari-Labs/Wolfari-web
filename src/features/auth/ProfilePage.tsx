@@ -471,7 +471,6 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
           </form>
           <section className={styles.panel} aria-labelledby="profile-notifications">
             <h2 id="profile-notifications">Thông báo & thiết bị</h2>
-            <p className={styles.muted}>Mỗi người tự quản lý kênh nhận thông báo của mình.</p>
             <NotificationPreferences key={profile.id} actor={profile.id} />
             <details
               onToggle={(event) => setShowSessions(event.currentTarget.open)}
@@ -606,13 +605,14 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
         </div>
       )}
       {previewEnabled && (
-        <details className="preview" data-preview="profile">
+        <details
+          className="preview"
+          data-preview="profile"
+          data-profile-version={profile?.version}
+        >
           <summary>Profile preview · Dữ liệu minh họa</summary>
           {profile && (
-            <p>
-              Phiên bản hồ sơ: {profile.version} ·{' '}
-              {profile.emailVerifiedAt ? 'Email đã xác minh' : 'Email chưa xác minh'}
-            </p>
+            <p>{profile.emailVerifiedAt ? 'Email đã xác minh' : 'Email chưa xác minh'}</p>
           )}
           <Select
             label="Trạng thái hồ sơ"

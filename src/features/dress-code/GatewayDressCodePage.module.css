@@ -1,23 +1,35 @@
 .page {
+  composes: page from '../../shared/styles/WorkspacePage.module.css';
   min-height: 100%;
-  padding: 8px 22px 24px 18px;
   background: var(--color-background);
   color: var(--color-ink);
 }
 
-.breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  min-height: 22px;
-  margin-bottom: 4px;
-  color: var(--color-muted);
-  font-size: 13px;
+@media (max-width: 768px) {
+  .page {
+    padding: 8px 22px 24px 18px;
+  }
 }
 
-.breadcrumb a {
-  color: var(--color-action-primary);
+.breadcrumb {
+  composes: breadcrumb from '../../shared/styles/WorkspacePage.module.css';
+}
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-height: 22px;
+    margin-bottom: 4px;
+    color: var(--color-muted);
+    font-size: var(--font-size-small);
+  }
+
+  .breadcrumb a {
+    color: var(--color-action-primary);
+  }
 }
 
 .visuallyHidden {
@@ -29,22 +41,36 @@
   white-space: nowrap;
 }
 
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin: 16px 0 14px;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 16px 0 14px;
 }
 
 .filters button {
   min-height: 44px;
   padding: 7px 16px;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   background: var(--color-white);
   color: var(--color-action-primary);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--font-size-small);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .filters button {
+    border-radius: 18px;
+  }
 }
 
 .filters button[aria-pressed='true'] {
@@ -55,7 +81,7 @@
 
 .content {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(250px, 280px);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
 }
@@ -73,7 +99,7 @@
 .group > h2 {
   margin: 0 0 10px;
   color: var(--color-action-primary);
-  font-size: 16px;
+  font-size: var(--font-size-body);
 }
 
 .cardGrid {
@@ -83,12 +109,11 @@
 }
 
 .card,
-.readOnlyPanel,
 .empty {
   min-width: 0;
   padding: 14px;
   border: 1px solid var(--color-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--color-white);
 }
 
@@ -104,8 +129,14 @@
 .cardHeader h3 {
   margin: 0;
   color: var(--color-ink);
-  font-size: 19px;
+  font-size: var(--font-size-subtitle);
   overflow-wrap: anywhere;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .cardHeader h3 {
+    font-size: 19px;
+  }
 }
 
 .cardHeader span,
@@ -115,7 +146,7 @@
   padding: 5px 10px;
   background: var(--color-surface);
   color: var(--color-action-primary);
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   white-space: nowrap;
 }
 
@@ -125,15 +156,14 @@
   min-height: 150px;
   padding: 18px;
   border: 1px dashed var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--color-surface);
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   text-align: center;
 }
 
 .card > p,
-.readOnlyPanel > p:not(.badge),
 .empty p {
   color: var(--color-muted);
   line-height: 1.55;
@@ -161,12 +191,6 @@
   font-weight: 500;
 }
 
-.readOnlyPanel h2 {
-  margin: 0 0 16px;
-  color: var(--color-ink);
-  font-size: 20px;
-}
-
 .badge {
   display: inline-block;
   margin: 0;
@@ -174,17 +198,17 @@
 
 .empty h2 {
   margin: 0 0 6px;
-  font-size: 19px;
+  font-size: var(--font-size-subtitle);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .empty h2 {
+    font-size: 19px;
+  }
 }
 
 .empty p {
   margin: 0;
-}
-
-@media (max-width: 1100px) {
-  .content {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 @media (max-width: 620px) {
@@ -194,5 +218,14 @@
 
   .cardGrid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .card,
+  .empty {
+    padding: var(--card-padding-narrow);
+    border-radius: var(--radius-panel);
   }
 }

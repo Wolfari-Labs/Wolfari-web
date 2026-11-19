@@ -12,3 +12,8 @@ playwright-report/
 test-results/
 .local/
 dist-demo1/
+docs/agents
+# UI declutter evidence screenshots (about 69 MB of PNG); the JSON, logs and README next to them stay tracked
+docs/ui-redesign/evidence/ui-declutter-20261119/before/
+docs/ui-redesign/evidence/ui-declutter-20261119/after/
+docs/ui-redesign/evidence/ui-declutter-20261119/after-AB-mobile-reference/

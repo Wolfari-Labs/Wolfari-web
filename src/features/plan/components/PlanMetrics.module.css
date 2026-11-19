@@ -4,6 +4,12 @@
   border-radius: var(--radius-10);
   background: var(--color-white);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .strip {
+    border-radius: var(--radius-10);
+  }
+}
 
 .metrics {
   display: grid;
@@ -65,7 +71,7 @@
   display: block;
   margin: 0 0 4px;
   color: var(--color-ink);
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   line-height: 24px;
   font-weight: var(--weight-bold);
 }
@@ -74,12 +80,12 @@
 .copy small {
   display: block;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 
 .copy small {
-  font-size: 12px;
+  font-size: var(--font-size-caption);
 }
 
 @media (max-width: 900px) {

@@ -1,9 +1,9 @@
 .summary {
   width: 100%;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
-.count {
-  font-size: 18px !important;
+.summary .count {
+  font-size: var(--font-size-subtitle);
   margin: 4px 0 14px;
   font-weight: 600;
   color: var(--color-ink);
@@ -21,13 +21,13 @@
   align-items: center;
   gap: 14px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 12px;
   min-height: 64px;
 }
 .summary time {
   color: var(--color-action-primary);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .summary li span {
   flex: 1;
@@ -58,12 +58,18 @@
   min-width: 100px;
   min-height: 46px;
   border: 0;
-  border-radius: 5px;
+  border-radius: var(--radius-6);
   color: var(--color-ink);
   background: #f0f8fc;
   font: inherit;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   cursor: pointer;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .days button {
+    border-radius: 5px;
+  }
 }
 .days button small {
   display: block;

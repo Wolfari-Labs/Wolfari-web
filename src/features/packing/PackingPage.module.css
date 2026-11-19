@@ -1,28 +1,37 @@
 .page {
+  composes: page from '../../shared/styles/WorkspacePage.module.css';
   min-height: 100%;
-  padding: 14px 22px 24px 18px;
   background: #f3fbff;
   color: var(--color-ink);
 }
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 22px;
-  margin-bottom: 8px;
-  color: var(--color-muted);
-  font-size: 13px;
-  line-height: 20px;
+  composes: breadcrumb from '../../shared/styles/WorkspacePage.module.css';
 }
-.breadcrumb h1 {
-  margin: 0;
-  color: #06458b;
-  font-size: 13px;
-  font-weight: 500;
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 22px;
+    margin-bottom: 8px;
+    color: var(--color-muted);
+    font-size: var(--font-size-small);
+    line-height: 20px;
+  }
+
+  .breadcrumb h1 {
+    margin: 0;
+    color: #06458b;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+  }
+
+  .breadcrumb a {
+    color: var(--color-muted);
+  }
 }
-.breadcrumb a {
-  color: var(--color-muted);
-}
+
 .summary {
   display: grid;
   grid-template-columns: minmax(180px, 260px) minmax(140px, 1fr) 170px;
@@ -33,20 +42,26 @@
   margin-top: 17px;
   padding: 13px 17px;
   border: 1px solid #cdebf7;
-  border-radius: 14px;
+  border-radius: var(--radius-12);
   background: white;
   box-sizing: border-box;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .summary {
+    border-radius: 14px;
+  }
 }
 .summary h2 {
   margin: 0;
   color: #06458b;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 32px;
 }
 .summary p {
   margin: 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .summary .progress {
@@ -62,17 +77,29 @@
 .summary .progress span {
   width: 70px;
   color: var(--color-action-text);
-  font-size: 15px;
+  font-size: var(--font-size-label);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .summary .progress span {
+    font-size: 15px;
+  }
 }
 .summary > button {
   width: 170px;
   height: 46px;
   min-height: 46px;
   box-sizing: border-box;
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   padding-inline: 12px;
   white-space: nowrap;
   overflow-wrap: normal;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .summary > button {
+    border-radius: 18px;
+  }
 }
 .readOnlyBadge {
   display: inline-flex;
@@ -81,10 +108,16 @@
   min-height: 44px;
   padding: 8px 12px;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   background: var(--color-surface);
   color: var(--color-action-primary);
-  font-size: 13px;
+  font-size: var(--font-size-small);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .readOnlyBadge {
+    border-radius: 18px;
+  }
 }
 .progress {
   width: 220px;
@@ -94,10 +127,16 @@
   align-items: center;
 }
 .progress strong {
-  font-size: 26px;
+  font-size: var(--font-size-title);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .progress strong {
+    font-size: 26px;
+  }
 }
 .progress span {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   color: var(--color-text-muted-on-light);
 }
 .progress i {
@@ -120,9 +159,15 @@
   overflow-x: hidden;
   overflow-y: auto;
   border: 1px solid #cdebf7;
-  border-radius: 14px;
+  border-radius: var(--radius-12);
   background: white;
   box-sizing: border-box;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .list {
+    border-radius: 14px;
+  }
 }
 .toolbar {
   display: flex;
@@ -140,12 +185,18 @@
   min-height: 44px;
   min-width: 100px;
   border: 1px solid #cdebf7;
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   padding: 6px 16px;
   background: white;
   color: #006ba6;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .filters button {
+    border-radius: 18px;
+  }
 }
 .filters button:last-child {
   min-width: 150px;
@@ -172,8 +223,14 @@
 }
 .categorySelect select {
   min-height: 44px;
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   padding-block: 6px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .categorySelect select {
+    border-radius: 18px;
+  }
 }
 .tableHead,
 .row {
@@ -186,10 +243,16 @@
 .tableHead {
   min-height: 28px;
   margin: 0 14px 12px;
-  border-radius: 5px;
+  border-radius: var(--radius-6);
   background: #f3fbff;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .tableHead {
+    border-radius: 5px;
+  }
 }
 .tableHead span {
   overflow: hidden;
@@ -214,18 +277,24 @@
   margin: 0 0 4px;
   padding: 0 12px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: #f3fbff;
   color: #06458b;
   text-align: left;
-  font-size: 15px;
+  font-size: var(--font-size-body);
   font-weight: 500;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .groupHeading {
+    font-size: 15px;
+  }
 }
 .groupHeading em {
   min-width: 24px;
   padding: 2px 7px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-style: normal;
   text-align: center;
 }
@@ -235,7 +304,7 @@
 .row {
   min-height: 56px;
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .row:last-child {
   margin-bottom: 4px;
@@ -246,9 +315,15 @@
   display: grid;
   place-items: center;
   border: 1px solid #cdebf7;
-  border-radius: 5px;
+  border-radius: var(--radius-6);
   background: white;
   color: white;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .checkbox {
+    border-radius: 5px;
+  }
 }
 .checkbox.checked {
   border-color: #008cac;
@@ -259,7 +334,7 @@
 }
 .readOnlyRowLabel {
   color: var(--color-action-primary);
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   white-space: nowrap;
 }
 .mobileReadLabel {
@@ -301,9 +376,15 @@
   min-width: 120px;
   padding: 4px;
   border: 1px solid #d9eaf2;
-  border-radius: 5px;
+  border-radius: var(--radius-6);
   background: white;
   box-shadow: 0 8px 20px rgb(19 74 92 / 12%);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .menu > div {
+    border-radius: 5px;
+  }
 }
 .menu button {
   border: 0;
@@ -318,9 +399,15 @@
   margin: 0 14px;
   padding: 34px;
   border: 1px dashed #c6dbe3;
-  border-radius: 5px;
+  border-radius: var(--radius-6);
   background: white;
   text-align: center;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .empty {
+    border-radius: 5px;
+  }
 }
 .empty h2 {
   margin: 0 0 6px;
@@ -333,9 +420,15 @@
   margin: 12px 0;
   padding: 10px 12px;
   border: 1px solid #b8e1d6;
-  border-radius: 5px;
+  border-radius: var(--radius-6);
   background: #effbf7;
   color: #216c5c;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .feedback {
+    border-radius: 5px;
+  }
 }
 @media (max-width: 1200px) and (min-width: 769px) {
   .summary {
@@ -485,5 +578,13 @@
   }
   .groups {
     margin-inline: 6px;
+  }
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .summary,
+  .list {
+    border-radius: var(--radius-panel);
   }
 }

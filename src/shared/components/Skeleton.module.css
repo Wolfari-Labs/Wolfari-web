@@ -5,6 +5,12 @@
   background: var(--color-selected);
   animation: pulse 1.2s ease-in-out infinite;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .skeleton {
+    border-radius: var(--radius-8);
+  }
+}
 @keyframes pulse {
   50% {
     opacity: 0.4;

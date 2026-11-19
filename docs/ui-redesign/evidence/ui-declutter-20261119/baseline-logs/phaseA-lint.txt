@@ -1,0 +1,4 @@
+
+> wolfari-web@0.1.0 lint D:\Desktop\NHAP\PBL6\Wolfari-web
+> eslint .
+

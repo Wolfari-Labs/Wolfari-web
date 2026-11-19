@@ -45,12 +45,22 @@ async function assertNoHorizontalOverflow(page: Page, width: number) {
   expect(dimensions.body).toBeLessThanOrEqual(width);
 }
 
+/**
+ * D1 (UI declutter): the workspace content is at most 1220px wide (1180 + 18 left + 22 right) and
+ * centred in the area right of the sidebar. Below that width it fills the area.
+ */
+function expectedFrame(width: number, sidebar: number) {
+  const area = width - sidebar;
+  const frame = Math.min(area, 1220);
+  const left = sidebar + (area - frame) / 2;
+  return { left: left + 18, right: left + frame - 22 };
+}
+
 async function assertDesktopContentEdges(page: Page, width: number) {
   const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
   const summary = (await page.locator('[data-region="trip-overview-summaries"]').boundingBox())!;
   const board = (await workspace(page).boundingBox())!;
-  const expectedLeft = 220 + 18;
-  const expectedRight = width - 22;
+  const { left: expectedLeft, right: expectedRight } = expectedFrame(width, 220);
   expectNear(hero.x, expectedLeft, `${width}px hero left edge`);
   expectNear(rightEdge(hero), expectedRight, `${width}px hero right edge`);
   expectNear(summary.x, expectedLeft, `${width}px summary left edge`);
@@ -134,8 +144,10 @@ test('Trip overview uses all available desktop width with the expanded and colla
       .locator('[data-region="trip-overview-summaries"]')
       .boundingBox())!;
     const workspaceBox = (await workspace(page).boundingBox())!;
-    const expectedLeft = Math.round(sidebarBox.width) + 18;
-    const expectedRight = 1440 - 22;
+    const { left: expectedLeft, right: expectedRight } = expectedFrame(
+      1440,
+      Math.round(sidebarBox.width),
+    );
 
     expectNear(heroBox.x, expectedLeft, `${state} hero left edge`);
     expectNear(rightEdge(heroBox), expectedRight, `${state} hero right edge`);
@@ -143,7 +155,8 @@ test('Trip overview uses all available desktop width with the expanded and colla
     expectNear(rightEdge(summaryBox), expectedRight, `${state} summary right edge`);
     expectNear(workspaceBox.x, expectedLeft, `${state} workspace left edge`);
     expectNear(rightEdge(workspaceBox), expectedRight, `${state} workspace right edge`);
-    expectNear(heroBox.height, 170, `${state} hero height`);
+    // D3: every workspace hero is 150px tall (the overview used to be 170px).
+    expectNear(heroBox.height, 150, `${state} hero height`);
     expect(workspaceBox.height).toBeGreaterThanOrEqual(408);
 
     const columns = await workspace(page)
@@ -158,8 +171,10 @@ test('Trip overview uses all available desktop width with the expanded and colla
     expect(columns[0]!.height).toBeGreaterThanOrEqual(408);
     expect(columns[1]!.height).toBeGreaterThanOrEqual(408);
     expect(columns[2]!.height).toBeGreaterThanOrEqual(408);
-    const usableWidth = workspaceBox.width - 28;
-    const expectedColumnWidths = [578, 314, 260].map((value) => (usableWidth * value) / 1152);
+    // D5/D7: four equal columns with a 16px gap; the itinerary spans two of them.
+    const gap = 16;
+    const unit = (workspaceBox.width - 3 * gap) / 4;
+    const expectedColumnWidths = [2 * unit + gap, unit, unit];
     columns.forEach((column, index) =>
       expectNear(column.width, expectedColumnWidths[index]!, `${state} workspace column ${index}`),
     );

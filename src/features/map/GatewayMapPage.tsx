@@ -6,7 +6,7 @@ import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Drawer } from '../../shared/components/Drawer';
-import { CapabilityNote } from '../../shared/components/CapabilityNote';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { ActionMenu } from '../../shared/components/Ui';
 import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import pinIcon from '../../shared/assets/figma/8efc8.svg';
@@ -601,13 +601,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         {data && (
           <>
             <div className={styles.mapContent}>
-              <div className={styles.breadcrumb}>
-                <Link to={paths.trips}>Chuyến đi của tôi</Link>
-                <span aria-hidden="true">›</span>
-                <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
-                <span aria-hidden="true">›</span>
-                <h1>Bản đồ &amp; địa điểm</h1>
-              </div>
+              <PageBreadcrumb
+                className={styles.breadcrumb}
+                items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+                current="Bản đồ địa điểm"
+              />
               <div className={styles.hero}>
                 <TripHero trip={data.trip} compact variant="landscape" />
               </div>
@@ -619,7 +617,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                 >
                   <header className={styles.panelHeader}>
                     <h2>Tìm kiếm &amp; chọn địa điểm</h2>
-                    <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
                   </header>
                   <div className={styles.localNotice} role="status">
                     {storageBlocked
@@ -976,10 +973,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                   />
                 </section>
               </div>
-              <CapabilityNote id="map-provider-note">
-                Wolfari / Geoapify · © OpenStreetMap contributors · Chọn ô để lưu địa điểm; dùng
-                “Thêm vào ngày…” để xếp thẳng vào lịch trình.
-              </CapabilityNote>
             </div>
             <PlaceDetail
               item={selectedItem}

@@ -10,6 +10,7 @@ import type { ReadResult } from '../../shared/types/result';
 import { ContentState } from '../../shared/components/ContentState';
 import { Alert } from '../../shared/components/Alert';
 import { Button } from '../../shared/components/Button';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { paths } from '../../app/route-paths';
 import { toDomainError } from '../../shared/lib/runtime-validation';
 import { formatVnd } from '../fund/GatewayFundPage';
@@ -124,11 +125,11 @@ export function GatewayOverview() {
 
   return (
     <section className={styles.page} data-flow="trip-overview" data-node-id="3:31">
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trips}>Chuyến đi của tôi</Link>
-        <span aria-hidden="true">›</span>
-        <h1>Tổng quan chuyến đi</h1>
-      </div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Chuyến đi của tôi', to: paths.trips }]}
+        current="Tổng quan chuyến đi"
+      />
       {tripQuery.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : tripError ? (

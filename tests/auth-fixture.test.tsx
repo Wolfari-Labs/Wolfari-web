@@ -336,7 +336,11 @@ describe('Self/profile and Home composition', () => {
     expect(await screen.findByLabelText('Tên hiển thị')).toHaveValue('Tên sửa local');
     await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
     await screen.findByText(/Chưa lưu được thay đổi/);
-    expect(screen.getByText(/Phiên bản hồ sơ: 1/)).toBeInTheDocument();
+    // A25: the version moved from visible text to data-profile-version; same behavioural check.
+    expect(document.querySelector('[data-preview="profile"]')).toHaveAttribute(
+      'data-profile-version',
+      '1',
+    );
     await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
     await screen.findByText('Phiên đăng nhập 1');
   });
