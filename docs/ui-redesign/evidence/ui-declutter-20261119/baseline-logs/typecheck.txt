@@ -1,0 +1,5 @@
+
+> wolfari-web@0.1.0 typecheck D:\Desktop\NHAP\PBL6\Wolfari-web
+> tsc --noEmit
+
+typecheck exit 0

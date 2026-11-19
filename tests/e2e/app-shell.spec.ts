@@ -6,7 +6,7 @@ for (const width of [1440, 402])
     await page.goto(tripPath);
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
     if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
-    await page.getByRole('link', { name: 'Packing list', exact: true }).click();
+    await page.getByRole('link', { name: 'Đồ đạc', exact: true }).click();
     await expect(page.locator('[data-flow="packing-read"]')).toBeVisible();
     await expect(page.locator('[data-flow="trip-overview"]')).toHaveCount(0);
     await expect(page).toHaveURL(tripPath + '/packing');

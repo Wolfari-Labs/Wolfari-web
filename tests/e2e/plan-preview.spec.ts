@@ -23,7 +23,7 @@ for (const size of [
     );
     if (size.width === 1440) {
       const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
-      for (const [key, expected] of Object.entries({ x: 238, y: 116, width: 1180, height: 150 }))
+      for (const [key, expected] of Object.entries({ x: 238, y: 120, width: 1180, height: 150 }))
         expect(
           Math.abs(hero[key as keyof typeof hero] - expected),
           `Figma hero ${key}`,

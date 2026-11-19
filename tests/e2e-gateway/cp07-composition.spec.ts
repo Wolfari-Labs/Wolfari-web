@@ -178,7 +178,7 @@ async function checkKeyboard(page: Page, root: Locator, route: (typeof routes)[n
     return;
   }
   const group = root.getByRole('group', {
-    name: route === 'dress-code' ? 'Lọc phạm vi dress code' : 'Bộ lọc vật dụng',
+    name: route === 'dress-code' ? 'Lọc phạm vi trang phục' : 'Bộ lọc vật dụng',
   });
   await group.getByRole('button', { name: 'Tất cả', exact: true }).focus();
   await page.keyboard.press('Tab');
@@ -232,14 +232,17 @@ for (const route of routes) {
         }
       } else if (route.name === 'dress-code') {
         await expect(root.getByText('Trang phục thoáng mát', { exact: true })).toBeVisible();
-        await expectPrimaryBeforeSecondary(
-          root.getByRole('region', { name: 'Hướng dẫn trang phục đã lưu' }),
-          root.getByRole('complementary', { name: 'Khả năng Dress code' }),
-          viewport.width <= 1100,
+        // A20 (UI declutter): the read-only aside was removed; its "Chỉ xem" chip now sits
+        // with the scope filters, above the saved guidance cards.
+        const readOnlyChip = root.getByText('Chỉ xem', { exact: true });
+        await expect(readOnlyChip).toBeVisible();
+        expect((await readOnlyChip.boundingBox())!.y).toBeLessThan(
+          (await root.getByRole('region', { name: 'Hướng dẫn trang phục đã lưu' }).boundingBox())!
+            .y,
         );
       } else {
         await expect(root.getByText('Áo mưa', { exact: true })).toBeVisible();
-        const summary = root.getByRole('region', { name: 'Tiến độ packing list' });
+        const summary = root.getByRole('region', { name: 'Tiến độ đồ đạc' });
         const filters = root.getByRole('group', { name: 'Bộ lọc vật dụng' });
         expect((await filters.boundingBox())!.y).toBeGreaterThan((await summary.boundingBox())!.y);
         if (viewport.width <= 402) {
@@ -290,7 +293,7 @@ for (const route of routes) {
         route.name === 'map'
           ? root.getByRole('button', { name: 'Đặt pin thủ công' })
           : route.name === 'dress-code'
-            ? root.getByRole('complementary', { name: 'Khả năng Dress code' })
+            ? root.getByRole('region', { name: 'Hướng dẫn trang phục đã lưu' })
             : root.getByText(/Danh sách hiện chỉ hỗ trợ xem/);
       await last.scrollIntoViewIfNeeded();
       await expect(last).toBeInViewport();

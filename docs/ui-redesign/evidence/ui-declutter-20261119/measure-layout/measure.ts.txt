@@ -1,0 +1,123 @@
+// TEMPORARY measurement helper for docs/agents/UI_DECLUTTER_AND_TYPOGRAPHY_PLAN.md (Phase 0 step 4).
+// Not part of the product test suite; copied into the evidence folder as a record of how numbers were taken.
+import type { Page } from '@playwright/test';
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+
+export const label = process.env.MEASURE_LABEL ?? 'before';
+export const evidenceRoot = resolve(
+  process.cwd(),
+  'docs/ui-redesign/evidence/ui-declutter-20261119',
+);
+export const tripId = '11111111-1111-4111-8111-111111111111';
+
+export const routes = [
+  { key: 'overview', suffix: '' },
+  { key: 'plan', suffix: '/plan' },
+  { key: 'map', suffix: '/map' },
+  { key: 'dress-code', suffix: '/dress-code' },
+  { key: 'packing', suffix: '/packing' },
+  { key: 'members', suffix: '/members' },
+  { key: 'fund', suffix: '/fund' },
+  { key: 'price-watch', suffix: '/price-watch' },
+  { key: 'settings', suffix: '/settings' },
+] as const;
+
+export const desktopViewports = [
+  { width: 1920, height: 1080 },
+  { width: 1440, height: 900 },
+  { width: 1366, height: 768 },
+] as const;
+export const mobileViewports = [
+  { width: 402, height: 874 },
+  { width: 320, height: 600 },
+] as const;
+
+/** Merge a record into the shared JSON result file (specs run in separate workers). */
+export function record(file: string, key: string, value: unknown) {
+  const path = resolve(evidenceRoot, file);
+  mkdirSync(dirname(path), { recursive: true });
+  const current = existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : {};
+  current[key] = value;
+  writeFileSync(path, JSON.stringify(current, null, 2));
+}
+
+export async function measureLayout(page: Page) {
+  return page.evaluate(() => {
+    const round = (value: number) => Math.round(value * 100) / 100;
+    const box = (element: Element | null) => {
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      return { x: round(rect.x), y: round(rect.y), width: round(rect.width), height: round(rect.height) };
+    };
+    const main = document.querySelector('main');
+    const root = main?.firstElementChild ?? null;
+    const hero =
+      document.querySelector('section[aria-label="Thông tin chuyến đi"]') ??
+      document.querySelector('[data-variant]');
+    const heroH2 = hero?.querySelector('h2') ?? null;
+    const heroStyle = hero ? getComputedStyle(hero) : null;
+    const h2Style = heroH2 ? getComputedStyle(heroH2) : null;
+    const rootStyle = root ? getComputedStyle(root) : null;
+    const breadcrumb = [...document.querySelectorAll('[class*="breadcrumb"]')].find((element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.width > 1 && rect.height > 1;
+    });
+    const h1s = [...document.querySelectorAll('h1')].map((element) => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return {
+        text: (element.textContent ?? '').trim().slice(0, 80),
+        box: box(element),
+        visible: rect.width > 2 && rect.height > 2 && style.visibility !== 'hidden',
+        fontSize: style.fontSize,
+        fontWeight: style.fontWeight,
+      };
+    });
+    const columns = (selector: string) =>
+      [...document.querySelectorAll(selector)].map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { left: round(rect.left), right: round(rect.right), top: round(rect.top), width: round(rect.width), height: round(rect.height) };
+      });
+    const grid = (selector: string) => {
+      const element = document.querySelector(selector);
+      if (!element) return null;
+      const style = getComputedStyle(element);
+      return { columns: style.gridTemplateColumns, gap: style.columnGap + ' / ' + style.rowGap };
+    };
+    return {
+      url: location.pathname,
+      viewport: { width: innerWidth, height: innerHeight },
+      scrollWidth: document.documentElement.scrollWidth,
+      main: box(main),
+      root: box(root),
+      rootPadding: rootStyle?.padding ?? null,
+      rootMaxWidth: rootStyle?.maxWidth ?? null,
+      hero: box(hero),
+      heroVariant: hero?.getAttribute('data-variant') ?? null,
+      heroRadius: heroStyle?.borderRadius ?? null,
+      heroH2: h2Style ? { fontSize: h2Style.fontSize, lineHeight: h2Style.lineHeight } : null,
+      heroH2Box: box(heroH2),
+      breadcrumb: breadcrumb
+        ? {
+            box: box(breadcrumb),
+            text: (breadcrumb.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 120),
+            gapBelow: hero && breadcrumb ? round(hero.getBoundingClientRect().top - breadcrumb.getBoundingClientRect().bottom) : null,
+          }
+        : null,
+      h1Count: h1s.length,
+      visibleH1Count: h1s.filter((item) => item.visible).length,
+      h1s,
+      overview: document.querySelector('[data-region="trip-overview-summaries"]')
+        ? {
+            kpiColumns: columns('[data-region="trip-overview-summaries"] > *'),
+            workspaceColumns: columns('[data-region="trip-overview-workspace"] > *'),
+            kpiGrid: grid('[data-region="trip-overview-summaries"]'),
+            workspaceGrid: grid('[data-region="trip-overview-workspace"]'),
+            summaries: box(document.querySelector('[data-region="trip-overview-summaries"]')),
+            workspace: box(document.querySelector('[data-region="trip-overview-workspace"]')),
+          }
+        : null,
+    };
+  });
+}

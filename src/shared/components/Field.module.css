@@ -6,6 +6,12 @@
   font-size: var(--font-size-label);
   line-height: var(--line-label);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .field {
+    font-size: var(--font-size-label);
+  }
+}
 .hiddenLabel {
   position: absolute;
   width: 1px;
@@ -96,7 +102,7 @@
   min-width: 44px;
   display: inline-grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 0 var(--space-4);
   font: inherit;
   font-weight: var(--weight-medium);
@@ -109,6 +115,12 @@
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: var(--focus-offset);
   border-radius: var(--radius-6);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .passwordToggle:focus-visible {
+    border-radius: var(--radius-6);
+  }
 }
 .passwordToggle:disabled {
   color: var(--color-control-disabled-text);
@@ -162,6 +174,12 @@
   font-size: var(--font-size-small);
   line-height: var(--line-small);
   overflow-wrap: anywhere;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .hint, .error {
+    font-size: var(--font-size-small);
+  }
 }
 .hint {
   color: var(--color-note-text);

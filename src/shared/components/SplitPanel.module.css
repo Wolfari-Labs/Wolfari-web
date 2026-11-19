@@ -12,7 +12,7 @@
   justify-content: center;
   width: 20px;
   color: var(--color-muted);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   touch-action: none;
 }
 .separator:hover,

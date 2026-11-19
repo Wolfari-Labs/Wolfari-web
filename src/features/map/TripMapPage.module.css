@@ -1,4 +1,5 @@
 .page {
+  composes: page from '../../shared/styles/WorkspacePage.module.css';
   --map-teal: #008cac;
   --map-scheduled: #0e8e69;
   --map-scheduled-surface: #eaf9f4;
@@ -9,7 +10,6 @@
   --map-muted-surface: #f7f9fa;
   width: 100%;
   min-height: 100%;
-  padding: 8px 22px 24px 18px;
   background: var(--color-background);
   color: var(--color-ink);
 }
@@ -19,30 +19,36 @@
 }
 
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 22px;
-  margin-bottom: 4px;
-  color: var(--color-muted);
-  font-size: 13px;
-  line-height: 20px;
+  composes: breadcrumb from '../../shared/styles/WorkspacePage.module.css';
 }
 
-.breadcrumb h1 {
-  margin: 0;
-  font: inherit;
-}
+@media (max-width: 768px) {
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 22px;
+    margin-bottom: 4px;
+    color: var(--color-muted);
+    font-size: var(--font-size-small);
+    line-height: 20px;
+  }
 
-.breadcrumb a {
-  position: relative;
-  color: var(--color-muted);
-}
+  .breadcrumb h1 {
+    margin: 0;
+    font: inherit;
+  }
 
-.breadcrumb a::after {
-  content: '';
-  position: absolute;
-  inset: -11px 0;
+  .breadcrumb a {
+    position: relative;
+    color: var(--color-muted);
+  }
+
+  .breadcrumb a::after {
+    content: '';
+    position: absolute;
+    inset: -11px 0;
+  }
 }
 
 .hero :global(.hero[data-variant='landscape']) {
@@ -63,8 +69,14 @@
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--color-line);
-  border-radius: 14px;
+  border-radius: var(--radius-12);
   background: var(--color-white);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .placePanel, .mapPanel {
+    border-radius: 14px;
+  }
 }
 
 .placePanel {
@@ -77,15 +89,14 @@
 .panelHeader h2 {
   margin: 0;
   color: #0b4f91;
-  font-size: 21px;
+  font-size: var(--font-size-card-title);
   line-height: 29px;
 }
-
-.panelHeader p {
-  margin: 0;
-  color: var(--color-muted);
-  font-size: 10px;
-  line-height: 15px;
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .panelHeader h2 {
+    font-size: 21px;
+  }
 }
 
 .visuallyHidden {
@@ -109,7 +120,7 @@
   height: 40px;
   padding: 0 12px;
   border: 1px solid #cde7f2;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: #f5fbfe;
 }
 
@@ -125,7 +136,13 @@
   outline: 0;
   background: transparent;
   color: var(--color-ink);
-  font-size: 11px;
+  font-size: var(--font-size-small);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .searchBox input {
+    font-size: 11px;
+  }
 }
 
 .searchBox input::placeholder {
@@ -160,12 +177,19 @@
   min-height: 44px;
   padding: 5px 11px;
   border: 1px solid #cde7f2;
-  border-radius: 15px;
+  border-radius: var(--radius-16);
   background: var(--color-white);
   color: #0b4f91;
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   font-weight: 500;
   line-height: 16px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .desktopFilters button, .desktopFilters > span {
+    font-size: 11px;
+    border-radius: 15px;
+  }
 }
 
 .desktopFilters > span {
@@ -245,7 +269,7 @@
   min-height: 58px;
   padding: 8px 9px;
   border: 1px solid #cde7f2;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--color-white);
   color: #0b4f91;
   text-align: left;
@@ -264,9 +288,16 @@
   width: 28px;
   height: 28px;
   border: 1px solid transparent;
-  border-radius: 14px;
-  font-size: 11px;
+  border-radius: var(--radius-12);
+  font-size: var(--font-size-caption);
   font-weight: 700;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .pinBadge {
+    font-size: 11px;
+    border-radius: 14px;
+  }
 }
 
 .pinScheduled {
@@ -291,7 +322,7 @@
 
 .placeCopy strong {
   overflow: hidden;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   line-height: 18px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -300,10 +331,16 @@
 .placeCopy small {
   overflow: hidden;
   color: var(--color-muted);
-  font-size: 10px;
+  font-size: var(--font-size-caption);
   line-height: 16px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .placeCopy small {
+    font-size: 10px;
+  }
 }
 
 .statusChip {
@@ -313,11 +350,18 @@
   min-height: 28px;
   padding: 5px 10px;
   border: 1px solid;
-  border-radius: 15px;
-  font-size: 10px;
+  border-radius: var(--radius-16);
+  font-size: var(--font-size-caption);
   font-weight: 500;
   line-height: 16px;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .statusChip {
+    font-size: 10px;
+    border-radius: 15px;
+  }
 }
 
 .statusScheduled {
@@ -342,7 +386,7 @@
   min-height: 160px;
   padding: 24px;
   border: 1px dashed var(--color-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   color: var(--color-muted);
   text-align: center;
 }
@@ -366,9 +410,15 @@
 .routeSelector select,
 .mapType button {
   height: 34px;
-  border-radius: 17px;
-  font-size: 13px;
+  border-radius: var(--radius-16);
+  font-size: var(--font-size-small);
   line-height: 20px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .routeSelector select, .mapType button {
+    border-radius: 17px;
+  }
 }
 
 .routeSelector select {
@@ -416,7 +466,7 @@
   max-width: 100%;
   height: 566px;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--color-pale);
 }
 
@@ -440,10 +490,16 @@
   left: 12px;
   z-index: 4;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: rgb(255 255 255 / 92%);
   color: #765600;
-  font-size: 11px;
+  font-size: var(--font-size-caption);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .providerUnavailableLabel {
+    font-size: 11px;
+  }
 }
 
 .desktopMapArtwork,
@@ -481,7 +537,7 @@
   padding: 0;
   border: 1px solid transparent;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   pointer-events: auto;
   transform: translate(-50%, -50%);
@@ -542,10 +598,16 @@
   min-height: 32px;
   padding: 0 9px;
   border: 1px solid var(--color-line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: rgb(255 255 255 / 95%);
-  font-size: 9px;
+  font-size: var(--font-size-caption);
   font-weight: 500;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .legend {
+    font-size: 9px;
+  }
 }
 
 .legend span {
@@ -585,8 +647,14 @@
   padding: 9px 10px 10px;
   overflow: hidden;
   border: 1px solid var(--color-line);
-  border-radius: 14px;
+  border-radius: var(--radius-12);
   background: var(--color-white);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .desktopPlaceCard {
+    border-radius: 14px;
+  }
 }
 
 .desktopPlaceCard > img {
@@ -595,19 +663,31 @@
   height: 90px;
   flex: none;
   margin-bottom: 8px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 
 .desktopPlaceCard strong {
-  font-size: 15px;
+  font-size: var(--font-size-label);
   line-height: 22px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .desktopPlaceCard strong {
+    font-size: 15px;
+  }
 }
 
 .desktopPlaceCard span,
 .desktopPlaceCard p {
   color: var(--color-muted);
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   line-height: 17px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .desktopPlaceCard span, .desktopPlaceCard p {
+    font-size: 11px;
+  }
 }
 
 .desktopPlaceCard p {
@@ -627,11 +707,17 @@
   min-height: 48px;
   margin: 0;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--color-status-warning-surface);
   color: var(--color-ink);
-  font-size: 11px;
+  font-size: var(--font-size-small);
   line-height: 17px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .mapSuggestion {
+    font-size: 11px;
+  }
 }
 
 .unavailableViewport {
@@ -655,7 +741,7 @@
   max-width: 380px;
   margin: 24px;
   padding: 24px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: rgb(255 255 255 / 92%);
   text-align: center;
   box-shadow: var(--shadow-soft);
@@ -1176,11 +1262,17 @@
 .searchState {
   flex: none;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: #fff8df;
   color: #765600;
-  font-size: 11px;
+  font-size: var(--font-size-small);
   line-height: 16px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .localNotice, .searchState {
+    font-size: 11px;
+  }
 }
 
 .searchState {
@@ -1252,8 +1344,14 @@
   min-height: 44px;
   padding: 12px;
   color: var(--color-muted);
-  font-size: 11px;
+  font-size: var(--font-size-small);
   text-align: center;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .listState {
+    font-size: 11px;
+  }
 }
 
 .filterSelect[data-filter='ALL'] select {
@@ -1320,11 +1418,18 @@
   min-height: 18px;
   padding: 0 6px;
   border: 1px solid #cde7f2;
-  border-radius: 9px;
+  border-radius: var(--radius-6);
   background: #f2fafc;
   color: #17677b;
-  font-size: 10px;
+  font-size: var(--font-size-caption);
   line-height: 16px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .sourceBadge, .unverifiedBadge {
+    font-size: 10px;
+    border-radius: 9px;
+  }
 }
 .sourceBadge[data-source='WOLFARI'] {
   border-color: #9fd6e6;
@@ -1346,8 +1451,14 @@
 /* POI-OVERTURE W10/W11 (see DESIGN_DELTAS POI-OVERTURE). */
 .placeMeta .sourceBadge,
 .placeMeta .unverifiedBadge {
-  font-size: 10px;
+  font-size: var(--font-size-caption);
   line-height: 16px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .placeMeta .sourceBadge, .placeMeta .unverifiedBadge {
+    font-size: 10px;
+  }
 }
 .placeMeta .sourceBadge {
   color: #17677b;
@@ -1376,7 +1487,7 @@
   display: grid;
   gap: 6px;
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   line-height: 18px;
 }
 .detailProvenance > div {
@@ -1415,8 +1526,14 @@
   flex: none;
   margin: 6px 0 0;
   color: var(--color-muted);
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   line-height: 16px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .dataCredit {
+    font-size: 11px;
+  }
 }
 /* POI-OVERTURE OVW-3: one-line source in the selected-place card (FR-TI01). */
 .cardProvenance {
@@ -1456,4 +1573,23 @@
 .cardProvenance .sourceBadge:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: 1px;
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .workspace {
+    gap: var(--grid-gap);
+  }
+  .placePanel,
+  .mapPanel,
+  .viewport {
+    border-radius: var(--radius-panel);
+  }
+  /*
+   * Phase B raised the provenance line from 10-11px to the 12px caption step. The card is 30px wider so
+   * the province and "Nguồn + ngày" still never truncate (places-overture spec, POV-05).
+   */
+  .desktopPlaceCard {
+    width: 280px;
+  }
 }

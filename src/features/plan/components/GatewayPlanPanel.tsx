@@ -202,10 +202,6 @@ function ActivityForm({
             </Button>
           )}
         </div>
-        <p className={styles.scheduleHint}>
-          Chọn ngày không cần giờ; có thể đặt giờ kết thúc vào ngày tiếp theo. Mọi thay đổi chỉ áp
-          dụng cho hoạt động này.
-        </p>
         <Select
           label="Địa điểm"
           value={location}
@@ -407,7 +403,7 @@ export function GatewayPlanPanel({
       ? { ...plan, activities: optimistic.activities }
       : plan;
   const feedback = (
-    <div className={styles.feedback}>
+    <div className={styles.feedback} data-plan-version={plan.planVersion}>
       {!canEdit && (
         <Alert>
           Bạn có thể xem lịch trình
@@ -465,13 +461,6 @@ export function GatewayPlanPanel({
           )}
         </Alert>
       )}
-      <details className={styles.syncDetails}>
-        <summary>Chi tiết đồng bộ</summary>
-        <p>
-          Phiên bản {plan.planVersion}. Đổi thứ tự giữ nguyên giờ. Ngày chưa có giờ cũng được lưu và
-          chia sẻ với thành viên.
-        </p>
-      </details>
     </div>
   );
   const actions = (
@@ -606,7 +595,7 @@ export function GatewayPlanPanel({
         description={
           confirmVersion !== plan.planVersion
             ? 'Dữ liệu đã thay đổi. Hủy và chọn lại hoạt động sau khi đối chiếu.'
-            : `Xóa “${confirm?.title ?? ''}”? Dress Code gắn với hoạt động cũng có thể bị xóa.`
+            : `Xóa “${confirm?.title ?? ''}”? Trang phục gắn với hoạt động cũng có thể bị xóa.`
         }
         confirmLabel="Xác nhận xóa"
         busy={commands.pending}

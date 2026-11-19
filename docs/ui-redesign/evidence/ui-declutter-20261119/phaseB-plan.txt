@@ -1,0 +1,550 @@
+auth/AuthPage.module.css:38 font-size 14px -> var(--font-size-label)  | .description
+auth/AuthPage.module.css:92 font-size 30px -> var(--font-size-title)  | .cardHeader h2
+auth/AuthPage.module.css:98 font-size 13px -> var(--font-size-small)  | .cardHeader p
+auth/AuthPage.module.css:107 font-size 14px -> var(--font-size-label)  | .fields label
+auth/AuthPage.module.css:111 font-size 16px -> var(--font-size-body)  | .fields input
+auth/AuthPage.module.css:117 font-size 13px -> var(--font-size-small)  | .previewNote
+auth/AuthPage.module.css:123 font-size 13.2px -> var(--font-size-small)  | .card .submit
+auth/AuthPage.module.css:135 font-size 13px -> var(--font-size-small)  | .alternative
+auth/AuthPage.module.css:149 font-size 13.2px -> var(--font-size-small)  | .alternative a
+auth/AuthPage.module.css:159 font-size 13px -> var(--font-size-small)  | .forgotLink
+auth/AuthPage.module.css:168 font-size 13px -> var(--font-size-small)  | .consent
+auth/AuthPage.module.css:185 font-size 13px -> var(--font-size-small)  | .error
+auth/AuthPage.module.css:223 font-size 28px -> var(--font-size-title)  | .register .cardHeader h2
+auth/AuthPage.module.css:251 font-size 26px -> var(--font-size-title)  | .cardHeader h2
+auth/AuthPage.module.css:82 border-radius 24px -> var(--radius-24)  | .card
+auth/AuthPage.module.css:147 border-radius 18px -> var(--radius-16)  | .alternative a
+auth/ProfilePage.module.css:9 font-size 34px -> var(--font-size-heading)  | .page h1
+auth/ProfilePage.module.css:15 font-size 15px -> var(--font-size-body)  | .subtitle
+auth/ProfilePage.module.css:37 font-size 24px -> var(--font-size-title)  | .panel h2
+auth/ProfilePage.module.css:64 font-size 22px -> var(--font-size-card-title)  | .avatar strong
+auth/ProfilePage.module.css:83 font-size 14px -> var(--font-size-label)  | .fields label
+auth/ProfilePage.module.css:87 font-size 14px -> var(--font-size-label)  | .fields input
+auth/ProfilePage.module.css:94 font-size 13px -> var(--font-size-small)  | .ruleNote > div
+auth/ProfilePage.module.css:128 font-size 14px -> var(--font-size-label)  | .preference strong
+auth/ProfilePage.module.css:133 font-size 11.5px -> var(--font-size-caption)  | .preference small
+auth/ProfilePage.module.css:153 font-size 18px -> var(--font-size-subtitle)  | .devices h3
+auth/ProfilePage.module.css:158 font-size 13px -> var(--font-size-small)  | .devices > div
+auth/ProfilePage.module.css:172 font-size 14px -> var(--font-size-label)  | .sessions summary
+auth/ProfilePage.module.css:189 font-size 13px -> var(--font-size-small)  | .sessions li
+auth/ProfilePage.module.css:206 font-size 21px -> var(--font-size-card-title)  | .panel h2
+auth/ProfilePage.module.css:32 border-radius 16px -> var(--radius-16)  | .panel
+auth/ProfilePage.module.css:142 border-radius 18px -> var(--radius-16)  | .preference button
+auth/ProfilePage.module.css:187 border-radius 10px -> var(--radius-10)  | .sessions li
+dress-code/DressCodePage.module.css:21 font-size 13px -> var(--font-size-small)  | .breadcrumb
+dress-code/DressCodePage.module.css:56 font-size 32px -> var(--font-size-heading)  | .tripDetails h1
+dress-code/DressCodePage.module.css:61 font-size 24px -> var(--font-size-title)  | .tripDetails h1 span
+dress-code/DressCodePage.module.css:62 font-size 15px -> var(--font-size-label)  | .tripDetails p
+dress-code/DressCodePage.module.css:77 font-size 13px -> var(--font-size-small)  | .statusChip
+dress-code/DressCodePage.module.css:92 font-size 15px -> var(--font-size-label)  | .outlineAction
+dress-code/DressCodePage.module.css:108 font-size 13px -> var(--font-size-small)  | .scopeTabs button
+dress-code/DressCodePage.module.css:136 font-size 24px -> var(--font-size-title)  | .cardHeader h3
+dress-code/DressCodePage.module.css:137 font-size 13px -> var(--font-size-small)  | .cardBadge
+dress-code/DressCodePage.module.css:142 font-size 13px -> var(--font-size-small)  | .palette
+dress-code/DressCodePage.module.css:145 font-size 13px -> var(--font-size-small)  | .metaLabel
+dress-code/DressCodePage.module.css:148 font-size 13px -> var(--font-size-small)  | .tags span
+dress-code/DressCodePage.module.css:151 font-size 15px -> var(--font-size-label)  | .suggestion strong
+dress-code/DressCodePage.module.css:152 font-size 12px -> var(--font-size-caption)  | .suggestion p
+dress-code/DressCodePage.module.css:153 font-size 12px -> var(--font-size-caption)  | .suggestion small
+dress-code/DressCodePage.module.css:156 font-size 24px -> var(--font-size-title)  | .editor h2
+dress-code/DressCodePage.module.css:157 font-size 13px -> var(--font-size-small)  | .field
+dress-code/DressCodePage.module.css:164 font-size 12px -> var(--font-size-caption)  | .editorNote
+dress-code/DressCodePage.module.css:168 font-size 12px -> var(--font-size-caption)  | .editor :global([role='note'])
+dress-code/DressCodePage.module.css:171 font-size 20px -> var(--font-size-card-title)  | .empty h2
+dress-code/DressCodePage.module.css:177 font-size 20px -> var(--font-size-card-title)  | .cardHeader h3
+dress-code/DressCodePage.module.css:32 border-radius 16px -> var(--radius-16)  | .tripBanner
+dress-code/DressCodePage.module.css:105 border-radius 17px -> var(--radius-16)  | .scopeTabs button
+dress-code/DressCodePage.module.css:131 border-radius 14px -> var(--radius-12)  | .card, .editor
+dress-code/DressCodePage.module.css:137 border-radius 17px -> var(--radius-16)  | .cardBadge
+dress-code/DressCodePage.module.css:139 border-radius 12px -> var(--radius-12)  | .artwork
+dress-code/DressCodePage.module.css:148 border-radius 17px -> var(--radius-16)  | .tags span
+dress-code/DressCodePage.module.css:150 border-radius 10px -> var(--radius-10)  | .suggestion
+dress-code/DressCodePage.module.css:158 border-radius 9px -> var(--radius-6)  | .field input, .field select, .field textarea
+dress-code/DressCodePage.module.css:170 border-radius 14px -> var(--radius-12)  | .empty
+dress-code/GatewayDressCodePage.module.css:16 font-size 13px -> var(--font-size-small)  | .breadcrumb
+dress-code/GatewayDressCodePage.module.css:55 font-size 13px -> var(--font-size-small)  | .filters button
+dress-code/GatewayDressCodePage.module.css:84 font-size 16px -> var(--font-size-body)  | .group > h2
+dress-code/GatewayDressCodePage.module.css:114 font-size 19px -> var(--font-size-subtitle)  | .cardHeader h3
+dress-code/GatewayDressCodePage.module.css:125 font-size 12px -> var(--font-size-caption)  | .cardHeader span, .badge
+dress-code/GatewayDressCodePage.module.css:138 font-size 13px -> var(--font-size-small)  | .noArtwork
+dress-code/GatewayDressCodePage.module.css:177 font-size 19px -> var(--font-size-subtitle)  | .empty h2
+dress-code/GatewayDressCodePage.module.css:51 border-radius 18px -> var(--radius-16)  | .filters button
+dress-code/GatewayDressCodePage.module.css:98 border-radius 10px -> var(--radius-10)  | .card, .empty
+dress-code/GatewayDressCodePage.module.css:135 border-radius 8px -> var(--radius-8)  | .noArtwork
+fund/FundPage.module.css:2 font-size 13px -> var(--font-size-small)  | .breadcrumb
+fund/FundPage.module.css:8 font-size 11px -> var(--font-size-caption)  | .environment
+fund/FundPage.module.css:9 font-size 24px -> var(--font-size-title)  | .stateBar h2
+fund/FundPage.module.css:10 font-size 12px -> var(--font-size-caption)  | .stateBar p
+fund/FundPage.module.css:13 font-size 13px -> var(--font-size-small)  | .holder
+fund/FundPage.module.css:14 font-size 13px -> var(--font-size-small)  | .closure
+fund/FundPage.module.css:20 font-size 13px -> var(--font-size-small)  | .metrics span
+fund/FundPage.module.css:21 font-size 32px -> var(--font-size-heading)  | .metrics strong
+fund/FundPage.module.css:29 font-size 13px -> var(--font-size-small)  | .table
+fund/FundPage.module.css:30 font-size 12px -> var(--font-size-caption)  | .simpleList em
+fund/FundPage.module.css:31 font-size 13px -> var(--font-size-small)  | .balanceNote
+fund/FundPage.module.css:32 font-size 24px -> var(--font-size-title)  | .formPanel h2
+fund/FundPage.module.css:32 font-size 12px -> var(--font-size-caption)  | .formHint
+fund/FundPage.module.css:32 font-size 12px -> var(--font-size-caption)  | .receipt
+fund/FundPage.module.css:33 font-size 12px -> var(--font-size-caption)  | .tableHead,.row
+fund/FundPage.module.css:42 font-size 13px -> var(--font-size-small)  | .gatewayContextEmpty p
+fund/FundPage.module.css:6 border-radius 14px -> var(--radius-12)  | .stateBar
+fund/FundPage.module.css:12 border-radius 8px -> var(--radius-8)  | .stateBar button
+fund/FundPage.module.css:13 border-radius 17px -> var(--radius-16)  | .holder
+fund/FundPage.module.css:14 border-radius 12px -> var(--radius-12)  | .closure
+fund/FundPage.module.css:19 border-radius 12px -> var(--radius-12)  | .metrics > div
+fund/FundPage.module.css:24 border-radius 14px -> var(--radius-12)  | .ledger,.formPanel
+fund/FundPage.module.css:27 border-radius 17px -> var(--radius-16)  | .tabs button
+fund/FundPage.module.css:29 border-radius 8px -> var(--radius-8)  | .row
+fund/FundPage.module.css:29 border-radius 17px -> var(--radius-16)  | .row em
+fund/FundPage.module.css:30 border-radius 8px -> var(--radius-8)  | .simpleList li
+fund/FundPage.module.css:31 border-radius 10px -> var(--radius-10)  | .balanceNote
+fund/FundPage.module.css:32 border-radius 10px -> var(--radius-10)  | .receipt
+fund/FundPage.module.css:32 border-radius 18px -> var(--radius-16)  | .formPanel > button:last-child
+home/HomePage.module.css:126 font-size 15.5px -> var(--font-size-body)  | .heroDescription
+home/HomePage.module.css:210 font-size 14px -> var(--font-size-label)  | .featureIntro > p:not(:first-child)
+home/HomePage.module.css:233 font-size 17px -> var(--font-size-subtitle)  | .featureGrid h3
+home/HomePage.module.css:243 font-size 13.5px -> var(--font-size-small)  | .featureGrid p
+home/HomePage.module.css:310 font-size 15px -> var(--font-size-body)  | .appCopy p
+home/HomePage.module.css:323 font-size 15px -> var(--font-size-body)  | .appCopy li
+home/HomePage.module.css:401 font-size 13px -> var(--font-size-small)  | .inspiration header p
+home/HomePage.module.css:452 font-size 13.2px -> var(--font-size-small)  | .stories strong
+home/HomePage.module.css:459 font-size 13px -> var(--font-size-small)  | .stories p
+home/HomePage.module.css:642 font-size 32px -> var(--font-size-heading)  | .appCopy h2 span + span
+home/HomePage.module.css:944 font-size 14px -> var(--font-size-label)  | .exploreLink
+home/HomePage.module.css:420 border-radius 3px -> var(--radius-6)  | .stories figure
+home/HomePage.module.css:448 border-radius 10px -> var(--radius-10)  | .stories figure > img
+home/HomePage.module.css:941 border-radius 12px -> var(--radius-12)  | .exploreLink
+map/GatewayMapPage.module.css:16 font-size 13px -> var(--font-size-small)  | .breadcrumb
+map/GatewayMapPage.module.css:50 font-size 21px -> var(--font-size-card-title)  | .panelHeader h1, .mapHeader h2
+map/GatewayMapPage.module.css:88 font-size 13px -> var(--font-size-small)  | .filters button
+map/GatewayMapPage.module.css:134 font-size 13px -> var(--font-size-small)  | .markerNumber
+map/GatewayMapPage.module.css:150 font-size 12px -> var(--font-size-caption)  | .placeText small
+map/GatewayMapPage.module.css:156 font-size 12px -> var(--font-size-caption)  | .status
+map/GatewayMapPage.module.css:185 font-size 12px -> var(--font-size-caption)  | .mapHeader span
+map/GatewayMapPage.module.css:222 font-size 17px -> var(--font-size-subtitle)  | .detail h3
+map/GatewayMapPage.module.css:35 border-radius 14px -> var(--radius-12)  | .placePanel, .mapPanel
+map/GatewayMapPage.module.css:68 border-radius 10px -> var(--radius-10)  | .search input
+map/GatewayMapPage.module.css:84 border-radius 18px -> var(--radius-16)  | .filters button
+map/GatewayMapPage.module.css:114 border-radius 8px -> var(--radius-8)  | .placeButton
+map/GatewayMapPage.module.css:164 border-radius 8px -> var(--radius-8)  | .empty
+map/GatewayMapPage.module.css:192 border-radius 8px -> var(--radius-8)  | .mapCanvas, .unavailable
+map/GatewayMapPage.module.css:217 border-radius 8px -> var(--radius-8)  | .detail
+map/GeoapifyMap.module.css:56 font-size 13px -> var(--font-size-small)  | .cluster
+map/GeoapifyMap.module.css:10 border-radius 12px -> var(--radius-12)  | .map
+map/TripMapPage.module.css:28 font-size 13px -> var(--font-size-small)  | .breadcrumb
+map/TripMapPage.module.css:80 font-size 21px -> var(--font-size-card-title)  | .panelHeader h2
+map/TripMapPage.module.css:121 font-size 11px -> var(--font-size-small)  | .searchBox input
+map/TripMapPage.module.css:159 font-size 11px -> var(--font-size-caption)  | .desktopFilters button, .desktopFilters > span
+map/TripMapPage.module.css:261 font-size 11px -> var(--font-size-caption)  | .pinBadge
+map/TripMapPage.module.css:287 font-size 12px -> var(--font-size-caption)  | .placeCopy strong
+map/TripMapPage.module.css:296 font-size 10px -> var(--font-size-caption)  | .placeCopy small
+map/TripMapPage.module.css:310 font-size 10px -> var(--font-size-caption)  | .statusChip
+map/TripMapPage.module.css:363 font-size 13px -> var(--font-size-small)  | .routeSelector select, .mapType button
+map/TripMapPage.module.css:439 font-size 11px -> var(--font-size-caption)  | .providerUnavailableLabel
+map/TripMapPage.module.css:477 font-size 13px -> var(--font-size-small)  | .marker
+map/TripMapPage.module.css:540 font-size 9px -> var(--font-size-caption)  | .legend
+map/TripMapPage.module.css:595 font-size 15px -> var(--font-size-label)  | .desktopPlaceCard strong
+map/TripMapPage.module.css:602 font-size 11px -> var(--font-size-small)  | .desktopPlaceCard span, .desktopPlaceCard p
+map/TripMapPage.module.css:626 font-size 11px -> var(--font-size-small)  | .mapSuggestion
+map/TripMapPage.module.css:1175 font-size 11px -> var(--font-size-small)  | .localNotice, .searchState
+map/TripMapPage.module.css:1248 font-size 11px -> var(--font-size-small)  | .listState
+map/TripMapPage.module.css:1319 font-size 10px -> var(--font-size-caption)  | .sourceBadge, .unverifiedBadge
+map/TripMapPage.module.css:1342 font-size 10px -> var(--font-size-caption)  | .placeMeta .sourceBadge, .placeMeta .unverifiedBadge
+map/TripMapPage.module.css:1372 font-size 12px -> var(--font-size-caption)  | .detailProvenance
+map/TripMapPage.module.css:1411 font-size 11px -> var(--font-size-caption)  | .dataCredit
+map/TripMapPage.module.css:66 border-radius 14px -> var(--radius-12)  | .placePanel, .mapPanel
+map/TripMapPage.module.css:105 border-radius 10px -> var(--radius-10)  | .searchBox
+map/TripMapPage.module.css:156 border-radius 15px -> var(--radius-16)  | .desktopFilters button, .desktopFilters > span
+map/TripMapPage.module.css:241 border-radius 10px -> var(--radius-10)  | .placeRow
+map/TripMapPage.module.css:260 border-radius 14px -> var(--radius-12)  | .pinBadge
+map/TripMapPage.module.css:309 border-radius 15px -> var(--radius-16)  | .statusChip
+map/TripMapPage.module.css:338 border-radius 10px -> var(--radius-10)  | .empty
+map/TripMapPage.module.css:362 border-radius 17px -> var(--radius-16)  | .routeSelector select, .mapType button
+map/TripMapPage.module.css:412 border-radius 12px -> var(--radius-12)  | .viewport
+map/TripMapPage.module.css:436 border-radius 8px -> var(--radius-8)  | .providerUnavailableLabel
+map/TripMapPage.module.css:538 border-radius 16px -> var(--radius-16)  | .legend
+map/TripMapPage.module.css:581 border-radius 14px -> var(--radius-12)  | .desktopPlaceCard
+map/TripMapPage.module.css:591 border-radius 10px -> var(--radius-10)  | .desktopPlaceCard > img
+map/TripMapPage.module.css:623 border-radius 10px -> var(--radius-10)  | .mapSuggestion
+map/TripMapPage.module.css:651 border-radius 16px -> var(--radius-16)  | .providerState
+map/TripMapPage.module.css:1172 border-radius 8px -> var(--radius-8)  | .localNotice, .searchState
+map/TripMapPage.module.css:1316 border-radius 9px -> var(--radius-6)  | .sourceBadge, .unverifiedBadge
+members/GatewayMembersPage.module.css:13 font-size 13px -> var(--font-size-small)  | .breadcrumb
+members/GatewayMembersPage.module.css:72 font-size 20px -> var(--font-size-card-title)  | .panel h2, .guidance h2
+members/GatewayMembersPage.module.css:83 font-size 13px -> var(--font-size-small)  | .intro, .metadata
+members/GatewayMembersPage.module.css:92 font-size 13px -> var(--font-size-small)  | .note
+members/GatewayMembersPage.module.css:95 font-size 14px -> var(--font-size-label)  | .note h3
+members/GatewayMembersPage.module.css:118 font-size 13px -> var(--font-size-small)  | .guidance a
+members/GatewayMembersPage.module.css:162 font-size 12px -> var(--font-size-caption)  | .list details
+members/GatewayMembersPage.module.css:36 border-radius 8px -> var(--radius-8)  | .actions
+members/GatewayMembersPage.module.css:53 border-radius 8px -> var(--radius-8)  | .workspace, .policyWorkspace
+members/GatewayMembersPage.module.css:90 border-radius 6px -> var(--radius-6)  | .note
+members/GatewayMembersPage.module.css:117 border-radius 6px -> var(--radius-6)  | .guidance a
+members/GatewayMembersPage.module.css:132 border-radius 6px -> var(--radius-6)  | .list > li
+members/GatewayMembersPage.module.css:196 border-radius 6px -> var(--radius-6)  | .checks
+members/GatewayMembersPage.module.css:217 border-radius 6px -> var(--radius-6)  | .radioCard
+members/Invitations.module.css:15 font-size 14px -> var(--font-size-label)  | .response p
+members/Invitations.module.css:33 font-size 18px -> var(--font-size-subtitle)  | .responseHeader h1
+members/Invitations.module.css:38 font-size 30px -> var(--font-size-title)  | .responseHeader h2
+members/Invitations.module.css:49 font-size 13px -> var(--font-size-small)  | .responseMetadata dt
+members/Invitations.module.css:94 font-size 20px -> var(--font-size-card-title)  | .panel h2
+members/Invitations.module.css:100 font-size 13px -> var(--font-size-small)  | .panel p
+members/Invitations.module.css:129 font-size 13px -> var(--font-size-small)  | .item
+members/Invitations.module.css:8 border-radius 16px -> var(--radius-16)  | .response
+members/Invitations.module.css:83 border-radius 8px -> var(--radius-8)  | .workspace
+members/Invitations.module.css:124 border-radius 6px -> var(--radius-6)  | .item
+members/MembersPage.module.css:13 font-size 13px -> var(--font-size-small)  | .breadcrumb
+members/MembersPage.module.css:16 font-size 13px -> var(--font-size-small)  | .breadcrumb h1
+members/MembersPage.module.css:49 font-size 13px -> var(--font-size-small)  | .tabs > button
+members/MembersPage.module.css:66 font-size 11px -> var(--font-size-caption)  | .tabs small
+members/MembersPage.module.css:79 font-size 20px -> var(--font-size-card-title)  | .policyPanel h2
+members/MembersPage.module.css:84 font-size 13px -> var(--font-size-small)  | .policyPanel > p
+members/MembersPage.module.css:99 font-size 13px -> var(--font-size-small)  | .includeLeft
+members/MembersPage.module.css:125 font-size 20px -> var(--font-size-card-title)  | .memberPanel h2, .responsibilities > h2, .invitationForm h2,
+members/MembersPage.module.css:131 font-size 11.5px -> var(--font-size-small)  | .help
+members/MembersPage.module.css:147 font-size 10.5px -> var(--font-size-caption)  | .rosterHead
+members/MembersPage.module.css:201 font-size 14px -> var(--font-size-label)  | .identity
+members/MembersPage.module.css:211 font-size 12px -> var(--font-size-caption)  | .identity small
+members/MembersPage.module.css:221 font-size 12px -> var(--font-size-caption)  | .identity summary
+members/MembersPage.module.css:229 font-size 11px -> var(--font-size-caption)  | .self
+members/MembersPage.module.css:232 font-size 12px -> var(--font-size-caption)  | .identity dl
+members/MembersPage.module.css:243 font-size 11px -> var(--font-size-caption)  | .role
+members/MembersPage.module.css:252 font-size 12px -> var(--font-size-caption)  | .members > li > button
+members/MembersPage.module.css:289 font-size 12.5px -> var(--font-size-small)  | .responsibilities h3
+members/MembersPage.module.css:295 font-size 11.5px -> var(--font-size-small)  | .responsibilities p
+members/MembersPage.module.css:324 font-size 13px -> var(--font-size-small)  | .invitationForm > p
+members/MembersPage.module.css:351 font-size 14px -> var(--font-size-label)  | .invitationHeading strong
+members/MembersPage.module.css:358 font-size 12px -> var(--font-size-caption)  | .invitationStatus
+members/MembersPage.module.css:366 font-size 12px -> var(--font-size-caption)  | .invitationList li p
+members/MembersPage.module.css:375 font-size 12px -> var(--font-size-caption)  | .revisions
+members/MembersPage.module.css:41 border-radius 8px -> var(--radius-8)  | .tabs
+members/MembersPage.module.css:52 border-radius 6px -> var(--radius-6)  | .tabs > button
+members/MembersPage.module.css:74 border-radius 8px -> var(--radius-8)  | .policyPanel
+members/MembersPage.module.css:113 border-radius 8px -> var(--radius-8)  | .workspace
+members/MembersPage.module.css:172 border-radius 8px -> var(--radius-8)  | .members > li
+members/MembersPage.module.css:272 border-radius 8px -> var(--radius-8)  | .responsibilities section
+members/MembersPage.module.css:306 border-radius 8px -> var(--radius-8)  | .invitationWorkspace
+members/MembersPage.module.css:338 border-radius 8px -> var(--radius-8)  | .invitationList li
+members/MembersPage.module.css:355 border-radius 24px -> var(--radius-24)  | .invitationStatus
+notifications/Notifications.module.css:26 font-size 12px -> var(--font-size-caption)  | .soon
+notifications/Notifications.module.css:54 font-size 14px -> var(--font-size-label)  | .list p
+notifications/Notifications.module.css:58 font-size 13px -> var(--font-size-small)  | .list time
+notifications/Notifications.module.css:64 font-size 14px -> var(--font-size-label)  | .list a, .preferencesLink
+notifications/Notifications.module.css:84 font-size 14px -> var(--font-size-label)  | .preferences p
+notifications/Notifications.module.css:101 font-size 14px -> var(--font-size-label)  | .preferences fieldset label
+notifications/Notifications.module.css:45 border-radius 16px -> var(--radius-16)  | .list li
+notifications/Notifications.module.css:92 border-radius 12px -> var(--radius-12)  | .preferences fieldset
+packing/components/PackingItemDrawer.module.css:6 font-size 13px -> var(--font-size-small)  | .suggestions li
+packing/components/PackingItemDrawer.module.css:7 font-size 11px -> var(--font-size-caption)  | .suggestions li small
+packing/components/PackingItemDrawer.module.css:5 border-radius 5px -> var(--radius-6)  | .suggestions
+packing/PackingPage.module.css:14 font-size 13px -> var(--font-size-small)  | .breadcrumb
+packing/PackingPage.module.css:20 font-size 13px -> var(--font-size-small)  | .breadcrumb h1
+packing/PackingPage.module.css:43 font-size 24px -> var(--font-size-title)  | .summary h2
+packing/PackingPage.module.css:49 font-size 13px -> var(--font-size-small)  | .summary p
+packing/PackingPage.module.css:65 font-size 15px -> var(--font-size-label)  | .summary .progress span
+packing/PackingPage.module.css:87 font-size 13px -> var(--font-size-small)  | .readOnlyBadge
+packing/PackingPage.module.css:97 font-size 26px -> var(--font-size-title)  | .progress strong
+packing/PackingPage.module.css:100 font-size 13px -> var(--font-size-small)  | .progress span
+packing/PackingPage.module.css:147 font-size 13px -> var(--font-size-small)  | .filters button
+packing/PackingPage.module.css:192 font-size 13px -> var(--font-size-small)  | .tableHead
+packing/PackingPage.module.css:221 font-size 15px -> var(--font-size-body)  | .groupHeading
+packing/PackingPage.module.css:228 font-size 13px -> var(--font-size-small)  | .groupHeading em
+packing/PackingPage.module.css:238 font-size 14px -> var(--font-size-label)  | .row
+packing/PackingPage.module.css:262 font-size 12px -> var(--font-size-caption)  | .readOnlyRowLabel
+packing/PackingPage.module.css:36 border-radius 14px -> var(--radius-12)  | .summary
+packing/PackingPage.module.css:72 border-radius 18px -> var(--radius-16)  | .summary > button
+packing/PackingPage.module.css:84 border-radius 18px -> var(--radius-16)  | .readOnlyBadge
+packing/PackingPage.module.css:123 border-radius 14px -> var(--radius-12)  | .list
+packing/PackingPage.module.css:143 border-radius 18px -> var(--radius-16)  | .filters button
+packing/PackingPage.module.css:175 border-radius 18px -> var(--radius-16)  | .categorySelect select
+packing/PackingPage.module.css:189 border-radius 5px -> var(--radius-6)  | .tableHead
+packing/PackingPage.module.css:217 border-radius 8px -> var(--radius-8)  | .groupHeading
+packing/PackingPage.module.css:249 border-radius 5px -> var(--radius-6)  | .checkbox
+packing/PackingPage.module.css:304 border-radius 5px -> var(--radius-6)  | .menu > div
+packing/PackingPage.module.css:321 border-radius 5px -> var(--radius-6)  | .empty
+packing/PackingPage.module.css:336 border-radius 5px -> var(--radius-6)  | .feedback
+plan/components/PlanDayMap.module.css:21 font-size 18px -> var(--font-size-subtitle)  | .header h3
+plan/components/PlanDayMap.module.css:26 font-size 13px -> var(--font-size-small)  | .header p
+plan/components/PlanDayMap.module.css:60 font-size 14px -> var(--font-size-label)  | .listRegion h4
+plan/components/PlanDayMap.module.css:83 font-size 13px -> var(--font-size-small)  | .list span, .list small, .empty
+plan/components/PlanDayMap.module.css:101 font-size 13px -> var(--font-size-small)  | .routeSummary
+plan/components/PlanDayMap.module.css:8 border-radius 8px -> var(--radius-8)  | .panel
+plan/components/PlanDayMap.module.css:35 border-radius 8px -> var(--radius-8)  | .map, .unavailable
+plan/components/PlanDayMap.module.css:77 border-radius 8px -> var(--radius-8)  | .list li
+plan/components/PlanMetrics.module.css:68 font-size 18px -> var(--font-size-subtitle)  | .copy strong
+plan/components/PlanMetrics.module.css:77 font-size 13px -> var(--font-size-small)  | .copy span, .copy small
+plan/components/PlanMetrics.module.css:82 font-size 12px -> var(--font-size-caption)  | .copy small
+plan/components/PlanSummary.module.css:3 font-size 13px -> var(--font-size-small)  | .summary
+plan/components/PlanSummary.module.css:30 font-size 13px -> var(--font-size-small)  | .summary time
+plan/components/PlanSummary.module.css:65 font-size 12px -> var(--font-size-caption)  | .days button
+plan/components/PlanSummary.module.css:24 border-radius 8px -> var(--radius-8)  | .summary li
+plan/components/PlanSummary.module.css:61 border-radius 5px -> var(--radius-6)  | .days button
+plan/components/RuntimeTimeline.module.css:57 font-size 24px -> var(--font-size-title)  | .timelineHeader h2, .poolHeader h2
+plan/components/RuntimeTimeline.module.css:63 font-size 13px -> var(--font-size-small)  | .progress, .poolHeader span
+plan/components/RuntimeTimeline.module.css:76 font-size 16px -> var(--font-size-body)  | .poolGroup h3
+plan/components/RuntimeTimeline.module.css:106 font-size 13px -> var(--font-size-small)  | .placeList small
+plan/components/RuntimeTimeline.module.css:126 font-size 16px -> var(--font-size-body)  | .dayGroup h3
+plan/components/RuntimeTimeline.module.css:130 font-size 13px -> var(--font-size-small)  | .dayGroup h3 small
+plan/components/RuntimeTimeline.module.css:142 font-size 13px -> var(--font-size-small)  | .emptyDrop
+plan/components/RuntimeTimeline.module.css:19 border-radius 8px -> var(--radius-8)  | .days button
+plan/components/RuntimeTimeline.module.css:35 border-radius 10px -> var(--radius-10)  | .surface
+plan/components/RuntimeTimeline.module.css:93 border-radius 8px -> var(--radius-8)  | .placeList li
+plan/components/RuntimeTimeline.module.css:135 border-radius 8px -> var(--radius-8)  | .list
+plan/components/RuntimeTimeline.module.css:140 border-radius 8px -> var(--radius-8)  | .emptyDrop
+plan/components/RuntimeTimeline.module.css:147 border-radius 8px -> var(--radius-8)  | .row
+plan/components/RuntimeTimeline.module.css:161 border-radius 16px -> var(--radius-16)  | .overlay
+plan/components/TimelineCard.module.css:15 font-size 13px -> var(--font-size-small)  | .schedule
+plan/components/TimelineCard.module.css:32 font-size 18px -> var(--font-size-subtitle)  | .copy h3
+plan/components/TimelineCard.module.css:36 font-size 14px -> var(--font-size-label)  | .copy p
+plan/components/TimelineCard.module.css:61 font-size 13px -> var(--font-size-small)  | .location
+plan/components/TimelineCard.module.css:104 font-size 14px -> var(--font-size-label)  | .compact .copy h3
+plan/components/TimelineCard.module.css:109 font-size 12px -> var(--font-size-caption)  | .compact .copy p
+plan/components/TimelineCard.module.css:3 border-radius 16px -> var(--radius-16)  | .card
+plan/components/TimelineCard.module.css:42 border-radius 12px -> var(--radius-12)  | .body img
+plan/components/TimelineCard.module.css:81 border-radius 8px -> var(--radius-8)  | .compact
+plan/components/TimelineCard.module.css:101 border-radius 6px -> var(--radius-6)  | .compact .body > img
+plan/PlanPage.module.css:13 font-size 13px -> var(--font-size-small)  | .breadcrumb
+plan/PlanPage.module.css:16 font-size 13px -> var(--font-size-small)  | .breadcrumb h1
+plan/PlanPage.module.css:40 font-size 14px -> var(--font-size-label)  | .days > button
+plan/PlanPage.module.css:46 font-size 13px -> var(--font-size-small)  | .days > button small
+plan/PlanPage.module.css:62 font-size 13px -> var(--font-size-small)  | .metrics
+plan/PlanPage.module.css:98 font-size 18px -> var(--font-size-subtitle)  | .metrics strong
+plan/PlanPage.module.css:132 font-size 24px -> var(--font-size-title)  | .toolbar h2
+plan/PlanPage.module.css:174 font-size 14px -> var(--font-size-label)  | .step
+plan/PlanPage.module.css:190 font-size 15px -> var(--font-size-label)  | .activityPreview strong
+plan/PlanPage.module.css:194 font-size 13px -> var(--font-size-small)  | .activityPreview small
+plan/PlanPage.module.css:198 font-size 13px -> var(--font-size-small)  | .activityPreview dl
+plan/PlanPage.module.css:205 font-size 13px -> var(--font-size-small)  | .activityPreview p
+plan/PlanPage.module.css:238 font-size 13px -> var(--font-size-small)  | .emptyDrop, .endDrop
+plan/PlanPage.module.css:256 font-size 18px -> var(--font-size-subtitle)  | .poolHeader h2
+plan/PlanPage.module.css:261 font-size 13px -> var(--font-size-small)  | .poolHeader p
+plan/PlanPage.module.css:270 font-size 24px -> var(--font-size-title)  | .poolHeader > button, .dialogHeader > button
+plan/PlanPage.module.css:282 font-size 13px -> var(--font-size-small)  | .localNotice
+plan/PlanPage.module.css:318 font-size 13px -> var(--font-size-small)  | .poolCard small
+plan/PlanPage.module.css:344 font-size 13px -> var(--font-size-small)  | .poolEmpty
+plan/PlanPage.module.css:348 font-size 14px -> var(--font-size-label)  | .poolEmpty strong
+plan/PlanPage.module.css:379 font-size 13px -> var(--font-size-small)  | .plannerDialogHeader p, .dialogHeader p
+plan/PlanPage.module.css:385 font-size 22px -> var(--font-size-card-title)  | .plannerDialogHeader h2, .dialogHeader h2
+plan/PlanPage.module.css:444 font-size 13px -> var(--font-size-small)  | .revisions
+plan/PlanPage.module.css:464 font-size 22px -> var(--font-size-card-title)  | .toolbar h2
+plan/PlanPage.module.css:35 border-radius 8px -> var(--radius-8)  | .days > button
+plan/PlanPage.module.css:55 border-radius 8px -> var(--radius-8)  | .metrics
+plan/PlanPage.module.css:121 border-radius 8px -> var(--radius-8)  | .timeline, .pool
+plan/PlanPage.module.css:216 border-radius 8px -> var(--radius-8)  | .dragHandle
+plan/PlanPage.module.css:234 border-radius 8px -> var(--radius-8)  | .emptyDrop, .endDrop
+plan/PlanPage.module.css:268 border-radius 8px -> var(--radius-8)  | .poolHeader > button, .dialogHeader > button
+plan/PlanPage.module.css:279 border-radius 8px -> var(--radius-8)  | .localNotice
+plan/PlanPage.module.css:293 border-radius 8px -> var(--radius-8)  | .poolList
+plan/PlanPage.module.css:303 border-radius 8px -> var(--radius-8)  | .poolCard
+plan/PlanPage.module.css:341 border-radius 8px -> var(--radius-8)  | .poolEmpty
+plan/PlanPage.module.css:409 border-radius 24px -> var(--radius-24)  | .editorDialog
+price-watch/PriceWatchPage.module.css:2 font-size 13px -> var(--font-size-small)  | .breadcrumb
+price-watch/PriceWatchPage.module.css:11 font-size 24px -> var(--font-size-title)  | .panelHeading h2
+price-watch/PriceWatchPage.module.css:15 font-size 11px -> var(--font-size-caption)  | .environmentBadge
+price-watch/PriceWatchPage.module.css:21 font-size 15px -> var(--font-size-body)  | .route
+price-watch/PriceWatchPage.module.css:22 font-size 13px -> var(--font-size-small)  | .watchMeta
+price-watch/PriceWatchPage.module.css:23 font-size 12px -> var(--font-size-caption)  | .watchOwner
+price-watch/PriceWatchPage.module.css:26 font-size 13px -> var(--font-size-small)  | .watchBottom small
+price-watch/PriceWatchPage.module.css:27 font-size 15px -> var(--font-size-label)  | .watchBottom strong
+price-watch/PriceWatchPage.module.css:30 font-size 13px -> var(--font-size-small)  | .watchBottom em
+price-watch/PriceWatchPage.module.css:34 font-size 12px -> var(--font-size-caption)  | .providerMeta
+price-watch/PriceWatchPage.module.css:35 font-size 13px -> var(--font-size-small)  | .listNote
+price-watch/PriceWatchPage.module.css:38 font-size 13px -> var(--font-size-small)  | .rangePill
+price-watch/PriceWatchPage.module.css:40 font-size 13px -> var(--font-size-small)  | .chartRoute span
+price-watch/PriceWatchPage.module.css:41 font-size 11px -> var(--font-size-caption)  | .chartRoute small
+price-watch/PriceWatchPage.module.css:44 font-size 10px -> var(--font-size-caption)  | .chartWrap text
+price-watch/PriceWatchPage.module.css:49 font-size 11px -> var(--font-size-caption)  | .chartLegend
+price-watch/PriceWatchPage.module.css:52 font-size 11px -> var(--font-size-small)  | .historyDetails
+price-watch/PriceWatchPage.module.css:54 font-size 10px -> var(--font-size-caption)  | .historyTable
+price-watch/PriceWatchPage.module.css:59 font-size 20px -> var(--font-size-card-title)  | .infoPanel h2
+price-watch/PriceWatchPage.module.css:63 font-size 13px -> var(--font-size-small)  | .stepNumber
+price-watch/PriceWatchPage.module.css:64 font-size 14px -> var(--font-size-label)  | .step strong
+price-watch/PriceWatchPage.module.css:65 font-size 12px -> var(--font-size-caption)  | .step p,.stepCream p
+price-watch/PriceWatchPage.module.css:68 font-size 11px -> var(--font-size-caption)  | .actionOwner
+price-watch/PriceWatchPage.module.css:69 font-size 11px -> var(--font-size-caption)  | .actionStrip button
+price-watch/PriceWatchPage.module.css:70 font-size 11px -> var(--font-size-small)  | .mutationNote
+price-watch/PriceWatchPage.module.css:73 font-size 22px -> var(--font-size-card-title)  | .formPanel .panelHeading h2
+price-watch/PriceWatchPage.module.css:77 font-size 12px -> var(--font-size-caption)  | .formPanel legend
+price-watch/PriceWatchPage.module.css:78 font-size 12px -> var(--font-size-caption)  | .formPanel label
+price-watch/PriceWatchPage.module.css:7 border-radius 14px -> var(--radius-12)  | .listPanel,.chartPanel,.infoPanel,.formPanel
+price-watch/PriceWatchPage.module.css:12 border-radius 18px -> var(--radius-16)  | .panelHeading > button
+price-watch/PriceWatchPage.module.css:15 border-radius 12px -> var(--radius-12)  | .environmentBadge
+price-watch/PriceWatchPage.module.css:18 border-radius 12px -> var(--radius-12)  | .watchCard
+price-watch/PriceWatchPage.module.css:30 border-radius 17px -> var(--radius-16)  | .watchBottom em
+price-watch/PriceWatchPage.module.css:35 border-radius 10px -> var(--radius-10)  | .listNote
+price-watch/PriceWatchPage.module.css:38 border-radius 17px -> var(--radius-16)  | .rangePill
+price-watch/PriceWatchPage.module.css:40 border-radius 17px -> var(--radius-16)  | .chartRoute span
+price-watch/PriceWatchPage.module.css:61 border-radius 12px -> var(--radius-12)  | .step,.stepCream
+price-watch/PriceWatchPage.module.css:69 border-radius 17px -> var(--radius-16)  | .actionStrip button
+price-watch/PriceWatchPage.module.css:75 border-radius 18px -> var(--radius-16)  | .formPanel form > button
+price-watch/RuntimePriceWatchPage.module.css:31 font-size 24px -> var(--font-size-title)  | .card h2
+price-watch/RuntimePriceWatchPage.module.css:34 font-size 14px -> var(--font-size-label)  | .card p
+price-watch/RuntimePriceWatchPage.module.css:22 border-radius 20px -> var(--radius-20)  | .card
+price-watch/RuntimePriceWatchPage.module.css:38 border-radius 20px -> var(--radius-20)  | .empty
+price-watch/RuntimePriceWatchPage.module.css:60 border-radius 20px -> var(--radius-20)  | .context
+shell/components/AdminChrome.module.css:49 font-size 13px -> var(--font-size-small)  | .brand > span
+shell/components/AdminChrome.module.css:54 font-size 15px -> var(--font-size-body)  | .brand strong
+shell/components/AdminChrome.module.css:73 font-size 15px -> var(--font-size-label)  | .sidebar nav button
+shell/components/AdminChrome.module.css:104 font-size 15px -> var(--font-size-label)  | .badge
+shell/components/AdminChrome.module.css:128 font-size 13px -> var(--font-size-small)  | .reminder p
+shell/components/AdminChrome.module.css:148 font-size 13px -> var(--font-size-small)  | .topbar > span
+shell/components/AdminChrome.module.css:155 font-size 15px -> var(--font-size-label)  | .actions
+shell/components/AdminChrome.module.css:189 font-size 13px -> var(--font-size-small)  | .actions a
+shell/components/AdminChrome.module.css:87 border-radius 1px -> var(--radius-6)  | .marker
+shell/components/AdminChrome.module.css:99 border-radius 2px -> var(--radius-6)  | .badge
+shell/components/AdminChrome.module.css:112 border-radius 3px -> var(--radius-6)  | .reminder
+shell/components/AdminChrome.module.css:178 border-radius 18px -> var(--radius-16)  | .avatar
+shell/components/AppShell.module.css:80 font-size 14.5px -> var(--font-size-label)  | .headerNav a, .headerNav button
+shell/components/AppShell.module.css:125 font-size 13.5px -> var(--font-size-small)  | .profile
+shell/components/AppShell.module.css:214 font-size 15px -> var(--font-size-label)  | .outline, .primary
+shell/components/AppShell.module.css:282 font-size 13px -> var(--font-size-small)  | .sidebar nav button, .sidebar nav a, .collapsed nav button, 
+shell/components/AppShell.module.css:331 font-size 18px -> var(--font-size-subtitle)  | .sidebarDecoration p
+shell/components/AppShell.module.css:364 font-size 13px -> var(--font-size-small)  | .collapseButton
+shell/components/AppShell.module.css:374 font-size 24px -> var(--font-size-title)  | .collapseButton strong
+shell/components/AppShell.module.css:456 font-size 13px -> var(--font-size-small)  | .headerNav a, .headerNav button
+shell/components/AppShell.module.css:103 border-radius 2px -> var(--radius-6)  | .headerNav a[aria-current='page']::after
+shell/components/AppShell.module.css:110 border-radius 14px -> var(--radius-12)  | .account, .profile
+shell/components/AppShell.module.css:143 border-radius 12px -> var(--radius-12)  | .profileChevron
+shell/components/AppShell.module.css:194 border-radius 20px -> var(--radius-20)  | .avatar
+shell/components/AppShell.module.css:213 border-radius 10px -> var(--radius-10)  | .outline, .primary
+shell/components/AppShell.module.css:277 border-radius 7px -> var(--radius-nav)  | .sidebar nav button, .sidebar nav a, .collapsed nav button, 
+shell/components/AppShell.module.css:319 border-radius 2px -> var(--radius-6)  | .selectedSection::before
+shell/components/AppShell.module.css:413 border-radius 10px -> var(--radius-10)  | .mobileMenuButton
+shell/components/AppShell.module.css:686 border-radius 18px -> var(--radius-16)  | .drawerClose
+trips/components/TripCard.module.css:73 font-size 11.5px -> var(--font-size-caption)  | .status
+trips/components/TripCard.module.css:123 font-size 16px -> var(--font-size-body)  | .body h2
+trips/components/TripCard.module.css:133 font-size 11.2px -> var(--font-size-caption)  | .metadata
+trips/components/TripCard.module.css:153 font-size 12.5px -> var(--font-size-small)  | .open
+trips/components/TripCard.module.css:45 border-radius 4px -> var(--radius-6)  | .link
+trips/components/TripCard.module.css:58 border-radius 3px -> var(--radius-6)  | .photo picture, .photo img, .noCover
+trips/components/TripCard.module.css:72 border-radius 14px -> var(--radius-12)  | .status
+trips/components/TripCard.module.css:111 border-radius 12px -> var(--radius-12)  | .more button
+trips/components/TripListHero.module.css:95 font-size 14.5px -> var(--font-size-label)  | .desktopSubtitle
+trips/components/TripListHero.module.css:118 font-size 14px -> var(--font-size-label)  | .create
+trips/components/TripListHero.module.css:153 font-size 12px -> var(--font-size-caption)  | .desktopSubtitle
+trips/components/TripListHero.module.css:110 border-radius 12px -> var(--radius-12)  | .create
+trips/create/CreateTripPage.module.css:40 font-size 13px -> var(--font-size-small)  | .eyebrow
+trips/create/CreateTripPage.module.css:48 font-size clamp(28px, 2.4vw, 36px) -> clamp(var(--font-size-title), 2.4vw, var(--font-size-heading))  | .pageHeader h1
+trips/create/CreateTripPage.module.css:55 font-size 14px -> var(--font-size-label)  | .pageHeader p:last-child
+trips/create/CreateTripPage.module.css:63 font-size 14px -> var(--font-size-label)  | .backLink
+trips/create/CreateTripPage.module.css:102 font-size 24px -> var(--font-size-title)  | .gatewayCapabilityHeading h2
+trips/create/CreateTripPage.module.css:108 font-size 13px -> var(--font-size-small)  | .gatewayCapabilityHeading p
+trips/create/CreateTripPage.module.css:134 font-size 12px -> var(--font-size-caption)  | .gatewayMapIllustration span
+trips/create/CreateTripPage.module.css:146 font-size 16px -> var(--font-size-body)  | .gatewayCapabilityBody h3
+trips/create/CreateTripPage.module.css:152 font-size 13px -> var(--font-size-small)  | .gatewayCapabilityBody p
+trips/create/CreateTripPage.module.css:161 font-size 24px -> var(--font-size-title)  | .gatewayIntro h2
+trips/create/CreateTripPage.module.css:167 font-size 13px -> var(--font-size-small)  | .gatewayIntro p
+trips/create/CreateTripPage.module.css:180 font-size 14px -> var(--font-size-label)  | .gatewayForm > p
+trips/create/CreateTripPage.module.css:207 font-size 13px -> var(--font-size-small)  | .errorSummary
+trips/create/CreateTripPage.module.css:334 font-size 13px -> var(--font-size-small)  | .styleChoices button
+trips/create/CreateTripPage.module.css:355 font-size 12px -> var(--font-size-caption)  | .currency
+trips/create/CreateTripPage.module.css:366 font-size 12px -> var(--font-size-caption)  | .budgetField small
+trips/create/CreateTripPage.module.css:398 font-size 12px -> var(--font-size-caption)  | .templateField strong
+trips/create/CreateTripPage.module.css:403 font-size 10px -> var(--font-size-caption)  | .templateField small
+trips/create/CreateTripPage.module.css:464 font-size 11px -> var(--font-size-caption)  | .uploadCover strong
+trips/create/CreateTripPage.module.css:468 font-size 9px -> var(--font-size-caption)  | .uploadCover small
+trips/create/CreateTripPage.module.css:482 font-size 11px -> var(--font-size-small)  | .draftNote
+trips/create/CreateTripPage.module.css:501 font-size 13px -> var(--font-size-small)  | .actions > a
+trips/create/CreateTripPage.module.css:553 font-size 11px -> var(--font-size-caption)  | .mapArea span
+trips/create/CreateTripPage.module.css:583 font-size 8px -> var(--font-size-caption)  | .selectedDestination small
+trips/create/CreateTripPage.module.css:592 font-size 15px -> var(--font-size-label)  | .selectedDestination strong
+trips/create/CreateTripPage.module.css:600 font-size 10px -> var(--font-size-caption)  | .selectedDestination span
+trips/create/CreateTripPage.module.css:610 font-size 13px -> var(--font-size-small)  | .suggestions h2
+trips/create/CreateTripPage.module.css:653 font-size 11px -> var(--font-size-small)  | .suggestions strong
+trips/create/CreateTripPage.module.css:659 font-size 8px -> var(--font-size-caption)  | .suggestions small
+trips/create/CreateTripPage.module.css:684 font-size 10px -> var(--font-size-small)  | .success > p
+trips/create/CreateTripPage.module.css:692 font-size 28px -> var(--font-size-title)  | .success h1
+trips/create/CreateTripPage.module.css:700 font-size 13px -> var(--font-size-small)  | .success > span
+trips/create/CreateTripPage.module.css:85 border-radius 18px -> var(--radius-16)  | .formCard, .destinationPanel
+trips/create/CreateTripPage.module.css:115 border-radius 10px -> var(--radius-10)  | .gatewayMapIllustration
+trips/create/CreateTripPage.module.css:130 border-radius 7px -> var(--radius-nav)  | .gatewayMapIllustration span
+trips/create/CreateTripPage.module.css:204 border-radius 10px -> var(--radius-10)  | .errorSummary
+trips/create/CreateTripPage.module.css:241 border-radius 10px -> var(--radius-10)  | .destinationInput
+trips/create/CreateTripPage.module.css:301 border-radius 10px -> var(--radius-10)  | .memberField button
+trips/create/CreateTripPage.module.css:330 border-radius 12px -> var(--radius-12)  | .styleChoices button
+trips/create/CreateTripPage.module.css:384 border-radius 11px -> var(--radius-12)  | .templateField button
+trips/create/CreateTripPage.module.css:425 border-radius 11px -> var(--radius-12)  | .coverChoices button, .uploadCover
+trips/create/CreateTripPage.module.css:479 border-radius 9px -> var(--radius-6)  | .draftNote
+trips/create/CreateTripPage.module.css:564 border-radius 13px -> var(--radius-12)  | .selectedDestination
+trips/create/CreateTripPage.module.css:571 border-radius 9px -> var(--radius-6)  | .selectedDestination > img
+trips/create/CreateTripPage.module.css:627 border-radius 10px -> var(--radius-10)  | .suggestions button
+trips/create/CreateTripPage.module.css:641 border-radius 7px -> var(--radius-nav)  | .suggestions img
+trips/settings/TripSettingsPage.module.css:14 font-size 13px -> var(--font-size-small)  | .breadcrumb
+trips/settings/TripSettingsPage.module.css:54 font-size 24px -> var(--font-size-title)  | .card h2
+trips/settings/TripSettingsPage.module.css:60 font-size 24px -> var(--font-size-title)  | .card h3
+trips/settings/TripSettingsPage.module.css:80 font-size 13px -> var(--font-size-small)  | .cardHeading p, .memberHeading p
+trips/settings/TripSettingsPage.module.css:114 font-size 14px -> var(--font-size-label)  | .informationGrid dt, .fieldLabel
+trips/settings/TripSettingsPage.module.css:121 font-size 16px -> var(--font-size-body)  | .informationGrid dd
+trips/settings/TripSettingsPage.module.css:174 font-size 18px -> var(--font-size-subtitle)  | .readOnlyPanel h3
+trips/settings/TripSettingsPage.module.css:190 font-size 13px -> var(--font-size-small)  | .readOnlyGrid dt
+trips/settings/TripSettingsPage.module.css:197 font-size 15px -> var(--font-size-label)  | .readOnlyGrid dd
+trips/settings/TripSettingsPage.module.css:221 font-size 15px -> var(--font-size-label)  | .memberHeading p
+trips/settings/TripSettingsPage.module.css:102 border-radius 8px -> var(--radius-8)  | .informationGrid > div
+trips/settings/TripSettingsPage.module.css:168 border-radius 10px -> var(--radius-10)  | .readOnlyPanel
+trips/TripListPage.module.css:90 font-size 13.5px -> var(--font-size-small)  | .search input
+trips/TripListPage.module.css:127 font-size 13px -> var(--font-size-small)  | .statuses button
+trips/TripListPage.module.css:138 font-size 10.5px -> var(--font-size-caption)  | .count
+trips/TripListPage.module.css:162 font-size 12.5px -> var(--font-size-small)  | .sort select
+trips/TripListPage.module.css:180 font-size 12px -> var(--font-size-caption)  | .loadedNotice
+trips/TripListPage.module.css:201 font-size 20px -> var(--font-size-card-title)  | .empty h2
+trips/TripListPage.module.css:136 border-radius 11px -> var(--radius-12)  | .count
+trips/TripListPage.module.css:151 border-radius 2px -> var(--radius-6)  | .statuses button[aria-pressed='true']::after
+trips/TripListPage.module.css:197 border-radius 16px -> var(--radius-16)  | .empty
+trips/TripOverviewPage.module.css:14 font-size 13px -> var(--font-size-small)  | .breadcrumb
+trips/TripOverviewPage.module.css:58 font-size 30px -> var(--font-size-heading)  | .hero h2
+trips/TripOverviewPage.module.css:68 font-size 12px -> var(--font-size-caption)  | .meta
+trips/TripOverviewPage.module.css:132 font-size 32px -> var(--font-size-heading)  | .hero[data-variant='schedule'] h2, .hero[data-variant='lands
+trips/TripOverviewPage.module.css:155 font-size 13px -> var(--font-size-small)  | .description
+trips/TripOverviewPage.module.css:165 font-size 12px -> var(--font-size-caption)  | .memberFeedback > p
+trips/TripOverviewPage.module.css:186 font-size 15px -> var(--font-size-body)  | .panel h2
+trips/TripOverviewPage.module.css:191 font-size 13px -> var(--font-size-small)  | .panel p
+trips/TripOverviewPage.module.css:202 font-size 14px -> var(--font-size-label)  | .summaries h2
+trips/TripOverviewPage.module.css:268 font-size 16px -> var(--font-size-body)  | .postcard
+trips/TripOverviewPage.module.css:284 font-size 12px -> var(--font-size-caption)  | .metadata
+trips/TripOverviewPage.module.css:36 border-radius 8px -> var(--radius-8)  | .hero
+trips/TripOverviewPage.module.css:140 border-radius 16px -> var(--radius-16)  | .hero[data-variant='landscape']
+trips/TripOverviewPage.module.css:152 border-radius 18px -> var(--radius-16)  | .hero[data-variant='landscape'] .actions > :is(button, a)
+trips/TripOverviewPage.module.css:179 border-radius 8px -> var(--radius-8)  | .panel
+trips/TripOverviewPage.module.css:263 border-radius 8px -> var(--radius-8)  | .postcard
+src/shared/components/Drawer.module.css:47 font-size 18px -> var(--font-size-subtitle)  | .title
+src/shared/components/Drawer.module.css:137 font-size 14px -> var(--font-size-label)  | .content nav button, .content nav a
+src/shared/components/Ui.module.css:14 font-size 13px -> var(--font-size-small)  | .badge
+src/shared/components/Ui.module.css:56 font-size 14px -> var(--font-size-label)  | .menuItem
+src/shared/components/Ui.module.css:78 font-size 13px -> var(--font-size-small)  | .tip
+src/shared/components/Ui.module.css:109 font-size 22px -> var(--font-size-card-title)  | .dialog h2
+src/shared/components/Ui.module.css:256 font-size 14px -> var(--font-size-label)  | .avatar
+src/shared/components/Ui.module.css:272 font-size 14px -> var(--font-size-label)  | .checkbox
+src/shared/components/Ui.module.css:351 font-size 14px -> var(--font-size-label)  | .toast
+src/shared/components/Ui.module.css:35 border-radius 12px -> var(--radius-12)  | .menu, .tip
+src/shared/components/Ui.module.css:55 border-radius 8px -> var(--radius-8)  | .menuItem
+src/shared/components/Ui.module.css:174 border-radius 14px -> var(--radius-12)  | .tabs
+src/shared/components/Ui.module.css:185 border-radius 10px -> var(--radius-10)  | .tabs button
+src/shared/components/Ui.module.css:253 border-radius 15px -> var(--radius-16)  | .avatar
+src/shared/components/Ui.module.css:298 border-radius 6px -> var(--radius-6)  | .checkboxControl > span
+src/shared/components/Ui.module.css:347 border-radius 16px -> var(--radius-16)  | .toast
+src/shared/components/Ui.module.css:364 border-radius 10px -> var(--radius-10)  | .toastClose
+src/shared/styles/DemoWorkspace.module.css:20 font-size 22px -> var(--font-size-card-title)  | .panel h2
+src/shared/styles/DemoWorkspace.module.css:55 font-size 13px -> var(--font-size-small)  | .metadata
+src/shared/styles/DemoWorkspace.module.css:59 font-size clamp(20px, 3vw, 30px) -> clamp(var(--font-size-card-title), 3vw, var(--font-size-title))  | .money
+src/shared/styles/DemoWorkspace.module.css:87 font-size clamp(24px, 3vw, 32px) -> clamp(var(--font-size-title), 3vw, var(--font-size-heading))  | .page h1
+src/shared/styles/DemoWorkspace.module.css:92 font-size 18px -> var(--font-size-subtitle)  | .page h3
+src/shared/styles/DemoWorkspace.module.css:98 font-size 13px -> var(--font-size-small)  | .page > a:first-child
+src/shared/styles/DemoWorkspace.module.css:140 font-size 14px -> var(--font-size-label)  | .stat p
+src/shared/styles/DemoWorkspace.module.css:163 font-size 14px -> var(--font-size-label)  | .readCard p
+src/shared/styles/DemoWorkspace.module.css:185 font-size 14px -> var(--font-size-label)  | .panel > a
+src/shared/styles/DemoWorkspace.module.css:51 border-radius 10px -> var(--radius-10)  | .list > li:nth-child(odd)
+src/shared/styles/DemoWorkspace.module.css:74 border-radius 10px -> var(--radius-10)  | .form fieldset
+src/shared/styles/DemoWorkspace.module.css:133 border-radius 16px -> var(--radius-16)  | .stat
+src/shared/styles/DemoWorkspace.module.css:152 border-radius 16px -> var(--radius-16)  | .readCard
+src/shared/styles/DemoWorkspace.module.css:170 border-radius 12px -> var(--radius-12)  | .readCard img
+src/shared/styles/DemoWorkspace.module.css:177 border-radius 16px -> var(--radius-16)  | .empty
+src/shared/styles/global.css:13 font-size 16px -> var(--font-size-body)  | body
+src/shared/styles/global.css:48 font-size 24px -> var(--font-size-title)  | .screen-title
+src/shared/styles/global.css:68 font-size 14px -> var(--font-size-label)  | details:not(.preview) > summary
+src/shared/styles/global.css:90 font-size 12px -> var(--font-size-caption)  | .preview
+src/shared/styles/global.css:93 border-radius 10px -> var(--radius-10)  | .preview
+src/shared/components/Field.module.css:99 border-radius 8px -> var(--radius-8)  | .passwordToggle
+src/shared/components/SplitPanel.module.css:15 border-radius 8px -> var(--radius-8)  | .separator
+src/shared/components/TravelCollage.module.css:19 border-radius 6px -> var(--radius-6)  | .main
+src/shared/components/TravelCollage.module.css:29 border-radius 2px -> var(--radius-6)  | .main img
+src/shared/components/TravelCollage.module.css:70 border-radius 2px -> var(--radius-6)  | .scene figure img

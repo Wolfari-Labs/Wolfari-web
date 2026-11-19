@@ -124,7 +124,7 @@ export function TripOverview({
         <section className={styles.panel} data-region="trip-overview-packing">
           <h2>
             <img src={packingIcon} alt="" />
-            Tiến độ Packing list
+            Tiến độ đồ đạc
           </h2>
           <PackingSummary trip={trip} plan={plan} onRetry={onRetry} />
         </section>

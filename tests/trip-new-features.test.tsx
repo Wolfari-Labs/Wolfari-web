@@ -99,7 +99,7 @@ describe('new trip workspace routes', () => {
     mount('/trips/:tripId/dress-code', <DressCodePage />, { section: 'dress' }, createFixtureTripRepository(), repository);
     await screen.findByText('Thoải mái và gọn nhẹ');
     await userEvent.click(screen.getByRole('tab', { name: 'Theo hoạt động' }));
-    expect(screen.getByRole('heading', { name: 'Chưa có dress code đã lưu' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Chưa có trang phục đã lưu' })).toBeInTheDocument();
     expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 

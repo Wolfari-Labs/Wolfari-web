@@ -204,7 +204,7 @@ test('CP07 Gateway Map, Dress and Packing fit native Chrome 200% zoom', async ({
     await allDress.focus();
     await page.keyboard.press('Tab');
     await expect(dress.getByRole('button', { name: 'Cả chuyến' })).toBeFocused();
-    await expect(dress.getByRole('complementary', { name: 'Khả năng Dress code' })).toBeVisible();
+    await expect(dress.getByText('Chỉ xem', { exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );

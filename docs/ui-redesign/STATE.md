@@ -1,5 +1,11 @@
 # Trạng thái thực thi
 
+## Bảo trì UI declutter & typography — 19/11/2026 (yêu cầu trực tiếp, không phải checkpoint CP mới)
+
+- Nhánh `feat/poi-overture-web`, thay đổi để ở working tree (không commit/push). Chạy Giai đoạn 0 → A → B → C theo [kế hoạch](../agents/UI_DECLUTTER_AND_TYPOGRAPHY_PLAN.md); Giai đoạn D chỉ ghi đề xuất `PROPOSED` (UDC-D1…D6), chưa code. Chỉ web desktop ≥ 769px; mobile hoãn (khối `mobile freeze`, `PageBreadcrumb mobile=`).
+- Kết quả: lint/typecheck 0; unit **694/694** (nền 689); build và build:preview 0; Preview fixture built **214/214** (nền 208, +6 `layout-consistency`); Gateway HTTP-mock built **143 pass/5 skip** (bằng nền). Hero cùng một hộp trên 9 route (238,120,1180,150 @1440); cột Tổng quan trùng cạnh; không còn chữ < 12px hoặc bo góc ngoài token ngoài khối mobile; ảnh mobile chỉ khác ở chỗ đổi văn bản Giai đoạn A và C6.
+- Delta: [UI-DECLUTTER trong DESIGN_DELTAS](DESIGN_DELTAS.md) (UDC-A01…C07, mỗi assertion hình học đã đổi kèm lý do). Bằng chứng, số liệu và NOT_RUN: [evidence/ui-declutter-20261119](evidence/ui-declutter-20261119/README.md). Ảnh chuẩn `linux/home-guest-1440.png` chưa chụp lại; A-phụ chưa làm; không Backend, route, guard, query key, dependency hay Figma thay đổi.
+
 ## Hiện tại — CP11 APPROVED / DONE_WITH_EXCEPTIONS theo D56, 02/11/2026
 
 - User đã duyệt sửa lỗi current-page của Trip Drawer và yêu cầu “tiếp tục. và chốt đóng sẵn sàng cho tôi”. Sau focused post-fix gates PASS, D56 đóng **APPROVED/DONE_WITH_EXCEPTIONS**. Full direct visual/live Backend/provider/delivery/manual screen reader/CI/device vẫn là giới hạn được chấp nhận, không chuyển NOT_RUN thành PASS hoặc tuyên bố production-ready.

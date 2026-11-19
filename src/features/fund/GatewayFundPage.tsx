@@ -18,6 +18,7 @@ import { paths } from '../../app/route-paths';
 import { Icon } from '../../shared/components/Icon';
 import { Badge } from '../../shared/components/Ui';
 import { Button } from '../../shared/components/Button';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Drawer } from '../../shared/components/Drawer';
@@ -537,11 +538,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       ) : (
         <div className={fundStyles.gatewayContextEmpty}>
           <h2>Thao tác quỹ</h2>
-          <p>
-            Chọn một thao tác ở vùng dữ liệu bên trái. Biểu mẫu sẽ giữ nguyên vùng làm việc khi màn
-            hình hẹp.
-          </p>
-          <p>TEST · Không chuyển tiền thật. Đóng vùng này không hủy thao tác đang chờ đối soát.</p>
+          <p>Chọn một thao tác để bắt đầu.</p>
         </div>
       )}
     </aside>
@@ -978,8 +975,16 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
   const trip = query.data?.status === 'ready' ? query.data.data : null;
   return (
     <section className={styles.page}>
-      <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-      <h1>Quỹ nhóm</h1>
+      <PageBreadcrumb
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Quỹ nhóm"
+        mobile={
+          <>
+            <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
+            <h1>Quỹ nhóm</h1>
+          </>
+        }
+      />
       {trip && trip.permissions.canRead && !trip.currentMembership.leftAt ? (
         <>
           <TripHero trip={trip} compact variant="landscape" />

@@ -7,6 +7,7 @@ import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { ButtonLink } from '../../../shared/components/ButtonLink';
 import { ContentState } from '../../../shared/components/ContentState';
+import { PageBreadcrumb } from '../../../shared/components/PageBreadcrumb';
 import { Input } from '../../../shared/components/Input';
 import { Textarea } from '../../../shared/components/Textarea';
 import { TripHero } from '../components/TripHero';
@@ -100,9 +101,6 @@ function ReadOnlyTripSummary({ trip }: { trip: TripDetailViewModel }) {
   return (
     <section className={styles.readOnlyPanel} aria-labelledby="read-only-trip-details-heading">
       <h3 id="read-only-trip-details-heading">Thông tin chỉ xem</h3>
-      <p className={styles.capabilityNote}>
-        Điểm đến, ngày và ngân sách hiện chỉ có thể xem; các trường này chưa hỗ trợ chỉnh sửa.
-      </p>
       <dl className={styles.readOnlyGrid}>
         <div>
           <dt>Điểm đến</dt>
@@ -135,9 +133,6 @@ function CoverPreview({ trip }: { trip: TripDetailViewModel }) {
           {cover?.mobileSrc && <source media="(max-width: 768px)" srcSet={cover.mobileSrc} />}
           <img src={cover?.src ?? coverFallback} alt="" />
         </picture>
-        <div>
-          <p>Ảnh bìa hiện đang được sử dụng cho chuyến đi.</p>
-        </div>
       </div>
     </div>
   );
@@ -149,7 +144,6 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
       <div className={styles.cardHeading}>
         <div>
           <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
-          <p>Xem thông tin hiện tại trước khi thực hiện chỉnh sửa.</p>
         </div>
         {trip.currentMembership.role === 'OWNER' &&
           trip.permissions.canUpdate &&
@@ -599,27 +593,9 @@ function ManagementCard({
       <div className={styles.separator} />
       <section className={styles.settingSection} aria-labelledby="reminders-heading">
         <h3 id="reminders-heading">Tùy chọn thông báo</h3>
-        <p className={styles.capabilityNote}>
-          Chọn kênh nhận và loại thông báo trong hồ sơ của bạn.
-        </p>
         <ButtonLink variant="outline" to={`${paths.profile}#notifications`}>
           Mở tùy chọn thông báo
         </ButtonLink>
-      </section>
-      <div className={styles.separator} />
-      <section className={styles.settingSection} aria-labelledby="trip-management-heading">
-        <h3 id="trip-management-heading">Quản lý chuyến đi</h3>
-        <details>
-          <summary>Tác vụ chưa khả dụng</summary>
-          <p className={styles.capabilityNote}>
-            Lưu trữ, chuyển chủ chuyến và xóa chuyến đi chưa được hỗ trợ.
-          </p>
-        </details>
-        <div className={styles.fundNote}>
-          <strong>Quỹ nhóm được quản lý riêng</strong>
-          <span>Kiểm tra trạng thái quỹ trước khi thay đổi vòng đời chuyến đi.</span>
-          <Link to={paths.fund(trip.id)}>Mở Quỹ nhóm</Link>
-        </div>
       </section>
     </section>
   );
@@ -682,19 +658,29 @@ export function TripSettingsPage() {
 
   return (
     <section className={styles.page} data-flow="trip-settings" data-node-id="25:676">
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trips}>Chuyến đi của tôi</Link>
-        <span aria-hidden="true">›</span>
-        {trip && <Link to={paths.trip(trip.id)}>{trip.name}</Link>}
-        <span aria-hidden="true">›</span>
-        {editMode && trip && (
-          <>
-            <Link to={paths.settings(trip.id)}>Cài đặt</Link>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[
+          { label: 'Tổng quan chuyến đi', to: paths.trip(tripId) },
+          ...(editMode ? [{ label: 'Cài đặt', to: paths.settings(tripId) }] : []),
+        ]}
+        current={editMode ? 'Chỉnh sửa' : 'Cài đặt'}
+        mobile={
+          <div className={styles.breadcrumb}>
+            <Link to={paths.trips}>Chuyến đi của tôi</Link>
             <span aria-hidden="true">›</span>
-          </>
-        )}
-        <h1>{editMode ? 'Chỉnh sửa' : 'Cài đặt'}</h1>
-      </div>
+            {trip && <Link to={paths.trip(trip.id)}>{trip.name}</Link>}
+            <span aria-hidden="true">›</span>
+            {editMode && trip && (
+              <>
+                <Link to={paths.settings(trip.id)}>Cài đặt</Link>
+                <span aria-hidden="true">›</span>
+              </>
+            )}
+            <h1>{editMode ? 'Chỉnh sửa' : 'Cài đặt'}</h1>
+          </div>
+        }
+      />
       {query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : error && !trip ? (

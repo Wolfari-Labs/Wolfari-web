@@ -171,7 +171,7 @@ export function MapViewport({
     <section
       className={`${styles.viewport} ${googleMapReady ? styles.googleMapActive : ''}`}
       aria-label={runtimeMap ? 'Bản đồ hành trình' : 'Bản đồ hành trình minh họa'}
-      aria-describedby="map-provider-note"
+      aria-describedby={runtimeMap ? undefined : 'map-provider-note'}
     >
       {runtimeMap && <div className={styles.googleMapCanvas}>{runtimeMap}</div>}
       {googleMapReady && (

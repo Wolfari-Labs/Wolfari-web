@@ -96,7 +96,7 @@ describe('Shell interactions', () => {
     const router = mount();
     await screen.findByText('Trang Nguyễn');
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
-    await userEvent.click(within(sidebar).getByRole('link', { name: 'Packing list' }));
+    await userEvent.click(within(sidebar).getByRole('link', { name: 'Đồ đạc' }));
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/packing`);
     await userEvent.click(
       within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', {

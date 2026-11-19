@@ -37,22 +37,27 @@
 .eyebrow {
   margin: 0 0 5px;
   color: var(--color-action-primary);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-size: var(--font-size-small);
+  font-weight: var(--weight-bold);
 }
 
 .pageHeader h1 {
   margin: 0;
   color: #075495;
-  font-size: clamp(28px, 2.4vw, 36px);
+  font-size: clamp(var(--font-size-title), 2.4vw, var(--font-size-heading));
   line-height: 1.2;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .pageHeader h1 {
+    font-size: clamp(28px, 2.4vw, 36px);
+  }
 }
 
 .pageHeader p:last-child {
   margin: 8px 0 0;
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 
 .backLink {
@@ -60,7 +65,7 @@
   align-items: center;
   min-height: 44px;
   color: #075495;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   font-weight: 600;
 }
 
@@ -82,9 +87,15 @@
 .formCard,
 .destinationPanel {
   border: 1px solid #dcecf3;
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   background: #fff;
   box-shadow: 0 14px 36px rgb(32 101 137 / 8%);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .formCard, .destinationPanel {
+    border-radius: 18px;
+  }
 }
 
 .formCard {
@@ -99,20 +110,20 @@
 .gatewayCapabilityHeading h2 {
   margin: 0;
   color: #075495;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 1.33;
 }
 .gatewayCapabilityHeading p {
   margin: 4px 0 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 1.5;
 }
 .gatewayMapIllustration {
   position: relative;
   overflow: hidden;
   margin-top: 18px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: #eaf9fc;
   aspect-ratio: 3 / 2;
 }
@@ -127,11 +138,11 @@
   right: 12px;
   bottom: 12px;
   left: 12px;
-  border-radius: 7px;
+  border-radius: var(--radius-nav);
   padding: 7px 9px;
   background: rgb(255 255 255 / 94%);
   color: var(--color-action-primary);
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   font-weight: 600;
   text-align: center;
 }
@@ -143,13 +154,13 @@
 .gatewayCapabilityBody h3 {
   margin: 0;
   color: #075495;
-  font-size: 16px;
+  font-size: var(--font-size-body);
   line-height: 1.4;
 }
 .gatewayCapabilityBody p {
   margin: 8px 0 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 1.55;
 }
 .gatewayIntro {
@@ -158,13 +169,13 @@
 .gatewayIntro h2 {
   margin: 0;
   color: #075495;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 1.33;
 }
 .gatewayIntro p {
   margin: 2px 0 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .gatewayForm > fieldset {
@@ -177,7 +188,7 @@
 }
 .gatewayForm > p {
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-size-label);
   margin-block: 20px;
 }
 
@@ -201,10 +212,10 @@
 .errorSummary {
   margin-bottom: 22px;
   padding: 14px 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: #fff1f1;
   color: #a83030;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 
 .errorSummary ul {
@@ -221,6 +232,12 @@
   min-width: 0;
   font-size: var(--font-size-label);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .destinationField, .budgetField {
+    font-size: var(--font-size-label);
+  }
+}
 
 .destinationField > label,
 .memberField legend,
@@ -231,6 +248,12 @@
   font-size: var(--font-size-label);
   font-weight: 600;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .destinationField > label, .memberField legend, .choiceField legend, .templateField legend, .coverField legend {
+    font-size: var(--font-size-label);
+  }
+}
 
 .destinationInput {
   display: flex;
@@ -238,7 +261,7 @@
   min-height: var(--control-height);
   padding: 0 14px;
   border: 1px solid var(--color-field-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: #fff;
   color: #079fc5;
 }
@@ -271,6 +294,12 @@
   color: var(--ios-error);
   font-size: var(--font-size-small);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .fieldError {
+    font-size: var(--font-size-small);
+  }
+}
 
 .dates {
   display: grid;
@@ -298,7 +327,7 @@
 .memberField button {
   min-height: 44px;
   border: 1px solid #d5e6ee;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: #fff;
   color: var(--color-muted);
   font: inherit;
@@ -327,11 +356,11 @@
   min-height: 58px;
   padding: 8px;
   border: 1px solid #dbe9ef;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: #fff;
   color: #506f8d;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 600;
 }
 
@@ -352,7 +381,7 @@
   top: 40px;
   right: 14px;
   color: var(--color-muted);
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   font-weight: 700;
   pointer-events: none;
 }
@@ -363,7 +392,7 @@
 
 .budgetField small {
   color: #7990a6;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
 }
 
 .templateField > div {
@@ -381,10 +410,16 @@
   min-height: 72px;
   padding: 11px;
   border: 1px solid #dbe9ef;
-  border-radius: 11px;
+  border-radius: var(--radius-12);
   background: #fff;
   color: #587590;
   text-align: left;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .templateField button {
+    border-radius: 11px;
+  }
 }
 
 .templateField button > span {
@@ -395,12 +430,18 @@
 
 .templateField strong {
   color: #173d5e;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
 }
 
 .templateField small {
   color: var(--color-muted);
-  font-size: 10px;
+  font-size: var(--font-size-caption);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .templateField small {
+    font-size: 10px;
+  }
 }
 
 .templateField button[aria-pressed='true'] {
@@ -422,8 +463,14 @@
   min-height: 84px;
   overflow: hidden;
   border: 1px solid #d9e8ef;
-  border-radius: 11px;
+  border-radius: var(--radius-12);
   background: #f8fcfe;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .coverChoices button, .uploadCover {
+    border-radius: 11px;
+  }
 }
 
 .coverChoices button {
@@ -461,11 +508,23 @@
 
 .uploadCover strong {
   color: #3b5d7b;
-  font-size: 11px;
+  font-size: var(--font-size-caption);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .uploadCover strong {
+    font-size: 11px;
+  }
 }
 
 .uploadCover small {
-  font-size: 9px;
+  font-size: var(--font-size-caption);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .uploadCover small {
+    font-size: 9px;
+  }
 }
 
 .selectedCover {
@@ -476,11 +535,18 @@
 .draftNote {
   margin: -4px 0 0;
   padding: 11px 13px;
-  border-radius: 9px;
+  border-radius: var(--radius-6);
   background: #f2f9fc;
   color: var(--color-muted);
-  font-size: 11px;
+  font-size: var(--font-size-small);
   line-height: 1.55;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .draftNote {
+    font-size: 11px;
+    border-radius: 9px;
+  }
 }
 
 .actions {
@@ -498,7 +564,7 @@
   min-height: 44px;
   padding: 0 16px;
   color: #496986;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 600;
 }
 
@@ -550,8 +616,14 @@
   position: absolute;
   bottom: 14px;
   color: #608099;
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   z-index: 2;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .mapArea span {
+    font-size: 11px;
+  }
 }
 
 .selectedDestination {
@@ -561,15 +633,27 @@
   margin: 16px;
   padding: 10px;
   border: 1px solid #dcecf3;
-  border-radius: 13px;
+  border-radius: var(--radius-12);
   background: #fff;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .selectedDestination {
+    border-radius: 13px;
+  }
 }
 
 .selectedDestination > img {
   width: 88px;
   height: 72px;
-  border-radius: 9px;
+  border-radius: var(--radius-6);
   object-fit: cover;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .selectedDestination > img {
+    border-radius: 9px;
+  }
 }
 
 .selectedDestination > div {
@@ -580,24 +664,41 @@
 
 .selectedDestination small {
   color: var(--color-action-primary);
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: var(--font-size-caption);
+  font-weight: var(--weight-bold);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .selectedDestination small {
+    font-size: 8px;
+  }
 }
 
 .selectedDestination strong {
   margin-top: 3px;
   overflow: hidden;
   color: #173d5e;
-  font-size: 15px;
+  font-size: var(--font-size-label);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .selectedDestination strong {
+    font-size: 15px;
+  }
 }
 
 .selectedDestination span {
   margin-top: 2px;
   color: var(--color-muted);
-  font-size: 10px;
+  font-size: var(--font-size-caption);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .selectedDestination span {
+    font-size: 10px;
+  }
 }
 
 .suggestions {
@@ -607,7 +708,7 @@
 .suggestions h2 {
   margin: 0 0 10px;
   color: #224865;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 
 .suggestions > div {
@@ -624,7 +725,7 @@
   min-height: 55px;
   padding: 6px;
   border: 1px solid #e0edf2;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: #fff;
   text-align: left;
 }
@@ -638,7 +739,7 @@
   width: 44px;
   height: 42px;
   flex-shrink: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-nav);
   object-fit: cover;
 }
 
@@ -650,15 +751,27 @@
 
 .suggestions strong {
   color: #244966;
-  font-size: 11px;
+  font-size: var(--font-size-small);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .suggestions strong {
+    font-size: 11px;
+  }
 }
 
 .suggestions small {
   overflow: hidden;
   color: var(--color-muted);
-  font-size: 8px;
+  font-size: var(--font-size-caption);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .suggestions small {
+    font-size: 8px;
+  }
 }
 
 .successDialog {
@@ -681,15 +794,26 @@
 .success > p {
   margin: 8px 0 6px;
   color: var(--color-action-primary);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  font-size: var(--font-size-small);
+  font-weight: var(--weight-bold);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .success > p {
+    font-size: 10px;
+  }
 }
 
 .success h1 {
   margin: 0;
   color: #075495;
-  font-size: 28px;
+  font-size: var(--font-size-title);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .success h1 {
+    font-size: 28px;
+  }
 }
 
 .success > span {
@@ -697,7 +821,7 @@
   max-width: 360px;
   margin: 10px auto 22px;
   color: var(--color-action-primary);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 1.55;
 }
 

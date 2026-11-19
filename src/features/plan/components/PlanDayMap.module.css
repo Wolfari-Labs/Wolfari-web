@@ -5,7 +5,7 @@
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--color-white);
   color: var(--color-ink);
 }
@@ -18,12 +18,12 @@
 }
 .header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
 }
 .header p {
   margin: 4px 0 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .header button {
   flex-shrink: 0;
@@ -32,7 +32,7 @@
 .unavailable {
   min-height: 240px;
   margin: 0 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .map {
   background: var(--color-white);
@@ -57,7 +57,7 @@
 }
 .listRegion h4 {
   margin: 0 0 10px;
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .list {
   display: grid;
@@ -74,13 +74,13 @@
   overflow-wrap: anywhere;
   padding: 10px 12px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .list span,
 .list small,
 .empty {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .empty {
   margin: 0;
@@ -98,7 +98,7 @@
 .routeSummary {
   margin: 8px 16px 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .routeSummary[data-estimated] {
   color: #7a4b00;

@@ -1,0 +1,1015 @@
+
+> wolfari-web@0.1.0 test D:\Desktop\NHAP\PBL6\Wolfari-web
+> vitest run
+
+
+ RUN  v5.0.4 D:/Desktop/NHAP/PBL6/Wolfari-web
+
+ ❯ tests/trip-list.test.tsx (17 tests | 1 failed) 6062ms
+   ❯ Trip List route slice (17)
+     × renders six permitted card links with navigation menus and disabled unresolved filters, without HTTP 815ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/trip-list.test.tsx > Trip List route slice > renders six permitted card links with navigation menus and disabled unresolved filters, without HTTP
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/^Vai trò:/`
+
+Here are the accessible roles:
+
+  link:
+
+  Name "Đến nội dung chính":
+  [36m<a[39m
+    [33mclass[39m=[32m"_skip_8c56e4"[39m
+    [33mhref[39m=[32m"#main-content"[39m
+  [36m/>[39m
+
+  Name "Wolfari · Trang chủ":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Wolfari · Trang chủ"[39m
+    [33mclass[39m=[32m"_logo_8c56e4"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/"[39m
+  [36m/>[39m
+
+  Name "Trang chủ":
+  [36m<a[39m
+    [33mclass[39m=[32m""[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/"[39m
+  [36m/>[39m
+
+  Name "Chuyến đi của tôi":
+  [36m<a[39m
+    [33maria-current[39m=[32m"page"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips"[39m
+  [36m/>[39m
+
+  Name "Trang NguyễnTN Trang NguyễnHồ sơ cá nhân":
+  [36m<a[39m
+    [33mclass[39m=[32m"_profile_8c56e4"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/profile"[39m
+  [36m/>[39m
+
+  Name "Wolfari · Trang chủ":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Wolfari · Trang chủ"[39m
+    [33mclass[39m=[32m"_mobileLogo_8c56e4"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/"[39m
+  [36m/>[39m
+
+  Name "TN Trang Nguyễn · Hồ sơ cá nhân":
+  [36m<a[39m
+    [33maria-label[39m=[32m"TN Trang Nguyễn · Hồ sơ cá nhân"[39m
+    [33mclass[39m=[32m"_mobileAccount_8c56e4"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/profile"[39m
+  [36m/>[39m
+
+  Name "Tạo chuyến đi":
+  [36m<a[39m
+    [33mclass[39m=[32m"_create_624a9e"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/new"[39m
+  [36m/>[39m
+
+  Name "Mở chuyến đi Đà Nẵng – Hội An":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Mở chuyến đi Đà Nẵng – Hội An"[39m
+    [33mclass[39m=[32m"_link_ecc49d"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/11111111-1111-4111-8111-111111111111"[39m
+  [36m/>[39m
+
+  Name "Mở chuyến đi Phú Quốc – Hẹn với biển":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Mở chuyến đi Phú Quốc – Hẹn với biển"[39m
+    [33mclass[39m=[32m"_link_ecc49d"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/33333333-3333-4333-8333-333333333333"[39m
+  [36m/>[39m
+
+  Name "Mở chuyến đi Đà Lạt – Một chút bình yên":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Mở chuyến đi Đà Lạt – Một chút bình yên"[39m
+    [33mclass[39m=[32m"_link_ecc49d"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/44444444-4444-4444-8444-444444444444"[39m
+  [36m/>[39m
+
+  Name "Mở chuyến đi Sài Gòn – Vũng Tàu":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Mở chuyến đi Sài Gòn – Vũng Tàu"[39m
+    [33mclass[39m=[32m"_link_ecc49d"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/55555555-5555-4555-8555-555555555555"[39m
+  [36m/>[39m
+
+  Name "Mở chuyến đi Huế – Chậm một nhịp":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Mở chuyến đi Huế – Chậm một nhịp"[39m
+    [33mclass[39m=[32m"_link_ecc49d"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/66666666-6666-4666-8666-666666666666"[39m
+  [36m/>[39m
+
+  Name "Mở chuyến đi Ninh Bình – Giữa núi xanh":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Mở chuyến đi Ninh Bình – Giữa núi xanh"[39m
+    [33mclass[39m=[32m"_link_ecc49d"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/77777777-7777-4777-8777-777777777777"[39m
+  [36m/>[39m
+
+  Name "+ Tạo một hành trình mới":
+  [36m<a[39m
+    [33mclass[39m=[32m"_mobileCreate_2dace0"[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/new"[39m
+  [36m/>[39m
+
+  Name "Shell trang chủ":
+  [36m<a[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/"[39m
+  [36m/>[39m
+
+  Name "Shell chuyến đi":
+  [36m<a[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/trips/11111111-1111-4111-8111-111111111111"[39m
+  [36m/>[39m
+
+  Name "Shell Admin":
+  [36m<a[39m
+    [33mdata-discover[39m=[32m"true"[39m
+    [33mhref[39m=[32m"/admin"[39m
+  [36m/>[39m
+
+  Name "Shared UI foundation":
+  [36m<a[39m
+    [33mhref[39m=[32m"/design-system.html"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"_desktopHeader_8c56e4"[39m
+    [33mdata-node-id[39m=[32m"135:483"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"_mobileHeader_8c56e4 "[39m
+    [33mdata-node-id[39m=[32m"779:6442"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"_hero_624a9e"[39m
+    [33mdata-node-id[39m=[32m"65:548"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  img:
+
+  Name "Wolfari":
+  [36m<img[39m
+    [33malt[39m=[32m"Wolfari"[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/44363.png"[39m
+  [36m/>[39m
+
+  Name "Wolfari":
+  [36m<img[39m
+    [33malt[39m=[32m"Wolfari"[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/44363.png"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Điều hướng chính":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"Điều hướng chính"[39m
+    [33mclass[39m=[32m"_headerNav_8c56e4"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Lên lịch":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"Chọn chuyến đi để mở lịch trình"[39m
+  [36m/>[39m
+
+  Name "Thông báo":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Thông báo"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d _bell_e80bb5"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mở menu tài khoản":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Mở menu tài khoản"[39m
+    [33mclass[39m=[32m"_profileChevron_8c56e4"[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_m_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Thông báo":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Thông báo"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d _bell_e80bb5"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Menu · Mở điều hướng chính":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"dialog"[39m
+    [33maria-label[39m=[32m"Menu · Mở điều hướng chính"[39m
+    [33mclass[39m=[32m"_mobileMenuButton_8c56e4"[39m
+  [36m/>[39m
+
+  Name "Tìm kiếm và sắp xếp":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"trip-list-search trip-list-sort"[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33mclass[39m=[32m"_mobileControlsToggle_2dace0"[39m
+  [36m/>[39m
+
+  Name "Tất cả · 6":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tất cả · 6"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "Sắp tới · 3":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Sắp tới · 3"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Đang diễn ra · 1 (Đang đi)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Đang diễn ra · 1 (Đang đi)"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Đã kết thúc · 2 (Đã đi)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Đã kết thúc · 2 (Đã đi)"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Đã lưu trữ · 0 (Lưu trữ)":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Đã lưu trữ · 0 (Lưu trữ)"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Thao tác Đà Nẵng – Hội An":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Thao tác Đà Nẵng – Hội An"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d "[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_4_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Thao tác Phú Quốc – Hẹn với biển":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Thao tác Phú Quốc – Hẹn với biển"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d "[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_6_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Thao tác Đà Lạt – Một chút bình yên":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Thao tác Đà Lạt – Một chút bình yên"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d "[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_8_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Thao tác Sài Gòn – Vũng Tàu":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Thao tác Sài Gòn – Vũng Tàu"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d "[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_a_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Thao tác Huế – Chậm một nhịp":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Thao tác Huế – Chậm một nhịp"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d "[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_c_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Thao tác Ninh Bình – Giữa núi xanh":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Thao tác Ninh Bình – Giữa núi xanh"[39m
+    [33mclass[39m=[32m"_button_c18b8d _ghost_c18b8d _icon_c18b8d "[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_e_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"_main_8c56e4 _tripMain_8c56e4 _listMain_8c56e4"[39m
+    [33mid[39m=[32m"main-content"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Danh sách chuyến đi":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Danh sách chuyến đi"[39m
+    [33mclass[39m=[32m"_page_2dace0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Chuyến đi của tôi":
+  [36m<h1 />[39m
+
+  Name "Đà Nẵng – Hội An":
+  [36m<h2 />[39m
+
+  Name "Phú Quốc – Hẹn với biển":
+  [36m<h2 />[39m
+
+  Name "Đà Lạt – Một chút bình yên":
+  [36m<h2 />[39m
+
+  Name "Sài Gòn – Vũng Tàu":
+  [36m<h2 />[39m
+
+  Name "Huế – Chậm một nhịp":
+  [36m<h2 />[39m
+
+  Name "Ninh Bình – Giữa núi xanh":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33mclass[39m=[32m"_underline_624a9e"[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='336'%20height='17'%20viewBox='0%200%20336%2017'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Decor%20/%20teal%20brush%20underline'%3e%3cpath%20id='Vector'%20opacity='0.82'%20d='M7.68%2010.3889C76.8%200.944445%20151.68%202.83333%20222.72%205.66667C263.04%207.55556%20295.68%201.88889%20328.32%204.72222'%20stroke='%23159D97'%20stroke-width='5'%20stroke-linecap='round'/%3e%3cpath%20id='Vector_2'%20opacity='0.45'%20d='M28.8%2015.1111C87.36%2010.3889%20147.84%2012.2778%20208.32%2014.1667'%20stroke='%23159D97'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='plus'%3e%3cg%20id='Vector'%3e%3cpath%20d='M10%203V17ZM3%2010H17Z'%20fill='black'/%3e%3cpath%20d='M10%203V17M3%2010H17'%20stroke='white'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Frame'%3e%3cpath%20id='Vector'%20d='M9.16667%2015C12.3883%2015%2015%2012.3883%2015%209.16667C15%205.94501%2012.3883%203.33333%209.16667%203.33333C5.94501%203.33333%203.33333%205.94501%203.33333%209.16667C3.33333%2012.3883%205.94501%2015%209.16667%2015Z'%20stroke='%236C8BB2'%20stroke-width='1.66667'/%3e%3cpath%20id='Vector_2'%20d='M16.6667%2016.6667L13.3333%2013.3333'%20stroke='%236C8BB2'%20stroke-width='1.66667'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/3a3f8.png"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='9'%20height='9'%20viewBox='0%200%209%209'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20id='status%20icon'%20cx='4.5'%20cy='4.5'%20r='4.5'%20fill='%23008F86'/%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='calendar'%3e%3cpath%20id='Vector'%20d='M4.08333%201.16667V2.91667M9.91667%201.16667V2.91667M2.04167%205.25H11.9583M2.91667%202.33333H11.0833C11.3928%202.33333%2011.6895%202.45625%2011.9083%202.67504C12.1271%202.89383%2012.25%203.19058%2012.25%203.5V11.0833H1.75V3.5C1.75%203.19058%201.87292%202.89383%202.09171%202.67504C2.3105%202.45625%202.60725%202.33333%202.91667%202.33333Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='people'%3e%3cpath%20id='Vector'%20d='M9.33333%2012.25V11.0833C9.33333%2010.4645%209.0875%209.871%208.64992%209.43342C8.21233%208.99583%207.61884%208.75%207%208.75H3.5C2.88116%208.75%202.28767%208.99583%201.85008%209.43342C1.4125%209.871%201.16667%2010.4645%201.16667%2011.0833V12.25M12.8333%2012.25V11.0833C12.8329%2010.5663%2012.6609%2010.0641%2012.3441%209.65552C12.0274%209.24692%2011.5839%208.95508%2011.0833%208.82583M9.33333%201.82583C9.83524%201.95434%2010.2801%202.24624%2010.5978%202.65551C10.9155%203.06479%2011.0879%203.56815%2011.0879%204.08625C11.0879%204.60435%2010.9155%205.10771%2010.5978%205.51699C10.2801%205.92626%209.83524%206.21816%209.33333%206.34667M5.25%206.41667C5.86884%206.41667%206.46233%206.17083%206.89992%205.73325C7.3375%205.29566%207.58333%204.70217%207.58333%204.08333C7.58333%203.4645%207.3375%202.871%206.89992%202.43342C6.46233%201.99583%205.86884%201.75%205.25%201.75C4.63116%201.75%204.03767%201.99583%203.60008%202.43342C3.1625%202.871%202.91667%203.4645%202.91667%204.08333C2.91667%204.70217%203.1625%205.29566%203.60008%205.73325C4.03767%206.17083%204.63116%206.41667%205.25%206.41667Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='crown'%3e%3cpath%20id='Vector'%20d='M1.75%204.08333L4.08333%207L7%202.91667L9.91667%207L12.25%204.08333L11.0833%2010.5H2.91667L1.75%204.08333Z'%20fill='%23F7B817'/%3e%3cg%20id='Vector_2'%3e%3cpath%20d='M3.5%2011.6667H10.5Z'%20fill='black'/%3e%3cpath%20d='M3.5%2011.6667H10.5'%20stroke='%23F7B817'%20stroke-width='1.16667'%20stroke-linecap='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/a84f7.png"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='status%20icon'%3e%3cpath%20id='Vector'%20d='M7%2012.25C9.8995%2012.25%2012.25%209.8995%2012.25%207C12.25%204.10051%209.8995%201.75%207%201.75C4.10051%201.75%201.75%204.10051%201.75%207C1.75%209.8995%204.10051%2012.25%207%2012.25Z'%20stroke='%23E89000'%20stroke-width='1.16667'/%3e%3cpath%20id='Vector_2'%20d='M7%204.08333V7L8.75%208.16667'%20stroke='%23E89000'%20stroke-width='1.16667'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='calendar'%3e%3cpath%20id='Vector'%20d='M4.08333%201.16667V2.91667M9.91667%201.16667V2.91667M2.04167%205.25H11.9583M2.91667%202.33333H11.0833C11.3928%202.33333%2011.6895%202.45625%2011.9083%202.67504C12.1271%202.89383%2012.25%203.19058%2012.25%203.5V11.0833H1.75V3.5C1.75%203.19058%201.87292%202.89383%202.09171%202.67504C2.3105%202.45625%202.60725%202.33333%202.91667%202.33333Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='people'%3e%3cpath%20id='Vector'%20d='M9.33333%2012.25V11.0833C9.33333%2010.4645%209.0875%209.871%208.64992%209.43342C8.21233%208.99583%207.61884%208.75%207%208.75H3.5C2.88116%208.75%202.28767%208.99583%201.85008%209.43342C1.4125%209.871%201.16667%2010.4645%201.16667%2011.0833V12.25M12.8333%2012.25V11.0833C12.8329%2010.5663%2012.6609%2010.0641%2012.3441%209.65552C12.0274%209.24692%2011.5839%208.95508%2011.0833%208.82583M9.33333%201.82583C9.83524%201.95434%2010.2801%202.24624%2010.5978%202.65551C10.9155%203.06479%2011.0879%203.56815%2011.0879%204.08625C11.0879%204.60435%2010.9155%205.10771%2010.5978%205.51699C10.2801%205.92626%209.83524%206.21816%209.33333%206.34667M5.25%206.41667C5.86884%206.41667%206.46233%206.17083%206.89992%205.73325C7.3375%205.29566%207.58333%204.70217%207.58333%204.08333C7.58333%203.4645%207.3375%202.871%206.89992%202.43342C6.46233%201.99583%205.86884%201.75%205.25%201.75C4.63116%201.75%204.03767%201.99583%203.60008%202.43342C3.1625%202.871%202.91667%203.4645%202.91667%204.08333C2.91667%204.70217%203.1625%205.29566%203.60008%205.73325C4.03767%206.17083%204.63116%206.41667%205.25%206.41667Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='member'%3e%3cpath%20id='Vector'%20d='M2.33333%2012.25C2.33333%2011.0123%202.825%209.82534%203.70017%208.95017C4.57534%208.075%205.76232%207.58333%207%207.58333C8.23768%207.58333%209.42466%208.075%2010.2998%208.95017C11.175%209.82534%2011.6667%2011.0123%2011.6667%2012.25M7%207C7.61884%207%208.21233%206.75417%208.64992%206.31658C9.0875%205.879%209.33333%205.28551%209.33333%204.66667C9.33333%204.04783%209.0875%203.45434%208.64992%203.01675C8.21233%202.57917%207.61884%202.33333%207%202.33333C6.38116%202.33333%205.78767%202.57917%205.35008%203.01675C4.9125%203.45434%204.66667%204.04783%204.66667%204.66667C4.66667%205.28551%204.9125%205.879%205.35008%206.31658C5.78767%206.75417%206.38116%207%207%207Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/6059f.png"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='status%20icon'%3e%3cpath%20id='Vector'%20d='M7%2012.25C9.8995%2012.25%2012.25%209.8995%2012.25%207C12.25%204.10051%209.8995%201.75%207%201.75C4.10051%201.75%201.75%204.10051%201.75%207C1.75%209.8995%204.10051%2012.25%207%2012.25Z'%20stroke='%23E89000'%20stroke-width='1.16667'/%3e%3cpath%20id='Vector_2'%20d='M7%204.08333V7L8.75%208.16667'%20stroke='%23E89000'%20stroke-width='1.16667'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='calendar'%3e%3cpath%20id='Vector'%20d='M4.08333%201.16667V2.91667M9.91667%201.16667V2.91667M2.04167%205.25H11.9583M2.91667%202.33333H11.0833C11.3928%202.33333%2011.6895%202.45625%2011.9083%202.67504C12.1271%202.89383%2012.25%203.19058%2012.25%203.5V11.0833H1.75V3.5C1.75%203.19058%201.87292%202.89383%202.09171%202.67504C2.3105%202.45625%202.60725%202.33333%202.91667%202.33333Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='people'%3e%3cpath%20id='Vector'%20d='M9.33333%2012.25V11.0833C9.33333%2010.4645%209.0875%209.871%208.64992%209.43342C8.21233%208.99583%207.61884%208.75%207%208.75H3.5C2.88116%208.75%202.28767%208.99583%201.85008%209.43342C1.4125%209.871%201.16667%2010.4645%201.16667%2011.0833V12.25M12.8333%2012.25V11.0833C12.8329%2010.5663%2012.6609%2010.0641%2012.3441%209.65552C12.0274%209.24692%2011.5839%208.95508%2011.0833%208.82583M9.33333%201.82583C9.83524%201.95434%2010.2801%202.24624%2010.5978%202.65551C10.9155%203.06479%2011.0879%203.56815%2011.0879%204.08625C11.0879%204.60435%2010.9155%205.10771%2010.5978%205.51699C10.2801%205.92626%209.83524%206.21816%209.33333%206.34667M5.25%206.41667C5.86884%206.41667%206.46233%206.17083%206.89992%205.73325C7.3375%205.29566%207.58333%204.70217%207.58333%204.08333C7.58333%203.4645%207.3375%202.871%206.89992%202.43342C6.46233%201.99583%205.86884%201.75%205.25%201.75C4.63116%201.75%204.03767%201.99583%203.60008%202.43342C3.1625%202.871%202.91667%203.4645%202.91667%204.08333C2.91667%204.70217%203.1625%205.29566%203.60008%205.73325C4.03767%206.17083%204.63116%206.41667%205.25%206.41667Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='crown'%3e%3cpath%20id='Vector'%20d='M1.75%204.08333L4.08333%207L7%202.91667L9.91667%207L12.25%204.08333L11.0833%2010.5H2.91667L1.75%204.08333Z'%20fill='%23F7B817'/%3e%3cg%20id='Vector_2'%3e%3cpath%20d='M3.5%2011.6667H10.5Z'%20fill='black'/%3e%3cpath%20d='M3.5%2011.6667H10.5'%20stroke='%23F7B817'%20stroke-width='1.16667'%20stroke-linecap='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/42524.png"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='status%20icon'%3e%3cpath%20id='Vector'%20d='M7%2012.25C9.8995%2012.25%2012.25%209.8995%2012.25%207C12.25%204.10051%209.8995%201.75%207%201.75C4.10051%201.75%201.75%204.10051%201.75%207C1.75%209.8995%204.10051%2012.25%207%2012.25Z'%20stroke='%23E89000'%20stroke-width='1.16667'/%3e%3cpath%20id='Vector_2'%20d='M7%204.08333V7L8.75%208.16667'%20stroke='%23E89000'%20stroke-width='1.16667'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='calendar'%3e%3cpath%20id='Vector'%20d='M4.08333%201.16667V2.91667M9.91667%201.16667V2.91667M2.04167%205.25H11.9583M2.91667%202.33333H11.0833C11.3928%202.33333%2011.6895%202.45625%2011.9083%202.67504C12.1271%202.89383%2012.25%203.19058%2012.25%203.5V11.0833H1.75V3.5C1.75%203.19058%201.87292%202.89383%202.09171%202.67504C2.3105%202.45625%202.60725%202.33333%202.91667%202.33333Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='people'%3e%3cpath%20id='Vector'%20d='M9.33333%2012.25V11.0833C9.33333%2010.4645%209.0875%209.871%208.64992%209.43342C8.21233%208.99583%207.61884%208.75%207%208.75H3.5C2.88116%208.75%202.28767%208.99583%201.85008%209.43342C1.4125%209.871%201.16667%2010.4645%201.16667%2011.0833V12.25M12.8333%2012.25V11.0833C12.8329%2010.5663%2012.6609%2010.0641%2012.3441%209.65552C12.0274%209.24692%2011.5839%208.95508%2011.0833%208.82583M9.33333%201.82583C9.83524%201.95434%2010.2801%202.24624%2010.5978%202.65551C10.9155%203.06479%2011.0879%203.56815%2011.0879%204.08625C11.0879%204.60435%2010.9155%205.10771%2010.5978%205.51699C10.2801%205.92626%209.83524%206.21816%209.33333%206.34667M5.25%206.41667C5.86884%206.41667%206.46233%206.17083%206.89992%205.73325C7.3375%205.29566%207.58333%204.70217%207.58333%204.08333C7.58333%203.4645%207.3375%202.871%206.89992%202.43342C6.46233%201.99583%205.86884%201.75%205.25%201.75C4.63116%201.75%204.03767%201.99583%203.60008%202.43342C3.1625%202.871%202.91667%203.4645%202.91667%204.08333C2.91667%204.70217%203.1625%205.29566%203.60008%205.73325C4.03767%206.17083%204.63116%206.41667%205.25%206.41667Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='member'%3e%3cpath%20id='Vector'%20d='M2.33333%2012.25C2.33333%2011.0123%202.825%209.82534%203.70017%208.95017C4.57534%208.075%205.76232%207.58333%207%207.58333C8.23768%207.58333%209.42466%208.075%2010.2998%208.95017C11.175%209.82534%2011.6667%2011.0123%2011.6667%2012.25M7%207C7.61884%207%208.21233%206.75417%208.64992%206.31658C9.0875%205.879%209.33333%205.28551%209.33333%204.66667C9.33333%204.04783%209.0875%203.45434%208.64992%203.01675C8.21233%202.57917%207.61884%202.33333%207%202.33333C6.38116%202.33333%205.78767%202.57917%205.35008%203.01675C4.9125%203.45434%204.66667%204.04783%204.66667%204.66667C4.66667%205.28551%204.9125%205.879%205.35008%206.31658C5.78767%206.75417%206.38116%207%207%207Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/1dc61.png"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='status%20icon'%3e%3cpath%20id='Vector'%20d='M7%2012.8333C10.2217%2012.8333%2012.8333%2010.2217%2012.8333%207C12.8333%203.77834%2010.2217%201.16667%207%201.16667C3.77834%201.16667%201.16667%203.77834%201.16667%207C1.16667%2010.2217%203.77834%2012.8333%207%2012.8333Z'%20fill='%232F89BF'/%3e%3cpath%20id='Vector_2'%20d='M4.375%207.175L6.125%208.98333L9.74167%204.9'%20stroke='white'%20stroke-width='1.28333'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='calendar'%3e%3cpath%20id='Vector'%20d='M4.08333%201.16667V2.91667M9.91667%201.16667V2.91667M2.04167%205.25H11.9583M2.91667%202.33333H11.0833C11.3928%202.33333%2011.6895%202.45625%2011.9083%202.67504C12.1271%202.89383%2012.25%203.19058%2012.25%203.5V11.0833H1.75V3.5C1.75%203.19058%201.87292%202.89383%202.09171%202.67504C2.3105%202.45625%202.60725%202.33333%202.91667%202.33333Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='people'%3e%3cpath%20id='Vector'%20d='M9.33333%2012.25V11.0833C9.33333%2010.4645%209.0875%209.871%208.64992%209.43342C8.21233%208.99583%207.61884%208.75%207%208.75H3.5C2.88116%208.75%202.28767%208.99583%201.85008%209.43342C1.4125%209.871%201.16667%2010.4645%201.16667%2011.0833V12.25M12.8333%2012.25V11.0833C12.8329%2010.5663%2012.6609%2010.0641%2012.3441%209.65552C12.0274%209.24692%2011.5839%208.95508%2011.0833%208.82583M9.33333%201.82583C9.83524%201.95434%2010.2801%202.24624%2010.5978%202.65551C10.9155%203.06479%2011.0879%203.56815%2011.0879%204.08625C11.0879%204.60435%2010.9155%205.10771%2010.5978%205.51699C10.2801%205.92626%209.83524%206.21816%209.33333%206.34667M5.25%206.41667C5.86884%206.41667%206.46233%206.17083%206.89992%205.73325C7.3375%205.29566%207.58333%204.70217%207.58333%204.08333C7.58333%203.4645%207.3375%202.871%206.89992%202.43342C6.46233%201.99583%205.86884%201.75%205.25%201.75C4.63116%201.75%204.03767%201.99583%203.60008%202.43342C3.1625%202.871%202.91667%203.4645%202.91667%204.08333C2.91667%204.70217%203.1625%205.29566%203.60008%205.73325C4.03767%206.17083%204.63116%206.41667%205.25%206.41667Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='crown'%3e%3cpath%20id='Vector'%20d='M1.75%204.08333L4.08333%207L7%202.91667L9.91667%207L12.25%204.08333L11.0833%2010.5H2.91667L1.75%204.08333Z'%20fill='%23F7B817'/%3e%3cg%20id='Vector_2'%3e%3cpath%20d='M3.5%2011.6667H10.5Z'%20fill='black'/%3e%3cpath%20d='M3.5%2011.6667H10.5'%20stroke='%23F7B817'%20stroke-width='1.16667'%20stroke-linecap='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"/src/shared/assets/figma/916ba.png"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='status%20icon'%3e%3cpath%20id='Vector'%20d='M7%2012.8333C10.2217%2012.8333%2012.8333%2010.2217%2012.8333%207C12.8333%203.77834%2010.2217%201.16667%207%201.16667C3.77834%201.16667%201.16667%203.77834%201.16667%207C1.16667%2010.2217%203.77834%2012.8333%207%2012.8333Z'%20fill='%232F89BF'/%3e%3cpath%20id='Vector_2'%20d='M4.375%207.175L6.125%208.98333L9.74167%204.9'%20stroke='white'%20stroke-width='1.28333'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='calendar'%3e%3cpath%20id='Vector'%20d='M4.08333%201.16667V2.91667M9.91667%201.16667V2.91667M2.04167%205.25H11.9583M2.91667%202.33333H11.0833C11.3928%202.33333%2011.6895%202.45625%2011.9083%202.67504C12.1271%202.89383%2012.25%203.19058%2012.25%203.5V11.0833H1.75V3.5C1.75%203.19058%201.87292%202.89383%202.09171%202.67504C2.3105%202.45625%202.60725%202.33333%202.91667%202.33333Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='people'%3e%3cpath%20id='Vector'%20d='M9.33333%2012.25V11.0833C9.33333%2010.4645%209.0875%209.871%208.64992%209.43342C8.21233%208.99583%207.61884%208.75%207%208.75H3.5C2.88116%208.75%202.28767%208.99583%201.85008%209.43342C1.4125%209.871%201.16667%2010.4645%201.16667%2011.0833V12.25M12.8333%2012.25V11.0833C12.8329%2010.5663%2012.6609%2010.0641%2012.3441%209.65552C12.0274%209.24692%2011.5839%208.95508%2011.0833%208.82583M9.33333%201.82583C9.83524%201.95434%2010.2801%202.24624%2010.5978%202.65551C10.9155%203.06479%2011.0879%203.56815%2011.0879%204.08625C11.0879%204.60435%2010.9155%205.10771%2010.5978%205.51699C10.2801%205.92626%209.83524%206.21816%209.33333%206.34667M5.25%206.41667C5.86884%206.41667%206.46233%206.17083%206.89992%205.73325C7.3375%205.29566%207.58333%204.70217%207.58333%204.08333C7.58333%203.4645%207.3375%202.871%206.89992%202.43342C6.46233%201.99583%205.86884%201.75%205.25%201.75C4.63116%201.75%204.03767%201.99583%203.60008%202.43342C3.1625%202.871%202.91667%203.4645%202.91667%204.08333C2.91667%204.70217%203.1625%205.29566%203.60008%205.73325C4.03767%206.17083%204.63116%206.41667%205.25%206.41667Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='14'%20height='14'%20viewBox='0%200%2014%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='member'%3e%3cpath%20id='Vector'%20d='M2.33333%2012.25C2.33333%2011.0123%202.825%209.82534%203.70017%208.95017C4.57534%208.075%205.76232%207.58333%207%207.58333C8.23768%207.58333%209.42466%208.075%2010.2998%208.95017C11.175%209.82534%2011.6667%2011.0123%2011.6667%2012.25M7%207C7.61884%207%208.21233%206.75417%208.64992%206.31658C9.0875%205.879%209.33333%205.28551%209.33333%204.66667C9.33333%204.04783%209.0875%203.45434%208.64992%203.01675C8.21233%202.57917%207.61884%202.33333%207%202.33333C6.38116%202.33333%205.78767%202.57917%205.35008%203.01675C4.9125%203.45434%204.66667%204.04783%204.66667%204.66667C4.66667%205.28551%204.9125%205.879%205.35008%206.31658C5.78767%206.75417%206.38116%207%207%207Z'%20stroke='%230677B8'%20stroke-width='1.10833'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"_desktopSubtitle_624a9e"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  searchbox:
+
+  Name "Tìm chuyến đi theo tên":
+  [36m<input[39m
+    [33mclass[39m=[32m"_input_03f12d "[39m
+    [33mid[39m=[32m"_r_1_"[39m
+    [33mplaceholder[39m=[32m"Tìm theo tên chuyến đi"[39m
+    [33mtype[39m=[32m"search"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "Trạng thái chuyến đi":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Trạng thái chuyến đi"[39m
+    [33mclass[39m=[32m"_statuses_2dace0"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"_preview_2dace0 preview"[39m
+    [33mdata-preview[39m=[32m"trip-list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"preview"[39m
+    [33mdata-preview[39m=[32m"shell"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Sắp xếp chuyến đi":
+  [36m<select[39m
+    [33mclass[39m=[32m"_select_03f12d  "[39m
+    [33mid[39m=[32m"_r_2_"[39m
+  [36m/>[39m
+
+  Name "Trạng thái danh sách":
+  [36m<select[39m
+    [33mclass[39m=[32m"_select_03f12d  "[39m
+    [33mid[39m=[32m"_r_3_"[39m
+  [36m/>[39m
+
+  Name "Trạng thái preview":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Trạng thái preview"[39m
+    [33mclass[39m=[32m"_select_03f12d  "[39m
+    [33mid[39m=[32m"_r_0_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Sắp xếp: Mặc định":
+  [36m<option[39m
+    [33mvalue[39m=[32m"listed"[39m
+  [36m/>[39m
+
+  Name "Ngày khởi hành: Tăng dần":
+  [36m<option[39m
+    [33mvalue[39m=[32m"start-asc"[39m
+  [36m/>[39m
+
+  Name "Ngày khởi hành: Giảm dần":
+  [36m<option[39m
+    [33mvalue[39m=[32m"start-desc"[39m
+  [36m/>[39m
+
+  Name "success":
+  [36m<option[39m
+    [33mvalue[39m=[32m"success"[39m
+  [36m/>[39m
+
+  Name "loading":
+  [36m<option[39m
+    [33mvalue[39m=[32m"loading"[39m
+  [36m/>[39m
+
+  Name "empty":
+  [36m<option[39m
+    [33mvalue[39m=[32m"empty"[39m
+  [36m/>[39m
+
+  Name "error":
+  [36m<option[39m
+    [33mvalue[39m=[32m"error"[39m
+  [36m/>[39m
+
+  Name "forbidden":
+  [36m<option[39m
+    [33mvalue[39m=[32m"forbidden"[39m
+  [36m/>[39m
+
+  Name "conflict":
+  [36m<option[39m
+    [33mvalue[39m=[32m"conflict"[39m
+  [36m/>[39m
+
+  Name "unavailable":
+  [36m<option[39m
+    [33mvalue[39m=[32m"unavailable"[39m
+  [36m/>[39m
+
+  Name "success":
+  [36m<option[39m
+    [33mvalue[39m=[32m"success"[39m
+  [36m/>[39m
+
+  Name "guest":
+  [36m<option[39m
+    [33mvalue[39m=[32m"guest"[39m
+  [36m/>[39m
+
+  Name "admin":
+  [36m<option[39m
+    [33mvalue[39m=[32m"admin"[39m
+  [36m/>[39m
+
+  Name "forbidden-snapshot":
+  [36m<option[39m
+    [33mvalue[39m=[32m"forbidden-snapshot"[39m
+  [36m/>[39m
+
+  Name "loading":
+  [36m<option[39m
+    [33mvalue[39m=[32m"loading"[39m
+  [36m/>[39m
+
+  Name "empty":
+  [36m<option[39m
+    [33mvalue[39m=[32m"empty"[39m
+  [36m/>[39m
+
+  Name "error":
+  [36m<option[39m
+    [33mvalue[39m=[32m"error"[39m
+  [36m/>[39m
+
+  Name "forbidden":
+  [36m<option[39m
+    [33mvalue[39m=[32m"forbidden"[39m
+  [36m/>[39m
+
+  Name "not-found":
+  [36m<option[39m
+    [33mvalue[39m=[32m"not-found"[39m
+  [36m/>[39m
+
+  Name "conflict":
+  [36m<option[39m
+    [33mvalue[39m=[32m"conflict"[39m
+  [36m/>[39m
+
+  Name "unavailable":
+  [36m<option[39m
+    [33mvalue[39m=[32m"unavailable"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"_srOnly_2dace0"[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  article:
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"_card_ecc49d _featured_ecc49d"[39m
+    [33mdata-trip-id[39m=[32m"11111111-1111-4111-8111-111111111111"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"_card_ecc49d "[39m
+    [33mdata-trip-id[39m=[32m"33333333-3333-4333-8333-333333333333"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"_card_ecc49d "[39m
+    [33mdata-trip-id[39m=[32m"44444444-4444-4444-8444-444444444444"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"_card_ecc49d "[39m
+    [33mdata-trip-id[39m=[32m"55555555-5555-4555-8555-555555555555"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"_card_ecc49d "[39m
+    [33mdata-trip-id[39m=[32m"66666666-6666-4666-8666-666666666666"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<article[39m
+    [33mclass[39m=[32m"_card_ecc49d "[39m
+    [33mdata-trip-id[39m=[32m"77777777-7777-4777-8777-777777777777"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"_shell_8c56e4  _tripShell_8c56e4"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"_skip_8c56e4"[39m
+        [33mhref[39m=[32m"#main-content"[39m
+      [36m>[39m
+        [0mĐến nội dung chính[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"_desktopHeader_8c56e4"[39m
+        [33mdata-node-id[39m=[32m"135:483"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Wolfari · Trang chủ"[39m
+          [33mclass[39m=[32m"_logo_8c56e4"[39m
+          [33mdata-discover[39m=[32m"true"[39m
+          [33mhref[39m=[32m"/"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m"Wolfari"[39m
+            [33msrc[39m=[32m"/src/shared/assets/figma/44363.png"[39m
+          [36m/>[39m
+        [36m</a>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"Điều hướng chính"[39m
+          [33mclass[39m=[32m"_headerNav_8c56e4"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m""[39m
+            [33mdata-discover[39m=[32m"true"[39m
+            [33mhref[39m=[32m"/"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-house lucide-home"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mTrang chủ[0m
+          [36m</a>[39m
+          [36m<a[39m
+            [33maria-current[39m=[32m"page"[39m
+            [33mdata-discover[39m=[32m"true"[39m
+            [33mhref[39m=[32m"/trips"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar-days"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v3"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v3"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"3"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 9h18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 13h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 13h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 13h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 17h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 17h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 17h.01"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mChuyến đi của tôi[0m
+          [36m</a>[39m
+          [36m<button[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtitle[39m=[32m"Chọn chuyến đi để mở lịch trình"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar-days"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v3"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v3"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"3"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 9h18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 13h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 13h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 13h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 17h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 17h.01"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 17h.01"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mLên lịch[0m
+          [36m</button>[39m
+        [36m</nav>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"_account_8c56e4"[39m
+        [36m>[39m
+      ...
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/trip-list.test.tsx:102:21
+    100|     await userEvent.keyboard('{Escape}');
+    101|     for (const name of [/^Vai trò:/, /^Thời gian/, /^Bộ lọc$/])
+    102|       expect(screen.getByRole('button', { name })).toBeDisabled();
+       |                     ^
+    103|     expect(fetchSpy).not.toHaveBeenCalled();
+    104|     expect(screen.queryByText(/đã lưu thành công|đã tạo chuyến đi/i)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 57 passed (58)
+      Tests  1 failed | 688 passed (689)
+   Start at  02:55:30
+   Duration  105.42s (environment 41%, tests 34%, setup 12%, import 12%, transform 1%)
+
+Environment  jsdom was created 58 times · 82.23s total, 41% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+ ELIFECYCLE  Test failed. See above for more details.

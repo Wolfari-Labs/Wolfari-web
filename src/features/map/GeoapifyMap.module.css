@@ -7,7 +7,7 @@
   height: 380px;
   width: 100%;
   z-index: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .notice {
   padding: 24px;
@@ -53,5 +53,5 @@
   box-shadow: 0 0 0 4px rgb(0 111 138 / 0.25);
   color: white;
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }

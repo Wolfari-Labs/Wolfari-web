@@ -1,0 +1,127 @@
+{
+  "fontSize": {
+    "declarations": 521,
+    "desktopEffective": {
+      "count": 403,
+      "usingToken": 16,
+      "distinctValues": 45,
+      "histogram": {
+        "1.07em": 1,
+        "2.46cqw": 1,
+        "8px": 2,
+        "9px": 2,
+        "10px": 10,
+        "10.5px": 2,
+        "11px": 26,
+        "11.2px": 1,
+        "11.5px": 4,
+        "12px": 43,
+        "12.5px": 3,
+        "13px": 134,
+        "13.2px": 3,
+        "13.5px": 4,
+        "14px": 45,
+        "14.5px": 2,
+        "15px": 21,
+        "15.5px": 1,
+        "16px": 10,
+        "17px": 2,
+        "18px": 11,
+        "18px !important": 1,
+        "19px": 2,
+        "20px": 10,
+        "21px": 3,
+        "22px": 10,
+        "24px": 20,
+        "26px": 2,
+        "28px": 2,
+        "29px": 1,
+        "30px": 3,
+        "32px": 6,
+        "34px": 3,
+        "37px": 1,
+        "41px": 1,
+        "42px": 1,
+        "clamp(34px, 3.2vw, 46px)": 1,
+        "56px": 1,
+        "76px": 1,
+        "clamp(40px, 4.93vw, 71px)": 1,
+        "40px": 1,
+        "clamp(28px, 2.4vw, 36px)": 1,
+        "clamp(18px, 2vw, 24px) !important": 1,
+        "clamp(20px, 3vw, 30px)": 1,
+        "clamp(24px, 3vw, 32px)": 1
+      },
+      "under12px": 47
+    },
+    "mobileBlocks": {
+      "count": 118,
+      "distinctValues": 26,
+      "histogram": {
+        "9px": 2,
+        "10px": 2,
+        "11px": 7,
+        "12px": 17,
+        "13px": 26,
+        "14px": 4,
+        "15px": 6,
+        "16px": 6,
+        "17px": 6,
+        "18px": 3,
+        "19px": 2,
+        "20px": 7,
+        "22px": 4,
+        "23px": 2,
+        "24px": 8,
+        "25px": 2,
+        "28px": 2,
+        "29px": 1,
+        "30px": 3,
+        "31px": 1,
+        "32px": 2,
+        "34px": 1,
+        "clamp(34px, 7.8vw, 56px)": 1,
+        "36px": 1,
+        "38px": 1,
+        "clamp(26px, 6vw, 38px)": 1
+      },
+      "under12px": 11
+    },
+    "distinctValuesAll": 52
+  },
+  "radius": {
+    "declarations": 280,
+    "desktopEffective": {
+      "count": 254,
+      "outsideToken": {
+        "n": 69,
+        "detail": {
+          "18px": 15,
+          "17px": 11,
+          "14px": 14,
+          "9px": 4,
+          "3px": 3,
+          "15px": 3,
+          "5px": 7,
+          "1px": 1,
+          "2px": 6,
+          "4px": 1,
+          "11px": 3,
+          "13px": 1
+        }
+      }
+    },
+    "mobileBlocks": {
+      "count": 26,
+      "outsideToken": {
+        "n": 5,
+        "detail": {
+          "18px": 2,
+          "13px": 1,
+          "15px": 1,
+          "14px": 1
+        }
+      }
+    }
+  }
+}

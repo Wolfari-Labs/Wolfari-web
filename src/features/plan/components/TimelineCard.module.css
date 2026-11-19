@@ -1,6 +1,6 @@
 .card {
   border: 1px solid var(--color-line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: white;
   box-shadow: var(--shadow-selection);
   padding: 18px;
@@ -12,7 +12,7 @@
   align-items: center;
   gap: 8px;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .schedule > button {
   margin-left: auto;
@@ -29,17 +29,17 @@
 }
 .copy h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   line-height: 1.5;
 }
 .copy p {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   margin: 6px 0;
   color: var(--color-muted);
 }
 .body img {
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   flex-shrink: 0;
 }
 .typeIcon {
@@ -58,7 +58,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   color: var(--color-muted);
 }
 .footer,
@@ -78,7 +78,7 @@
   gap: 12px;
   min-height: 78px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   box-shadow: none;
 }
 .compact .schedule {
@@ -98,15 +98,15 @@
 .compact .body > img {
   width: 90px;
   height: 54px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .compact .copy h3 {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 20px;
 }
 .compact .copy p {
   margin: 2px 0;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   line-height: 18px;
 }
 .compact .footer {

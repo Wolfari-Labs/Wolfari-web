@@ -4,6 +4,7 @@ import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
 import { Button } from '../../shared/components/Button';
 import { Select } from '../../shared/components/Select';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Icon } from '../../shared/components/Icon';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
@@ -115,7 +116,7 @@ export function PackingPage() {
       }),
     );
     closeDrawer();
-    setFeedback(drawer.item ? 'Đã cập nhật vật dụng' : 'Đã thêm vật dụng vào Packing list');
+    setFeedback(drawer.item ? 'Đã cập nhật vật dụng' : 'Đã thêm vật dụng vào danh sách đồ đạc');
   };
   const remove = (item: PackingPreviewItem) => {
     if (!canWrite) return;
@@ -155,22 +156,29 @@ export function PackingPage() {
         data-flow="packing-read"
         data-mode={previewEnabled ? 'preview' : 'gateway-readonly'}
       >
-        <div className={styles.breadcrumb}>
-          <Link to={paths.trips}>Chuyến đi của tôi</Link>
-          <span aria-hidden="true">›</span>
-          {data && (
-            <>
-              <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
+        <PageBreadcrumb
+          className={styles.breadcrumb}
+          items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+          current="Đồ đạc"
+          mobile={
+            <div className={styles.breadcrumb}>
+              <Link to={paths.trips}>Chuyến đi của tôi</Link>
               <span aria-hidden="true">›</span>
-            </>
-          )}
-          <h1>Packing list</h1>
-        </div>
+              {data && (
+                <>
+                  <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
+                  <span aria-hidden="true">›</span>
+                </>
+              )}
+              <h1>Đồ đạc</h1>
+            </div>
+          }
+        />
         {data && <TripHero trip={data.trip} variant="landscape" />}
         <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
-          <section className={styles.summary} aria-label="Tiến độ packing list">
+          <section className={styles.summary} aria-label="Tiến độ đồ đạc">
             <div>
-              <h2>Packing list</h2>
+              <h2>Đồ đạc</h2>
               <p>
                 {progress.completed}/{progress.total} món đã hoàn thành
               </p>

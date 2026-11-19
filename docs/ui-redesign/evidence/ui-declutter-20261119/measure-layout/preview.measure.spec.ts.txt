@@ -1,0 +1,69 @@
+// TEMPORARY (Phase 0 step 4): Preview/fixture layout measurement + screenshots. See measure.ts.
+import { test } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+import {
+  desktopViewports,
+  evidenceRoot,
+  label,
+  measureLayout,
+  mobileViewports,
+  record,
+  routes,
+  tripId,
+} from './measure';
+
+const shotDir = resolve(evidenceRoot, label);
+mkdirSync(shotDir, { recursive: true });
+const viewports = [...desktopViewports, ...mobileViewports];
+const extra = [
+  { key: 'trips', path: '/trips' },
+  { key: 'trips-new', path: '/trips/new' },
+  { key: 'profile', path: '/profile' },
+  { key: 'home', path: '/' },
+];
+
+async function settle(page: import('@playwright/test').Page) {
+  await page.waitForLoadState('networkidle').catch(() => undefined);
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(700);
+}
+
+for (const route of routes) {
+  for (const viewport of viewports) {
+    test(`preview ${route.key} ${viewport.width}x${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(`/trips/${tripId}${route.suffix}`);
+      await settle(page);
+      const mobile = viewport.width <= 768;
+      if (!mobile) record(`layout-${label}.json`, `preview/${route.key}/${viewport.width}x${viewport.height}`, await measureLayout(page));
+      await page.screenshot({
+        path: resolve(shotDir, `preview-${route.key}-${viewport.width}x${viewport.height}.png`),
+        fullPage: mobile,
+      });
+    });
+  }
+}
+for (const item of extra) {
+  for (const viewport of mobileViewports) {
+    test(`preview ${item.key} ${viewport.width}x${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(item.path);
+      await settle(page);
+      await page.screenshot({
+        path: resolve(shotDir, `preview-${item.key}-${viewport.width}x${viewport.height}.png`),
+        fullPage: true,
+      });
+    });
+  }
+  for (const viewport of desktopViewports) {
+    test(`preview ${item.key} ${viewport.width}x${viewport.height}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(item.path);
+      await settle(page);
+      await page.screenshot({
+        path: resolve(shotDir, `preview-${item.key}-${viewport.width}x${viewport.height}.png`),
+      });
+    });
+  }
+}

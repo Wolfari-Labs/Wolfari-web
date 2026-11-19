@@ -16,7 +16,7 @@
   flex-shrink: 0;
   min-width: 128px;
   min-height: 54px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .dayUtilities {
   display: flex;
@@ -28,15 +28,11 @@
   outline: 3px solid var(--color-active);
   outline-offset: 3px;
 }
-.help {
-  font-size: 13px;
-  color: var(--color-muted);
-}
 .surface {
   background: white;
   padding: 16px;
   border: 1px solid var(--color-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   min-width: 0;
   min-height: 498px;
 }
@@ -58,13 +54,13 @@
 .timelineHeader h2,
 .poolHeader h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 32px;
 }
 .progress,
 .poolHeader span {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .timelineActions {
   display: flex;
@@ -77,7 +73,7 @@
 }
 .poolGroup h3 {
   margin: 0 0 10px;
-  font-size: 16px;
+  font-size: var(--font-size-body);
 }
 .placeList {
   list-style: none;
@@ -94,7 +90,7 @@
   min-width: 0;
   padding: 10px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .placeList li > div {
   min-width: 0;
@@ -107,7 +103,7 @@
 .placeList small {
   margin-top: 4px;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .list {
   display: grid;
@@ -127,28 +123,28 @@
   align-items: baseline;
   gap: 8px;
   margin: 0 0 10px;
-  font-size: 16px;
+  font-size: var(--font-size-body);
 }
 .dayGroup h3 small {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 400;
 }
 .list {
   min-height: 48px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .emptyDrop {
   padding: 10px 12px;
   border: 1px dashed var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   text-align: center;
 }
 .row {
   min-width: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .row[data-dragging] {
   opacity: 0.3;
@@ -162,7 +158,7 @@
   gap: 12px;
   padding: 20px;
   border: 1px solid var(--color-active);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: white;
   box-shadow: var(--shadow-overlay);
   transform: rotate(1deg);
@@ -197,5 +193,12 @@
   .placeList li {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .surface {
+    border-radius: var(--radius-panel);
   }
 }

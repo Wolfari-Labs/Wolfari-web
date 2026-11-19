@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
+import { paths } from '../../app/route-paths';
 import { useRuntimeServices } from '../../app/gateway-context';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import { TripHero } from '../trips/components/TripHero';
@@ -19,6 +20,8 @@ import { Icon } from '../../shared/components/Icon';
 import { Alert } from '../../shared/components/Alert';
 import { Badge, ConfirmDialog } from '../../shared/components/Ui';
 import { ContentState } from '../../shared/components/ContentState';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
+import { useDesktopLayout } from '../../shared/lib/use-desktop-layout';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import priceStyles from './RuntimePriceWatchPage.module.css';
 const labels = {
@@ -212,6 +215,7 @@ function WatchWorkspace({
   trip: import('../trips/model/trip-detail').TripDetailViewModel;
   repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'];
 }) {
+  const desktop = useDesktopLayout();
   const query = useInfiniteQuery({
     queryKey: ['price-watches', trip.currentMembership.userId, trip.id],
     initialPageParam: null as string | null,
@@ -408,22 +412,32 @@ function WatchWorkspace({
       )}
     </>
   );
+  const providerBadge = (
+    <Badge tone="warning">
+      {import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+        ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
+        : 'MOCK_FLIGHT · Mô phỏng'}
+    </Badge>
+  );
   return (
     <section className={styles.page}>
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
+      <PageBreadcrumb
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(trip.id) }]}
+        current="Theo dõi giá vé"
+        trailing={providerBadge}
+        mobile={null}
+      />
       <TripHero trip={trip} compact variant="landscape" />
-      <div className={priceStyles.heading}>
-        <div>
-          <p className={styles.metadata}>CHỦ ĐỘNG CHO CHUYẾN ĐI</p>
-          <h1>Theo dõi giá vé</h1>
+      {!desktop && (
+        <div className={priceStyles.heading}>
+          <div>
+            <p className={styles.metadata}>CHỦ ĐỘNG CHO CHUYẾN ĐI</p>
+            <h1>Theo dõi giá vé</h1>
+          </div>
+          {providerBadge}
         </div>
-        <Badge tone="warning">
-          {import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
-            ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
-            : 'MOCK_FLIGHT · Mô phỏng'}
-        </Badge>
-      </div>
-      <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
+      )}
       {!editing && recovery}
       <div className={priceStyles.workspace}>
         <section className={priceStyles.workspaceMain} aria-label="Danh sách theo dõi giá">

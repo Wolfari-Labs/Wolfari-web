@@ -376,20 +376,6 @@ export function InvitationManagement({
             </div>
           </section>
         )}
-        <div className={styles.note}>
-          <h3>Quy tắc lời mời</h3>
-          <p>
-            Chỉ Owner được tạo và thu hồi lời mời. Lời mời qua email cần đúng tài khoản nhận và
-            email đã xác minh.
-          </p>
-        </div>
-        <div className={styles.note} data-tone="member">
-          <h3>Khi chấp nhận</h3>
-          <p>
-            Hệ thống kiểm tra lại lời mời và quyền tham gia. Quyền sửa lịch trình cần được cấp
-            riêng; không tự có trách nhiệm giữ quỹ.
-          </p>
-        </div>
       </form>
       <section className={styles.panel} aria-label="Lời mời hiện có" data-cp08-secondary>
         <h2>Lời mời</h2>
@@ -481,13 +467,6 @@ export function InvitationManagement({
             Tải thêm lời mời
           </Button>
         )}
-        <div className={styles.note} data-tone="terminal">
-          <h3>Lời mời kết thúc</h3>
-          <p>
-            Lời mời đã chấp nhận, từ chối, hết hạn hoặc thu hồi không thể dùng lại để tham gia. Muốn
-            tham gia lại cần lời mời mới.
-          </p>
-        </div>
       </section>
     </div>
   );

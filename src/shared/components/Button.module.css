@@ -21,6 +21,12 @@
     box-shadow var(--motion-duration),
     opacity var(--motion-duration);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .button {
+    font-size: var(--font-size-label);
+  }
+}
 .primary {
   background: var(--action-gradient);
   color: var(--color-white);
