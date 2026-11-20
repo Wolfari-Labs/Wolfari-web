@@ -105,7 +105,7 @@ export function RefundPanel({
                       : 'Lý do thao tác',
                   required: true,
                   ...(kind === 'refund-reverse' && row?.reversal_reason
-                    ? { initial: row.reversal_reason }
+                    ? { initial: row.reversal_reason, readOnly: true }
                     : {}),
                 },
               ]
@@ -115,13 +115,18 @@ export function RefundPanel({
         key={kind}
         label={label}
         session={session}
-        disabled={blocked || query.isFetching || query.isError}
+        disabled={
+          blocked ||
+          query.isFetching ||
+          query.isError ||
+          (kind === 'refund-reverse' && !row?.reversal_reason)
+        }
         fields={fields}
         description={
           kind === 'refund-reverse'
             ? row?.reversal_reason
               ? 'Lý do đảo được điền sẵn từ yêu cầu đảo mà người nhận đã đồng ý; giữ nguyên để backend chấp nhận.'
-              : 'Nhập đúng lý do đã gửi khi yêu cầu đảo; không dùng lý do hoàn tiền ban đầu.'
+              : 'Chưa tải được lý do đã yêu cầu đảo. Tải lại danh sách trước khi tiếp tục.'
             : kind === 'refund-assign-verifier'
               ? 'Người nhận đồng thời là chủ chuyến và người giữ quỹ, nên một thành viên khác phải kiểm chứng việc đã hoàn tiền.'
               : 'Không tự chuyển tiền hoặc giải phóng khoản giữ. Chỉ xác nhận việc đã thực sự kiểm tra.'

@@ -16,6 +16,7 @@ import { ExpensePanel } from './components/ExpensePanel';
 import { FinancialNotesPanel } from './components/FinancialNotesPanel';
 import { FinanceAction } from './components/FinanceAction';
 import { RefundPanel } from './components/RefundPanel';
+import { BankPicker } from './components/BankPicker';
 import { ClosurePanel } from './components/ClosurePanel';
 import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
 import { HandoverPanel } from './components/HandoverPanel';
@@ -99,10 +100,16 @@ function FundCommandForm({
   members,
   session,
   banks,
+  banksLoading,
+  banksFailed,
+  retryBanks,
   onClose,
 }: {
   spec: FormSpec;
   banks: readonly Bank[] | null;
+  banksLoading: boolean;
+  banksFailed: boolean;
+  retryBanks: () => void;
   trip: TripDetailViewModel;
   fund: RuntimeFund | null;
   destinations: Destination[];
@@ -257,31 +264,14 @@ function FundCommandForm({
       )}
       {bankForm && (
         <>
-          {banks ? (
-            <Select
-              label="Ngân hàng"
-              value={bank}
-              onChange={(e) => setBank(e.target.value)}
-              required
-              hint="Danh mục ngân hàng nhận chuyển khoản VietQR (NAPAS)."
-            >
-              <option value="">Chọn ngân hàng</option>
-              {banks.map((b) => (
-                <option key={b.code} value={b.code}>
-                  {b.short_name} — {b.name}
-                </option>
-              ))}
-            </Select>
-          ) : (
-            <Input
-              label="Mã ngân hàng VietQR"
-              value={bank}
-              maxLength={30}
-              onChange={(e) => setBank(e.target.value)}
-              required
-              hint="Danh mục chưa tải được; nhập mã VietQR (ví dụ VCB, TCB, MB) hoặc BIN 6 số."
-            />
-          )}
+          <BankPicker
+            banks={banks}
+            loading={banksLoading}
+            failed={banksFailed}
+            retry={retryBanks}
+            value={bank}
+            onChange={setBank}
+          />
           <Input
             label="Số tài khoản"
             value={account}
@@ -674,6 +664,9 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             members={members}
             session={session}
             banks={banks.data ?? null}
+            banksLoading={banks.isFetching}
+            banksFailed={banks.isError}
+            retryBanks={() => void banks.refetch()}
             onClose={closeForm}
           />
         </>
@@ -955,6 +948,9 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 members={members}
                 session={session}
                 banks={banks.data ?? null}
+                banksLoading={banks.isFetching}
+                banksFailed={banks.isError}
+                retryBanks={() => void banks.refetch()}
                 onClose={closeForm}
               />
             </main>

@@ -145,6 +145,7 @@ test('HTTP mock: refund create/report/nonreceipt/cancel and receipt/consent/reve
   // BE-04: the reversal reason comes back from the API and is prefilled.
   await page.getByRole('button', { name: 'Đảo hoàn tiền', exact: true }).click();
   await expect(page.getByLabel('Lý do đảo (đã yêu cầu trước đó)')).toHaveValue('Lý do đảo TEST');
+  await expect(page.getByLabel('Lý do đảo (đã yêu cầu trước đó)')).toHaveAttribute('readonly', '');
   await page.getByRole('button', { name: 'Xác nhận · Đảo hoàn tiền', exact: true }).click();
   await expect(
     page.getByRole('button', { name: 'Xác nhận · Đảo hoàn tiền', exact: true }),

@@ -16,6 +16,7 @@ export interface FinanceField {
   label: string;
   initial?: string;
   required?: boolean;
+  readOnly?: boolean;
   maxLength?: number;
   type?: 'text' | 'datetime-local' | 'file';
   /** Leave the key out of the body when empty (e.g. keep an existing attachment on edit). */
@@ -142,7 +143,9 @@ export function FinanceAction({
               try {
                 const body = { ...draft.definition.body };
                 for (const field of fields) {
-                  const value = draft.values[field.key]?.trim() ?? '';
+                  const value = field.readOnly
+                    ? (draft.values[field.key] ?? '')
+                    : (draft.values[field.key]?.trim() ?? '');
                   if (field.omitWhenEmpty && !value) continue;
                   body[field.key] =
                     field.type === 'datetime-local' && value
@@ -205,6 +208,7 @@ export function FinanceAction({
                   type={field.type ?? 'text'}
                   required={field.required ?? false}
                   maxLength={field.maxLength}
+                  readOnly={field.readOnly ?? false}
                   value={draft.values[field.key] ?? ''}
                   disabled={blocked}
                   onChange={(e) =>

@@ -24,3 +24,12 @@ Backend/provider tests.
 No database migration, seed, real bank transfer or production mutation was run.
 Firebase configuration is not yet provisioned; provider verification is separate
 from unit/component and HTTP-mock evidence. No claim of production readiness.
+
+## Commit 2 — reversal reason and bank directory
+
+Reversal uses the exact server-provided reason in a read-only field; missing reason
+disables the action. Bank selection supports name/code/BIN search, loading/error,
+retry and manual entry without clearing the selected code or form draft.
+Verification: typecheck/scoped lint PASS; bank-picker/refund unit 4/4 PASS;
+built Gateway HTTP-mock refund journey (including read-only reason after reload)
+1/1 PASS. Live Backend NOT_RUN.
