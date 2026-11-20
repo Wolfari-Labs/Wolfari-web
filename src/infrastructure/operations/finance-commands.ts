@@ -1,6 +1,9 @@
 import * as d from '../http/decode';
 
 export const financeCommandKinds = [
+  'payment-create',
+  'payment-reconcile',
+  'payment-resolve',
   'closure-create',
   'closure-confirm',
   'closure-cancel',
@@ -47,6 +50,51 @@ const expenseFields = [
   'receipt_object_key',
 ];
 export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<string, unknown>) {
+  if (kind.startsWith('payment-')) {
+    const allowed =
+      kind === 'payment-create'
+        ? ['provider', ...versions]
+        : kind === 'payment-reconcile'
+          ? ['reason']
+          : [
+              'resolution',
+              'linked_attempt_id',
+              'reason',
+              'expected_finance_version',
+              'previous_holder_transfer_confirmed',
+            ];
+    if (Object.keys(body).some((key) => !allowed.includes(key)))
+      throw Error('Invalid payment field');
+    if (kind === 'payment-create') {
+      d.enumeration(body.provider, ['MOMO_SANDBOX']);
+      for (const key of versions) d.version(body[key]);
+    } else {
+      if (
+        typeof body.reason !== 'string' ||
+        !body.reason.trim() ||
+        body.reason.includes('\0') ||
+        [...body.reason].length > 1024
+      )
+        throw Error('Nhập lý do đối soát (tối đa 1024 ký tự).');
+      if (kind === 'payment-resolve') {
+        d.version(body.expected_finance_version);
+        const resolution = d.enumeration(body.resolution, ['LINKED', 'NO_FINANCIAL_EFFECT']);
+        if (resolution === 'LINKED') {
+          d.uuid(body.linked_attempt_id);
+          if (
+            body.previous_holder_transfer_confirmed !== undefined &&
+            body.previous_holder_transfer_confirmed !== true
+          )
+            throw Error('Invalid transfer confirmation');
+        } else if (
+          body.linked_attempt_id !== undefined ||
+          body.previous_holder_transfer_confirmed !== undefined
+        )
+          throw Error('Invalid resolution fields');
+      }
+    }
+    return;
+  }
   if (kind.startsWith('handover-')) {
     const allowed =
       kind === 'handover-create'
@@ -221,6 +269,21 @@ export function financeCommandRoute(
   resourceId?: string,
 ): { path: string; method: 'POST' | 'PATCH' | 'DELETE' } {
   const root = '/api/v1/funds/' + d.uuid(fundId);
+  if (kind === 'payment-create')
+    return {
+      path: '/api/v1/contributions/' + d.uuid(resourceId) + '/payment-attempts',
+      method: 'POST',
+    };
+  if (kind === 'payment-reconcile')
+    return {
+      path: '/api/v1/payment-attempts/' + d.uuid(resourceId) + '/reconcile',
+      method: 'POST',
+    };
+  if (kind === 'payment-resolve')
+    return {
+      path: '/api/v1/payment-exceptions/' + d.uuid(resourceId) + '/resolve',
+      method: 'POST',
+    };
   if (kind === 'handover-create') return { path: root + '/holder-handovers', method: 'POST' };
   if (kind.startsWith('handover-'))
     return {

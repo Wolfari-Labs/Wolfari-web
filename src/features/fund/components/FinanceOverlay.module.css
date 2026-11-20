@@ -525,6 +525,37 @@
   }
 }
 
+@media (max-height: 600px) {
+  .frame {
+    display: block;
+    overflow-y: auto;
+  }
+  .body {
+    display: block;
+  }
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .tripSummary,
+  .permissionNote {
+    display: none;
+  }
+  .sidebar .nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 120px;
+    margin-top: 0;
+    overflow-y: auto;
+  }
+  .contentGrid {
+    flex: none;
+    overflow: visible;
+  }
+  .footer {
+    min-height: 56px;
+  }
+}
+
 @media (max-width: 540px) {
   .body {
     flex-direction: column;

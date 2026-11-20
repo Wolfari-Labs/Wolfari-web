@@ -33,3 +33,19 @@ retry and manual entry without clearing the selected code or form draft.
 Verification: typecheck/scoped lint PASS; bank-picker/refund unit 4/4 PASS;
 built Gateway HTTP-mock refund journey (including read-only reason after reload)
 1/1 PASS. Live Backend NOT_RUN.
+
+## Commit 3 — MoMo Sandbox and reconciliation
+
+Added Sandbox destination configuration, payment creation/status/recovery, bounded
+foreground polling, Holder reconciliation and paginated exception resolution.
+Uses existing command journal, versions and idempotency keys; 202 attempt receipts
+and terminal 202 reconciliation operations match current main. Request completion
+is not payment completion; no optimistic balance update. Redirects allow only
+HTTPS test-payment.momo.vn without credentials/port. Previous-Holder transfer
+confirmation is explicit, never inferred. Recovery stores the latest attempt
+ID per actor/Trip/contribution in this browser session; no invented all-attempts history.
+
+Typecheck/scoped lint PASS; payment contract/recovery unit 4/4 PASS; built Gateway
+HTTP-mock create/reload/reconcile/resolve 1/1 PASS including narrow AXE scan.
+Narrow screenshot inspected; existing Finance overlay/primitives reused.
+Live MoMo provider, IPN and real Backend execution NOT_RUN.

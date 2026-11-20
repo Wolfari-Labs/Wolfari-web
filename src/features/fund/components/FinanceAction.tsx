@@ -18,7 +18,7 @@ export interface FinanceField {
   required?: boolean;
   readOnly?: boolean;
   maxLength?: number;
-  type?: 'text' | 'datetime-local' | 'file';
+  type?: 'text' | 'datetime-local' | 'file' | 'checkbox';
   /** Leave the key out of the body when empty (e.g. keep an existing attachment on edit). */
   omitWhenEmpty?: boolean;
   /** For type "file": uploads the chosen file and returns the value sent in the body. */
@@ -84,6 +84,7 @@ export function FinanceAction({
   disabled = false,
   description,
   children,
+  payment = false,
 }: {
   label: string;
   session: CommandSession;
@@ -92,6 +93,7 @@ export function FinanceAction({
   disabled?: boolean;
   description?: string;
   children?: ReactNode;
+  payment?: boolean;
 }) {
   const [draft, setDraft] = useState<{
     definition: CommandDefinition;
@@ -147,6 +149,10 @@ export function FinanceAction({
                     ? (draft.values[field.key] ?? '')
                     : (draft.values[field.key]?.trim() ?? '');
                   if (field.omitWhenEmpty && !value) continue;
+                  if (field.type === 'checkbox') {
+                    if (value === 'true') body[field.key] = true;
+                    continue;
+                  }
                   body[field.key] =
                     field.type === 'datetime-local' && value
                       ? new Date(value).toISOString()
@@ -161,7 +167,12 @@ export function FinanceAction({
               }
             }}
           >
-            <p>Ứng dụng chỉ ghi nhận, không tự chuyển tiền. {description}</p>
+            <p>
+              {payment
+                ? 'MoMo Sandbox — không chuyển tiền thật. Thành công của yêu cầu không đồng nghĩa khoản đóng đã được ghi nhận.'
+                : 'Ứng dụng chỉ ghi nhận, không tự chuyển tiền.'}{' '}
+              {description}
+            </p>
             <OperationStatus session={session} />
             {error && (
               <Alert tone="error" live>
@@ -169,7 +180,22 @@ export function FinanceAction({
               </Alert>
             )}
             {fields.map((field) =>
-              field.type === 'file' ? (
+              field.type === 'checkbox' ? (
+                <label key={field.key}>
+                  <input
+                    type="checkbox"
+                    checked={draft.values[field.key] === 'true'}
+                    disabled={blocked || submitted}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        values: { ...draft.values, [field.key]: e.target.checked ? 'true' : '' },
+                      })
+                    }
+                  />{' '}
+                  {field.label}
+                </label>
+              ) : field.type === 'file' ? (
                 <FileField
                   key={field.key}
                   field={field}

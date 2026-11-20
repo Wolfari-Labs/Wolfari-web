@@ -5,6 +5,7 @@ import styles from './FinanceOverlay.module.css';
 
 export type FinanceSection =
   | 'audit'
+  | 'payments'
   | 'notes'
   | 'general'
   | 'members'
@@ -19,6 +20,7 @@ const sections: readonly { id: FinanceSection; label: string; icon: IconName }[]
   { id: 'general', label: 'Thông tin chung', icon: 'settings' },
   { id: 'members', label: 'Thành viên & quyền', icon: 'members' },
   { id: 'contributions', label: 'Đợt đóng góp', icon: 'fund' },
+  { id: 'payments', label: 'MoMo & đối soát', icon: 'refresh' },
   { id: 'expenses', label: 'Khoản chi', icon: 'down' },
   { id: 'notes', label: 'Ngoài quỹ', icon: 'fund' },
   { id: 'refunds', label: 'Hoàn tiền', icon: 'refresh' },
@@ -32,6 +34,11 @@ const sectionMeta: Record<
   FinanceSection,
   { eyebrow: string; heading: string; description: string }
 > = {
+  payments: {
+    eyebrow: 'QUỸ NHÓM / MOMO SANDBOX',
+    heading: 'MoMo & đối soát',
+    description: 'Thanh toán thử nghiệm và theo dõi kết quả xác nhận từ hệ thống.',
+  },
   audit: {
     eyebrow: 'QUỸ NHÓM / LỊCH SỬ THAO TÁC',
     heading: 'Lịch sử thao tác',
