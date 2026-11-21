@@ -1,19 +1,23 @@
 import { expect, test } from '@playwright/test';
 
-test('guest header opens the matching Home sections from Home and login', async ({ page }) => {
+test('guest header follows the Web v2 top nav from Home and login', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 800 });
-  for (const [start, label, target] of [
-    ['/', 'Tính năng', 'home-features'],
-    ['/login', 'Về Wolfari', 'home-about'],
-  ] as const) {
+  for (const start of ['/', '/login'] as const) {
     await page.goto(start);
-    await page
-      .getByRole('navigation', { name: 'Điều hướng chính' })
-      .getByRole('link', { name: label, exact: true })
-      .click();
-    await expect(page).toHaveURL(`/#${target}`);
-    await expect(page.locator(`#${target}`)).toBeInViewport();
-    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+    // Figma 930:6661 (Active=Guest): Trang chủ, Chuyến đi của tôi, Lên lịch + two CTAs.
+    const nav = page.getByRole('navigation', { name: 'Điều hướng chính' });
+    await expect(nav.getByRole('link', { name: 'Trang chủ', exact: true })).toHaveAttribute(
+      'href',
+      '/',
+    );
+    await expect(
+      nav.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }),
+    ).toHaveAttribute('href', '/trips');
+    await expect(nav.getByRole('button', { name: 'Lên lịch', exact: true })).toBeDisabled();
+    await expect(page.getByRole('link', { name: 'Bắt đầu miễn phí', exact: true })).toHaveAttribute(
+      'href',
+      '/register',
+    );
   }
 });
 
@@ -40,31 +44,17 @@ for (const width of [1440, 402])
     await expect(
       page.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }).last(),
     ).toBeVisible();
-    for (const layout of [
-      'home-hero',
-      'home-features',
-      'home-about',
-      'home-inspiration',
-      'home-footer',
-    ]) {
+    // Web v2 Home (Figma 938:7830): four sections inside the shell gutter; no cloud layers.
+    for (const layout of ['home-hero', 'home-features', 'home-inspiration', 'home-footer']) {
       const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
       expect(bounds).not.toBeNull();
-      expect(Math.abs(bounds!.x)).toBeLessThanOrEqual(1);
-      expect(Math.abs(bounds!.width - width)).toBeLessThanOrEqual(1);
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width + 1);
     }
-    await expect(page.locator('[data-cloud-layer]')).toHaveCount(5);
-    const userTopCloud = await page
-      .locator('[data-layout="home-hero"] [data-cloud-layer="top"]')
-      .boundingBox();
-    expect(userTopCloud).not.toBeNull();
-    expect(Math.abs(userTopCloud!.height - (390 * width) / 1440)).toBeLessThanOrEqual(1);
     if (width === 1440) {
       for (const [layout, height] of [
-        ['home-hero', 548],
-        ['home-features', 442],
-        ['home-about', 432],
-        ['home-inspiration', 390],
-        ['home-footer', 256],
+        ['home-hero', 566],
+        ['home-features', 335],
       ] as const) {
         const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
         expect(bounds).not.toBeNull();
@@ -96,103 +86,34 @@ for (const width of [1440, 402])
   });
 
 for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 402, 320])
-  test(`Home cloud layers cover the viewport at ${width}px`, async ({ page }, info) => {
+  test(`Home sections stay inside the viewport at ${width}px`, async ({ page }, info) => {
     await page.setViewportSize({ width, height: width <= 402 ? 874 : 900 });
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
 
-    for (const layout of [
-      'home-hero',
-      'home-features',
-      'home-about',
-      'home-inspiration',
-      'home-footer',
-    ]) {
+    for (const layout of ['home-hero', 'home-features', 'home-inspiration', 'home-footer']) {
       const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
       expect(bounds).not.toBeNull();
-      expect(Math.abs(bounds!.x)).toBeLessThanOrEqual(1);
-      expect(Math.abs(bounds!.width - width)).toBeLessThanOrEqual(1);
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width + 1);
     }
-
-    const cloudLayers = page.locator('[data-cloud-layer]');
-    expect(await cloudLayers.count()).toBe(5);
-    for (let index = 0; index < (await cloudLayers.count()); index += 1) {
-      const layer = cloudLayers.nth(index);
-      // Fonts may finish before the lazily imported Home mounts/decodes its images.
-      // Retain the exact aspect/coverage assertions, but read loaded dimensions.
-      await expect
-        .poll(() =>
-          layer.locator('img').evaluate((element) => {
-            const image = element as HTMLImageElement;
-            return image.complete && image.naturalWidth > 0 && image.naturalHeight > 0;
-          }),
-        )
-        .toBe(true);
-      const bounds = await layer.boundingBox();
-      const image = await layer.locator('img').evaluate((element) => {
-        const target = element as HTMLImageElement;
-        return {
-          naturalWidth: target.naturalWidth,
-          naturalHeight: target.naturalHeight,
-          objectFit: getComputedStyle(target).objectFit,
-        };
-      });
-      expect(bounds).not.toBeNull();
-      expect(Math.abs(bounds!.x)).toBeLessThanOrEqual(1);
-      expect(Math.abs(bounds!.width - width)).toBeLessThanOrEqual(1);
-      expect(image.objectFit).toBe('cover');
-      expect(image.naturalWidth / image.naturalHeight).toBe(3);
-      const scale = Math.max(
-        bounds!.width / image.naturalWidth,
-        bounds!.height / image.naturalHeight,
-      );
-      const paintedWidth = image.naturalWidth * scale;
-      const paintedHeight = image.naturalHeight * scale;
-      expect(paintedWidth + 0.5).toBeGreaterThanOrEqual(bounds!.width);
-      expect(paintedHeight + 0.5).toBeGreaterThanOrEqual(bounds!.height);
-      expect(paintedWidth / paintedHeight).toBeCloseTo(3, 10);
-    }
-
-    for (const [selector, referenceHeight] of [
-      ['[data-layout="home-hero"] [data-cloud-layer="top"]', 390],
-      ['[data-layout="home-hero"] [data-cloud-layer="lower"]', 490],
-      ['[data-layout="home-features"] [data-cloud-layer="lower"]', 292],
-      ['[data-layout="home-about"] [data-cloud-layer="lower"]', 282],
-      ['[data-layout="home-inspiration"] [data-cloud-layer="lower"]', 240],
-    ] as const) {
-      const bounds = await page.locator(selector).boundingBox();
-      expect(bounds).not.toBeNull();
-      expect(Math.abs(bounds!.height - (referenceHeight * width) / 1440)).toBeLessThanOrEqual(1);
-    }
-
-    const footerBackground = await page
-      .locator('[data-layout="home-footer"]')
-      .evaluate((element) => {
-        const style = getComputedStyle(element);
-        return {
-          size: style.backgroundSize.split(',')[0]?.trim() ?? '',
-          positionY: Number.parseFloat(style.backgroundPositionY.split(',')[0] ?? ''),
-        };
-      });
-    expect(footerBackground.size).toBe('100% auto');
-    if (width > 1000)
-      expect(Math.abs(footerBackground.positionY + (200 * width) / 1440)).toBeLessThanOrEqual(1);
 
     if (width >= 1440) {
+      // Figma 933:7734: 1296px content column at x=72 of the 1440 frame, photo frame at x=728.
       const frame = await page.locator('[data-layout="home-hero-frame"]').boundingBox();
       const collage = await page.locator('[data-layout="home-collage"]').boundingBox();
       expect(frame).not.toBeNull();
       expect(collage).not.toBeNull();
-      expect(Math.abs(frame!.x - (width - 1440) / 2)).toBeLessThanOrEqual(1);
-      expect(Math.abs(frame!.width - 1440)).toBeLessThanOrEqual(1);
-      expect(Math.abs(collage!.x - ((width - 1440) / 2 + 718))).toBeLessThanOrEqual(4);
-      expect(Math.abs(collage!.width - 650)).toBeLessThanOrEqual(4);
+      expect(Math.abs(frame!.x - ((width - 1440) / 2 + 72))).toBeLessThanOrEqual(1);
+      expect(Math.abs(frame!.width - 1296)).toBeLessThanOrEqual(1);
+      expect(Math.abs(collage!.x - ((width - 1440) / 2 + 728))).toBeLessThanOrEqual(4);
+      expect(Math.abs(collage!.width - 640)).toBeLessThanOrEqual(4);
     }
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       width,
     );
-    await page.screenshot({ path: info.outputPath('home-clouds.png'), fullPage: true });
+    await page.screenshot({ path: info.outputPath('home-sections.png'), fullPage: true });
   });
 
 for (const size of [
@@ -233,11 +154,10 @@ for (const size of [
       await page.evaluate(() => document.fonts.ready);
       if (size.width === 1440 && route === '/') {
         const targets = [
-          ['home-hero', 76, 548],
-          ['home-features', 624, 442],
-          ['home-about', 1066, 432],
-          ['home-inspiration', 1498, 390],
-          ['home-footer', 1888, 256],
+          ['home-hero', 112, 566],
+          ['home-features', 820, 335],
+          ['home-inspiration', 1255, 459],
+          ['home-footer', 1814, 391],
         ] as const;
         for (const [layout, y, height] of targets) {
           const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
@@ -246,8 +166,7 @@ for (const size of [
           expect(Math.abs(bounds!.height - height)).toBeLessThanOrEqual(4);
         }
         for (const [layout, target] of [
-          ['home-collage', { x: 718, y: 111, width: 650, height: 470 }],
-          ['home-devices', { x: 497, y: 1095, width: 890, height: 398 }],
+          ['home-collage', { x: 728, y: 112, width: 640, height: 566 }],
         ] as const) {
           const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
           expect(bounds).not.toBeNull();
@@ -279,10 +198,10 @@ for (const size of [
         expect(bounds).not.toBeNull();
         const target =
           route === '/login'
-            ? { x: 886, y: 166, width: 440 }
+            ? { x: 834, y: 112, width: 520 }
             : route === '/register'
-              ? { x: 876, y: 142, width: 458 }
-              : { x: 130, y: 220, width: 560 };
+              ? { x: 834, y: 112, width: 520 }
+              : { x: 48, y: 221, width: 560 };
         for (const dimension of ['x', 'y', 'width'] as const)
           expect(Math.abs(bounds![dimension] - target[dimension])).toBeLessThanOrEqual(4);
         if (route === '/login') {
@@ -300,8 +219,11 @@ for (const size of [
       if (route === '/profile' && size.width <= 768) {
         await expect(page.getByLabel('Tên hiển thị')).toBeVisible();
       }
-      await page.locator('main > details[data-preview="shell"] summary').scrollIntoViewIfNeeded();
-      expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+      const shellPreview = page.locator('main > details[data-preview="shell"] summary');
+      await shellPreview.scrollIntoViewIfNeeded();
+      // Desktop floats the fixture-only shell preview in the gutter; mobile keeps it in flow.
+      if (size.width > 768) await expect(shellPreview).toBeInViewport();
+      else expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
       for (const img of await page.locator('img:visible').all()) {
         await img.scrollIntoViewIfNeeded();
         await expect

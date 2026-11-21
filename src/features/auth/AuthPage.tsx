@@ -5,9 +5,9 @@ import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
 import { Select } from '../../shared/components/Select';
-import { TravelCollage } from '../../shared/components/TravelCollage';
-import { sceneAssets as art } from '../../shared/assets/scene-assets';
-import { LogIn, UserPlus, Mail, LockKeyhole, UserRound } from 'lucide-react';
+import { BrandWordmark } from '../../shared/components/BrandWordmark';
+import { ArrowRight, Mail, LockKeyhole, UserRound } from 'lucide-react';
+import { AuthHero } from './AuthHero';
 import { validateAuth, type AuthFormValues, type AuthFormErrors } from './model/auth-validation';
 import styles from './AuthPage.module.css';
 import { useOptionalIdentityRepository } from './repositories/identity-context';
@@ -160,31 +160,11 @@ export function AuthPage({
       className={`${styles.page} ${register ? styles.register : ''}`}
       data-node-id={register ? '298:2007' : '298:1893'}
     >
-      <div className={styles.introduction}>
-        <p className={styles.eyebrow}>Cùng Wolfari lên đường</p>
-        <h1>
-          {register ? (
-            <>
-              Tạo tài khoản,
-              <br />
-              chuẩn bị đi thôi!
-            </>
-          ) : (
-            'Chào mừng trở lại!'
-          )}
-        </h1>
-        <p className={styles.description}>
-          {register
-            ? 'Đăng ký bằng email để bắt đầu tạo và tham gia các chuyến đi trong Wolfari.'
-            : 'Đăng nhập để tiếp tục quản lý những hành trình của bạn.'}
-        </p>
-        <div className={styles.collage}>
-          <TravelCollage variant="auth" />
-          <span className={styles.mascotSlot}>
-            <img src={art['4ff86.png']} alt="" />
-          </span>
-        </div>
-      </div>
+      <AuthHero
+        title={
+          register ? ['Cùng Wolfari', 'lên đường'] : ['Cho những chuyến đi', 'thật đẹp, cùng nhau']
+        }
+      />
       <div className={styles.formColumn}>
         <form
           className={styles.card}
@@ -192,20 +172,18 @@ export function AuthPage({
           onSubmit={(event) => void submit(event)}
           aria-label={register ? 'Biểu mẫu đăng ký' : 'Biểu mẫu đăng nhập'}
         >
+          <span className={styles.cardWordmark} aria-hidden="true">
+            <BrandWordmark />
+          </span>
           <header className={styles.cardHeader}>
-            <h2>
-              {registrationAccepted
-                ? 'Kiểm tra email của bạn'
-                : register
-                  ? 'Đăng ký tài khoản'
-                  : 'Đăng nhập'}
-            </h2>
+            <h1>{register ? 'Tạo tài khoản, chuẩn bị đi thôi!' : 'Chào mừng trở lại!'}</h1>
+            {registrationAccepted && <h2>Kiểm tra email của bạn</h2>}
             <p>
               {registrationAccepted
                 ? 'Mở liên kết trong email để xác minh, sau đó đăng nhập bằng mật khẩu của bạn.'
                 : register
-                  ? 'Tạo tài khoản Wolfari bằng email'
-                  : 'Tiếp tục hành trình cùng Wolfari'}
+                  ? 'Đăng ký bằng email để bắt đầu tạo và tham gia các chuyến đi trong Wolfari.'
+                  : 'Đăng nhập để tiếp tục lên kế hoạch cùng nhóm của bạn.'}
             </p>
           </header>
           {!registrationAccepted && (
@@ -264,6 +242,13 @@ export function AuthPage({
                   />
                 )}
               </div>
+              {!register && (
+                <div className={styles.forgotRow}>
+                  <Link className={styles.forgotLink} to="/forgot-password">
+                    Quên mật khẩu?
+                  </Link>
+                </div>
+              )}
               {register && (
                 <>
                   <label className={styles.consent}>
@@ -306,9 +291,9 @@ export function AuthPage({
                 className={styles.submit}
                 type="submit"
                 loading={preview === 'pending' || !!pending}
-                icon={register ? <UserPlus size={18} /> : <LogIn size={18} />}
               >
                 {register ? 'Tạo tài khoản' : 'Đăng nhập'}
+                <ArrowRight size={18} aria-hidden="true" className={styles.submitArrow} />
               </Button>
             </>
           )}
@@ -339,11 +324,6 @@ export function AuthPage({
           )}
           <div className={styles.alternative}>
             <span>{register ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}</span>
-            {!register && (
-              <Link className={styles.forgotLink} to="/forgot-password">
-                Quên mật khẩu?
-              </Link>
-            )}
             <Link
               to={`${register ? '/login' : '/register'}?returnTo=${encodeURIComponent(safeReturnTo(new URLSearchParams(location.search).get('returnTo')))}`}
             >

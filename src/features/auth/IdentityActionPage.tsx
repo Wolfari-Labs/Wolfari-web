@@ -7,6 +7,8 @@ import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
 import { validateAuth } from './model/auth-validation';
 import styles from './AuthPage.module.css';
+import { AuthHero } from './AuthHero';
+import { BrandWordmark } from '../../shared/components/BrandWordmark';
 import { useIdentityTask } from './use-identity-task';
 import { useOptionalSessionManager } from '../../app/session-context';
 
@@ -182,11 +184,7 @@ export function IdentityActionPage({ action }: { action: Action }) {
 
   return (
     <section className={styles.page} data-flow={`identity-${action}`}>
-      <div className={styles.introduction}>
-        <p className={styles.eyebrow}>Tài khoản Wolfari</p>
-        <h1>{title}</h1>
-        <p className={styles.description}>{description}</p>
-      </div>
+      <AuthHero title={['Cùng Wolfari', 'lên đường']} />
       <div className={styles.formColumn}>
         <form
           className={styles.card}
@@ -194,8 +192,11 @@ export function IdentityActionPage({ action }: { action: Action }) {
           onSubmit={(event) => void submit(event)}
           aria-label={title}
         >
+          <span className={styles.cardWordmark} aria-hidden="true">
+            <BrandWordmark />
+          </span>
           <header className={styles.cardHeader}>
-            <h2>{title}</h2>
+            <h1>{title}</h1>
             <p>{description}</p>
           </header>
           <div className={styles.fields}>
