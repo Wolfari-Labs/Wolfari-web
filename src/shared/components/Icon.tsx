@@ -35,6 +35,21 @@ import {
   Sun,
   ChevronRight,
   ChevronLeft,
+  Tag,
+  ReceiptText,
+  Lock,
+  Hourglass,
+  History,
+  ArrowLeftRight,
+  Target,
+  Mail,
+  Crown,
+  UserPlus,
+  Clock,
+  Sparkles,
+  ImagePlus,
+  FileText,
+  Car,
 } from 'lucide-react';
 const icons = {
   home: House,
@@ -74,6 +89,24 @@ const icons = {
   sun: Sun,
   chevronRight: ChevronRight,
   chevronLeft: ChevronLeft,
+  // Web v2 Finance / Price Watch (Figma W10, W11) glyphs.
+  tag: Tag,
+  receipt: ReceiptText,
+  lock: Lock,
+  hourglass: Hourglass,
+  history: History,
+  handover: ArrowLeftRight,
+  target: Target,
+  mail: Mail,
+  // Web v2 Members / Settings / Create Trip (Figma W12, W14, W03) glyphs.
+  crown: Crown,
+  userPlus: UserPlus,
+  clock: Clock,
+  sparkles: Sparkles,
+  imagePlus: ImagePlus,
+  fileText: FileText,
+  // Web v2 Plan (Figma W06) day stats.
+  car: Car,
 };
 export type IconName = keyof typeof icons;
 export function Icon({

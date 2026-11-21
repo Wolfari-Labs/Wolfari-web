@@ -131,6 +131,12 @@
 .share:disabled {
   cursor: not-allowed;
 }
+/* Figma fixes the card at 84px and centres the 68px text column (breadcrumb, title, meta). */
+@media (min-width: 769px) {
+  .hero {
+    height: 84px;
+  }
+}
 @media (max-width: 768px) {
   .hero {
     flex-wrap: wrap;

@@ -40,3 +40,27 @@
   max-width: 100%;
   margin: 0 auto 24px;
 }
+
+/* Web v2 empty/loading/error states: V2 typography only, so the state reads correctly inside
+   both page backgrounds and existing cards/drawers. */
+.state {
+  color: var(--v2-sub);
+  font-family: var(--v2-font);
+  font-weight: 600;
+}
+.state h1,
+.state h2 {
+  margin: 0 0 6px;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 30px;
+}
+.state p {
+  margin: 0;
+  line-height: 22px;
+}
+.state > button {
+  margin-top: 16px;
+}

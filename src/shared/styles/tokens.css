@@ -3,20 +3,20 @@
   --color-white: #fff;
   /* Web v2 remaps the legacy text roles onto Figma 930:6658 values. */
   --color-ink: #1f2a44;
-  --color-muted: #6a7891;
+  --color-muted: #5f6d86;
   --color-line: #e6ecfa;
   --color-selected: #eef3ff;
-  --color-blue: #3c7be8;
+  --color-blue: #2e6ad4;
   --color-green: #2dbe7a;
   --color-pale: #f7f9ff;
   --color-background: #eef3ff;
   --color-nav: #4a5770;
-  --color-active: #3c7be8;
+  --color-active: #2e6ad4;
   --color-field-line: #dfe6f7;
   --color-note: #f6f8ff;
-  --color-note-text: #6a7891;
-  --color-text-muted-on-light: #6a7891;
-  --color-action-primary: #3c7be8;
+  --color-note-text: #5f6d86;
+  --color-text-muted-on-light: #5f6d86;
+  --color-action-primary: #2e6ad4;
   --color-border-control: #6daac0;
   --color-status-warning: #8a6500;
   --color-status-warning-surface: #fff7df;
@@ -108,7 +108,7 @@
   --admin-sidebar-width: 248px;
   --admin-header-height: 72px;
   --drawer-width: 280px;
-  --focus-color: #3c7be8;
+  --focus-color: #2e6ad4;
   --focus-width: 3px;
   --focus-offset: 4px;
   --motion-duration: 150ms;
@@ -155,10 +155,12 @@
   --v2-font: 'Nunito', 'Be Vietnam Pro', sans-serif;
   --v2-font-brand: 'Baloo 2', 'Nunito', sans-serif;
   --v2-ink: #1f2a44;
-  --v2-sub: #6a7891;
+  /* Text roles darkened minimally from Figma (#6a7891, #8a97b0, #3c7be8, #9a6a12, #6b4ee6) to
+     reach WCAG AA 4.5:1 on their V2 surfaces; see docs/web-v2/V2_DESIGN_DELTAS.md (V2-D01). */
+  --v2-sub: #5f6d86;
   --v2-nav-text: #4a5770;
-  --v2-muted: #8a97b0;
-  --v2-blue: #3c7be8;
+  --v2-muted: #5d6a83;
+  --v2-blue: #2e6ad4;
   --v2-white: #fff;
   --v2-track: #eef3ff;
   --v2-field: #f4f6fd;
@@ -170,9 +172,9 @@
   --v2-butter: #fff0c2;
   --v2-peach: #ffe0d4;
   --v2-lilac: #e9e1ff;
-  --v2-violet-text: #6b4ee6;
+  --v2-violet-text: #6346de;
   --v2-success-text: #1f7a52;
-  --v2-warning-text: #9a6a12;
+  --v2-warning-text: #8c600f;
   --v2-danger-text: #c2412d;
   --v2-grad-start: #5b8cff;
   --v2-grad-end: #3cc9b0;

@@ -6,7 +6,7 @@ for (const width of [1440, 402])
     await page.goto(tripPath);
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
     if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chuyến đi/ }).click();
-    await page.getByRole('link', { name: 'Đồ đạc', exact: true }).click();
+    await page.getByRole('link', { name: 'Hành lý', exact: true }).click();
     await expect(page.locator('[data-flow="packing-read"]')).toBeVisible();
     await expect(page.locator('[data-flow="trip-overview"]')).toHaveCount(0);
     await expect(page).toHaveURL(tripPath + '/packing');
@@ -15,12 +15,12 @@ for (const width of [1440, 402])
     if (width <= 768) {
       await page
         .getByRole('dialog', { name: 'Điều hướng chuyến đi' })
-        .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true })
+        .getByRole('link', { name: 'Tổng quan', exact: true })
         .click();
     } else {
       await page
         .getByRole('navigation', { name: 'Điều hướng chuyến đi' })
-        .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true })
+        .getByRole('link', { name: 'Tổng quan', exact: true })
         .click();
     }
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
@@ -92,13 +92,17 @@ async function loadedAssets(page: Page) {
       };
     }),
   );
-  expect(images.length).toBeGreaterThan(0);
+  // Web v2 draws the wordmark with CSS, so a page may have no <img> at all.
   for (const image of images) {
     expect(image.loaded, image.source ?? 'asset').toBe(true);
     expect(image.width).toBeGreaterThan(0);
     expect(image.height).toBeGreaterThan(0);
     expect(image.source).not.toContain('figma.com');
-    if (image.source?.includes('.svg') || image.source?.startsWith('data:image/svg+xml')) {
+    // Icon-sized SVGs render at source size; V2 illustrations (map art) scale with their card.
+    if (
+      (image.source?.includes('.svg') || image.source?.startsWith('data:image/svg+xml')) &&
+      image.naturalWidth <= 64
+    ) {
       // HTMLImageElement rounds intrinsic fractional SVG dimensions to integer pixels.
       expect(Math.round(image.width)).toBe(image.naturalWidth);
       expect(Math.round(image.height)).toBe(image.naturalHeight);
@@ -165,7 +169,8 @@ for (const size of sizes)
       );
       const side = page.getByRole('complementary');
       await expect(header.getByRole('link', { name: /Hồ sơ cá nhân/ })).toBeVisible();
-      expect(Math.round((await side.boundingBox())!.width)).toBe(220);
+      // Web v2: 264px sidebar; 769–1100px uses the 84px collapsed rail (V2-D11).
+      expect(Math.round((await side.boundingBox())!.width)).toBe(size.width > 1100 ? 264 : 84);
       const toggle = page.getByRole('button', { name: 'Thu gọn thanh điều hướng' });
       const bounds = (await toggle.boundingBox())!;
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(size.height);
@@ -185,7 +190,7 @@ for (const size of sizes)
       await page.keyboard.press('Enter');
       // The collapse control changes state immediately, while its existing width
       // transition finishes on the next frames in the built preview.
-      await expect.poll(async () => Math.round((await side.boundingBox())!.width)).toBe(72);
+      await expect.poll(async () => Math.round((await side.boundingBox())!.width)).toBe(84);
       await expect(page.getByRole('button', { name: 'Mở rộng thanh điều hướng' })).toBeFocused();
       await page.screenshot({ path: info.outputPath('desktop-collapsed.png') });
       await page.keyboard.press('Enter');
@@ -208,8 +213,9 @@ for (const size of sizes)
         page.getByRole('heading', { name: 'Tổng quan chuyến đi', exact: true }),
       ).toBeVisible();
     } else {
-      const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
-      expect(Math.round(logo.width)).toBe(size.width <= 360 ? 112 : 130);
+      // Web v2 wordmark (Figma 865:6673) at 70% on the mobile header.
+      const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
+      expect(logo.width).toBeLessThanOrEqual(140);
       expect(Math.round(logo.x)).toBe(16);
       const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
@@ -378,7 +384,7 @@ test('drawer traps focus, closes with Escape/backdrop, and keeps background scro
   await expect(drawer).not.toBeVisible();
   await expect(menu).toBeFocused();
   await menu.click();
-  await drawer.getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }).click();
+  await drawer.getByRole('link', { name: 'Tổng quan', exact: true }).click();
   await expect(page).toHaveURL(tripPath);
   await expect(drawer).not.toBeVisible();
   await expect(page.locator('main')).toBeFocused();
@@ -475,8 +481,9 @@ for (const size of [
     await loadedAssets(page);
     if (size.width > 768) {
       await page.screenshot({ path: info.outputPath('admin.png') });
-      expect((await page.getByRole('complementary').boundingBox())!.width).toBe(248);
-      expect((await page.locator('header:visible').boundingBox())!.height).toBe(72);
+      // Web v2 W/Admin sidebar 937:8030 (264px) and top bar 937:8031 (76px).
+      expect((await page.getByRole('complementary').boundingBox())!.width).toBe(264);
+      expect((await page.locator('header:visible').boundingBox())!.height).toBe(76);
       await page
         .getByRole('navigation', { name: 'Điều hướng Admin' })
         .getByRole('button', { name: 'Tài khoản', exact: true })
@@ -537,9 +544,11 @@ test('CP04 Web Home guest menu and 404 recovery keep public routes distinct', as
 }, info) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto('/');
-  for (const section of ['hero', 'features', 'about', 'inspiration', 'footer'])
+  for (const section of ['hero', 'features', 'inspiration', 'footer'])
     await expect(page.locator(`[data-layout="home-${section}"]`)).toBeVisible();
-  await expect(page.getByText(/Trên trình duyệt máy tính hoặc điện thoại/)).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'Điểm đến được yêu thích' }),
+  ).toBeVisible();
   const header = page.locator('header:visible').first();
   const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
   const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
@@ -616,20 +625,25 @@ test('CP04 Web trip drawer follows the approved navigation composition', async (
   await expect(nav.getByRole('link', { name: 'Chuyến đi của tôi' })).not.toHaveAttribute(
     'aria-current',
   );
-  await expect(drawer.locator('img[class*="drawerMascot"]')).toBeVisible();
+  await expect(drawer.locator('[class*="drawerMascot"] img')).toBeVisible();
   await page.screenshot({ path: info.outputPath('cp04-trip-menu-402.png') });
   await drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' }).click();
   await expect(menu).toBeFocused();
 });
 
-test('guest assets and expanded sidebar decorations retain source geometry', async ({
-  page,
-}, info) => {
+test('guest assets and expanded sidebar decorations follow Web v2', async ({ page }, info) => {
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto('/');
   await choose(page, 'guest');
-  await expect(page.getByRole('link', { name: 'Đăng nhập', exact: true })).toBeVisible();
-  expect((await page.locator('header:visible img[alt="Wolfari"]').boundingBox())!.width).toBe(155);
+  const header = page.locator('header:visible');
+  await expect(header.getByRole('link', { name: 'Đăng nhập', exact: true })).toBeVisible();
+  await expect(header.getByRole('link', { name: 'Bắt đầu miễn phí', exact: true })).toHaveAttribute(
+    'href',
+    '/register',
+  );
+  // Figma 930:6661: the V2 wordmark sits 24px inside the floating 76px top nav.
+  const wordmark = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
+  expect(Math.round(wordmark.x)).toBe(48);
   await loadedAssets(page);
   await page.screenshot({ path: info.outputPath('guest.png') });
   await page.goto(tripPath + '/plan');
@@ -640,8 +654,8 @@ test('guest assets and expanded sidebar decorations retain source geometry', asy
   await expect(
     page.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }),
   ).not.toHaveAttribute('aria-current', 'page');
-  expect((await page.locator('img[class*="readingMascot"]').boundingBox())!.width).toBe(166);
-  const deco = (await page.locator('img[class*="routeDecoration"]').boundingBox())!;
-  expect(deco.width).toBe(145);
-  expect(deco.height).toBe(40);
+  // Figma 930:6887 mascot card: 96×80 mascot at the foot of the 264px sidebar.
+  const mascot = (await page.locator('[class*="mascotCard"] img').first().boundingBox())!;
+  expect(mascot.width).toBe(96);
+  expect(mascot.height).toBe(80);
 });

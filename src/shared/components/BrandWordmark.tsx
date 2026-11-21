@@ -1,21 +1,20 @@
-import mountains from '../assets/v2/logo-mountains.svg';
-import pin from '../assets/v2/logo-pin.svg';
-import swoosh from '../assets/v2/logo-swoosh.svg';
 import styles from './BrandWordmark.module.css';
 
-/** Figma 865:6673 `v2/Brand/Wordmark`, exposed as one image named "Wolfari". */
+/**
+ * Figma 865:6673 `v2/Brand/Wordmark`, exposed as one image named "Wolfari". Letters are CSS
+ * generated content and the mountain mark, pin and swoosh are backgrounds, so the wordmark scales
+ * as one unit and adds no stray visible text to the link that wraps it.
+ */
 export function BrandWordmark({ className }: { className?: string }) {
   return (
     <span className={`${styles.wordmark} ${className ?? ''}`} role="img" aria-label="Wolfari">
-      <span className={styles.row}>
-        <span className={styles.w}>W</span>
-        <span className={styles.mark}>
-          <img src={mountains} alt="" width="34" height="34" />
-        </span>
-        <span className={styles.rest}>lfari</span>
-        <img className={styles.pin} src={pin} alt="" width="16" height="20" />
+      <span className={styles.row} aria-hidden="true">
+        <span className={styles.w} />
+        <span className={styles.mark} />
+        <span className={styles.rest} />
+        <span className={styles.pin} />
       </span>
-      <img className={styles.swoosh} src={swoosh} alt="" width="150" height="12" />
+      <span className={styles.swoosh} aria-hidden="true" />
     </span>
   );
 }
