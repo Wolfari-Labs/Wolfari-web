@@ -19,6 +19,7 @@ import { TripHero } from '../trips/components/TripHero';
 import { Avatar } from '../../shared/components/Avatar';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Badge } from '../../shared/components/Ui';
+import { Icon } from '../../shared/components/Icon';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
 import { Drawer } from '../../shared/components/Drawer';
@@ -281,7 +282,12 @@ function Workspace({
                 </Button>
               </>
             )}
-            <Button variant="plain" onClick={refresh}>
+            <Button
+              variant="plain"
+              className={styles.refresh}
+              icon={<Icon name="refresh" size={16} />}
+              onClick={refresh}
+            >
               Tải lại quyền và thành viên
             </Button>
           </div>
@@ -294,11 +300,18 @@ function Workspace({
                 data-cp08-primary
                 aria-label="Chỉnh sửa quyền lịch trình"
               >
-                <h2>Quyền sửa lịch trình</h2>
-                <p>
-                  Chọn người được sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp quyền
-                  lại.
-                </p>
+                <div className={styles.cardHeader}>
+                  <span className={styles.iconBadge} aria-hidden="true">
+                    <Icon name="edit" size={22} />
+                  </span>
+                  <div>
+                    <h2>Quyền sửa lịch trình</h2>
+                    <p>
+                      Chọn người được sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp
+                      quyền lại.
+                    </p>
+                  </div>
+                </div>
                 {policyQuery.data?.status === 'error' ? (
                   <ContentState
                     state="error"
@@ -432,6 +445,8 @@ function Workspace({
                     )}
                     <Button
                       type="submit"
+                      className={styles.submit}
+                      icon={<Icon name="check" size={16} />}
                       disabled={policyBusy || policyStorageBlocked || !!trip.archivedAt}
                       loading={policyBusy}
                     >
@@ -455,7 +470,7 @@ function Workspace({
                 aria-label="Hướng dẫn quyền sửa lịch trình"
                 data-cp08-secondary
               >
-                <div className={styles.note} data-tone="fund">
+                <div className={styles.note} data-tone="owner">
                   <h3>Điểm cần nhớ</h3>
                   <p>
                     Owner luôn có quyền sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp
@@ -469,7 +484,7 @@ function Workspace({
                     quỹ.
                   </p>
                 </div>
-                <div className={styles.note}>
+                <div className={styles.note} data-tone="transfer">
                   <h3>Kiểm tra tại thời điểm lưu</h3>
                   <p>
                     Hệ thống kiểm tra quyền hiện hành trước mỗi thay đổi. Khi kết quả chưa rõ, thử
@@ -481,10 +496,23 @@ function Workspace({
           ) : (
             <div className={styles.workspace}>
               <section className={styles.panel} aria-label="Danh sách thành viên" data-cp08-primary>
-                <h2>Thành viên chuyến đi</h2>
-                <p className={styles.intro}>
-                  Vai trò trong chuyến đi và trách nhiệm quỹ được quản lý riêng.
-                </p>
+                <div className={styles.panelHeading}>
+                  <div>
+                    <h2>Thành viên chuyến đi</h2>
+                    <p className={styles.intro}>
+                      Vai trò trong chuyến đi và trách nhiệm quỹ được quản lý riêng.
+                    </p>
+                  </div>
+                  {owner && (
+                    <Button
+                      className={styles.inviteButton}
+                      icon={<Icon name="userPlus" size={17} />}
+                      onClick={() => setTab('invitations')}
+                    >
+                      Mời thành viên
+                    </Button>
+                  )}
+                </div>
                 <label className={styles.check}>
                   <input
                     type="checkbox"
@@ -558,6 +586,7 @@ function Workspace({
                         {owner && m.role !== 'OWNER' && !m.leftAt && (
                           <Button
                             variant="outline"
+                            className={styles.removeButton}
                             disabled={blocked}
                             aria-label={`Xóa thành viên · ${m.presentation.displayName ?? m.userId.slice(0, 8)}`}
                             onClick={(event) => {
@@ -601,7 +630,7 @@ function Workspace({
                     Rời chuyến đi
                   </Button>
                 )}
-                <div className={styles.note} data-tone="owner">
+                <div className={`${styles.note} ${styles.lifecycleNote}`} data-tone="danger">
                   <h3>Rời hoặc xóa thành viên</h3>
                   <p>
                     Hệ thống kiểm tra trách nhiệm quỹ và khoản đóng góp còn chờ. Thành viên chỉ thay
@@ -614,7 +643,12 @@ function Workspace({
                 aria-label="Quyền và trách nhiệm"
                 data-cp08-secondary
               >
-                <h2>Quyền &amp; trách nhiệm</h2>
+                <div className={styles.cardHeader}>
+                  <span className={styles.iconBadge} data-tone="violet" aria-hidden="true">
+                    <Icon name="crown" size={22} />
+                  </span>
+                  <h2>Quyền &amp; trách nhiệm</h2>
+                </div>
                 <div className={styles.note} data-tone="owner">
                   <h3>Owner</h3>
                   <p>
@@ -635,11 +669,14 @@ function Workspace({
                     Chính sách này không cấp quyền quản lý thành viên hay xác nhận giao dịch quỹ.
                   </p>
                 </div>
-                <div className={styles.note}>
+                <div className={styles.note} data-tone="transfer">
                   <h3>Chuyển Owner</h3>
                   <p>Thao tác chuyển chủ chuyến chưa được hỗ trợ trên giao diện hiện tại.</p>
                 </div>
-                <Link to={paths.fund(tripId)}>Xem trách nhiệm tại Quỹ nhóm →</Link>
+                <Link className={styles.fundLink} to={paths.fund(tripId)}>
+                  <Icon name="fund" size={16} />
+                  Xem trách nhiệm tại Quỹ nhóm →
+                </Link>
               </aside>
             </div>
           )}

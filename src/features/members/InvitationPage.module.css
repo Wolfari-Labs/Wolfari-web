@@ -1,0 +1,234 @@
+/* Web v2 W20 · Phản hồi lời mời (Figma 944:17102). */
+.response {
+  position: relative;
+  width: min(calc(100% - 32px), 640px);
+  margin: 94px auto 48px;
+  padding: 14px 14px 28px;
+  display: grid;
+  gap: 16px;
+  border-radius: 40px;
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  overflow-wrap: anywhere;
+}
+.response > :not(.responseHeader, .mascot) {
+  margin-inline: 18px;
+}
+.response p {
+  margin: 0;
+  color: var(--v2-nav-text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+}
+.mascot {
+  position: absolute;
+  top: -70px;
+  right: -40px;
+  width: 150px;
+  height: 124px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.responseHeader {
+  display: grid;
+  gap: 14px;
+}
+.responseHeader > :not(.banner) {
+  margin-inline: 18px;
+}
+.banner {
+  min-height: 120px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 30px;
+  background: linear-gradient(135deg, var(--v2-sky) 0%, var(--v2-lilac) 52%, var(--v2-mint) 100%);
+}
+.response[data-has-trip] .banner {
+  min-height: 150px;
+}
+.banner h1 {
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  color: var(--v2-violet-text);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+.response:not([data-has-trip]) .banner h1 {
+  align-self: flex-end;
+  padding: 0;
+  background: none;
+  color: var(--v2-ink);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 36px;
+}
+.responseHeader h2 {
+  margin: 0;
+  color: var(--v2-ink);
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 46px;
+}
+.inviter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.response .inviter {
+  font-weight: 700;
+}
+.inviterIcon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--v2-sky);
+  color: var(--v2-blue);
+}
+.responseMetadata {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.responseMetadata > div {
+  position: relative;
+  min-width: 0;
+  min-height: 56px;
+  padding: 10px 12px 10px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-sky);
+}
+.responseMetadata > div:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+.responseMetadata > div[data-tone='butter'] {
+  background: var(--v2-butter);
+}
+.responseMetadata > div[data-tone='lilac'] {
+  background: var(--v2-lilac);
+}
+.responseMetadata dt {
+  /* Nav ink keeps 4.5:1 on the sky/butter/lilac tiles. */
+  color: var(--v2-nav-text);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+}
+.responseMetadata dd {
+  margin: 0;
+  color: var(--v2-ink);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 20px;
+}
+.tileIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--v2-white);
+  color: var(--v2-ink);
+  transform: translateY(-50%);
+}
+.response .note {
+  padding: 10px 14px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-sky);
+  color: #2f63c4;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+}
+.response .note a {
+  color: #1f4fae;
+  font-weight: 800;
+  text-decoration: underline;
+}
+.responseActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.responseActions button {
+  min-height: 48px;
+  min-width: 0;
+  white-space: normal;
+  font-size: 15px;
+  font-weight: 800;
+}
+.recheck {
+  justify-self: stretch;
+}
+.switchAccount {
+  justify-self: center;
+}
+.authLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.response a {
+  color: var(--v2-blue);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.response summary {
+  min-height: 44px;
+  align-content: center;
+}
+@media (max-width: 768px) {
+  .response {
+    margin-top: 72px;
+  }
+  .mascot {
+    top: -64px;
+    right: -8px;
+    width: 110px;
+    height: 91px;
+  }
+}
+@media (max-width: 600px) {
+  .response {
+    width: calc(100% - 20px);
+    margin-block: 64px 24px;
+    padding: 10px 10px 20px;
+    border-radius: 30px;
+  }
+  .response > :not(.responseHeader, .mascot),
+  .responseHeader > :not(.banner) {
+    margin-inline: 8px;
+  }
+  .banner {
+    border-radius: 22px;
+  }
+  .response[data-has-trip] .banner {
+    min-height: 120px;
+  }
+  .responseHeader h2 {
+    font-size: 26px;
+    line-height: 34px;
+  }
+  .responseMetadata,
+  .responseActions {
+    grid-template-columns: 1fr;
+  }
+}
