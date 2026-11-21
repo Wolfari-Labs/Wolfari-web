@@ -71,6 +71,20 @@ export function restorePlanCommand(
       return restorePlanArrangementCommand(repository, tripId, payload);
     case 'preparation': {
       if (!keys(payload, ['kind', 'intent']) || !repository.mutatePreparation) return null;
+      // Never replay the historical PUT /assignment as a new PATCH with the old key.
+      if (
+        record(payload.intent) &&
+        payload.intent.operation === 'packing-assignment' &&
+        parsePreparationIntent({ ...payload.intent, operation: 'packing-assign' })
+      )
+        return async () => ({
+          status: 'error',
+          error: {
+            code: 'VERSION_CONFLICT',
+            correlationId: null,
+            retryable: false,
+          },
+        });
       const intent = parsePreparationIntent(payload.intent);
       if (!intent) return null;
       return (context) => repository.mutatePreparation!({ ...context, tripId, intent });

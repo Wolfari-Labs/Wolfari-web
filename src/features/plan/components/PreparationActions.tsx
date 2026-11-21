@@ -446,7 +446,7 @@ export function PreparationActions({
                   />
                   <Textarea
                     label="Ghi chú"
-                    maxLength={500}
+                    maxLength={5000}
                     value={draft.fields.note}
                     onChange={(e) => update('note', e.target.value)}
                   />
@@ -456,10 +456,7 @@ export function PreparationActions({
                     value={draft.fields.dueDate}
                     onChange={(e) => update('dueDate', e.target.value)}
                   />
-                  <p>
-                    Phân công là thao tác riêng sau khi lưu. Đổi tên hoặc số lượng sẽ đưa vật dụng
-                    về chưa hoàn thành.
-                  </p>
+                  <p>Sửa thông tin không tự thay đổi trạng thái hoàn thành.</p>
                 </>
               )}
             </fieldset>
@@ -599,9 +596,7 @@ export function PackingAssignment(props: PreparationProps & { item: PackingItemV
               <Button onClick={() => void roster.refetch()}>Tải lại</Button>
             </Alert>
           )}
-          <p>
-            Đổi người phụ trách sẽ đưa vật dụng về chưa hoàn thành. Lịch sử được giữ trên server.
-          </p>
+          <p>Đổi người phụ trách không tự thay đổi trạng thái hoàn thành.</p>
           {version !== props.plan.planVersion && (
             <Alert>Plan đã đổi. Đóng và mở lại để đối chiếu.</Alert>
           )}
@@ -617,7 +612,7 @@ export function PackingAssignment(props: PreparationProps & { item: PackingItemV
             onClick={() =>
               void commands
                 .submit({
-                  operation: 'packing-assignment',
+                  operation: 'packing-assign',
                   id: props.item.id,
                   assignedMemberId: selected || null,
                 })

@@ -1,5 +1,5 @@
 import type { PackingItemViewModel } from '../plan/model/plan';
-import { packingRequiresReset, validPackingQuantity } from '../plan/model/preparation';
+import { validPackingQuantity } from '../plan/model/preparation';
 
 export interface PackingGroup {
   readonly category: string;
@@ -185,13 +185,13 @@ export function validatePackingForm(values: PackingFormValues): PackingFormError
   const name = values.name.trim();
   const quantity = values.quantity.trim();
   if (!name) errors.name = 'Vui lòng nhập tên vật dụng.';
-  else if (name.length > 200) errors.name = 'Tên vật dụng tối đa 200 ký tự.';
+  else if ([...name].length > 200) errors.name = 'Tên vật dụng tối đa 200 ký tự.';
   if (!validPackingQuantity(quantity)) {
     errors.quantity = 'Số lượng phải là số dương, tối đa 2 chữ số thập phân.';
   }
-  if (values.category.trim().length > 80) errors.category = 'Danh mục tối đa 80 ký tự.';
-  if (values.unit.trim().length > 30) errors.unit = 'Đơn vị tối đa 30 ký tự.';
-  if (values.note.trim().length > 500) errors.note = 'Ghi chú tối đa 500 ký tự.';
+  if ([...values.category.trim()].length > 80) errors.category = 'Danh mục tối đa 80 ký tự.';
+  if ([...values.unit.trim()].length > 30) errors.unit = 'Đơn vị tối đa 30 ký tự.';
+  if ([...values.note.trim()].length > 5000) errors.note = 'Ghi chú tối đa 5000 ký tự.';
   if (values.reminder.trim().length > 80) errors.reminder = 'Nhắc nhở tối đa 80 ký tự.';
   if (values.dueDate) {
     const parsed = new Date(`${values.dueDate}T00:00:00`);
@@ -215,13 +215,6 @@ export function packingItemsFromForm(
   now = new Date(),
 ): PackingPreviewItem {
   const dueIso = values.dueDate ? packingDateToIso(values.dueDate, timezone) : null;
-  const reset =
-    !!existing &&
-    packingRequiresReset(existing, {
-      name: values.name.trim(),
-      quantity: values.quantity.trim(),
-      assignedMemberId: values.assignedMemberId || null,
-    });
   return {
     id: existing?.id ?? `preview-${now.getTime()}-${Math.random().toString(36).slice(2, 8)}`,
     tripId,
@@ -232,10 +225,10 @@ export function packingItemsFromForm(
     category: values.category.trim() || null,
     assignedMemberId: values.assignedMemberId || null,
     dueAt: dueIso,
-    status: reset ? 'TODO' : (existing?.status ?? 'TODO'),
+    status: existing?.status ?? 'TODO',
     source: existing?.source ?? 'MANUAL',
-    completedByUserId: reset ? null : (existing?.completedByUserId ?? null),
-    completedAt: reset ? null : (existing?.completedAt ?? null),
+    completedByUserId: existing?.completedByUserId ?? null,
+    completedAt: existing?.completedAt ?? null,
     planVersion,
     reminder: values.reminder.trim() || null,
   };

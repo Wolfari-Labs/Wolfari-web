@@ -157,7 +157,12 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
     capabilities: Object.fromEntries(
       preparationCapabilities.map((key) => [
         key,
-        data.capabilities != null && record(data.capabilities)[key] === true,
+        data.capabilities != null &&
+          record(data.capabilities)[
+            ['packing_items_write', 'packing_assignment', 'packing_completion'].includes(key)
+              ? 'packing_write'
+              : key
+          ] === true,
       ]),
     ),
     planVersion: number(data.plan_version),
@@ -288,26 +293,21 @@ export function createGatewayPlanRepository(
           : 'packing-items';
     const suffix = apply
       ? '/apply'
-      : intent.operation === 'packing-assignment'
-        ? '/assignment'
-        : intent.operation === 'packing-completion'
-          ? '/completion'
-          : '';
+      : intent.operation === 'packing-completion'
+        ? '/completion'
+        : '';
     const path = `${root}/${collection}${'id' in intent ? `/${encodeURIComponent(intent.id)}` : ''}${suffix}`;
     const method =
       apply || intent.operation.endsWith('-create')
         ? 'POST'
         : intent.operation.endsWith('-delete')
           ? 'DELETE'
-          : intent.operation === 'packing-assignment'
-            ? 'PUT'
-            : 'PATCH';
+          : 'PATCH';
     const body: Record<string, unknown> = { expected_plan_version: expectedPlanVersion };
     if ('fields' in intent)
       for (const [key, value] of Object.entries(intent.fields))
         body[key.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`)] = value;
-    if (intent.operation === 'packing-assignment')
-      body.assigned_member_id = intent.assignedMemberId;
+    if (intent.operation === 'packing-assign') body.assigned_member_id = intent.assignedMemberId;
     if (intent.operation === 'packing-completion') body.status = intent.status;
     if (apply) {
       body.selected_item_ids = intent.selectedItemIds;

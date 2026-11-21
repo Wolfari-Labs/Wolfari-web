@@ -43,6 +43,7 @@ export interface PackingWrite {
   category: string | null;
   note: string | null;
   dueAt: string | null;
+  assignedMemberId?: string | null;
 }
 export type PreparationIntent =
   | { operation: 'location-create'; fields: LocationWrite }
@@ -54,7 +55,7 @@ export type PreparationIntent =
   | { operation: 'packing-create'; fields: PackingWrite }
   | { operation: 'packing-update'; id: string; fields: PackingWrite }
   | { operation: 'packing-delete'; id: string }
-  | { operation: 'packing-assignment'; id: string; assignedMemberId: string | null }
+  | { operation: 'packing-assign'; id: string; assignedMemberId: string | null }
   | { operation: 'packing-completion'; id: string; status: 'TODO' | 'COMPLETED' }
   | {
       operation: 'recommendation-apply';
@@ -117,21 +118,28 @@ export function validDressWrite(v: unknown): v is DressWrite {
   );
 }
 export function validPackingWrite(v: unknown): v is PackingWrite {
+  const packingText = (value: unknown, max: number, required = false) =>
+    (!required && value === null) ||
+    (typeof value === 'string' &&
+      !value.includes('\0') &&
+      [...value.trim()].length <= max &&
+      (!required || !!value.trim()));
   return (
     obj(v) &&
-    keys(v, ['name', 'quantity', 'unit', 'category', 'note', 'dueAt']) &&
-    text(v.name, 200) &&
+    keys(v, ['name', 'quantity', 'unit', 'category', 'note', 'dueAt', 'assignedMemberId']) &&
+    packingText(v.name, 200, true) &&
     validPackingQuantity(v.quantity) &&
-    nullable(v.unit, 30) &&
-    nullable(v.category, 80) &&
-    nullable(v.note, 500) &&
+    packingText(v.unit, 30) &&
+    packingText(v.category, 80) &&
+    packingText(v.note, 5000) &&
+    (v.assignedMemberId === undefined || v.assignedMemberId === null || id(v.assignedMemberId)) &&
     (v.dueAt === null || (typeof v.dueAt === 'string' && Number.isFinite(Date.parse(v.dueAt))))
   );
 }
 export function validPackingQuantity(value: unknown) {
   return (
     typeof value === 'string' &&
-    /^\d+(?:\.\d{1,2})?$/.test(value) &&
+    /^\d{1,8}(?:\.\d{1,2})?$/.test(value) &&
     Number(value) > 0 &&
     Number(value) <= 99999999.99
   );
@@ -152,7 +160,7 @@ export function parsePreparationIntent(value: unknown): PreparationIntent | null
       Number(value.basePlanVersion) < 1
     )
       return null;
-  } else if (op === 'packing-assignment') {
+  } else if (op === 'packing-assign') {
     if (
       !keys(value, ['operation', 'id', 'assignedMemberId']) ||
       !id(value.id) ||
@@ -201,16 +209,8 @@ export function canTogglePacking(
 ) {
   return (
     activePlan(trip) &&
-    (plan.permissions.canEdit || item.assignedMemberId === trip.currentMembership.id)
-  );
-}
-export function packingRequiresReset(
-  before: PackingItemViewModel,
-  after: Pick<PackingItemViewModel, 'name' | 'quantity' | 'assignedMemberId'>,
-) {
-  return (
-    before.name !== after.name ||
-    Number(before.quantity) !== Number(after.quantity) ||
-    before.assignedMemberId !== after.assignedMemberId
+    (plan.permissions.canEdit ||
+      ((!item.assignedMemberId || item.assignedMemberId === trip.currentMembership.id) &&
+        (item.status !== 'COMPLETED' || item.completedByUserId === trip.currentMembership.userId)))
   );
 }

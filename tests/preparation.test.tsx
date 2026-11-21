@@ -13,7 +13,6 @@ import {
   validDressWrite,
   validPackingWrite,
   canTogglePacking,
-  packingRequiresReset,
 } from '../src/features/plan/model/preparation';
 import {
   PlanCommandsContext,
@@ -70,11 +69,90 @@ afterEach(() => {
   sessionStorage.clear();
 });
 describe('SRS 1.2 preparation contracts', () => {
+  it.each([true, false, undefined])(
+    'uses only the server packing_write capability (%s)',
+    async (enabled) => {
+      const { repo } = setup({
+        trip_id: tripId,
+        plan_version: 1,
+        export_revision: 1,
+        activities: [],
+        selected_locations: [],
+        dress_codes: [],
+        packing_items: [],
+        permissions: { can_read: true, can_edit: true, can_complete: false },
+        capabilities: {
+          packing_write: enabled,
+          packing_items_write: true,
+          packing_completion: true,
+        },
+      });
+      expect(await repo.getPlan({ ...request(), scenario: 'success' })).toMatchObject({
+        status: 'ready',
+        data: {
+          capabilities: {
+            packing_items_write: enabled === true,
+            packing_assignment: enabled === true,
+            packing_completion: enabled === true,
+          },
+        },
+      });
+    },
+  );
+  it('does not resend an old assignment journal using a different endpoint', async () => {
+    const { repo, transport } = setup({ plan_version: 2 });
+    const old = restorePlanCommand(repo, tripId, {
+      kind: 'preparation',
+      intent: { operation: 'packing-assignment', id, assignedMemberId: null },
+    });
+    expect(await old!(request())).toMatchObject({
+      status: 'error',
+      error: { code: 'VERSION_CONFLICT' },
+    });
+    expect(transport).not.toHaveBeenCalled();
+  });
+  it('creates with membership ID and permits server-sized Unicode notes', async () => {
+    const { repo, transport } = setup({ id, trip_id: tripId, plan_version: 2 }, 201);
+    const input = {
+      ...fields,
+      name: '🎒'.repeat(200),
+      note: 'a'.repeat(5000),
+      assignedMemberId: memberId,
+    };
+    expect(validPackingWrite(input)).toBe(true);
+    expect(validPackingWrite({ ...input, note: 'a'.repeat(5001) })).toBe(false);
+    expect(validPackingWrite({ ...input, name: 'bad\0name' })).toBe(false);
+    await repo.mutatePreparation!({
+      ...request(),
+      intent: { operation: 'packing-create', fields: input },
+    });
+    expect(JSON.parse(String(transport.mock.calls[0]![1]?.body)).assigned_member_id).toBe(memberId);
+  });
+  it('only lets the completing non-editor undo completion, subject to assignment', () => {
+    const trip = {
+      archivedAt: null,
+      lifecycle: 'ONGOING',
+      currentMembership: {
+        id: memberId,
+        userId: id,
+        leftAt: null,
+      },
+    } as TripDetailViewModel;
+    const plan = { permissions: { canEdit: false } } as PlanViewModel;
+    const item = {
+      assignedMemberId: null,
+      status: 'COMPLETED',
+      completedByUserId: id,
+    } as PackingItemViewModel;
+    expect(canTogglePacking(trip, plan, item)).toBe(true);
+    expect(canTogglePacking(trip, plan, { ...item, completedByUserId: tripId })).toBe(false);
+    expect(canTogglePacking(trip, plan, { ...item, assignedMemberId: tripId })).toBe(false);
+  });
   it.each([
     'packing-create',
     'packing-update',
     'packing-delete',
-    'packing-assignment',
+    'packing-assign',
     'packing-completion',
     'location-create',
     'location-update',
@@ -86,7 +164,7 @@ describe('SRS 1.2 preparation contracts', () => {
     const intent = parsePreparationIntent({
       operation,
       ...(operation.endsWith('create') ? {} : { id }),
-      ...(operation === 'packing-assignment'
+      ...(operation === 'packing-assign'
         ? { assignedMemberId: null }
         : operation === 'packing-completion'
           ? { status: 'TODO' }
@@ -124,9 +202,10 @@ describe('SRS 1.2 preparation contracts', () => {
     expect(new Headers(options?.headers).get('idempotency-key')).toBe(request().idempotencyKey);
     const body = JSON.parse(String(options?.body));
     expect(body.expected_plan_version).toBe(1);
-    if (operation === 'packing-assignment') {
-      expect(url).toContain('/assignment');
-      expect(options?.method).toBe('PUT');
+    if (operation === 'packing-assign') {
+      expect(url).toContain(`/packing-items/${id}`);
+      expect(url).not.toContain('/assignment');
+      expect(options?.method).toBe('PATCH');
       expect(body.assigned_member_id).toBeNull();
     }
     if (operation === 'packing-completion') {
@@ -263,7 +342,7 @@ describe('validation and SRS permissions', () => {
     [true, id, true],
     [false, memberId, true],
     [false, id, false],
-    [false, null, false],
+    [false, null, true],
   ])('editor=%s assignee=%s toggle=%s', (editor, assignedMemberId, expected) => {
     const trip = {
       archivedAt: null,
@@ -275,18 +354,7 @@ describe('validation and SRS permissions', () => {
     expect(canTogglePacking(trip, plan, item)).toBe(expected);
     expect(canTogglePacking({ ...trip, lifecycle: 'ARCHIVED' }, plan, item)).toBe(false);
   });
-  it('resets changed name/quantity/assignment but not note/category/unit/date', () => {
-    const before = {
-      ...fields,
-      assignedMemberId: memberId,
-      status: 'COMPLETED',
-    } as PackingItemViewModel;
-    expect(packingRequiresReset(before, { ...before, name: 'Áo khoác' })).toBe(true);
-    expect(packingRequiresReset(before, { ...before, quantity: '2' })).toBe(true);
-    expect(packingRequiresReset(before, { ...before, assignedMemberId: null })).toBe(true);
-    expect(packingRequiresReset(before, { ...before, quantity: '1.00' })).toBe(false);
-    expect(packingRequiresReset(before, before)).toBe(false);
-  });
+
   it('finds actual overlaps, not adjacent or unscheduled Activities', () => {
     const values = [
       { id: 'a', title: 'A', startsAt: '2026-11-05T01:00:00Z', endsAt: '2026-11-05T02:00:00Z' },
