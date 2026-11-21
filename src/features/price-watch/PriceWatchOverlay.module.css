@@ -68,3 +68,72 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2 (Figma W11.0 · 941:10218 form card language). */
+.backdrop {
+  background: rgb(31 42 68 / 28%);
+}
+.modal {
+  border: 0;
+  border-radius: var(--v2-radius-panel);
+  background: var(--v2-white);
+  box-shadow: 0 24px 60px -12px rgb(31 42 68 / 30%);
+  font-family: var(--v2-font);
+}
+.header {
+  justify-content: flex-start;
+  padding: 18px 22px 12px;
+  border-bottom: 0;
+  background: var(--v2-white);
+}
+.headerIcon {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  background: var(--v2-gradient-coral);
+  color: var(--v2-white);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(255 111 89 / 32%);
+}
+.header h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 27px;
+}
+.header button,
+.body button {
+  border-radius: var(--v2-radius-pill);
+}
+.body {
+  padding: 4px 22px 22px;
+  color: #56637b;
+}
+.body fieldset {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.body legend {
+  margin-bottom: 4px;
+  padding: 0;
+  color: var(--v2-ink);
+  font-weight: 800;
+}
+@media (max-width: 540px) {
+  .header,
+  .body {
+    padding-inline: 14px;
+  }
+  .modal {
+    border-radius: 24px;
+  }
+}

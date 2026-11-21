@@ -123,3 +123,47 @@
     border-radius: var(--radius-panel);
   }
 }
+
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2 (Figma W11 · 941:9891): watch cards and context on rounded V2 surfaces. */
+.page {
+  font-family: var(--v2-font);
+}
+.heading h1,
+.card h2,
+.contextHeader h2,
+.empty h2 {
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-weight: 800;
+}
+.card,
+.context {
+  border: 0;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.card {
+  background: linear-gradient(180deg, var(--v2-white) 0%, var(--v2-row) 100%);
+}
+.card p {
+  color: #56637b;
+}
+.empty {
+  border: 2px dashed var(--v2-dashed-line);
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-dashed-surface);
+}
+.empty svg {
+  color: #2f63c4;
+}
+@media (min-width: 769px) {
+  .card,
+  .context {
+    border-radius: var(--v2-radius-tile);
+  }
+  .empty {
+    border-radius: var(--v2-radius-tile);
+  }
+}

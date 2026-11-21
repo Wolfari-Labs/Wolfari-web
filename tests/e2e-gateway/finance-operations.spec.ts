@@ -118,7 +118,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   const generalFields = dialog.getByRole('definition');
   await expect(generalFields.filter({ hasText: 'VND' }).first()).toHaveCSS(
     'border-top-width',
-    '1px',
+    '0px',
   );
   await expect(dialog.getByRole('heading', { name: 'Thông tin chung', exact: true })).toHaveCSS(
     'font-size',

@@ -1,11 +1,11 @@
 import { useMemo, useState, type ReactNode, type RefObject } from 'react';
+import { Icon } from '../../../shared/components/Icon';
 import styles from './FinanceDesktop.module.css';
 
 export type FinanceTransactionType = 'CONTRIBUTION' | 'EXPENSE' | 'REFUND' | 'REVERSAL';
 export type FinanceTransactionFilter = 'ALL' | FinanceTransactionType;
 
 const financeAssets = {
-  goal: '/assets/finance-v12/e761e.svg',
   all: '/assets/finance-v12/6170f.svg',
   contribution: '/assets/finance-v12/514da.svg',
   expense: '/assets/finance-v12/f8a51.svg',
@@ -60,7 +60,7 @@ export function FinanceGoal({
   return (
     <section className={styles.goal} aria-label="Mục tiêu quỹ" data-finance-goal>
       <div className={styles.goalIcon} aria-hidden="true">
-        <img src={financeAssets.goal} alt="" />
+        <Icon name="target" size={22} />
       </div>
       <div className={styles.goalLabel}>
         <span>Mục tiêu quỹ</span>
