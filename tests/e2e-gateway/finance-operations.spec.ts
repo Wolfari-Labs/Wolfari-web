@@ -135,21 +135,33 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await expect(dialog.getByRole('region', { name: 'Đích nhận', exact: true })).toBeVisible();
   const addDestination = dialog.getByRole('button', { name: 'Thêm tài khoản nhận', exact: true });
   const receivingPanel = dialog.getByRole('region', { name: 'Đích nhận', exact: true });
-  const addBox = await addDestination.boundingBox();
-  const receivingTitleBox = await receivingPanel
-    .getByRole('heading', { name: 'Tài khoản nhận' })
-    .boundingBox();
-  expect(addBox).not.toBeNull();
-  expect(addBox!.x).toBeGreaterThan(receivingTitleBox!.x + receivingTitleBox!.width);
-  expect(
-    Math.abs(
-      addBox!.y + addBox!.height / 2 - (receivingTitleBox!.y + receivingTitleBox!.height / 2),
-    ),
-  ).toBeLessThan(2);
   await expect(receivingPanel.locator('..').locator('..').locator('..')).toHaveCSS(
     'border-top-width',
     '0px',
   );
+  // Switching sections removes the outer frame/padding. Separate boundingBox()
+  // calls can straddle that layout change and compare two different frames.
+  // Read both rectangles synchronously; retry the invariant, not stale coordinates.
+  await expect(async () => {
+    const geometry = await receivingPanel.evaluate((panel) => {
+      const heading = panel.querySelector('h2');
+      const button = heading?.parentElement?.querySelector('button');
+      if (!heading || !button) return null;
+      const title = heading.getBoundingClientRect();
+      const add = button.getBoundingClientRect();
+      return {
+        titleWidth: title.width,
+        buttonWidth: add.width,
+        horizontalGap: add.left - title.right,
+        centerOffset: Math.abs(add.top + add.height / 2 - (title.top + title.height / 2)),
+      };
+    });
+    expect(geometry).not.toBeNull();
+    expect(geometry!.titleWidth).toBeGreaterThan(0);
+    expect(geometry!.buttonWidth).toBeGreaterThan(0);
+    expect(geometry!.horizontalGap).toBeGreaterThan(0);
+    expect(geometry!.centerOffset).toBeLessThan(2);
+  }).toPass();
   await page.screenshot({ path: test.info().outputPath('fund-receiving-spacing.png') });
   await addDestination.click();
   await expect(dialog.getByLabel('Ngân hàng', { exact: true })).toBeVisible();

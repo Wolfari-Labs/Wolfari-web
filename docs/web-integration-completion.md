@@ -111,3 +111,33 @@ warning; Backend remains authoritative for whether the destination supports MoMo
 
 Exactly four commits are retained on the single feature branch. Implementation
 is directly in `Wolfari-web`; pre-existing QA edits are excluded. No push or PR.
+
+## PR #29 CI follow-up — 21/11/2026
+
+The preceding four-commit/no-PR statement describes the original handoff. The
+user subsequently authorized two Packing commits and PR #29 into develop.
+The pull_request run 44876522542 failed one of 193 Gateway dev-server tests;
+the push run 44876498425 at the same head SHA and both built-browser matrices
+passed. The failure was a 18px center offset in finance-operations.spec.ts.
+
+The retained CI trace shows the receiving panel moving as its outer frame/padding
+is removed, while the heading and button remain aligned within each screenshot.
+The test read the button and heading using separate boundingBox calls around
+258976–259008ms, crossing that layout update. It now checks the unframed container
+first, reads both rectangles synchronously in one browser evaluation, and retries
+the alignment assertion. The original <2px tolerance and right-of-title assertion
+remain; no product CSS, arbitrary sleeps or test-timeout increases are introduced.
+
+Verification for this test-only repair:
+
+- Scoped ESLint, Prettier, TypeScript typecheck and `git diff --check`: PASS.
+- Dev-server HTTP-mock Finance spec, three repetitions / one worker: 6/6 PASS.
+- Production build and built Gateway HTTP-mock Finance spec, three repetitions /
+  one worker: build PASS, 6/6 tests PASS.
+- Earlier dev-server stress run, five repetitions / two workers: 5/10 PASS,
+  5 failures at the existing 30s test timeout (initial login/navigation,
+  transaction row count or post-reload budget control). None reported the
+  receiving-header alignment assertion. The cause of these other timeouts is
+  not established; the serial passes do not make that stress run green.
+- Full suites and live Backend/provider checks: NOT_RUN for this repair.
+  Updated remote CI results must be checked separately after pushing.
