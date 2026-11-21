@@ -483,9 +483,34 @@ export function PreparationActions({
 
 export function PackingCompletion({
   item,
+  checkboxClassName,
   ...props
-}: PreparationProps & { item: PackingItemViewModel }) {
+}: PreparationProps & { item: PackingItemViewModel; checkboxClassName?: string }) {
   const commands = usePreparationCommands(props);
+  if (checkboxClassName)
+    return (
+      <button
+        type="button"
+        role="checkbox"
+        className={checkboxClassName}
+        aria-checked={item.status === 'COMPLETED'}
+        aria-label={`${item.status === 'COMPLETED' ? 'Bỏ hoàn thành' : 'Hoàn thành'} ${item.name}`}
+        disabled={
+          !props.plan.capabilities?.packing_completion ||
+          !canTogglePacking(props.trip, props.plan, item) ||
+          commands.locked
+        }
+        onClick={() =>
+          void commands.submit({
+            operation: 'packing-completion',
+            id: item.id,
+            status: item.status === 'COMPLETED' ? 'TODO' : 'COMPLETED',
+          })
+        }
+      >
+        {item.status === 'COMPLETED' ? '✓' : null}
+      </button>
+    );
   if (
     !props.plan.capabilities?.packing_completion ||
     !canTogglePacking(props.trip, props.plan, item)

@@ -203,6 +203,8 @@ export function validatePackingForm(values: PackingFormValues): PackingFormError
     )
       errors.dueDate = 'Ngày hạn không hợp lệ.';
   }
+  for (const key of ['name', 'unit', 'category', 'note'] as const)
+    if (values[key].includes('\0')) errors[key] = 'Nội dung chứa ký tự không hợp lệ.';
   return errors;
 }
 

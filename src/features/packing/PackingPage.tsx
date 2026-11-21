@@ -29,13 +29,10 @@ import {
 import { PackingItemDrawer } from './components/PackingItemDrawer';
 import styles from './PackingPage.module.css';
 import { ActionMenu, ConfirmDialog } from '../../shared/components/Ui';
-import {
-  PreparationActions,
-  PreparationStatus,
-  PackingAssignment,
-  PackingCompletion,
-} from '../plan/components/PreparationActions';
+import { PreparationStatus, PackingCompletion } from '../plan/components/PreparationActions';
 import { activePlan, canTogglePacking } from '../plan/model/preparation';
+import { GatewayPackingEditor } from './components/GatewayPackingEditor';
+import { usePackingMembers } from './use-packing-members';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 
 export function PackingPage() {
@@ -44,6 +41,23 @@ export function PackingPage() {
   const [scenario, setScenario] = useState<PlanScenario>('success');
   const snapshot = useTripPlanSnapshot(tripId, scenario);
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
+  useEffect(() => {
+    if (previewEnabled) return;
+    let refreshing = false;
+    const refresh = () => {
+      if (document.visibilityState !== 'visible' || refreshing) return;
+      refreshing = true;
+      void snapshot.retry().finally(() => {
+        refreshing = false;
+      });
+    };
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [previewEnabled, snapshot.retry]);
   const [items, setItems] = useState<PackingPreviewItem[]>([]);
   const [catalog, setCatalog] = useState<PackingSuggestionCatalog>(() =>
     createPackingSuggestionCatalog(),
@@ -62,6 +76,7 @@ export function PackingPage() {
 
   const viewerUserId = data?.trip.currentMembership.userId ?? '';
   const viewerMemberId = data?.trip.currentMembership.id ?? '';
+  const roster = usePackingMembers(data?.trip ?? null, !previewEnabled);
   const canEdit = data?.plan.permissions.canEdit === true;
   const canWrite = previewEnabled && canEdit && !!data && activePlan(data.trip);
   const gatewayItems = useMemo(
@@ -185,6 +200,12 @@ export function PackingPage() {
           {data && !previewEnabled && (
             <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
           )}
+          {!previewEnabled && roster.isError && (
+            <p role="status">
+              Không tải được thông tin thành viên.{' '}
+              <Button onClick={() => void roster.refetch()}>Tải lại thành viên</Button>
+            </p>
+          )}
           <section className={styles.summary} aria-label="Tiến độ packing list">
             <div>
               <h2>Packing list</h2>
@@ -208,8 +229,9 @@ export function PackingPage() {
                 <Icon name="plus" size={18} /> Thêm vật dụng
               </Button>
             ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
-              <PreparationActions
-                module="packing"
+              <GatewayPackingEditor
+                key={`${tripId}:${viewerUserId}:create`}
+                addButtonRef={addButtonRef}
                 trip={data.trip}
                 plan={data.plan}
                 refresh={snapshot.retry}
@@ -320,6 +342,14 @@ export function PackingPage() {
                                     <Icon name="check" size={18} />
                                   ) : null}
                                 </button>
+                              ) : data && data.plan.capabilities?.packing_completion ? (
+                                <PackingCompletion
+                                  item={item}
+                                  trip={data.trip}
+                                  plan={data.plan}
+                                  refresh={snapshot.retry}
+                                  checkboxClassName={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
+                                />
                               ) : (
                                 <span
                                   className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
@@ -336,6 +366,22 @@ export function PackingPage() {
                               <div className={styles.name}>
                                 <strong>{item.name}</strong>
                                 {item.note && <small>{item.note}</small>}
+                                {!previewEnabled && item.completedAt && (
+                                  <small>
+                                    Hoàn thành:{' '}
+                                    {new Intl.DateTimeFormat('vi-VN', {
+                                      dateStyle: 'short',
+                                      timeStyle: 'short',
+                                      timeZone: data?.trip.timezone ?? 'UTC',
+                                    }).format(new Date(item.completedAt))}{' '}
+                                    ·{' '}
+                                    {item.completedByUserId === viewerUserId
+                                      ? 'Tôi'
+                                      : (roster.data?.find(
+                                          (m) => m.userId === item.completedByUserId,
+                                        )?.presentation.displayName ?? 'Thành viên')}
+                                  </small>
+                                )}
                               </div>
                               <span className={styles.quantity}>
                                 {!previewEnabled && (
@@ -350,7 +396,13 @@ export function PackingPage() {
                                 {item.assignedMemberId === viewerMemberId
                                   ? 'Tôi'
                                   : item.assignedMemberId
-                                    ? 'Đã phân công'
+                                    ? previewEnabled
+                                      ? 'Đã phân công'
+                                      : (roster.data?.find((m) => m.id === item.assignedMemberId)
+                                          ?.presentation.displayName ??
+                                        (roster.isPending
+                                          ? 'Đang tải thành viên…'
+                                          : 'Không tải được thông tin thành viên'))
                                     : 'Chưa phân công'}
                               </span>
                               <span className={styles.due}>
@@ -382,27 +434,14 @@ export function PackingPage() {
                                 <div className={styles.gatewayActions}>
                                   {data && (
                                     <>
-                                      <PreparationActions
-                                        module="packing"
+                                      <GatewayPackingEditor
+                                        key={`${tripId}:${viewerUserId}:${item.id}`}
+                                        addButtonRef={addButtonRef}
                                         item={item}
                                         trip={data.trip}
                                         plan={data.plan}
                                         refresh={snapshot.retry}
                                       />
-                                      <PackingCompletion
-                                        item={item}
-                                        trip={data.trip}
-                                        plan={data.plan}
-                                        refresh={snapshot.retry}
-                                      />
-                                      {data.plan.capabilities?.packing_assignment && (
-                                        <PackingAssignment
-                                          item={item}
-                                          trip={data.trip}
-                                          plan={data.plan}
-                                          refresh={snapshot.retry}
-                                        />
-                                      )}
                                     </>
                                   )}
                                 </div>
