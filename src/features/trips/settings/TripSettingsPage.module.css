@@ -1,7 +1,10 @@
+/* Web v2 W14 Cài đặt (Figma 943:16283) and W14.1 Chỉnh sửa thông tin (943:16565): 540px
+   information card + 544px management card, #f7f9ff rows with white icon chips. */
 .page {
   composes: page from '../../../shared/styles/WorkspacePage.module.css';
   width: 100%;
-  color: var(--color-ink);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 
 .breadcrumb {
@@ -32,133 +35,225 @@
 
 .columns {
   display: grid;
-  /* The information card is the primary surface; management stays compact. */
-  grid-template-columns: minmax(0, 1.6fr) minmax(360px, 1fr);
-  gap: 18px;
-  margin-top: 16px;
+  grid-template-columns: minmax(0, 540fr) minmax(0, 544fr);
+  gap: 20px;
+  margin-top: 20px;
   align-items: start;
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   min-width: 0;
-  padding: 24px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-card);
-  background: var(--color-white);
+  padding: 20px 22px;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 
 .card h2,
 .card h3,
 .card p {
-  margin-top: 0;
+  margin: 0;
 }
 
 .card h2 {
-  margin-bottom: 4px;
-  font-size: var(--font-size-title);
-  line-height: 34px;
+  color: var(--v2-ink);
+  font: 800 19px/normal var(--v2-font);
 }
 
-.card h3 {
-  margin-bottom: 10px;
-  font-size: var(--font-size-title);
-  line-height: 34px;
-}
-
-.cardHeading,
-.memberHeading {
+.cardHeading {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
-.cardHeading > div,
-.memberHeading > div {
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   min-width: 0;
 }
 
-.cardHeading p,
-.memberHeading p {
-  margin-bottom: 0;
-  font-size: var(--font-size-small);
-  line-height: 20px;
-  color: var(--color-muted);
+.cardTitle > div {
+  min-width: 0;
 }
 
-.cardHeading > button,
-.memberHeading > a {
+.cardTitle p {
+  color: var(--v2-sub);
+  font: 600 12px/16px var(--v2-font);
+}
+
+.iconBadge {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  background: var(--v2-gradient-blue);
+  color: var(--v2-white);
+  box-shadow:
+    0 6px 12px -2px rgb(60 123 232 / 32%),
+    var(--v2-inset-badge);
+}
+
+.iconBadge[data-tone='violet'] {
+  background: var(--v2-gradient-violet);
+  box-shadow:
+    0 6px 12px -2px rgb(107 78 230 / 32%),
+    var(--v2-inset-badge);
+}
+
+.cardHeading > button {
   flex: 0 0 auto;
 }
 
-.informationGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 18px;
-  margin: 20px 0;
+.editButton {
+  padding: 8px 14px 8px 12px;
+  background: var(--v2-sky);
+  color: #2f63c4;
+  font-size: 12px;
+  line-height: 16px;
+  box-shadow: none;
 }
 
-.informationGrid > div {
-  min-width: 0;
-  min-height: 66px;
-  padding: 10px 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-8);
-  background: var(--color-pale);
-}
-
-.informationGrid .fullRow {
-  grid-column: 1 / -1;
-}
-
-.informationGrid dt,
-.fieldLabel {
-  display: block;
-  margin-bottom: 3px;
-  font-size: var(--font-size-label);
-  line-height: 22px;
-  color: var(--color-muted);
-}
-
-.informationGrid dd {
-  margin: 0;
-  font-size: var(--font-size-body);
-  line-height: 24px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-.informationGrid .descriptionBox {
-  min-height: 96px;
-}
-
-.descriptionBox dd {
-  font-weight: 400;
-}
-
+/* Cover (943:16283 "Ảnh bìa hiện tại"): 150px photo with a chip label. */
 .coverField {
-  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
 }
 
-.coverRow {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.coverField .fieldLabel {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  border-radius: var(--v2-radius-pill);
+  background: #eef1f7;
+  color: var(--v2-nav-text);
+  font: 700 12px/normal var(--v2-font);
 }
 
 .coverRow picture,
 .coverRow img {
   display: block;
-  width: 250px;
-  height: 78px;
-  max-width: 100%;
+  width: 100%;
+  height: 150px;
   object-fit: cover;
+}
+
+/* Information rows (943:16283): #f7f9ff, radius 18, white 30px icon chip. */
+.informationGrid {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.informationGrid > div {
+  position: relative;
+  min-width: 0;
+  padding: 9px 12px 9px 54px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+}
+
+.rowIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 12px;
+  background: var(--v2-white);
+  color: var(--v2-blue);
+}
+
+.informationGrid .rowIcon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+}
+
+.informationGrid dt {
+  color: var(--v2-sub);
+  font: 700 11px/15px var(--v2-font);
+}
+
+.informationGrid dd {
+  margin: 0;
+  color: var(--v2-ink);
+  font: 800 14px/19px var(--v2-font);
+  overflow-wrap: anywhere;
+}
+
+.descriptionBox dd {
+  font-weight: 700;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
+}
+
+/* W14.1 edit card: blue outline (943:16565). */
+.editCard {
+  box-shadow:
+    0 0 0 2px var(--v2-grad-start),
+    var(--v2-shadow-card);
+}
+
+.editCard > h2 {
+  font-size: 19px;
 }
 
 .form {
   display: grid;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
+}
+
+.fieldChip {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: -4px;
+  border-radius: 12px;
+  background: var(--v2-sky);
+  color: var(--v2-blue);
+}
+
+/* W14.1: the cover is a 120×72 thumbnail with its label beside it. */
+.form .coverField {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  overflow: visible;
+  border-radius: 0;
+}
+
+.form .coverField .fieldLabel {
+  position: static;
+  order: 2;
+  padding: 0;
+  background: transparent;
+  color: var(--v2-nav-text);
+  font-size: 13px;
+}
+
+.form .coverRow picture,
+.form .coverRow img {
+  width: 120px;
+  height: 72px;
+  border-radius: 16px;
 }
 
 .refreshButton {
@@ -166,24 +261,22 @@
 }
 
 .readOnlyPanel {
-  margin-top: 8px;
-  padding: 14px 16px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-10);
-  background: var(--color-pale);
+  padding: 12px 14px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
 }
 
 .readOnlyPanel h3 {
   margin: 0;
-  font-size: var(--font-size-subtitle);
-  line-height: 26px;
+  color: var(--v2-ink);
+  font: 800 14px/20px var(--v2-font);
 }
 
 .readOnlyGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 18px;
-  margin: 12px 0 0;
+  gap: 8px 18px;
+  margin: 8px 0 0;
 }
 
 .readOnlyGrid > div {
@@ -191,16 +284,14 @@
 }
 
 .readOnlyGrid dt {
-  font-size: var(--font-size-small);
-  line-height: 20px;
-  color: var(--color-muted);
+  color: var(--v2-sub);
+  font: 700 11px/15px var(--v2-font);
 }
 
 .readOnlyGrid dd {
   margin: 0;
-  font-size: var(--font-size-label);
-  line-height: 22px;
-  font-weight: 600;
+  color: var(--v2-ink);
+  font: 800 14px/19px var(--v2-font);
   overflow-wrap: anywhere;
 }
 @media (max-width: 768px) {
@@ -218,30 +309,96 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
-.separator {
-  height: 1px;
-  margin: 16px 0;
-  background: var(--color-line);
+/* Management card (943:16283 "Thành viên & nhắc nhở"). */
+.management {
+  gap: 10px;
+  padding: 18px 20px;
+}
+
+.management h2 {
+  font-size: 18px;
+}
+
+.memberHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 8px 12px;
+  border-radius: var(--v2-radius-row);
+  background: #f4f1ff;
 }
 
 .memberHeading p {
-  font-size: var(--font-size-label);
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--v2-ink);
+  font: 700 13px/18px var(--v2-font);
 }
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .memberHeading p {
-    font-size: 15px;
-  }
+
+.memberHeading p svg {
+  flex-shrink: 0;
+  color: var(--v2-violet-text);
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+  color: var(--v2-blue);
+  font: 800 13px/normal var(--v2-font);
+  text-decoration: none;
+}
+
+.textLink:hover {
+  text-decoration: underline;
+}
+
+.settingSection {
+  display: grid;
+  gap: 8px;
 }
 
 .settingSection h3 {
-  margin-top: 0;
+  margin: 0;
+  color: var(--v2-sub);
+  font: 700 12px/16px var(--v2-font);
+}
+
+.settingRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 6px 14px 6px 12px;
+  border-radius: 16px;
+  background: var(--v2-row);
+  color: var(--v2-ink);
+  font: 800 13px/18px var(--v2-font);
+  text-decoration: none;
+}
+
+.settingRow > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.settingRow > svg {
+  flex-shrink: 0;
+  color: var(--v2-muted);
+}
+
+@media (hover: hover) {
+  .settingRow:hover {
+    background: var(--v2-track);
+  }
 }
 
 .mobileTitle {
@@ -304,45 +461,35 @@
 
   .card {
     padding: 18px 16px;
-    border-radius: 16px;
+    border-radius: 22px;
   }
 
-  .card h2,
-  .card h3 {
-    font-size: 20px;
-    line-height: 28px;
+  .card h2 {
+    font-size: 18px;
+    line-height: 26px;
   }
 
-  .cardHeading,
-  .memberHeading {
+  .cardHeading {
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .cardHeading > button,
-  .memberHeading > a {
+  .cardHeading > button {
     width: 100%;
   }
 
-  .informationGrid,
   .readOnlyGrid {
     grid-template-columns: 1fr;
   }
 
-  .coverRow {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .coverRow picture,
   .coverRow img {
-    width: 100%;
     height: 166px;
-    border-radius: 14px;
   }
 
-  .coverRow > div,
-  .coverRow button {
-    width: 100%;
+  .textLink,
+  .settingRow {
+    min-height: 44px;
   }
 
   .formActions {
@@ -351,16 +498,6 @@
 
   .formActions button {
     width: 100%;
-  }
-
-  .fundNote {
-    grid-template-columns: 1fr;
-  }
-
-  .fundNote a,
-  .fundNote span {
-    grid-column: 1;
-    grid-row: auto;
   }
 }
 
@@ -371,16 +508,5 @@
 
   .card {
     padding-inline: 12px;
-  }
-}
-
-/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
-@media (min-width: 769px) {
-  .columns {
-    gap: var(--grid-gap);
-  }
-  .card {
-    padding: var(--card-padding-narrow);
-    border-radius: var(--radius-panel);
   }
 }

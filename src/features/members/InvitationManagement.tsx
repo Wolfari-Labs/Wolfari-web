@@ -10,6 +10,7 @@ import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
+import { Icon } from '../../shared/components/Icon';
 import { invitationErrorMessage, refreshInvitationProjections } from './invitation-feedback';
 import {
   invitationManagementAttempt,
@@ -279,11 +280,18 @@ export function InvitationManagement({
         onSubmit={create}
         data-cp08-primary
       >
-        <h2>Mời thành viên</h2>
-        <p>
-          Người nhận trở thành Member sau khi chấp nhận. Quyền sửa lịch trình và trách nhiệm quỹ
-          được quản lý riêng.
-        </p>
+        <div className={styles.cardHeader}>
+          <span className={styles.iconBadge} aria-hidden="true">
+            <Icon name="userPlus" size={22} />
+          </span>
+          <div>
+            <h2>Mời thành viên</h2>
+            <p>
+              Người nhận trở thành Member sau khi chấp nhận. Quyền sửa lịch trình và trách nhiệm quỹ
+              được quản lý riêng.
+            </p>
+          </div>
+        </div>
         {!allowed && (
           <Alert>
             Chỉ Owner có quyền cập nhật chuyến đi đang hoạt động mới được quản lý lời mời.
@@ -307,6 +315,11 @@ export function InvitationManagement({
             label="Email người nhận"
             type="email"
             autoComplete="off"
+            leadingIcon={
+              <span className={styles.fieldChip}>
+                <Icon name="mail" size={18} />
+              </span>
+            }
             value={email}
             error={validation}
             disabled={locked}
@@ -378,7 +391,12 @@ export function InvitationManagement({
         )}
       </form>
       <section className={styles.panel} aria-label="Lời mời hiện có" data-cp08-secondary>
-        <h2>Lời mời</h2>
+        <div className={styles.cardHeader}>
+          <span className={styles.iconBadge} data-tone="amber" aria-hidden="true">
+            <Icon name="clock" size={22} />
+          </span>
+          <h2>Lời mời</h2>
+        </div>
         <Select
           label="Trạng thái lời mời"
           value={filter}
@@ -418,11 +436,20 @@ export function InvitationManagement({
         <ul className={styles.list}>
           {items.map((item) => (
             <li className={styles.item} key={item.id}>
+              <span className={styles.itemAvatar} aria-hidden="true">
+                {item.invitationType === 'EMAIL' && item.email ? (
+                  item.email.charAt(0).toLocaleUpperCase('vi')
+                ) : (
+                  <Icon name="share" size={16} />
+                )}
+              </span>
               <strong>
                 {item.invitationType === 'EMAIL' ? item.email : 'Lời mời bằng liên kết'}
               </strong>
-              <span>{labels[item.status]}</span>
-              <span>
+              <span className={styles.itemStatus} data-status={item.status}>
+                {labels[item.status]}
+              </span>
+              <span className={styles.itemMeta}>
                 Hết hạn{' '}
                 {new Date(item.expiresAt).toLocaleString('vi-VN', { timeZone: trip.timezone })}
               </span>
@@ -430,6 +457,7 @@ export function InvitationManagement({
                 {item.invitationType === 'EMAIL' && (
                   <Button
                     variant="outline"
+                    size="compact"
                     disabled={locked || item.status !== 'PENDING' || !invitation.resendInvitation}
                     onClick={() => version('resend', item)}
                   >
@@ -438,6 +466,8 @@ export function InvitationManagement({
                 )}
                 <Button
                   variant="outline"
+                  size="compact"
+                  className={styles.revoke}
                   disabled={locked || item.status !== 'PENDING' || !invitation.revokeInvitation}
                   onClick={() => setConfirm(item)}
                 >
@@ -445,7 +475,7 @@ export function InvitationManagement({
                 </Button>
               </div>
               {confirm?.id === item.id && (
-                <div role="group" aria-label="Xác nhận thu hồi">
+                <div className={styles.confirm} role="group" aria-label="Xác nhận thu hồi">
                   <p>Thu hồi lời mời này? Liên kết sẽ không thể sử dụng.</p>
                   <Button disabled={locked} onClick={() => version('revoke', item)}>
                     Xác nhận thu hồi

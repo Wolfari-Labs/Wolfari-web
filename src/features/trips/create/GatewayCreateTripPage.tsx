@@ -8,6 +8,7 @@ import { VietnameseDateInput } from '../../../shared/components/VietnameseDateIn
 import { Select } from '../../../shared/components/Select';
 import { Textarea } from '../../../shared/components/Textarea';
 import { Alert } from '../../../shared/components/Alert';
+import { Icon } from '../../../shared/components/Icon';
 import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
 import { validCalendarDate, nextCalendarDate } from '../../../shared/lib/calendar';
 import { localTimeToIso } from '../../plan/model/plan-draft';
@@ -264,11 +265,14 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
       <img className={styles.banner} src={banner} alt="" />
       <header className={styles.pageHeader}>
         <div>
-          <p className={styles.eyebrow}>Chuyến đi mới</p>
+          <nav className={styles.trail} aria-label="Đường dẫn">
+            <Link to="/trips">Chuyến đi của tôi</Link>
+            <Icon name="chevronRight" size={12} />
+            <span aria-current="page">Tạo chuyến đi</span>
+          </nav>
           <h1>Tạo chuyến đi mới</h1>
           <p>Lên kế hoạch cho hành trình tiếp theo và khám phá thế giới cùng Wolfari!</p>
         </div>
-        <Link to="/trips">Chuyến đi của tôi</Link>
       </header>
       <div className={styles.layout}>
         <form
@@ -277,9 +281,14 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
           aria-labelledby="gateway-create-trip-title"
           noValidate
         >
-          <div className={styles.gatewayIntro}>
-            <h2 id="gateway-create-trip-title">Thông tin cơ bản</h2>
-            <p>Bắt đầu với những thông tin chính về chuyến đi của bạn</p>
+          <div className={`${styles.formHeader} ${styles.gatewayIntro}`}>
+            <span className={styles.iconBadge} aria-hidden="true">
+              <Icon name="compass" size={22} />
+            </span>
+            <div>
+              <h2 id="gateway-create-trip-title">Thông tin cơ bản</h2>
+              <p>Bắt đầu với những thông tin chính về chuyến đi của bạn</p>
+            </div>
           </div>
           {message && <Alert live>{message}</Alert>}
           {memoryOnly && (
@@ -372,6 +381,7 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
             <Button
               ref={createActionRef}
               type="submit"
+              icon={<Icon name="sparkles" size={18} />}
               loading={busy}
               disabled={initial.current.invalid || !!created}
             >
