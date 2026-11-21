@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => ({
   cacheDir: `node_modules/.vite/${mode}-${(process.env.VITE_DATA_MODE ?? loadEnv(mode, process.cwd(), '').VITE_DATA_MODE) === 'gateway' ? 'gateway' : 'fixture'}`,
   define: {},
   plugins: [react()],
+  // Stable root URL also lets FCM revoke a token after a full page reload.
+  worker: { rolldownOptions: { output: { entryFileNames: 'firebase-messaging-sw.js' } } },
   server: {
     host: '127.0.0.1',
     port: 5173,
