@@ -11,7 +11,7 @@ Phạm vi sửa: **chỉ Wolfari-web**. Wolfari-backend (`feat/poi-overture`) ch
 | Web `origin/develop` | `62ea04c` (PR #29 web-integration-completion) | Nền của nhánh A |
 | Web POI có sẵn | `origin/feat/poi-overture-web` `5afb307` (thepiece27, 12 commit) | Tách từ develop cũ `d9d2035`; thiếu ~30 commit của develop |
 | Backend POI | `origin/feat/poi-overture` `ef266df` | Đã gồm merge main `0329c2a` |
-| Figma V2 | file `hdy2sOZk6rfjKXKDJ9HW9y`, node `930-6658` | **BLOCKED**: phiên hiện tại không có Figma MCP/token. Inventory cũ (29/10, `docs/ui-redesign/FIGMA_INVENTORY.md`) không chứa node V2 |
+| Figma V2 | file `hdy2sOZk6rfjKXKDJ9HW9y`, node `930-6658` | Đọc qua Figma MCP từ 21/11/2026; kiểm kê trong [FIGMA_V2_INVENTORY.md](FIGMA_V2_INVENTORY.md) |
 
 ## 2. Chiến lược nhánh
 
@@ -30,11 +30,13 @@ Quy ước commit: commit local dưới tên người dùng, không có dòng t�
 | A1 Branch | Tạo worktree/nhánh A từ develop | A0 | `git status`, base commit | DONE |
 | A2 Integration | Merge nhánh POI Web, giải 40 file conflict, căn contract | A1 | typecheck, lint | TESTED |
 | A3 Testing | lint, typecheck, unit, build, E2E fixture + Gateway HTTP-mock | A2 | Toàn bộ suite | TESTED (mock/fixture; backend thật NOT_RUN — [báo cáo](POI_TEST_REPORT.md)) |
-| A4 Commit | Merge commit + docs commit; người dùng push | A3 | `git log`, diff | COMMITTED local, chờ người dùng push |
-| B0 Branch V2 | Tạo nhánh B từ commit A đã nghiệm thu | A4 push xác minh | — | TODO |
-| B1 Figma | Kiểm kê W01–W22, A00–A06, tokens, components (Node ID thật) | Figma MCP | — | BLOCKED (Figma) |
-| B2 Mapping | Figma-to-Code mapping | B1 | — | BLOCKED |
-| B3–B10 | Tokens → components → shell → màn hình → responsive → visual diff → regression → final audit | B2 | Theo từng phase | BLOCKED |
+| A4 Commit | Merge commit + docs commit; người dùng push | A3 | `git log`, diff | DONE (người dùng đã push `50f6a74`) |
+| B0 Branch V2 | Tạo nhánh B từ commit A đã nghiệm thu | A4 push xác minh | — | DONE (`50f6a74`) |
+| B1 Figma | Kiểm kê W01–W22, A00–A06, tokens, components (Node ID thật) | Figma MCP | — | DONE ([inventory](FIGMA_V2_INVENTORY.md)) |
+| B2 Mapping | Figma-to-Code mapping | B1 | — | DONE (cột Route/Code trong inventory) |
+| B3–B5 | Tokens, shared components, app shell | B2 | tsc, lint, unit | COMMITTED `8fde232`, `aa490a6` |
+| B6–B7 | Màn hình + responsive/interaction | B5 | unit, E2E | COMMITTED `d4df994`…`f615dfe` |
+| B8–B10 | Visual diff, regression, final audit | B6 | toàn bộ suite | TESTED fixture/HTTP-mock ([báo cáo](V2_TEST_REPORT.md)); backend thật NOT_RUN |
 
 Critical path: A2 → A3 → A4 (người dùng push) → B0 → B1 (cần Figma) → B2 → B3 → B4 → B5 → B6 → B8 → B9 → B10.
 
