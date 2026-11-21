@@ -141,3 +141,27 @@ Verification for this test-only repair:
   not established; the serial passes do not make that stress run green.
 - Full suites and live Backend/provider checks: NOT_RUN for this repair.
   Updated remote CI results must be checked separately after pushing.
+
+### MoMo responsive assertion follow-up
+
+Job 136784491617 (run 44883763142) subsequently reported 192/193 built Gateway
+tests passing. The failure was the payment spec's immediate horizontal-overflow
+boolean assertion, not a payment command or response mismatch. Its retained trace
+passes at 1440px and 768px, then returns false at 320px: the measurement starts
+about 3ms after `setViewportSize` completes. The old test passed 3/3 local built
+repetitions, so persistent overflow has not been reproduced locally and the exact
+CI overflowing element is not established.
+
+The assertion now polls fresh `scrollWidth - innerWidth` measurements using the
+default assertion timeout, allowing responsive layout to settle while retaining
+the same zero-overflow requirement. Failure output includes the viewport and
+excess pixel count instead of only true/false. All four viewport sizes, payment
+command checks and axe checks remain. No runtime CSS, sleeps, test-timeout
+increases or overflow clipping were added.
+
+Post-fix verification: scoped ESLint and Prettier, TypeScript typecheck, production
+build and diff whitespace checks PASS. Built Gateway HTTP-mock payment spec:
+6/6 PASS with two workers; dev-server HTTP-mock payment spec: 3/3 PASS with one
+worker. Each repetition covers 1440/768/320/402px and the existing axe checks.
+Full suites and live Backend/provider checks were NOT_RUN for this test-only
+change; remote CI must be verified independently after push.

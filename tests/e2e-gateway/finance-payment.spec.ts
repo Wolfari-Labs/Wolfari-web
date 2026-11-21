@@ -170,9 +170,13 @@ test('HTTP mock: Sandbox create, reload recovery, reconcile and exception resolu
   expect(resolves).toBe(1);
   for (const width of [1440, 768, 320, 402]) {
     await page.setViewportSize({ width, height: 850 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
-      true,
-    );
+    // A viewport resize can precede the browser's responsive layout update.
+    // Retry a fresh measurement, retaining zero tolerance for horizontal overflow.
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth - innerWidth), {
+        message: `MoMo page horizontal overflow at ${width}px (excess pixels)`,
+      })
+      .toBeLessThanOrEqual(0);
     expect(
       (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()).violations,
     ).toEqual([]);
