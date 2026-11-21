@@ -69,7 +69,12 @@ for (const viewport of [
     const map = page.locator('[data-plan-day-map]');
     await expect(map.getByText('Địa điểm trong ngày', { exact: true })).toBeVisible();
     await expect(map.getByText('Địa điểm chưa xếp', { exact: true })).toHaveCount(0);
-    await expect(map.getByText('Bản đồ nền chưa khả dụng', { exact: true })).toBeVisible();
+    // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
+    await expect(
+      map
+        .getByText('Bản đồ nền chưa khả dụng', { exact: true })
+        .or(map.locator('.leaflet-container')),
+    ).toBeVisible();
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);

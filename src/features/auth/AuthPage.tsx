@@ -1,5 +1,5 @@
-﻿import { useState, type FormEvent } from 'react';
-import { Link, useLocation, useNavigate, useOutletContext } from 'react-router';
+import { useState, useSyncExternalStore, type FormEvent } from 'react';
+import { Link, Navigate, useLocation, useNavigate, useOutletContext } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
@@ -11,8 +11,12 @@ import { LogIn, UserPlus, Mail, LockKeyhole, UserRound } from 'lucide-react';
 import { validateAuth, type AuthFormValues, type AuthFormErrors } from './model/auth-validation';
 import styles from './AuthPage.module.css';
 import { useOptionalIdentityRepository } from './repositories/identity-context';
-import { safeReturnTo } from '../../app/safe-return-to';
+import { safeReturnTo, postAuthReturnTo } from '../../app/safe-return-to';
 import { useIdentityTask } from './use-identity-task';
+import { useOptionalSessionManager } from '../../app/session-context';
+
+const noSession = () => 'anonymous';
+const noSubscription = () => () => {};
 
 type Preview = 'idle' | 'pending' | 'unknown' | 'error' | 'unavailable';
 const previewStates: readonly Preview[] = ['idle', 'pending', 'unknown', 'error', 'unavailable'];
@@ -37,7 +41,20 @@ export function AuthPage({
   const repository = useOptionalIdentityRepository();
   const navigate = useNavigate();
   const location = useLocation();
+  const session = useOptionalSessionManager();
+  const sessionStatus = useSyncExternalStore(
+    session?.subscribe ?? noSubscription,
+    session?.status ?? noSession,
+    noSession,
+  );
+  const [registrationAccepted, setRegistrationAccepted] = useState(false);
   const identityNotice = (location.state as { identityNotice?: unknown } | null)?.identityNotice;
+  // Password writes leave the private route before clearing its old session.
+  // Keep this reauthentication destination stable during that transition.
+  const reauthenticate =
+    identityNotice === 'password-reset' ||
+    identityNotice === 'password-changed' ||
+    identityNotice === 'password-uncertain';
   const demoLogin = previewEnabled && !register ? context?.demoLogin : undefined;
   const [demoError, setDemoError] = useState(false);
   const [values, setValues] = useState<AuthFormValues>({
@@ -52,12 +69,16 @@ export function AuthPage({
   const { pending, run } = useIdentityTask();
   const [feedback, setFeedback] = useState<string | null>(() =>
     identityNotice === 'email-verified'
-      ? 'Đăng ký thành công. Email đã được xác minh, bạn có thể đăng nhập.'
+      ? 'Email đã được xác minh. Bạn có thể đăng nhập.'
       : identityNotice === 'password-reset' || identityNotice === 'password-changed'
         ? 'Mật khẩu đã được đặt lại. Vui lòng đăng nhập bằng mật khẩu mới.'
-        : null,
+        : identityNotice === 'password-uncertain'
+          ? 'Chưa xác nhận được thay đổi mật khẩu. Thử mật khẩu mới; nếu không đăng nhập được, chọn Quên mật khẩu.'
+          : null,
   );
-  const [feedbackTone, setFeedbackTone] = useState<'error' | 'success'>('success');
+  const [feedbackTone, setFeedbackTone] = useState<'error' | 'success'>(
+    identityNotice === 'password-uncertain' ? 'error' : 'success',
+  );
   const showError = (message: string) => {
     setFeedbackTone('error');
     setFeedback(message);
@@ -70,7 +91,7 @@ export function AuthPage({
   };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (preview === 'pending' || pending) return;
+    if (preview === 'pending' || pending || registrationAccepted) return;
     const next = validateAuth(mode, values);
     setErrors(next);
     setFeedback(null);
@@ -112,19 +133,28 @@ export function AuthPage({
             showError(authErrorMessage(result.error.code));
           } else if (register) {
             setPreview('idle');
+            setRegistrationAccepted(true);
+            setValues((current) => ({ ...current, password: '', confirmation: '' }));
             setFeedbackTone('success');
             setFeedback(
               'Yêu cầu đăng ký đã được tiếp nhận. Nếu email hợp lệ, hãy kiểm tra hộp thư để xác minh tài khoản.',
             );
           } else {
             const returnTo = new URLSearchParams(location.search).get('returnTo');
-            navigate(safeReturnTo(returnTo), { replace: true });
+            navigate(postAuthReturnTo(returnTo), { replace: true });
           }
         },
         () => showError('Chưa thể kết nối. Vui lòng thử lại.'),
       );
     } else setPreview('unavailable');
   };
+  if (sessionStatus === 'authenticated' && !previewEnabled && !reauthenticate)
+    return (
+      <Navigate
+        to={postAuthReturnTo(new URLSearchParams(location.search).get('returnTo'))}
+        replace
+      />
+    );
   return (
     <section
       className={`${styles.page} ${register ? styles.register : ''}`}
@@ -163,111 +193,125 @@ export function AuthPage({
           aria-label={register ? 'Biểu mẫu đăng ký' : 'Biểu mẫu đăng nhập'}
         >
           <header className={styles.cardHeader}>
-            <h2>{register ? 'Đăng ký tài khoản' : 'Đăng nhập'}</h2>
+            <h2>
+              {registrationAccepted
+                ? 'Kiểm tra email của bạn'
+                : register
+                  ? 'Đăng ký tài khoản'
+                  : 'Đăng nhập'}
+            </h2>
             <p>
-              {register ? 'Tạo tài khoản Wolfari bằng email' : 'Tiếp tục hành trình cùng Wolfari'}
+              {registrationAccepted
+                ? 'Mở liên kết trong email để xác minh, sau đó đăng nhập bằng mật khẩu của bạn.'
+                : register
+                  ? 'Tạo tài khoản Wolfari bằng email'
+                  : 'Tiếp tục hành trình cùng Wolfari'}
             </p>
           </header>
-          <div className={styles.fields}>
-            {register && (
-              <Input
-                id="auth-fullName"
-                required
-                label="Họ và tên"
-                name="fullName"
-                autoComplete="name"
-                value={values.fullName}
-                error={errors.fullName}
-                onChange={(e) => field('fullName', e.target.value)}
-                leadingIcon={<UserRound size={18} />}
-              />
-            )}
-            <Input
-              id="auth-email"
-              required
-              label="Email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="name@example.com"
-              value={values.email}
-              error={errors.email}
-              onChange={(e) => field('email', e.target.value)}
-              leadingIcon={<Mail size={18} />}
-            />
-            <Input
-              id="auth-password"
-              required
-              label="Mật khẩu"
-              type="password"
-              name="password"
-              autoComplete={register ? 'new-password' : 'current-password'}
-              placeholder={register ? 'Từ 15 đến 128 ký tự' : 'Mật khẩu của bạn'}
-              value={values.password}
-              error={errors.password}
-              onChange={(e) => field('password', e.target.value)}
-              leadingIcon={<LockKeyhole size={18} />}
-            />
-            {register && (
-              <Input
-                id="auth-confirmation"
-                required
-                label="Nhập lại mật khẩu"
-                type="password"
-                autoComplete="new-password"
-                value={values.confirmation}
-                error={errors.confirmation}
-                onChange={(e) => field('confirmation', e.target.value)}
-                leadingIcon={<LockKeyhole size={18} />}
-              />
-            )}
-          </div>
-          {register && (
+          {!registrationAccepted && (
             <>
-              <label className={styles.consent}>
-                <input
-                  id="auth-acceptedTerms"
+              <div className={styles.fields}>
+                {register && (
+                  <Input
+                    id="auth-fullName"
+                    required
+                    label="Họ và tên"
+                    name="fullName"
+                    autoComplete="name"
+                    value={values.fullName}
+                    error={errors.fullName}
+                    onChange={(e) => field('fullName', e.target.value)}
+                    leadingIcon={<UserRound size={18} />}
+                  />
+                )}
+                <Input
+                  id="auth-email"
                   required
-                  type="checkbox"
-                  checked={values.acceptedTerms}
-                  onChange={(e) => field('acceptedTerms', e.target.checked)}
-                  aria-invalid={!!errors.acceptedTerms}
-                  aria-describedby={errors.acceptedTerms ? 'auth-terms-error' : undefined}
+                  label="Email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  placeholder="name@example.com"
+                  value={values.email}
+                  error={errors.email}
+                  onChange={(e) => field('email', e.target.value)}
+                  leadingIcon={<Mail size={18} />}
                 />
-                Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật
-                {previewEnabled ? ' (xem trước)' : ''}
-              </label>
-              {errors.acceptedTerms && (
-                <p className={styles.error} role="alert" id="auth-terms-error">
-                  {errors.acceptedTerms}
+                <Input
+                  id="auth-password"
+                  required
+                  label="Mật khẩu"
+                  type="password"
+                  name="password"
+                  autoComplete={register ? 'new-password' : 'current-password'}
+                  placeholder={register ? 'Từ 8 đến 128 ký tự' : 'Mật khẩu của bạn'}
+                  value={values.password}
+                  error={errors.password}
+                  onChange={(e) => field('password', e.target.value)}
+                  leadingIcon={<LockKeyhole size={18} />}
+                />
+                {register && (
+                  <Input
+                    id="auth-confirmation"
+                    required
+                    label="Nhập lại mật khẩu"
+                    type="password"
+                    autoComplete="new-password"
+                    value={values.confirmation}
+                    error={errors.confirmation}
+                    onChange={(e) => field('confirmation', e.target.value)}
+                    leadingIcon={<LockKeyhole size={18} />}
+                  />
+                )}
+              </div>
+              {register && (
+                <>
+                  <label className={styles.consent}>
+                    <input
+                      id="auth-acceptedTerms"
+                      required
+                      type="checkbox"
+                      checked={values.acceptedTerms}
+                      onChange={(e) => field('acceptedTerms', e.target.checked)}
+                      aria-invalid={!!errors.acceptedTerms}
+                      aria-describedby={errors.acceptedTerms ? 'auth-terms-error' : undefined}
+                    />
+                    Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật
+                    {previewEnabled ? ' (xem trước)' : ''}
+                  </label>
+                  {errors.acceptedTerms && (
+                    <p className={styles.error} role="alert" id="auth-terms-error">
+                      {errors.acceptedTerms}
+                    </p>
+                  )}
+                </>
+              )}
+              {(previewEnabled || register) && (
+                <p className={styles.previewNote}>
+                  {previewEnabled
+                    ? register
+                      ? 'Mật khẩu từ 8–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
+                      : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'
+                    : register
+                      ? 'Mật khẩu cần từ 8 đến 128 ký tự.'
+                      : 'Mật khẩu phân biệt chữ hoa, chữ thường và không được gửi vào URL.'}
                 </p>
               )}
+              {demoError && (
+                <Alert tone="error">
+                  Email hoặc mật khẩu demo chưa đúng. Dùng tài khoản minh họa trong bảng xem trước.
+                </Alert>
+              )}
+              <Button
+                className={styles.submit}
+                type="submit"
+                loading={preview === 'pending' || !!pending}
+                icon={register ? <UserPlus size={18} /> : <LogIn size={18} />}
+              >
+                {register ? 'Tạo tài khoản' : 'Đăng nhập'}
+              </Button>
             </>
           )}
-          {(previewEnabled || register) && (
-            <p className={styles.previewNote}>
-              {previewEnabled
-                ? register
-                  ? 'Mật khẩu từ 15–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
-                  : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'
-                : register
-                  ? 'Mật khẩu cần từ 15 đến 128 ký tự.'
-                  : 'Mật khẩu phân biệt chữ hoa, chữ thường và không được gửi vào URL.'}
-            </p>
-          )}
-          {demoError && (
-            <Alert tone="error">
-              Email hoặc mật khẩu demo chưa đúng. Dùng tài khoản minh họa trong bảng xem trước.
-            </Alert>
-          )}
-          <Button
-            className={styles.submit}
-            type="submit"
-            loading={preview === 'pending' || !!pending}
-            icon={register ? <UserPlus size={18} /> : <LogIn size={18} />}
-          >
-            {register ? 'Tạo tài khoản' : 'Đăng nhập'}
-          </Button>
           {pending && (
             <span role="status" className={styles.srOnly}>
               Đang xử lý…

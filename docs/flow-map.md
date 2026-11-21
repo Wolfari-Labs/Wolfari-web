@@ -203,7 +203,7 @@ Không có `success` giả cho các mutation chưa có Gateway handler. Với jo
 
 ## Inventory toàn bộ · entry/exit và prototype gaps
 
-[Full map](figma-screen-map-2026-10-15.md) có 150 cấp-page frame/board; [snapshot](figma-inventory-2026-10-15.json) ghi 2.149 action entries với trigger/destination/reset-scroll/capability. Internal layout frame kế thừa screen, không tạo route; variables/checkbox/confetti là local presentation.
+[Full map](archive/implementation/figma-screen-map-2026-10-15.md) có 150 cấp-page frame/board; [snapshot](figma-inventory-2026-10-15.json) ghi 2.149 action entries với trigger/destination/reset-scroll/capability. Internal layout frame kế thừa screen, không tạo route; variables/checkbox/confetti là local presentation.
 
 | Actor / flow                      | Entry → steps → exit                                                                                     | Runtime gate                                                                                   |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -263,16 +263,16 @@ Acceptance 15/10/2026: 95 unit/component/proxy và 47 browser tests đạt; alia
 
 ### Auth fixture / Home / Self profile
 
-Header/drawer/logo → `/`; Guest CTA → `/login` ↔ `/register`; User → `/trips` hoặc `/profile`. Theo yêu cầu demo: fixture `/login` nhận tài khoản sample đúng → shell User preview → `/` với banner phiên demo; sai → error giữ input/route và không private read. Thoát demo → Guest Home; reload Home cũng về Guest. Không server session/token/storage/API; production không inject demo capability. Register và Login không có capability vẫn unavailable. Mobile profile summary mở editor inline; draft giữ qua read error/retry. Guest không gọi Self/Trip queries, kể cả Home retry. Xem [contract và evidence](auth-fixture-phase3.md).
+Header/drawer/logo → `/`; Guest CTA → `/login` ↔ `/register`; User → `/trips` hoặc `/profile`. Theo yêu cầu demo: fixture `/login` nhận tài khoản sample đúng → shell User preview → `/` với banner phiên demo; sai → error giữ input/route và không private read. Thoát demo → Guest Home; reload Home cũng về Guest. Không server session/token/storage/API; production không inject demo capability. Register và Login không có capability vẫn unavailable. Mobile profile summary mở editor inline; draft giữ qua read error/retry. Guest không gọi Self/Trip queries, kể cả Home retry. Xem [contract và evidence](archive/implementation/auth-fixture-phase3.md).
 
 ### Trip Overview fixture
 
-Readable Trip List card → Overview metadata → existing Plan/Members route; Back trả về list, focus main/reset scroll theo shell. Edit/Share và aggregate actions unavailable. Không deep link mới, không server writes. [Contract/evidence](trip-overview-phase3.md).
+Readable Trip List card → Overview metadata → existing Plan/Members route; Back trả về list, focus main/reset scroll theo shell. Edit/Share và aggregate actions unavailable. Không deep link mới, không server writes. [Contract/evidence](archive/implementation/trip-overview-phase3.md).
 
 ### Plan preview
 
-Overview/sidebar → Plan → chọn ngày/activity disclosure → “Thêm hoạt động” mở pool local → kéo pool ↔ timeline hoặc mở editor activity. Pool luôn ẩn khi mới vào trang; desktop dùng cột phải, ≤1200px dùng planner dialog chứa đồng thời pool và timeline. Draft lưu trên thiết bị 30 ngày, không route activity mới, không Activity/Selected Location write API và chưa đồng bộ thành viên. Map selection tạo client draft chưa xếp; chỉ draft có `scheduledDate` được coi là “Trong lịch”. Overview vẫn đọc first-day Plan projection nguồn. [Contract/evidence](plan-preview-phase3.md).
+Overview/sidebar → Plan → chọn ngày/activity disclosure → “Thêm hoạt động” mở pool local → kéo pool ↔ timeline hoặc mở editor activity. Pool luôn ẩn khi mới vào trang; desktop dùng cột phải, ≤1200px dùng planner dialog chứa đồng thời pool và timeline. Draft lưu trên thiết bị 30 ngày, không route activity mới, không Activity/Selected Location write API và chưa đồng bộ thành viên. Map selection tạo client draft chưa xếp; chỉ draft có `scheduledDate` được coi là “Trong lịch”. Overview vẫn đọc first-day Plan projection nguồn. [Contract/evidence](archive/implementation/plan-preview-phase3.md).
 
 ### Members / Invitation preview
 
-Overview/Plan/sidebar → Members active rows → Owner-only local invitation preview → Members, không URL mới. Member không đọc invitation projection. Email validation giữ draft/focus rồi unavailable, không sent/saved/token/link; terminal statuses là seeded reads. Target-only sidebar giữ selection/URL và unavailable, chọn Overview phục hồi body và focus main. [Contract/evidence](members-preview-phase3.md).
+Overview/Plan/sidebar → Members active rows → Owner-only local invitation preview → Members, không URL mới. Member không đọc invitation projection. Email validation giữ draft/focus rồi unavailable, không sent/saved/token/link; terminal statuses là seeded reads. Target-only sidebar giữ selection/URL và unavailable, chọn Overview phục hồi body và focus main. [Contract/evidence](archive/implementation/members-preview-phase3.md).

@@ -1,0 +1,157 @@
+[36mvite v8.3.4 [32mbuilding client environment for preview...[36m[39m
+transforming...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 2938 modules transformed.
+rendering chunks...
+computing gzip size...
+test-results/build/fixture/index.html                                                      1.27 kB │ gzip:   0.51 kB
+test-results/build/fixture/assets/44363-Dnc2vCAu.png                                       1.86 kB
+test-results/build/fixture/design-system.html                                              1.92 kB │ gzip:   0.58 kB
+test-results/build/fixture/assets/b329f-BLz362UB.svg                                       4.17 kB │ gzip:   1.23 kB
+test-results/build/fixture/assets/9478a-0Bi9C616.svg                                       4.18 kB │ gzip:   1.57 kB
+test-results/build/fixture/assets/95ec9-SDrSm5cj.svg                                       4.53 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/969e1-CmrqPxZh.svg                                       4.54 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/8efc6-Bm5dPhA_.svg                                       4.82 kB │ gzip:   1.67 kB
+test-results/build/fixture/assets/8bc2c-BUdElA4T.svg                                       4.83 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/9ca6f-D5Z7ULiw.svg                                       4.83 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/32882-BuR1_srp.svg                                       5.77 kB │ gzip:   2.35 kB
+test-results/build/fixture/assets/039dc-MMX5ou6V.svg                                       5.86 kB │ gzip:   1.28 kB
+test-results/build/fixture/assets/patrick-hand-vietnamese-400-normal-CZjY324Y.woff         6.49 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-400-normal-BuGn0gnm.woff       6.56 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-600-normal-DkpCIyan.woff       6.88 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-500-normal-CfdwVo8-.woff       6.88 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-700-normal-By_5yT39.woff       6.89 kB
+test-results/build/fixture/assets/5a593-BarKZqrj.svg                                       8.24 kB │ gzip:   2.45 kB
+test-results/build/fixture/assets/a16a3-DofLal5J.svg                                       8.28 kB │ gzip:   1.90 kB
+test-results/build/fixture/assets/ddfc7-BMnqBe8B.png                                       9.62 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-400-normal-CRcqvyg1.woff2     11.53 kB
+test-results/build/fixture/assets/patrick-hand-vietnamese-400-normal-65jA92mZ.woff2       11.57 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-500-normal-DREgrEoJ.woff2     12.17 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-600-normal-nyU-ZL2p.woff2     12.17 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-700-normal-Csr0PCuG.woff2     12.46 kB
+test-results/build/fixture/assets/4bccc-D7t6Ohdm.png                                      12.97 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-400-normal-bXgqVju9.woff           16.43 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-700-normal-C2EtzaOi.woff           16.90 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-500-normal-BJkVuMHw.woff           16.99 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-600-normal-5IO4e7bK.woff           17.01 kB
+test-results/build/fixture/assets/patrick-hand-latin-400-normal-Df9_VoRQ.woff             17.65 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-400-normal-PpnXBOrz.woff2          21.16 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-500-normal-B6LVzGNe.woff2          21.89 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-600-normal-BZDkUTrt.woff2          22.03 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-700-normal-DlW1Zbsh.woff2          22.15 kB
+test-results/build/fixture/assets/4ff86-DqY-Irqy.png                                      23.67 kB
+test-results/build/fixture/assets/patrick-hand-latin-400-normal-B7HHA2Vw.woff2            23.94 kB
+test-results/build/fixture/assets/1dc61-BJI8CjGz.png                                      27.60 kB
+test-results/build/fixture/assets/916ba-zzTcfguj.png                                      32.61 kB
+test-results/build/fixture/assets/6059f-2gKAuTut.png                                      40.02 kB
+test-results/build/fixture/assets/42524-Bpp6kOMc.png                                      44.70 kB
+test-results/build/fixture/assets/a84f7-KRRgzD-S.png                                      47.80 kB
+test-results/build/fixture/assets/3a3f8-Cl-_OnZw.png                                      48.72 kB
+test-results/build/fixture/assets/8b8b5-DkVHiSbk.png                                      72.61 kB
+test-results/build/fixture/assets/2dc85-DROnVtLO.png                                     335.60 kB
+test-results/build/fixture/assets/16cac-ZW08gMZN.png                                     475.43 kB
+test-results/build/fixture/assets/06bd1-9iR9yAvz.png                                   2,698.78 kB
+test-results/build/fixture/assets/CapabilityNote-CTRimchz.css                              0.46 kB │ gzip:   0.25 kB
+test-results/build/fixture/assets/ContentState-CD3znfYM.css                                1.02 kB │ gzip:   0.47 kB
+test-results/build/fixture/assets/TripOverviewPage-CHFHEYBX.css                            1.42 kB │ gzip:   0.55 kB
+test-results/build/fixture/assets/Notifications-BHi1lXw5.css                               1.71 kB │ gzip:   0.63 kB
+test-results/build/fixture/assets/designSystem-CcRvD-k2.css                                2.69 kB │ gzip:   0.82 kB
+test-results/build/fixture/assets/Invitations-DF5k1fOt.css                                 2.94 kB │ gzip:   0.89 kB
+test-results/build/fixture/assets/Drawer-BgujksgV.css                                      3.19 kB │ gzip:   1.05 kB
+test-results/build/fixture/assets/ProfilePage-vT_RcfZM.css                                 4.53 kB │ gzip:   1.24 kB
+test-results/build/fixture/assets/DemoWorkspace-Dz9rF2Cu.css                               4.95 kB │ gzip:   1.41 kB
+test-results/build/fixture/assets/TripSettingsPage-CEdKGNR8.css                            6.21 kB │ gzip:   1.60 kB
+test-results/build/fixture/assets/AuthPage-CrN2pPjL.css                                    7.20 kB │ gzip:   2.05 kB
+test-results/build/fixture/assets/GatewayFundPage-CKtWQrCZ.css                             9.73 kB │ gzip:   2.24 kB
+test-results/build/fixture/assets/PackingPage--bj6JxCX.css                                11.83 kB │ gzip:   2.85 kB
+test-results/build/fixture/assets/TripHero-D4MoW9V9.css                                   15.19 kB │ gzip:   3.47 kB
+test-results/build/fixture/assets/PriceWatchPage-DuEITpPx.css                             15.38 kB │ gzip:   3.27 kB
+test-results/build/fixture/assets/GeoapifyMap-OYnlHoig.css                                15.93 kB │ gzip:   6.70 kB
+test-results/build/fixture/assets/DressCodePage-0GlisSrM.css                              15.99 kB │ gzip:   3.13 kB
+test-results/build/fixture/assets/MembersPage-BqQsxzdy.css                                16.55 kB │ gzip:   3.26 kB
+test-results/build/fixture/assets/CreateTripPage-D3agAJgK.css                             17.53 kB │ gzip:   3.77 kB
+test-results/build/fixture/assets/PlanPage-DMCmYNNH.css                                   23.26 kB │ gzip:   4.70 kB
+test-results/build/fixture/assets/ac8db-BcmrQoiQ.css                                      24.29 kB │ gzip:   5.64 kB
+test-results/build/fixture/assets/TripMapPage-DXXQ1Rba.css                                25.65 kB │ gzip:   5.25 kB
+test-results/build/fixture/assets/TripListPage-CdfpX7Gb.css                               51.67 kB │ gzip:   7.65 kB
+test-results/build/fixture/assets/app-F6TH-MjM.css                                        90.99 kB │ gzip:  17.41 kB
+test-results/build/fixture/assets/916ba-BYKaVzrc.js                                        0.05 kB │ gzip:   0.07 kB
+test-results/build/fixture/assets/trip-query-keys-BXnqlEhj.js                              0.09 kB │ gzip:   0.09 kB
+test-results/build/fixture/assets/plan-BGd-BzLW.js                                         0.12 kB │ gzip:   0.11 kB
+test-results/build/fixture/assets/demo-access-SSkwNlvq.js                                  0.23 kB │ gzip:   0.19 kB
+test-results/build/fixture/assets/CapabilityNote-B0uVpilP.js                               0.24 kB │ gzip:   0.21 kB
+test-results/build/fixture/assets/Notifications.module-7Mf6bFP-.js                         0.27 kB │ gzip:   0.17 kB
+test-results/build/fixture/assets/DemoWorkspace.module-DvhYzKJ-.js                         0.41 kB │ gzip:   0.23 kB
+test-results/build/fixture/assets/use-identity-task-DQXKvuq8.js                            0.44 kB │ gzip:   0.30 kB
+test-results/build/fixture/assets/Textarea-BZsxXNYd.js                                     0.44 kB │ gzip:   0.29 kB
+test-results/build/fixture/assets/QueryClientProvider-BNq2_qya.js                          0.45 kB │ gzip:   0.31 kB
+test-results/build/fixture/assets/04603-CbteM2Jc.js                                        0.46 kB │ gzip:   0.31 kB
+test-results/build/fixture/assets/resolve-elements-laAgVCTe.js                             0.47 kB │ gzip:   0.31 kB
+test-results/build/fixture/assets/TripPlanBoundary-DLFF9ooi.js                             0.48 kB │ gzip:   0.28 kB
+test-results/build/fixture/assets/trip-store-WHai0hMQ.js                                   0.53 kB │ gzip:   0.39 kB
+test-results/build/fixture/assets/command-failure-btaHnPqq.js                              0.56 kB │ gzip:   0.37 kB
+test-results/build/fixture/assets/browser-storage-B4ajCdc-.js                              0.72 kB │ gzip:   0.36 kB
+test-results/build/fixture/assets/rolldown-runtime-XKyaHtl9.js                             0.72 kB │ gzip:   0.42 kB
+test-results/build/fixture/assets/identity.fixture-repository-DjHdzNEc.js                  0.97 kB │ gzip:   0.62 kB
+test-results/build/fixture/assets/2e748-DMbBi9k-.js                                        1.00 kB │ gzip:   0.48 kB
+test-results/build/fixture/assets/trip-list-query-DzgDhBj2.js                              1.01 kB │ gzip:   0.64 kB
+test-results/build/fixture/assets/useInfiniteQuery-Y80N09ar.js                             1.11 kB │ gzip:   0.47 kB
+test-results/build/fixture/assets/membership.fixture-repository-BDa2EwKX.js                1.15 kB │ gzip:   0.73 kB
+test-results/build/fixture/assets/home.fixture-repository-Dg-eFXmT.js                      1.19 kB │ gzip:   0.73 kB
+test-results/build/fixture/assets/invitation.fixture-repository-B_TRvn73.js                1.24 kB │ gzip:   0.77 kB
+test-results/build/fixture/assets/shell.fixture-repository-DRVT3eh1.js                     1.24 kB │ gzip:   0.71 kB
+test-results/build/fixture/assets/bd989-VLPlw6fL.js                                        1.28 kB │ gzip:   0.59 kB
+test-results/build/fixture/assets/AuthPage.module-B1BuUYlg.js                              1.31 kB │ gzip:   0.70 kB
+test-results/build/fixture/assets/AccountMenu-BeQzN_tj.js                                  1.39 kB │ gzip:   0.62 kB
+test-results/build/fixture/assets/Drawer-DfW4Q2x6.js                                       1.61 kB │ gzip:   0.82 kB
+test-results/build/fixture/assets/Invitations.module-Bf80GrRa.js                           1.66 kB │ gzip:   0.90 kB
+test-results/build/fixture/assets/Input-CgHV-zOk.js                                        1.67 kB │ gzip:   0.88 kB
+test-results/build/fixture/assets/Notifications-DhnyAyAf.js                                1.89 kB │ gzip:   0.99 kB
+test-results/build/fixture/assets/ContentState-BTeymsjU.js                                 2.17 kB │ gzip:   1.13 kB
+test-results/build/fixture/assets/trip-catalog-Mqv26uBP.js                                 2.33 kB │ gzip:   1.06 kB
+test-results/build/fixture/assets/use-trip-plan-snapshot-B1-yWxR8.js                       2.64 kB │ gzip:   1.13 kB
+test-results/build/fixture/assets/5290c-DInDbAzD.js                                        2.95 kB │ gzip:   0.88 kB
+test-results/build/fixture/assets/price-watch.fixture-repository-Ds2alPgo.js               3.14 kB │ gzip:   1.54 kB
+test-results/build/fixture/assets/e73d3-B-Ym26aP.js                                        3.31 kB │ gzip:   1.27 kB
+test-results/build/fixture/assets/is-svg-component-B0869fuX.js                             3.34 kB │ gzip:   1.66 kB
+test-results/build/fixture/assets/OperationStatus-9I82z5Lx.js                              3.51 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/trip.fixture-repository-CoBVLZW-.js                      3.54 kB │ gzip:   1.45 kB
+test-results/build/fixture/assets/NotificationInbox-Bu8zpb25.js                            3.71 kB │ gzip:   1.79 kB
+test-results/build/fixture/assets/TripHero-D96EWA76.js                                     4.90 kB │ gzip:   2.04 kB
+test-results/build/fixture/assets/fund.fixture-repository-BEYkjFPh.js                      4.93 kB │ gzip:   2.10 kB
+test-results/build/fixture/assets/plan.fixture-repository-DkbP-cCd.js                      5.18 kB │ gzip:   2.26 kB
+test-results/build/fixture/assets/dist-BAzHyJJF.js                                         5.23 kB │ gzip:   1.94 kB
+test-results/build/fixture/assets/IdentityActionPage-D6CrRNEz.js                           5.95 kB │ gzip:   2.43 kB
+test-results/build/fixture/assets/plan-draft-PqF88qE0.js                                   6.29 kB │ gzip:   2.42 kB
+test-results/build/fixture/assets/InvitationPage-DPtrQbES.js                               7.00 kB │ gzip:   2.90 kB
+test-results/build/fixture/assets/react-BZk3575t.js                                        7.87 kB │ gzip:   3.00 kB
+test-results/build/fixture/assets/AuthPage-B0e4PA2l.js                                     9.80 kB │ gzip:   3.97 kB
+test-results/build/fixture/assets/designSystem-qmI16VKb.js                                10.00 kB │ gzip:   3.43 kB
+test-results/build/fixture/assets/FundPage-C0vxpXf_.js                                    11.14 kB │ gzip:   3.90 kB
+test-results/build/fixture/assets/SuccessToast-BMJp9YP1.js                                11.49 kB │ gzip:   4.22 kB
+test-results/build/fixture/assets/asset-map-DUmpj009.js                                   11.99 kB │ gzip:   2.46 kB
+test-results/build/fixture/assets/GeoapifyMap-BZLnzxKl.js                                 13.32 kB │ gzip:   5.44 kB
+test-results/build/fixture/assets/TripOverviewPage-PfnDccIr.js                            15.41 kB │ gzip:   4.94 kB
+test-results/build/fixture/assets/ProfilePage-RFOY-NuV.js                                 16.64 kB │ gzip:   6.15 kB
+test-results/build/fixture/assets/PackingPage-BOGzEkkj.js                                 17.25 kB │ gzip:   6.30 kB
+test-results/build/fixture/assets/TripSettingsPage-D0OqxooB.js                            20.39 kB │ gzip:   7.07 kB
+test-results/build/fixture/assets/TripListPage-DhQWLPzr.js                                20.69 kB │ gzip:   6.45 kB
+test-results/build/fixture/assets/Ui-lPecKtvR.js                                          21.90 kB │ gzip:   7.04 kB
+test-results/build/fixture/assets/GatewayFundPage-CWyZk5Tg.js                             22.73 kB │ gzip:   7.26 kB
+test-results/build/fixture/assets/DressCodePage-ChvLJ3Ru.js                               23.37 kB │ gzip:   6.22 kB
+test-results/build/fixture/assets/MotionProvider-Bn4fUJXi.js                              24.06 kB │ gzip:   8.78 kB
+test-results/build/fixture/assets/es2015-DVXfUwnT.js                                      34.54 kB │ gzip:  11.99 kB
+test-results/build/fixture/assets/PriceWatchPage-XtOJpcR3.js                              35.42 kB │ gzip:  11.80 kB
+test-results/build/fixture/assets/CreateTripPage-DGycIw5U.js                              38.05 kB │ gzip:  10.64 kB
+test-results/build/fixture/assets/motion-features-CHgZXoaB.js                             45.61 kB │ gzip:  17.39 kB
+test-results/build/fixture/assets/MembersPage-Cr60xq6G.js                                 47.42 kB │ gzip:  12.95 kB
+test-results/build/fixture/assets/dist-CqnWfZbW.js                                        51.18 kB │ gzip:  17.95 kB
+test-results/build/fixture/assets/scene-assets-Cxw8IZXn.js                                68.57 kB │ gzip:  11.81 kB
+test-results/build/fixture/assets/TripMapPage-BEmTvvwD.js                                 71.31 kB │ gzip:  21.50 kB
+test-results/build/fixture/assets/leaflet-src-Dvea1573.js                                148.62 kB │ gzip:  43.33 kB
+test-results/build/fixture/assets/app-CJG8JJ8J.js                                        155.13 kB │ gzip:  43.57 kB
+test-results/build/fixture/assets/PlanPage-BFj1ydur.js                                   231.80 kB │ gzip:  73.33 kB
+test-results/build/fixture/assets/ac8db-QGV1_wYv.js                                      329.71 kB │ gzip: 106.90 kB
+
+[32m✓ built in 1.24s[39m

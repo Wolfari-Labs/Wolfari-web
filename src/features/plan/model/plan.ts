@@ -160,8 +160,3 @@ export type PlanCommandResult<T> =
       readonly status: 'error';
       readonly error: import('../../../shared/types/result').DomainError;
     };
-// Commands carry the revisions and idempotency keys required by the Gateway contract.
-export interface PlanWriteIntent {
-  readonly idempotencyKey: string;
-  readonly expectedPlanVersion: number;
-}

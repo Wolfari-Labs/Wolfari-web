@@ -123,8 +123,14 @@
   width: 536px;
   max-width: calc(100% - 29px);
   margin: 37px 0 23px 29px;
-  font-size: 15.5px;
+  font-size: var(--font-size-body);
   line-height: 27px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .heroDescription {
+    font-size: 15.5px;
+  }
 }
 .heroDescription span {
   display: block;
@@ -207,7 +213,7 @@
   background: url('../../shared/assets/figma/827dd.svg') left bottom / 330px 18px no-repeat;
 }
 .featureIntro > p:not(:first-child) {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 26px;
   max-width: 400px;
   margin: 14px 0 0;
@@ -230,19 +236,31 @@
   min-width: 0;
 }
 .featureGrid h3 {
-  font-size: 17px;
+  font-size: var(--font-size-subtitle);
   line-height: 23px;
   margin: 9px 0;
   font-weight: 600;
   color: #0088c4;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .featureGrid h3 {
+    font-size: 17px;
+  }
+}
 .featureGrid h3 span {
   display: block;
 }
 .featureGrid p {
-  font-size: 13.5px;
+  font-size: var(--font-size-small);
   line-height: 23px;
   margin: 0;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .featureGrid p {
+    font-size: 13.5px;
+  }
 }
 .featureArt {
   position: relative;
@@ -307,9 +325,15 @@
 .appCopy p {
   width: 400px;
   max-width: 100%;
-  font-size: 15px;
+  font-size: var(--font-size-body);
   line-height: 25px;
   margin: 0 0 21px 13px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .appCopy p {
+    font-size: 15px;
+  }
 }
 .appCopy ul {
   list-style: none;
@@ -320,10 +344,16 @@
   position: relative;
   padding-left: 42px;
   min-height: 23px;
-  font-size: 15px;
+  font-size: var(--font-size-body);
   line-height: 23px;
   margin-bottom: 15px;
   background: url('../../shared/assets/figma/eaabc.svg') left center / 22px 22px no-repeat;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .appCopy li {
+    font-size: 15px;
+  }
 }
 .appCopy li::before {
   content: '✓';
@@ -398,7 +428,7 @@
   position: absolute;
   right: 12px;
   top: 4px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .stories {
   grid-column: 1;
@@ -417,9 +447,15 @@
     url('../../shared/assets/figma/8250d.svg') center / cover no-repeat,
     white;
   border: 1px solid #e8dec4;
-  border-radius: 3px;
+  border-radius: var(--radius-6);
   box-shadow: 0 5px 3px #4d5e591f;
   position: relative;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .stories figure {
+    border-radius: 3px;
+  }
 }
 .stories figure::before {
   content: '';
@@ -445,18 +481,24 @@
   width: 100%;
   height: 130px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .stories strong {
   display: block;
-  font-size: 13.2px;
+  font-size: var(--font-size-small);
   line-height: 19px;
   min-height: 19px;
   margin-top: 8px;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .stories strong {
+    font-size: 13.2px;
+  }
+}
 .stories p {
   margin: 18px 0 0;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 19px;
 }
 .inspiration aside {
@@ -639,7 +681,7 @@
     font-size: 40px;
   }
   .appCopy h2 span + span {
-    font-size: 32px;
+    font-size: var(--font-size-heading);
   }
   .appCopy p {
     margin-left: 0;
@@ -938,8 +980,8 @@
   min-height: 48px;
   padding: 12px 18px;
   border: 1px solid var(--color-border-control);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: white;
   color: var(--color-ink);
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }

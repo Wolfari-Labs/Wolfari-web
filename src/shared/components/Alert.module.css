@@ -10,6 +10,13 @@
   color: var(--color-note-text);
   overflow-wrap: anywhere;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .alert {
+    font-size: var(--font-size-small);
+    border-radius: var(--radius-10);
+  }
+}
 .alert > div {
   min-width: 0;
 }

@@ -12,13 +12,9 @@ import { TripCard } from './components/TripCard';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
-import { Icon } from '../../shared/components/Icon';
 import { ContentState } from '../../shared/components/ContentState';
 import { Alert } from '../../shared/components/Alert';
 import { uiAssets } from '../../shared/assets/asset-map';
-import roleIcon from '../../shared/assets/figma/2fa29.svg';
-import timeIcon from '../../shared/assets/figma/40d4c.svg';
-import filterIcon from '../../shared/assets/figma/40418.svg';
 import styles from './TripListPage.module.css';
 import { Link } from 'react-router';
 import { paths } from '../../app/route-paths';
@@ -100,39 +96,6 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
               leadingIcon={<img src={uiAssets.search} alt="" />}
             />
           </div>
-          {previewEnabled && (
-            <div className={styles.unavailableFilters}>
-              <button
-                disabled
-                title="Lọc theo vai trò chưa khả dụng"
-                aria-describedby="trip-filter-capability-note"
-              >
-                <img src={roleIcon} alt="" />
-                Vai trò: Tất cả
-                <Icon name="chevron" size={16} />
-              </button>
-              <button
-                disabled
-                title="Lọc theo thời gian chưa khả dụng"
-                aria-describedby="trip-filter-capability-note"
-              >
-                <img src={timeIcon} alt="" />
-                Thời gian
-                <Icon name="chevron" size={16} />
-              </button>
-              <button
-                disabled
-                title="Bộ lọc nâng cao chưa khả dụng"
-                aria-describedby="trip-filter-capability-note"
-              >
-                <img src={filterIcon} alt="" />
-                Bộ lọc
-              </button>
-              <span id="trip-filter-capability-note" className={styles.srOnly}>
-                Các bộ lọc này hiện chưa khả dụng.
-              </span>
-            </div>
-          )}
         </div>
         <div className={styles.toolbar}>
           <div className={styles.statuses} role="group" aria-label="Trạng thái chuyến đi">

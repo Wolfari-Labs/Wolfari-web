@@ -6,14 +6,26 @@
 }
 .page h1 {
   margin: 0;
-  font-size: 34px;
+  font-size: var(--font-size-heading);
   line-height: 44px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .page h1 {
+    font-size: 34px;
+  }
 }
 .subtitle {
   margin: 0 0 34px;
   color: var(--color-muted);
-  font-size: 15px;
+  font-size: var(--font-size-body);
   line-height: 24px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .subtitle {
+    font-size: 15px;
+  }
 }
 .grid {
   display: grid;
@@ -29,12 +41,12 @@
   align-items: stretch;
   background: white;
   border: 1px solid #bae4f4;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px 44px;
 }
 .panel h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 32px;
 }
 .avatarRow {
@@ -61,7 +73,13 @@
 .avatar strong {
   position: relative;
   color: #009da9;
-  font-size: 22px;
+  font-size: var(--font-size-card-title);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .avatar strong {
+    font-size: 22px;
+  }
 }
 .avatar .avatarPhoto {
   width: 78px;
@@ -80,18 +98,18 @@
   gap: 4px;
 }
 .fields label {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 18px;
 }
 .fields input {
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .ruleNote {
   margin-top: 24px;
 }
 .ruleNote > div {
   min-height: 76px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .personal .save {
@@ -106,12 +124,6 @@
 }
 .feedback {
   margin-top: 16px;
-}
-.muted {
-  color: var(--color-muted);
-  font-size: 13px;
-  line-height: 20px;
-  margin: 2px 0 0;
 }
 .preferences {
   margin-top: 24px;
@@ -131,23 +143,35 @@
   gap: 5px;
 }
 .preference strong {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 22px;
   font-weight: 600;
 }
 .preference small {
-  font-size: 11.5px;
+  font-size: var(--font-size-caption);
   line-height: 18px;
   color: var(--color-muted);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .preference small {
+    font-size: 11.5px;
+  }
 }
 .preference button {
   min-height: 44px;
   width: 52px;
   flex-shrink: 0;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   background: #f6fcff;
   color: var(--color-muted);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .preference button {
+    border-radius: 18px;
+  }
 }
 .devices {
   margin-top: 18px;
@@ -156,12 +180,12 @@
 }
 .devices h3 {
   margin: 0 0 16px;
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   line-height: 24px;
   font-weight: 600;
 }
 .devices > div {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .sessions {
@@ -175,7 +199,7 @@
   align-items: center;
   cursor: pointer;
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .sessions ul {
   list-style: none;
@@ -190,9 +214,9 @@
   flex-direction: column;
   gap: 8px;
   padding: 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid var(--color-line);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   overflow-wrap: anywhere;
 }
 .page > :global(.preview) {
@@ -209,8 +233,14 @@
     padding-inline: 20px;
   }
   .panel h2 {
-    font-size: 21px;
+    font-size: var(--font-size-card-title);
     line-height: 30px;
+  }
+  @media (max-width: 768px) {
+    /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+    .panel h2 {
+      font-size: 21px;
+    }
   }
 }
 .panel > button:last-child {

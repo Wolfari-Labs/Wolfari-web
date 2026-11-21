@@ -235,6 +235,81 @@ Built Preview responsive6/6 and Gateway HTTP-mock5/5 (including axe) PASS.
 
 ## Review protocol
 
+### SYNC-MAP-A11Y — 17/11/2026 — APPROVED_BY_USER
+
+Merge-readiness review found existing Gateway Map filter/toolbar text contrast failures (approximately 3.8–4.4:1 against a 4.5:1 requirement). User explicitly approved the bounded contrast repair on 17/11/2026. Applied only to affected filters, status chips and map-type button in `TripMapPage.module.css`: selected text and active button backgrounds use existing `--color-action-primary`; scheduled text uses `#087653`; unscheduled text uses `#8a5d00`. Matching responsive filter variants follow the same text colors. Calculated ratios are 5.19–5.97:1. Active teal button backgrounds are darkened to preserve white labels; other backgrounds, layout, controls and interactions remain unchanged. No backend/API change or new redesign checkpoint. Original failures remain historical; fresh browser verification belongs in the main-sync report. Axe assertions remain enabled.
+
+### Provider integration correction — 12/11/2026
+
+User explicitly rejected the extra Map panels/forms and requires the approved template to remain intact. The earlier statement that provider integration authorized presentation changes was incorrect and is superseded. Runtime Map now reuses the existing TripMapPage composition, CSS, compact hero, search, filters, selection checkboxes, map toolbar/cards and PlaceDetail. Existing checkbox/heart controls persist selections through the Gateway; the existing itinerary link opens the existing Plan editor flow. Manual coordinates use the existing pin affordance and shared Drawer, not an always-visible panel. Leaflet occupies the existing map canvas. Price form/card layout and design tokens stay unchanged; provider constraints/status labels remain truthful. The satellite control reports unsupported capability rather than substituting another map. No Figma writes, redesign, commit/push or deployment. Earlier tests of the rejected layout remain historical; fresh correction verification is recorded separately in the root report.
+
+### MAP-POI — 18/11/2026 — TASK_AUTHORIZED
+
+Authority: owner task brief `docs/agents/AGENT_PROMPT_MAP_POI_DEMO.md` §3.1 (D57), Web stream W, local demo only. Each item lists what departs from the approved template so it can be reviewed separately; none of them approves other pending deltas.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| MPOI-01 | Plan Gateway “Tất cả” nhóm hoạt động theo ngày (tiêu đề `Ngày N · dd/mm` + số hoạt động) và nhóm “Chưa xếp lịch”; ngày trống có ô thả nét đứt. Trước đây là một danh sách phẳng theo thứ tự toàn Trip. | Cần đích thả rõ ràng giữa các ngày (DoD bước 4). Day tabs/ALL/POOL, panel, card và editor giữ nguyên. |
+| MPOI-02 | Thả → một `PATCH {scheduled_date, position}` (thay `PUT /order` + `PATCH scheduled_date` riêng). Hoạt động có giờ cố định kéo sang ngày khác bị chặn với cảnh báo “Hoạt động có giờ cố định — sửa giờ trong chi tiết” và nút “Mở chi tiết”, thay vì tự mở editor. Menu Đưa lên/xuống đổi chỗ trong cùng ngày. | Hợp đồng 4.3; ràng buộc DB `starts_at` vs `scheduled_date`. Nút lên/xuống vẫn là phương án bàn phím. |
+| MPOI-03 | Hàng kết quả Bản đồ thêm dòng huy hiệu nguồn (Wolfari/Geoapify/Thủ công) và “Chưa xác minh vị trí” khi `coord_verified=false`; dòng phụ dùng `category_label`. | Truthful provenance/attribution (SRS); không thêm control mới vào hàng (vẫn một nút + checkbox). |
+| MPOI-04 | “Thêm vào ngày…” (menu Ngày 1..n) nằm trong thẻ “Đang chọn” sẵn có trên bản đồ và trong Chi tiết địa điểm; sau khi thêm hiện liên kết “Xem lịch trình Ngày N” (`/plan?day=YYYY-MM-DD`). | Tôn trọng quyết định 12/11/2026 không thêm panel/form mới trên Map; tái dùng `ActionMenu` với trigger chữ. |
+| MPOI-05 | Bản đồ ngày vẽ polyline theo thứ tự đã sắp: nét liền + “x km · y phút (ước lượng ô tô)” khi OSRM trả kết quả; nét đứt + “Đường chim bay — chưa kiểm tra di chuyển” khi lỗi/503. Không vẽ cho “Tất cả” hay “Chưa xếp lịch”. | Thay quy tắc PLN03 cũ “không vẽ route/travel giả” bằng đường có nhãn trung thực; Leaflet giữ nguyên, MapLibre hoãn. |
+
+### POI-OVERTURE — 18/11/2026 — TASK_AUTHORIZED
+
+Authority: owner task brief `docs/agents/AGENT_PROMPT_POI_OVERTURE_WEB.md` (D58), Web only. Each item is listed separately for review; none approves other pending deltas.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| POV-01 | Thêm một hàng chip “Nhóm địa điểm” (Du lịch · Ăn uống · Cà phê · Lưu trú · Bar · Mua sắm · Giải trí · Spa · Giao thông · Tiện ích · Mọi nhóm — đổi từ “Tất cả” theo chủ dự án 18/11 để không trùng chip lọc lịch) ngay dưới hàng lọc Tất cả/Đã chọn/Trong lịch/Chưa xếp, dùng lại style chip lọc hiện có (chip đang chọn nền `--color-action-primary`, chữ trắng). Bố cục hẹp: hàng chip cuộn ngang dưới bộ lọc mobile. Trạng thái nằm trên URL `?group=`; bấm lại chip đang chọn để bỏ chọn. | W11; không thêm panel. Không chọn chip = không gửi `category` (backend trả 4 nhóm mặc định). |
+| POV-02 | Dòng trạng thái kiểu `searchState` sẵn có dưới hàng chip: “Phóng to để xem địa điểm” (zoom < 11 hoặc `BBOX_TOO_LARGE`), “Đang hiển thị 150 điểm nổi bật, phóng to để xem thêm” (`bbox_truncated`), lỗi tải khung. Empty state theo nhóm: “Không có địa điểm thuộc nhóm này trong khu vực” + “Phóng nhỏ bản đồ hoặc chọn nhóm khác.” | W11/W12; tái dùng `searchState`/`empty`. |
+| POV-03 | Marker cụm tròn có số (nền `#006f8a`, viền trắng, 36/42/48 px theo số điểm) trên Leaflet; marker đơn giữ nguyên. | W12/AC-PL02; gom tự viết, không thêm thư viện. |
+| POV-04 | Huy hiệu nguồn thêm biến thể “Overture” (tím nhạt `#f4f2fc`, chữ `#463a8c`, ≈ 8:1) có tooltip; huy hiệu nguồn cũng hiện trong thẻ “Đang chọn” (desktop và mobile). | W10; tooltip thay cho cảnh báo lặp lại trên từng hàng. |
+| POV-05 | Panel “Chi tiết địa điểm” (bố cục hẹp) thêm danh sách Loại · Tỉnh/thành · Nguồn (huy hiệu + “Bản dữ liệu dd/MM/yyyy · Cập nhật dd/MM/yyyy”, ghi chú Overture) · Ghi nguồn, đặt dưới địa chỉ. Desktop không có panel chi tiết trong template; theo chủ dự án 18/11, thẻ “Đang chọn” thêm đúng một dòng nhỏ “<loại> · <tỉnh> · Nguồn: <huy hiệu> (dd/MM/yyyy)” (tỉnh và “Nguồn + ngày” không bao giờ bị cắt; thiếu chỗ thì tên loại rút gọn bằng “…” trước, hẹp hơn 40 px thì ẩn hẳn; ngày = `fetched_at`, thiếu thì `data_release`; nội dung đầy đủ “loại · tỉnh” nằm trong tooltip huy hiệu); attribution bản ghi và ghi chú kiểm tay nằm trong tooltip của huy hiệu (hover và focus bàn phím). | W10/FR-TI01. |
+| POV-06 | Dòng chữ nhỏ cuối danh sách “Dữ liệu địa điểm: Wolfari, Overture Maps Foundation (bản …), Geoapify / © OpenStreetMap contributors” (chỉ nguồn đang có); attribution Leaflet thêm “© Overture Maps Foundation” khi khung có điểm Overture. | W13. |
+| POV-07 | Chế độ khám phá theo khung (không có từ khóa): không tự chọn kết quả đầu; thẻ “Đang chọn” chỉ hiện khi người dùng bấm hàng hoặc pin. Có từ khóa: giữ tự chọn kết quả đầu như cũ. Kết quả cùng tên ở tỉnh khác tỉnh của tâm bản đồ hiện “ · <tỉnh>” sau địa chỉ (W14). | Chủ dự án 18/11 (OVW-2 review); DoD bước 2–3 không đổi. |
+
+### UI-DECLUTTER — 19/11/2026 — USER_REQUESTED_MAINTENANCE
+
+Authority: yêu cầu trực tiếp của chủ dự án, thực hiện đúng kế hoạch [`docs/agents/UI_DECLUTTER_AND_TYPOGRAPHY_PLAN.md`](../agents/UI_DECLUTTER_AND_TYPOGRAPHY_PLAN.md) (Giai đoạn 0 → A → B → C; D chỉ đề xuất). Đây là việc bảo trì Web, không phải checkpoint CP mới và không duyệt thêm delta nào khác. Bằng chứng: [`evidence/ui-declutter-20261119/`](evidence/ui-declutter-20261119/README.md).
+
+**Mobile deferred.** Phạm vi thiết bị chỉ là web desktop (viewport ≥ 769px; `breakpoints.mobile = 768`). Bố cục mobile (≤ 768px) và ứng dụng mobile hoãn sang đợt sau; không khai báo nào hiện có trong `@media (max-width: 768px)` bị sửa. Các quy tắc dùng chung mới chỉ áp từ `min-width: 769px`; giá trị cũ của quy tắc nền được giữ cho mobile bằng khối `mobile freeze` (182 khối, mỗi khối đứng ngay sau quy tắc nó bảo vệ) và bằng thành phần `PageBreadcrumb` (`mobile=`) giữ tiêu đề cũ dưới 769px. Hồi quy: ảnh 402×874 và 320×600 của mọi route giống hệt (so điểm ảnh) trừ chỗ đổi văn bản của Giai đoạn A và nhãn C6.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| UDC-A01 | Members: bỏ ba hộp ghi chú trong quản lý lời mời ("Quy tắc lời mời", "Khi chấp nhận", "Lời mời kết thúc") và hộp "Khi chấp nhận…" ở trang nhận lời mời. Trạng thái lời mời vẫn hiện trên từng dòng; lý do từ chối nằm trong thông báo lỗi sẵn có. | Kế hoạch A1–A4, P8 (không nhảy cấp tiêu đề). |
+| UDC-A02 | Map: bỏ câu mô tả ô tìm kiếm và ghi chú nhà cung cấp ở bản Gateway; bản Preview rút còn "Bản đồ nền chưa được cấu hình." (giữ `<strong>` vì test khóa). `MapViewport` chỉ gắn `aria-describedby` khi ghi chú còn được render (P1). Ghi nguồn OSM/Geoapify/Overture không đổi (P2). | A5–A7. |
+| UDC-A03 | Plan Gateway: bỏ câu hướng dẫn kéo-thả (đã có `screenReaderInstructions`, P3), gợi ý lịch trong editor và khối "Chi tiết đồng bộ"; phiên bản chuyển sang `data-plan-version`. | A8–A10. |
+| UDC-A04 | Price Watch: bỏ câu mô tả ở bản Gateway; bỏ dòng "Watch version · providerEnvironment" khỏi bản Preview (chuyển sang `data-watch-version`, `data-provider-environment`). | A11–A12. |
+| UDC-A05 | Quỹ Gateway: vùng trống chỉ còn "Chọn một thao tác để bắt đầu."; nhãn môi trường vẫn ở đầu trang (chip TEST) và trong biểu mẫu (P4). | A13. |
+| UDC-A06 | Cài đặt chuyến đi: bỏ các câu mô tả, `details` "Tác vụ chưa khả dụng" và hộp `fundNote` (cả mục "Quản lý chuyến đi" vì chỉ còn hai khối đó). | A14–A19. |
+| UDC-A07 | Bộ phối đồ Gateway: bỏ cả `aside` tự mâu thuẫn; chip "Chỉ xem" nằm cạnh bộ lọc phạm vi. Lưới nội dung thành một cột (không còn cột phụ). Bản Preview đã ghi "Ảnh và bảng màu đều là minh họa mẫu" nên giữ (P5). | A20–A22. |
+| UDC-A08 | Thông báo/Hồ sơ: bỏ hai câu mô tả; công tắc push có chip "Sắp có"; "Phiên bản hồ sơ" chuyển sang `data-profile-version` (bản Preview). | A23–A25. |
+| UDC-A09 | Danh sách chuyến đi: bỏ ba bộ lọc bị khóa (Preview) và câu giải thích. | A26. |
+| UDC-A10 | Dọn CSS chết sau khi xóa JSX (`.note`, `.help`, `.syncDetails`, `.fundNote`, `.readOnlyPanel`, `.unavailableFilters`, …) và tệp `GatewayMapPage.module.css` không còn ai import. | P7, C7. Không xóa `CapabilityNote`. |
+| UDC-B01 | Thang chữ 8 bậc 12/13/14/16/18/20/24/32 qua token (thêm `--font-size-caption`, `--font-size-subtitle`); không còn chữ < 12px ngoài khối mobile. 2 `!important` bỏ bằng độ cụ thể selector. | B; thay đổi > 1px xem UDC-B04. |
+| UDC-B02 | Bo góc về token (6/8/10/12/16/20/24/pill); `14/17/18 → 12/16`, `2/3/4/5/9 → 6`. | B. |
+| UDC-B03 | `font-weight: 800 → 700`; bỏ `text-transform: uppercase` (đầu cột Thành viên) và `letter-spacing` rộng; nhãn chữ HOA cứng ("CHUYẾN ĐI MỚI", "ĐIỂM ĐẾN ĐÃ CHỌN", "HOÀN TẤT") thành chữ thường câu. Nhãn mã kỹ thuật `TEST · OPEN` ở Quỹ Preview giữ nguyên. | B, 7.5. |
+| UDC-B04 | Thay đổi cỡ chữ > 1px: Auth tiêu đề thẻ 30/28 → 32 (tablet 26 → 24); Profile h1 34 → 32; phản hồi lời mời 30 → 24; Packing số tiến độ 26 → 24; thành công tạo chuyến 28 → 24; tiêu đề Tạo chuyến `clamp(28,2.4vw,36)` → `clamp(24,2.4vw,32)`; số tiền Quỹ/Giá vé `clamp(20,3vw,30)` → `clamp(20,3vw,32)`; tiêu đề panel Map 21 → 20, hộp thoại 22 → 20; 45 khai báo 8–11,5px → 12 hoặc 13 (đoạn chữ); 15 → 14/16 theo vai trò. Thẻ "Đang chọn" ở Map rộng 250 → 280px để dòng tỉnh + Nguồn + ngày (POV-05) vẫn không bị cắt ở cỡ 12px. | B; xem ảnh trước/sau trong evidence. Display Home/Auth intro ≥ 29px giữ ngoài thang. |
+| UDC-C01 | Một khung nội dung cho mọi trang workspace: `max-width` 1220px căn giữa, lề 8/22/24/18, qua `WorkspacePage.module.css` + token `--workspace-max-width`… (D1). Quỹ/Giá vé Gateway chuyển từ `DemoWorkspace` sang khung chung. Cài đặt 26 → 24px đáy. | C0–C1. |
+| UDC-C02 | Một tiêu đề trang: `PageBreadcrumb` "Tổng quan chuyến đi › {Mục}", `h1` luôn thấy, đậm 600 màu ink; bỏ "Chuyến đi của tôi › tên chuyến" ở Bản đồ/Đồ đạc/Quỹ/Cài đặt; Cài đặt chỉnh sửa giữ 3 cấp; Quỹ/Giá vé Gateway có breadcrumb chuẩn, bỏ nhãn HOA (D10); bỏ `visuallyHidden` ở Bộ phối đồ/Thành viên Gateway (D8). Đỉnh hero cách đỉnh vùng nội dung 44px (D2). | C2. |
+| UDC-C03 | Hero một bộ số liệu: cao 150px, bo `--radius-hero` (16), `h2` 32/40, padding chữ 31 28 20, nút cùng cỡ; biến thể chỉ đổi nền (Tổng quan dùng chung nền chữ của landscape để không bị cắt). Bộ phối đồ Preview dùng `TripHero` ở desktop. Nút bo 16 (token) thay vì 18 của D3: xung đột giữa D3 và B ("không bo ngoài token"), chênh 2px. | C3, D3. |
+| UDC-C04 | Tổng quan: hàng KPI và hàng dưới cùng 4 cột bằng nhau, gap 16 (`--grid-gap`); lịch trình chiếm 2 cột; 769–1100px cả hai hàng 2 cột. Tiêu đề thẻ KPI và thẻ 16px/600, giá trị KPI 24/32. Min-height khai báo một lần (`--overview-*-min`). | C4, D4, D5, D7. |
+| UDC-C05 | Lưới còn lại: gap 16 (Map 12, Thành viên Preview 48 → 16, Gateway 18/24, Plan 12, Settings 18, Giá vé Gateway 20); cột phụ `--side-panel-width` ở Quỹ (cả hai bản), Giá vé (cả hai bản; cột phải Preview 288 → 372), Bộ phối đồ Preview (364 → 372) và Thành viên Gateway; thẻ nội dung bo 8, padding 16 ở Quỹ, Map, Packing, Giá vé, Cài đặt, Bộ phối đồ, `DemoWorkspace.panel`. Ngoại lệ giữ vai trò riêng: panel lịch trình Tổng quan (padding 12/15/0 theo hợp đồng Figma), thẻ hoạt động `TimelineCard`, thẻ phản hồi lời mời, hộp thoại. Bộ phối đồ Gateway không còn cột phụ nên D6 không áp dụng (xung đột A20). | C5, D4–D6. Cột chỉ áp ở độ rộng mà lưới không thu về ít cột hơn. |
+| UDC-C06 | Nhãn tiếng Việt: "Trang phục" (thay "Dress code"), "Đồ đạc" (thay "Packing list"), tiêu đề Bản đồ "Bản đồ địa điểm" ở thanh bên, breadcrumb, `h1`, `aria-label`, thẻ KPI "Tiến độ đồ đạc". Route và query key không đổi. Trang chủ (quảng cáo) không đổi. | C6, D9. |
+| UDC-C07 | Assertion hình học đổi có chủ đích (không xóa, không nới sai số): `trip-overview.spec.ts` cạnh trái/phải theo khung 1220 căn giữa (D1, mọi viewport và sidebar thu gọn), chiều cao hero 170 → 150 (D3), cột `[578,314,260]/1152` → `[2c+g, c, c]`, `c=(w−3g)/4`, g=16 (D5, D7); `plan-preview.spec.ts` hero y 116 → 120 (D2); tên nhãn D9 ở `app-shell.spec.ts`, `packing-list.spec.ts`, `shell-navigation.test.tsx`, `trip-new-features.test.tsx`, `cp07-composition.spec.ts`; A20 ở `cp07-composition.spec.ts` và `cp07-native-zoom.spec.ts` (aside → chip "Chỉ xem"); A25 ở `auth-fixture.test.tsx` và `auth-fixture.spec.ts` (phiên bản → `data-profile-version`); A26 ở `trip-list.test.tsx` và `trip-list.spec.ts` (bộ lọc khóa → không còn); ảnh `home-guest-1440.png` (win32) chụp lại vì Giai đoạn B đổi cỡ chữ Trang chủ (bản linux chưa chụp lại được trên máy này). Spec mới `layout-consistency.spec.ts` (sai số ≤ 1px). | C7, mục 9 của kế hoạch. |
+
+**Giai đoạn D — chỉ đề xuất, trạng thái `PROPOSED`, chưa code.**
+
+| Mã | Đề xuất | Trạng thái |
+| --- | --- | --- |
+| UDC-D1 | Ẩn linh vật thanh bên desktop (166px) khi chiều cao < 950px (`--breakpoint-short-workspace`); vùng trang trí ngăn kéo mobile để lại cho đợt mobile. | PROPOSED |
+| UDC-D2 | Nâng tương phản viền ô nhập và điều khiển lên ≥ 3:1 (đo bằng script, không đoán mã màu); tách thẻ khỏi nền bằng bóng hoặc viền đậm hơn, không dùng nền đổi màu. | PROPOSED |
+| UDC-D3 | Giới hạn hộp ghi chú viền trái (`CapabilityNote`, `.note`) cho lỗi và cảnh báo. | PROPOSED |
+| UDC-D4 | Thứ bậc tiêu đề: làm tên mục rõ hơn tên chuyến (tiêu đề 24px phía trên hero hoặc nhãn trong hero) thay vì chỉ là mục cuối breadcrumb 13px. | PROPOSED |
+| UDC-D5 | Bỏ bất đối xứng lề 18/22px (20/20); đang bị test khóa (`220 + 18`, `width − 22`) nên cần duyệt riêng. | PROPOSED |
+| UDC-D6 | Rà các màn còn ghi chú chức năng chưa hỗ trợ (Packing "Chỉ xem" lặp từng dòng, Plan Preview, Thành viên Preview, `AppShell`) theo quy tắc "ẩn điều khiển"; thêm bước giữ nguyên tuyệt đối mobile nếu cần. | PROPOSED |
+
 Mỗi delta cần source node, current code, lý do, proposed presentation, impact contracts/accessibility và trạng thái approval riêng. Nếu chưa có quyết định: giữ source và runtime semantics, không tự resolve bằng đổi thiết kế hoặc thêm API. CP02 đã đóng bằng D20 với ngoại lệ D19 và báo cáo nghiệm thu; register tiếp tục giới hạn những gì được phép áp dụng ở checkpoint sau.
 
 ## Finance overlay box correction — 07/11/2026

@@ -1,27 +1,33 @@
 .page {
-  composes: page from '../components/TripWorkspace.module.css';
+  composes: page from '../../../shared/styles/WorkspacePage.module.css';
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 8px 22px 26px 18px;
   color: var(--color-ink);
 }
 
 .breadcrumb {
-  composes: breadcrumb from '../components/TripWorkspace.module.css';
-  font-size: 13px;
-  line-height: 20px;
-  color: var(--color-muted);
+  composes: breadcrumb from '../../../shared/styles/WorkspacePage.module.css';
 }
 
-.breadcrumb h1 {
-  margin: 0;
-  font: inherit;
-  color: var(--color-muted);
-}
+@media (max-width: 768px) {
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    font-size: var(--font-size-small);
+    line-height: 20px;
+    color: var(--color-muted);
+  }
 
-.breadcrumb a {
-  color: var(--color-muted);
+  .breadcrumb h1 {
+    margin: 0;
+    font: inherit;
+    color: var(--color-muted);
+  }
+
+  .breadcrumb a {
+    color: var(--color-muted);
+  }
 }
 
 .columns {
@@ -49,13 +55,13 @@
 
 .card h2 {
   margin-bottom: 4px;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 34px;
 }
 
 .card h3 {
   margin-bottom: 10px;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 34px;
 }
 
@@ -75,7 +81,7 @@
 .cardHeading p,
 .memberHeading p {
   margin-bottom: 0;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   color: var(--color-muted);
 }
@@ -97,7 +103,7 @@
   min-height: 66px;
   padding: 10px 12px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--color-pale);
 }
 
@@ -109,14 +115,14 @@
 .fieldLabel {
   display: block;
   margin-bottom: 3px;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 22px;
   color: var(--color-muted);
 }
 
 .informationGrid dd {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--font-size-body);
   line-height: 24px;
   font-weight: 600;
   overflow-wrap: anywhere;
@@ -149,17 +155,6 @@
   object-fit: cover;
 }
 
-.coverRow > div {
-  min-width: 0;
-}
-
-.coverRow p {
-  margin: 8px 0 0;
-  font-size: 13px;
-  line-height: 20px;
-  color: var(--color-muted);
-}
-
 .form {
   display: grid;
   gap: 10px;
@@ -170,28 +165,18 @@
   margin-top: 10px;
 }
 
-.formColumns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
 .readOnlyPanel {
   margin-top: 8px;
   padding: 14px 16px;
   border: 1px solid var(--color-line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--color-pale);
 }
 
 .readOnlyPanel h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   line-height: 26px;
-}
-
-.readOnlyPanel .capabilityNote {
-  margin-top: 4px;
 }
 
 .readOnlyGrid {
@@ -206,17 +191,23 @@
 }
 
 .readOnlyGrid dt {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   color: var(--color-muted);
 }
 
 .readOnlyGrid dd {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--font-size-label);
   line-height: 22px;
   font-weight: 600;
   overflow-wrap: anywhere;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .readOnlyGrid dd {
+    font-size: 15px;
+  }
 }
 
 .currentValue {
@@ -237,122 +228,20 @@
 }
 
 .memberHeading p {
-  font-size: 15px;
+  font-size: var(--font-size-label);
   line-height: 24px;
   font-weight: 500;
   color: var(--color-ink);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .memberHeading p {
+    font-size: 15px;
+  }
+}
 
 .settingSection h3 {
   margin-top: 0;
-}
-
-.reminderRow {
-  display: grid;
-  grid-template-columns: 20px minmax(0, 1fr) 140px;
-  align-items: center;
-  gap: 10px;
-  min-height: 38px;
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.disabledCheck {
-  display: grid;
-  width: 20px;
-  height: 20px;
-  place-items: center;
-  border-radius: 5px;
-  background: var(--color-active);
-  color: white;
-}
-
-.reminderRow button,
-.managementGrid button {
-  min-height: 44px;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: var(--color-pale);
-  color: var(--color-ink);
-  font: inherit;
-}
-
-.reminderRow button:disabled,
-.managementGrid button:disabled {
-  cursor: not-allowed;
-  opacity: 1;
-}
-
-.capabilityNote {
-  margin: 8px 0 0;
-  font-size: 13px;
-  color: var(--color-muted);
-}
-
-.managementGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.managementGrid > div {
-  min-height: 126px;
-  padding: 10px;
-  border: 1px solid var(--color-line);
-  border-radius: 10px;
-  background: var(--color-white);
-}
-
-.managementGrid button {
-  min-height: 44px;
-  width: 100%;
-  padding: 4px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  text-align: left;
-  font-weight: 500;
-}
-
-.managementGrid p {
-  margin: 6px 0 0;
-  font-size: 13px;
-  line-height: 20px;
-  color: var(--color-muted);
-}
-
-.managementGrid .dangerCard {
-  border-color: #f27461;
-}
-
-.dangerCard button {
-  color: #e35442;
-}
-
-.fundNote {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4px 12px;
-  margin-top: 18px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #fff7dd;
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.fundNote span {
-  grid-column: 1;
-  color: var(--color-muted);
-}
-
-.fundNote a {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
 }
 
 .mobileTitle {
@@ -367,10 +256,6 @@
 @media (max-width: 1100px) {
   .columns {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .managementGrid > div {
-    min-height: auto;
   }
 }
 
@@ -439,9 +324,7 @@
   }
 
   .informationGrid,
-  .formColumns,
-  .readOnlyGrid,
-  .managementGrid {
+  .readOnlyGrid {
     grid-template-columns: 1fr;
   }
 
@@ -470,17 +353,6 @@
     width: 100%;
   }
 
-  .reminderRow {
-    grid-template-columns: 20px minmax(0, 1fr);
-    min-height: 52px;
-  }
-
-  .reminderRow button {
-    grid-column: 2;
-    width: 100%;
-    min-height: 44px;
-  }
-
   .fundNote {
     grid-template-columns: 1fr;
   }
@@ -499,5 +371,16 @@
 
   .card {
     padding-inline: 12px;
+  }
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .columns {
+    gap: var(--grid-gap);
+  }
+  .card {
+    padding: var(--card-padding-narrow);
+    border-radius: var(--radius-panel);
   }
 }

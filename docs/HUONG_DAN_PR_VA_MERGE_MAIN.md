@@ -1,5 +1,7 @@
 # Quy trình PR và merge Demo 1 — Backend trước, Web sau
 
+> **ARCHIVED SNAPSHOT — 03/11/2026.** Quy trình/PR bên dưới mô tả đợt Demo 1, không phải hướng dẫn thực thi cho nhánh trial hiện tại. Ngày 16/11/2026, Web đã chứa main `e196652`; đợt sync mới giữ `feat/single-host-trial-deploy`, chỉ commit local, không tạo lại PR cũ hoặc push/deploy. Tra [mục lục hiện hành](README.md) trước khi vận hành.
+
 **GIAI ĐOẠN D / DRAFT.** Người dùng đã yêu cầu chuyển D ngày03/11. Đây là hướng dẫn, không xác nhận PR/CI/reviewer đã đạt. Kiểm tra [bàn giao D](PHASE_D_HANDOFF.md), [readiness](demo-readiness-validation.md) và trạng thái GitHub thực tế trước mỗi thao tác. Gate live post-fix và Edge còn thiếu nên chưa merge.
 
 Đã push và tạo [Draft PR Backend #17](https://github.com/Wolfari-Labs/Wolfari-backend/pull/17), [Draft PR Web #21](https://github.com/Wolfari-Labs/Wolfari-web/pull/21) bằng GitHub API theo chấp thuận của người dùng, không cài GitHub CLI. Các bước tạo PR dưới đây là hướng dẫn tham khảo, không tạo lại PR trùng. [Nội dung Backend](pr-drafts/demo-readiness-backend.md) và [nội dung Web](pr-drafts/demo-readiness-web.md) lưu phạm vi/gate; xem [báo cáo lỗi CI Web](WEB_PR21_CI_FIX.md) và CI trên HEAD hiện hành trước review/merge.

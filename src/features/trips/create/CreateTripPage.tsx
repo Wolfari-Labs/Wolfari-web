@@ -250,7 +250,7 @@ function PreviewCreateTripPage() {
       <img className={styles.banner} src={banner} alt="" aria-hidden="true" />
       <header className={styles.pageHeader}>
         <div>
-          <p className={styles.eyebrow}>CHUYẾN ĐI MỚI</p>
+          <p className={styles.eyebrow}>Chuyến đi mới</p>
           <h1>Tạo chuyến đi mới</h1>
           <p>Lên kế hoạch cho hành trình tiếp theo và khám phá thế giới cùng Wolfari!</p>
         </div>
@@ -542,7 +542,7 @@ function PreviewCreateTripPage() {
             <div className={styles.selectedDestination}>
               <img src={selectedPhoto} alt="" />
               <div>
-                <small>ĐIỂM ĐẾN ĐÃ CHỌN</small>
+                <small>Điểm đến đã chọn</small>
                 <strong>{draft.destination || 'Chưa chọn điểm đến'}</strong>
                 <span>{selectedDestination?.caption ?? 'Chọn từ danh sách gợi ý bên dưới'}</span>
               </div>

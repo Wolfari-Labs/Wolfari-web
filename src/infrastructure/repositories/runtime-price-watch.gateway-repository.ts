@@ -28,7 +28,7 @@ export function decodeWatch(value: unknown, tripId: string): RuntimeWatch {
     version: d.version(r.version),
     expiresAt: d.instant(r.expires_at),
     fields: {
-      provider: d.enumeration(q.provider, ['MOCK_FLIGHT']),
+      provider: d.enumeration(q.provider, ['MOCK_FLIGHT', 'TRAVELPAYOUTS_CACHE']),
       origin: d.string(q.origin),
       destination: d.string(q.destination),
       departure_date: d.string(q.departure_date),
@@ -52,6 +52,8 @@ export function decodeWatch(value: unknown, tripId: string): RuntimeWatch {
 }
 export function decodeObservation(value: unknown): RuntimeObservation {
   const r = d.object(value);
+  const metadata =
+    r.fare_metadata && typeof r.fare_metadata === 'object' ? d.object(r.fare_metadata) : {};
   d.enumeration(r.currency, ['VND']);
   return {
     id: d.uuid(r.id),
@@ -59,6 +61,13 @@ export function decodeObservation(value: unknown): RuntimeObservation {
     provider: d.string(r.provider),
     observedAt: d.instant(r.observed_at),
     fetchedAt: d.instant(r.fetched_at),
+    providerFoundAt:
+      typeof metadata.provider_found_at === 'string' ? d.instant(metadata.provider_found_at) : null,
+    providerExpiresAt:
+      typeof metadata.provider_expires_at === 'string'
+        ? d.instant(metadata.provider_expires_at)
+        : null,
+    dataKind: typeof metadata.data_kind === 'string' ? metadata.data_kind : null,
   };
 }
 export function createRuntimePriceWatchRepository(client: GatewayHttpClient) {

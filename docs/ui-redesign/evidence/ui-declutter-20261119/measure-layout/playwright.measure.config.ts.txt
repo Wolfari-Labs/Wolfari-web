@@ -1,0 +1,23 @@
+// TEMPORARY (Phase 0 step 4). Serves the already-built outputs and runs tests/_measure only.
+import { chromium, defineConfig } from '@playwright/test';
+const gateway = process.env.MEASURE_MODE === 'gateway';
+export default defineConfig({
+  testDir: './tests/_measure',
+  testMatch: gateway ? 'gateway.measure.spec.ts' : 'preview.measure.spec.ts',
+  outputDir: `test-results/measure-${gateway ? 'gateway' : 'preview'}`,
+  reporter: [['list']],
+  workers: 1,
+  timeout: 90_000,
+  use: {
+    baseURL: gateway ? 'http://127.0.0.1:5174' : 'http://127.0.0.1:5173',
+    launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ?? chromium.executablePath() },
+    headless: true,
+    reducedMotion: 'reduce',
+    serviceWorkers: 'block',
+  },
+  webServer: {
+    command: `node node_modules/vite/bin/vite.js preview --outDir test-results/build/${gateway ? 'gateway' : 'fixture'} --host 127.0.0.1 --port ${gateway ? 5174 : 5173} --strictPort`,
+    url: gateway ? 'http://127.0.0.1:5174' : 'http://127.0.0.1:5173',
+    reuseExistingServer: false,
+  },
+});

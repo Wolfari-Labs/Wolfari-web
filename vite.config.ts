@@ -6,7 +6,6 @@ export default defineConfig(({ mode }) => ({
   // Fixture and Gateway test servers can run together without invalidating
   // each other's dependency hashes (504 Outdated Optimize Dep).
   cacheDir: `node_modules/.vite/${mode}-${(process.env.VITE_DATA_MODE ?? loadEnv(mode, process.cwd(), '').VITE_DATA_MODE) === 'gateway' ? 'gateway' : 'fixture'}`,
-  define: {},
   plugins: [react()],
   // Stable root URL also lets FCM revoke a token after a full page reload.
   worker: { rolldownOptions: { output: { entryFileNames: 'firebase-messaging-sw.js' } } },

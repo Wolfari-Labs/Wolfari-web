@@ -51,7 +51,7 @@ Khuyến nghị tổng thể là **phương án B — tối ưu cân bằng**: g
 ### 2.1 Nguồn đã đọc hoặc kiểm tra
 
 - Nghiệp vụ và kiến trúc: [Backend README](../../Wolfari-backend/README.md), [SRS chính thức](../../Wolfari-backend/docs/Wolfari_SRS_v2.3_ChinhThuc.docx), [domain architecture](./domain-architecture.md), [flow map](./flow-map.md), [state matrix](./state-matrix.md), [screen contracts](./screen-contracts.md).
-- Trạng thái capability: [runtime evidence](./runtime-evidence-2026-10-15.md), [Web README](../README.md), repository selectors/adapters và route/page source.
+- Trạng thái capability: [runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md), [Web README](../README.md), repository selectors/adapters và route/page source.
 - Figma read-only qua Figma MCP chính thức, file key **hdy2sOZk6rfjKXKDJ9HW9y**:
   - Desktop page [0:1](https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-%C2%B7-Travel-Workspace?node-id=0-1), Mobile page [310:2025](https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-%C2%B7-Travel-Workspace?node-id=310-2025) và Admin page [194:1073](https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-%C2%B7-Travel-Workspace?node-id=194-1073).
   - Enumeration MCP hiện tại trả 79/54/17 root frame; snapshot inventory lưu sẵn ghi 78/54/18. Báo cáo không dùng chênh lệch phân loại root này để suy coverage, mà dựa vào node-level evidence.
@@ -485,7 +485,7 @@ Các điểm Figma cần thay đổi trước khi dùng làm acceptance:
 | ID | Trang/component | Vấn đề | Bằng chứng | Tin cậy |
 | --- | --- | --- | --- | --- |
 | **UX-003** | Trip/Create/Plan/Members/Profile/Price Watch | Core write journey chủ yếu disabled hoặc preview-only | SOURCE-VERIFIED + LIVE-VERIFIED; ví dụ [TripListHero.tsx](../src/features/trips/components/TripListHero.tsx#L34), [PlanPage.tsx](../src/features/plan/PlanPage.tsx#L79) | Cao |
-| **UX-004** | Home + fixture/sandbox UI | Lời hứa sản phẩm và dữ liệu minh họa có thể vượt capability Web hiện có | DOC-CLAIM + SOURCE-VERIFIED + EXPERT-ASSESSMENT: [HomePage.tsx](../src/features/home/HomePage.tsx#L87), [runtime evidence](./runtime-evidence-2026-10-15.md#capabilityaction-matrix) | Cao cho mismatch; Trung bình cho user impact |
+| **UX-004** | Home + fixture/sandbox UI | Lời hứa sản phẩm và dữ liệu minh họa có thể vượt capability Web hiện có | DOC-CLAIM + SOURCE-VERIFIED + EXPERT-ASSESSMENT: [HomePage.tsx](../src/features/home/HomePage.tsx#L87), [runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md#capabilityaction-matrix) | Cao cho mismatch; Trung bình cho user impact |
 | **UX-005** | Trip sidebar / Admin nav | Navigation quảng bá destination không có route/body; state local không bền qua URL/back/refresh | SOURCE-VERIFIED + LIVE-VERIFIED: [AppShell.tsx](../src/features/shell/components/AppShell.tsx#L8), [AdminChrome.tsx](../src/features/shell/components/AdminChrome.tsx#L10) | Cao |
 | **UX-006** | Disabled/unavailable controls | Lý do thường chỉ ở title; disabled control không focus/hover trên keyboard/touch; một số CTA nhìn gần active | SOURCE-VERIFIED + LIVE-VERIFIED: [TripHero.tsx](../src/features/trips/components/TripHero.tsx#L58), [ProfilePage.tsx](../src/features/auth/ProfilePage.tsx#L97) | Cao |
 | **UX-007** | Shared tokens/components | Một số text, gradient button và border không đạt contrast AA theo CSS tĩnh | SOURCE + tính toán tĩnh: [tokens.css](../src/shared/styles/tokens.css#L2), [Button.module.css](../src/shared/components/Button.module.css#L1) | Cao cho cặp tĩnh |

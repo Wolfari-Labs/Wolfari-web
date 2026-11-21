@@ -26,7 +26,10 @@ export function PriceWatchForm({
     prefix = useId();
   const [fields, setFields] = useState<WatchFields>(
     initial?.fields ?? {
-      provider: 'MOCK_FLIGHT',
+      provider:
+        !preview && import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+          ? 'TRAVELPAYOUTS_CACHE'
+          : 'MOCK_FLIGHT',
       origin: '',
       destination: '',
       departure_date: '',
@@ -50,6 +53,7 @@ export function PriceWatchForm({
       : '09:00',
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const cached = fields.provider === 'TRAVELPAYOUTS_CACHE';
   const fieldProps = (name: string) => ({ id: `${prefix}-${name}`, name, error: errors[name] });
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -107,8 +111,9 @@ export function PriceWatchForm({
   return (
     <form ref={form} onSubmit={submit} noValidate className={styles.form}>
       <p className={styles.metadata}>
-        Ngày, giờ tra cứu theo UTC; không phải giờ địa phương tại sân bay. Nguồn MOCK_FLIGHT · Giá
-        mô phỏng.
+        {cached
+          ? 'Nguồn TRAVELPAYOUTS_CACHE · Giá tham khảo cho 1 người lớn, một chiều, phổ thông; không bảo đảm còn mua được. Giờ UTC chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.'
+          : 'Ngày, giờ tra cứu theo UTC; không phải giờ địa phương tại sân bay. Nguồn MOCK_FLIGHT · Giá mô phỏng.'}
       </p>
       <fieldset disabled={disabled || busy} className={styles.form}>
         <legend>Thông tin chuyến bay</legend>
@@ -136,6 +141,7 @@ export function PriceWatchForm({
         />
         <Select
           label="Hành trình"
+          disabled={cached}
           value={fields.journey_type}
           onChange={(e) =>
             setFields({ ...fields, journey_type: e.target.value as WatchFields['journey_type'] })
@@ -153,7 +159,7 @@ export function PriceWatchForm({
           onChange={(e) => setFields({ ...fields, departure_date: e.target.value })}
         />
         <Input
-          label="Giờ khởi hành (UTC)"
+          label={cached ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
           type="time"
           required
           value={clock}
@@ -173,6 +179,7 @@ export function PriceWatchForm({
         {(['adults', 'children', 'infants'] as const).map((key) => (
           <Input
             key={key}
+            disabled={cached}
             {...fieldProps(key)}
             label={{ adults: 'Người lớn', children: 'Trẻ em', infants: 'Em bé' }[key]}
             type="number"
@@ -190,6 +197,7 @@ export function PriceWatchForm({
         ))}
         <Select
           label="Hạng ghế"
+          disabled={cached}
           value={fields.cabin_class ?? ''}
           onChange={(e) =>
             setFields({

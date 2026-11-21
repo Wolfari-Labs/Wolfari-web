@@ -35,7 +35,7 @@
   min-height: 52px;
   margin: 16px 0 0 4px;
   color: #044791;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 20px;
 }
 .collage {
@@ -79,7 +79,7 @@
   min-height: 0;
   padding: 32px 38px 39px;
   border: 1px solid #bae4f4;
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   box-shadow: var(--shadow-soft);
   background: white;
 }
@@ -89,13 +89,19 @@
 .cardHeader h2 {
   margin: 0;
   color: #044791;
-  font-size: 30px;
+  font-size: var(--font-size-heading);
   line-height: 38px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .cardHeader h2 {
+    font-size: 30px;
+  }
 }
 .cardHeader p {
   margin: 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .fields {
@@ -104,23 +110,29 @@
   gap: 18px;
 }
 .fields label {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 18px;
 }
 .fields input {
-  font-size: 16px;
+  font-size: var(--font-size-body);
 }
 .previewNote {
   min-height: 34px;
   margin: 18px 0 0;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 17px;
 }
 .card .submit {
   width: 100%;
   margin-top: 18px;
-  font-size: 13.2px;
+  font-size: var(--font-size-small);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .card .submit {
+    font-size: 13.2px;
+  }
 }
 .alternative {
   display: flex;
@@ -132,7 +144,7 @@
   margin-top: 22px;
   padding-top: 15px;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .alternative a {
@@ -144,19 +156,16 @@
   min-width: 137px;
   padding-inline: 16px;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   color: #044791;
-  font-size: 13.2px;
+  font-size: var(--font-size-small);
 }
-.stateNote {
-  margin-top: 19px;
-}
-.stateNote > div {
-  min-height: 60px;
-  padding: 10px 13px;
-  font-size: 13px;
-  line-height: 17px;
-  background: #f8fcff;
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .alternative a {
+    font-size: 13.2px;
+    border-radius: 18px;
+  }
 }
 .feedback {
   margin-top: 16px;
@@ -166,7 +175,7 @@
   padding-inline: 0 !important;
   border: 0 !important;
   color: #044791;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .consent {
   display: flex;
@@ -175,7 +184,7 @@
   min-height: 44px;
   margin-top: 12px;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 18px;
 }
 .consent input {
@@ -192,7 +201,7 @@
 .error {
   margin: 4px 0 0;
   color: var(--ios-error);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .formColumn > :global(.preview) {
   margin-top: 24px;
@@ -230,8 +239,14 @@
   margin-bottom: 21px;
 }
 .register .cardHeader h2 {
-  font-size: 28px;
+  font-size: var(--font-size-heading);
   line-height: 36px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .register .cardHeader h2 {
+    font-size: 28px;
+  }
 }
 .register .previewNote {
   margin-top: 12px;
@@ -258,7 +273,7 @@
     padding-inline: 24px;
   }
   .cardHeader h2 {
-    font-size: 26px;
+    font-size: var(--font-size-title);
   }
   .introduction h1,
   .register .introduction h1 {

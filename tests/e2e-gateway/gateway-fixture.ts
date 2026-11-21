@@ -1,5 +1,11 @@
 import { test as base, expect, type Page, type Route } from '@playwright/test';
 
+/** 1×1 transparent PNG served for every map tile in E2E. */
+const TRANSPARENT_TILE = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  'base64',
+);
+
 export const avatarPng = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=',
   'base64',
@@ -168,6 +174,11 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           meta: { correlation_id: 'gateway-e2e' },
         },
       });
+    // Map tiles never leave the test machine, even when the build carries a real browser key
+    // (the demo machine does). Tests may route tiles themselves to simulate failures.
+    await page.route('https://maps.geoapify.com/**', (route) =>
+      route.fulfill({ contentType: 'image/png', body: TRANSPARENT_TILE }),
+    );
     // All API traffic is fulfilled or rejected; nothing falls through to the real Gateway.
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
@@ -626,6 +637,16 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           }
         }
       }
+      // POI-OVERTURE: with a browser key the Map explores its frame by bbox. Unless a test
+      // mocks it, answer like the current Gateway, which rejects unknown query parameters.
+      if (method === 'GET' && path.endsWith('/places/search') && url.searchParams.has('bbox'))
+        return route.fulfill({
+          status: 400,
+          json: {
+            error: { code: 'VALIDATION_FAILED', message: 'Invalid query', retryable: false },
+            meta: { correlation_id: 'gateway-e2e' },
+          },
+        });
       unexpected.push(method + ' ' + path);
       return route.fulfill({ status: 501, body: 'Unmocked API request' });
     });

@@ -5,14 +5,14 @@
   display: grid;
   gap: 24px;
   border: 1px solid var(--color-field-line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--color-white);
   color: var(--color-ink);
   overflow-wrap: anywhere;
 }
 .response p {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 1.65;
 }
 .responseHeader {
@@ -30,13 +30,19 @@
 }
 .responseHeader h1 {
   margin: 0 0 12px;
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   line-height: 1.5;
 }
 .responseHeader h2 {
   margin: 0 0 12px;
-  font-size: 30px;
+  font-size: var(--font-size-title);
   line-height: 1.35;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .responseHeader h2 {
+    font-size: 30px;
+  }
 }
 .responseMetadata {
   display: grid;
@@ -46,7 +52,7 @@
 }
 .responseMetadata dt {
   margin-bottom: 8px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   color: var(--color-muted);
 }
 .responseMetadata dd {
@@ -80,7 +86,7 @@
   gap: 36px;
   padding: 16px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--color-white);
 }
 .panel {
@@ -91,13 +97,13 @@
   overflow-wrap: anywhere;
 }
 .panel h2 {
-  font-size: 20px;
+  font-size: var(--font-size-card-title);
   line-height: 1.4;
   margin: 0;
 }
 .panel p {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 1.65;
 }
 .metadata {
@@ -121,31 +127,12 @@
 }
 .item {
   border: 1px solid var(--color-line);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 16px;
   display: grid;
   gap: 0.75rem;
   overflow-wrap: anywhere;
-  font-size: 13px;
-}
-.note {
-  padding: 14px;
-  background: var(--color-note);
-  border: 1px solid var(--color-line);
-  border-left: 3px solid var(--color-active);
-  border-radius: 6px;
-}
-.note h3 {
-  margin: 0 0 8px;
-  font-size: 14px;
-}
-.note[data-tone='member'] {
-  background: #e7faf1;
-  border-left-color: var(--color-green);
-}
-.note[data-tone='terminal'] {
-  background: var(--color-status-warning-surface);
-  border-left-color: var(--color-status-warning);
+  font-size: var(--font-size-small);
 }
 .secret {
   overflow-wrap: anywhere;

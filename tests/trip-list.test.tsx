@@ -73,7 +73,7 @@ function statusButton(label: string) {
 }
 
 describe('Trip List route slice', () => {
-  it('renders six permitted card links with navigation menus and disabled unresolved filters, without HTTP', async () => {
+  it('renders six permitted card links with navigation menus and no unresolved placeholder filters, without HTTP', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     mount();
     await loaded();
@@ -98,8 +98,9 @@ describe('Trip List route slice', () => {
       'Cài đặt chuyến đi',
     ]);
     await userEvent.keyboard('{Escape}');
+    // A26 (UI declutter): the three disabled placeholder filters were removed, not just disabled.
     for (const name of [/^Vai trò:/, /^Thời gian/, /^Bộ lọc$/])
-      expect(screen.getByRole('button', { name })).toBeDisabled();
+      expect(screen.queryByRole('button', { name })).not.toBeInTheDocument();
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(screen.queryByText(/đã lưu thành công|đã tạo chuyến đi/i)).not.toBeInTheDocument();
   });

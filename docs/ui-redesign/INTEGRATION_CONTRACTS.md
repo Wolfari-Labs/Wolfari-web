@@ -25,7 +25,7 @@ Prefix `/api/v1` áp dụng mọi path dưới đây. `{id}`/`{tripId}` là iden
 | Operation recovery | GET `/operations/{key}`; bounded poll and reconciliation | command-coordinator | Operation schemas in Finance/member lifecycle contracts |
 | Notifications | GET `/me/notifications`; PATCH `/me/notifications/{id}/read`; GET/PUT `/me/notification-preferences` | notification.gateway-repository, inbox/preferences | notification.openapi.yaml |
 | Price Watch | GET/POST `/trips/{tripId}/price-watches`; PATCH `/price-watches/{id}`; POST same + `/pause`, `/resume`, `/stop`; GET same + `/observations` | runtime-price-watch gateway, RuntimePriceWatchPage/model | price-watch.openapi.yaml |
-| Map/Dress/Packing | Plan read projections, no independent Gateway mutations wired | DeferredReadPage / PackingPage | plan.openapi.json; không suy ra CRUD từ Figma |
+| Map/Dress/Packing | Plan read projections, no independent Gateway mutations wired | GatewayMapPage / GatewayDressCodePage / PackingPage | plan.openapi.json; không suy ra CRUD từ Figma |
 | Home | Gateway editorial landing local content, không remote recommendation API | HomeRoute/editorial-landing | Không có endpoint recommendation đang wired ở route này |
 | Admin/export/public share | Không có current workflow integration | guarded placeholder/deferred UI | Contract Backend khác tồn tại không tự cấp scope |
 

@@ -43,18 +43,41 @@ export function ActionMenu({
   items,
   triggerRef,
   icon,
+  triggerText,
+  disabled = false,
 }: {
   label?: string;
   items: { label: string; action: () => void; disabled?: boolean; danger?: boolean }[];
   triggerRef?: RefObject<HTMLButtonElement | null>;
   icon?: ReactNode;
+  /** Visible text trigger instead of the icon; `label` should start with this text. */
+  triggerText?: string;
+  disabled?: boolean;
 }) {
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <Button ref={triggerRef} variant="ghost" size="icon" aria-label={label}>
-          {icon ?? <Icon name="more" />}
-        </Button>
+      <DropdownMenu.Trigger asChild disabled={disabled}>
+        {triggerText ? (
+          <Button
+            ref={triggerRef}
+            variant="outline"
+            size="compact"
+            aria-label={label}
+            disabled={disabled}
+          >
+            {triggerText}
+          </Button>
+        ) : (
+          <Button
+            ref={triggerRef}
+            variant="ghost"
+            size="icon"
+            aria-label={label}
+            disabled={disabled}
+          >
+            {icon ?? <Icon name="more" />}
+          </Button>
+        )}
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={styles.menu} sideOffset={6} align="end">

@@ -167,23 +167,23 @@ async function expectPrimaryBeforeSecondary(
 }
 
 async function checkKeyboard(page: Page, root: Locator, route: (typeof routes)[number]['name']) {
+  if (route === 'map') {
+    await root.getByRole('button', { name: /^Đã chọn ·/ }).focus();
+    await page.keyboard.press('Tab');
+    const next = root.getByRole('button', { name: /^Trong lịch ·/ });
+    await expect(next).toBeFocused();
+    expect(await next.evaluate((element) => element.matches(':focus-visible'))).toBe(true);
+    await page.keyboard.press('Enter');
+    await expect(next).toHaveAttribute('aria-pressed', 'true');
+    return;
+  }
   const group = root.getByRole('group', {
-    name:
-      route === 'map'
-        ? 'Lọc địa điểm đã lưu'
-        : route === 'dress-code'
-          ? 'Lọc phạm vi dress code'
-          : 'Bộ lọc vật dụng',
+    name: route === 'dress-code' ? 'Lọc phạm vi trang phục' : 'Bộ lọc vật dụng',
   });
   await group.getByRole('button', { name: 'Tất cả', exact: true }).focus();
   await page.keyboard.press('Tab');
-  if (route === 'map') {
-    await expect(group.getByRole('button', { name: /Đã chọn \(/ })).toBeFocused();
-    await page.keyboard.press('Tab');
-  }
   const next = group.getByRole('button', {
-    name: route === 'map' ? 'Trong lịch' : route === 'dress-code' ? 'Cả chuyến' : 'Của tôi',
-    exact: true,
+    name: route === 'dress-code' ? 'Cả chuyến' : 'Của tôi',
   });
   await expect(next).toBeFocused();
   expect(await next.evaluate((element) => element.matches(':focus-visible'))).toBe(true);
@@ -209,22 +209,40 @@ for (const route of routes) {
 
       if (route.name === 'map') {
         await expect(root.getByText('Bãi biển Mỹ Khê', { exact: true }).first()).toBeVisible();
-        await expect(root.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
-        await expectPrimaryBeforeSecondary(
-          root.getByRole('region', { name: 'Tìm kiếm & chọn địa điểm' }),
-          root.getByRole('region', { name: 'Bản đồ địa điểm đã lưu' }),
-          viewport.width <= 900,
-        );
+        // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
+        await expect(
+          root.getByText('Bản đồ nền chưa khả dụng').or(root.locator('.leaflet-container')),
+        ).toBeVisible();
+        if (viewport.width > 768) {
+          await expectPrimaryBeforeSecondary(
+            root.getByRole('region', { name: 'Địa điểm đã lưu' }),
+            root.locator('[data-region="map-panel"]'),
+            viewport.width <= 1100,
+          );
+        } else {
+          // Approved mobile template: search, filters, map, then list (display: contents panels).
+          const search = await root.getByRole('searchbox').boundingBox();
+          const viewportBox = await root
+            .locator('section[aria-label="Bản đồ hành trình"]')
+            .boundingBox();
+          const list = await root.locator('[data-region="place-list"]').boundingBox();
+          expect(search).not.toBeNull();
+          expect(viewportBox!.y).toBeGreaterThan(search!.y);
+          expect(list!.y).toBeGreaterThanOrEqual(viewportBox!.y + viewportBox!.height - 1);
+        }
       } else if (route.name === 'dress-code') {
         await expect(root.getByText('Trang phục thoáng mát', { exact: true })).toBeVisible();
-        await expectPrimaryBeforeSecondary(
-          root.getByRole('region', { name: 'Hướng dẫn trang phục đã lưu' }),
-          root.getByRole('complementary', { name: 'Khả năng Dress code' }),
-          viewport.width <= 1100,
+        // A20 (UI declutter): the read-only aside was removed; its "Chỉ xem" chip now sits
+        // with the scope filters, above the saved guidance cards.
+        const readOnlyChip = root.getByText('Chỉ xem', { exact: true });
+        await expect(readOnlyChip).toBeVisible();
+        expect((await readOnlyChip.boundingBox())!.y).toBeLessThan(
+          (await root.getByRole('region', { name: 'Hướng dẫn trang phục đã lưu' }).boundingBox())!
+            .y,
         );
       } else {
         await expect(root.getByText('Áo mưa', { exact: true })).toBeVisible();
-        const summary = root.getByRole('region', { name: 'Tiến độ packing list' });
+        const summary = root.getByRole('region', { name: 'Tiến độ đồ đạc' });
         const filters = root.getByRole('group', { name: 'Bộ lọc vật dụng' });
         expect((await filters.boundingBox())!.y).toBeGreaterThan((await summary.boundingBox())!.y);
         if (viewport.width <= 402) {
@@ -273,9 +291,9 @@ for (const route of routes) {
 
       const last =
         route.name === 'map'
-          ? root.getByText(/Chỉ xem địa điểm đã lưu/)
+          ? root.getByRole('button', { name: 'Đặt pin thủ công' })
           : route.name === 'dress-code'
-            ? root.getByRole('complementary', { name: 'Khả năng Dress code' })
+            ? root.getByRole('region', { name: 'Hướng dẫn trang phục đã lưu' })
             : root.getByText(/Danh sách hiện chỉ hỗ trợ xem/);
       await last.scrollIntoViewIfNeeded();
       await expect(last).toBeInViewport();

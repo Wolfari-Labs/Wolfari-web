@@ -72,18 +72,18 @@ Không chạy dev và preview đồng thời trên 5273. `dist-demo/` là bản 
 
 ## 4. Cổng và tài khoản
 
-| Thành phần | Local demo |
-| --- | --- |
-| Web | localhost:5273 |
-| Gateway | 127.0.0.1:13000 |
-| Identity HTTP/gRPC | 13101 / 13201 |
-| Trip HTTP/gRPC | 13102 / 13202 |
-| Finance HTTP/gRPC | 13104 / 13204 |
-| Automation HTTP/gRPC | 13105 / 13205 |
-| PostgreSQL | 15432 |
-| RabbitMQ AMQP/UI | 25672 / 25673 |
-| MinIO API/UI | 19000 / 19001 |
-| Mailpit SMTP/UI | 11025 / 18025 |
+| Thành phần           | Local demo      |
+| -------------------- | --------------- |
+| Web                  | localhost:5273  |
+| Gateway              | 127.0.0.1:13000 |
+| Identity HTTP/gRPC   | 13101 / 13201   |
+| Trip HTTP/gRPC       | 13102 / 13202   |
+| Finance HTTP/gRPC    | 13104 / 13204   |
+| Automation HTTP/gRPC | 13105 / 13205   |
+| PostgreSQL           | 15432           |
+| RabbitMQ AMQP/UI     | 25672 / 25673   |
+| MinIO API/UI         | 19000 / 19001   |
+| Mailpit SMTP/UI      | 11025 / 18025   |
 
 `corepack pnpm demo:accounts` kiểm tra email/trạng thái tài khoản từ journal bằng READ ONLY, **không in password, không tạo session**. Không giả định luôn có `demo-owner@wolfari.test`. Password seed sinh ngẫu nhiên nằm trong `Wolfari-backend/.local/demo/seed.json`; chỉ đọc cục bộ, không dán vào log/issue/chat. Password trong journal có thể cũ sau khi đổi ở UI: dùng Quên mật khẩu và Mailpit <http://127.0.0.1:18025/>. Seed không tự reset tài khoản đã tồn tại. Nếu journal còn nhưng database/volume đã mất và accounts báo `MISSING`, giữ journal/backup, không giả định password reset sẽ tạo lại account; tạo bộ TEST mới bằng UI với email khác.
 
@@ -173,4 +173,4 @@ Web Locks cần secure context ([MDN](https://developer.mozilla.org/en-US/docs/W
 
 Backend còn production transport guards; đây **không phải** hướng dẫn triển khai domain chỉ bằng đổi `NODE_ENV`/URL. Cần kế hoạch TLS/internal transport, secrets, backups, migration rollout và deployment riêng; không bỏ guard để chạy tạm. TLS/domain/production, Mobile, provider thật và CI sau push: **NOT RUN**.
 
-Nguồn contract/runtime: [runbook Backend](../Wolfari-backend/docs/architecture/local-demo.md), [handoff](../Wolfari-backend/docs/architecture/demo-1-web-handoff.md), [rejection feedback](../Wolfari-backend/docs/architecture/demo-1-rejection-feedback.md). Ba DOCX chính thức không bị chỉnh sửa bởi đợt Web.
+Nguồn contract/runtime: [runbook Backend](../Wolfari-backend/docs/architecture/local-demo.md), [handoff](../Wolfari-backend/docs/architecture/demo-1-web-handoff.md), [rejection feedback](../Wolfari-backend/docs/architecture/finance-contribution-requests.md#phản-hồi-từ-chối-demo-1). Ba DOCX chính thức không bị chỉnh sửa bởi đợt Web.

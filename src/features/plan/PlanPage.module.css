@@ -5,7 +5,7 @@
   composes: breadcrumb from '../trips/components/TripWorkspace.module.css';
 }
 .breadcrumb h1 {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 400;
   margin: 0;
 }
@@ -24,18 +24,18 @@
 .days > button {
   min-width: 128px;
   min-height: 54px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: 1px solid var(--color-line);
   background: white;
   color: var(--color-ink);
   font: inherit;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   cursor: pointer;
   flex-shrink: 0;
 }
 .days > button small {
   display: block;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   margin-top: 3px;
 }
 .days > button[aria-pressed='true'] {
@@ -44,14 +44,14 @@
 }
 .metrics {
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: white;
   padding: 12px 16px;
   min-height: 74px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .metrics > div {
   display: flex;
@@ -87,7 +87,7 @@
   display: block;
 }
 .metrics strong {
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   color: var(--color-active);
   display: block;
   margin-bottom: 4px;
@@ -189,7 +189,7 @@
   background: var(--color-white);
   color: var(--color-ink);
   box-shadow: var(--shadow-raised);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 600;
   line-height: 20px;
   overflow-wrap: anywhere;
@@ -214,13 +214,13 @@
   gap: 18px;
   align-items: center;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   min-height: 78px;
   padding: 12px;
   background: white;
 }
 .time {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   line-height: 22px;
   white-space: nowrap;
 }
@@ -230,7 +230,7 @@
   border-radius: 999px;
   background: #fff7de;
   color: #986000;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 600;
 }
 .icon {
@@ -253,7 +253,7 @@
   height: 44px;
   flex: 0 0 44px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: white;
   color: var(--color-muted);
   cursor: grab;
@@ -271,11 +271,11 @@
 .emptyDrop,
 .endDrop {
   border: 2px dashed #9adbd7;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 24px 12px;
   text-align: center;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .endDrop {
   margin: 12px 0 0 34px;
@@ -343,9 +343,9 @@
   width: 44px;
   height: 44px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: white;
-  font-size: 24px;
+  font-size: var(--font-size-title);
   cursor: pointer;
 }
 .localNotice {
@@ -396,7 +396,7 @@
   padding: 0;
   max-height: none;
   overflow: auto;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .poolCard {
   position: relative;
@@ -408,7 +408,7 @@
   padding: 10px;
   margin-bottom: 12px;
   border: 1px solid #f2c75c;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: white;
 }
 .poolCover {
@@ -488,7 +488,7 @@
 .poolCard small {
   margin-top: 5px;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   white-space: nowrap;
 }
 .poolIcon {
@@ -511,14 +511,14 @@
   gap: 8px;
   padding: 18px;
   border: 2px dashed var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   text-align: center;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .poolEmpty strong {
   color: var(--color-ink);
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .plannerDialog,
 .editorDialog {
@@ -549,7 +549,7 @@
 .dialogHeader p {
   margin: 0 0 4px;
   color: #286c70;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 600;
 }
 .plannerDialogHeader h2,
@@ -580,7 +580,7 @@
   max-height: calc(100dvh - 32px);
   padding: 0;
   border: 0;
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   box-shadow: 0 24px 80px rgb(0 0 0 / 24%);
 }
 .editorDialog form {
@@ -605,14 +605,14 @@
 .nativeField {
   display: grid;
   gap: 7px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 600;
 }
 .nativeField select {
   min-height: 44px;
   padding: 8px 12px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: white;
   color: inherit;
   font: inherit;
@@ -630,7 +630,7 @@
   border-top: 1px solid var(--color-line);
 }
 .revisions {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   color: var(--color-muted);
   overflow-wrap: anywhere;
@@ -661,7 +661,7 @@
   }
   .plannerDialogBody .poolHeader h2 {
     flex-basis: 100%;
-    font-size: 18px;
+    font-size: var(--font-size-subtitle);
     line-height: 26px;
   }
   .plannerDialogBody .poolHeader > button {
@@ -724,7 +724,7 @@
   }
   .metrics {
     padding: 12px;
-    font-size: 13px;
+    font-size: var(--font-size-small);
     gap: 16px 4px;
   }
   .metrics strong {
@@ -748,7 +748,7 @@
   }
   .toolbar > button {
     flex: 1;
-    font-size: 13px;
+    font-size: var(--font-size-small);
     padding-inline: 8px;
   }
   .timelineViewport {
@@ -767,7 +767,7 @@
     height: 28px;
     left: -15px;
     top: 18px;
-    font-size: 13px;
+    font-size: var(--font-size-small);
   }
   .card {
     display: grid;
@@ -778,14 +778,14 @@
   }
   .time {
     grid-column: 1 / -1;
-    font-size: 13px;
+    font-size: var(--font-size-small);
   }
   .activityPreview strong {
-    font-size: 14px;
+    font-size: var(--font-size-label);
     line-height: 22px;
   }
   .activityPreview small {
-    font-size: 13px;
+    font-size: var(--font-size-small);
   }
   .activityPreview[open] {
     min-width: 0;
@@ -880,5 +880,12 @@
   }
   .dialogActions > button {
     flex: 1;
+  }
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .columns {
+    gap: var(--grid-gap);
   }
 }

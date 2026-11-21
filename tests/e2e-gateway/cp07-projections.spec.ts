@@ -109,34 +109,21 @@ test('CP07 Map reads only saved locations and filters scheduled/unscheduled loca
   const map = page.locator('[data-flow="gateway-map-read"]');
   await expect(map.getByText('Bãi biển Mỹ Khê', { exact: true }).first()).toBeVisible();
   await expect(map.getByText('Ngũ Hành Sơn', { exact: true }).first()).toBeVisible();
-  await expect(map.getByText('Bản đồ nền chưa khả dụng')).toBeVisible();
-  const routeControl = map.getByText('Hiển thị lịch trình', { exact: true });
-  await expect(routeControl).toHaveCSS('color', 'rgb(255, 255, 255)');
-  await expect(routeControl).toHaveCSS('background-color', 'rgb(0, 107, 146)');
-  await expect(routeControl).toHaveCSS('font-weight', '600');
-  const icons = map.getByLabel('Chú thích trạng thái địa điểm').locator('[aria-hidden]');
-  await expect(icons).toHaveCount(3);
-  for (const icon of await icons.all()) {
-    const circle = (await icon.locator('img').nth(0).boundingBox())!;
-    const glyph = (await icon.locator('img').nth(1).boundingBox())!;
-    expect(Math.abs(circle.x + circle.width / 2 - glyph.x - glyph.width / 2)).toBeLessThan(0.5);
-    expect(Math.abs(circle.y + circle.height / 2 - glyph.y - glyph.height / 2)).toBeLessThan(0.5);
-  }
+  // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
   await expect(
-    map.getByRole('img', { name: /Đã thêm vào lịch trình: Bãi biển Mỹ Khê/ }),
+    map.getByText('Bản đồ nền chưa khả dụng').or(map.locator('.leaflet-container')),
   ).toBeVisible();
-  await expect(
-    map.getByRole('img', { name: /Đã chọn, chưa xếp lịch: Ngũ Hành Sơn/ }),
-  ).toBeVisible();
-  await expect(map.getByRole('button', { name: /Chọn |Xóa / })).toHaveCount(0);
-  await map.getByRole('button', { name: 'Trong lịch', exact: true }).click();
+  await map.getByRole('button', { name: /^Trong lịch \(/ }).click();
   await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toBeVisible();
   await expect(map.getByRole('button', { name: /Ngũ Hành Sơn/ })).toHaveCount(0);
-  await map.getByRole('button', { name: 'Chưa xếp', exact: true }).click();
+  await map.getByRole('button', { name: /^Chưa xếp \(/ }).click();
   await expect(map.getByRole('button', { name: /Ngũ Hành Sơn/ })).toBeVisible();
   await expect(map.getByRole('button', { name: /Bãi biển Mỹ Khê/ })).toHaveCount(0);
-  await expect(map.getByText('Chưa có tọa độ hợp lệ')).toBeVisible();
-  await expect(map.getByRole('button', { name: /Lưu|Thêm địa điểm|Bỏ chọn/ })).toHaveCount(0);
+  await expect(
+    map.getByRole('article', { name: 'Đang chọn Ngũ Hành Sơn' }).getByText('Chưa có tọa độ hợp lệ'),
+  ).toBeVisible();
+  // Approved provider integration adds explicit writes; browsing/filtering still issues none.
+  await expect(map.getByRole('button', { name: 'Đặt pin thủ công' })).toBeVisible();
   expect(tripWrites(gateway)).toEqual([]);
 });
 
@@ -264,7 +251,7 @@ test('CP07 empty Map/Dress/Packing remain readable and issue no writes', async (
 }) => {
   await login(page);
   for (const [path, emptyText] of [
-    ['map', /Chuyến đi chưa có địa điểm/],
+    ['map', /Không có địa điểm phù hợp/],
     ['dress-code', /Chưa có hướng dẫn trang phục/],
     ['packing', /Chưa có hành lý đã lưu/],
   ] as const) {
