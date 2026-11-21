@@ -16,6 +16,7 @@ import {
   type RefundStatus,
 } from './model/fund';
 import { Button } from '../../shared/components/Button';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
@@ -233,7 +234,12 @@ function FixtureFundPage() {
   const error = tripQuery.isError || fundQuery.isError ? { code: 'SERVICE_UNAVAILABLE' as const, correlationId: null, retryable: true } : tripQuery.data?.status === 'error' ? tripQuery.data.error : trip && !allowed ? { code: 'PERMISSION_DENIED' as const, correlationId: null, retryable: false } : result?.status === 'error' ? result.error : null;
   return (
     <section className={styles.page} data-flow="fund-preview" data-node-id="768:7778">
-      <div className={styles.breadcrumb}><Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link><span aria-hidden="true">›</span><span>{trip?.name ?? 'Chuyến đi'}</span><span aria-hidden="true">›</span><h1>Quỹ nhóm</h1></div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Quỹ nhóm"
+        mobile={<div className={styles.breadcrumb}><Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link><span aria-hidden="true">›</span><span>{trip?.name ?? 'Chuyến đi'}</span><span aria-hidden="true">›</span><h1>Quỹ nhóm</h1></div>}
+      />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       {error ? <ErrorState error={error} retry={() => { void tripQuery.refetch(); void fundQuery.refetch(); }} /> : tripQuery.isPending || (allowed && fundQuery.isPending) ? <ContentState state="loading" headingLevel={2} /> : fund ? <FundWorkspace data={fund} /> : <ContentState state="empty" headingLevel={2} />}
       {previewEnabled && <details className="preview" data-preview="fund"><summary>Fund preview · Dữ liệu minh họa</summary><Select label="Trạng thái quỹ" value={scenario} onChange={(e) => { const next = fundScenarios.find((item) => item === e.target.value); if (next) setScenario(next); }}>{fundScenarios.map((item) => <option key={item}>{item}</option>)}</Select>{fund && <p>Finance version {fund.fund.financeVersion} · {fund.viewerRole} · {fund.environment} fixture</p>}</details>}

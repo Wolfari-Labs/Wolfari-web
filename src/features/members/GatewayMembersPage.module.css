@@ -1,19 +1,29 @@
 .page {
+  composes: page from '../../shared/styles/WorkspacePage.module.css';
   min-width: 0;
   min-height: 100%;
-  padding: 8px 22px 24px 18px;
   color: var(--color-ink);
   background: var(--color-background);
 }
 .breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 8px;
-  font-size: 13px;
-  color: var(--color-muted);
+  composes: breadcrumb from '../../shared/styles/WorkspacePage.module.css';
 }
-.breadcrumb a,
+@media (max-width: 768px) {
+  .page {
+    padding: 8px 22px 24px 18px;
+  }
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: var(--font-size-small);
+    color: var(--color-muted);
+  }
+  .breadcrumb a {
+    color: var(--color-action-primary);
+  }
+}
 .guidance a {
   color: var(--color-action-primary);
 }
@@ -33,7 +43,7 @@
   margin-block: 16px 12px;
   padding: 6px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--color-white);
 }
 .actions > button {
@@ -50,7 +60,7 @@
   gap: 18px;
   padding: 16px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--color-white);
   align-items: start;
 }
@@ -69,7 +79,7 @@
 .panel h2,
 .guidance h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--font-size-card-title);
   line-height: 1.4;
 }
 .panel p,
@@ -80,19 +90,19 @@
 .intro,
 .metadata {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 1.6;
 }
 .note {
   padding: 14px;
   border: 1px solid var(--color-line);
   border-left: 3px solid var(--color-active);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   background: var(--color-note);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .note h3 {
-  font-size: 14px;
+  font-size: var(--font-size-label);
   margin: 0 0 8px;
 }
 .note[data-tone='owner'] {
@@ -114,8 +124,8 @@
   min-height: 44px;
   padding: 8px 12px;
   border: 1px solid var(--color-line);
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: var(--radius-6);
+  font-size: var(--font-size-small);
   text-align: center;
 }
 .list {
@@ -129,7 +139,7 @@
   min-width: 0;
   padding: 14px;
   border: 1px solid var(--color-line);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .memberRow {
   display: grid;
@@ -159,7 +169,7 @@
 }
 .list details {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   color: var(--color-muted);
 }
 .page summary {
@@ -193,7 +203,7 @@
   min-width: 0;
   padding: 12px;
   border: 1px solid var(--color-line);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .radioGroup {
   min-width: 0;
@@ -214,7 +224,7 @@
   min-height: 68px;
   padding: 14px;
   border: 1px solid var(--color-line);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   cursor: pointer;
 }
 .radioCard:has(:checked) {
@@ -254,5 +264,20 @@
   }
   .actions > button:last-child {
     margin-left: 0;
+  }
+}
+
+/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
+@media (min-width: 769px) {
+  .workspace,
+  .policyWorkspace {
+    gap: var(--grid-gap);
+  }
+}
+
+/* Side column only where the page is not collapsing to fewer columns. */
+@media (min-width: 1101px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr) var(--side-panel-width);
   }
 }

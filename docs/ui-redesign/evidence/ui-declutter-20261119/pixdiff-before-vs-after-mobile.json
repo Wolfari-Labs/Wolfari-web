@@ -1,0 +1,502 @@
+[
+ {
+  "name": "gateway-dress-code-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   922
+  ],
+  "b": [
+   320,
+   600
+  ]
+ },
+ {
+  "name": "gateway-dress-code-402x874.png",
+  "status": "DIFF",
+  "diffPixels": 134675,
+  "size": [
+   402,
+   874
+  ],
+  "bbox": [
+   14,
+   18,
+   387,
+   783
+  ]
+ },
+ {
+  "name": "gateway-fund-320x600.png",
+  "status": "DIFF",
+  "diffPixels": 10020,
+  "size": [
+   320,
+   2673
+  ],
+  "bbox": [
+   23,
+   2463,
+   292,
+   2622
+  ]
+ },
+ {
+  "name": "gateway-fund-402x874.png",
+  "status": "DIFF",
+  "diffPixels": 10331,
+  "size": [
+   402,
+   2500
+  ],
+  "bbox": [
+   23,
+   2300,
+   365,
+   2439
+  ]
+ },
+ {
+  "name": "gateway-map-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   1044
+  ],
+  "b": [
+   320,
+   932
+  ]
+ },
+ {
+  "name": "gateway-map-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   1100
+  ],
+  "b": [
+   402,
+   1012
+  ]
+ },
+ {
+  "name": "gateway-members-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   2081
+  ]
+ },
+ {
+  "name": "gateway-members-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   1965
+  ]
+ },
+ {
+  "name": "gateway-overview-320x600.png",
+  "status": "DIFF",
+  "diffPixels": 576,
+  "size": [
+   320,
+   1935
+  ],
+  "bbox": [
+   114,
+   976,
+   187,
+   992
+  ]
+ },
+ {
+  "name": "gateway-overview-402x874.png",
+  "status": "DIFF",
+  "diffPixels": 3834,
+  "size": [
+   402,
+   1699
+  ],
+  "bbox": [
+   220,
+   604,
+   351,
+   726
+  ]
+ },
+ {
+  "name": "gateway-packing-320x600.png",
+  "status": "DIFF",
+  "diffPixels": 2243,
+  "size": [
+   320,
+   1052
+  ],
+  "bbox": [
+   16,
+   114,
+   171,
+   415
+  ]
+ },
+ {
+  "name": "gateway-packing-402x874.png",
+  "status": "DIFF",
+  "diffPixels": 2224,
+  "size": [
+   402,
+   908
+  ],
+  "bbox": [
+   31,
+   87,
+   357,
+   359
+  ]
+ },
+ {
+  "name": "gateway-plan-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   2197
+  ],
+  "b": [
+   320,
+   2058
+  ]
+ },
+ {
+  "name": "gateway-plan-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   1932
+  ],
+  "b": [
+   402,
+   1813
+  ]
+ },
+ {
+  "name": "gateway-price-watch-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   1031
+  ],
+  "b": [
+   320,
+   963
+  ]
+ },
+ {
+  "name": "gateway-price-watch-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   981
+  ],
+  "b": [
+   402,
+   913
+  ]
+ },
+ {
+  "name": "gateway-settings-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   2180
+  ],
+  "b": [
+   320,
+   1765
+  ]
+ },
+ {
+  "name": "gateway-settings-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   2110
+  ],
+  "b": [
+   402,
+   1735
+  ]
+ },
+ {
+  "name": "preview-dress-code-320x600.png",
+  "status": "DIFF",
+  "diffPixels": 1947,
+  "size": [
+   320,
+   2721
+  ],
+  "bbox": [
+   121,
+   1982,
+   270,
+   2070
+  ]
+ },
+ {
+  "name": "preview-dress-code-402x874.png",
+  "status": "DIFF",
+  "diffPixels": 1947,
+  "size": [
+   402,
+   2744
+  ],
+  "bbox": [
+   121,
+   2014,
+   270,
+   2103
+  ]
+ },
+ {
+  "name": "preview-fund-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   2794
+  ]
+ },
+ {
+  "name": "preview-fund-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   2664
+  ]
+ },
+ {
+  "name": "preview-home-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   4342
+  ]
+ },
+ {
+  "name": "preview-home-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   4660
+  ]
+ },
+ {
+  "name": "preview-map-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   1618
+  ],
+  "b": [
+   320,
+   1546
+  ]
+ },
+ {
+  "name": "preview-map-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   1674
+  ],
+  "b": [
+   402,
+   1626
+  ]
+ },
+ {
+  "name": "preview-members-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   2410
+  ]
+ },
+ {
+  "name": "preview-members-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   2298
+  ]
+ },
+ {
+  "name": "preview-overview-320x600.png",
+  "status": "DIFF",
+  "diffPixels": 576,
+  "size": [
+   320,
+   2164
+  ],
+  "bbox": [
+   114,
+   860,
+   187,
+   876
+  ]
+ },
+ {
+  "name": "preview-overview-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   1927
+  ],
+  "b": [
+   402,
+   1897
+  ]
+ },
+ {
+  "name": "preview-packing-320x600.png",
+  "status": "DIFF",
+  "diffPixels": 2243,
+  "size": [
+   320,
+   2082
+  ],
+  "bbox": [
+   16,
+   114,
+   171,
+   415
+  ]
+ },
+ {
+  "name": "preview-packing-402x874.png",
+  "status": "DIFF",
+  "diffPixels": 2225,
+  "size": [
+   402,
+   2006
+  ],
+  "bbox": [
+   31,
+   87,
+   353,
+   389
+  ]
+ },
+ {
+  "name": "preview-plan-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   2180
+  ]
+ },
+ {
+  "name": "preview-plan-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   1942
+  ]
+ },
+ {
+  "name": "preview-price-watch-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   3365
+  ]
+ },
+ {
+  "name": "preview-price-watch-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   2904
+  ]
+ },
+ {
+  "name": "preview-profile-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   1745
+  ],
+  "b": [
+   320,
+   1703
+  ]
+ },
+ {
+  "name": "preview-profile-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   1737
+  ],
+  "b": [
+   402,
+   1695
+  ]
+ },
+ {
+  "name": "preview-settings-320x600.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   320,
+   2321
+  ],
+  "b": [
+   320,
+   1906
+  ]
+ },
+ {
+  "name": "preview-settings-402x874.png",
+  "status": "SIZE_DIFF",
+  "a": [
+   402,
+   2281
+  ],
+  "b": [
+   402,
+   1906
+  ]
+ },
+ {
+  "name": "preview-trips-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   2715
+  ]
+ },
+ {
+  "name": "preview-trips-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   2897
+  ]
+ },
+ {
+  "name": "preview-trips-new-320x600.png",
+  "status": "IDENTICAL",
+  "size": [
+   320,
+   1058
+  ]
+ },
+ {
+  "name": "preview-trips-new-402x874.png",
+  "status": "IDENTICAL",
+  "size": [
+   402,
+   1039
+  ]
+ }
+]

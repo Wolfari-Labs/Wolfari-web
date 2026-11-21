@@ -92,9 +92,15 @@
 }
 .desktopSubtitle {
   margin: 4px 0 0 32px;
-  font-size: 14.5px;
+  font-size: var(--font-size-label);
   line-height: 22px;
   color: #075495;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .desktopSubtitle {
+    font-size: 14.5px;
+  }
 }
 .mobileSubtitle,
 .mobileUnderline {
@@ -107,7 +113,7 @@
   width: 178px;
   min-height: 50px;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: linear-gradient(to right, #05a99f, #008bb5);
   color: white;
   box-shadow: 0 5px 12px #036b8029;
@@ -115,7 +121,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .create img {
   width: 20px;
@@ -150,7 +156,7 @@
   }
   .desktopSubtitle {
     margin-left: 0;
-    font-size: 12px;
+    font-size: var(--font-size-caption);
   }
   .accent {
     display: none;

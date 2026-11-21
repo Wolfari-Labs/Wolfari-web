@@ -279,8 +279,9 @@ for (const width of [1440, 402]) {
         'href',
         '/trips/new',
       );
+      // A26 (UI declutter): the three locked placeholder filters were removed, not just disabled.
       for (const label of ['Vai trò: Tất cả', 'Thời gian', 'Bộ lọc'])
-        await expect(page.getByRole('button', { name: label, exact: true })).toBeDisabled();
+        await expect(page.getByRole('button', { name: label, exact: true })).toHaveCount(0);
       for (const action of await articles(page).getByRole('button').all())
         await expect(action).toBeEnabled();
     } else

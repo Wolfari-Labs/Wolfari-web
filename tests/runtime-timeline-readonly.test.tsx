@@ -110,6 +110,7 @@ describe('read-only Gateway timeline navigation', () => {
     expect(screen.queryByRole('listitem', { name: 'Trong ngày' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Kéo hoạt động/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('menuitem', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Sửa' })).not.toBeInTheDocument();
     for (const action of [onEdit, onDelete, onComplete, onMove, onArrange])
       expect(action).not.toHaveBeenCalled();
   });

@@ -8,7 +8,7 @@ import {
   type RefObject,
   type KeyboardEvent,
 } from 'react';
-import { Link, useParams, useOutletContext } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { Accessibility } from '@dnd-kit/dom';
 import {
   DragDropProvider,
@@ -40,6 +40,7 @@ import {
 } from './model/plan-draft';
 import { activityTime, planDays } from './model/plan-presentation';
 import { Drawer } from '../../shared/components/Drawer';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { TimelineCard } from './components/TimelineCard';
 import { MotionProvider } from '../../shared/components/MotionProvider';
 import { Button } from '../../shared/components/Button';
@@ -977,11 +978,11 @@ function GatewayPlanPage() {
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   return (
     <section className={styles.page} data-flow="plan-server">
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-        <span>›</span>
-        <h1>Lịch trình</h1>
-      </div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Lịch trình"
+      />
       {snapshot.state.status === 'ready' ? (
         <>
           <TripHero trip={snapshot.state.trip} compact variant="landscape" />
@@ -1047,11 +1048,11 @@ function PreviewPlanPage() {
       data-local-draft="true"
       data-node-id="20:236"
     >
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-        <span aria-hidden="true">›</span>
-        <h1>Lịch trình</h1>
-      </div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Lịch trình"
+      />
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}

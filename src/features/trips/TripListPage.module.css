@@ -87,49 +87,18 @@
   overflow: hidden;
 }
 .search input {
-  font-size: 13.5px;
+  font-size: var(--font-size-small);
   min-height: 46px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .search input {
+    font-size: 13.5px;
+  }
 }
 .search img {
   width: 20px;
   height: 20px;
-}
-.unavailableFilters {
-  display: flex;
-  gap: 12px;
-}
-.unavailableFilters button {
-  min-height: 46px;
-  border: 1.2px solid #72c6ea;
-  background: white;
-  color: #0677b8;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  font-size: 13.5px;
-  padding: 0 14px;
-  white-space: nowrap;
-}
-.unavailableFilters button:first-child {
-  width: 200px;
-}
-.unavailableFilters button:nth-child(2) {
-  width: 165px;
-}
-.unavailableFilters button:last-child {
-  width: 150px;
-}
-.unavailableFilters img {
-  width: 20px;
-  height: 20px;
-}
-.unavailableFilters button span {
-  margin-left: auto;
-}
-.unavailableFilters > p {
-  flex-basis: 100%;
 }
 .mobileCreate + p {
   margin-top: 8px;
@@ -161,7 +130,7 @@
   background: transparent;
   color: #0677b8;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   font-weight: 500;
 }
 .count {
@@ -170,9 +139,16 @@
   justify-content: center;
   min-width: 22px;
   height: 22px;
-  border-radius: 11px;
+  border-radius: var(--radius-12);
   background: #eaf5fb;
-  font-size: 10.5px;
+  font-size: var(--font-size-caption);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .count {
+    font-size: 10.5px;
+    border-radius: 11px;
+  }
 }
 .statuses button[aria-pressed='true'] {
   color: #008f9d;
@@ -185,8 +161,14 @@
   left: 0;
   right: 0;
   height: 3px;
-  border-radius: 2px;
+  border-radius: var(--radius-6);
   background: #008f9d;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .statuses button[aria-pressed='true']::after {
+    border-radius: 2px;
+  }
 }
 .statuses button[aria-pressed='true'] .count {
   background: #d8f5f1;
@@ -196,9 +178,15 @@
   flex-shrink: 0;
 }
 .sort select {
-  font-size: 12.5px;
+  font-size: var(--font-size-small);
   min-height: 44px;
   padding-block: 8px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .sort select {
+    font-size: 12.5px;
+  }
 }
 .grid {
   display: grid;
@@ -214,7 +202,7 @@
 .loadedNotice {
   margin: -6px 0 14px;
   color: var(--color-muted);
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   line-height: 18px;
 }
 .refreshError {
@@ -231,11 +219,11 @@
   padding: 32px;
   background: #ffffffb3;
   border: 1px solid var(--color-line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   text-align: center;
 }
 .empty h2 {
-  font-size: 20px;
+  font-size: var(--font-size-card-title);
   line-height: 28px;
 }
 .mobileLabel,
@@ -254,15 +242,6 @@
 @media (max-width: 1250px) {
   .content {
     padding-inline: 32px;
-  }
-  .unavailableFilters button:first-child {
-    width: 150px;
-  }
-  .unavailableFilters button:nth-child(2) {
-    width: 136px;
-  }
-  .unavailableFilters button:last-child {
-    width: 110px;
   }
   .statuses {
     gap: 16px;
@@ -284,9 +263,6 @@
   }
   .search {
     width: 100%;
-  }
-  .unavailableFilters {
-    flex-wrap: wrap;
   }
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

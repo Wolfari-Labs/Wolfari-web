@@ -323,6 +323,7 @@ function DropList({
       }}
       className={pool ? styles.poolList : styles.list}
       data-gateway-list={day ?? 'POOL'}
+      data-day-list={day ?? 'POOL'}
       data-insertion-slot={active ? dnd.intent?.target.index : undefined}
       aria-label={label}
       tabIndex={0}
@@ -372,7 +373,11 @@ export function RuntimeTimeline({
   utilities?: ReactNode;
 }) {
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
-  const [day, setDay] = useState(days[0] ?? 'ALL');
+  // `?day=YYYY-MM-DD` (e.g. from "Xem lịch trình Ngày N" on the Map) opens that day.
+  const [day, setDay] = useState(() => {
+    const requested = new URLSearchParams(window.location.search).get('day');
+    return requested && days.includes(requested) ? requested : (days[0] ?? 'ALL');
+  });
   const [sidePanel, setSidePanel] = useState<'none' | 'pool' | 'map'>('none');
   const [poolQuery, setPoolQuery] = useState('');
   const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1201px)').matches);
@@ -445,6 +450,13 @@ export function RuntimeTimeline({
       (day === 'ALL' || (gatewayActivityDay(a, trip.timezone) ?? 'POOL') === day) &&
       (sidePanel !== 'pool' || gatewayActivityDay(a, trip.timezone) !== null),
   );
+  const outsideDays = [
+    ...new Set(
+      items
+        .map((activity) => gatewayActivityDay(activity, trip.timezone))
+        .filter((value): value is string => value !== null && !days.includes(value)),
+    ),
+  ].sort();
   const linkedLocationIds = new Set(items.map((activity) => activity.selectedLocationId));
   const normalizedQuery = poolQuery.trim().toLocaleLowerCase('vi');
   const poolLocations = plan.selectedLocations.filter(
@@ -578,6 +590,21 @@ export function RuntimeTimeline({
                 >
                   {group.map((activity, index) => row(activity, index, group))}
                 </DropList>
+              </section>
+            );
+          })}
+          {outsideDays.map((value) => {
+            // Dated outside the Trip calendar: still visible, never a drop target.
+            const group = visible.filter(
+              (activity) => gatewayActivityDay(activity, trip.timezone) === value,
+            );
+            const label = `Ngoài chuyến đi · ${value.slice(8)}/${value.slice(5, 7)}/${value.slice(0, 4)}`;
+            return (
+              <section key={value}>
+                <h3>{label}</h3>
+                <ol className={styles.list} aria-label={`Hoạt động ${label}`} data-day-list={value}>
+                  {group.map((activity, index) => row(activity, index, group))}
+                </ol>
               </section>
             );
           })}

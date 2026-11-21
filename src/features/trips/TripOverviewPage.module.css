@@ -1,39 +1,51 @@
 .page {
+  composes: page from '../../shared/styles/WorkspacePage.module.css';
   width: 100%;
-  padding: 8px 22px 24px 18px;
   color: var(--color-ink);
-  max-width: none;
-  margin-inline: 0;
+  /* Row/card minimums the Figma contract and its tests rely on, declared once. */
+  --overview-workspace-min: 408px;
+  --overview-fare-min: 190px;
+  --overview-postcard-min: 204px;
 }
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 22px;
-  margin-bottom: 4px;
-  font-size: 13px;
-  line-height: 20px;
+  composes: breadcrumb from '../../shared/styles/WorkspacePage.module.css';
 }
-.breadcrumb h1 {
-  font: inherit;
-  margin: 0;
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 22px;
+    margin-bottom: 4px;
+    font-size: var(--font-size-small);
+    line-height: 20px;
+  }
+
+  .breadcrumb h1 {
+    font: inherit;
+    margin: 0;
+  }
+
+  .breadcrumb a {
+    position: relative;
+    color: var(--color-action-primary);
+  }
+
+  .breadcrumb a::after {
+    content: '';
+    position: absolute;
+    inset: -11px 0;
+  }
 }
-.breadcrumb a {
-  position: relative;
-  color: var(--color-action-primary);
-}
-.breadcrumb a::after {
-  content: '';
-  position: absolute;
-  inset: -11px 0;
-}
+
 .hero {
   position: relative;
   overflow: clip;
   isolation: isolate;
   min-height: 170px;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: #f0fbff var(--trip-cover, none) center / cover no-repeat;
   display: flex;
   justify-content: space-between;
@@ -55,17 +67,23 @@
   background: url('../../shared/assets/figma/b6b89.svg') left top / 490px 170px no-repeat;
 }
 .hero h2 {
-  font-size: 30px;
+  font-size: var(--font-size-heading);
   line-height: 40px;
   margin: 0 0 10px;
   overflow-wrap: anywhere;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .hero h2 {
+    font-size: 30px;
+  }
 }
 .meta {
   display: flex;
   gap: 18px;
   align-items: center;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   line-height: 20px;
   font-weight: 500;
 }
@@ -129,7 +147,7 @@
 }
 .hero[data-variant='schedule'] h2,
 .hero[data-variant='landscape'] h2 {
-  font-size: 32px;
+  font-size: var(--font-size-heading);
   line-height: 40px;
 }
 .hero[data-variant='schedule'] .actions {
@@ -137,7 +155,7 @@
   padding-right: 30px;
 }
 .hero[data-variant='landscape'] {
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: #def7ff url('../../shared/assets/figma/bd989.svg') right top / 1180px 150px no-repeat;
 }
 .hero[data-variant='landscape'] .paper {
@@ -149,10 +167,16 @@
   background-size: 480px 150px;
 }
 .hero[data-variant='landscape'] .actions > :is(button, a) {
-  border-radius: 18px;
+  border-radius: var(--radius-16);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .hero[data-variant='landscape'] .actions > :is(button, a) {
+    border-radius: 18px;
+  }
 }
 .description {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   margin: 12px 0;
 }
@@ -162,7 +186,7 @@
 .memberFeedback > p {
   margin: 0;
   color: var(--color-muted);
-  font-size: 12px;
+  font-size: var(--font-size-caption);
 }
 .memberFeedback button {
   margin-left: 12px;
@@ -176,19 +200,25 @@
 .panel {
   background: white;
   border: 1px solid var(--color-line);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 16px;
   min-width: 0;
   box-shadow: 0 2px 5px #0547660a;
 }
 .panel h2 {
   margin: 0 0 14px;
-  font-size: 15px;
+  font-size: var(--font-size-body);
   line-height: 22px;
   font-weight: 500;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .panel h2 {
+    font-size: 15px;
+  }
+}
 .panel p {
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .summaries > .panel {
@@ -199,7 +229,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--font-size-label);
   margin-bottom: 16px;
 }
 .summaries h2 img {
@@ -210,11 +240,11 @@
   color: var(--color-muted);
   margin: 12px 0;
 }
-.summaryValue {
+.panel .summaryValue {
   margin: 0 0 8px;
   color: var(--color-ink);
-  font-size: clamp(18px, 2vw, 24px) !important;
-  line-height: 30px !important;
+  font-size: clamp(var(--font-size-subtitle), 2vw, var(--font-size-title));
+  line-height: 30px;
   font-weight: 600;
 }
 .summaryDetail {
@@ -260,12 +290,12 @@
   gap: 14px;
 }
 .postcard {
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: white url('../../shared/assets/figma/916ba.png') center bottom / 100% auto no-repeat;
   min-height: 200px;
   flex: 1;
   padding: 18px;
-  font-size: 16px;
+  font-size: var(--font-size-body);
   line-height: 26px;
 }
 .postcard p {
@@ -281,7 +311,7 @@
   min-width: 0;
 }
 .metadata {
-  font-size: 12px;
+  font-size: var(--font-size-caption);
   overflow-wrap: anywhere;
 }
 .metadata dl {
@@ -297,7 +327,7 @@
 }
 @media (min-width: 1101px) {
   .workspace {
-    min-height: 408px;
+    min-height: var(--overview-workspace-min);
   }
   .itineraryPanel {
     padding: 12px 15px 0;
@@ -324,10 +354,10 @@
     margin-top: 8px;
   }
   .aside > .panel:first-child {
-    min-height: 190px;
+    min-height: var(--overview-fare-min);
   }
   .postcard {
-    min-height: 204px;
+    min-height: var(--overview-postcard-min);
   }
 }
 @media (max-width: 1200px) {
@@ -444,5 +474,89 @@
   }
   .summaries > .panel {
     min-height: 136px;
+  }
+}
+
+/*
+ * UI declutter plan C3-C4 (D3, D4, D5, D7). Desktop only: everything below is scoped to >= 769px so
+ * the deferred mobile layout keeps the rules above.
+ */
+@media (min-width: 769px) {
+  /* C3: one hero geometry for every variant (D3); variants only change the artwork. */
+  .hero,
+  .hero[data-variant] {
+    min-height: 150px;
+    border-radius: var(--radius-hero);
+  }
+  .hero .paper,
+  .hero[data-variant] .paper {
+    padding: 31px 28px 20px;
+  }
+  .hero h2,
+  .hero[data-variant] h2 {
+    font-size: var(--font-size-heading);
+    line-height: var(--line-heading);
+  }
+  .hero .actions,
+  .hero[data-variant] .actions {
+    padding: 14px 20px 14px 0;
+  }
+  .hero .actions > :is(button, a),
+  .hero[data-variant] .actions > :is(button, a) {
+    border-radius: var(--radius-16);
+  }
+  /* The photo variant shares the landscape paper artwork so the shorter hero is not cropped. */
+  .hero[data-variant='photo'] .paper::before {
+    width: 480px;
+    background-image: url('../../shared/assets/figma/25ff8.svg');
+    background-size: 480px 150px;
+  }
+
+  /* C4: one card title style for KPI and workspace cards, KPI values on the title step. */
+  .panel {
+    box-shadow: var(--shadow-selection);
+  }
+  .panel h2,
+  .summaries > .panel h2 {
+    font-size: var(--font-size-body);
+    font-weight: var(--weight-semibold);
+    line-height: var(--line-body);
+  }
+  .panel .summaryValue {
+    font-size: var(--font-size-title);
+    line-height: var(--line-title);
+  }
+  .summaries > .panel {
+    padding: var(--card-padding-narrow);
+  }
+  .summaries,
+  .workspace {
+    gap: var(--grid-gap);
+  }
+  .summaries,
+  .workspace {
+    margin-top: var(--grid-gap);
+  }
+  .aside {
+    gap: var(--grid-gap);
+  }
+}
+
+/* Both rows share one four-column line grid; the itinerary takes two columns (D7). */
+@media (min-width: 1101px) {
+  .summaries,
+  .workspace {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .workspace > .itineraryPanel {
+    grid-column: span 2;
+  }
+}
+
+/* 769-1100px: both rows use the same two columns. */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .summaries,
+  .workspace {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

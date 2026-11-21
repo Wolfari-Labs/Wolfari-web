@@ -16,7 +16,7 @@
   width: 76.92%;
   height: 78.09%;
   padding: 2.15%;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   transform: rotate(-7deg);
   background: white;
   box-shadow: 0 8px 18px #05458c24;
@@ -26,7 +26,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: var(--radius-6);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .main img {
+    border-radius: 2px;
+  }
 }
 .tape {
   position: absolute;
@@ -67,7 +73,13 @@
   display: block;
   width: 100%;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: var(--radius-6);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .scene figure img {
+    border-radius: 2px;
+  }
 }
 .scene figcaption {
   margin-top: 0;

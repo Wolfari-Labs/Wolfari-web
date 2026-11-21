@@ -11,6 +11,21 @@
   top: 8px;
   right: 8px;
 }
+.switchRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.soon {
+  padding: 2px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-pale);
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
+  line-height: 20px;
+}
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -27,7 +42,7 @@
 .list li {
   padding: 16px;
   border: 1px solid var(--color-line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow-wrap: anywhere;
 }
 .list li[data-unread] {
@@ -36,17 +51,17 @@
 }
 .list p {
   margin: 8px 0;
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .list time {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .list a,
 .preferencesLink {
   text-decoration: underline;
   text-underline-offset: 4px;
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .preferencesLink {
   display: block;
@@ -66,7 +81,7 @@
 }
 .preferences p {
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }
 .preferences summary {
   cursor: pointer;
@@ -74,7 +89,7 @@
 }
 .preferences fieldset {
   border: 1px solid var(--color-line);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px;
   margin: 12px 0;
   min-width: 0;
@@ -83,5 +98,5 @@
   display: grid;
   gap: 4px;
   margin-block: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-label);
 }

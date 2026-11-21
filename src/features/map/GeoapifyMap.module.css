@@ -1,0 +1,57 @@
+.wrapper {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+.map {
+  height: 380px;
+  width: 100%;
+  z-index: 0;
+  border-radius: var(--radius-12);
+}
+.notice {
+  padding: 24px;
+  min-height: 160px;
+  background: var(--color-surface);
+}
+.pin {
+  display: grid;
+  place-items: center;
+  border: 2px solid #9a6900;
+  background: #ffe3a1;
+  border-radius: 50%;
+  color: #573600;
+  font-weight: 700;
+}
+.scheduled {
+  background: #087052;
+  border-color: #06543f;
+  color: white;
+}
+.selected {
+  outline: 3px solid #006b92;
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .map {
+    height: 300px;
+  }
+}
+/* MAP-POI route line: solid for a routed estimate, dashed for a straight-line fallback. */
+.route,
+.routeEstimated {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* POI-OVERTURE W12: numbered grid cluster. */
+.cluster {
+  display: grid;
+  place-items: center;
+  border: 3px solid rgb(255 255 255 / 0.9);
+  border-radius: 50%;
+  background: #006f8a;
+  box-shadow: 0 0 0 4px rgb(0 111 138 / 0.25);
+  color: white;
+  font-weight: 700;
+  font-size: var(--font-size-small);
+}

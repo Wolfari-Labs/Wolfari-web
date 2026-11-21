@@ -108,7 +108,9 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
     const id = path.split('/').at(-1)!;
     if (request.method() === 'POST') {
       createdCount += 1;
-      activities.push({
+      // Like the backend: omitted optional fields are stored as null and the new
+      // activity is inserted at the requested Trip-wide position.
+      const created = {
         ...activity(
           `55555555-3333-4333-8333-${String(createdCount).padStart(12, '0')}`,
           String(body.title),
@@ -121,7 +123,13 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
         ends_at: (body.ends_at ?? null) as string | null,
         description: (body.description ?? null) as string | null,
         public_description: (body.public_description ?? null) as string | null,
-      });
+      };
+      const ordered = [...activities].sort(
+        (a, b) => a.position - b.position || a.id.localeCompare(b.id),
+      );
+      expect(Number(body.position)).toBeLessThanOrEqual(ordered.length);
+      ordered.splice(Number(body.position), 0, created);
+      activities = ordered.map((item, position) => ({ ...item, position }));
     } else if (id === 'order') {
       const ids = body.activity_ids as string[];
       expect([...ids].sort()).toEqual(activities.map((item) => item.id).sort());
@@ -153,13 +161,23 @@ export async function mockPlan(page: Page, gateway: GatewayModel) {
       ] as const) {
         if (key in body) selected[key] = body[key] as string | null;
       }
+      if (typeof body.position === 'number') {
+        // Mirror the backend: remove the activity, re-insert at the Trip-wide index.
+        const ordered = [...activities]
+          .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+          .filter((item) => item.id !== id);
+        expect(body.position).toBeLessThanOrEqual(ordered.length);
+        ordered.splice(body.position, 0, selected);
+        activities = ordered.map((item, position) => ({ ...item, position }));
+      }
     }
     activities = activities.map((item) => ({ ...item, plan_version: trip.plan_version }));
+    const createdId = `55555555-3333-4333-8333-${String(createdCount).padStart(12, '0')}`;
     const data =
       request.method() === 'DELETE' || id === 'order'
         ? { plan_version: trip.plan_version, export_revision: trip.export_revision }
         : request.method() === 'POST'
-          ? activities.at(-1)
+          ? activities.find((item) => item.id === createdId)
           : activities.find(
               (item) => item.id === (id === 'completion' ? path.split('/').at(-2) : id),
             );

@@ -1,0 +1,13 @@
+
+ RUN  v5.0.4 D:/Desktop/NHAP/PBL6/Wolfari-web
+
+
+ Test Files  58 passed (58)
+      Tests  689 passed (689)
+   Start at  03:24:28
+   Duration  104.22s (environment 42%, tests 32%, setup 13%, import 12%, transform 1%)
+
+Environment  jsdom was created 58 times · 82.87s total, 42% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

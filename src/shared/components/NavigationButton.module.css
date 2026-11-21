@@ -12,6 +12,12 @@
   text-align: left;
   flex-shrink: 0;
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .item {
+    border-radius: var(--radius-nav);
+  }
+}
 .item[aria-pressed='true'] {
   background: var(--color-selected);
 }

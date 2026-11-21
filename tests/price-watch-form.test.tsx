@@ -1,8 +1,40 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { PriceWatchForm } from '../src/features/price-watch/PriceWatchForm';
 describe('PriceWatchForm contract and field feedback', () => {
+  afterEach(() => vi.unstubAllEnvs());
+  it('cached production form restricts passengers, journey and cabin without converting VND', async () => {
+    vi.stubEnv('VITE_PRICE_WATCH_PROVIDER', 'TRAVELPAYOUTS_CACHE');
+    const save = vi.fn(),
+      user = userEvent.setup();
+    render(
+      <PriceWatchForm
+        initial={null}
+        timezone="Asia/Ho_Chi_Minh"
+        disabled={false}
+        busy={false}
+        onSave={save}
+      />,
+    );
+    for (const label of ['Hành trình', 'Người lớn', 'Trẻ em', 'Em bé', 'Hạng ghế'])
+      expect(screen.getByLabelText(label)).toBeDisabled();
+    await user.type(screen.getByLabelText('Sân bay đi (IATA)'), 'HAN');
+    await user.type(screen.getByLabelText('Sân bay đến (IATA)'), 'DAD');
+    await user.type(screen.getByLabelText('Ngày khởi hành'), '2099-01-02');
+    await user.type(screen.getByLabelText('Ngưỡng cảnh báo (VND)'), '2000000');
+    await user.click(screen.getByRole('button', { name: 'Lưu theo dõi' }));
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        provider: 'TRAVELPAYOUTS_CACHE',
+        journey_type: 'ONE_WAY',
+        passengers: { adults: 1, children: 0, infants: 0 },
+        cabin_class: 'ECONOMY',
+        currency: 'VND',
+        threshold_price: '2000000',
+      }),
+    );
+  });
   it('focuses the first invalid field without submitting', async () => {
     const save = vi.fn(),
       user = userEvent.setup();

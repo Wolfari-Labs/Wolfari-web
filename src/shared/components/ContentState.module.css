@@ -14,6 +14,13 @@
   font-weight: var(--weight-semibold);
   line-height: var(--line-title);
 }
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .state h1,
+  .state h2 {
+    font-size: var(--font-size-title);
+  }
+}
 .state p {
   line-height: 24px;
 }

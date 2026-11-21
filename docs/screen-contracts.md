@@ -73,7 +73,7 @@ Mỗi screen contract phải ghi:
 | State evidence        | success/loading/empty/error/forbidden/not-found/conflict/unavailable ở mọi shell/placeholder; snapshot `canRead=false` không render private outlet                                                                                           |
 | Evidence              | `src/features/shell/components/AppShell.tsx`, `AppShell.module.css`, `shell.fixture-repository.ts`                                                                                                                                           |
 
-Acceptance hiện tại: 40 unit/component/proxy tests và 24 browser tests đạt ngày 15/10/2026. Chuyển destination focus main và reset vùng cuộn; Back từ Plan/Members về Trip base hiển thị Tổng quan. Phase 1 chỉ đọc Trip preview đã khai báo; Phase 3 mở rộng allowlist thành sáu readable trip trong catalog, ID lạ/denied vẫn not-found. [Báo cáo Phase 1](app-shell-reconcile-2026-10-15.md) gộp shell mapping, bootstrap và reconcile với kết quả kiểm tra hiện tại.
+Acceptance hiện tại: 40 unit/component/proxy tests và 24 browser tests đạt ngày 15/10/2026. Chuyển destination focus main và reset vùng cuộn; Back từ Plan/Members về Trip base hiển thị Tổng quan. Phase 1 chỉ đọc Trip preview đã khai báo; Phase 3 mở rộng allowlist thành sáu readable trip trong catalog, ID lạ/denied vẫn not-found. [Báo cáo Phase 1](archive/implementation/app-shell-reconcile-2026-10-15.md) gộp shell mapping, bootstrap và reconcile với kết quả kiểm tra hiện tại.
 
 ## Contract: Admin Shell
 
@@ -108,7 +108,7 @@ Route `/admin` được người dùng chốt ngày 15/10/2026 cho Phase 1, ch�
 | Accessibility extension | Focus ring/hover/loading/error live semantics bổ sung cho Web; reduced motion tắt animation; font mobile dùng system SF Pro fallback, không tải font Apple.                                                                               |
 | Acceptance              | Browser ở 1440×800, 1366×520, 820×600, 768×1024, 402×874, 320×480; test native selection, input preservation, local assets, 44px targets, focus/scroll; shell regression suite giữ nguyên và mở rộng touch assertion.                     |
 
-Token/style source và test evidence: [Phase 2 handoff](design-system-phase2.md). Shell route/model/revision/permission và mutation behavior không đổi.
+Token/style source và test evidence: [Phase 2 handoff](archive/implementation/design-system-phase2.md). Shell route/model/revision/permission và mutation behavior không đổi.
 
 ## Contract: Home
 
@@ -149,7 +149,7 @@ Token/style source và test evidence: [Phase 2 handoff](design-system-phase2.md)
 | States | Read loading/success/empty/error/forbidden/not-found/conflict/unavailable; form validation lỗi giữ input và focus field đầu; login phân biệt invalid credentials/rate limit/unavailable/unknown; register accepted không lộ duplicate; verify/reset hỗ trợ token sai/hết hạn/đã dùng; profile conflict giữ draft và refetch projection; pending/unknown không phải mutation receipt |
 | Responsive / scroll | Home/public/auth/profile natural document flow. Home dùng background full-width và foreground tối đa 1440px; mây local 840×280 giữ tỉ lệ 3:1, từng layer có crop/opacity/anchor riêng và không quyết định chiều cao nội dung. Desktop Auth grid illustration + form, tablet co spacing/stack khi cần; Mobile 402/320 form/content natural, shared header drawer trái/logo giữa/avatar phải. Header Web mobile giữ 54px (ngoại lệ có chủ đích so với proposal 72px). Profile M22 summary mở local editor theo M32 `424:4048`, không thêm route hoặc saved success. Title trong content, không native bars/bottom tab; focus/touch ≥44px |
 | Source gaps | M04 budget/packing và profile notification/push devices không verified public projections → unavailable, không tạo số tiền/checklist/device sample. Backend email link vẫn trỏ `/api/v1/auth/local/*`; current-session logout thiếu `session_id` ở Web. Không bịa key/retry |
-| Runtime evidence | Backend `d8c02cb`: identity-proxy.ts allowlist + IdentityController/IdentityService/identity-crypto.ts; Web Gateway adapters gọi các route trong integration matrix. Issue #4 kiểm chứng bằng browser Gateway mode với HTTP mock, adapter/session manager thật, cổng 5174 và CI riêng; xem [bằng chứng](profile-sessions-evidence-2026-10-22.md). Chưa kiểm thử Backend thật; email/storage/cookie deployment vẫn cần harness tích hợp ngoài repository này |
+| Runtime evidence | Backend `d8c02cb`: identity-proxy.ts allowlist + IdentityController/IdentityService/identity-crypto.ts; Web Gateway adapters gọi các route trong integration matrix. Issue #4 kiểm chứng bằng browser Gateway mode với HTTP mock, adapter/session manager thật, cổng 5174 và CI riêng; xem [bằng chứng](archive/implementation/profile-sessions-evidence-2026-10-22.md). Chưa kiểm thử Backend thật; email/storage/cookie deployment vẫn cần harness tích hợp ngoài repository này |
 | Profile/session lifecycle | Validate DTO trước view model; không tự tăng version/retry mutation. Profile conflict giữ draft, refetch version, yêu cầu gửi lại; response thành công đồng bộ tên shell. Avatar-only PATCH không gửi full_name, Blob URL được tải lại theo version và thu hồi khi thay/unmount. Sessions useInfiniteQuery theo cursor, dedup ID, giữ trang cũ khi trang sau lỗi, revoke 204 reset trang đầu. Guard chặn private query lúc bootstrap; clear/login hủy query và cache cũ, refresh cũ không khôi phục token. Đổi/reset mật khẩu thành công kết thúc phiên local và hiện thông báo tại login |
 | Acceptance | Kiểm tra Home Guest/User, cloud paint/crop và foreground geometry tại 2560/1920/1440/1366/1200/1101/1100/1024/820/768/402/320, forms validation/no fake session, Self/version/nullable data, all read states, permission aliases, scroll/keyboard; không API/storage hoặc fixture trong production bundle |
 
@@ -278,7 +278,7 @@ Price Watch dùng `PriceWatchRepository` với fixture `TEST` và Gateway `SERVI
 
 ## Inventory contract profiles
 
-Inventory toàn bộ ngày 15/10/2026: [150 frame map](figma-screen-map-2026-10-15.md), [action/runtime evidence](runtime-evidence-2026-10-15.md), [snapshot JSON](figma-inventory-2026-10-15.json). Các profile dưới đây là **draft/blocked cho feature chưa code**, giữ nguyên shell đã triển khai. Tên view model/repository là đề xuất Web, không phải API/DTO đã có. `not-yet-routed` cần chốt URL trước code; existing route chỉ là shell placeholder. Data mode là fixture preview dự kiến, production unavailable đến khi verified adapter tồn tại.
+Inventory toàn bộ ngày 15/10/2026: [150 frame map](archive/implementation/figma-screen-map-2026-10-15.md), [action/runtime evidence](archive/implementation/runtime-evidence-2026-10-15.md), [snapshot JSON](figma-inventory-2026-10-15.json). Các profile dưới đây là **draft/blocked cho feature chưa code**, giữ nguyên shell đã triển khai. Tên view model/repository là đề xuất Web, không phải API/DTO đã có. `not-yet-routed` cần chốt URL trước code; existing route chỉ là shell placeholder. Data mode là fixture preview dự kiến, production unavailable đến khi verified adapter tồn tại.
 
 Mỗi frame kế thừa entry/exit/permission/query/model từ profile tương ứng và có actor/domain/state/overflow riêng trong map.
 
