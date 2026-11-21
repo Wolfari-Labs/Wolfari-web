@@ -209,3 +209,17 @@
     background: var(--v2-track);
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}

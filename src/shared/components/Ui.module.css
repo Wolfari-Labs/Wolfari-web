@@ -473,7 +473,8 @@
   background: #f3f6ff;
 }
 .tabs button {
-  min-height: 34px;
+  /* 44px project target minimum (V2-D02); Figma pill is 34px. */
+  min-height: 44px;
   padding: 8px 14px;
   border-radius: var(--v2-radius-pill);
   color: var(--v2-sub);

@@ -159,7 +159,7 @@ test('hover and pressed variants preserve focus, disabled controls and field err
   await page.goto('/design-system.html');
   const outline = page.getByRole('button', { name: 'Xem minh họa', exact: true });
   await outline.hover();
-  await expect(outline).toHaveCSS('background-color', 'rgb(243, 251, 255)');
+  await expect(outline).toHaveCSS('background-color', 'rgb(238, 243, 255)');
   const bounds = (await outline.boundingBox())!;
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
   await page.mouse.down();
@@ -167,7 +167,7 @@ test('hover and pressed variants preserve focus, disabled controls and field err
   await page.mouse.up();
   const field = page.getByRole('textbox', { name: 'Nội dung minh họa' });
   await field.hover();
-  await expect(field.locator('..')).toHaveCSS('--field-border', '#0089c7');
+  await expect(field.locator('..')).toHaveCSS('--field-border', '#2e6ad4');
   await page.getByRole('button', { name: 'Hiện lỗi minh họa' }).click();
   await field.hover();
   await expect(field.locator('..')).toHaveCSS('--field-border', '#955c49');

@@ -26,11 +26,16 @@
 .w {
   background-image: linear-gradient(to bottom, #1b8be0, #0a62b8);
 }
+.w::before {
+  content: 'W';
+}
 .rest {
   background-image: linear-gradient(to bottom, #0fa3b8, #17b57e);
 }
+.rest::before {
+  content: 'lfari';
+}
 .mark {
-  position: relative;
   display: block;
   width: 34px;
   height: 34px;
@@ -38,21 +43,20 @@
   overflow: hidden;
   border: 3px solid var(--v2-white);
   border-radius: 17px;
-  background: linear-gradient(to bottom, #38b6f2, #0a6cc2);
-}
-.mark img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 34px;
-  height: 34px;
+  background:
+    url('../assets/v2/logo-mountains.svg') 0 0 / 34px 34px no-repeat,
+    linear-gradient(to bottom, #38b6f2, #0a6cc2);
 }
 .pin {
+  display: block;
   width: 16px;
   height: 20px;
   flex-shrink: 0;
+  background: url('../assets/v2/logo-pin.svg') center / 16px 20px no-repeat;
 }
 .swoosh {
+  display: block;
   width: 150px;
   height: 12px;
+  background: url('../assets/v2/logo-swoosh.svg') center / 150px 12px no-repeat;
 }

@@ -167,3 +167,20 @@ details[open]:not(.preview) > summary::after {
     padding-inline: 0;
   }
 }
+/* Fixture-only shell preview controls float in the bottom-right gutter so they never change
+   the Web v2 page geometry (they are not part of the Figma frames). */
+@media (min-width: 769px) {
+  #main-content > details.preview[data-preview='shell'] {
+    position: fixed;
+    z-index: 6;
+    right: 24px;
+    bottom: 2px;
+    max-width: min(560px, calc(100vw - 48px));
+    max-height: 40dvh;
+    margin: 0;
+    padding: 2px 10px;
+    overflow: auto;
+    border-radius: 12px;
+    background: rgb(255 255 255 / 85%);
+  }
+}

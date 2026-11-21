@@ -21,3 +21,9 @@
     animation: none;
   }
 }
+
+/* Web v2: pill shimmer on the V2 track colour. */
+.skeleton {
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-track);
+}

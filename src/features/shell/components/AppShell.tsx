@@ -316,14 +316,14 @@ export function AppShell({
             <nav aria-label="Điều hướng chính" className={styles.headerNav}>
               <NavLink end to={paths.home}>
                 <UiIcon name="compass" size={18} />
-                Trang chủ
+                <span className={styles.navLabel}>Trang chủ</span>
               </NavLink>
               <Link
                 to={paths.trips}
                 aria-current={selectedHeader === 'trips' ? 'page' : undefined}
               >
                 <UiIcon name="luggage" size={18} />
-                Chuyến đi của tôi
+                <span className={styles.navLabel}>Chuyến đi của tôi</span>
               </Link>
               {canReadTrip && snapshot?.trip ? (
                 <Link
@@ -331,12 +331,12 @@ export function AppShell({
                   to={paths.plan(snapshot.trip.id)}
                 >
                   <UiIcon name="calendar" size={18} />
-                  Lên lịch
+                  <span className={styles.navLabel}>Lên lịch</span>
                 </Link>
               ) : (
                 <button disabled title="Chọn chuyến đi để mở lịch trình">
                   <UiIcon name="calendar" size={18} />
-                  Lên lịch
+                  <span className={styles.navLabel}>Lên lịch</span>
                 </button>
               )}
             </nav>
