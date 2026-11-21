@@ -29,6 +29,10 @@ import { createGatewayHttpClient } from './infrastructure/http/http-client';
 import { createAccessTokenStore } from './infrastructure/session/access-token-store';
 import { createSessionManager } from './infrastructure/session/session-manager';
 import { coordinateBrowserSession } from './infrastructure/session/coordinated-session';
+import { withPushCleanup } from './infrastructure/session/push-session';
+import { createFirebasePushAdapter } from './infrastructure/push/firebase-browser-adapter';
+import { createBrowserPushService } from './infrastructure/push/browser-push-service';
+import { createDeviceRepository } from './infrastructure/repositories/device.gateway-repository';
 import { createCommandCoordinator } from './infrastructure/operations/command-coordinator';
 import { decodeFinanceReceipt } from './infrastructure/repositories/finance-decoders';
 import { createNotificationRepository } from './infrastructure/repositories/notification.gateway-repository';
@@ -52,7 +56,29 @@ async function start() {
       onUnauthorized: refreshSession,
     });
     const localManager = createSessionManager(gatewayHttpClient, accessTokenStore);
-    const sessionManager = fixtureSelected ? localManager : coordinateBrowserSession(localManager);
+    // No refresh callback here: cleanup can run inside the cookie-session lock.
+    const deviceClient = createGatewayHttpClient({
+      getAccessToken: accessTokenStore.get,
+      timeoutMs: 5000,
+    });
+    const browserPush = createBrowserPushService(
+      createFirebasePushAdapter(),
+      createDeviceRepository(deviceClient),
+      () => window.localStorage,
+    );
+    const sessionManager = fixtureSelected
+      ? localManager
+      : withPushCleanup(coordinateBrowserSession(localManager), browserPush);
+    localManager.subscribe(() => {
+      if (localManager.status() !== 'authenticated') {
+        if (browserPush.getSnapshot().state === 'registered') {
+          void browserPush
+            .disconnect()
+            .catch(() => undefined)
+            .finally(() => browserPush.suspend());
+        } else browserPush.suspend();
+      }
+    });
     let journal: Storage | undefined;
     try {
       journal = window.sessionStorage;
@@ -180,6 +206,7 @@ async function start() {
                   sessionManager,
                   runtimeServices: {
                     travel: createTravelRepository(gatewayHttpClient),
+                    browserPush,
                     notifications: createNotificationRepository(gatewayHttpClient),
                     priceWatch: createRuntimePriceWatchRepository(gatewayHttpClient),
                   },

@@ -1,4 +1,5 @@
 import type { Page } from '../../../infrastructure/http/decode';
+import type { PaymentAttempt, PaymentException } from './payment';
 import type { CommandCoordinator } from '../../../infrastructure/operations/command-coordinator';
 export interface RuntimeFund {
   id: string;
@@ -134,6 +135,17 @@ export interface Bank {
   short_name: string;
 }
 export interface FundRuntime {
+  paymentRecovery?: {
+    load(actor: string, trip: string): string;
+    save(actor: string, trip: string, id: string, contribution?: string): void;
+    list(actor: string, trip: string): Record<string, string>;
+  };
+  paymentAttempt?(id: string, signal?: AbortSignal): Promise<PaymentAttempt>;
+  paymentExceptions?(
+    fundId: string,
+    cursor?: string,
+    signal?: AbortSignal,
+  ): Promise<Page<PaymentException>>;
   history?(fundId: string, cursor?: string, signal?: AbortSignal): Promise<Page<FinanceHistory>>;
   closures?(
     fundId: string,

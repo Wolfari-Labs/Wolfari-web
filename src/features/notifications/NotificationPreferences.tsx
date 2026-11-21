@@ -11,6 +11,7 @@ import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
 import { notificationGroups, type Preferences } from './notification.repository';
 import styles from './Notifications.module.css';
+import { BrowserPushPanel } from './BrowserPushPanel';
 const labels = {
   INVITATION: 'Lời mời',
   PLAN: 'Lịch trình',
@@ -20,6 +21,7 @@ const labels = {
   PRICE: 'Theo dõi giá',
 };
 export function NotificationPreferences({ actor }: { actor: string }) {
+  const browserPush = useRuntimeServices()?.browserPush;
   const repository = useRuntimeServices()?.notifications,
     cache = useQueryClient();
   const writeScope = useWriteScope(actor),
@@ -82,9 +84,10 @@ export function NotificationPreferences({ actor }: { actor: string }) {
   return (
     <div className={styles.preferences} id="notifications">
       <p>
-        Áp dụng cho email và thiết bị đã đăng ký. Nhận push trên trình duyệt hiện chưa được hỗ trợ.
+        Áp dụng cho email và thiết bị đã đăng ký. Đăng ký trình duyệt được quản lý riêng bên dưới.
       </p>
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
+      {browserPush && <BrowserPushPanel service={browserPush} actor={actor} />}
       <Switch
         label="Cho phép email"
         checked={value.email_enabled}

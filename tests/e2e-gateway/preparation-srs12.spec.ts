@@ -50,9 +50,7 @@ async function install(page: Page, gateway: GatewayModel) {
                 [
                   'locations_write',
                   'dress_codes_write',
-                  'packing_items_write',
-                  'packing_assignment',
-                  'packing_completion',
+                  'packing_write',
                   'place_search',
                   'routes',
                   'route_order_request',
@@ -105,7 +103,7 @@ async function install(page: Page, gateway: GatewayModel) {
       });
     }
     const match =
-      /\/(locations|dress-codes|packing-items|recommendations)(?:\/([^/]+))?(?:\/(assignment|completion|apply))?$/.exec(
+      /\/(locations|dress-codes|packing-items|recommendations)(?:\/([^/]+))?(?:\/(completion|apply))?$/.exec(
         path,
       );
     if (!match || request.method() === 'GET') return route.fallback();
@@ -140,16 +138,7 @@ async function install(page: Page, gateway: GatewayModel) {
         existing.completed_by_user_id = body.status === 'COMPLETED' ? gateway.profile.id : null;
         existing.completed_at = body.status === 'COMPLETED' ? '2026-11-01T01:00:00Z' : null;
       } else {
-        const reset =
-          ('name' in body && body.name !== existing.name) ||
-          ('quantity' in body && Number(body.quantity) !== Number(existing.quantity)) ||
-          ('assigned_member_id' in body && body.assigned_member_id !== existing.assigned_member_id);
         Object.assign(existing, body);
-        if (reset && key === 'packing_items') {
-          existing.status = 'TODO';
-          existing.completed_at = null;
-          existing.completed_by_user_id = null;
-        }
       }
       return respond({ ...existing, plan_version: trip.plan_version });
     }
@@ -237,7 +226,7 @@ test('SRS12: location and Dress writes survive reload with shared revisions', as
   expect(model.writes[1]!.body.expected_plan_version).toBe(2);
   expect(model.rows.dress_codes[0]?.scope_type).toBe('DAY');
 });
-test('SRS12: packing content, assignment, completion and reset are separate authoritative writes', async ({
+test('SRS12: packing assignment uses item PATCH and editing preserves completion', async ({
   page,
   gateway,
 }) => {
@@ -246,26 +235,31 @@ test('SRS12: packing content, assignment, completion and reset are separate auth
   await page.goto(`${root}/packing`);
   await page.getByRole('button', { name: 'Thêm vật dụng', exact: true }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel('Tên', { exact: true }).fill('Áo mưa');
-  await dialog.getByRole('button', { name: 'Lưu vật dụng' }).click();
+  await dialog.getByRole('combobox', { name: 'Tên vật dụng' }).fill('Áo mưa');
+  await dialog.getByRole('button', { name: /Thêm vào danh sách|Lưu thay đổi/ }).click();
   await expect(dialog).toHaveCount(0);
   expect(model.rows.packing_items[0]?.assigned_member_id).toBeNull();
   expect(model.rows.packing_items[0]?.status).toBe('TODO');
-  await page.getByRole('button', { name: 'Phân công Áo mưa', exact: true }).click();
+  await page.getByRole('button', { name: 'Thao tác Áo mưa' }).click();
+  await page.getByRole('menuitem', { name: 'Chỉnh sửa' }).click();
   await dialog.getByLabel('Người chuẩn bị').selectOption(model.trip.current_membership.id);
-  await dialog.getByRole('button', { name: 'Lưu phân công' }).click();
+  await dialog.getByRole('button', { name: 'Lưu thay đổi' }).click();
   await expect(dialog).toHaveCount(0);
-  await page.getByRole('button', { name: 'Hoàn thành Áo mưa', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Hoàn thành Áo mưa', exact: true }).click();
   await expect(
-    page.getByRole('button', { name: 'Bỏ hoàn thành Áo mưa', exact: true }),
+    page.getByRole('checkbox', { name: 'Bỏ hoàn thành Áo mưa', exact: true }),
   ).toBeVisible();
-  await page.getByRole('button', { name: 'Sửa vật dụng', exact: true }).click();
+  await page.getByRole('button', { name: 'Thao tác Áo mưa' }).click();
+  await page.getByRole('menuitem', { name: 'Chỉnh sửa' }).click();
   await dialog.getByLabel('Số lượng').fill('2');
-  await dialog.getByRole('button', { name: 'Lưu vật dụng' }).click();
+  await dialog.getByRole('button', { name: /Thêm vào danh sách|Lưu thay đổi/ }).click();
   await expect(dialog).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Hoàn thành Áo mưa', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('checkbox', { name: 'Bỏ hoàn thành Áo mưa', exact: true }),
+  ).toBeChecked();
   expect(model.writes).toHaveLength(4);
-  expect(model.writes[1]!.path).toContain('/assignment');
+  expect(model.writes[1]!.path).toContain('/packing-items/');
+  expect(model.writes[1]!.path).not.toContain('/assignment');
   expect(model.writes[2]!.path).toContain('/completion');
 });
 test('SRS12: non-editor can search and preview DSS, but cannot save or apply', async ({
@@ -444,7 +438,7 @@ test('SRS12: expired proposals are visible but cannot be selected or applied', a
   await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
   expect(model.writes).toEqual([]);
 });
-test('SRS12: non-editor toggles only current assigned item, then archive removes writes', async ({
+test('SRS12: non-editor undo respects assignment and completer, archive disables writes', async ({
   page,
   gateway,
 }) => {
@@ -470,18 +464,20 @@ test('SRS12: non-editor toggles only current assigned item, then archive removes
   await login(page);
   await page.goto(`${root}/packing`);
   await expect(
-    page.getByRole('button', { name: 'Bỏ hoàn thành Của người khác', exact: true }),
-  ).toHaveCount(0);
+    page.getByRole('checkbox', { name: 'Bỏ hoàn thành Của người khác', exact: true }),
+  ).toBeDisabled();
   await expect(
-    page.getByRole('button', { name: 'Bỏ hoàn thành Chưa giao', exact: true }),
-  ).toHaveCount(0);
-  await page.getByRole('button', { name: 'Bỏ hoàn thành Của tôi', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Hoàn thành Của tôi', exact: true })).toBeVisible();
+    page.getByRole('checkbox', { name: 'Bỏ hoàn thành Chưa giao', exact: true }),
+  ).toBeEnabled();
+  await page.getByRole('checkbox', { name: 'Bỏ hoàn thành Của tôi', exact: true }).click();
+  await expect(
+    page.getByRole('checkbox', { name: 'Hoàn thành Của tôi', exact: true }),
+  ).toBeVisible();
   expect(model.writes).toHaveLength(1);
   model.trip.lifecycle = 'ARCHIVED';
   model.trip.archived_at = '2026-11-05T01:00:00Z';
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Hoàn thành Của tôi', exact: true })).toHaveCount(
-    0,
-  );
+  await expect(
+    page.getByRole('checkbox', { name: 'Hoàn thành Của tôi', exact: true }),
+  ).toBeDisabled();
 });

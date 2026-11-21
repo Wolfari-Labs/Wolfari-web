@@ -176,17 +176,18 @@
   padding-block: 6px;
 }
 .gatewayActions {
-  grid-column: 2 / -1;
+  grid-column: 6;
+  grid-row: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   min-width: 0;
-  padding-block: 8px;
+  padding-block: 0;
 }
 @media (max-width: 768px) {
   .gatewayRow > .gatewayActions {
-    grid-column: 1 / -1;
-    grid-row: 5;
+    grid-column: 3;
+    grid-row: 1;
   }
 }
 .tableHead,
@@ -290,6 +291,10 @@
 }
 .name small {
   display: none;
+}
+.gatewayRow .name small {
+  display: block;
+  overflow-wrap: anywhere;
 }
 .menu {
   position: relative;

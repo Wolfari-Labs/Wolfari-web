@@ -16,6 +16,8 @@ import { ExpensePanel } from './components/ExpensePanel';
 import { FinancialNotesPanel } from './components/FinancialNotesPanel';
 import { FinanceAction } from './components/FinanceAction';
 import { RefundPanel } from './components/RefundPanel';
+import { BankPicker } from './components/BankPicker';
+import { PaymentPanel } from './components/PaymentPanel';
 import { ClosurePanel } from './components/ClosurePanel';
 import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
 import { HandoverPanel } from './components/HandoverPanel';
@@ -99,10 +101,16 @@ function FundCommandForm({
   members,
   session,
   banks,
+  banksLoading,
+  banksFailed,
+  retryBanks,
   onClose,
 }: {
   spec: FormSpec;
   banks: readonly Bank[] | null;
+  banksLoading: boolean;
+  banksFailed: boolean;
+  retryBanks: () => void;
   trip: TripDetailViewModel;
   fund: RuntimeFund | null;
   destinations: Destination[];
@@ -118,6 +126,10 @@ function FundCommandForm({
   const [holder, setHolder] = useState(fund?.holder_user_id ?? '');
   const [budget, setBudget] = useState(fund?.budget_amount ?? '');
   const [bank, setBank] = useState(destination?.bank_code ?? '');
+  const [destinationType, setDestinationType] = useState<'VIETQR' | 'MOMO_SANDBOX'>(
+    destination?.destination_type ?? 'VIETQR',
+  );
+  const [phone, setPhone] = useState(destination?.momo_phone ?? '');
   const [account, setAccount] = useState(destination?.account_number ?? '');
   const [recipient, setRecipient] = useState(destination?.account_name ?? '');
   const [active, setActive] = useState(destination?.active ?? true);
@@ -128,9 +140,7 @@ function FundCommandForm({
   const [amount, setAmount] = useState(contribution?.amount ?? '');
   const [amounts, setAmounts] = useState<Record<string, string>>({});
   const [destinationId, setDestinationId] = useState(
-    destinations.find(
-      (d) => d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
-    )?.id ?? '',
+    destinations.find((d) => d.active && d.confirmed_by_holder_at)?.id ?? '',
   );
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
@@ -142,13 +152,19 @@ function FundCommandForm({
     try {
       let body: Record<string, unknown> = { ...spec.versions };
       if (bankForm) {
-        if (!bank.trim() || !account.trim() || !recipient.trim())
+        if (destinationType === 'VIETQR' && (!bank.trim() || !account.trim() || !recipient.trim()))
           throw Error('Chọn ngân hàng, nhập số tài khoản và tên chủ tài khoản.');
+        if (destinationType === 'MOMO_SANDBOX' && !/^0[0-9]{9}$/.test(phone.trim()))
+          throw Error('Nhập số điện thoại MoMo gồm 10 số, bắt đầu bằng 0.');
         const config = {
-          destination_type: 'VIETQR',
-          bank_code: bank.trim(),
-          account_number: account.replace(/\s+/g, ''),
-          account_name: recipient.trim(),
+          destination_type: destinationType,
+          ...(destinationType === 'VIETQR'
+            ? {
+                bank_code: bank.trim(),
+                account_number: account.replace(/\s+/g, ''),
+                account_name: recipient.trim(),
+              }
+            : { momo_phone: phone.trim() }),
           active,
           is_default: defaultDestination,
         };
@@ -257,48 +273,56 @@ function FundCommandForm({
       )}
       {bankForm && (
         <>
-          {banks ? (
-            <Select
-              label="Ngân hàng"
-              value={bank}
-              onChange={(e) => setBank(e.target.value)}
-              required
-              hint="Danh mục ngân hàng nhận chuyển khoản VietQR (NAPAS)."
-            >
-              <option value="">Chọn ngân hàng</option>
-              {banks.map((b) => (
-                <option key={b.code} value={b.code}>
-                  {b.short_name} — {b.name}
-                </option>
-              ))}
-            </Select>
+          <Select
+            label="Loại đích nhận"
+            value={destinationType}
+            disabled={kind === 'destination-edit'}
+            onChange={(e) => setDestinationType(e.target.value as 'VIETQR' | 'MOMO_SANDBOX')}
+          >
+            <option value="VIETQR">Ngân hàng · VietQR</option>
+            <option value="MOMO_SANDBOX">MoMo · Sandbox thử nghiệm</option>
+          </Select>
+          {destinationType === 'MOMO_SANDBOX' ? (
+            <>
+              <Alert tone="warning">MoMo Sandbox chỉ để thử nghiệm, không chuyển tiền thật.</Alert>
+              <Input
+                label="Số điện thoại MoMo Sandbox"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                inputMode="tel"
+                maxLength={10}
+              />
+            </>
           ) : (
-            <Input
-              label="Mã ngân hàng VietQR"
-              value={bank}
-              maxLength={30}
-              onChange={(e) => setBank(e.target.value)}
-              required
-              hint="Danh mục chưa tải được; nhập mã VietQR (ví dụ VCB, TCB, MB) hoặc BIN 6 số."
-            />
+            <>
+              <BankPicker
+                banks={banks}
+                loading={banksLoading}
+                failed={banksFailed}
+                retry={retryBanks}
+                value={bank}
+                onChange={setBank}
+              />
+              <Input
+                label="Số tài khoản"
+                value={account}
+                maxLength={30}
+                onChange={(e) => setAccount(e.target.value)}
+                required
+                autoComplete="off"
+                hint="Chữ và số, tối đa 19 ký tự theo chuẩn NAPAS; khoảng trắng sẽ được bỏ."
+              />
+              <Input
+                label="Tên chủ tài khoản"
+                value={recipient}
+                maxLength={150}
+                onChange={(e) => setRecipient(e.target.value)}
+                required
+                hint="Ghi như ngân hàng in; thành viên thấy tên này khi chuyển khoản."
+              />
+            </>
           )}
-          <Input
-            label="Số tài khoản"
-            value={account}
-            maxLength={30}
-            onChange={(e) => setAccount(e.target.value)}
-            required
-            autoComplete="off"
-            hint="Chữ và số, tối đa 19 ký tự theo chuẩn NAPAS; khoảng trắng sẽ được bỏ."
-          />
-          <Input
-            label="Tên chủ tài khoản"
-            value={recipient}
-            maxLength={150}
-            onChange={(e) => setRecipient(e.target.value)}
-            required
-            hint="Ghi như ngân hàng in; thành viên thấy tên này khi chuyển khoản."
-          />
           <label>
             <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />{' '}
             Đích đang hoạt động
@@ -350,12 +374,11 @@ function FundCommandForm({
               >
                 <option value="">Chọn đích nhận</option>
                 {destinations
-                  .filter(
-                    (d) => d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
-                  )
+                  .filter((d) => d.active && d.confirmed_by_holder_at)
                   .map((d) => (
                     <option key={d.id} value={d.id}>
-                      {d.account_name ?? 'Tài khoản nhận'} · {d.bank_code} · {d.account_number}
+                      {d.account_name ?? 'MoMo Sandbox'} · {d.bank_code ?? 'Ví thử nghiệm'} ·{' '}
+                      {d.account_number ?? d.momo_phone}
                     </option>
                   ))}
               </Select>
@@ -674,6 +697,9 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             members={members}
             session={session}
             banks={banks.data ?? null}
+            banksLoading={banks.isFetching}
+            banksFailed={banks.isError}
+            retryBanks={() => void banks.refetch()}
             onClose={closeForm}
           />
         </>
@@ -955,6 +981,9 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 members={members}
                 session={session}
                 banks={banks.data ?? null}
+                banksLoading={banks.isFetching}
+                banksFailed={banks.isError}
+                retryBanks={() => void banks.refetch()}
                 onClose={closeForm}
               />
             </main>
@@ -1123,7 +1152,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                             </div>
                           </dl>
                           <div className={styles.actions}>
-                            {owner && d.destination_type === 'VIETQR' && (
+                            {owner && (
                               <Button
                                 variant="outline"
                                 disabled={blocked}
@@ -1161,10 +1190,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                     <Button
                       disabled={
                         blocked ||
-                        !destinations.data?.some(
-                          (d) =>
-                            d.active && d.confirmed_by_holder_at && d.destination_type === 'VIETQR',
-                        )
+                        !destinations.data?.some((d) => d.active && d.confirmed_by_holder_at)
                       }
                       onClick={() => open('request-create')}
                     >
@@ -1294,6 +1320,15 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                           )}
                           {c.status === 'PENDING' && c.member_user_id === actor && (
                             <>
+                              {runtime.paymentAttempt && (
+                                <Button
+                                  variant="outline"
+                                  disabled={blocked}
+                                  onClick={() => setFinanceSection('payments')}
+                                >
+                                  Thanh toán MoMo Sandbox
+                                </Button>
+                              )}
                               <Button
                                 variant="outline"
                                 disabled={blocked}
@@ -1388,6 +1423,17 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                 trip={trip}
                 members={members}
                 blocked={blocked || fundQuery.isError || membersQuery.isError}
+              />
+            ) : financeSection === 'payments' &&
+              fund &&
+              runtime.paymentAttempt &&
+              runtime.paymentExceptions ? (
+              <PaymentPanel
+                key={actor + ':' + trip.id}
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={blocked || fundQuery.isError}
               />
             ) : financeSection === 'refunds' && fund && runtime.refunds ? (
               <RefundPanel

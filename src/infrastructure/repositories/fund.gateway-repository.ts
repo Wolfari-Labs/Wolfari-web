@@ -4,6 +4,8 @@ import type { CommandCoordinator } from '../operations/command-coordinator';
 import { ApiError } from '../http/api-error';
 import * as d from '../http/decode';
 import { decodeClosure } from './finance-closure-decoder';
+import { decodePaymentAttempt, decodePaymentException } from './payment-decoders';
+import { createPaymentRecovery } from './payment-recovery';
 import {
   decodeExpense,
   decodeFinancialNote,
@@ -55,6 +57,28 @@ export function createGatewayFundRepository(
       ? {
           runtime: {
             commands,
+            paymentRecovery: {
+              load: (actor, trip) => createPaymentRecovery(sessionStorage).load(actor, trip),
+              save: (actor, trip, id, contribution) =>
+                createPaymentRecovery(sessionStorage).save(actor, trip, id, contribution),
+              list: (actor, trip) => createPaymentRecovery(sessionStorage).list(actor, trip),
+            },
+            paymentAttempt: (id, signal) =>
+              read(
+                '/api/v1/payment-attempts/' + d.uuid(id),
+                (value) => {
+                  const row = decodePaymentAttempt(value);
+                  d.scope(row.id, id);
+                  return row;
+                },
+                signal,
+              ),
+            paymentExceptions: (id, cursor, signal) =>
+              read(
+                root(id) + '/payment-exceptions' + query(cursor, 20),
+                (value) => d.page(value, decodePaymentException, 20),
+                signal,
+              ),
             history: (id, cursor, signal) =>
               read(
                 root(id) + '/history' + query(cursor, 20),

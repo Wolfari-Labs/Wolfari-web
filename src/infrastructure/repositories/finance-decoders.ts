@@ -1,4 +1,5 @@
 import * as d from '../http/decode';
+import { decodePaymentAttempt, decodePaymentException } from './payment-decoders';
 import { decodeClosure } from './finance-closure-decoder';
 import type {
   Bank,
@@ -201,6 +202,19 @@ export function decodeBank(value: unknown): Bank {
   };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {
+  if (intent.kind === 'payment-create' || intent.kind === 'payment-reconcile') {
+    const row = decodePaymentAttempt(value);
+    d.scope(
+      intent.kind === 'payment-create' ? row.contribution_id : row.id,
+      d.uuid(intent.resourceId),
+    );
+    return row;
+  }
+  if (intent.kind === 'payment-resolve') {
+    const row = decodePaymentException(value);
+    d.scope(row.id, d.uuid(intent.resourceId));
+    return row;
+  }
   if (intent.kind.startsWith('handover-')) {
     const row = decodeHandover(value, d.uuid(intent.fundId));
     if (intent.resourceId) d.scope(row.id, intent.resourceId);

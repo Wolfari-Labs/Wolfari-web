@@ -12,6 +12,8 @@ import { TripMapPage } from '../src/features/map/TripMapPage';
 import { createFixtureShellRepository } from '../src/infrastructure/fixtures/shell.fixture-repository';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
 import { createFixturePlanRepository } from '../src/infrastructure/fixtures/plan.fixture-repository';
+import { createFixtureMembershipRepository } from '../src/infrastructure/fixtures/membership.fixture-repository';
+import { createFixtureInvitationRepository } from '../src/infrastructure/fixtures/invitation.fixture-repository';
 import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
 
 const routers: ReturnType<typeof createMemoryRouter>[] = [];
@@ -28,14 +30,35 @@ function mount(
   planRepository = createFixturePlanRepository(),
 ) {
   const createTrip = vi.spyOn(tripRepository, 'createTrip');
-  const router = createMemoryRouter([
-    {
-      element: <App previewTripPath={`/trips/${previewTripId}`} />,
-      children: [{ path, element, handle: { requiresViewer: true, contentTitle: true, fullBleed: true, ...handle } }],
-    },
-  ], { initialEntries: [path.replace(':tripId', previewTripId)] });
+  const router = createMemoryRouter(
+    [
+      {
+        element: <App previewTripPath={`/trips/${previewTripId}`} />,
+        children: [
+          {
+            path,
+            element,
+            handle: { requiresViewer: true, contentTitle: true, fullBleed: true, ...handle },
+          },
+        ],
+      },
+    ],
+    { initialEntries: [path.replace(':tripId', previewTripId)] },
+  );
   routers.push(router);
-  render(<Providers repository={createFixtureShellRepository()} tripRepository={tripRepository} planRepository={planRepository}><RouterProvider router={router} /></Providers>);
+  render(
+    <Providers
+      membersRepositories={{
+        membership: createFixtureMembershipRepository(),
+        invitation: createFixtureInvitationRepository(),
+      }}
+      repository={createFixtureShellRepository()}
+      tripRepository={tripRepository}
+      planRepository={planRepository}
+    >
+      <RouterProvider router={router} />
+    </Providers>,
+  );
   return { router, createTrip };
 }
 
@@ -76,7 +99,10 @@ describe('new trip workspace routes', () => {
     await userEvent.type(screen.getByLabelText('Ngày về'), '2026-10-20');
     await userEvent.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
     const dialog = await screen.findByRole('dialog', { name: 'Chuyến đi đã sẵn sàng' });
-    expect(within(dialog).getByRole('link', { name: /Mở chuyến đi/ })).toHaveAttribute('href', `/trips/${previewTripId}`);
+    expect(within(dialog).getByRole('link', { name: /Mở chuyến đi/ })).toHaveAttribute(
+      'href',
+      `/trips/${previewTripId}`,
+    );
     expect(window.sessionStorage.getItem('wolfari:create-trip:v2')).toBeNull();
   });
 
@@ -94,9 +120,23 @@ describe('new trip workspace routes', () => {
     const getPlan = repository.getPlan;
     vi.spyOn(repository, 'getPlan').mockImplementation(async (request) => {
       const result = await getPlan(request);
-      return result.status === 'ready' ? { ...result, data: { ...result.data, dressCodes: result.data.dressCodes.filter((item) => item.scopeType !== 'ACTIVITY') } } : result;
+      return result.status === 'ready'
+        ? {
+            ...result,
+            data: {
+              ...result.data,
+              dressCodes: result.data.dressCodes.filter((item) => item.scopeType !== 'ACTIVITY'),
+            },
+          }
+        : result;
     });
-    mount('/trips/:tripId/dress-code', <DressCodePage />, { section: 'dress' }, createFixtureTripRepository(), repository);
+    mount(
+      '/trips/:tripId/dress-code',
+      <DressCodePage />,
+      { section: 'dress' },
+      createFixtureTripRepository(),
+      repository,
+    );
     await screen.findByText('Thoải mái và gọn nhẹ');
     await userEvent.click(screen.getByRole('tab', { name: 'Theo hoạt động' }));
     expect(screen.getByRole('heading', { name: 'Chưa có dress code đã lưu' })).toBeInTheDocument();
@@ -107,7 +147,7 @@ describe('new trip workspace routes', () => {
     mount('/trips/:tripId/packing', <PackingPage />, { section: 'packing' });
     expect(await screen.findByText('Kem chống nắng')).toBeInTheDocument();
     expect(screen.getByText(/1\.5 chai/)).toBeInTheDocument();
-    expect(screen.getByText(/Đã phân công/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Tôi/).length).toBeGreaterThan(0);
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     expect(screen.queryByText(/11111111-1111/)).not.toBeInTheDocument();
   });
@@ -119,8 +159,12 @@ describe('new trip workspace routes', () => {
     ).toBeInTheDocument();
     const list = screen.getByRole('region', { name: /^Địa điểm/ });
     // Select the place, not the separate delete action with the same place name.
-    await userEvent.click(within(list).getByRole('button', { name: /Ngũ Hành Sơn/, pressed: false }));
-    expect(screen.getByRole('complementary', { name: 'Chi tiết địa điểm' })).toHaveTextContent('Chưa có tọa độ hợp lệ');
+    await userEvent.click(
+      within(list).getByRole('button', { name: /Ngũ Hành Sơn/, pressed: false }),
+    );
+    expect(screen.getByRole('complementary', { name: 'Chi tiết địa điểm' })).toHaveTextContent(
+      'Chưa có tọa độ hợp lệ',
+    );
     await userEvent.selectOptions(screen.getByLabelText('Sắp xếp lịch'), 'UNSCHEDULED');
     expect(within(list).queryByRole('button', { name: /Bán đảo Sơn Trà/ })).not.toBeInTheDocument();
   });

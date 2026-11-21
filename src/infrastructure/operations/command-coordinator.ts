@@ -437,9 +437,20 @@ export function createCommandCoordinator(
           d.scope(d.uuid(receipt.operation_id), i.key);
           d.scope(d.uuid(receipt.closure_id), d.uuid(i.resourceId));
           update({ state: 'SUCCEEDED', busy: false, error: null, receipt: { accepted: true } });
+        } else if (
+          r.status === 202 &&
+          i.kind === 'payment-create' &&
+          d.object(r.data).provider === 'MOMO_SANDBOX'
+        ) {
+          const receipt = decodeReceipt(r.data, i);
+          update({ state: 'SUCCEEDED', busy: false, error: null, receipt });
         } else if (r.status === 202 || i.kind === 'leave' || i.kind === 'remove') {
           const op = decodeOperation(r.data, i);
-          if (r.status === 202 && ['SUCCEEDED', 'FAILED'].includes(op.state))
+          if (
+            r.status === 202 &&
+            !i.kind.startsWith('payment-') &&
+            ['SUCCEEDED', 'FAILED'].includes(op.state)
+          )
             throw Error('Invalid 202');
           update({
             state: op.state,
@@ -553,7 +564,13 @@ export function createCommandCoordinator(
               : null,
           });
           // Finance operations do not expose resource IDs. Retrieve the immutable receipt if possible.
-          if (op.state === 'SUCCEEDED' && i.body && i.kind !== 'leave' && i.kind !== 'remove') {
+          if (
+            op.state === 'SUCCEEDED' &&
+            i.body &&
+            i.kind !== 'leave' &&
+            i.kind !== 'remove' &&
+            i.kind !== 'payment-reconcile'
+          ) {
             update({ busy: true });
             await execute(true);
           }
