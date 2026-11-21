@@ -27,10 +27,11 @@ for (const size of [
     if (size.width === 1440) {
       const hero = page.getByRole('region', { name: 'Thông tin chuyến đi' });
       const box = (await hero.boundingBox())!;
-      expect(Math.abs(box.x - 238)).toBeLessThanOrEqual(4);
-      expect(Math.abs(box.y - 120)).toBeLessThanOrEqual(4);
-      expect(Math.abs(box.width - 1180)).toBeLessThanOrEqual(4);
-      expect(Math.abs(box.height - 150)).toBeLessThanOrEqual(4);
+      // Web v2 W/Trip header 937:7647 at the content origin.
+      expect(Math.abs(box.x - 312)).toBeLessThanOrEqual(4);
+      expect(Math.abs(box.y - 112)).toBeLessThanOrEqual(4);
+      expect(Math.abs(box.width - 1104)).toBeLessThanOrEqual(4);
+      expect(Math.abs(box.height - 84)).toBeLessThanOrEqual(4);
     }
     const transactions = page.locator('[data-finance-transactions]');
     await transactions.getByRole('tab', { name: /Đóng góp/ }).click();

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
@@ -17,6 +17,7 @@ import {
   type PriceWatchViewModel,
 } from './model/price-watch';
 import { Button } from '../../shared/components/Button';
+import { Icon } from '../../shared/components/Icon';
 import { PriceWatchForm } from './PriceWatchForm';
 import { PriceWatchOverlay } from './PriceWatchOverlay';
 import { Select } from '../../shared/components/Select';
@@ -96,7 +97,7 @@ function WatchList({
           <h2 id="price-watch-list-title">Theo dõi của chuyến đi</h2>
           <span className={styles.environmentBadge}>{environment}</span>
         </div>
-        <Button onClick={onCreate} disabled={!canCreate}>
+        <Button onClick={onCreate} disabled={!canCreate} icon={<Icon name="plus" size={17} />}>
           Tạo theo dõi
         </Button>
       </div>
@@ -107,19 +108,27 @@ function WatchList({
             key={watch.id}
             type="button"
             aria-pressed={watch.id === selectedId}
+            data-price-state={
+              watch.status !== 'ACTIVE' ? 'inactive' : reachedThreshold(watch) ? 'reached' : 'above'
+            }
             onClick={() => onSelect(watch.id)}
           >
-            <span className={styles.route}>
-              ✈ {watch.origin.split(' (')[0]} → {watch.destination.split(' (')[0]}
+            <span className={styles.watchIcon} aria-hidden="true">
+              <Icon name="price" size={22} />
             </span>
-            <span className={styles.watchMeta}>
-              {journeyLabel(watch.journeyType)} · {date(watch.departureDate)}
-              {watch.returnDate ? ` – ${date(watch.returnDate)}` : ''}
-            </span>
-            <span className={styles.watchOwner}>
-              {watch.passengers.adults + watch.passengers.children + watch.passengers.infants} hành
-              khách · {cabinLabel(watch.cabin)} ·{' '}
-              {watch.selfOwned ? 'Bạn tạo' : `Tạo bởi ${watch.owner.displayName ?? 'thành viên'}`}
+            <span className={styles.watchMain}>
+              <span className={styles.route}>
+                {watch.origin.split(' (')[0]} → {watch.destination.split(' (')[0]}
+              </span>
+              <span className={styles.watchMeta}>
+                {journeyLabel(watch.journeyType)} · {date(watch.departureDate)}
+                {watch.returnDate ? ` – ${date(watch.returnDate)}` : ''}
+              </span>
+              <span className={styles.watchOwner}>
+                {watch.passengers.adults + watch.passengers.children + watch.passengers.infants}{' '}
+                hành khách · {cabinLabel(watch.cabin)} ·{' '}
+                {watch.selfOwned ? 'Bạn tạo' : `Tạo bởi ${watch.owner.displayName ?? 'thành viên'}`}
+              </span>
             </span>
             <span className={styles.watchBottom}>
               <span>
@@ -149,8 +158,8 @@ function WatchList({
         ))}
       </div>
       <p className={styles.listNote}>
-        <span aria-hidden="true">ⓘ</span> Nguồn MOCK_FLIGHT · Giá mô phỏng, không phải giá thị
-        trường. Wolfari không đặt vé.
+        <Icon name="info" size={16} /> Nguồn MOCK_FLIGHT · Giá mô phỏng, không phải giá thị trường.
+        Wolfari không đặt vé.
       </p>
     </section>
   );
@@ -172,6 +181,7 @@ const observationRange = (points: readonly { item: PriceObservation }[]) => {
 };
 
 function TrendChart({ watch }: { watch: PriceWatchItem }) {
+  const gradientId = useId();
   const points = watch.observations.flatMap((item) =>
     item.priceVnd !== null && isMoneyVnd(item.priceVnd)
       ? [{ item, amount: BigInt(item.priceVnd) }]
@@ -197,6 +207,10 @@ function TrendChart({ watch }: { watch: PriceWatchItem }) {
   const path = chartPoints
     .map((point, index) => `${index ? 'L' : 'M'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`)
     .join(' ');
+  const area =
+    chartPoints.length > 1
+      ? `${path} L ${chartPoints.at(-1)!.x.toFixed(1)} 150 L ${chartPoints[0]!.x.toFixed(1)} 150 Z`
+      : '';
   return (
     <section className={styles.chartPanel} aria-labelledby="price-history-title">
       <div className={styles.panelHeading}>
@@ -212,7 +226,7 @@ function TrendChart({ watch }: { watch: PriceWatchItem }) {
       {points.length ? (
         <div className={styles.chartWrap}>
           <svg
-            viewBox="0 0 520 190"
+            viewBox="0 30 520 160"
             role="img"
             aria-label={`Biểu đồ giá ${watch.origin} đến ${watch.destination}`}
           >
@@ -220,6 +234,16 @@ function TrendChart({ watch }: { watch: PriceWatchItem }) {
               Giá quan sát theo thời gian, đơn vị triệu VND. Đường nét đứt là ngưỡng{' '}
               {money(watch.thresholdVnd)}.
             </desc>
+            <defs>
+              <linearGradient id={`${gradientId}-area`} x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="#5b8cff" stopOpacity="0.28" />
+                <stop offset="100%" stopColor="#3cc9b0" stopOpacity="0.02" />
+              </linearGradient>
+              <linearGradient id={`${gradientId}-line`} x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stopColor="#5b8cff" />
+                <stop offset="100%" stopColor="#3cc9b0" />
+              </linearGradient>
+            </defs>
             {ticks.map(({ value, y }) => (
               <g key={y}>
                 <text x="45" y={y + 3} textAnchor="end">
@@ -235,7 +259,10 @@ function TrendChart({ watch }: { watch: PriceWatchItem }) {
               y2={thresholdY}
               className={styles.thresholdLine}
             />
-            <path d={path} className={styles.priceLine} />
+            {area && (
+              <path d={area} className={styles.priceArea} fill={`url(#${gradientId}-area)`} />
+            )}
+            <path d={path} className={styles.priceLine} stroke={`url(#${gradientId}-line)`} />
             {chartPoints.map(({ item, x, y }) => (
               <circle key={item.id} cx={x} cy={y} r="5" className={styles.pricePoint}>
                 <title>{`${time(item.observedAt)} · ${money(item.priceVnd)}`}</title>
@@ -377,8 +404,10 @@ function PriceInfo({ watch, view }: { watch: PriceWatchItem; view: PriceWatchVie
         ].map(([number, title, description], index) => (
           <div className={index === 3 ? styles.stepCream : styles.step} key={number}>
             <span className={styles.stepNumber}>{number}</span>
-            <strong>{title}</strong>
-            <p>{description}</p>
+            <span className={styles.stepCopy}>
+              <strong>{title}</strong>
+              <p>{description}</p>
+            </span>
           </div>
         ))}
       </div>
@@ -434,16 +463,18 @@ function PriceWatchWorkspace({ data, timezone }: { data: PriceWatchViewModel; ti
   };
   return (
     <div className={styles.workspace} data-region="price-watch-workspace">
-      <WatchList
-        watches={data.watches}
-        selectedId={selected.id}
-        environment={data.providerEnvironment}
-        canCreate={data.permissions.canCreate}
-        onSelect={setSelectedId}
-        onCreate={focusCreateForm}
-      />
-      <div className={styles.middleColumn}>
+      <div className={styles.mainColumn}>
+        <WatchList
+          watches={data.watches}
+          selectedId={selected.id}
+          environment={data.providerEnvironment}
+          canCreate={data.permissions.canCreate}
+          onSelect={setSelectedId}
+          onCreate={focusCreateForm}
+        />
         <TrendChart watch={selected} />
+      </div>
+      <div className={styles.sideColumn}>
         <PriceInfo watch={selected} view={data} />
       </div>
       <PriceWatchOverlay

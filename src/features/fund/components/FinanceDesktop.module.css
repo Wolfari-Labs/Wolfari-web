@@ -26,3 +26,239 @@
   font: inherit;
   line-height: inherit;
 }
+
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2 (Figma W10 · 942:10026): goal + transaction ledger cards on the V2 surface. */
+.goal,
+.transactions {
+  border: 0;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+}
+.goal {
+  margin-top: 20px;
+}
+.goalIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  background: var(--v2-gradient-green);
+  color: var(--v2-white);
+  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
+}
+.goalLabel span {
+  font-size: 16px;
+  font-weight: 800;
+}
+.goalLabel small {
+  color: #5d6a82;
+  font-size: 12px;
+  font-weight: 700;
+}
+.goalProgress strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+.track {
+  height: 10px;
+  margin-top: 6px;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-track);
+}
+.track span {
+  background: var(--v2-gradient);
+}
+.percent {
+  min-height: 30px;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-mint);
+  color: var(--v2-success-text);
+  font-size: 13px;
+  font-weight: 800;
+}
+.settings,
+.filterGroup button,
+.export,
+.loadMore {
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  color: var(--v2-ink);
+  font: 800 13px/18px var(--v2-font);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.settings {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.settings span {
+  font-size: 15px;
+}
+.settings:hover:not(:disabled),
+.export:hover:not(:disabled),
+.loadMore:hover:not(:disabled) {
+  color: #2f63c4;
+}
+.transactions {
+  margin-top: 20px;
+  padding: 18px 22px 20px;
+}
+.transactions h2 {
+  margin: 0 0 14px;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 24px;
+}
+.filterGroup {
+  flex: 0 1 auto;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--v2-radius-pill);
+  background: #f3f6ff;
+}
+.filterGroup button {
+  min-height: 34px;
+  padding: 0 14px;
+  box-shadow: none;
+  background: transparent;
+  color: #56637b;
+  font-weight: 700;
+}
+.filterGroup button img {
+  width: 16px;
+  height: 16px;
+}
+.filterGroup button[aria-selected='true'] {
+  border: 0;
+  background: var(--v2-gradient);
+  color: var(--v2-white);
+  box-shadow: 0 4px 10px -3px rgb(60 123 232 / 25%);
+}
+.toolbar {
+  gap: 12px;
+}
+.toolbar > .selectLabel:first-of-type {
+  margin-left: auto;
+}
+.selectLabel {
+  color: transparent;
+}
+.selectLabel select {
+  height: 42px;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  padding-inline: 16px 32px;
+  background-color: var(--v2-field);
+  color: var(--v2-ink);
+  font: 700 13px/18px var(--v2-font);
+}
+.selectLabel select:focus-visible {
+  outline: 2px solid var(--v2-blue);
+  outline-offset: 2px;
+}
+.export {
+  min-height: 42px;
+}
+.export img {
+  width: 20px;
+  height: 20px;
+}
+.transactions .loadedOnly {
+  color: #5d6a82;
+  font-weight: 600;
+}
+.empty {
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+  color: #56637b;
+  font-weight: 700;
+}
+.in {
+  color: var(--v2-success-text);
+}
+.out {
+  color: #a63320;
+}
+@media (min-width: 561px) {
+  .export {
+    width: 44px;
+  }
+  .transactions table {
+    border-collapse: separate;
+    border-spacing: 0 6px;
+    font-size: 13px;
+  }
+  .transactions th {
+    height: 28px;
+    padding: 0 14px;
+    background: transparent;
+    color: #5d6a82;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .transactions td {
+    height: 48px;
+    padding: 0 14px;
+    border: 0;
+    background: var(--v2-row);
+    color: var(--v2-nav-text);
+    font-weight: 700;
+  }
+  .transactions tbody tr:nth-child(even) {
+    background: transparent;
+  }
+  .transactions td:first-child {
+    border-radius: var(--v2-radius-row) 0 0 var(--v2-radius-row);
+  }
+  .transactions td:last-child {
+    border-radius: 0 var(--v2-radius-row) var(--v2-radius-row) 0;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .transactions td.in,
+  .transactions td.out {
+    font-weight: 800;
+  }
+  .transactions td:last-child.in {
+    color: var(--v2-success-text);
+  }
+  .transactions td:last-child.out {
+    color: #a63320;
+  }
+}
+@media (max-width: 560px) {
+  .goalIcon {
+    width: 40px;
+    height: 40px;
+  }
+  .transactions {
+    padding: 14px 12px;
+  }
+  .transactions tbody tr {
+    margin-bottom: 6px;
+    border: 0;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-row);
+  }
+  .filterGroup {
+    border-radius: 22px;
+  }
+  .toolbar > .selectLabel:first-of-type {
+    margin-left: 0;
+  }
+}
+/* Narrow desktop: the ledger toolbar wraps instead of pushing its selects past the card. */
+@media (max-width: 1100px) {
+  .toolbar > .selectLabel:first-of-type {
+    margin-left: 0;
+  }
+}
