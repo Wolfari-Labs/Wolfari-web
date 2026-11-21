@@ -117,15 +117,12 @@ export function PlanSummary({
                     <time dateTime={a.startsAt ?? undefined}>
                       {activityTime(a.startsAt, trip.timezone)}
                     </time>
-                    {overview && (
-                      <img className={styles.stop} src="/assets/overview-v2/504bf.svg" alt="" />
-                    )}
-                    {overview && overviewTypeIcon(a.activityType) && (
-                      <img
-                        className={styles.typeIcon}
-                        src={overviewTypeIcon(a.activityType)}
-                        alt=""
-                      />
+                    {overview && !a.presentation.cover && (
+                      <span className={styles.typeIcon} aria-hidden="true">
+                        {overviewTypeIcon(a.activityType) && (
+                          <img src={overviewTypeIcon(a.activityType)} alt="" />
+                        )}
+                      </span>
                     )}
                     <span className={styles.activityCopy}>
                       <span>{a.title}</span>

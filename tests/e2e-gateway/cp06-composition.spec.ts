@@ -48,8 +48,9 @@ for (const viewport of [
     const metrics = page.getByRole('region', { name: 'Tóm tắt lịch trình · 1/11' });
     await expect(metrics).toBeVisible();
     expect((await days.boundingBox())!.y).toBeLessThan((await metrics.boundingBox())!.y);
-    for (const label of ['Hoạt động', 'Địa điểm', 'Trải nghiệm', 'Di chuyển'])
-      await expect(metrics.getByText(`${label} · 1/11`, { exact: true })).toBeVisible();
+    // Web v2 W06 metrics show the short labels; the day scope stays in the region name.
+    for (const label of ['hoạt động', 'địa điểm', 'trải nghiệm', 'di chuyển'])
+      await expect(metrics.getByText(label, { exact: true })).toBeVisible();
     await expect(metrics.getByText(/Chưa có dữ liệu|Ngày 1/)).toHaveCount(0);
     const missingHours = metrics.getByText('1 hoạt động chưa tính giờ');
     // Keep the note available to assistive technology without visible explanatory copy.

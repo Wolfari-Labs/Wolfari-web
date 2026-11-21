@@ -6,23 +6,20 @@ export async function assertOverviewCardLayout(page: Page) {
     '[data-region="trip-overview-itinerary"], [data-region="trip-overview-map"], ' +
       '[data-region="trip-overview-fare"], [data-region="trip-overview-postcard"]',
   );
+  // Web v2 W04 (Figma 932:7192): borderless 28px tiles/cards and 26px D/Activity rows.
   for (const card of [...(await summaries.all()), ...(await panels.all())]) {
-    await expect(card).toHaveCSS('border-radius', '6px');
-    await expect(card).toHaveCSS('border-color', 'rgb(166, 217, 242)');
-    await expect(card).toHaveCSS('border-width', '1px');
+    await expect(card).toHaveCSS('border-radius', '28px');
+    await expect(card).toHaveCSS('border-width', '0px');
   }
   for (const row of await page.locator('[data-region="trip-overview-itinerary"] ol > li').all()) {
-    await expect(row).toHaveCSS('border-radius', '6px');
+    await expect(row).toHaveCSS('border-radius', '26px');
   }
   if (page.viewportSize()!.width <= 1100) return;
-  for (const [upper, lower] of [
-    ['fund', 'map'],
-    ['packing', 'fare'],
-  ]) {
-    const top = (await page.locator(`[data-region="trip-overview-${upper}"]`).boundingBox())!;
-    const bottom = (await page.locator(`[data-region="trip-overview-${lower}"]`).boundingBox())!;
-    expect(Math.abs(top.x - bottom.x)).toBeLessThanOrEqual(1);
-    expect(Math.abs(top.width - bottom.width)).toBeLessThanOrEqual(1);
-    expect(Math.abs(top.x + top.width - bottom.x - bottom.width)).toBeLessThanOrEqual(1);
-  }
+  // The stat row and the itinerary / map / side-column row share their outer edges.
+  const day = (await page.locator('[data-region="trip-overview-day"]').boundingBox())!;
+  const itinerary = (await page.locator('[data-region="trip-overview-itinerary"]').boundingBox())!;
+  const weather = (await summaries.last().boundingBox())!;
+  const fare = (await page.locator('[data-region="trip-overview-fare"]').boundingBox())!;
+  expect(Math.abs(day.x - itinerary.x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(weather.x + weather.width - fare.x - fare.width)).toBeLessThanOrEqual(1);
 }
