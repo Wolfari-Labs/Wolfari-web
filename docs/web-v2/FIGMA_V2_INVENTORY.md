@@ -82,10 +82,10 @@ Nguồn: file `hdy2sOZk6rfjKXKDJ9HW9y`, trang `930:6658` "Wolfari · Web v2", đ
 | `943:15930` | W13.2 · Xuất & chia sẻ — Link đã tạo | (chưa có route Export/Share trên Web) | — | NOT_IMPLEMENTED (V2-D13) |
 | `943:16283` | W14 · Cài đặt | /trips/:id/settings | TripSettingsPage | DONE |
 | `943:16565` | W14.1 · Cài đặt — Chỉnh sửa thông tin | /trips/:id/settings | TripSettingsPage | DONE |
-| `943:16883` | W14.2 · Cài đặt — Không thể xóa Trip | /trips/:id/settings | TripSettingsPage | DONE |
-| `943:17184` | W14.3 · Cài đặt — Finance CLOSED | /trips/:id/settings | TripSettingsPage | DONE |
-| `943:17465` | W14.4 · Cài đặt — Trip đã lưu trữ | /trips/:id/settings | TripSettingsPage | DONE |
-| `943:17751` | W14.5 · Cài đặt — Xác nhận xóa Trip | /trips/:id/settings | TripSettingsPage | DONE |
+| `943:16883` | W14.2 · Cài đặt — Không thể xóa Trip | /trips/:id/settings | TripSettingsPage | PARTIAL: không có hành động lưu trữ hoặc xóa Trip (V2-D12) |
+| `943:17184` | W14.3 · Cài đặt — Finance CLOSED | /trips/:id/settings | TripSettingsPage | PARTIAL: không có hành động lưu trữ hoặc xóa Trip (V2-D12) |
+| `943:17465` | W14.4 · Cài đặt — Trip đã lưu trữ | /trips/:id/settings | TripSettingsPage | PARTIAL: không có hành động lưu trữ hoặc xóa Trip (V2-D12) |
+| `943:17751` | W14.5 · Cài đặt — Xác nhận xóa Trip | /trips/:id/settings | TripSettingsPage | PARTIAL: không có hành động lưu trữ hoặc xóa Trip (V2-D12) |
 | `944:15951` | W17 · Đăng ký | /register | auth | DONE |
 | `944:16082` | W18 · Tài khoản & thông báo | /profile | profile | DONE |
 | `944:16255` | W18.1 · Tài khoản — Đã lưu | /profile | profile | PARTIAL: dùng Alert inline thay toast (V2-D12) |
