@@ -14,22 +14,31 @@
   min-height: 160px;
   background: var(--color-surface);
 }
+/* V2 D/Map pin (Figma 875:7312/875:7314): white ring, gradient fill, amber when selected. */
 .pin {
   display: grid;
   place-items: center;
-  border: 2px solid #9a6900;
-  background: #ffe3a1;
+  border: 3px solid var(--v2-white, #fff);
+  background: var(--v2-gradient-violet, #6b4ee6);
   border-radius: 50%;
-  color: #573600;
+  box-shadow: 0 12px 14px rgb(92 122 199 / 18%);
+  color: var(--v2-white, #fff);
+  font-family: var(--v2-font, inherit);
   font-weight: 700;
 }
 .scheduled {
-  background: #087052;
-  border-color: #06543f;
+  background: var(--v2-gradient-diagonal, #3c7be8);
   color: white;
 }
 .selected {
-  outline: 3px solid #006b92;
+  background: linear-gradient(to bottom, #ffd66b, #f5a623);
+  box-shadow:
+    0 0 0 4px rgb(245 166 35 / 30%),
+    0 12px 14px rgb(92 122 199 / 18%);
+}
+.selected:focus-visible,
+.pin:focus-visible {
+  outline: 3px solid var(--focus-color, #006b92);
   outline-offset: 3px;
 }
 @media (max-width: 600px) {
@@ -49,8 +58,8 @@
   place-items: center;
   border: 3px solid rgb(255 255 255 / 0.9);
   border-radius: 50%;
-  background: #006f8a;
-  box-shadow: 0 0 0 4px rgb(0 111 138 / 0.25);
+  background: var(--v2-gradient-blue, #3c7be8);
+  box-shadow: 0 0 0 4px rgb(60 123 232 / 0.22);
   color: white;
   font-weight: 700;
   font-size: var(--font-size-small);

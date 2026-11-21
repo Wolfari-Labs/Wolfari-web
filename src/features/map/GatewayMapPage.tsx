@@ -834,29 +834,31 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                                 )}
                                 <span className={styles.placeCopy}>
                                   <strong>{item.location.name}</strong>
-                                  <small>
-                                    {item.activities[0]
-                                      ? activityTypeLabel(item.activities[0].activityType)
-                                      : (provenance.categoryLabel ?? 'Tham quan')}{' '}
-                                    · {item.location.address ?? 'Chưa có địa chỉ'}
-                                    {otherProvince && (
-                                      <span data-province="other"> · {otherProvince}</span>
-                                    )}
-                                  </small>
+                                  <span className={styles.placeMetaLine}>
+                                    <span
+                                      className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
+                                    >
+                                      {status === 'IN_SCHEDULE'
+                                        ? 'Trong lịch'
+                                        : status === 'SELECTED_UNSCHEDULED'
+                                          ? 'Đã chọn · Chưa xếp'
+                                          : 'Chưa chọn'}
+                                    </span>
+                                    <small>
+                                      {item.activities[0]
+                                        ? activityTypeLabel(item.activities[0].activityType)
+                                        : (provenance.categoryLabel ?? 'Tham quan')}{' '}
+                                      · {item.location.address ?? 'Chưa có địa chỉ'}
+                                      {otherProvince && (
+                                        <span data-province="other"> · {otherProvince}</span>
+                                      )}
+                                    </small>
+                                  </span>
                                   {/* Only curated Wolfari pins carry the per-row review flag (W10). */}
                                   <PlaceSourceBadges
                                     dataset={provenance.dataset}
                                     coordVerified={provenance.coordVerified}
                                   />
-                                </span>
-                                <span
-                                  className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
-                                >
-                                  {status === 'IN_SCHEDULE'
-                                    ? 'Trong lịch'
-                                    : status === 'SELECTED_UNSCHEDULED'
-                                      ? 'Đã chọn · Chưa xếp'
-                                      : 'Chưa chọn'}
                                 </span>
                                 <img
                                   className={styles.rowChevron}

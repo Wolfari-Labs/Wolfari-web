@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '../../shared/components/Button';
-import desktopMapArtwork from '../../shared/assets/figma/a75f2.svg';
+import desktopMapArtwork from '../../shared/assets/v2/map-art.svg';
 import desktopPlaceArtwork from '../../shared/assets/figma/a33fd.svg';
 import mobileMapArtwork from '../../shared/assets/figma/316c4.svg';
 import destinationPhoto from '../../shared/assets/figma/16cac.png';
@@ -181,8 +181,8 @@ export function MapViewport({
         <img
           className={styles.desktopMapArtwork}
           src={desktopMapArtwork}
-          width="666"
-          height="566"
+          width="680"
+          height="700"
           alt=""
         />
       )}

@@ -213,11 +213,18 @@ for (const route of routes) {
         await expect(
           root.getByText('Bản đồ nền chưa khả dụng').or(root.locator('.leaflet-container')),
         ).toBeVisible();
-        if (viewport.width > 768) {
+        if (viewport.width > 1100) {
+          // Web V2 (Figma W07 938:9333): the map card sits left of the search panel.
+          await expectPrimaryBeforeSecondary(
+            root.locator('[data-region="map-panel"]'),
+            root.getByRole('region', { name: 'Địa điểm đã lưu' }),
+            false,
+          );
+        } else if (viewport.width > 768) {
           await expectPrimaryBeforeSecondary(
             root.getByRole('region', { name: 'Địa điểm đã lưu' }),
             root.locator('[data-region="map-panel"]'),
-            viewport.width <= 1100,
+            true,
           );
         } else {
           // Approved mobile template: search, filters, map, then list (display: contents panels).

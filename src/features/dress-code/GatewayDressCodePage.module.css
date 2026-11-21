@@ -200,3 +200,130 @@
     padding: 12px 14px 28px;
   }
 }
+
+/*
+ * Wolfari Web V2 — Figma W08 "Dress code" (941:8933). Presentation only: gradient scope chips,
+ * one column of white clay cards on the left and the 384px form/capability panel on the right.
+ */
+@media (min-width: 769px) {
+  .page {
+    padding: var(--page-padding-top) var(--page-padding-right) var(--page-padding-bottom)
+      var(--page-padding-left);
+    background: transparent;
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+  }
+
+  .toolbar {
+    margin: 20px 0 16px;
+  }
+
+  .filters button {
+    min-height: 36px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    color: var(--v2-sub);
+    font-family: var(--v2-font);
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: var(--v2-shadow-drop), var(--v2-inset);
+  }
+
+  .filters button[aria-pressed='true'] {
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+    box-shadow: var(--v2-shadow-active), var(--v2-inset-badge);
+  }
+
+  .badge,
+  .cardHeader span {
+    border: 0;
+    padding: 5px 10px;
+    background: var(--v2-sky);
+    color: #2f63c4;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .content {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 384px);
+    gap: 20px;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .group > h2 {
+    color: var(--v2-sub);
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .cardGrid {
+    gap: 16px;
+  }
+
+  .card,
+  .readOnlyPanel,
+  .empty {
+    padding: 20px 22px;
+    border: 0;
+    border-radius: var(--v2-radius-panel);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .cardHeader {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .cardHeader h3 {
+    color: var(--v2-ink);
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .card > p {
+    padding: 12px 14px;
+    border-radius: var(--v2-radius-thumb);
+    background: #fff6da;
+    color: var(--v2-sub);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .card dt {
+    color: var(--v2-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .card dd {
+    color: var(--v2-ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .readOnlyPanel h2 {
+    color: var(--v2-ink);
+    font-size: 19px;
+    font-weight: 800;
+  }
+
+  .readOnlyPanel > p:not(.badge),
+  .empty p {
+    color: var(--v2-sub);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .empty {
+    border: 2px dashed var(--v2-dashed-line);
+    background: var(--v2-dashed-surface);
+    box-shadow: none;
+  }
+}

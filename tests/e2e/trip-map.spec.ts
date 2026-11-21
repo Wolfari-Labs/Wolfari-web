@@ -72,13 +72,16 @@ for (const viewport of viewports) {
       const mapPanel = await page.locator('[data-region="map-panel"]').boundingBox();
       expect(placePanel).not.toBeNull();
       expect(mapPanel).not.toBeNull();
-      expect(Math.abs(placePanel!.width / mapPanel!.width - 470 / 694)).toBeLessThanOrEqual(0.01);
+      // Web V2 (Figma W07 938:9333): map card on the left, search panel on the right (700 + 384).
+      expect(placePanel!.x).toBeGreaterThanOrEqual(mapPanel!.x + mapPanel!.width - 1);
+      if (viewport.width >= 1366)
+        expect(Math.abs(placePanel!.width / mapPanel!.width - 384 / 700)).toBeLessThanOrEqual(0.01);
     }
     if (viewport.width === 1440) {
       const route = page.locator('[data-region="map-panel"]').getByRole('combobox');
-      await expect(route).toHaveCSS('color', 'rgb(255, 255, 255)');
-      await expect(route).toHaveCSS('background-color', 'rgb(0, 107, 146)');
-      await expect(route).toHaveCSS('font-weight', '600');
+      await expect(route).toHaveCSS('color', 'rgb(31, 42, 68)');
+      await expect(route).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+      await expect(route).toHaveCSS('font-weight', '700');
       const icons = page.getByLabel('Chú thích trạng thái địa điểm').locator('[aria-hidden]');
       await expect(icons).toHaveCount(3);
       for (const icon of await icons.all()) {
@@ -111,14 +114,14 @@ test('Map filters use semantic status colors and accessible targets', async ({ p
   const scheduled = filters.getByRole('button', { name: /Trong lịch/ });
   const unscheduled = filters.getByRole('button', { name: /Chưa xếp/ });
 
-  // SYNC-MAP-A11Y: approved darker active background preserves white-label contrast.
-  await expect(all).toHaveCSS('background-color', 'rgb(0, 107, 146)');
-  await expect(selected).toHaveCSS('background-color', 'rgb(233, 248, 251)');
+  // Web V2 D/Chip (Figma W07 938:9545): gradient active chip, white clay chips otherwise.
+  await expect(all).toHaveCSS('background-image', /linear-gradient/);
+  await expect(selected).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(scheduled).toHaveCSS('background-color', 'rgb(255, 255, 255)');
-  await expect(scheduled).toHaveCSS('border-color', 'rgb(205, 231, 242)');
-  await expect(unscheduled).toHaveCSS('background-color', 'rgb(255, 247, 222)');
+  await expect(scheduled).toHaveCSS('border-top-width', '0px');
+  await expect(unscheduled).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   for (const target of [all, selected, scheduled, unscheduled]) {
-    expect((await target.boundingBox())!.height).toBe(26);
+    expect((await target.boundingBox())!.height).toBe(31);
   }
 
   const addButton = page.getByRole('button', { name: 'Chọn Gợi ý Đà Nẵng 01' });
@@ -134,7 +137,7 @@ test('Preview map selection uses +, status-only checks, and a separate removable
   await installPlacesMock(page);
   await page.goto(tripMap);
 
-  const selectedFilter = page.getByRole('button', { name: /Đã chọn/ });
+  const selectedFilter = page.getByRole('button', { name: /^Đã chọn \(\d+\)$/ });
   const list = page.locator('[data-region="place-list"]');
   const add = page.getByRole('button', { name: 'Chọn Gợi ý Đà Nẵng 01' });
   await expect(add).toBeVisible();

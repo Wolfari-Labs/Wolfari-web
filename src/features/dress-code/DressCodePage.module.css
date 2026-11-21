@@ -315,3 +315,422 @@
     grid-template-columns: minmax(0, 1fr) var(--side-panel-width);
   }
 }
+
+/*
+ * Wolfari Web V2 — Figma W08 "Dress code" (941:8933) / W08.1 "Đã lưu" (941:9248).
+ * Presentation only: chips + horizontal outfit cards on the left (700 at 1440), the outfit form
+ * on the right (384). Decorative icons are aria-hidden; mobile keeps its existing layout.
+ */
+.artworkBadge,
+.suggestionIcon,
+.editorIcon {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mainColumn {
+    display: contents;
+  }
+}
+
+@media (min-width: 769px) {
+  .page {
+    --dress-v2-tip-day: #fff6da;
+    --dress-v2-tip-evening: #f1edff;
+    --dress-v2-tag: #f3f6ff;
+    --dress-v2-day-badge-text: #2f63c4;
+    background: transparent;
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+  }
+
+  .contentGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 384px);
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .mainColumn {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Scope chips (D/Chip 941:9076) */
+  .scopeTabs {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .scopeTabs button,
+  .scopeTabs button:first-child {
+    min-width: 0;
+    height: 36px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    color: var(--v2-sub);
+    font-family: var(--v2-font);
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: var(--v2-shadow-drop), var(--v2-inset);
+  }
+
+  .scopeTabs button:hover {
+    color: var(--v2-blue);
+  }
+
+  .scopeTabs button[aria-selected='true'] {
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+    box-shadow: var(--v2-shadow-active), var(--v2-inset-badge);
+  }
+
+  /* Outfit cards (941:9084): photo left, details right. */
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    align-content: start;
+    gap: 9px 18px;
+    height: auto;
+    padding: 12px 22px 14px 14px;
+    border: 0;
+    border-radius: var(--v2-radius-panel);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .card > * {
+    grid-column: 2;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .card > .artwork {
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    align-self: start;
+    width: 200px;
+    height: 236px;
+    margin: 0;
+    border-radius: 24px;
+    background: #f5fbff;
+  }
+
+  .artwork img {
+    object-fit: contain;
+  }
+
+  .card > .artworkBadge {
+    position: absolute;
+    grid-area: auto;
+    top: 24px;
+    left: 26px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    background: var(--v2-gradient-violet);
+    box-shadow:
+      0 6px 6px rgb(107 78 230 / 32%),
+      var(--v2-inset-badge);
+    color: var(--v2-white);
+  }
+
+  .card[data-tone='day'] > .artworkBadge {
+    background: var(--v2-gradient-blue);
+    box-shadow:
+      0 6px 6px rgb(60 123 232 / 32%),
+      var(--v2-inset-badge);
+  }
+
+  .cardHeader {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .cardHeader h3 {
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 30px;
+  }
+
+  .cardBadge {
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-lilac);
+    color: var(--v2-violet-text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+  }
+
+  .card[data-tone='day'] .cardBadge {
+    background: var(--v2-sky);
+    color: var(--dress-v2-day-badge-text);
+  }
+
+  .palette {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    color: var(--v2-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .palette > div {
+    gap: 8px;
+  }
+
+  .palette img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .metaLabel {
+    color: var(--v2-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .tags {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tags span {
+    height: 26px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--dress-v2-tag);
+    color: var(--v2-nav-text);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* Tip (941:9111): sun on butter for daytime, sparkles on lilac for the evening outfit. */
+  .suggestion {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 2px 10px;
+    min-height: 0;
+    padding: 12px 14px;
+    border-radius: var(--v2-radius-thumb);
+    background: var(--dress-v2-tip-day);
+    color: var(--v2-sub);
+  }
+
+  .card[data-tone='evening'] .suggestion {
+    background: var(--dress-v2-tip-evening);
+  }
+
+  .suggestionIcon {
+    display: block;
+    grid-row: 1 / span 4;
+    color: #f5a623;
+  }
+
+  .card[data-tone='evening'] .suggestionIcon {
+    color: var(--v2-violet-text);
+  }
+
+  .suggestion > :not(.suggestionIcon) {
+    grid-column: 2;
+  }
+
+  .suggestion strong {
+    color: var(--v2-ink);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 19px;
+  }
+
+  .suggestion p,
+  .suggestion small {
+    margin: 0;
+    color: var(--v2-sub);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .suggestion small {
+    color: var(--v2-muted);
+    font-size: 12px;
+  }
+
+  /* Outfit form (941:9169) */
+  .editor {
+    gap: 14px;
+    height: auto;
+    min-height: 720px;
+    padding: 20px;
+    border: 0;
+    border-radius: var(--v2-radius-panel);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .editorTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .editorIcon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    background: var(--v2-gradient-violet);
+    box-shadow:
+      0 6px 6px rgb(107 78 230 / 32%),
+      var(--v2-inset-badge);
+    color: var(--v2-white);
+  }
+
+  .editor h2 {
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 26px;
+  }
+
+  .editor label,
+  .field {
+    gap: 8px;
+    min-height: 0;
+    color: var(--v2-ink);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 18px;
+  }
+
+  .field input,
+  .field textarea,
+  .editor select {
+    min-height: 56px;
+    padding: 0 16px;
+    border: 2px solid transparent;
+    border-radius: var(--v2-radius-field);
+    background: var(--v2-field);
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+  }
+
+  .field input {
+    height: 56px;
+  }
+
+  .field textarea {
+    height: 96px;
+    padding: 14px 16px;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--v2-muted);
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .editor select:focus {
+    border-color: var(--v2-blue);
+    background: var(--v2-white);
+    box-shadow: 0 0 0 4px rgb(92 140 255 / 18%);
+  }
+
+  .editorNote {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-row);
+    color: var(--v2-sub);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .checkButton {
+    min-height: 44px;
+    margin-top: auto;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  }
+
+  .checkButton img {
+    filter: brightness(0) invert(1);
+  }
+
+  .editor :global([role='note']) {
+    border-radius: var(--v2-radius-row);
+    font-size: 12px;
+  }
+
+  .editor > p[role='alert'] {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-peach);
+    color: var(--v2-danger-text);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 18px;
+  }
+
+  .empty {
+    border: 2px dashed var(--v2-dashed-line);
+    border-radius: var(--v2-radius-panel);
+    background: var(--v2-dashed-surface);
+  }
+
+  .empty h2 {
+    color: var(--v2-ink);
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .empty p {
+    color: var(--v2-sub);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+  .contentGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor {
+    min-height: 0;
+  }
+}
