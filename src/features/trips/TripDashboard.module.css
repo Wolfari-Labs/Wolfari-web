@@ -1,109 +1,118 @@
-@font-face {
-  font-family: 'Wolfari Nunito';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/assets/overview-v2/nunito-600.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Wolfari Nunito';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/assets/overview-v2/nunito-700.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Wolfari Nunito';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('/assets/overview-v2/nunito-800.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Wolfari Nunito';
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/assets/overview-v2/nunito-700-italic.ttf') format('truetype');
-}
-
-/* Figma Desktop 3:31, refreshed 2026-11-07. Shell and shared TripHero stay unchanged. */
+/* Web v2 W04 / W05 trip overview (Figma 932:7192, 938:8073): photo hero, four D/Stat tiles and the
+   itinerary / map / side column row. Desktop geometry: 1104 = 4 x 261 + 3 x 20 and
+   520 + 340 + 204 + 2 x 20; the lower row fills the viewport down to the shell gutter. */
 .page {
-  --overview-radius: 6px;
-  --overview-border: #a6d9f2;
+  --overview-gap: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100dvh - var(--desktop-header-height, 76px));
   min-width: 0;
-  min-height: 0;
-  padding: 8px 22px 16px 18px;
-  color: #073ab7;
-  background: #f4faff;
-}
-.page > [data-region='trip-hero'] {
-  flex-shrink: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 .page > section:not([data-region='trip-hero']) {
-  flex: 1;
   min-height: 0;
-  overflow: auto;
-  margin-block: 16px;
 }
 .breadcrumb {
   display: flex;
   align-items: center;
-  flex: 0 0 26px;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
-  font-size: 13px;
-  line-height: 20px;
+  margin: 0 0 12px;
+  font: 700 13px/20px var(--v2-font);
+  color: var(--v2-sub);
 }
 .breadcrumb h1 {
   margin: 0;
   font: inherit;
+  color: var(--v2-ink);
 }
 .breadcrumb a {
-  color: var(--color-action-primary);
+  color: var(--v2-sub);
 }
+.breadcrumb a:hover {
+  color: var(--v2-blue);
+}
+
+/* Over the photo hero: the Figma breadcrumb pill at its top-left corner (5px frame + 17/19). */
+@media (min-width: 769px) {
+  :global(#main-content) .page > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero']) {
+    position: absolute;
+    z-index: 3;
+    top: 22px;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: max-content;
+    max-width: calc(100% - 48px);
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 7px 14px;
+    overflow: hidden;
+    border-radius: var(--v2-radius-pill);
+    background: rgb(255 255 255 / 90%);
+    color: var(--v2-sub);
+    font: 700 13px/normal var(--v2-font);
+  }
+  :global(#main-content) .page > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero']) a {
+    min-height: 0;
+    color: var(--v2-sub);
+  }
+  :global(#main-content)
+    .page
+    > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero'])
+    a:hover {
+    color: var(--v2-blue);
+  }
+  :global(#main-content) .page > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero']) h1 {
+    color: var(--v2-ink);
+    font: 700 13px/normal var(--v2-font);
+  }
+}
+
+/* Optional trip description: a pill over the hero's top-right corner, opening a popover. */
 .description {
   position: absolute;
-  z-index: 2;
-  top: 8px;
-  right: 22px;
+  z-index: 3;
+  top: 22px;
+  right: 24px;
   margin: 0;
-  font-size: 11px;
-  line-height: 18px;
-  color: var(--color-muted);
+  font: 700 13px/normal var(--v2-font);
 }
 .page .description > summary {
-  min-height: 22px;
-  padding: 0;
   width: fit-content;
+  min-height: 0;
+  margin-left: auto;
+  padding: 7px 14px;
+  border-radius: var(--v2-radius-pill);
+  background: rgb(255 255 255 / 90%);
+  color: var(--v2-sub);
   cursor: pointer;
-  font-size: 11px;
 }
 .description[open] p {
   position: absolute;
-  z-index: 3;
-  top: 12px;
+  z-index: 4;
+  top: calc(100% + 8px);
   right: 0;
   width: min(520px, 75vw);
-  max-height: 160px;
+  max-height: 180px;
+  margin: 0;
+  padding: 14px 16px;
   overflow: auto;
-  padding: 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--overview-radius);
-  background: white;
-  box-shadow: var(--shadow-header);
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  color: var(--v2-ink);
+  font: 600 14px/20px var(--v2-font);
 }
 .memberFeedback {
-  flex: 0 1 auto;
   max-height: 100px;
   overflow: auto;
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: 12px;
+  font: 600 13px/18px var(--v2-font);
 }
 .memberFeedback p {
   margin: 0;
@@ -111,98 +120,138 @@
 .memberFeedback button {
   margin-left: 8px;
 }
+
 .dashboard {
-  --overview-columns: minmax(0, 277fr) minmax(0, 277fr) minmax(0, 286fr) minmax(0, 305fr);
-  --overview-column-gap: 13px;
-  display: grid;
-  grid-template-rows: 162px minmax(0, 1fr);
-  gap: 13px;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--overview-gap);
   min-height: 0;
-  max-height: 576px;
-  margin-top: 12px;
-  font-family: 'Wolfari Nunito', var(--font-body);
-  font-weight: 700;
+  margin-top: 24px;
 }
 .summaries {
   display: grid;
-  grid-template-columns: var(--overview-columns);
-  gap: var(--overview-column-gap);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--overview-gap);
+}
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 520fr) minmax(0, 340fr) minmax(0, 204fr);
+  gap: var(--overview-gap);
+  height: clamp(340px, calc(100dvh - 550px), 560px);
   min-height: 0;
 }
-.panel {
+
+/* Cards. A native link covers each card; nested controls stay above it. */
+.stat,
+.panel,
+.postcard {
   position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  padding: 14px 15px 8px;
-  border: 1px solid var(--overview-border);
-  border-radius: var(--overview-radius);
-  background: white;
-  box-shadow: 0 4px 10px rgb(150 185 215 / 15%);
+  border-radius: var(--v2-radius-tile);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
-.cardLink,
-.mapLink::after {
+.cardLink {
   position: absolute;
   inset: 0;
   z-index: 2;
   border-radius: inherit;
 }
-.mapLink::after {
-  content: '';
-  border-radius: var(--overview-radius);
+.cardLink:hover {
+  box-shadow: inset 0 0 0 2px rgb(60 123 232 / 25%);
 }
-.cardLink:hover,
-.mapLink:hover::after {
-  box-shadow: inset 0 0 0 2px #b7e8f9;
+.cardLink:focus-visible {
+  outline: 3px solid var(--v2-blue);
+  outline-offset: 2px;
 }
-.cardLink:focus-visible,
-.mapLink:focus-visible::after {
-  outline: 3px solid #0638bf;
-  outline-offset: -3px;
-}
-/* Native links cover the card; nested controls and the scrollable list stay interactive. */
+.stat :is(button, select, input, [role='alert']),
 .panel :is(button, select, input, [role='alert']),
 .itineraryPanel ol,
-.itineraryPanel a:not(.cardLink) {
+.fareContent a {
   position: relative;
   z-index: 3;
 }
+.stat h2,
 .panel h2 {
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-shrink: 0;
-  margin: 0 0 10px;
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 24px;
+  margin: 0;
 }
-.panel h2 img {
-  flex-shrink: 0;
-  object-fit: contain;
+
+/* D/Icon badge (Figma 892:7848): 46px gradient square, white glyph. */
+.badge {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  color: var(--v2-white);
+  box-shadow: var(--v2-inset-badge);
 }
-.panel p {
-  font-size: 14px;
-  line-height: 20px;
+.badge[data-tone='blue'] {
+  background: var(--v2-gradient-blue);
+  box-shadow:
+    0 6px 12px -2px rgb(60 123 232 / 35%),
+    var(--v2-inset-badge);
 }
-.summaries > .panel {
+.badge[data-tone='green'] {
+  background: var(--v2-gradient-green);
+  box-shadow:
+    0 6px 12px -2px rgb(45 190 122 / 35%),
+    var(--v2-inset-badge);
+}
+.badge[data-tone='amber'] {
+  background: var(--v2-gradient-amber);
+  box-shadow:
+    0 6px 12px -2px rgb(245 166 35 / 35%),
+    var(--v2-inset-badge);
+}
+.badge[data-tone='coral'] {
+  background: var(--v2-gradient-coral);
+  box-shadow:
+    0 6px 12px -2px rgb(255 111 89 / 35%),
+    var(--v2-inset-badge);
+}
+
+/* D/Stat tile (Figma 875:7320): 138px pastel tile, badge, 24px value, 13px label. */
+.stat {
+  gap: 8px;
+  height: 138px;
+  padding: 16px;
   overflow: hidden;
-  isolation: isolate;
-  padding: 10px 15px 14px;
+  box-shadow: var(--v2-shadow-drop), var(--v2-inset);
 }
-.summaries h2 {
-  gap: 5px;
-  margin: 0 -5px 11px;
-  font-size: 15px;
-  line-height: 20px;
+.dayCard {
+  background: var(--v2-sky);
 }
-.summaries h2 img {
-  width: 38px;
-  height: 36px;
+.fundCard {
+  background: var(--v2-mint);
+}
+.packingCard {
+  background: var(--v2-butter);
+}
+.weatherCard {
+  background: var(--v2-peach);
+}
+.statHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+.stat h2 {
+  min-width: 0;
+  padding-top: 4px;
+  overflow: hidden;
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .cardContent {
   position: relative;
@@ -211,200 +260,139 @@
   scrollbar-width: thin;
 }
 .cardContent:has(.progressSummary) {
+  position: static;
   display: flex;
   flex: 1;
   overflow: visible;
 }
-.summaries > :is(.fundCard, .packingCard) {
-  padding-bottom: 21px; /* 22px to the outside edge, including the card border. */
+.summaryValue,
+.cardContent .summaryValue {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--v2-ink);
+  font: 800 24px/28px var(--v2-font);
 }
-.summaries :is(.fundCard, .packingCard) > h2 {
-  margin-bottom: 6px;
+.summaryDetail,
+.unavailable {
+  margin: 4px 0 0;
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
+}
+.summaryLink {
+  color: var(--v2-blue);
+  font: 700 13px/18px var(--v2-font);
 }
 .progressSummary {
   display: flex;
-  flex-direction: column;
   flex: 1;
+  flex-direction: column;
   min-width: 0;
   min-height: 0;
-  gap: 12px;
 }
 .progressCopy {
   min-height: 0;
   overflow: auto;
   scrollbar-width: thin;
 }
-.progressCopy .summaryDetail {
-  margin-bottom: 0;
-}
-.dayCard {
-  color: #0636b4;
-  background: linear-gradient(#dbf7ff, #f9fdff);
-}
-.weatherCard {
-  color: #0735af;
-  background: linear-gradient(#fff0d5, #fffcf6);
-}
-.fundCard {
-  color: #0737b3;
-  background: linear-gradient(#e7fbf2, white);
-}
-.packingCard {
-  color: #0737af;
-  background: linear-gradient(#ffe6f0, #fffafb);
-}
-.summaryValue {
-  margin: 0 0 5px;
-  font-size: 26px !important;
-  line-height: 36px !important;
-  font-weight: 800;
-  overflow-wrap: anywhere;
-}
-.fundCard .summaryValue {
-  color: #00b1cf;
-}
-.packingCard .summaryValue {
-  color: #0539b9;
-}
-.weatherCard .summaryValue {
-  color: #0738bf;
-}
-.summaryDetail,
-.unavailable {
-  margin: 0 0 5px;
-  color: #788cc7;
-}
-.fundCard .summaryDetail {
-  color: #788ac2;
-  font-size: 13.5px;
-}
-.packingCard .summaryDetail {
-  color: #798bc2;
-}
-.summaryLink {
-  color: #00799f;
-  font-size: 13px;
-}
+/* The progress track sits beside the badge, under the tile label (top row of the tile). */
 .progressTrack {
-  flex-shrink: 0;
-  height: 12px;
-  margin-top: auto;
-  border-radius: 6px;
+  position: absolute;
+  top: 44px;
+  right: 18px;
+  left: 74px;
+  height: 8px;
   overflow: hidden;
-  background: #e7ebee;
+  border-radius: var(--v2-radius-pill);
+  background: rgb(255 255 255 / 75%);
 }
 .progressTrack span {
   display: block;
   height: 100%;
-  background: #3acd62;
   border-radius: inherit;
 }
-.artwork {
-  position: absolute;
-  pointer-events: none;
-  object-fit: contain;
+.fundCard .progressTrack span {
+  background: var(--v2-gradient-green);
 }
-.summaries .artwork {
-  z-index: 0;
+.packingCard .progressTrack span {
+  background: var(--v2-gradient-amber);
 }
-[data-art='day-cloud'] {
-  width: 170px;
-  height: 33px;
-  top: 0;
-  right: -30px;
+.stat :global(section) {
+  margin: 0;
+  padding: 0;
 }
-[data-art='day-hill'] {
-  width: 137px;
-  height: 57px;
-  right: 0;
-  bottom: -4px;
-  opacity: 0.88;
+.stat :global(section) h2 {
+  padding: 0;
+  color: var(--v2-ink);
+  font-size: 14px;
 }
-[data-art='signpost'] {
-  width: 148px;
-  height: 149px;
-  right: -18px;
-  bottom: -43px;
+.stat :global(section) p {
+  margin: 2px 0;
+  font-size: 12px;
+  line-height: 16px;
 }
-[data-art='beach'] {
-  width: 363px;
-  height: 100px;
-  max-width: none;
-  left: -11px;
-  bottom: -25px;
+
+/* White panels: itinerary, map and fare tracker. */
+.panel {
+  background: var(--v2-white);
 }
-[data-art='weather-cloud'] {
-  width: 110px;
-  height: 47px;
-  right: 0;
-  top: 23px;
-  opacity: 0.52;
-}
-[data-art='palms'] {
-  width: 107px;
-  height: 103px;
-  right: 3px;
-  bottom: 6px;
-}
-[data-art='coins'] {
-  width: 75px;
-  height: 71px;
-  right: 0;
-  top: 57px;
-}
-[data-art='backpack'] {
-  width: 79px;
-  height: 81px;
-  right: 5px;
-  top: 46px;
-}
-.workspace {
-  display: grid;
-  grid-template-columns: var(--overview-columns);
-  gap: var(--overview-column-gap);
-  min-height: 0;
+.panel > h2,
+.panelHeading h2 {
+  color: var(--v2-ink);
+  font: 800 20px/27px var(--v2-font);
 }
 .itineraryPanel {
-  grid-column: span 2;
-  color: #0639b4;
-  padding-bottom: 4px;
+  gap: 14px;
+  padding: 20px 22px;
 }
 .itineraryPanel > div {
   flex: 1;
   min-height: 0;
 }
-.aside {
-  display: grid;
-  grid-template-rows: minmax(0, 244fr) minmax(0, 142fr);
-  gap: 15px;
-  min-height: 0;
+.mapPanel {
+  gap: 12px;
+  padding: 16px 12px 12px;
 }
 .panelHeading {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 0 8px;
   flex-shrink: 0;
+  padding-inline: 10px;
 }
-.panelHeading h2 {
-  font-size: 15.5px;
-  margin-right: auto;
+.mapLink {
+  color: var(--v2-blue);
+  font: 700 14px/normal var(--v2-font);
 }
-.panelHeading a {
-  color: var(--color-action-primary);
-  font-size: 12.5px;
-  margin-bottom: 10px;
+/* The map link's ::after covers the whole card (the panel is its containing block). */
+.mapLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
 }
-.mapPanel {
-  padding-inline: 13px;
+.mapLink:hover {
+  text-decoration: underline;
+}
+.mapLink:hover::after {
+  box-shadow: inset 0 0 0 2px rgb(60 123 232 / 25%);
+}
+.mapLink:focus-visible {
+  outline: none;
+}
+.mapLink:focus-visible::after {
+  outline: 3px solid var(--v2-blue);
+  outline-offset: 2px;
 }
 .mapArtwork {
   position: relative;
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  border-radius: 5px;
-  background: #eaf7e8;
+  border-radius: 22px;
+  background: var(--v2-track);
 }
 .mapArtwork > img {
   display: block;
@@ -414,109 +402,79 @@
 }
 .mapArtwork > span {
   position: absolute;
-  left: 10px;
-  bottom: 5px;
-  border-radius: var(--overview-radius);
-  padding: 3px 10px;
-  font-size: 12px;
-  background: #f9fdff;
+  bottom: 12px;
+  left: 12px;
+  padding: 5px 12px;
+  border-radius: var(--v2-radius-pill);
+  background: rgb(255 255 255 / 92%);
+  color: var(--v2-sub);
+  font: 700 12px/normal var(--v2-font);
+  box-shadow: var(--v2-shadow-drop);
 }
-.mapCaption {
-  flex: 0 1 auto;
-  max-height: 70px;
-  overflow: auto;
-  font-size: 12px;
-}
-.mapCaption p {
-  font-size: 12px;
-  line-height: 16px;
-  margin: 6px 0 0;
-}
-.mapCaption a,
-.fareContent a {
-  display: inline-block;
-  padding-block: 5px;
-  color: #00799f;
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
 }
 .farePanel {
+  flex: 1 1 auto;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 0;
+  padding: 20px 18px;
   overflow: hidden;
-  isolation: isolate;
+}
+.farePanel > .badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+}
+.farePanel > h2 {
+  color: var(--v2-sub);
+  font: 700 13px/normal var(--v2-font);
 }
 .fareContent {
   position: relative;
-  flex: 1;
+  width: 100%;
   min-height: 0;
   overflow: auto;
-  padding-top: 40px;
-  font-size: 13px;
+  color: var(--v2-ink);
+  font: 700 13px/18px var(--v2-font);
 }
 .fareContent p {
-  margin-block: 0 8px;
+  margin: 0;
 }
-[data-art='airplane'] {
-  width: 117px;
-  height: 71px;
-  right: -5px;
-  top: 28px;
+.fareContent > p:first-child {
+  color: var(--v2-ink);
+  font: 800 22px/28px var(--v2-font);
 }
+.fareContent .summaryDetail {
+  margin-top: 4px;
+}
+.fareContent a {
+  display: inline-block;
+  padding-block: 4px;
+  color: var(--v2-blue);
+}
+/* The Figma weather tile slot (932:7455) holds the brand postcard: no weather data exists. */
 .postcard {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 0;
-  border: 1px solid var(--overview-border);
-  border-radius: var(--overview-radius);
-  background: linear-gradient(#bdefff, white);
-  box-shadow: 0 4px 12px rgb(153 189 229 / 16%);
+  flex: 0 0 auto;
+  gap: 10px;
+  padding: 20px 18px;
+  background: var(--v2-gradient-mascot);
+}
+.postcard > .badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
 }
 .postcard p {
-  position: relative;
-  z-index: 1;
-  margin: 9px 14px;
-  font-size: 18px;
-  font-style: italic;
-  line-height: 25px;
-}
-[data-art='mountains'] {
-  z-index: 0;
-  width: 111%;
-  height: 104px;
-  left: -6%;
-  bottom: -25px;
-}
-[data-art='route'] {
-  width: 84px;
-  height: 44px;
-  right: 50px;
-  top: 51px;
-}
-[data-art='paper-plane'] {
-  width: 48px;
-  height: 37px;
-  right: 18px;
-  top: 32px;
-}
-[data-art='wordmark'] {
-  width: 96px;
-  height: 42px;
-  left: 20%;
-  bottom: 25px;
-}
-.panel section {
   margin: 0;
-  padding: 8px;
+  color: var(--v2-ink);
+  font: 800 17px/23px var(--v2-font);
 }
-.panel section h2 {
-  font-size: 15px;
-  line-height: 20px;
-}
-.panel section p {
-  font-size: 12px;
-  line-height: 18px;
-}
-.panel section small {
-  margin: 4px;
-}
+
 .metadata {
   font-size: 12px;
   overflow-wrap: anywhere;
@@ -529,149 +487,82 @@
 .metadata dd {
   margin: 0;
 }
+/* Fixture-only preview controls stay out of the dashboard: a compact disclosure in the gutter. */
 .page > :global(.preview) {
-  flex-shrink: 0;
-  max-height: 25%;
-  overflow: auto;
-  margin-top: 4px;
+  margin-top: 16px;
   font-size: 11px;
-  padding: 4px 8px;
 }
 .page > :global(.preview) > summary {
   min-height: 24px;
   padding: 0;
 }
-:global(main):has(> .page) > :global(.preview) {
-  position: fixed;
-  z-index: 5;
-  right: 24px;
-  bottom: 4px;
-  max-width: calc(100vw - 48px);
-  max-height: 40dvh;
-  overflow: auto;
-  margin: 0;
-  padding: 4px 8px;
-  font-size: 11px;
-}
-:global(main):has(> .page) > :global(.preview) > summary {
-  min-height: 24px;
-  padding: 0;
-}
-@media (max-height: 750px) and (min-width: 1101px) {
-  .dashboard {
-    grid-template-rows: 162px minmax(0, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .summaries h2 {
-    font-size: 13px;
-    margin-bottom: 0;
-  }
-  .summaryValue {
-    font-size: 22px !important;
-    line-height: 28px !important;
-    margin-bottom: 0;
-  }
-  .summaryDetail {
-    margin-bottom: 0;
-  }
-  .fareContent {
-    padding-top: 0;
-  }
-  .panel {
-    padding-top: 8px;
-  }
-  .panel h2 {
-    margin-bottom: 6px;
-  }
-  .postcard p {
-    font-size: 14px;
-    line-height: 19px;
-  }
-  [data-art='wordmark'] {
-    width: 72px;
-    height: 32px;
-    bottom: 0;
-  }
-}
-@media (min-width: 1101px) and (max-width: 1250px) {
-  /* Two-line card headings still leave room for the copy and the 12px progress gap. */
-  .progressCopy .summaryValue {
-    line-height: 32px !important;
-  }
-}
-@media (max-width: 1100px) {
-  /* One bounded workspace; all content remains reachable at narrow widths/zoom. */
-  .dashboard {
-    display: flex;
-    flex-direction: column;
-    max-height: none;
+@media (min-width: 769px) {
+  .page > :global(.preview) {
+    position: fixed;
+    z-index: 5;
+    bottom: 2px;
+    left: calc(var(--v2-shell-gutter) + var(--v2-sidebar-width) + var(--v2-shell-gutter) + 8px);
+    max-width: min(560px, calc(100vw - 48px));
+    max-height: 40dvh;
+    margin: 0;
+    padding: 2px 10px;
     overflow: auto;
-    padding: 0 3px 3px;
+    border-radius: 12px;
+    background: rgb(255 255 255 / 85%);
   }
+}
+
+@media (max-width: 1100px) {
   .summaries {
-    flex: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 162px;
   }
   .workspace {
-    flex: none;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    height: auto;
   }
   .itineraryPanel,
   .mapPanel {
-    height: 401px;
-  }
-  .itineraryPanel {
-    grid-column: auto;
+    height: 410px;
   }
   .aside {
     grid-column: 1 / -1;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 220px;
+    flex-direction: row;
+  }
+  .aside > * {
+    flex: 1 1 0;
   }
 }
 @media (max-width: 768px) {
   .page {
-    height: calc(100dvh - 72px);
-    padding: 8px 14px 12px;
-  }
-  .breadcrumb {
-    font-size: 11px;
-    gap: 8px;
+    padding: 12px 14px 24px;
   }
   .description {
     position: relative;
     top: auto;
     right: auto;
-    flex-shrink: 0;
+    margin-top: 12px;
+  }
+  .description[open] p {
+    position: static;
+    width: auto;
+    margin-top: 8px;
   }
   .dashboard {
-    margin-top: 8px;
+    --overview-gap: 12px;
+    margin-top: 16px;
   }
   .workspace {
     grid-template-columns: minmax(0, 1fr);
   }
-  .summaries {
-    gap: 8px;
+  .stat {
+    padding: 14px;
   }
-  .summaries > .panel {
-    padding-inline: 10px;
-  }
-  .summaries h2 {
-    font-size: 12px;
-    gap: 2px;
-  }
-  .summaries h2 img {
-    width: 30px;
-    height: 30px;
-  }
-  .summaryValue {
-    font-size: 22px !important;
+  .progressTrack {
+    left: 70px;
+    right: 14px;
   }
   .aside {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 220px 142px;
+    flex-direction: column;
   }
   .metadata dl {
     grid-template-columns: minmax(0, 1fr);
@@ -682,17 +573,34 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
-@media (max-height: 650px) and (min-width: 1101px) {
-  .dashboard {
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-    padding: 0 3px 3px;
+/* On the pastel stat tiles the secondary copy uses the nav ink: #5f6d86 is under 4.5:1 on peach. */
+.summaries :is(h2, .summaryDetail, .unavailable, p) {
+  color: var(--v2-nav-text);
+}
+.summaries .summaryValue {
+  color: var(--v2-ink);
+}
+/* Mobile cards grow with their content, so the fare copy never becomes a non-focusable scroller. */
+@media (max-width: 768px) {
+  .fareContent {
+    overflow: visible;
   }
-  .summaries {
-    flex: 0 0 162px;
-  }
-  .workspace {
-    flex: 0 0 401px;
+}
+/* Gateway member-loading note: a pill over the hero under the breadcrumb, so the W04 rows keep
+   their Figma positions (hero 232, tiles at +256). */
+@media (min-width: 769px) {
+  .memberFeedback {
+    position: absolute;
+    z-index: 2;
+    top: 62px;
+    left: 24px;
+    max-width: min(640px, 60%);
+    max-height: none;
+    margin: 0;
+    padding: 6px 12px;
+    overflow: visible;
+    border-radius: var(--v2-radius-pill);
+    background: rgb(255 255 255 / 92%);
+    color: var(--v2-ink);
   }
 }

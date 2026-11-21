@@ -5,7 +5,7 @@ import { useReducedMotion } from 'motion/react';
 import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from '../model/plan';
 import type { GatewayPlanMove } from '../model/plan-arrangement';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
-import { localDate, planDays } from '../model/plan-presentation';
+import { dayHeading, localDate, planDays } from '../model/plan-presentation';
 import {
   gatewayActivityDay,
   gatewayDragKey,
@@ -478,7 +478,7 @@ export function RuntimeTimeline({
       ? 'Lịch trình chung'
       : day === 'POOL'
         ? 'Hoạt động chưa xếp ngày'
-        : `Lịch trình ngày ${days.indexOf(day) + 1}`;
+        : dayHeading(day);
   const compactPool = sidePanel === 'pool' && !wide;
   const dayBar = (
     <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">

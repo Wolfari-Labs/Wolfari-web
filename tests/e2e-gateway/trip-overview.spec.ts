@@ -38,8 +38,10 @@ for (const [width, height] of [
       };
     });
     expect(metrics.width).toBeLessThanOrEqual(width);
-    expect(metrics.height).toBeLessThanOrEqual(height);
-    expect(metrics.overflow).toBeLessThanOrEqual(1);
+    // Web v2 (V2-D10): one screen at the Figma frame size; shorter desktop heights scroll inside
+    // main and mobile scrolls naturally.
+    if (width > 768) expect(metrics.height).toBeLessThanOrEqual(height);
+    if (width >= 1101 && height >= 900) expect(metrics.overflow).toBeLessThanOrEqual(1);
     expect(
       gateway.calls.filter(
         (call) => call.path.startsWith(`/api/v1/trips/${tripId}/`) && call.method !== 'GET',
@@ -90,20 +92,20 @@ for (const height of [960, 700, 520]) {
     await expect(fund.getByText('69% ngân sách · 9.000.000 ₫')).toBeVisible();
     await expect(fund.getByText('6.250.000 ₫', { exact: true })).toHaveCSS(
       'color',
-      'rgb(0, 177, 207)',
+      'rgb(31, 42, 68)',
     );
     await expect(fund.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '69');
     for (const region of ['fund', 'packing']) {
       const panel = page.locator(`[data-region="trip-overview-${region}"]`);
       const bar = panel.getByRole('progressbar');
-      await expect(bar).toHaveCSS('height', '12px');
+      await expect(bar).toHaveCSS('height', '8px');
       const bounds = (await panel.boundingBox())!,
         track = (await bar.boundingBox())!;
       expect(track.y + track.height).toBeLessThanOrEqual(bounds.y + bounds.height);
-      expect(bounds.y + bounds.height - track.y - track.height).toBeGreaterThanOrEqual(20);
-      expect(bounds.y + bounds.height - track.y - track.height).toBeLessThanOrEqual(25);
-      const copy = (await panel.locator('p').last().boundingBox())!;
-      expect(track.y - copy.y - copy.height).toBeGreaterThanOrEqual(12);
+      // Web v2 W04: the track sits in the tile's top row, above the value copy.
+      const copy = (await panel.locator('p').first().boundingBox())!;
+      expect(copy.y - track.y - track.height).toBeGreaterThanOrEqual(8);
+      expect(copy.y + copy.height).toBeLessThanOrEqual(bounds.y + bounds.height);
       expect(
         await bar.evaluate((el) => {
           const parent = el.parentElement!;

@@ -23,10 +23,10 @@ for (const size of [
     );
     if (size.width === 1440) {
       const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
-      for (const [key, expected] of Object.entries({ x: 238, y: 120, width: 1180, height: 150 }))
+      for (const [key, expected] of Object.entries({ x: 312, y: 112, width: 1104, height: 84 }))
         expect(
           Math.abs(hero[key as keyof typeof hero] - expected),
-          `Figma hero ${key}`,
+          `Figma W/Trip header 937:7647 ${key}`,
         ).toBeLessThanOrEqual(4);
     }
     const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });

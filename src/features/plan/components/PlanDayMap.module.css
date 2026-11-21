@@ -1,30 +1,35 @@
+/* Web v2 W06.2 day map card (Figma 938:8712): white 28px card, 20px title, 22px-radius map. */
 .panel {
-  height: 498px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  height: max(440px, calc(100dvh - 339px));
   min-width: 0;
   min-height: 0;
+  padding: 16px 12px 12px;
   overflow: auto;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-10);
-  background: var(--color-white);
-  color: var(--color-ink);
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 .header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px;
+  padding: 0 10px;
 }
 .header h3 {
   margin: 0;
-  font-size: var(--font-size-subtitle);
+  color: var(--v2-ink);
+  font: 800 20px/27px var(--v2-font);
 }
 .header p {
-  margin: 4px 0 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
+  margin: 2px 0 0;
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
 }
 .header button {
   flex-shrink: 0;
@@ -32,11 +37,11 @@
 .map,
 .unavailable {
   min-height: 240px;
-  margin: 0 16px;
-  border-radius: var(--radius-8);
+  border-radius: 22px;
 }
 .map {
-  background: var(--color-white);
+  overflow: hidden;
+  background: var(--v2-track);
 }
 .unavailable {
   display: flex;
@@ -44,21 +49,22 @@
   justify-content: center;
   gap: 8px;
   padding: 20px;
-  border: 1px dashed var(--color-line);
-  background: var(--color-surface);
+  border: 2px dashed var(--v2-dashed-line);
+  background: var(--v2-dashed-surface);
 }
 .unavailable p {
   margin: 0;
-  color: var(--color-muted);
-  line-height: 1.5;
+  color: var(--v2-sub);
+  font: 600 14px/1.5 var(--v2-font);
 }
 .listRegion {
   min-height: 0;
-  padding: 16px;
+  padding: 0 4px;
 }
 .listRegion h4 {
   margin: 0 0 10px;
-  font-size: var(--font-size-label);
+  color: var(--v2-ink);
+  font: 800 15px/normal var(--v2-font);
 }
 .list {
   display: grid;
@@ -71,36 +77,38 @@
 }
 .list li {
   display: grid;
-  gap: 4px;
+  gap: 2px;
+  padding: 10px 14px;
   overflow-wrap: anywhere;
-  padding: 10px 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-8);
+  border: 1.5px solid #e6ecfa;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+  font: 800 14px/20px var(--v2-font);
 }
 .list span,
 .list small,
 .empty {
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
+  color: var(--v2-sub);
+  font: 700 12px/18px var(--v2-font);
 }
 .empty {
   margin: 0;
 }
-@media (max-width: 480px) {
-  .header,
-  .listRegion {
-    padding: 12px;
+@media (max-width: 768px) {
+  .panel {
+    height: auto;
   }
-  .map,
-  .unavailable {
-    margin-inline: 12px;
+}
+@media (max-width: 480px) {
+  .header {
+    padding-inline: 4px;
   }
 }
 .routeSummary {
-  margin: 8px 16px 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
+  margin: 0 10px;
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
 }
 .routeSummary[data-estimated] {
-  color: #7a4b00;
+  color: var(--v2-warning-text);
 }
