@@ -1,390 +1,331 @@
-﻿.page {
-  width: 100%;
-  max-width: 1440px;
-  min-height: 884px;
-  margin-inline: auto;
-  padding: 66px 114px 64px 94px;
+﻿/* Web v2 identity screens: W16 Đăng nhập (933:7623), W17 Đăng ký (944:15951); forgot/verify/reset
+   share the same photo panel + clay form card. Figma frames have no top nav, so the 1440 layout
+   keeps Figma x positions (hero 48, card 834) below the shell header. */
+.page {
   display: grid;
-  grid-template-columns: minmax(0, 590px) minmax(0, 440px);
-  column-gap: 202px;
-  align-items: start;
-  background: linear-gradient(#f4fcff, #fbfeff 58%, white);
-  color: #044791;
+  width: 100%;
+  gap: 24px;
+  padding: 8px 16px 24px;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
-.introduction {
-  min-width: 0;
-  padding-top: 12px;
-}
-.eyebrow {
-  margin: 0 0 8px 2px;
-  color: #0488cc;
-  font:
-    400 22px/34px 'Patrick Hand',
-    cursive;
-}
-.introduction h1 {
-  min-height: 72px;
-  margin: 0;
-  color: #009da9;
-  font:
-    400 46px/54px 'Patrick Hand',
-    cursive;
-}
-.description {
-  max-width: 500px;
-  min-height: 52px;
-  margin: 16px 0 0 4px;
-  color: #044791;
-  font-size: var(--font-size-label);
-  line-height: 20px;
-}
-.collage {
+
+/* ---------- Photo panel ---------- */
+.hero {
   position: relative;
-  width: 570.175px;
-  max-width: calc(100% + 8px);
-  margin: 46px 0 0 -8px;
+  min-width: 0;
 }
-.collage::before {
+.heroPanel {
+  position: relative;
+  display: flex;
+  min-height: 420px;
+  height: 100%;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 6px solid var(--v2-white);
+  border-radius: 44px;
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  isolation: isolate;
+}
+.heroPanel::after {
   position: absolute;
-  z-index: 0;
+  z-index: -1;
+  inset: 0;
   content: '';
-  width: 103.48%;
-  aspect-ratio: 590 / 370;
-  left: -4.91%;
-  top: -28px;
-  background: url('../../shared/assets/figma/19867.svg') center / contain no-repeat;
+  background: linear-gradient(to bottom, rgb(31 42 68 / 0%) 35%, rgb(31 42 68 / 70%));
 }
-.mascotSlot {
+.heroPhoto {
   position: absolute;
-  display: block;
-  left: 74.714%;
-  top: 65%;
-  width: 18.24%;
-  aspect-ratio: 1;
-  overflow: clip;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.mascotSlot img {
+.heroCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 20px 28px;
+  color: var(--v2-white);
+}
+.page .heroTitle {
+  margin: 0;
+  color: var(--v2-white);
+  font-size: clamp(30px, 7vw, 48px);
+  font-weight: 800;
+  line-height: 1.17;
+  text-shadow: 0 2px 12px rgb(31 42 68 / 25%);
+}
+.heroTitle > span {
   display: block;
-  width: 122.95%;
-  max-width: none;
+}
+.page .heroDescription {
+  margin: 0;
+  color: var(--v2-white);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 23px;
+}
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 10px 0 0;
+  list-style: none;
+}
+.highlights li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 6px;
+  border-radius: 22px;
+  background: var(--v2-sky);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  color: var(--v2-ink);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+.highlights li[data-tone='violet'] {
+  background: var(--v2-lilac);
+}
+.highlights li[data-tone='amber'] {
+  background: var(--v2-butter);
+}
+.highlights li[data-tone='green'] {
+  background: var(--v2-mint);
+}
+.highlightBadge {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--v2-gradient-blue);
+  color: var(--v2-white);
+}
+[data-tone='violet'] > .highlightBadge {
+  background: var(--v2-gradient-violet);
+}
+[data-tone='amber'] > .highlightBadge {
+  background: var(--v2-gradient-amber);
+}
+[data-tone='green'] > .highlightBadge {
+  background: var(--v2-gradient-green);
+}
+.heroMascot {
+  position: absolute;
+  top: -28px;
+  right: 0;
+  width: clamp(90px, 22vw, 150px);
   height: auto;
+  aspect-ratio: 150 / 124;
+  object-fit: cover;
+  pointer-events: none;
 }
+
+/* ---------- Form card ---------- */
 .formColumn {
   min-width: 0;
-  margin-top: 24px;
 }
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  padding: 32px 38px 39px;
-  border: 1px solid #bae4f4;
-  border-radius: var(--radius-24);
-  box-shadow: var(--shadow-soft);
-  background: white;
+  gap: 18px;
+  padding: 32px 22px 32px;
+  border-radius: 36px;
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
+}
+.cardWordmark {
+  display: flex;
 }
 .cardHeader {
-  margin-bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 6px;
+}
+.cardHeader h1 {
+  margin: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: clamp(26px, 6vw, 34px);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.35;
 }
 .cardHeader h2 {
-  margin: 0;
-  color: #044791;
-  font-size: var(--font-size-heading);
-  line-height: 38px;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .cardHeader h2 {
-    font-size: 30px;
-  }
+  margin: 4px 0 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 27px;
 }
 .cardHeader p {
   margin: 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 20px;
+  color: var(--v2-sub);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
 }
 .fields {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-.fields label {
-  font-size: var(--font-size-label);
-  line-height: 18px;
-}
-.fields input {
-  font-size: var(--font-size-body);
-}
-.previewNote {
-  min-height: 34px;
-  margin: 18px 0 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 17px;
-}
-.card .submit {
-  width: 100%;
-  margin-top: 18px;
-  font-size: var(--font-size-small);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .card .submit {
-    font-size: 13.2px;
-  }
-}
-.alternative {
+.forgotRow {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  border-top: 1px solid #bae4f4;
-  margin-top: 22px;
-  padding-top: 15px;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 20px;
-}
-.alternative a {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 137px;
-  padding-inline: 16px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-16);
-  color: #044791;
-  font-size: var(--font-size-small);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .alternative a {
-    font-size: 13.2px;
-    border-radius: 18px;
-  }
-}
-.feedback {
-  margin-top: 16px;
+  justify-content: flex-end;
+  margin-top: -6px;
 }
 .forgotLink {
-  min-width: 0 !important;
-  padding-inline: 0 !important;
-  border: 0 !important;
-  color: #044791;
-  font-size: var(--font-size-small);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--v2-blue);
+  font-size: 14px;
+  font-weight: 800;
 }
 .consent {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   min-height: 44px;
-  margin-top: 12px;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 18px;
+  color: var(--v2-nav-text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 19px;
 }
 .consent input {
   width: 20px;
   height: 20px;
   margin: 0;
   flex-shrink: 0;
-  accent-color: #009da9;
+  accent-color: var(--v2-blue);
 }
 .consent:has(input:focus-visible) {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: 4px;
 }
 .error {
-  margin: 4px 0 0;
-  color: var(--ios-error);
-  font-size: var(--font-size-small);
+  margin: -12px 0 0;
+  color: var(--v2-danger-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+.previewNote {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-sky);
+  color: var(--v2-ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.card .submit {
+  width: 100%;
+  min-height: 56px;
+  font-size: 17px;
+}
+.submitArrow {
+  margin-left: 8px;
+  vertical-align: -3px;
+}
+.feedback {
+  margin: 0;
+}
+.alternative {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 6px;
+  color: var(--v2-sub);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.alternative a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--v2-blue);
+  font-weight: 800;
+}
+.register .card {
+  gap: 16px;
 }
 .formColumn > :global(.preview) {
   margin-top: 24px;
 }
-.register {
-  grid-template-columns: minmax(0, 590px) minmax(0, 458px);
-  padding-right: 106px;
-  column-gap: 192px;
-}
-.register .formColumn {
-  margin-top: 0;
-}
-.register .eyebrow {
-  margin-bottom: 2px;
-}
-.register .introduction h1 {
-  min-height: 100px;
-  font-size: 42px;
-  line-height: 50px;
-}
-.register .description {
-  margin-top: 24px;
-}
-.register .collage {
-  margin-top: 34px;
-}
-.register .mascotSlot {
-  top: 66.7%;
-}
-.register .card {
-  min-height: 0;
-  padding-top: 29px;
-}
-.register .cardHeader {
-  margin-bottom: 21px;
-}
-.register .cardHeader h2 {
-  font-size: var(--font-size-heading);
-  line-height: 36px;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .register .cardHeader h2 {
-    font-size: 28px;
-  }
-}
-.register .previewNote {
-  margin-top: 12px;
-}
-@media (min-width: 769px) and (max-width: 1439px) {
-  .page,
-  .register {
-    padding-inline: 6.5%;
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 38%);
-    column-gap: clamp(36px, 8vw, 120px);
-  }
-  .introduction h1 {
-    font-size: clamp(34px, 3.2vw, 46px);
-  }
-}
-@media (max-width: 1000px) and (min-width: 769px) {
-  .page,
-  .register {
-    padding-inline: 32px;
-    column-gap: 32px;
-    grid-template-columns: minmax(0, 1fr) minmax(340px, 43%);
-  }
+
+@media (min-width: 769px) {
   .card {
-    padding-inline: 24px;
-  }
-  .cardHeader h2 {
-    font-size: var(--font-size-title);
-  }
-  .introduction h1,
-  .register .introduction h1 {
-    font-size: 34px;
-    line-height: 44px;
-  }
-}
-@media (max-width: 768px) {
-  .page,
-  .register {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 28px 24px 40px;
-    min-height: calc(100dvh - 64px);
-  }
-  .introduction {
-    width: 100%;
-    max-width: 480px;
-    margin-inline: auto;
-    padding: 0;
-  }
-  .eyebrow,
-  .register .eyebrow {
-    margin: 0 0 8px;
-    font-size: 19px;
-    line-height: 28px;
-  }
-  .introduction h1,
-  .register .introduction h1 {
-    min-height: 0;
-    font-size: 34px;
-    line-height: 42px;
-  }
-  .description,
-  .register .description {
-    min-height: 0;
-    margin: 10px 0 0;
-    font-size: 13px;
-    line-height: 21px;
-  }
-  .collage,
-  .register .collage {
-    width: min(240px, 80%);
-    margin: 20px auto 0;
-  }
-  .collage::before {
-    top: -12px;
-  }
-  .page .formColumn {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-  .card,
-  .register .card {
-    min-height: 0;
-    padding: 24px;
-  }
-  .cardHeader,
-  .register .cardHeader {
-    margin-bottom: 24px;
-  }
-  .cardHeader h2,
-  .register .cardHeader h2 {
-    font-size: 25px;
-    line-height: 34px;
-  }
-  .fields {
     gap: 16px;
+    padding: 40px 44px 36px;
   }
-  .fields label {
-    font-size: 13px;
-    line-height: 20px;
+  .heroCopy {
+    padding: 34px 28px 30px;
   }
-  .fields input {
-    font-size: 16px;
+  .heroPanel {
+    min-height: 560px;
   }
-  .previewNote {
-    font-size: 13px;
-    line-height: 19px;
+  .highlights {
+    gap: 12px;
   }
-  .consent {
-    font-size: 13px;
-    line-height: 20px;
+  .highlights li {
+    padding: 14px 14px 12px;
+    font-size: 14px;
   }
-  .alternative {
-    flex-wrap: wrap;
-    font-size: 13px;
-  }
-  .alternative a {
-    min-width: 110px;
-  }
-  .stateNote > div {
-    font-size: 13px;
-    line-height: 19px;
+  .page .heroDescription {
+    font-size: 17px;
   }
 }
-@media (max-width: 360px) {
-  .page,
-  .register {
-    padding-inline: 16px;
+@media (min-width: 1101px) {
+  .page {
+    grid-template-columns: minmax(0, 700px) minmax(0, 520px);
+    column-gap: clamp(32px, 6vw, 86px);
+    align-items: start;
+    padding-block: 0 24px;
+    padding-inline: max(24px, calc((100% - 1306px) / 2 - 19px))
+      max(24px, calc((100% - 1306px) / 2 + 19px));
   }
-  .card,
-  .register .card {
-    padding-inline: 18px;
+  .hero {
+    height: clamp(600px, calc(100dvh - 136px), 864px);
   }
-  .introduction h1,
-  .register .introduction h1 {
-    font-size: 31px;
-    line-height: 40px;
+  .formColumn {
+    align-self: center;
+  }
+  /* Figma: mascot 628,20 against the hero at 48,48 (150×124). */
+  .heroMascot {
+    top: -12px;
+    right: -30px;
+    width: 150px;
+  }
+}
+@media (max-width: 1100px) {
+  .page {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+  .hero {
+    order: 2;
+  }
+}
+@media (max-width: 480px) {
+  .highlights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 .srOnly {

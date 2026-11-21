@@ -15,7 +15,8 @@ import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
 import { Select } from '../../shared/components/Select';
 import { ContentState } from '../../shared/components/ContentState';
-import { sceneAssets as art } from '../../shared/assets/scene-assets';
+import { Bell, Camera, Check, KeyRound, LogOut, Mail, Pencil, UserRound } from 'lucide-react';
+import mascot from '../../shared/assets/v2/mascot-waving.png';
 import styles from './ProfilePage.module.css';
 import { NotificationPreferences } from '../notifications/NotificationPreferences';
 
@@ -354,33 +355,41 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
             noValidate
             aria-label="Thông tin cá nhân"
           >
-            <h2>Thông tin cá nhân</h2>
+            <div className={styles.panelHead}>
+              <span className={styles.badge} data-tone="blue" aria-hidden="true">
+                <UserRound size={22} strokeWidth={2.2} />
+              </span>
+              <h2>Thông tin cá nhân</h2>
+            </div>
             <div className={styles.avatarRow}>
               <span className={styles.avatar}>
                 {profile.avatar && avatarUrl ? (
                   <img className={styles.avatarPhoto} src={avatarUrl} alt={profile.avatar.alt} />
                 ) : (
-                  <>
-                    <img src={art['95b35.svg']} alt="" />
-                    <strong>
-                      {profile.fullName
-                        .split(/\s+/)
-                        .map((s) => s[0])
-                        .slice(0, 2)
-                        .join('')}
-                    </strong>
-                  </>
+                  <strong>
+                    {profile.fullName
+                      .split(/\s+/)
+                      .map((s) => s[0])
+                      .slice(0, 2)
+                      .join('')}
+                  </strong>
                 )}
               </span>
-              <Button
-                variant="outline"
-                loading={pending === 'avatar'}
-                disabled={busy || !repository.uploadAvatar}
-                title="Upload ảnh"
-                onClick={() => avatarInput.current?.click()}
-              >
-                Đổi ảnh
-              </Button>
+              <div className={styles.identity}>
+                <p className={styles.displayName}>{profile.fullName}</p>
+                <Button
+                  variant="secondary"
+                  size="compact"
+                  className={styles.changePhoto}
+                  loading={pending === 'avatar'}
+                  disabled={busy || !repository.uploadAvatar}
+                  title="Upload ảnh"
+                  icon={<Camera size={14} strokeWidth={2.2} />}
+                  onClick={() => avatarInput.current?.click()}
+                >
+                  Đổi ảnh
+                </Button>
+              </div>
               <input
                 aria-label="Chọn ảnh đại diện"
                 ref={avatarInput}
@@ -404,6 +413,11 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 label="Tên hiển thị"
                 name="name"
                 autoComplete="name"
+                leadingIcon={
+                  <span className={styles.fieldChip}>
+                    <Pencil size={18} strokeWidth={2} />
+                  </span>
+                }
                 required
                 value={draft ?? profile.fullName}
                 disabled={busy}
@@ -420,8 +434,17 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 readOnly
                 type="email"
                 autoComplete="email"
+                leadingIcon={
+                  <span className={styles.fieldChip}>
+                    <Mail size={18} strokeWidth={2} />
+                  </span>
+                }
               />
             </div>
+            <p className={styles.roleNote}>
+              Chỉnh sửa hồ sơ không làm thay đổi vai trò Owner/Member, Fund Holder hoặc quyền trong
+              Trip.
+            </p>
             {!profile.emailVerifiedAt && (
               <Alert tone="info">
                 <p>Email chưa được xác minh.</p>
@@ -435,42 +458,56 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 </Button>
               </Alert>
             )}
-            <Button
-              className={styles.save}
-              type="submit"
-              loading={pending === 'profile'}
-              disabled={busy}
-              icon={<img src={art['ac8db.svg']} alt="" />}
-            >
-              Lưu thay đổi
-            </Button>
             {feedback && (
               <div className={styles.feedback}>
                 <Alert live>{feedback}</Alert>
               </div>
             )}
-            <Button
-              variant="outline"
-              className={styles.logout}
-              type="button"
-              disabled={busy || !sessionManager?.logout}
-              loading={pending === 'logout'}
-              onClick={() =>
-                void run(
-                  'logout',
-                  async (signal) => {
-                    await sessionManager?.logout?.(signal);
-                    navigate('/login', { replace: true });
-                  },
-                  () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
-                )
-              }
-            >
-              {sessionManager?.logout ? 'Đăng xuất' : 'Đăng xuất (chưa khả dụng)'}
-            </Button>
+            <div className={styles.formFooter}>
+              <Button
+                variant="outline"
+                className={styles.logout}
+                type="button"
+                icon={<LogOut size={17} strokeWidth={2.2} />}
+                disabled={busy || !sessionManager?.logout}
+                loading={pending === 'logout'}
+                onClick={() =>
+                  void run(
+                    'logout',
+                    async (signal) => {
+                      await sessionManager?.logout?.(signal);
+                      navigate('/login', { replace: true });
+                    },
+                    () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
+                  )
+                }
+              >
+                {sessionManager?.logout ? 'Đăng xuất' : 'Đăng xuất (chưa khả dụng)'}
+              </Button>
+              <Button
+                className={styles.save}
+                type="submit"
+                loading={pending === 'profile'}
+                disabled={busy}
+                icon={<Check size={17} strokeWidth={2.6} />}
+              >
+                Lưu thay đổi
+              </Button>
+            </div>
           </form>
-          <section className={styles.panel} aria-labelledby="profile-notifications">
-            <h2 id="profile-notifications">Thông báo & thiết bị</h2>
+          <section
+            className={styles.panel + ' ' + styles.notifications}
+            aria-labelledby="profile-notifications"
+          >
+            <div className={styles.panelHead}>
+              <span className={styles.badge} data-tone="violet" aria-hidden="true">
+                <Bell size={22} strokeWidth={2.2} />
+              </span>
+              <div>
+                <h2 id="profile-notifications">Thông báo & thiết bị</h2>
+                <p>Mỗi người tự quản lý kênh nhận thông báo của mình.</p>
+              </div>
+            </div>
             <NotificationPreferences key={profile.id} actor={profile.id} />
             <details
               onToggle={(event) => setShowSessions(event.currentTarget.open)}
@@ -536,14 +573,20 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 </>
               )}
             </details>
+            <img className={styles.mascot} src={mascot} alt="" width={118} height={98} />
           </section>
           <form
-            className={styles.panel + ' ' + styles.ruleNote}
+            className={styles.panel + ' ' + styles.password}
             aria-label="Đổi mật khẩu"
             noValidate
             onSubmit={submitPassword}
           >
-            <h2>Đổi mật khẩu</h2>
+            <div className={styles.panelHead}>
+              <span className={styles.badge} data-tone="amber" aria-hidden="true">
+                <KeyRound size={22} strokeWidth={2.2} />
+              </span>
+              <h2>Đổi mật khẩu</h2>
+            </div>
             <div className={styles.fields}>
               <Input
                 id="profile-current-password"
