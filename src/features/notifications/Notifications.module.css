@@ -1,15 +1,25 @@
-.bell {
+/* Figma 930:6780 icon-btn/bell: 44px white disc, ink bell, coral unread dot. */
+.bell.bell {
   position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  color: var(--v2-ink);
+  box-shadow:
+    var(--v2-shadow-card),
+    var(--v2-inset);
 }
 .dot {
   position: absolute;
-  width: 7px;
-  height: 7px;
-  background: #b73c48;
+  width: 8px;
+  height: 8px;
+  box-sizing: content-box;
+  background: #ff6f59;
   border: 2px solid white;
   border-radius: 50%;
   top: 8px;
-  right: 8px;
+  right: 7px;
 }
 .switchRow {
   display: flex;

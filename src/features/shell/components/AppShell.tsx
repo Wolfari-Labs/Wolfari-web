@@ -10,10 +10,8 @@ import {
 import { Link, NavLink } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSection, ShellSnapshot } from '../model/shell';
-import type { assets } from '../../../shared/assets/asset-map';
-import logo from '../../../shared/assets/figma/44363.png';
-import routeDecoration from '../../../shared/assets/figma/0d2a5.svg';
-import mascot from '../../../shared/assets/figma/4ff86.png';
+import mascot from '../../../shared/assets/v2/mascot-waving.png';
+import { BrandWordmark } from '../../../shared/components/BrandWordmark';
 import styles from './AppShell.module.css';
 import { Icon as UiIcon, type IconName } from '../../../shared/components/Icon';
 import { Avatar } from '../../../shared/components/Avatar';
@@ -32,41 +30,27 @@ const NavigationDrawer = lazy(() =>
   import('../../../shared/components/Drawer').then((module) => ({ default: module.Drawer })),
 );
 
-const sections: { id: ShellSection; label: string; icon: keyof typeof assets }[] = [
-  { id: 'overview', label: 'Tổng quan chuyến đi', icon: '4151c.svg' },
-  { id: 'map', label: 'Bản đồ địa điểm', icon: 'f892f.svg' },
-  { id: 'plan', label: 'Lịch trình', icon: 'ea811.svg' },
-  { id: 'dress', label: 'Trang phục', icon: '87597.svg' },
-  { id: 'packing', label: 'Đồ đạc', icon: '462bc.svg' },
-  { id: 'members', label: 'Thành viên', icon: '46522.svg' },
-  { id: 'fund', label: 'Quỹ nhóm', icon: '431b0.svg' },
-  { id: 'fare', label: 'Theo dõi giá vé', icon: 'b7793.svg' },
-  { id: 'settings', label: 'Cài đặt', icon: 'd379f.svg' },
+// Web v2 trip sidebar (Figma 930:7331): labels and glyphs follow the V2 components.
+const sections: { id: ShellSection; label: string; icon: IconName }[] = [
+  { id: 'overview', label: 'Tổng quan', icon: 'compass' },
+  { id: 'map', label: 'Bản đồ & địa điểm', icon: 'mapFolded' },
+  { id: 'plan', label: 'Lịch trình', icon: 'calendar' },
+  { id: 'dress', label: 'Dress code', icon: 'dress' },
+  { id: 'packing', label: 'Hành lý', icon: 'luggage' },
+  { id: 'members', label: 'Thành viên', icon: 'members' },
+  { id: 'fund', label: 'Quỹ nhóm', icon: 'fund' },
+  { id: 'fare', label: 'Theo dõi giá vé', icon: 'price' },
+  { id: 'settings', label: 'Cài đặt', icon: 'settings' },
 ];
-function Icon({ file, className }: { file: keyof typeof assets; className?: string | undefined }) {
-  const names: Partial<Record<keyof typeof assets, IconName>> = {
-    '4151c.svg': 'home',
-    'f892f.svg': 'map',
-    'ea811.svg': 'plan',
-    '87597.svg': 'dress',
-    '462bc.svg': 'packing',
-    '46522.svg': 'members',
-    '431b0.svg': 'fund',
-    'b7793.svg': 'price',
-    'd379f.svg': 'settings',
-    'd4edd.svg': 'home',
-    '92234.svg': 'home',
-    '5290c.svg': 'plan',
-    'ff747.svg': 'plan',
-    '28f71.svg': 'plan',
-    '89e09.svg': 'plan',
-    'ac8db.svg': 'price',
-    '2e748.svg': 'user',
-    'cea87.svg': 'expand',
-    '0e16c.svg': 'bell',
-  };
-  const name = names[file];
-  return <UiIcon name={name ?? 'info'} {...(className ? { className } : {})} />;
+
+function MascotCard({ className }: { className?: string | undefined }) {
+  return (
+    <div className={className} aria-hidden="true">
+      <img src={mascot} alt="" width="96" height="80" />
+      <p>Cùng bạn đi xa hơn!</p>
+      <span>Mỗi chuyến đi là một câu chuyện.</span>
+    </div>
+  );
 }
 
 function accountInitials(name: string) {
@@ -220,7 +204,7 @@ export function AppShell({
       {includeAccountLinks && viewer && (
         <>
           <NavLink end to={paths.trips} onClick={selectDestination}>
-            <UiIcon name="plan" />
+            <UiIcon name="luggage" />
             <span>Chuyến đi của tôi</span>
           </NavLink>
           <NavLink to={paths.profile} onClick={selectDestination}>
@@ -240,7 +224,7 @@ export function AppShell({
             title={item.label}
             onClick={selectDestination}
           >
-            <Icon file={item.icon} />
+            <UiIcon name={item.icon} />
             <span>{item.label}</span>
           </NavLink>
         ) : (
@@ -252,7 +236,7 @@ export function AppShell({
             title={`${item.label} · Chưa khả dụng`}
             onClick={() => selectTrip(item.id)}
           >
-            <Icon file={item.icon} />
+            <UiIcon name={item.icon} />
             <span>{item.label}</span>
           </NavigationButton>
         ),
@@ -327,43 +311,31 @@ export function AppShell({
         <>
           <header className={styles.desktopHeader} data-node-id="135:483">
             <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
-              <img src={logo} alt="Wolfari" />
+              <BrandWordmark />
             </Link>
             <nav aria-label="Điều hướng chính" className={styles.headerNav}>
               <NavLink end to={paths.home}>
-                <Icon file={selectedHeader === 'home' ? 'd4edd.svg' : '92234.svg'} />
+                <UiIcon name="compass" size={18} />
                 Trang chủ
               </NavLink>
-              {guest ? (
-                <a href={`${paths.home}#home-features`}>
-                  <Icon file="5290c.svg" />
-                  Tính năng
-                </a>
-              ) : (
-                <Link
-                  to={paths.trips}
-                  aria-current={selectedHeader === 'trips' ? 'page' : undefined}
-                >
-                  <Icon file={selectedHeader === 'trips' ? 'ff747.svg' : '5290c.svg'} />
-                  Chuyến đi của tôi
-                </Link>
-              )}
+              <Link
+                to={paths.trips}
+                aria-current={selectedHeader === 'trips' ? 'page' : undefined}
+              >
+                <UiIcon name="luggage" size={18} />
+                Chuyến đi của tôi
+              </Link>
               {canReadTrip && snapshot?.trip ? (
                 <Link
                   aria-current={schedule ? 'page' : undefined}
                   to={paths.plan(snapshot.trip.id)}
                 >
-                  <Icon file={schedule ? '28f71.svg' : '89e09.svg'} />
+                  <UiIcon name="calendar" size={18} />
                   Lên lịch
                 </Link>
-              ) : guest ? (
-                <a href={`${paths.home}#home-about`}>
-                  <UiIcon name="info" />
-                  Về Wolfari
-                </a>
               ) : (
                 <button disabled title="Chọn chuyến đi để mở lịch trình">
-                  <Icon file="89e09.svg" />
+                  <UiIcon name="calendar" size={18} />
                   Lên lịch
                 </button>
               )}
@@ -397,8 +369,7 @@ export function AppShell({
                     Đăng nhập
                   </Link>
                   <Link className={styles.primary} to={paths.register}>
-                    <Icon file="ac8db.svg" />
-                    Đăng ký
+                    Bắt đầu miễn phí
                   </Link>
                 </>
               ) : (
@@ -414,7 +385,7 @@ export function AppShell({
       >
         {adminLayout && mobileMenu}
         <Link to={paths.home} className={styles.mobileLogo} aria-label="Wolfari · Trang chủ">
-          <img src={logo} alt="Wolfari" />
+          <BrandWordmark />
         </Link>
         {viewer ? (
           <div className={styles.mobileAccountActions}>
@@ -451,39 +422,28 @@ export function AppShell({
             className={collapsed ? styles.collapsed : styles.sidebar}
             data-node-id={collapsed ? '135:1042' : '135:484'}
           >
+            <div className={styles.sidebarHead}>
+              {!collapsed && <p className={styles.sidebarSection}>Chuyến đi</p>}
+              <button
+                className={styles.collapseButton}
+                aria-label={collapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
+                aria-expanded={!collapsed}
+                onClick={() => setCollapsed((value) => !value)}
+              >
+                <UiIcon name={collapsed ? 'chevronRight' : 'chevronLeft'} size={20} />
+              </button>
+            </div>
             {tripNavigation()}
-            {!collapsed && (
-              <div className={styles.sidebarDecoration} aria-hidden="true">
-                <p>
-                  Cùng bạn
-                  <br />
-                  đi xa hơn!
-                </p>
-                <img className={styles.routeDecoration} src={routeDecoration} alt="" />
-                <img className={styles.readingMascot} src={mascot} alt="" />
-              </div>
-            )}
-            <button
-              className={styles.collapseButton}
-              aria-label={collapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
-              aria-expanded={!collapsed}
-              onClick={() => setCollapsed((value) => !value)}
-            >
-              {collapsed ? (
-                <Icon file="cea87.svg" className={styles.collapseIconReversed} />
-              ) : (
-                <>
-                  <UiIcon name="collapse" />
-                  <span>Thu gọn</span>
-                </>
-              )}
-            </button>
+            {!collapsed && <MascotCard className={styles.mascotCard} />}
           </aside>
         ) : null}
         <main
           ref={contentScope}
           id="main-content"
           tabIndex={-1}
+          data-layout={
+            adminLayout ? 'admin' : tripLayout ? 'trip' : listLayout ? 'list' : 'flow'
+          }
           className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout || fullBleed ? styles.listMain : ''}`}
         >
           {children}
@@ -507,7 +467,7 @@ export function AppShell({
             {!adminLayout && (
               <div className={styles.drawerHeader}>
                 <Link to={paths.home} aria-label="Wolfari · Trang chủ" onClick={selectDestination}>
-                  <img src={logo} alt="Wolfari" />
+                  <BrandWordmark />
                 </Link>
                 <button
                   ref={drawerClose}
@@ -520,17 +480,7 @@ export function AppShell({
               </div>
             )}
             {adminLayout ? adminNavigation : tripLayout ? tripNavigation(true) : publicNavigation}
-            {tripLayout && (
-              <div className={styles.drawerDecoration} aria-hidden="true">
-                <p>
-                  Cùng bạn
-                  <br />
-                  đi xa hơn!
-                </p>
-                <img src={routeDecoration} alt="" className={styles.drawerRoute} />
-                <img src={mascot} alt="" className={styles.drawerMascot} />
-              </div>
-            )}
+            {tripLayout && <MascotCard className={`${styles.mascotCard} ${styles.drawerMascot}`} />}
           </NavigationDrawer>
         </Suspense>
       )}
