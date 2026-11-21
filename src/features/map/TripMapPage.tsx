@@ -623,12 +623,23 @@ function PreviewMapPage() {
                                   )}
                                   <span className={styles.placeCopy}>
                                     <strong>{item.location.name}</strong>
-                                    <small>
-                                      {item.activities[0]?.activityType === 'MEAL'
-                                        ? 'Ẩm thực'
-                                        : 'Tham quan'}{' '}
-                                      · {item.location.address ?? 'Chưa có địa chỉ'}
-                                    </small>
+                                    <span className={styles.placeMetaLine}>
+                                      <span
+                                        className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
+                                      >
+                                        {status === 'IN_SCHEDULE'
+                                          ? 'Trong lịch'
+                                          : status === 'SELECTED_UNSCHEDULED'
+                                            ? 'Đã chọn · Chưa xếp'
+                                            : 'Chưa chọn'}
+                                      </span>
+                                      <small>
+                                        {item.activities[0]?.activityType === 'MEAL'
+                                          ? 'Ẩm thực'
+                                          : 'Tham quan'}{' '}
+                                        · {item.location.address ?? 'Chưa có địa chỉ'}
+                                      </small>
+                                    </span>
                                   </span>
                                   <img
                                     className={styles.rowChevron}
@@ -638,15 +649,6 @@ function PreviewMapPage() {
                                     alt=""
                                   />
                                 </button>
-                                <span
-                                  className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
-                                >
-                                  {status === 'IN_SCHEDULE'
-                                    ? 'Trong lịch'
-                                    : status === 'SELECTED_UNSCHEDULED'
-                                      ? 'Đã chọn · Chưa xếp'
-                                      : 'Chưa chọn'}
-                                </span>
                                 {item.selected ? (
                                   <span
                                     className={`${styles.placeState} ${status === 'IN_SCHEDULE' ? styles.placeStateScheduled : styles.placeStateSelected}`}

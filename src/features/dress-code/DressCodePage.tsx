@@ -6,6 +6,7 @@ import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
+import { Icon } from '../../shared/components/Icon';
 import { TripHero } from '../trips/components/TripHero';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
@@ -89,7 +90,7 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
     ? [eveningSwatch1, eveningSwatch2, eveningSwatch3]
     : [beachSwatch1, beachSwatch2, beachSwatch3];
   return (
-    <article className={styles.card} aria-label={title}>
+    <article className={styles.card} aria-label={title} data-tone={isEvening ? 'evening' : 'day'}>
       <div className={styles.cardHeader}>
         <h3>{title}</h3>
         <span className={styles.cardBadge}>{isEvening ? 'Gợi ý' : 'Cả chuyến'}</span>
@@ -98,6 +99,9 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         <source media="(max-width: 768px)" srcSet={mobileArtwork} />
         <img src={artwork} alt="Minh họa phối trang phục" />
       </picture>
+      <span className={styles.artworkBadge} aria-hidden="true">
+        <Icon name="dress" size={22} />
+      </span>
       <div className={styles.palette}>
         <span>Minh họa</span>
         <div aria-label="Bảng màu minh họa">
@@ -113,6 +117,9 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         ))}
       </div>
       <div className={styles.suggestion}>
+        <span className={styles.suggestionIcon} aria-hidden="true">
+          <Icon name={isEvening ? 'sparkles' : 'sun'} size={18} />
+        </span>
         <strong>{sourceLabel(item.source)}</strong>
         <p>
           {item.description ??
@@ -184,34 +191,41 @@ function PreviewDressCodePage() {
       />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
-        <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi trang phục">
-          {(['ALL', 'DAY', 'ACTIVITY'] as DressScope[]).map((value) => (
-            <button
-              key={value}
-              type="button"
-              role="tab"
-              aria-selected={scope === value}
-              className={scope === value ? styles.activeTab : ''}
-              onClick={() => setScope(value)}
-            >
-              {scopeLabels[value]}
-            </button>
-          ))}
-        </div>
         <div className={styles.contentGrid}>
-          <div className={styles.cards}>
-            {items.map((item, index) => (
-              <OutfitCard key={item.id} item={item} index={index} />
-            ))}
-            {!items.length && (
-              <div className={styles.empty} role="status">
-                <h2>Chưa có trang phục đã lưu</h2>
-                <p>Chưa có hướng dẫn trong phạm vi đang chọn.</p>
-              </div>
-            )}
+          <div className={styles.mainColumn}>
+            <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi trang phục">
+              {(['ALL', 'DAY', 'ACTIVITY'] as DressScope[]).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={scope === value}
+                  className={scope === value ? styles.activeTab : ''}
+                  onClick={() => setScope(value)}
+                >
+                  {scopeLabels[value]}
+                </button>
+              ))}
+            </div>
+            <div className={styles.cards}>
+              {items.map((item, index) => (
+                <OutfitCard key={item.id} item={item} index={index} />
+              ))}
+              {!items.length && (
+                <div className={styles.empty} role="status">
+                  <h2>Chưa có trang phục đã lưu</h2>
+                  <p>Chưa có hướng dẫn trong phạm vi đang chọn.</p>
+                </div>
+              )}
+            </div>
           </div>
           <aside className={styles.editor} aria-label="Tạo hoặc sửa trang phục">
-            <h2>Tạo / sửa trang phục</h2>
+            <div className={styles.editorTitle}>
+              <span className={styles.editorIcon} aria-hidden="true">
+                <Icon name="dress" size={22} />
+              </span>
+              <h2>Tạo / sửa trang phục</h2>
+            </div>
             <DraftField
               label="Tiêu đề"
               value={draftTitle}

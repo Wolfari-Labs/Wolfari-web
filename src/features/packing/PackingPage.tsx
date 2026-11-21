@@ -215,6 +215,9 @@ export function PackingPage() {
             </p>
           )}
           <section className={styles.summary} aria-label="Tiến độ đồ đạc">
+            <span className={styles.summaryIcon} aria-hidden="true">
+              <Icon name="luggage" size={22} />
+            </span>
             <div>
               <h2>Đồ đạc</h2>
               <p>
@@ -227,28 +230,6 @@ export function PackingPage() {
               </i>
               <span>{percent}%</span>
             </div>
-            {canWrite ? (
-              <Button
-                onClick={(event) => {
-                  addButtonRef.current = event.currentTarget;
-                  setDrawer({ open: true, mode: 'add', item: null });
-                }}
-              >
-                <Icon name="plus" size={18} /> Thêm vật dụng
-              </Button>
-            ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
-              <GatewayPackingEditor
-                key={`${tripId}:${viewerUserId}:create`}
-                addButtonRef={addButtonRef}
-                trip={data.trip}
-                plan={data.plan}
-                refresh={snapshot.retry}
-              />
-            ) : !previewEnabled ? (
-              <span className={styles.readOnlyBadge}>Chỉ xem</span>
-            ) : null}
-          </section>
-          <div className={styles.list}>
             <div className={styles.toolbar}>
               <div className={styles.filters} role="group" aria-label="Bộ lọc vật dụng">
                 <button
@@ -289,6 +270,28 @@ export function PackingPage() {
                 </Select>
               </div>
             </div>
+            {canWrite ? (
+              <Button
+                onClick={(event) => {
+                  addButtonRef.current = event.currentTarget;
+                  setDrawer({ open: true, mode: 'add', item: null });
+                }}
+              >
+                <Icon name="plus" size={18} /> Thêm vật dụng
+              </Button>
+            ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
+              <GatewayPackingEditor
+                key={`${tripId}:${viewerUserId}:create`}
+                addButtonRef={addButtonRef}
+                trip={data.trip}
+                plan={data.plan}
+                refresh={snapshot.retry}
+              />
+            ) : !previewEnabled ? (
+              <span className={styles.readOnlyBadge}>Chỉ xem</span>
+            ) : null}
+          </section>
+          <div className={styles.list}>
             <div className={styles.tableHead}>
               <span aria-hidden="true" />
               <span>Vật dụng</span>
@@ -417,7 +420,18 @@ export function PackingPage() {
                                 {!previewEnabled && (
                                   <span className={styles.mobileReadLabel}>Hạn chuẩn bị: </span>
                                 )}
-                                {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC') ?? '—'}
+                                {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC') ? (
+                                  <>
+                                    <Icon
+                                      name="calendar"
+                                      size={14}
+                                      className={styles.dueIcon ?? ''}
+                                    />
+                                    {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC')}
+                                  </>
+                                ) : (
+                                  '—'
+                                )}
                               </span>
                               {previewEnabled ? (
                                 <ActionMenu
