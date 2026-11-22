@@ -44,7 +44,7 @@ export function PriceWatchOverlay({
         <h2 ref={focus} tabIndex={-1}>
           {title}
         </h2>
-        <Button variant="outline" disabled={busy} onClick={onDismiss}>
+        <Button variant="plain" size="compact" disabled={busy} onClick={onDismiss}>
           ← Trở lại
         </Button>
       </header>

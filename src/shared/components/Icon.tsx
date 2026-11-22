@@ -50,6 +50,9 @@ import {
   ImagePlus,
   FileText,
   Car,
+  Pause,
+  Play,
+  TriangleAlert,
 } from 'lucide-react';
 const icons = {
   home: House,
@@ -107,6 +110,10 @@ const icons = {
   fileText: FileText,
   // Web v2 Plan (Figma W06) day stats.
   car: Car,
+  // Web v2 Price Watch card actions and data-quality notes.
+  pause: Pause,
+  play: Play,
+  alert: TriangleAlert,
 };
 export type IconName = keyof typeof icons;
 export function Icon({

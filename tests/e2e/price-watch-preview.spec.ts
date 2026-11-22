@@ -28,7 +28,12 @@ for (const size of [
     );
     await page.getByRole('button', { name: /Minh Anh/ }).click();
     await expect(page.getByText('Hà Nội → Đà Nẵng', { exact: true }).last()).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Dừng theo dõi này' })).toBeEnabled();
+    // Another member's watch: only stopping is allowed, from the card's overflow menu.
+    await expect(page.getByText('Chỉ người tạo mới chỉnh sửa hoặc tạm dừng được')).toBeVisible();
+    await page.getByRole('button', { name: 'Thêm thao tác cho Hà Nội đến Đà Nẵng' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Dừng theo dõi' })).toBeEnabled();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('menu')).toHaveCount(0);
     await page.screenshot({ path: info.outputPath('price-watch.png'), fullPage: true });
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByRole('region', { name: 'Lịch sử giá vé' })).toHaveCSS(
@@ -57,11 +62,13 @@ test('Price Watch preserves an old price when provider fails and keeps commands 
   await scenario.selectOption('provider-error');
   await expect(page.getByText(/giữ lại giá gần nhất/i)).toBeVisible();
   await expect(page.getByText('2.350.000đ', { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Tạm dừng' })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Tạm dừng', exact: true })).toBeEnabled();
+  // Pause and resume are one toggle: only the valid action is shown.
+  await expect(page.getByRole('button', { name: 'Tiếp tục', exact: true })).toHaveCount(0);
   await page.getByText(/Xem dữ liệu lịch sử/).click();
   await expect(page.getByRole('cell', { name: 'Chưa có giá' })).toBeVisible();
   for (const [value, heading] of [
-    ['empty', 'Chưa có nội dung'],
+    ['empty', 'Chưa có theo dõi giá nào'],
     ['error', 'Chưa thể tải nội dung'],
     ['forbidden', 'Bạn không có quyền truy cập'],
     ['not-found', 'Không tìm thấy nội dung'],
@@ -87,4 +94,23 @@ test('Price Watch capability controls explain that preview actions do not mutate
   await expect(help).not.toHaveAttribute('open', '');
   await help.getByText('Cách hoạt động', { exact: true }).click();
   await expect(help.getByText('Bạn tự đặt vé ở dịch vụ bên ngoài.')).toBeVisible();
+  // A paused watch offers only "Tiếp tục"; the selected card stays keyboard-selectable.
+  await page.locator('[data-preview="price-watch"] summary').click();
+  await page.locator('[data-preview="price-watch"] select').selectOption('paused');
+  const paused = page.getByLabel('Thao tác theo dõi');
+  await expect(paused.getByRole('button', { name: 'Tiếp tục', exact: true })).toBeEnabled();
+  await expect(paused.getByRole('button', { name: 'Tạm dừng', exact: true })).toHaveCount(0);
+  const second = page.getByRole('button', { name: /Minh Anh/ });
+  await second.focus();
+  await page.keyboard.press('Enter');
+  await expect(second).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('Price Watch empty state offers one real next step', async ({ page }) => {
+  await page.goto(route);
+  await page.locator('[data-preview="price-watch"] summary').click();
+  await page.locator('[data-preview="price-watch"] select').selectOption('empty');
+  await expect(page.getByRole('heading', { name: 'Chưa có theo dõi giá nào' })).toBeVisible();
+  await page.getByRole('button', { name: 'Tạo theo dõi', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Tạo theo dõi giá vé' })).toBeVisible();
 });
