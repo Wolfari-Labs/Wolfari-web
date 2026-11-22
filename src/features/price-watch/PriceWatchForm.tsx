@@ -6,7 +6,8 @@ import { localTimeToIso } from '../plan/model/plan-draft';
 import { localDate } from '../plan/model/plan-presentation';
 import { isValidDate } from './model/price-watch';
 import type { RuntimeWatch, WatchFields } from './model/runtime-price-watch';
-import styles from '../../shared/styles/DemoWorkspace.module.css';
+import { Icon } from '../../shared/components/Icon';
+import formStyles from './PriceWatchForm.module.css';
 
 export function PriceWatchForm({
   initial,
@@ -109,125 +110,152 @@ export function PriceWatchForm({
     });
   };
   return (
-    <form ref={form} onSubmit={submit} noValidate className={styles.form}>
-      <p className={styles.metadata}>
-        {cached
-          ? 'Nguồn TRAVELPAYOUTS_CACHE · Giá tham khảo cho 1 người lớn, một chiều, phổ thông; không bảo đảm còn mua được. Giờ UTC chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.'
-          : 'Ngày, giờ tra cứu theo UTC; không phải giờ địa phương tại sân bay. Nguồn MOCK_FLIGHT · Giá mô phỏng.'}
+    <form ref={form} onSubmit={submit} noValidate className={formStyles.form}>
+      <p className={formStyles.source}>
+        <Icon name="info" size={16} />
+        <span>
+          {cached
+            ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo cho 1 người lớn, một chiều, hạng phổ thông; không bảo đảm còn mua được.'
+            : 'Nguồn: giá mô phỏng, không phải giá thị trường.'}
+        </span>
       </p>
-      <fieldset disabled={disabled || busy} className={styles.form}>
-        <legend>Thông tin chuyến bay</legend>
-        <Input
-          {...fieldProps('origin')}
-          label="Sân bay đi (IATA)"
-          required
-          maxLength={3}
-          value={fields.origin}
-          onChange={(e) => setFields({ ...fields, origin: e.target.value.toUpperCase().trim() })}
-          placeholder="DAD"
-          autoComplete="off"
-        />
-        <Input
-          {...fieldProps('destination')}
-          label="Sân bay đến (IATA)"
-          required
-          maxLength={3}
-          value={fields.destination}
-          onChange={(e) =>
-            setFields({ ...fields, destination: e.target.value.toUpperCase().trim() })
-          }
-          placeholder="SGN"
-          autoComplete="off"
-        />
-        <Select
-          label="Hành trình"
-          disabled={cached}
-          value={fields.journey_type}
-          onChange={(e) =>
-            setFields({ ...fields, journey_type: e.target.value as WatchFields['journey_type'] })
-          }
-        >
-          <option value="ONE_WAY">Một chiều</option>
-          <option value="ROUND_TRIP">Khứ hồi</option>
-        </Select>
-        <Input
-          {...fieldProps('departure_date')}
-          label="Ngày khởi hành"
-          type="date"
-          required
-          value={fields.departure_date}
-          onChange={(e) => setFields({ ...fields, departure_date: e.target.value })}
-        />
-        <Input
-          label={cached ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
-          type="time"
-          required
-          value={clock}
-          onChange={(e) => setClock(e.target.value)}
-        />
-        {fields.journey_type === 'ROUND_TRIP' && (
-          <Input
-            {...fieldProps('return_date')}
-            label="Ngày về"
-            type="date"
-            required
-            min={fields.departure_date}
-            value={fields.return_date ?? ''}
-            onChange={(e) => setFields({ ...fields, return_date: e.target.value })}
-          />
-        )}
-        {(['adults', 'children', 'infants'] as const).map((key) => (
-          <Input
-            key={key}
+      <fieldset disabled={disabled || busy} className={formStyles.fields}>
+        <legend className={formStyles.hiddenLegend}>Thông tin chuyến bay</legend>
+        <fieldset className={formStyles.group}>
+          <legend>Chặng bay</legend>
+          <div className={formStyles.grid}>
+            <Input
+              {...fieldProps('origin')}
+              label="Sân bay đi (IATA)"
+              required
+              maxLength={3}
+              value={fields.origin}
+              onChange={(e) =>
+                setFields({ ...fields, origin: e.target.value.toUpperCase().trim() })
+              }
+              placeholder="DAD"
+              autoComplete="off"
+            />
+            <Input
+              {...fieldProps('destination')}
+              label="Sân bay đến (IATA)"
+              required
+              maxLength={3}
+              value={fields.destination}
+              onChange={(e) =>
+                setFields({ ...fields, destination: e.target.value.toUpperCase().trim() })
+              }
+              placeholder="SGN"
+              autoComplete="off"
+            />
+            <Select
+              label="Hành trình"
+              disabled={cached}
+              value={fields.journey_type}
+              onChange={(e) =>
+                setFields({
+                  ...fields,
+                  journey_type: e.target.value as WatchFields['journey_type'],
+                })
+              }
+            >
+              <option value="ONE_WAY">Một chiều</option>
+              <option value="ROUND_TRIP">Khứ hồi</option>
+            </Select>
+            <Input
+              {...fieldProps('departure_date')}
+              label="Ngày khởi hành"
+              type="date"
+              required
+              value={fields.departure_date}
+              onChange={(e) => setFields({ ...fields, departure_date: e.target.value })}
+            />
+            <Input
+              label={cached ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
+              hint={
+                cached
+                  ? 'Chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.'
+                  : 'Theo giờ UTC, không phải giờ địa phương tại sân bay.'
+              }
+              type="time"
+              required
+              value={clock}
+              onChange={(e) => setClock(e.target.value)}
+            />
+            {fields.journey_type === 'ROUND_TRIP' && (
+              <Input
+                {...fieldProps('return_date')}
+                label="Ngày về"
+                type="date"
+                required
+                min={fields.departure_date}
+                value={fields.return_date ?? ''}
+                onChange={(e) => setFields({ ...fields, return_date: e.target.value })}
+              />
+            )}
+          </div>
+        </fieldset>
+        <fieldset className={formStyles.group}>
+          <legend>Hành khách và hạng ghế</legend>
+          <div className={formStyles.passengers}>
+            {(['adults', 'children', 'infants'] as const).map((key) => (
+              <Input
+                key={key}
+                disabled={cached}
+                {...fieldProps(key)}
+                label={{ adults: 'Người lớn', children: 'Trẻ em', infants: 'Em bé' }[key]}
+                type="number"
+                min={key === 'adults' ? 1 : 0}
+                max={9}
+                required
+                value={fields.passengers[key]}
+                onChange={(e) =>
+                  setFields({
+                    ...fields,
+                    passengers: { ...fields.passengers, [key]: Number(e.target.value) },
+                  })
+                }
+              />
+            ))}
+          </div>
+          <Select
+            label="Hạng ghế"
             disabled={cached}
-            {...fieldProps(key)}
-            label={{ adults: 'Người lớn', children: 'Trẻ em', infants: 'Em bé' }[key]}
-            type="number"
-            min={key === 'adults' ? 1 : 0}
-            max={9}
-            required
-            value={fields.passengers[key]}
+            value={fields.cabin_class ?? ''}
             onChange={(e) =>
               setFields({
                 ...fields,
-                passengers: { ...fields.passengers, [key]: Number(e.target.value) },
+                cabin_class: (e.target.value as WatchFields['cabin_class']) || null,
               })
             }
+          >
+            <option value="">Không chỉ định</option>
+            <option value="ECONOMY">Phổ thông</option>
+            <option value="PREMIUM_ECONOMY">Phổ thông đặc biệt</option>
+            <option value="BUSINESS">Thương gia</option>
+            <option value="FIRST">Hạng nhất</option>
+          </Select>
+        </fieldset>
+        <fieldset className={formStyles.group}>
+          <legend>Mức giá mong muốn</legend>
+          <Input
+            {...fieldProps('threshold_price')}
+            label="Ngưỡng cảnh báo (VND)"
+            hint="Chỉ nhập chữ số, ví dụ 1500000 cho 1.500.000đ."
+            inputMode="numeric"
+            required
+            value={fields.threshold_price}
+            onChange={(e) => setFields({ ...fields, threshold_price: e.target.value })}
+            placeholder="1500000"
           />
-        ))}
-        <Select
-          label="Hạng ghế"
-          disabled={cached}
-          value={fields.cabin_class ?? ''}
-          onChange={(e) =>
-            setFields({
-              ...fields,
-              cabin_class: (e.target.value as WatchFields['cabin_class']) || null,
-            })
-          }
-        >
-          <option value="">Không chỉ định</option>
-          <option value="ECONOMY">Phổ thông</option>
-          <option value="PREMIUM_ECONOMY">Phổ thông đặc biệt</option>
-          <option value="BUSINESS">Thương gia</option>
-          <option value="FIRST">Hạng nhất</option>
-        </Select>
-        <Input
-          {...fieldProps('threshold_price')}
-          label="Ngưỡng cảnh báo (VND)"
-          inputMode="numeric"
-          required
-          value={fields.threshold_price}
-          onChange={(e) => setFields({ ...fields, threshold_price: e.target.value })}
-          placeholder="1500000"
-        />
+        </fieldset>
       </fieldset>
-      {preview && (
-        <p className={styles.metadata}>Bản xem trước · Không tạo theo dõi hoặc gửi dữ liệu.</p>
-      )}
-      <Button type="submit" loading={busy} disabled={disabled}>
-        {preview ? 'Kiểm tra bản nháp' : 'Lưu theo dõi'}
-      </Button>
+      <div className={formStyles.footer}>
+        {preview && <p>Bản xem trước · Không tạo theo dõi hoặc gửi dữ liệu.</p>}
+        <Button type="submit" loading={busy} disabled={disabled}>
+          {preview ? 'Kiểm tra bản nháp' : 'Lưu theo dõi'}
+        </Button>
+      </div>
     </form>
   );
 }

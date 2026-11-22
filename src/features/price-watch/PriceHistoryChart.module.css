@@ -1,0 +1,111 @@
+/* Price history chart (Web v2 W11). One series, a dashed threshold reference line labelled in
+   place, recessive grid. Solid fills only. */
+.chart {
+  margin: 0;
+  min-width: 0;
+}
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  overflow: visible;
+}
+.grid {
+  stroke: #e8ecf4;
+  stroke-width: 1;
+}
+.axis {
+  fill: var(--v2-muted);
+  font-family: var(--v2-font);
+  font-size: 11px;
+  font-weight: 600;
+}
+.area {
+  fill: var(--v2-sky);
+  opacity: 0.55;
+  stroke: none;
+}
+.line {
+  fill: none;
+  stroke: var(--v2-blue);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.threshold {
+  stroke: var(--v2-ink);
+  stroke-width: 1.25;
+  stroke-dasharray: 5 4;
+  opacity: 0.55;
+}
+.thresholdLabel {
+  fill: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 11px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--v2-white);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.point {
+  fill: var(--v2-white);
+  stroke: var(--v2-blue);
+  stroke-width: 2;
+}
+.lastPoint {
+  fill: var(--v2-blue);
+  stroke: var(--v2-white);
+  stroke-width: 2;
+}
+.hit {
+  fill: transparent;
+  cursor: default;
+}
+.pointGroup:hover .point {
+  fill: var(--v2-sky);
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin-top: 8px;
+  color: var(--v2-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+.legendPrice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--v2-ink);
+}
+.legendPrice::before {
+  content: '';
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--v2-blue);
+}
+.unit {
+  margin-left: auto;
+}
+.sparkline {
+  display: block;
+  width: 80px;
+  height: 30px;
+  overflow: visible;
+}
+.sparkline polyline {
+  fill: none;
+  stroke: var(--v2-blue);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sparkline circle {
+  fill: var(--v2-blue);
+}

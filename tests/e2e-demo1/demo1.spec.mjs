@@ -634,7 +634,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       let stopStatus = 409;
       for (let attempt = 0; attempt < 3 && stopStatus === 409; attempt++) {
         await owner.reload();
-        await owner.getByRole('button', { name: 'Dừng', exact: true }).click();
+        // Stop lives in the watch card's overflow menu, still behind the confirm dialog.
+        await owner.getByRole('button', { name: /^Thêm thao tác cho / }).first().click();
+        await owner.getByRole('menuitem', { name: 'Dừng theo dõi', exact: true }).click();
         const stopped = owner.waitForResponse((r) =>
           /\/price-watches\/[^/]+\/stop$/.test(new URL(r.url()).pathname),
         );
