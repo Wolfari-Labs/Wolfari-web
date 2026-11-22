@@ -5,8 +5,8 @@ import type { RouteContext } from '../../../app/route-context';
 import { paths } from '../../../app/route-paths';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
-import { ButtonLink } from '../../../shared/components/ButtonLink';
 import { ContentState } from '../../../shared/components/ContentState';
+import { Icon, type IconName } from '../../../shared/components/Icon';
 import { PageBreadcrumb } from '../../../shared/components/PageBreadcrumb';
 import { Input } from '../../../shared/components/Input';
 import { Textarea } from '../../../shared/components/Textarea';
@@ -103,10 +103,6 @@ function ReadOnlyTripSummary({ trip }: { trip: TripDetailViewModel }) {
       <h3 id="read-only-trip-details-heading">Thông tin chỉ xem</h3>
       <dl className={styles.readOnlyGrid}>
         <div>
-          <dt>Điểm đến</dt>
-          <dd>Chưa có dữ liệu</dd>
-        </div>
-        <div>
           <dt>Ngày bắt đầu</dt>
           <dd>{displayDate(trip.startAt, trip.timezone)}</dd>
         </div>
@@ -114,12 +110,16 @@ function ReadOnlyTripSummary({ trip }: { trip: TripDetailViewModel }) {
           <dt>Ngày kết thúc</dt>
           <dd>{displayDate(trip.endAt, trip.timezone, true)}</dd>
         </div>
-        <div>
-          <dt>Ngân sách dự kiến</dt>
-          <dd>Chưa có dữ liệu</dd>
-        </div>
       </dl>
     </section>
+  );
+}
+
+function RowIcon({ name }: { name: IconName }) {
+  return (
+    <span className={styles.rowIcon} aria-hidden="true">
+      <Icon name={name} size={16} />
+    </span>
   );
 }
 
@@ -142,55 +142,78 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
   return (
     <section className={styles.card} aria-labelledby="trip-information-heading">
       <div className={styles.cardHeading}>
-        <div>
-          <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
+        <div className={styles.cardTitle}>
+          <span className={styles.iconBadge} aria-hidden="true">
+            <Icon name="settings" size={22} />
+          </span>
+          <div>
+            <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
+            <p>Xem thông tin hiện tại trước khi thực hiện chỉnh sửa.</p>
+          </div>
         </div>
         {trip.currentMembership.role === 'OWNER' &&
           trip.permissions.canUpdate &&
           trip.lifecycle !== 'ARCHIVED' && (
-            <Button id="edit-trip-information" variant="outline" onClick={onEdit}>
+            <Button
+              id="edit-trip-information"
+              variant="outline"
+              className={styles.editButton}
+              icon={<Icon name="edit" size={14} />}
+              onClick={onEdit}
+            >
               Chỉnh sửa thông tin
             </Button>
           )}
       </div>
-      <dl className={styles.informationGrid}>
-        <div className={styles.fullRow}>
-          <dt>Tên chuyến đi</dt>
-          <dd>{trip.name}</dd>
-        </div>
-        <div>
-          <dt>Điểm đến chính</dt>
-          <dd>Chưa có dữ liệu</dd>
-        </div>
-        <div>
-          <dt>Thời gian</dt>
-          <dd>
-            {displayDate(trip.startAt, trip.timezone)} →{' '}
-            {displayDate(trip.endAt, trip.timezone, true)}
-          </dd>
-        </div>
-        <div>
-          <dt>Ngân sách dự kiến</dt>
-          <dd>Chưa có dữ liệu</dd>
-        </div>
-        <div>
-          <dt>Thành viên</dt>
-          <dd>
-            {trip.presentation.memberCount === null
-              ? 'Chưa có dữ liệu'
-              : `${trip.presentation.memberCount} người`}
-          </dd>
-        </div>
-        <div className={`${styles.fullRow} ${styles.descriptionBox}`}>
-          <dt>Mô tả chuyến đi</dt>
-          <dd>{trip.description || 'Chưa có mô tả.'}</dd>
-        </div>
-        <div className={`${styles.fullRow} ${styles.descriptionBox}`}>
-          <dt>Mô tả công khai</dt>
-          <dd>{trip.publicDescription || 'Chưa có mô tả công khai.'}</dd>
-        </div>
-      </dl>
-      <CoverPreview trip={trip} />
+      <div className={styles.viewBody}>
+        <CoverPreview trip={trip} />
+        <dl className={styles.informationGrid}>
+          <div>
+            <dt>
+              <RowIcon name="edit" />
+              Tên chuyến đi
+            </dt>
+            <dd>{trip.name}</dd>
+          </div>
+          <div>
+            <dt>
+              <RowIcon name="calendar" />
+              Thời gian
+            </dt>
+            <dd>
+              {displayDate(trip.startAt, trip.timezone)} →{' '}
+              {displayDate(trip.endAt, trip.timezone, true)}
+            </dd>
+          </div>
+          {trip.presentation.memberCount !== null && (
+            <div>
+              <dt>
+                <RowIcon name="members" />
+                Thành viên
+              </dt>
+              <dd>{trip.presentation.memberCount} người</dd>
+            </div>
+          )}
+          {trip.description && (
+            <div className={styles.descriptionBox}>
+              <dt>
+                <RowIcon name="fileText" />
+                Mô tả chuyến đi
+              </dt>
+              <dd>{trip.description}</dd>
+            </div>
+          )}
+          {trip.publicDescription && (
+            <div className={styles.descriptionBox}>
+              <dt>
+                <RowIcon name="share" />
+                Mô tả công khai
+              </dt>
+              <dd>{trip.publicDescription}</dd>
+            </div>
+          )}
+        </dl>
+      </div>
     </section>
   );
 }
@@ -427,7 +450,7 @@ function TripInformationForm({
   }
 
   return (
-    <section className={styles.card} aria-labelledby="edit-trip-heading">
+    <section className={`${styles.card} ${styles.editCard}`} aria-labelledby="edit-trip-heading">
       <h2 id="edit-trip-heading">Chỉnh sửa thông tin chuyến đi</h2>
       <form className={styles.form} onSubmit={(event) => void submit(event)} noValidate>
         {result && result.status !== 'validation-error' && !unresolvedIntent && (
@@ -505,6 +528,11 @@ function TripInformationForm({
           value={name}
           disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
           maxLength={201}
+          leadingIcon={
+            <span className={styles.fieldChip}>
+              <Icon name="edit" size={18} />
+            </span>
+          }
           error={nameError}
           className={!nameDirty && focused !== 'name' ? styles.currentValue : ''}
           onFocus={() => setFocused('name')}
@@ -514,38 +542,46 @@ function TripInformationForm({
             setResult(null);
           }}
         />
-        <Textarea
-          label="Mô tả chuyến đi"
-          value={description}
-          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
-          error={result?.status === 'validation-error' ? result.fieldErrors.description : undefined}
-          className={!descriptionDirty && focused !== 'description' ? styles.currentValue : ''}
-          onFocus={() => setFocused('description')}
-          onBlur={() => setFocused(null)}
-          onChange={(event) => {
-            setDescription(event.target.value);
-            setResult(null);
-          }}
-        />
-        <Textarea
-          label="Mô tả công khai"
-          value={publicDescription}
-          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
-          error={
-            result?.status === 'validation-error' ? result.fieldErrors.publicDescription : undefined
-          }
-          className={
-            !publicDescriptionDirty && focused !== 'publicDescription' ? styles.currentValue : ''
-          }
-          onFocus={() => setFocused('publicDescription')}
-          onBlur={() => setFocused(null)}
-          onChange={(event) => {
-            setPublicDescription(event.target.value);
-            setResult(null);
-          }}
-        />
-        <ReadOnlyTripSummary trip={trip} />
-        <CoverPreview trip={trip} />
+        <div className={styles.formPair}>
+          <Textarea
+            label="Mô tả chuyến đi"
+            value={description}
+            disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+            error={
+              result?.status === 'validation-error' ? result.fieldErrors.description : undefined
+            }
+            className={!descriptionDirty && focused !== 'description' ? styles.currentValue : ''}
+            onFocus={() => setFocused('description')}
+            onBlur={() => setFocused(null)}
+            onChange={(event) => {
+              setDescription(event.target.value);
+              setResult(null);
+            }}
+          />
+          <Textarea
+            label="Mô tả công khai"
+            value={publicDescription}
+            disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+            error={
+              result?.status === 'validation-error'
+                ? result.fieldErrors.publicDescription
+                : undefined
+            }
+            className={
+              !publicDescriptionDirty && focused !== 'publicDescription' ? styles.currentValue : ''
+            }
+            onFocus={() => setFocused('publicDescription')}
+            onBlur={() => setFocused(null)}
+            onChange={(event) => {
+              setPublicDescription(event.target.value);
+              setResult(null);
+            }}
+          />
+        </div>
+        <div className={styles.formPair}>
+          <ReadOnlyTripSummary trip={trip} />
+          <CoverPreview trip={trip} />
+        </div>
         <div className={styles.formActions}>
           <Button
             variant="outline"
@@ -556,6 +592,7 @@ function TripInformationForm({
           </Button>
           <Button
             type="submit"
+            icon={<Icon name="check" size={16} />}
             loading={mutation.isPending}
             disabled={
               !!nameError ||
@@ -578,25 +615,30 @@ function ManagementCard({
   trip: TripDetailViewModel;
   ownerName: string | null;
 }) {
-  const owner = trip.currentMembership.role === 'OWNER' ? ownerName : null;
+  const isOwner = trip.currentMembership.role === 'OWNER';
   return (
     <section className={`${styles.card} ${styles.management}`} aria-labelledby="management-heading">
-      <div className={styles.memberHeading}>
-        <div>
-          <h2 id="management-heading">Thành viên &amp; nhắc nhở</h2>
-          <p>Chủ chuyến: {owner ?? 'Xem trong danh sách thành viên'}</p>
+      <h2 id="management-heading">Thành viên &amp; thông báo</h2>
+      <div className={styles.managementRows}>
+        <div className={styles.memberHeading}>
+          <p>
+            <Icon name="crown" size={16} />
+            <span>
+              {isOwner ? `Chủ chuyến: ${ownerName ?? 'Bạn'}` : 'Bạn là thành viên chuyến đi'}
+            </span>
+          </p>
+          <Link className={styles.textLink} to={paths.members(trip.id)}>
+            Quản lý thành viên <span aria-hidden="true">→</span>
+          </Link>
         </div>
-        <ButtonLink variant="outline" to={paths.members(trip.id)}>
-          Quản lý thành viên
-        </ButtonLink>
+        <Link className={styles.settingRow} to={`${paths.profile}#notifications`}>
+          <span className={styles.rowIcon} aria-hidden="true">
+            <Icon name="bell" size={16} />
+          </span>
+          <span>Mở tùy chọn thông báo</span>
+          <Icon name="chevronRight" size={16} />
+        </Link>
       </div>
-      <div className={styles.separator} />
-      <section className={styles.settingSection} aria-labelledby="reminders-heading">
-        <h3 id="reminders-heading">Tùy chọn thông báo</h3>
-        <ButtonLink variant="outline" to={`${paths.profile}#notifications`}>
-          Mở tùy chọn thông báo
-        </ButtonLink>
-      </section>
     </section>
   );
 }

@@ -1,9 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /**
- * UI declutter plan C7: insurance against layout drift. Every trip-workspace route shares one
- * content frame (D1), one header position (D2, D8) and one hero geometry (D3); the overview rows
- * share one line grid (D7). Tolerance is 1px everywhere.
+ * Insurance against layout drift: every trip-workspace route shares the Web v2 content frame,
+ * the W/Trip header card (Figma 937:7647) and its embedded breadcrumb. Tolerance is 1px.
  */
 const tripId = '11111111-1111-4111-8111-111111111111';
 // The overview keeps develop's Figma layout (full-width hero, no breadcrumb), verified by
@@ -35,12 +34,15 @@ for (const viewport of viewports) {
     page,
   }) => {
     await page.setViewportSize(viewport);
-    // 220px sidebar; the content frame fills the area like develop's TripWorkspace frame
-    // (the 1220px centred cap of D1 is a pending delta).
-    const frame = viewport.width - 220;
-    const frameLeft = 220;
-    const expected = { x: frameLeft + 18, y: 76 + 44, width: frame - 40, height: 150 };
-
+    // Web v2 (Figma 932:7192/937:7647): 24px gutters, 264px floating sidebar, content origin
+    // x=312 y=112; the W/Trip header card is 84px tall and spans to the right gutter.
+    const frameLeft = 24 + 264 + 24;
+    const expected = {
+      x: frameLeft,
+      y: 20 + 76 + 16,
+      width: viewport.width - frameLeft - 24,
+      height: 84,
+    };
     for (const route of routes) {
       await page.goto(`/trips/${tripId}${route.path}`);
       const label = `${route.name} @${viewport.width}`;
@@ -51,12 +53,10 @@ for (const viewport of viewports) {
       near(box.width, expected.width, `${label} hero width`);
       near(box.height, expected.height, `${label} hero height`);
 
+      // The page breadcrumb (with the h1) sits inside the trip header's text column.
       const crumb = (await breadcrumb(page).boundingBox())!;
-      // Fund and Price Watch keep develop's header row (36px, centred), 10px lower than the
-      // 22px declutter row.
-      if (route.name !== 'fund' && route.name !== 'price-watch')
-        near(crumb.y, 76 + 8, `${label} breadcrumb y`);
-      near(crumb.x, expected.x, `${label} breadcrumb x`);
+      near(crumb.y, expected.y + 8, `${label} breadcrumb y`);
+      near(crumb.x, expected.x + 88, `${label} breadcrumb x`);
 
       const headings = page.getByRole('heading', { level: 1 });
       await expect(headings, `${label} exactly one visible h1`).toHaveCount(1);
@@ -83,13 +83,9 @@ for (const viewport of [...viewports, { width: 1366, height: 768 }, { width: 120
     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
     const lower = await edges('[data-region="trip-overview-workspace"] > *');
     expect(kpi).toHaveLength(4);
-    expect(lower).toHaveLength(3);
-    // Itinerary spans KPI columns 1-2, the map is column 3, the aside is column 4.
+    expect(lower).toHaveLength(2);
+    // Web v2 W04: four equal stat tiles over a 3:2 itinerary / map row; only outer edges align.
     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
-    near(lower[0]!.right, kpi[1]!.right, 'itinerary right = KPI 2 right');
-    near(lower[1]!.left, kpi[2]!.left, 'map left = KPI 3 left');
-    near(lower[1]!.right, kpi[2]!.right, 'map right = KPI 3 right');
-    near(lower[2]!.left, kpi[3]!.left, 'aside left = KPI 4 left');
-    near(lower[2]!.right, kpi[3]!.right, 'aside right = KPI 4 right');
+    near(lower[1]!.right, kpi[3]!.right, 'map right = KPI 4 right');
   });
 }

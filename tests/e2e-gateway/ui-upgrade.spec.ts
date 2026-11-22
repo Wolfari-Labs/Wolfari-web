@@ -214,7 +214,8 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await expect(form.locator('form')).toHaveCount(0);
   expect(keys).toHaveLength(2);
   expect(keys[0]).toBe(keys[1]);
-  await page.getByRole('button', { name: 'Sửa', exact: true }).click();
+  // The trip header has its own "Chỉnh sửa"; the watch action lives inside the watch card.
+  await main.getByRole('button', { name: 'Chỉnh sửa', exact: true }).click();
   await expect(form.locator('h2[tabindex="-1"]')).toBeFocused();
   await page.screenshot({ path: testInfo.outputPath('price-populated-desktop1440.png') });
   await form.getByLabel('Ngưỡng cảnh báo (VND)').fill('1600000');
@@ -225,11 +226,14 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await expect(main).toContainText('1.600.000 ₫');
   await page.getByRole('button', { name: 'Tạm dừng', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Tiếp tục', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Tạm dừng', exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
   await page.getByRole('button', { name: 'Lịch sử giá' }).click();
   await expect(page.getByText('Chưa có giá quan sát.', { exact: false })).toBeVisible();
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Dừng', exact: true }).click();
+  // Stopping is a destructive item in the card's overflow menu, still behind the confirm dialog.
+  await main.getByRole('button', { name: 'Thêm thao tác cho DAD đến SGN' }).click();
+  await page.getByRole('menuitem', { name: 'Dừng theo dõi' }).click();
   await page.getByRole('button', { name: 'Xác nhận', exact: true }).click();
   await expect(page.getByText('Đã dừng', { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 900, height: 700 });

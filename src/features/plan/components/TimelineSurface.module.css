@@ -1,81 +1,84 @@
+/* Web v2 W06 timeline card (Figma 933:7307 / 938:8431): white 28px card, 24px day title,
+   numbered D/Activity rows without the old vertical rail. Shared by Preview and Gateway. */
 .panel {
   container: itinerary / inline-size;
-  min-width: 0;
-  height: 498px;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--color-line);
-  border-radius: 10px;
-  background: var(--color-white);
+  gap: 10px;
+  min-width: 0;
+  height: max(440px, calc(100dvh - 339px));
+  padding: 22px 24px 20px;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 .toolbar {
-  min-height: 68px;
-  flex: 0 0 auto;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 12px;
-  padding: 12px 30px 12px 18px;
+  gap: 10px;
+  min-height: 0;
+  padding: 0 0 6px;
 }
 .toolbar h2 {
-  font-size: 24px;
-  line-height: 32px;
   margin: 0;
+  overflow: hidden;
+  color: var(--v2-ink);
+  font: 800 24px/normal var(--v2-font);
+  text-overflow: ellipsis;
   white-space: nowrap;
-}
-.toolbar button {
-  border-radius: 8px;
-  font-size: 14px;
 }
 .list {
   flex: 1 1 auto;
   min-height: 0;
+  margin: 0;
+  padding: 2px 4px 4px 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  margin: 0 0 14px;
-  padding: 2px 30px 0 42px;
   list-style: none;
   scrollbar-width: thin;
-  scrollbar-color: #52add4 #e4f5fc;
+  scrollbar-color: #c9d6f2 transparent;
 }
 .row {
-  --timeline-row-gap: 34px;
+  --timeline-row-gap: 14px;
   position: relative;
-  padding: 0 0 var(--timeline-row-gap) 34px;
-  border-left: 2px solid var(--color-active);
+  display: flex;
+  align-items: center;
+  gap: 14px;
   min-width: 0;
+  padding: 0 0 var(--timeline-row-gap);
 }
-/* A drop target is not another activity. End the rail at the final card,
-   including when it is the only card or a read-only list has no drop target. */
+/* A drop target is not another activity: no gap after the final card. */
 .row:not(:has(+ .row)) {
   --timeline-row-gap: 0px;
 }
+.row > :last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 .step {
-  position: absolute;
-  left: -20px;
-  top: 19px;
-  width: 38px;
-  height: 38px;
   display: grid;
+  flex: 0 0 34px;
   place-items: center;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: var(--color-active);
-  color: white;
-  font-size: 14px;
+  background: var(--v2-lilac);
+  color: var(--v2-violet-text);
+  font: 800 15px/normal var(--v2-font);
+}
+.row:first-child .step {
+  background: var(--v2-gradient);
+  color: var(--v2-white);
 }
 .progress {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-muted);
-  font-size: 12px;
+  color: var(--v2-sub);
+  font: 600 13px/normal var(--v2-font);
   white-space: nowrap;
-}
-.progress::before {
-  content: '';
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--color-action-primary);
-  border-radius: 50%;
 }
 .disclosure {
   min-width: 0;
@@ -86,10 +89,10 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  cursor: pointer;
-  list-style: none;
   margin-left: auto;
-  border-radius: 6px;
+  border-radius: 14px;
+  list-style: none;
+  cursor: pointer;
 }
 .disclosure summary::-webkit-details-marker {
   display: none;
@@ -98,10 +101,11 @@
   display: none;
 }
 .disclosure summary:hover {
-  background: var(--color-selected);
+  background: var(--v2-track);
 }
 .disclosure summary img {
   display: block;
+  opacity: 0.7;
 }
 .disclosure[open] {
   width: 100%;
@@ -111,14 +115,19 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 6px 12px;
+  color: var(--v2-ink);
+  font: 600 13px/18px var(--v2-font);
+}
+.disclosure dt {
+  color: var(--v2-sub);
 }
 .disclosure dd {
   margin: 0;
   overflow-wrap: anywhere;
 }
 .disclosure p {
-  color: var(--color-muted);
-  line-height: 20px;
+  color: var(--v2-sub);
+  font: 600 13px/20px var(--v2-font);
 }
 .row[data-dragging] {
   opacity: 0.4;
@@ -126,69 +135,40 @@
 .row[data-drop-target]::before {
   content: '';
   position: absolute;
-  left: 26px;
-  right: 0;
   top: -4px;
+  right: 0;
+  left: 48px;
   height: 3px;
-  background: var(--color-active);
   border-radius: 2px;
+  background: var(--v2-blue);
 }
-@container itinerary (max-width: 800px) {
+@container itinerary (max-width: 560px) {
   .toolbar {
-    padding-inline: 16px;
-    gap: 8px;
     flex-wrap: wrap;
   }
   .toolbar h2 {
     font-size: 21px;
-    line-height: 28px;
-  }
-  .toolbar button {
-    font-size: 12px;
-    padding-inline: 10px;
-  }
-  .list {
-    padding-left: 34px;
-    padding-right: 16px;
   }
   .row {
-    padding-left: 26px;
+    gap: 10px;
   }
   .step {
-    width: 34px;
-    height: 34px;
-    left: -18px;
-    top: 18px;
-  }
-  .progress {
-    font-size: 11px;
-    gap: 5px;
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
   }
 }
 @media (max-width: 768px) {
   .panel {
     height: auto;
     min-height: 240px;
-  }
-  .toolbar {
-    flex-wrap: wrap;
-    padding: 12px;
+    padding: 16px 14px;
   }
   .toolbar h2 {
     font-size: 20px;
   }
   .list {
     overflow: visible;
-    padding: 4px 12px 16px 20px;
-  }
-  .row {
-    --timeline-row-gap: 20px;
-    padding-left: 24px;
-  }
-  .step {
-    width: 28px;
-    height: 28px;
-    left: -15px;
-    font-size: 12px;
   }
 }

@@ -93,7 +93,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   );
   await page.screenshot({ path: test.info().outputPath('fund-populated.png'), fullPage: true });
   const filterNote = page.locator('[data-finance-filter-note]');
-  await expect(filterNote).toContainText('Số dư và tổng tiền lấy từ projection Finance.');
+  await expect(filterNote).toContainText('Bộ lọc chỉ áp dụng cho các giao dịch đã tải.');
   await expect(filterNote).toHaveCount(1);
   const noteBounds = await filterNote.boundingBox();
   const tableBounds = await page
@@ -104,9 +104,10 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await page.screenshot({ path: test.info().outputPath('fund-filter-note.png') });
   const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
   expect(scan.violations).toEqual([]);
+  // The page h1 is the current breadcrumb item inside W/Trip header 937:7647 (12px).
   await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toHaveCSS(
     'font-size',
-    '13px',
+    '12px',
   );
   await expect(page.getByRole('region', { name: 'Thao tác chi tiết Finance' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Tải thêm giao dịch' }).click();
@@ -118,7 +119,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   const generalFields = dialog.getByRole('definition');
   await expect(generalFields.filter({ hasText: 'VND' }).first()).toHaveCSS(
     'border-top-width',
-    '1px',
+    '0px',
   );
   await expect(dialog.getByRole('heading', { name: 'Thông tin chung', exact: true })).toHaveCSS(
     'font-size',
@@ -253,7 +254,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   expect(writes).toBe(0);
   fundReadFails = false;
   await dialog.getByRole('button', { name: 'Tải lại quỹ' }).click();
-  await expect(dialog).toContainText('Finance OPEN');
+  await expect(dialog).toContainText('Quỹ đang mở · VND');
   await expect(page.getByRole('heading', { name: 'Chưa thể tải nội dung' })).toHaveCount(0);
   await expect(page.getByLabel('Ngân sách (VND)')).toHaveValue('1000000');
   expect(writes).toBe(0);

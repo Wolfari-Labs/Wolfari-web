@@ -145,10 +145,10 @@ for (const viewport of [
       }),
     );
     if (viewport.width === 1440) {
-      for (const [key, expected] of Object.entries({ x: 64, y: 372, width: 416 }))
+      for (const [key, expected] of Object.entries({ x: 48, y: 300, width: 440 }))
         expect(
           Math.abs(boxes[0]![key as keyof (typeof boxes)[number]] - expected),
-          `Figma first trip card ${key}`,
+          `Figma W02 featured trip 932:6959 ${key}`,
         ).toBeLessThanOrEqual(4);
     }
     if (desktop) {
@@ -158,16 +158,13 @@ for (const viewport of [
       expect(
         await page.locator('main').evaluate((element) => getComputedStyle(element).overflowY),
       ).toBe('auto');
-      const columns = viewport.width > 1000 ? 3 : 2;
+      // W02: featured trip + three card columns from 1101px, two columns below.
+      const columns = viewport.width > 1100 ? 4 : 2;
       for (let index = 1; index < columns; index++) {
         expect(boxes[index]!.y).toBeCloseTo(boxes[0]!.y, 0);
         expect(boxes[index]!.x).toBeGreaterThan(boxes[index - 1]!.x);
       }
       expect(boxes[columns]!.y).toBeGreaterThan(boxes[0]!.y);
-      if (viewport.height === 520)
-        expect(
-          Math.round((await page.locator('header[data-node-id="65:548"]').boundingBox())!.height),
-        ).toBe(174);
       await page.screenshot({ path: info.outputPath('trip-list.png') });
       await articles(page).last().scrollIntoViewIfNeeded();
       await expect(articles(page).last()).toBeInViewport();
@@ -177,9 +174,10 @@ for (const viewport of [
         0,
       );
       expect(await page.evaluate(() => scrollY)).toBe(0);
-      expect(Math.round((await header.boundingBox())!.y)).toBe(0);
+      // The V2 top nav floats 20px below the viewport edge (Figma 930:6745).
+      expect(Math.round((await header.boundingBox())!.y)).toBe(20);
     } else {
-      const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
+      const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
       expect(Math.round(logo.x)).toBe(16);
       const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });

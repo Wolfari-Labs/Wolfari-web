@@ -1,46 +1,35 @@
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2 (Figma W11 · 941:9891), Gateway page: title row, a quiet source line, watch cards with
+   their actions inside, and the history drawer. Solid fills, tile radius 16px. */
+.page {
+  font-family: var(--v2-font);
+}
 .heading {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 12px 20px;
+  margin-top: 16px;
+}
+.headingText {
+  display: grid;
+  flex: 1 1 320px;
+  gap: 4px;
+  min-width: 0;
 }
 .heading h1 {
   margin: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-weight: 800;
 }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 12px;
-  margin-block: 12px;
-}
-.card {
-  padding: 16px;
-  border: 1px solid var(--color-line);
-  background: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow-selection);
-  min-width: 0;
-}
-.card .heading {
-  margin-top: 0;
-}
-.card h2 {
-  font-size: var(--font-size-title);
-}
-.card p {
-  font-size: var(--font-size-label);
-}
-.empty {
-  border: 1px dashed var(--color-border-control);
-  border-radius: var(--radius-20);
-  text-align: center;
-  padding: 48px 24px;
-  background: white;
-}
-.empty svg {
-  color: var(--color-action-primary);
+.headingText p {
+  margin: 0;
+  color: #56637b;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
 }
 .workspace {
   display: grid;
@@ -49,77 +38,301 @@
   align-items: start;
   margin-block: 12px;
 }
-
-.page > p {
-  margin: 8px 0 12px;
+.workspaceMain {
+  min-width: 0;
 }
-.heading p {
-  margin: 0 0 4px;
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
 }
-.card h2 {
-  margin: 8px 0;
+.sourceNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  color: #56637b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 19px;
 }
-.card p {
-  margin: 6px 0;
+.sourceNote svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--v2-blue);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: 16px;
+  margin-block: 0 12px;
 }
 .grid:empty {
   display: none;
 }
-.workspaceMain {
-  min-width: 0;
-}
-.context {
-  min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-20);
-  background: white;
-  box-shadow: var(--shadow-selection);
-}
-.contextHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.contextHeader h2 {
-  margin: 0;
-}
-.contextEmpty {
-  min-height: 220px;
+
+/* Watch card */
+.card {
   display: grid;
-  align-content: center;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px 18px 14px;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+.card h2 {
+  margin: 0;
+  min-width: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 25px;
+  overflow-wrap: anywhere;
+}
+.status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--v2-radius-round);
+  background: var(--v2-track);
+  color: var(--v2-nav-text);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.status[data-status='ACTIVE'] {
+  background: var(--v2-mint);
+  color: var(--v2-success-text);
+}
+.status[data-status='PAUSED'] {
+  background: var(--v2-butter);
+  color: #7a520b;
+}
+.meta {
+  margin: -4px 0 0;
+  color: #56637b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.threshold {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--v2-row);
+}
+.threshold > button {
+  min-height: 44px;
+}
+.threshold > span {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.threshold > span small {
+  color: #5d6a82;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+.threshold strong {
+  color: var(--v2-ink);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 28px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.card[data-status='STOPPED'] .threshold strong,
+.card[data-status='EXPIRED'] .threshold strong {
+  color: var(--v2-nav-text);
+}
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #e3e8f1;
 }
-@media (max-width: 1024px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-  .context {
-    order: 2;
-  }
-  .workspaceMain {
-    order: 1;
-  }
+.cardActions > button {
+  min-height: 44px;
 }
-@media (max-width: 520px) {
-  .context {
-    padding: 12px;
-  }
+.more {
+  margin-left: auto;
+}
+.more > button {
+  width: 44px;
+  min-height: 44px;
+  color: var(--v2-nav-text);
+}
+.reason {
+  flex: 1 1 160px;
+  margin: 0;
+  color: #56637b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
 }
 
-/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
-@media (min-width: 769px) {
-  .grid {
-    gap: var(--grid-gap);
+/* Empty state */
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 28px 24px;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.emptyArt {
+  flex: 0 0 auto;
+  width: 132px;
+  height: auto;
+}
+.empty > div {
+  max-width: 420px;
+}
+.empty h2 {
+  margin: 0 0 6px;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 27px;
+}
+.empty p {
+  margin: 0;
+  color: #56637b;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+}
+
+/* History drawer content (portalled; not under .page). */
+.history {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  color: #56637b;
+  font-family: var(--v2-font);
+  font-size: 13px;
+  line-height: 19px;
+}
+.history p {
+  margin: 0;
+}
+.historyHead {
+  display: grid;
+  gap: 2px;
+}
+.historyHead h3 {
+  margin: 0;
+  color: var(--v2-ink);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 25px;
+}
+.historyHead p {
+  font-weight: 600;
+}
+.latest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--v2-row);
+}
+.latest strong {
+  color: var(--v2-ink);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 30px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.noPrice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--v2-row);
+  color: var(--v2-ink);
+  font-weight: 700;
+}
+.noPrice svg {
+  color: var(--v2-blue);
+}
+.caveat {
+  color: #5d6a82;
+  font-size: 12px;
+  line-height: 17px;
+}
+.observations {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.observations > li {
+  padding: 10px 12px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+  overflow-wrap: anywhere;
+}
+.observations strong {
+  color: var(--v2-ink);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.observations p {
+  margin: 2px 0;
+  font-weight: 600;
+}
+.observations small {
+  color: #5d6a82;
+  font-size: 12px;
+}
+@media (max-width: 680px) {
+  .card {
+    padding: 14px;
   }
-  .card,
-  .context {
-    padding: var(--card-padding-narrow);
-    border-radius: var(--radius-panel);
+  .cardActions > button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 10px;
   }
   .empty {
-    border-radius: var(--radius-panel);
+    flex-direction: column;
+    text-align: center;
+  }
+  .emptyArt {
+    width: 112px;
   }
 }

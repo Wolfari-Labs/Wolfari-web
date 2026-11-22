@@ -66,3 +66,60 @@
     box-shadow: var(--shadow-selection);
   }
 }
+
+/* Web v2: the page frame starts at the content origin (Figma x=312, y=112) and the breadcrumb is
+   the small trail inside W/Trip header 937:7647 (12px, #8a97b0, current page #3c7be8). */
+@media (min-width: 769px) {
+  .page {
+    padding: 0 0 var(--v2-shell-gutter);
+  }
+
+  .breadcrumb {
+    gap: 4px;
+    min-height: 16px;
+    margin-bottom: 12px;
+    color: var(--v2-muted);
+    font: 700 12px/normal var(--v2-font);
+  }
+
+  .breadcrumb a {
+    min-height: 16px;
+    color: var(--v2-muted);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--v2-blue);
+  }
+
+  .breadcrumb h1 {
+    font: 700 12px/normal var(--v2-font);
+    color: var(--v2-blue);
+  }
+
+  /* Over the trip header: zero-height row placed at the card's text column (12 + 60 + 14 + 2). */
+  .breadcrumb:has(+ section[data-region='trip-hero']) {
+    position: relative;
+    z-index: 1;
+    top: 8px;
+    height: 0;
+    min-height: 0;
+    margin: 0 0 0 88px;
+    overflow: visible;
+    align-items: flex-start;
+    width: max-content;
+  }
+
+  .breadcrumbTrailing {
+    margin-block: -4px;
+  }
+
+  .panel {
+    padding: 20px 22px;
+    border: 0;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-white);
+    box-shadow:
+      var(--v2-shadow-card),
+      var(--v2-inset);
+  }
+}

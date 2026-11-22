@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
-import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
+import { Icon } from '../../shared/components/Icon';
 import { TripHero } from '../trips/components/TripHero';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
@@ -37,6 +37,12 @@ const scopeLabels: Record<DressScope, string> = {
 };
 
 const tags = ['Tắm biển', 'Tham quan', 'Ăn uống'];
+
+/** `2026-09-22` → `22/09/2026` (date-only values; no timezone shift). */
+function displayPlanDate(value: string) {
+  const [year, month, day] = value.split('-');
+  return year && month && day ? `${day}/${month}/${year}` : value;
+}
 
 function sourceLabel(source: DressCodeViewModel['source']) {
   return source === 'DSS' ? 'Gợi ý từ mẫu du lịch' : 'Đã đưa vào kế hoạch';
@@ -89,7 +95,7 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
     ? [eveningSwatch1, eveningSwatch2, eveningSwatch3]
     : [beachSwatch1, beachSwatch2, beachSwatch3];
   return (
-    <article className={styles.card} aria-label={title}>
+    <article className={styles.card} aria-label={title} data-tone={isEvening ? 'evening' : 'day'}>
       <div className={styles.cardHeader}>
         <h3>{title}</h3>
         <span className={styles.cardBadge}>{isEvening ? 'Gợi ý' : 'Cả chuyến'}</span>
@@ -98,9 +104,11 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         <source media="(max-width: 768px)" srcSet={mobileArtwork} />
         <img src={artwork} alt="Minh họa phối trang phục" />
       </picture>
+      <span className={styles.artworkBadge} aria-hidden="true">
+        <Icon name="dress" size={22} />
+      </span>
       <div className={styles.palette}>
-        <span>Minh họa</span>
-        <div aria-label="Bảng màu minh họa">
+        <div role="img" aria-label="Bảng màu gợi ý">
           {swatches.map((swatch) => (
             <img key={swatch} src={swatch} alt="" />
           ))}
@@ -113,6 +121,9 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         ))}
       </div>
       <div className={styles.suggestion}>
+        <span className={styles.suggestionIcon} aria-hidden="true">
+          <Icon name={isEvening ? 'sparkles' : 'sun'} size={18} />
+        </span>
         <strong>{sourceLabel(item.source)}</strong>
         <p>
           {item.description ??
@@ -122,7 +133,7 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         {item.source === 'DSS' && <small>Nguồn: Gợi ý đã lưu trước đây</small>}
         {isEvening && (
           <small>
-            Hoạt động: Ăn tối · {item.planDate ?? '12/10/2026'}
+            Hoạt động: Ăn tối{item.planDate && ` · ${displayPlanDate(item.planDate)}`}
             <br />
             Nguồn: Mẫu du lịch · 10/10, 09:00
           </small>
@@ -180,38 +191,45 @@ function PreviewDressCodePage() {
       <PageBreadcrumb
         className={styles.breadcrumb}
         items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Trang phục"
+        current="Dress code"
       />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
-        <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi trang phục">
-          {(['ALL', 'DAY', 'ACTIVITY'] as DressScope[]).map((value) => (
-            <button
-              key={value}
-              type="button"
-              role="tab"
-              aria-selected={scope === value}
-              className={scope === value ? styles.activeTab : ''}
-              onClick={() => setScope(value)}
-            >
-              {scopeLabels[value]}
-            </button>
-          ))}
-        </div>
         <div className={styles.contentGrid}>
-          <div className={styles.cards}>
-            {items.map((item, index) => (
-              <OutfitCard key={item.id} item={item} index={index} />
-            ))}
-            {!items.length && (
-              <div className={styles.empty} role="status">
-                <h2>Chưa có trang phục đã lưu</h2>
-                <p>Chưa có hướng dẫn trong phạm vi đang chọn.</p>
-              </div>
-            )}
+          <div className={styles.mainColumn}>
+            <div className={styles.scopeTabs} role="tablist" aria-label="Phạm vi trang phục">
+              {(['ALL', 'DAY', 'ACTIVITY'] as DressScope[]).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={scope === value}
+                  className={scope === value ? styles.activeTab : ''}
+                  onClick={() => setScope(value)}
+                >
+                  {scopeLabels[value]}
+                </button>
+              ))}
+            </div>
+            <div className={styles.cards}>
+              {items.map((item, index) => (
+                <OutfitCard key={item.id} item={item} index={index} />
+              ))}
+              {!items.length && (
+                <div className={styles.empty} role="status">
+                  <h2>Chưa có trang phục đã lưu</h2>
+                  <p>Chưa có hướng dẫn trong phạm vi đang chọn.</p>
+                </div>
+              )}
+            </div>
           </div>
           <aside className={styles.editor} aria-label="Tạo hoặc sửa trang phục">
-            <h2>Tạo / sửa trang phục</h2>
+            <div className={styles.editorTitle}>
+              <span className={styles.editorIcon} aria-hidden="true">
+                <Icon name="dress" size={22} />
+              </span>
+              <h2>Tạo / sửa trang phục</h2>
+            </div>
             <DraftField
               label="Tiêu đề"
               value={draftTitle}
@@ -269,11 +287,10 @@ function PreviewDressCodePage() {
               onChange={setDraftDescription}
               multiline
             />
-            <div className={styles.editorNote}>
-              <p>Ảnh và bảng màu đều là minh họa mẫu.</p>
+            <div className={styles.editorNote} role="status">
               <p>
                 {draftChecked
-                  ? 'Bản nháp đã được kiểm tra cục bộ.'
+                  ? 'Bản nháp hợp lệ, chưa được lưu vào kế hoạch.'
                   : 'Bản nháp chưa được lưu vào kế hoạch.'}
               </p>
             </div>
@@ -292,16 +309,15 @@ function PreviewDressCodePage() {
                 });
                 setDraftChecked(valid);
                 setDraftError(
-                  valid ? '' : 'Nhập tiêu đề (tối đa 100 ký tự) và chọn ngày hoặc Activity hợp lệ.',
+                  valid
+                    ? ''
+                    : 'Nhập tiêu đề (tối đa 100 ký tự) và chọn ngày hoặc hoạt động hợp lệ.',
                 );
               }}
             >
               Kiểm tra bản nháp
             </Button>
             {draftError && <p role="alert">{draftError}</p>}
-            <CapabilityNote tone="info">
-              Gợi ý và chỉnh sửa chỉ tạo bản nháp cục bộ; chưa gửi thay đổi lên kế hoạch.
-            </CapabilityNote>
           </aside>
         </div>
       </TripPlanBoundary>

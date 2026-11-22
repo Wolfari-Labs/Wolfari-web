@@ -92,7 +92,7 @@ test('reduced motion removes shared button displacement but keeps state feedback
   const button = page.getByRole('button', { name: 'Xem minh họa', exact: true });
   await button.hover();
   await expect(button).toHaveCSS('transform', 'none');
-  await expect(button).toHaveCSS('background-color', 'rgb(243, 251, 255)');
+  await expect(button).toHaveCSS('background-color', 'rgb(238, 241, 246)');
   await page.mouse.down();
   await expect(button).toHaveCSS('transform', 'none');
   await page.mouse.up();
@@ -156,5 +156,7 @@ test('computed shared text, field error, focus and primary gradient contrast', a
     contentType: 'application/json',
   });
   await writeFile(info.outputPath('contrast-ratios.json'), JSON.stringify(ratios, null, 2));
-  for (const ratio of Object.values(ratios)) expect(ratio).toBeGreaterThanOrEqual(4.5);
+  // Refined V2 uses a flat brand blue for primary actions, so white text meets AA (V2-D15).
+  for (const [name, ratio] of Object.entries(ratios))
+    expect(ratio, name).toBeGreaterThanOrEqual(4.5);
 });

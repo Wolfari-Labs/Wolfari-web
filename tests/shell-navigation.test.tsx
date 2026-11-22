@@ -96,7 +96,7 @@ describe('Shell interactions', () => {
     const router = mount();
     await screen.findByText('Trang Nguyễn');
     const sidebar = screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
-    await userEvent.click(within(sidebar).getByRole('link', { name: 'Đồ đạc' }));
+    await userEvent.click(within(sidebar).getByRole('link', { name: 'Hành lý' }));
     expect(router.state.location.pathname).toBe(`/trips/${previewTripId}/packing`);
     await userEvent.click(
       within(screen.getByRole('navigation', { name: 'Điều hướng chuyến đi' })).getByRole('link', {
@@ -161,7 +161,7 @@ describe('Shell interactions', () => {
       'aria-current',
     );
     expect(within(drawer).getAllByRole('link', { current: 'page' })).toEqual([
-      within(drawer).getByRole('link', { name: 'Tổng quan chuyến đi' }),
+      within(drawer).getByRole('link', { name: 'Tổng quan' }),
     ]);
     expect(within(drawer).getByRole('link', { name: 'Hồ sơ cá nhân' })).toHaveAttribute(
       'href',

@@ -132,13 +132,13 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
   hasHistoricalPrice = true;
   await history.getByRole('button', { name: 'Tải lại lịch sử' }).click();
   await expect(history).toContainText('9.007.199.254.740.993 ₫');
-  await expect(history).toContainText('MOCK_FLIGHT');
+  await expect(history).toContainText('Nguồn: giá mô phỏng.');
   await expect(history).toContainText('Giá cũ.');
   await expect(history).toContainText('Nguồn giá phản hồi quá thời gian chờ. (PROVIDER_TIMEOUT)');
   await expect(history).toContainText('Giá lịch sử trước lần lỗi nguồn');
   await expect(history).toContainText('Nhận dữ liệu:');
   await expect(history).toContainText('Quan sát:');
-  await expect(history).toContainText('Nguồn: MOCK_FLIGHT');
+  await expect(history).toContainText('· Nguồn: giá mô phỏng');
   await expect(history).toContainText('Không xác nhận giá hiện tại');
   await expect(history).toContainText('múi giờ thiết bị');
   await expect(history.getByRole('listitem')).toHaveCount(1);

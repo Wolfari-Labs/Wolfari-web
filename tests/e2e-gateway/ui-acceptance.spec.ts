@@ -97,7 +97,10 @@ for (const size of [
         const mainBreadcrumb = page
           .locator('main')
           .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true });
-        await expect(mainBreadcrumb).toHaveCSS('color', 'rgb(0, 107, 146)');
+        await expect(mainBreadcrumb).toHaveCSS(
+          'color',
+          size.width > 768 ? 'rgb(93, 106, 131)' : 'rgb(46, 106, 212)',
+        );
         const colors = await mainBreadcrumb.evaluate((link) => ({
           foreground: getComputedStyle(link).color,
           background: getComputedStyle(document.body).backgroundColor,

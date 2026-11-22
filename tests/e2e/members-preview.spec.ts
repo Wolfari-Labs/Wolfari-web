@@ -25,10 +25,10 @@ for (const size of [
     );
     if (size.width === 1440) {
       const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
-      for (const [key, expected] of Object.entries({ x: 238, y: 120, width: 1180, height: 150 }))
+      for (const [key, expected] of Object.entries({ x: 312, y: 112, width: 1104, height: 84 }))
         expect(
           Math.abs(hero[key as keyof typeof hero] - expected),
-          `Figma hero ${key}`,
+          `Figma W/Trip header 937:7647 ${key}`,
         ).toBeLessThanOrEqual(4);
     }
     const identity = region.locator('details').first().locator('summary');
@@ -37,7 +37,8 @@ for (const size of [
       region.getByText('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { exact: true }),
     ).toBeVisible();
     await identity.click();
-    await page.getByText('Rời chuyến đi', { exact: true }).scrollIntoViewIfNeeded();
+    await expect(page.getByText('Rời chuyến đi', { exact: true })).toHaveCount(0);
+    await page.getByText('Vai trò và trách nhiệm', { exact: true }).scrollIntoViewIfNeeded();
     if (size.width > 768) {
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
@@ -47,7 +48,7 @@ for (const size of [
     await page.locator('main').evaluate((e) => (e.scrollTop = 0));
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: info.outputPath('members.png'), fullPage: true });
-    await page.getByRole('button', { name: 'Lời mời · Xem trước' }).click();
+    await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
     await expect(page.getByText('linh@example.com', { exact: true })).toBeVisible();
     await page.getByLabel('Email người nhận').fill('preview@example.com');
     await page.getByRole('button', { name: 'Kiểm tra lời mời' }).click();
@@ -81,7 +82,7 @@ test('member and invitation states, terminal statuses, draft and permission', as
   }
   await page.getByLabel('Trạng thái thành viên').selectOption('success');
   await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình' })).toBeDisabled();
-  await page.getByRole('button', { name: 'Lời mời · Xem trước' }).click();
+  await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
   await page.getByLabel('Email người nhận').fill('draft@example.com');
   for (const [state, text] of [
     ['expired', 'Đã hết hạn'],
@@ -91,7 +92,7 @@ test('member and invitation states, terminal statuses, draft and permission', as
     await page.getByLabel('Trạng thái lời mời').selectOption(state);
     await expect(page.getByText(text, { exact: true })).toBeVisible();
     await expect(page.getByText(/Phiên bản 2/)).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Gửi lại' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Gửi lại' })).toHaveCount(0);
   }
   for (const [state, text] of [
     ['error', 'Chưa thể tải nội dung'],
@@ -112,5 +113,5 @@ test('member and invitation states, terminal statuses, draft and permission', as
   await expect(page.getByText(/Membership revision 1/)).toBeVisible();
   await page.goto('/trips/33333333-3333-4333-8333-333333333333/members');
   await expect(page.getByText('User aaaaaaaa…aaaa', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Lời mời', exact: true })).toBeDisabled();
 });

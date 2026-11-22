@@ -1,0 +1,36 @@
+/* Web v2 W/Toast (Figma 937:7687): white pill, green gradient check badge, ink ExtraBold text.
+   Layered on the Ui.module.css toast primitives (positioning, swipe and motion stay there). */
+.toast.toast {
+  gap: 12px;
+  padding: 6px 8px 6px 10px;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-nav), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 20px;
+}
+.badge {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: var(--v2-radius-pill);
+  background: linear-gradient(to bottom, #5ee0b0, #2dbe7a);
+  color: var(--v2-white);
+}
+.title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.close.close {
+  border-radius: var(--v2-radius-pill);
+  color: var(--v2-sub);
+}
+.close.close:hover {
+  background: var(--v2-track);
+}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { useParams, useOutletContext } from 'react-router';
+import { Link, useParams, useOutletContext } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
@@ -25,6 +25,7 @@ import { Select } from '../../shared/components/Select';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
+import { Icon } from '../../shared/components/Icon';
 import userIcon from '../../shared/assets/figma/2e748.svg';
 import styles from './MembersPage.module.css';
 import { InvitationManagement } from './InvitationManagement';
@@ -91,11 +92,18 @@ function PlanPolicyPanel({
 }) {
   return (
     <section className={styles.policyPanel} aria-labelledby="plan-policy-heading">
-      <h2 id="plan-policy-heading">Quyền sửa lịch trình</h2>
-      <p>
-        Quyền này độc lập với vai trò thành viên và trách nhiệm quản lý quỹ. Thay đổi có hiệu lực
-        sau khi xác nhận lại dữ liệu từ chuyến đi.
-      </p>
+      <div className={styles.cardHeader}>
+        <span className={styles.iconBadge} data-tone="blue" aria-hidden="true">
+          <Icon name="edit" size={22} />
+        </span>
+        <div>
+          <h2 id="plan-policy-heading">Quyền sửa lịch trình</h2>
+          <p>
+            Quyền này độc lập với vai trò thành viên và trách nhiệm quản lý quỹ. Thay đổi có hiệu
+            lực sau khi xác nhận lại dữ liệu từ chuyến đi.
+          </p>
+        </div>
+      </div>
       <form onSubmit={onSubmit}>
         {feedback?.status === 'saved' && (
           <Alert tone="success" live>
@@ -139,20 +147,19 @@ function PlanPolicyPanel({
           <Alert>
             {trip.archivedAt || trip.lifecycle === 'ARCHIVED'
               ? 'Chuyến đi đã lưu trữ; không thể thay đổi quyền.'
-              : 'Chỉ Owner đang hoạt động trên Gateway mới có thể thay đổi quyền.'}
+              : 'Chỉ chủ chuyến mới có thể thay đổi quyền.'}
           </Alert>
         )}
         {trip.planEditPolicy === 'SELECTED_MEMBERS' && (
           <Alert tone="warning">
-            Backend chưa cung cấp projection thành viên đã được chọn. Có thể chuyển sang một trong
-            hai chế độ trên, nhưng không thể xem hoặc chỉnh sửa danh sách đang lưu.
+            Chưa thể xem hoặc chỉnh sửa danh sách thành viên được chọn. Bạn vẫn có thể chuyển sang
+            một trong hai chế độ trên.
           </Alert>
-        )}
-        {!available && !trip.archivedAt && trip.lifecycle !== 'ARCHIVED' && (
-          <Alert>Thay đổi quyền chưa khả dụng trong dữ liệu xem trước.</Alert>
         )}
         <Button
           type="submit"
+          className={styles.policySubmit}
+          icon={<Icon name="check" size={16} />}
           loading={pending}
           disabled={
             !available ||
@@ -237,35 +244,36 @@ export function MembersView({
       <div className={styles.hero}>
         <TripHero trip={trip} compact variant="landscape" />
       </div>
-      <div className={styles.tabs} role="group" aria-label="Nội dung thành viên">
-        <button
-          type="button"
-          aria-pressed={tab === 'members'}
-          onClick={() => onTabChange('members')}
-        >
-          Thành viên
-        </button>
-        <button
-          type="button"
-          aria-pressed={tab === 'invitations'}
-          disabled={!owner}
-          title={!owner ? 'Chỉ Owner được đọc lời mời' : undefined}
-          onClick={() => onTabChange('invitations')}
-        >
-          {invitationManagement ? 'Lời mời' : 'Lời mời · Xem trước'}
-        </button>
-        <button
-          type="button"
-          aria-pressed={tab === 'policy'}
-          disabled={!policyAvailable}
-          title={
-            !policyAvailable ? 'Quyền sửa chỉ khả dụng cho Owner có quyền cập nhật' : undefined
-          }
-          onClick={() => onTabChange('policy')}
-        >
-          Quyền sửa lịch trình
-        </button>
-        <small>Vai trò và trách nhiệm được quản lý riêng.</small>
+      <div className={styles.top}>
+        <div className={styles.tabs} role="group" aria-label="Nội dung thành viên">
+          <button
+            type="button"
+            aria-pressed={tab === 'members'}
+            onClick={() => onTabChange('members')}
+          >
+            Thành viên
+          </button>
+          <button
+            type="button"
+            aria-pressed={tab === 'invitations'}
+            disabled={!owner}
+            title={!owner ? 'Chỉ chủ chuyến được xem lời mời' : undefined}
+            onClick={() => onTabChange('invitations')}
+          >
+            Lời mời
+          </button>
+          <button
+            type="button"
+            aria-pressed={tab === 'policy'}
+            disabled={!policyAvailable}
+            title={
+              !policyAvailable ? 'Chỉ chủ chuyến có quyền cập nhật mới thay đổi được' : undefined
+            }
+            onClick={() => onTabChange('policy')}
+          >
+            Quyền sửa lịch trình
+          </button>
+        </div>
       </div>
       {tab === 'policy' ? (
         <PlanPolicyPanel
@@ -281,10 +289,18 @@ export function MembersView({
       ) : tab === 'members' ? (
         <div className={styles.workspace}>
           <section className={styles.memberPanel} aria-label="Danh sách thành viên">
-            <h2>Thành viên chuyến đi</h2>
-            <p className={styles.help}>
-              Vai trò trong chuyến đi và trách nhiệm riêng được hiển thị tách biệt.
-            </p>
+            <div className={styles.panelHeading}>
+              <h2>Thành viên chuyến đi</h2>
+              {owner && (
+                <Button
+                  className={styles.inviteButton}
+                  icon={<Icon name="userPlus" size={17} />}
+                  onClick={() => onTabChange('invitations')}
+                >
+                  Mời thành viên
+                </Button>
+              )}
+            </div>
             <label className={styles.includeLeft}>
               <input
                 type="checkbox"
@@ -303,19 +319,25 @@ export function MembersView({
                     <p className={styles.count}>{items.length} thành viên đã tải</p>
                     <div className={styles.rosterHead} aria-hidden="true">
                       <span>Thành viên</span>
-                      <span>Vai trò / Trách nhiệm</span>
-                      <span>Thao tác</span>
+                      <span>Vai trò</span>
                     </div>
                     <ul className={styles.members}>
-                      {items.map((member) => (
+                      {items.map((member, index) => (
                         <li key={member.id} data-departed={member.leftAt !== null || undefined}>
-                          <span className={styles.avatar}>
+                          <span className={styles.avatar} data-tone={index % 5}>
                             {member.presentation.avatar ? (
                               <img
                                 className={styles.avatarPhoto}
                                 src={member.presentation.avatar.src}
                                 alt={member.presentation.avatar.alt}
                               />
+                            ) : member.presentation.displayName ? (
+                              <span aria-hidden="true">
+                                {member.presentation.displayName
+                                  .trim()
+                                  .charAt(0)
+                                  .toLocaleUpperCase('vi')}
+                              </span>
                             ) : (
                               <img src={userIcon} alt="" />
                             )}
@@ -349,11 +371,6 @@ export function MembersView({
                           >
                             {member.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
                           </span>
-                          {owner && member.role === 'MEMBER' && member.leftAt === null && (
-                            <Button variant="outline" disabled>
-                              Chuyển Owner
-                            </Button>
-                          )}
                         </li>
                       ))}
                     </ul>
@@ -381,53 +398,31 @@ export function MembersView({
                 );
               }}
             </ReadPanel>
-            <Alert tone="warning">
-              Rời hoặc xóa thành viên cần kiểm tra nghĩa vụ và trách nhiệm liên quan. Thao tác hiện
-              chưa khả dụng.
-            </Alert>
-            <div className={styles.lifecycle}>
-              <Button variant="outline" disabled>
-                Rời chuyến đi
-              </Button>
-              <Button variant="outline" disabled>
-                Xóa thành viên
-              </Button>
-            </div>
+            <details className={styles.roleHelp}>
+              <summary>
+                <Icon name="crown" size={16} />
+                Vai trò và trách nhiệm
+              </summary>
+              <dl>
+                <dt>Chủ chuyến</dt>
+                <dd>Quản lý thành viên, lời mời và quyền sửa lịch trình.</dd>
+                <dt>Người giữ quỹ</dt>
+                <dd>
+                  Trách nhiệm riêng, không đi kèm vai trò trong chuyến đi.{' '}
+                  <Link to={paths.fund(trip.id)}>Xem tại Quỹ nhóm</Link>
+                </dd>
+                <dt>Quyền sửa lịch trình</dt>
+                <dd>
+                  {trip.planEditPolicy === 'OWNER_ONLY'
+                    ? 'Chỉ chủ chuyến được sửa lịch trình.'
+                    : trip.planEditPolicy === 'SELECTED_MEMBERS'
+                      ? 'Chủ chuyến và thành viên được phân công có thể sửa lịch trình.'
+                      : 'Mọi thành viên được sửa lịch trình.'}{' '}
+                  Quyền này không cấp quyền quản lý thành viên hay quỹ.
+                </dd>
+              </dl>
+            </details>
           </section>
-          <aside className={styles.responsibilities}>
-            <h2>Quyền & trách nhiệm</h2>
-            <section>
-              <h3>Chủ chuyến</h3>
-              <p>Quản lý thành viên, lời mời và quyền sửa lịch trình.</p>
-            </section>
-            <section>
-              <h3>Người giữ quỹ</h3>
-              <p>
-                Trách nhiệm quản lý quỹ tách biệt với vai trò trong chuyến đi. Thông tin người quản
-                lý quỹ chưa khả dụng.
-              </p>
-            </section>
-            <section>
-              <h3>Quyền sửa lịch trình</h3>
-              <p>
-                {trip.planEditPolicy === 'OWNER_ONLY'
-                  ? 'Chỉ chủ chuyến được sửa lịch trình.'
-                  : trip.planEditPolicy === 'SELECTED_MEMBERS'
-                    ? 'Chủ chuyến và thành viên được phân công có thể sửa lịch trình.'
-                    : 'Mọi thành viên được sửa lịch trình.'}
-              </p>
-              <p>Quyền sửa lịch trình được quản lý riêng với quyền quản lý quỹ và thành viên.</p>
-            </section>
-            <section>
-              <h3>Khi chuyển chủ chuyến</h3>
-              <p>
-                Thay đổi chủ chuyến vẫn giữ riêng trách nhiệm người giữ quỹ và quyền sửa lịch trình.
-              </p>
-            </section>
-            <Button variant="outline" disabled>
-              Quản lý người giữ quỹ
-            </Button>
-          </aside>
         </div>
       ) : !owner ? (
         <ContentState
@@ -441,37 +436,56 @@ export function MembersView({
             className={styles.invitationForm}
             noValidate
             onSubmit={submit}
-            aria-label="Xem trước lời mời"
+            aria-label="Mời thành viên"
           >
-            <h2>Mời thành viên</h2>
-            <p>Người nhận tham gia với vai trò Member sau khi chấp nhận lời mời hợp lệ.</p>
-            <Input
-              id="invitation-email"
-              label="Email người nhận"
-              type="email"
-              autoComplete="off"
-              value={draft}
-              error={emailError}
-              onChange={(e) => {
-                onDraftChange(e.target.value);
-                setEmailError(undefined);
-                setNotice(false);
-              }}
-            />
-            <Button type="submit">Kiểm tra lời mời</Button>
+            <div className={styles.cardHeader}>
+              <span className={styles.iconBadge} data-tone="blue" aria-hidden="true">
+                <Icon name="userPlus" size={22} />
+              </span>
+              <div>
+                <h2>Mời thành viên</h2>
+                <p>
+                  Người nhận tham gia chuyến đi sau khi chấp nhận. Quyền sửa lịch trình và trách
+                  nhiệm quỹ không tự đi kèm.
+                </p>
+              </div>
+            </div>
+            <div className={styles.inviteRow}>
+              <Input
+                id="invitation-email"
+                label="Email người nhận"
+                type="email"
+                autoComplete="off"
+                leadingIcon={
+                  <span className={styles.fieldChip}>
+                    <Icon name="mail" size={18} />
+                  </span>
+                }
+                value={draft}
+                error={emailError}
+                onChange={(e) => {
+                  onDraftChange(e.target.value);
+                  setEmailError(undefined);
+                  setNotice(false);
+                }}
+              />
+              <Button type="submit" icon={<Icon name="share" size={16} />}>
+                Kiểm tra lời mời
+              </Button>
+            </div>
             {notice && (
               <Alert live>
                 Email hợp lệ cho bản xem trước. Chưa gửi lời mời, tạo link hoặc thay đổi thành viên.
               </Alert>
             )}
-            <Alert>Chỉ xem trước · Gửi lời mời, gửi lại và thu hồi chưa khả dụng.</Alert>
-            <Alert tone="warning">
-              Quyền sửa Plan và trách nhiệm quản lý quỹ được phân công riêng, không tự cấp khi mời
-              thành viên.
-            </Alert>
           </form>
           <section className={styles.invitationList} aria-label="Lời mời hiện có">
-            <h2>Lời mời</h2>
+            <div className={styles.cardHeader}>
+              <span className={styles.iconBadge} data-tone="amber" aria-hidden="true">
+                <Icon name="clock" size={22} />
+              </span>
+              <h2>Lời mời</h2>
+            </div>
             <ReadPanel result={invitations} onRetry={onRetryInvitations}>
               {(data) =>
                 data.items.length ? (
@@ -481,30 +495,31 @@ export function MembersView({
                         .filter((i) => i.tripId === trip.id)
                         .map((invitation) => (
                           <li key={invitation.id}>
-                            <div className={styles.invitationHeading}>
-                              <strong>
-                                {invitation.invitationType === 'EMAIL'
-                                  ? (invitation.email ?? 'Chưa có email')
-                                  : 'Lời mời bằng link'}
-                              </strong>
-                              <span
-                                className={styles.invitationStatus}
-                                data-status={invitation.status}
-                              >
-                                {invitationLabels[invitation.status]}
-                              </span>
-                            </div>
-                            <p>Hết hạn {date(invitation.expiresAt, trip.timezone)}</p>
-                            {invitation.resolvedAt && (
-                              <p>Kết thúc {date(invitation.resolvedAt, trip.timezone)}</p>
-                            )}
-                            <div className={styles.lifecycle}>
-                              <Button variant="outline" disabled>
-                                Gửi lại
-                              </Button>
-                              <Button variant="plain" disabled>
-                                Thu hồi
-                              </Button>
+                            <span className={styles.invitationAvatar} aria-hidden="true">
+                              {invitation.invitationType === 'EMAIL' && invitation.email ? (
+                                invitation.email.charAt(0).toLocaleUpperCase('vi')
+                              ) : (
+                                <Icon name="share" size={16} />
+                              )}
+                            </span>
+                            <div className={styles.invitationBody}>
+                              <div className={styles.invitationHeading}>
+                                <strong>
+                                  {invitation.invitationType === 'EMAIL'
+                                    ? (invitation.email ?? 'Chưa có email')
+                                    : 'Lời mời bằng link'}
+                                </strong>
+                                <span
+                                  className={styles.invitationStatus}
+                                  data-status={invitation.status}
+                                >
+                                  {invitationLabels[invitation.status]}
+                                </span>
+                              </div>
+                              <p>Hết hạn {date(invitation.expiresAt, trip.timezone)}</p>
+                              {invitation.resolvedAt && (
+                                <p>Kết thúc {date(invitation.resolvedAt, trip.timezone)}</p>
+                              )}
                             </div>
                           </li>
                         ))}
@@ -518,10 +533,9 @@ export function MembersView({
                 )
               }
             </ReadPanel>
-            <Alert tone="warning">
-              Lời mời đã chấp nhận, từ chối, hết hạn hoặc thu hồi không thể dùng để tạo lại thành
-              viên.
-            </Alert>
+            <p className={styles.terminalNote}>
+              Lời mời đã chấp nhận, từ chối, hết hạn hoặc thu hồi không dùng lại được.
+            </p>
           </section>
         </div>
       )}

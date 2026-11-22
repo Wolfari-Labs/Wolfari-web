@@ -38,8 +38,10 @@ for (const [width, height] of [
       };
     });
     expect(metrics.width).toBeLessThanOrEqual(width);
-    expect(metrics.height).toBeLessThanOrEqual(height);
-    expect(metrics.overflow).toBeLessThanOrEqual(1);
+    // Web v2 (V2-D10): one screen at the Figma frame size; shorter desktop heights scroll inside
+    // main and mobile scrolls naturally.
+    if (width > 768) expect(metrics.height).toBeLessThanOrEqual(height);
+    if (width >= 1101 && height >= 900) expect(metrics.overflow).toBeLessThanOrEqual(1);
     expect(
       gateway.calls.filter(
         (call) => call.path.startsWith(`/api/v1/trips/${tripId}/`) && call.method !== 'GET',
@@ -90,20 +92,25 @@ for (const height of [960, 700, 520]) {
     await expect(fund.getByText('69% ngân sách · 9.000.000 ₫')).toBeVisible();
     await expect(fund.getByText('6.250.000 ₫', { exact: true })).toHaveCSS(
       'color',
-      'rgb(0, 177, 207)',
+      'rgb(31, 42, 68)',
     );
     await expect(fund.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '69');
-    for (const region of ['fund', 'packing']) {
+    // This mock has no packing data, so only the measured fund value draws a track
+    // (CONTENT_RULES: no empty progress bars).
+    await expect(
+      page.locator('[data-region="trip-overview-packing"]').getByRole('progressbar'),
+    ).toHaveCount(0);
+    for (const region of ['fund']) {
       const panel = page.locator(`[data-region="trip-overview-${region}"]`);
       const bar = panel.getByRole('progressbar');
-      await expect(bar).toHaveCSS('height', '12px');
+      await expect(bar).toHaveCSS('height', '8px');
       const bounds = (await panel.boundingBox())!,
         track = (await bar.boundingBox())!;
       expect(track.y + track.height).toBeLessThanOrEqual(bounds.y + bounds.height);
-      expect(bounds.y + bounds.height - track.y - track.height).toBeGreaterThanOrEqual(20);
-      expect(bounds.y + bounds.height - track.y - track.height).toBeLessThanOrEqual(25);
-      const copy = (await panel.locator('p').last().boundingBox())!;
-      expect(track.y - copy.y - copy.height).toBeGreaterThanOrEqual(12);
+      // Web v2 W04: the track sits in the tile's top row, above the value copy.
+      const copy = (await panel.locator('p').first().boundingBox())!;
+      expect(copy.y - track.y - track.height).toBeGreaterThanOrEqual(8);
+      expect(copy.y + copy.height).toBeLessThanOrEqual(bounds.y + bounds.height);
       expect(
         await bar.evaluate((el) => {
           const parent = el.parentElement!;
@@ -112,9 +119,9 @@ for (const height of [960, 700, 520]) {
       ).toBeLessThanOrEqual(1);
     }
     const fare = page.locator('[data-region="trip-overview-fare"]');
-    const emptyCopy = fare.getByText('Chưa có dữ liệu', { exact: true });
+    const emptyCopy = fare.getByText('Tạo theo dõi giá →', { exact: true });
     await expect(emptyCopy).toBeVisible();
-    await expect(fare.getByText('—', { exact: true })).toBeVisible();
+    await expect(fare.getByText('Chưa theo dõi', { exact: true })).toBeVisible();
     const fareBox = (await fare.boundingBox())!,
       copyBox = (await emptyCopy.boundingBox())!;
     expect(copyBox.y + copyBox.height).toBeLessThanOrEqual(fareBox.y + fareBox.height);
@@ -142,12 +149,12 @@ test('HTTP mock: fare read failure stays an error, retry gives the concise empty
   await signIn(page);
   const fare = page.locator('[data-region="trip-overview-fare"]');
   await expect(fare.getByRole('heading', { name: 'Chưa thể tải nội dung' })).toBeVisible();
-  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toHaveCount(0);
+  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toHaveCount(0);
   failing = false;
   await fare.getByRole('button', { name: 'Tải lại' }).click();
   await expect(page).toHaveURL(path);
-  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toBeVisible();
-  await expect(fare.getByText('—', { exact: true })).toBeVisible();
+  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toBeVisible();
+  await expect(fare.getByText('Tạo theo dõi giá →', { exact: true })).toBeVisible();
   await fare.click({ position: { x: 8, y: 8 } });
   await expect(page).toHaveURL(`${path}/price-watch`);
 });
@@ -190,9 +197,11 @@ test('HTTP mock: existing fare watches are not reported as empty or as live pric
   );
   await signIn(page);
   const fare = page.locator('[data-region="trip-overview-fare"]');
-  await expect(fare.getByText('1+ mục theo dõi')).toBeVisible();
-  await expect(fare.getByText('Nguồn mô phỏng · MOCK_FLIGHT')).toBeVisible();
-  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toHaveCount(0);
+  await expect(fare.getByText('1+ mục', { exact: true })).toBeVisible();
+  await expect(fare.getByText('Đang theo dõi · giá mô phỏng')).toBeVisible();
+  // Provider codes such as MOCK_FLIGHT stay out of the UI copy.
+  await expect(fare.getByText(/MOCK_FLIGHT/)).toHaveCount(0);
+  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toHaveCount(0);
   await expect(fare.getByText(/9007199254740993|₫/)).toHaveCount(0);
 });
 
@@ -209,7 +218,7 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
   await expect(overview.locator('[data-region="trip-overview-summaries"] > section')).toHaveCount(
     4,
   );
-  await expect(overview.locator('[data-region="trip-overview-workspace"] > *')).toHaveCount(3);
+  await expect(overview.locator('[data-region="trip-overview-workspace"] > *')).toHaveCount(2);
   const plan = overview.locator('[data-region="trip-overview-itinerary"]');
   const fund = overview.locator('[data-region="trip-overview-fund"]');
   const packing = overview.locator('[data-region="trip-overview-packing"]');
@@ -231,7 +240,7 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
     `${path}/price-watch`,
   );
   await expect(fare.getByText('Chưa khả dụng')).toHaveCount(0);
-  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toBeVisible();
+  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toBeVisible();
   await expect(overview.getByText('Không thể tải danh sách thành viên.')).toBeVisible();
   await expect(plan.getByText('0 hoạt động')).toHaveCount(0);
   await expect(packing.getByText('0/0 món')).toHaveCount(0);
@@ -247,7 +256,8 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
   await overview.getByRole('button', { name: 'Tải lại thành viên' }).click();
   await expect(plan.getByText('Chưa có hoạt động trong ngày này.')).toBeVisible();
   await expect(packing.getByText('0/0 món')).toBeVisible();
-  await expect(packing.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+  // An empty list is not a measured 0%: no progress bar until items exist.
+  await expect(packing.getByRole('progressbar')).toHaveCount(0);
   await expect(overview.getByText('Đã tải 2 thành viên ở trang đầu.')).toBeVisible();
   await expect(overview.getByRole('link', { name: 'Thành viên', exact: true })).toBeVisible();
   expect(gateway.calls.filter((call) => call.path === `/api/v1/trips/${tripId}/fund`)).toHaveLength(

@@ -355,7 +355,7 @@ describe('Self/profile and Home composition', () => {
   );
   it('Home defaults to Guest and reads public inspiration without reading private Trip data', async () => {
     const { listTrips } = mount('/');
-    await screen.findByText('Minh họa từ thiết kế');
+    await screen.findByText('Điểm đến được yêu thích');
     expect(screen.getByRole('link', { name: 'Bắt đầu ngay' })).toHaveAttribute('href', '/register');
     expect(screen.getByRole('link', { name: 'Bắt đầu hành trình' })).toHaveAttribute(
       'href',
@@ -371,9 +371,9 @@ describe('Self/profile and Home composition', () => {
     const { listTrips } = mount('/');
     await userEvent.click(await screen.findByText('UI preview · Dữ liệu minh họa'));
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'success');
-    expect(await screen.findByRole('link', { name: 'Khám phá ứng dụng' })).toHaveAttribute(
+    expect(await screen.findByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute(
       'href',
-      '/trips',
+      '/trips/new',
     );
     expect(screen.getAllByRole('link', { name: 'Chuyến đi của tôi' })).toEqual(
       expect.arrayContaining([expect.objectContaining({ pathname: '/trips' })]),
