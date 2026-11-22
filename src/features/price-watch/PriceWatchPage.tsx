@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useOutletContext, useParams } from 'react-router';
+import { useOutletContext, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
@@ -22,6 +22,7 @@ import { PriceWatchOverlay } from './PriceWatchOverlay';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import type { DomainError } from '../../shared/types/result';
 import styles from './PriceWatchPage.module.css';
 import { RuntimePriceWatchPage } from './RuntimePriceWatchPage';
@@ -497,11 +498,11 @@ function PreviewPriceWatchPage() {
               : null;
   return (
     <section className={styles.page} data-flow="price-watch-preview" data-node-id="768:7992">
-      <div className={styles.breadcrumb}>
-        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-        <span aria-hidden="true">›</span>
-        <h1>Theo dõi giá vé</h1>
-      </div>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Theo dõi giá vé"
+      />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       {error ? (
         <ErrorState
@@ -519,7 +520,12 @@ function PreviewPriceWatchPage() {
         <ContentState state="empty" headingLevel={2} />
       )}
       {previewEnabled && (
-        <details className="preview" data-preview="price-watch">
+        <details
+          className="preview"
+          data-preview="price-watch"
+          data-watch-version={data?.watchVersion}
+          data-provider-environment={data?.providerEnvironment}
+        >
           <summary>Price Watch preview · Dữ liệu minh họa</summary>
           <Select
             label="Trạng thái theo dõi"
@@ -533,11 +539,6 @@ function PreviewPriceWatchPage() {
               <option key={item}>{item}</option>
             ))}
           </Select>
-          {data && (
-            <p>
-              Watch version {data.watchVersion} · {data.providerEnvironment} · Chỉ xem, không đặt vé
-            </p>
-          )}
         </details>
       )}
     </section>

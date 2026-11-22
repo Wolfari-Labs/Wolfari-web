@@ -38,6 +38,7 @@ import { decodeFinanceReceipt } from './infrastructure/repositories/finance-deco
 import { createNotificationRepository } from './infrastructure/repositories/notification.gateway-repository';
 import { createTravelRepository } from './infrastructure/repositories/travel.gateway-repository';
 import { createRuntimePriceWatchRepository } from './infrastructure/repositories/runtime-price-watch.gateway-repository';
+import { createPlacesRepository } from './infrastructure/repositories/places.gateway-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -209,6 +210,7 @@ async function start() {
                     browserPush,
                     notifications: createNotificationRepository(gatewayHttpClient),
                     priceWatch: createRuntimePriceWatchRepository(gatewayHttpClient),
+                    places: createPlacesRepository(gatewayHttpClient),
                   },
                 }
               : {})}

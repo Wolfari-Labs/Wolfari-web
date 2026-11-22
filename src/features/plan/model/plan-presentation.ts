@@ -6,6 +6,15 @@ export function localDate(instant: string, timezone: string) {
 export function planDays(startAt: string, endAt: string, timezone: string) {
   return tripCalendarDays(startAt, endAt, timezone);
 }
+/** Calendar day an activity is shown in; `'POOL'` when it has no day yet. */
+export function activityPlanDay(
+  activity: Pick<ActivityViewModel, 'startsAt' | 'scheduledDate'>,
+  timezone: string,
+) {
+  return activity.startsAt
+    ? localDate(activity.startsAt, timezone)
+    : (activity.scheduledDate ?? 'POOL');
+}
 export function activitiesForDay(
   items: readonly ActivityViewModel[],
   day: string,

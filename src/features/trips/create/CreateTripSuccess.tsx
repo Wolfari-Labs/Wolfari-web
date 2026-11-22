@@ -29,7 +29,7 @@ export function CreateTripSuccess({
     >
       <div className={styles.success}>
         <img src={mascot} alt="Chú sói Wolfari ăn mừng" />
-        <p>HOÀN TẤT</p>
+        <p>Hoàn tất</p>
         <h1 id="create-trip-success-title">Chuyến đi đã sẵn sàng</h1>
         <span>
           Một hành trình mới đang chờ bạn. Bắt đầu lên lịch và lưu lại những điều tuyệt vời nhé!

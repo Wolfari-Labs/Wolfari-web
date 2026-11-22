@@ -278,14 +278,6 @@ function InvitationResponse({
           </div>
         </dl>
       )}
-      {preview?.status === 'PENDING' && (
-        <div className={styles.note} data-tone="terminal">
-          <p>
-            Khi chấp nhận, hệ thống kiểm tra lại người nhận, hiệu lực lời mời và quyền tham gia
-            chuyến đi. Quyền sửa lịch trình và trách nhiệm quỹ được quản lý riêng.
-          </p>
-        </div>
-      )}
       {((!authorityStale && preview?.status === 'PENDING') || attempt) && (
         <div className={styles.responseActions}>
           <Button

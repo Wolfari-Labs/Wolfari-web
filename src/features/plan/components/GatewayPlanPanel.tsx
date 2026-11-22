@@ -6,7 +6,7 @@ import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { usePlanRepository } from '../repositories/plan-context';
 import { usePlanCommands } from '../hooks/use-plan-commands';
 import { localTimeToIso } from '../model/plan-draft';
-import { localDate, planDays } from '../model/plan-presentation';
+import { activityPlanDay, localDate, planDays } from '../model/plan-presentation';
 import { lastTripDate } from '../../../shared/lib/calendar';
 import { Button } from '../../../shared/components/Button';
 import { Select } from '../../../shared/components/Select';
@@ -202,10 +202,6 @@ function ActivityForm({
             </Button>
           )}
         </div>
-        <p className={styles.scheduleHint}>
-          Chọn ngày không cần giờ; có thể đặt giờ kết thúc vào ngày tiếp theo. Mọi thay đổi chỉ áp
-          dụng cho hoạt động này.
-        </p>
         <Select
           label="Địa điểm"
           value={location}
@@ -341,15 +337,22 @@ export function GatewayPlanPanel({
     // complete permutation and preserve all existing times. Only pointer/keyboard
     // drag arrangements use the suffix-time reset rules.
     if (!canEdit || locked || editing || confirm || !repository.reorderActivities) return;
+    const activity = items.find((item) => item.id === id);
+    if (!activity) return;
+    // Swap with the neighbour in the same day so the visible day order changes; the row
+    // menu index/length are measured inside that day group.
+    const dayOf = (item: ActivityViewModel) => activityPlanDay(item, trip.timezone);
+    const day = items.filter((item) => dayOf(item) === dayOf(activity));
+    const neighbour = day[day.indexOf(activity) + offset];
+    if (!neighbour) return;
     const ids = items.map((item) => item.id);
     const index = ids.indexOf(id);
-    const target = index + offset;
-    if (index < 0 || target < 0 || target >= ids.length) return;
+    const target = ids.indexOf(neighbour.id);
     [ids[index], ids[target]] = [ids[target]!, ids[index]!];
     await execute({ kind: 'reorder', activityIds: ids });
   };
   const feedback = (
-    <div className={styles.feedback}>
+    <div className={styles.feedback} data-plan-version={plan.planVersion}>
       {!canEdit && (
         <Alert>
           Bạn có thể xem lịch trình
@@ -530,7 +533,7 @@ export function GatewayPlanPanel({
         description={
           confirmVersion !== plan.planVersion
             ? 'Dữ liệu đã thay đổi. Hủy và chọn lại hoạt động sau khi đối chiếu.'
-            : `Xóa “${confirm?.title ?? ''}”? Dress Code gắn với hoạt động cũng có thể bị xóa.`
+            : `Xóa “${confirm?.title ?? ''}”? Trang phục gắn với hoạt động cũng có thể bị xóa.`
         }
         confirmLabel="Xác nhận xóa"
         busy={commands.pending}

@@ -17,6 +17,7 @@ import { useCommandSession, OperationStatus } from '../../shared/components/Oper
 import { InvitationManagement } from './InvitationManagement';
 import { TripHero } from '../trips/components/TripHero';
 import { Avatar } from '../../shared/components/Avatar';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Badge } from '../../shared/components/Ui';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
@@ -680,12 +681,21 @@ export function GatewayMembersPage({ commands }: { commands: CommandCoordinator 
   });
   return (
     <section className={styles.page} data-flow="gateway-members">
-      <nav className={styles.breadcrumb} aria-label="Đường dẫn">
-        <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-        <span aria-hidden="true">›</span>
-        <span>Thành viên</span>
-      </nav>
-      <h1 className={styles.visuallyHidden}>Thành viên</h1>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+        current="Thành viên"
+        mobile={
+          <>
+            <nav className={styles.breadcrumb} aria-label="Đường dẫn">
+              <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
+              <span aria-hidden="true">›</span>
+              <span>Thành viên</span>
+            </nav>
+            <h1 className={styles.visuallyHidden}>Thành viên</h1>
+          </>
+        }
+      />
       {actor.data?.status === 'ready' ? (
         <Workspace
           key={actor.data.data.id + ':' + tripId}

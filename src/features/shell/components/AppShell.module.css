@@ -77,7 +77,7 @@
   gap: 8px;
   padding: 0 6px;
   height: 100%;
-  font-size: 14.5px;
+  font-size: var(--font-size-label);
   line-height: 22px;
   font-weight: 500;
   border: 0;
@@ -85,6 +85,13 @@
   position: relative;
   color: #0a55a1;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .headerNav a,
+  .headerNav button {
+    font-size: 14.5px;
+  }
 }
 .headerNav img {
   width: 20px;
@@ -100,20 +107,33 @@
   right: 0;
   height: 3px;
   bottom: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-6);
   background: #079fc5;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .headerNav a[aria-current='page']::after {
+    border-radius: 2px;
+  }
 }
 .account,
 .profile {
   border: 1px solid transparent;
   background: transparent;
-  border-radius: 14px;
+  border-radius: var(--radius-12);
   padding: 4px 8px;
   transition: background-color 160ms ease;
   min-height: var(--target-min);
   display: flex;
   align-items: center;
   gap: 12px;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .account,
+  .profile {
+    border-radius: 14px;
+  }
 }
 .account {
   min-width: 260px;
@@ -122,11 +142,17 @@
 .profile {
   min-width: var(--target-min);
   justify-content: center;
-  font-size: 13.5px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   font-weight: 600;
   color: #075495;
   white-space: nowrap;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .profile {
+    font-size: 13.5px;
+  }
 }
 .profileGroup {
   display: flex;
@@ -140,7 +166,7 @@
   width: 44px;
   height: 44px;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: transparent;
   color: #075495;
 }
@@ -191,7 +217,7 @@
   width: 40px;
   height: 40px;
   border: 2px solid #41b5d2;
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   background: #fff6ef;
   overflow: hidden;
   position: relative;
@@ -210,8 +236,15 @@
   align-items: center;
   justify-content: center;
   min-height: var(--target-min);
-  border-radius: 10px;
-  font-size: 15px;
+  border-radius: var(--radius-10);
+  font-size: var(--font-size-label);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .outline,
+  .primary {
+    font-size: 15px;
+  }
 }
 .outline {
   width: 122px;
@@ -274,12 +307,12 @@
   align-items: center;
   min-height: var(--target-min);
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-nav);
   background: white;
   color: #0a55a1;
   padding: 0 12px 0 16px;
   text-align: left;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
   white-space: nowrap;
   position: relative;
@@ -316,8 +349,14 @@
   top: 0;
   height: 100%;
   width: 4px;
-  border-radius: 2px;
+  border-radius: var(--radius-6);
   background: #079fc5;
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .selectedSection::before {
+    border-radius: 2px;
+  }
 }
 .sidebarDecoration {
   flex-shrink: 0;
@@ -328,7 +367,7 @@
 }
 .sidebarDecoration p {
   font-family: var(--font-handwritten);
-  font-size: 18px;
+  font-size: var(--font-size-subtitle);
   line-height: 52px;
   color: #079cc5;
   margin: 0 26px;
@@ -361,7 +400,7 @@
   color: var(--color-muted);
   padding: 0;
   min-height: 60px;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   line-height: 20px;
 }
 .collapsed {
@@ -371,7 +410,7 @@
   min-height: var(--target-min);
 }
 .collapseButton strong {
-  font-size: 24px;
+  font-size: var(--font-size-title);
   line-height: 32px;
   color: #0089c7;
 }
@@ -410,7 +449,7 @@
   justify-content: center;
   flex-shrink: 0;
   border: 1px solid rgb(10 85 161 / 14%);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: white;
   color: var(--color-ink);
   font-size: 22px;
@@ -453,7 +492,7 @@
   }
   .headerNav a,
   .headerNav button {
-    font-size: 13px;
+    font-size: var(--font-size-small);
   }
   .outline {
     width: 96px;
@@ -683,10 +722,16 @@
   min-height: 44px;
   padding: 0 12px;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
+  border-radius: var(--radius-16);
   background: white;
   color: var(--color-ink);
   font: 500 15px/22px var(--font-body);
+}
+@media (max-width: 768px) {
+  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
+  .drawerClose {
+    border-radius: 18px;
+  }
 }
 .navigationDrawer.navigationDrawer nav {
   padding: 8px;

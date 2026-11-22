@@ -264,7 +264,7 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
       <img className={styles.banner} src={banner} alt="" />
       <header className={styles.pageHeader}>
         <div>
-          <p className={styles.eyebrow}>CHUYẾN ĐI MỚI</p>
+          <p className={styles.eyebrow}>Chuyến đi mới</p>
           <h1>Tạo chuyến đi mới</h1>
           <p>Lên kế hoạch cho hành trình tiếp theo và khám phá thế giới cùng Wolfari!</p>
         </div>

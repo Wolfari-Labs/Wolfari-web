@@ -103,7 +103,7 @@ Không được chuyển trực tiếp `pending → success` bằng fixture tron
 
 ## Inventory state profiles
 
-Profiles nối [full frame map](figma-screen-map-2026-10-15.md) với contract tương lai, là required coverage, **không phải feature test result hoặc Figma variants đã có**. Shell Phase 1 giữ coverage phía trên.
+Profiles nối [full frame map](archive/implementation/figma-screen-map-2026-10-15.md) với contract tương lai, là required coverage, **không phải feature test result hoặc Figma variants đã có**. Shell Phase 1 giữ coverage phía trên.
 
 | Profile    | Required states                                                                                                                                                                 | Giới hạn                                                              |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -137,7 +137,7 @@ Profiles nối [full frame map](figma-screen-map-2026-10-15.md) với contract t
 - Drawer/nav: closed không tab-order; modal focus trap, Escape/backdrop/close focus return, internal scroll/body lock; selected/disabled không cấp permission.
 - Component pending/loading không có server operation; unknown/conflict/forbidden của feature vẫn thuộc owning model/repository. Không tạo shared business state machine.
 
-Sandbox và acceptance theo [shared UI contract](screen-contracts.md#contract-shared-ui-foundation) / [Phase 2 handoff](design-system-phase2.md).
+Sandbox và acceptance theo [shared UI contract](screen-contracts.md#contract-shared-ui-foundation) / [Phase 2 handoff](archive/implementation/design-system-phase2.md).
 
 ## Phase 3 — Trip List · fixture state contract
 
@@ -164,21 +164,21 @@ Browser acceptance đã bao phủ desktop 1440×800, short laptop 1366×520, tab
 
 ### Phase 3 Auth/Home/Self coverage
 
-Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable qua common repository result. Auth: validation giữ input/focus; pending/unknown/error/unavailable là presentation, không mutation receipt. Self save chỉ validate/unavailable, version không đổi; profile draft giữ qua error/recovery. Notification/push/avatar/logout/revoke disabled. [Evidence](auth-fixture-phase3.md).
+Home/Self/session reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable qua common repository result. Auth: validation giữ input/focus; pending/unknown/error/unavailable là presentation, không mutation receipt. Self save chỉ validate/unavailable, version không đổi; profile draft giữ qua error/recovery. Notification/push/avatar/logout/revoke disabled. [Evidence](archive/implementation/auth-fixture-phase3.md).
 
 Demo login được người dùng yêu cầu: public sample credentials chỉ trong fixture bootstrap; invalid credentials → form alert/focus, Guest và route giữ nguyên; đúng → User Home + banner demo, không server success. Thoát demo hoặc reload Home → Guest; không token/storage/HTTP hoặc thay revisions. Nút thoát demo chỉ đổi preview, khác logout Backend vẫn disabled. Register/Gateway không có demo login. Pending/unknown selector vẫn là presentation và không activate demo khi pending.
 
 ### Trip Overview fixture
 
-Metadata read: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; unknown/denied opaque IDs → not-found. Snapshot canRead/active membership guard và Guest/Admin shell guard chặn private reads. Aggregate cards unavailable; writes disabled, pending/unknown không áp dụng cho read-only metadata. [Evidence](trip-overview-phase3.md).
+Metadata read: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; unknown/denied opaque IDs → not-found. Snapshot canRead/active membership guard và Guest/Admin shell guard chặn private reads. Aggregate cards unavailable; writes disabled, pending/unknown không áp dụng cho read-only metadata. [Evidence](archive/implementation/trip-overview-phase3.md).
 
 ### Plan preview
 
-Plan read loading/ready/empty/error/forbidden/not-found/conflict/unavailable; null startsAt không bị gán ngày, nullable end/location rõ ràng; unknown trip → not-found. Cross-projection revision mismatch → conflict; read permissions trước summary/timeline. Pending/unknown presentation không đổi snapshot, write controls disabled. Day selection/expansion giữ qua read recovery; Guest không gọi Plan. [Evidence](plan-preview-phase3.md).
+Plan read loading/ready/empty/error/forbidden/not-found/conflict/unavailable; null startsAt không bị gán ngày, nullable end/location rõ ràng; unknown trip → not-found. Cross-projection revision mismatch → conflict; read permissions trước summary/timeline. Pending/unknown presentation không đổi snapshot, write controls disabled. Day selection/expansion giữ qua read recovery; Guest không gọi Plan. [Evidence](archive/implementation/plan-preview-phase3.md).
 
 ### Members / Invitation preview
 
-Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; Invitation EXPIRED/REVOKED/ACCEPTED “đã dùng” là read scenarios/version2. Owner-only invitation query; Guest và denied metadata không đọc members/invitations; foreign-trip rows không hiển thị. Nullable name/avatar → neutral ID fallback, không role/Holder inference. Draft email giữ qua read recovery; pending/unknown không tăng revision hoặc báo sent/saved. Target-only selection unavailable thay vì sai body. [Evidence](members-preview-phase3.md).
+Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/unavailable; Invitation EXPIRED/REVOKED/ACCEPTED “đã dùng” là read scenarios/version2. Owner-only invitation query; Guest và denied metadata không đọc members/invitations; foreign-trip rows không hiển thị. Nullable name/avatar → neutral ID fallback, không role/Holder inference. Draft email giữ qua read recovery; pending/unknown không tăng revision hoặc báo sent/saved. Target-only selection unavailable thay vì sai body. [Evidence](archive/implementation/members-preview-phase3.md).
 
 ### Feature 6 — Gateway Members / Plan policy
 
@@ -197,7 +197,7 @@ Member/invitation reads: loading/ready/empty/error/forbidden/not-found/conflict/
 | Unknown write              | Timeout/network/5xx/malformed 2xx after sending remains unknown, even if a later read appears to match. Do not claim success or retry automatically; explicit retry reuses identical payload, revision and idempotency key. |
 | Deferred capabilities      | Leave/remove/transfer and invitation writes remain disabled until their owning Backend lifecycle gates are enabled; no `feat/7`, `feat/8` or editor-ID read API is introduced.                                              |
 
-Gateway browser tests use Playwright HTTP interception and the real Web adapters; they are mocked contract coverage, not live Backend E2E. See [Members Phase 3 / Feature 6 status](members-preview-phase3.md#feature-6-gateway-status--22102026) and [Gateway Integration Matrix](gateway-integration-matrix.md).
+Gateway browser tests use Playwright HTTP interception and the real Web adapters; they are mocked contract coverage, not live Backend E2E. See [Members Phase 3 / Feature 6 status](archive/implementation/members-preview-phase3.md#feature-6-gateway-status--22102026) and [Gateway Integration Matrix](gateway-integration-matrix.md).
 
 ### Fund preview
 

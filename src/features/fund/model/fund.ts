@@ -39,22 +39,20 @@ export type ContributionStatus = (typeof contributionStatuses)[number];
 export const expenseStatuses = ['DRAFT', 'SUBMITTED', 'CONFIRMED', 'REJECTED', 'REVERSED'] as const;
 export type ExpenseStatus = (typeof expenseStatuses)[number];
 
-export const refundStatuses = ['PENDING', 'HOLDER_REPORTED', 'CONFIRMED', 'CANCELLED', 'REVERSED'] as const;
+export const refundStatuses = [
+  'PENDING',
+  'HOLDER_REPORTED',
+  'CONFIRMED',
+  'CANCELLED',
+  'REVERSED',
+] as const;
 export type RefundStatus = (typeof refundStatuses)[number];
 
-export const closureStatuses = [
-  'PENDING_CONFIRMATIONS',
-  'COMPLETED',
-  'CANCELLED',
-] as const;
+export const closureStatuses = ['PENDING_CONFIRMATIONS', 'COMPLETED', 'CANCELLED'] as const;
 export type ClosureStatus = (typeof closureStatuses)[number];
 
 export type LedgerDirection = 'IN' | 'OUT';
-export type LedgerTransactionType =
-  | 'CONTRIBUTION'
-  | 'EXPENSE'
-  | 'REFUND'
-  | 'REVERSAL';
+export type LedgerTransactionType = 'CONTRIBUTION' | 'EXPENSE' | 'REFUND' | 'REVERSAL';
 
 export interface FundProjection {
   readonly id: string;
@@ -235,8 +233,4 @@ export interface FundRepository {
 /** Runtime guard for form adapters before a future command contract exists. */
 export function isMoneyVnd(value: string): value is MoneyVnd {
   return /^(?:0|[1-9]\d*)$/.test(value.trim());
-}
-
-export function addMoneyVnd(values: readonly MoneyVnd[]): MoneyVnd {
-  return values.reduce((total, value) => total + BigInt(value), 0n).toString();
 }

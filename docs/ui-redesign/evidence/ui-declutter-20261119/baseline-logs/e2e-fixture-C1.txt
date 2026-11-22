@@ -1,0 +1,557 @@
+[36mvite v8.3.4 [32mbuilding client environment for preview...[36m[39m
+transforming...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 2938 modules transformed.
+rendering chunks...
+computing gzip size...
+test-results/build/fixture/index.html                                                      1.27 kB │ gzip:   0.51 kB
+test-results/build/fixture/assets/44363-Dnc2vCAu.png                                       1.86 kB
+test-results/build/fixture/design-system.html                                              1.92 kB │ gzip:   0.58 kB
+test-results/build/fixture/assets/b329f-BLz362UB.svg                                       4.17 kB │ gzip:   1.23 kB
+test-results/build/fixture/assets/9478a-0Bi9C616.svg                                       4.18 kB │ gzip:   1.57 kB
+test-results/build/fixture/assets/95ec9-SDrSm5cj.svg                                       4.53 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/969e1-CmrqPxZh.svg                                       4.54 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/8efc6-Bm5dPhA_.svg                                       4.82 kB │ gzip:   1.67 kB
+test-results/build/fixture/assets/8bc2c-BUdElA4T.svg                                       4.83 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/9ca6f-D5Z7ULiw.svg                                       4.83 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/32882-BuR1_srp.svg                                       5.77 kB │ gzip:   2.35 kB
+test-results/build/fixture/assets/039dc-MMX5ou6V.svg                                       5.86 kB │ gzip:   1.28 kB
+test-results/build/fixture/assets/patrick-hand-vietnamese-400-normal-CZjY324Y.woff         6.49 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-400-normal-BuGn0gnm.woff       6.56 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-600-normal-DkpCIyan.woff       6.88 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-500-normal-CfdwVo8-.woff       6.88 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-700-normal-By_5yT39.woff       6.89 kB
+test-results/build/fixture/assets/5a593-BarKZqrj.svg                                       8.24 kB │ gzip:   2.45 kB
+test-results/build/fixture/assets/a16a3-DofLal5J.svg                                       8.28 kB │ gzip:   1.90 kB
+test-results/build/fixture/assets/ddfc7-BMnqBe8B.png                                       9.62 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-400-normal-CRcqvyg1.woff2     11.53 kB
+test-results/build/fixture/assets/patrick-hand-vietnamese-400-normal-65jA92mZ.woff2       11.57 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-500-normal-DREgrEoJ.woff2     12.17 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-600-normal-nyU-ZL2p.woff2     12.17 kB
+test-results/build/fixture/assets/be-vietnam-pro-vietnamese-700-normal-Csr0PCuG.woff2     12.46 kB
+test-results/build/fixture/assets/4bccc-D7t6Ohdm.png                                      12.97 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-400-normal-bXgqVju9.woff           16.43 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-700-normal-C2EtzaOi.woff           16.90 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-500-normal-BJkVuMHw.woff           16.99 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-600-normal-5IO4e7bK.woff           17.01 kB
+test-results/build/fixture/assets/patrick-hand-latin-400-normal-Df9_VoRQ.woff             17.65 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-400-normal-PpnXBOrz.woff2          21.16 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-500-normal-B6LVzGNe.woff2          21.89 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-600-normal-BZDkUTrt.woff2          22.03 kB
+test-results/build/fixture/assets/be-vietnam-pro-latin-700-normal-DlW1Zbsh.woff2          22.15 kB
+test-results/build/fixture/assets/4ff86-DqY-Irqy.png                                      23.67 kB
+test-results/build/fixture/assets/patrick-hand-latin-400-normal-B7HHA2Vw.woff2            23.94 kB
+test-results/build/fixture/assets/1dc61-BJI8CjGz.png                                      27.60 kB
+test-results/build/fixture/assets/916ba-zzTcfguj.png                                      32.61 kB
+test-results/build/fixture/assets/6059f-2gKAuTut.png                                      40.02 kB
+test-results/build/fixture/assets/42524-Bpp6kOMc.png                                      44.70 kB
+test-results/build/fixture/assets/a84f7-KRRgzD-S.png                                      47.80 kB
+test-results/build/fixture/assets/3a3f8-Cl-_OnZw.png                                      48.72 kB
+test-results/build/fixture/assets/8b8b5-DkVHiSbk.png                                      72.61 kB
+test-results/build/fixture/assets/2dc85-DROnVtLO.png                                     335.60 kB
+test-results/build/fixture/assets/16cac-ZW08gMZN.png                                     475.43 kB
+test-results/build/fixture/assets/06bd1-9iR9yAvz.png                                   2,698.78 kB
+test-results/build/fixture/assets/CapabilityNote-CTRimchz.css                              0.46 kB │ gzip:   0.25 kB
+test-results/build/fixture/assets/ContentState-CD3znfYM.css                                1.02 kB │ gzip:   0.47 kB
+test-results/build/fixture/assets/TripOverviewPage-CHFHEYBX.css                            1.42 kB │ gzip:   0.55 kB
+test-results/build/fixture/assets/Notifications-BHi1lXw5.css                               1.71 kB │ gzip:   0.63 kB
+test-results/build/fixture/assets/designSystem-CcRvD-k2.css                                2.69 kB │ gzip:   0.82 kB
+test-results/build/fixture/assets/Invitations-DF5k1fOt.css                                 2.94 kB │ gzip:   0.89 kB
+test-results/build/fixture/assets/Drawer-BgujksgV.css                                      3.19 kB │ gzip:   1.05 kB
+test-results/build/fixture/assets/ProfilePage-vT_RcfZM.css                                 4.53 kB │ gzip:   1.24 kB
+test-results/build/fixture/assets/DemoWorkspace-Dz9rF2Cu.css                               4.95 kB │ gzip:   1.41 kB
+test-results/build/fixture/assets/TripSettingsPage-CEdKGNR8.css                            6.21 kB │ gzip:   1.60 kB
+test-results/build/fixture/assets/AuthPage-CrN2pPjL.css                                    7.20 kB │ gzip:   2.05 kB
+test-results/build/fixture/assets/GatewayFundPage-CKtWQrCZ.css                             9.73 kB │ gzip:   2.24 kB
+test-results/build/fixture/assets/PackingPage--bj6JxCX.css                                11.83 kB │ gzip:   2.85 kB
+test-results/build/fixture/assets/TripHero-D4MoW9V9.css                                   15.19 kB │ gzip:   3.47 kB
+test-results/build/fixture/assets/PriceWatchPage-DuEITpPx.css                             15.38 kB │ gzip:   3.27 kB
+test-results/build/fixture/assets/GeoapifyMap-OYnlHoig.css                                15.93 kB │ gzip:   6.70 kB
+test-results/build/fixture/assets/DressCodePage-0GlisSrM.css                              15.99 kB │ gzip:   3.13 kB
+test-results/build/fixture/assets/MembersPage-BqQsxzdy.css                                16.55 kB │ gzip:   3.26 kB
+test-results/build/fixture/assets/CreateTripPage-D3agAJgK.css                             17.53 kB │ gzip:   3.77 kB
+test-results/build/fixture/assets/PlanPage-DMCmYNNH.css                                   23.26 kB │ gzip:   4.70 kB
+test-results/build/fixture/assets/ac8db-BcmrQoiQ.css                                      24.29 kB │ gzip:   5.64 kB
+test-results/build/fixture/assets/TripMapPage-BiMxTMu4.css                                25.61 kB │ gzip:   5.25 kB
+test-results/build/fixture/assets/TripListPage-CdfpX7Gb.css                               51.67 kB │ gzip:   7.65 kB
+test-results/build/fixture/assets/app-F6TH-MjM.css                                        90.99 kB │ gzip:  17.41 kB
+test-results/build/fixture/assets/916ba-BYKaVzrc.js                                        0.05 kB │ gzip:   0.07 kB
+test-results/build/fixture/assets/trip-query-keys-BXnqlEhj.js                              0.09 kB │ gzip:   0.09 kB
+test-results/build/fixture/assets/plan-BGd-BzLW.js                                         0.12 kB │ gzip:   0.11 kB
+test-results/build/fixture/assets/demo-access-SSkwNlvq.js                                  0.23 kB │ gzip:   0.19 kB
+test-results/build/fixture/assets/CapabilityNote-B0uVpilP.js                               0.24 kB │ gzip:   0.21 kB
+test-results/build/fixture/assets/Notifications.module-7Mf6bFP-.js                         0.27 kB │ gzip:   0.17 kB
+test-results/build/fixture/assets/DemoWorkspace.module-DvhYzKJ-.js                         0.41 kB │ gzip:   0.23 kB
+test-results/build/fixture/assets/use-identity-task-DQXKvuq8.js                            0.44 kB │ gzip:   0.30 kB
+test-results/build/fixture/assets/Textarea-BZsxXNYd.js                                     0.44 kB │ gzip:   0.29 kB
+test-results/build/fixture/assets/QueryClientProvider-BNq2_qya.js                          0.45 kB │ gzip:   0.31 kB
+test-results/build/fixture/assets/04603-CbteM2Jc.js                                        0.46 kB │ gzip:   0.31 kB
+test-results/build/fixture/assets/resolve-elements-laAgVCTe.js                             0.47 kB │ gzip:   0.31 kB
+test-results/build/fixture/assets/TripPlanBoundary-DLFF9ooi.js                             0.48 kB │ gzip:   0.28 kB
+test-results/build/fixture/assets/trip-store-jx57KYWx.js                                   0.53 kB │ gzip:   0.39 kB
+test-results/build/fixture/assets/command-failure-Bhoi0mjN.js                              0.56 kB │ gzip:   0.37 kB
+test-results/build/fixture/assets/browser-storage-B4ajCdc-.js                              0.72 kB │ gzip:   0.36 kB
+test-results/build/fixture/assets/rolldown-runtime-XKyaHtl9.js                             0.72 kB │ gzip:   0.42 kB
+test-results/build/fixture/assets/identity.fixture-repository-DjHdzNEc.js                  0.97 kB │ gzip:   0.62 kB
+test-results/build/fixture/assets/2e748-DMbBi9k-.js                                        1.00 kB │ gzip:   0.48 kB
+test-results/build/fixture/assets/trip-list-query-DzgDhBj2.js                              1.01 kB │ gzip:   0.64 kB
+test-results/build/fixture/assets/useInfiniteQuery-9jFRWQZM.js                             1.11 kB │ gzip:   0.47 kB
+test-results/build/fixture/assets/membership.fixture-repository-cdzW8NSw.js                1.15 kB │ gzip:   0.73 kB
+test-results/build/fixture/assets/home.fixture-repository-DxemIV7l.js                      1.19 kB │ gzip:   0.73 kB
+test-results/build/fixture/assets/invitation.fixture-repository-DyBEbIw0.js                1.24 kB │ gzip:   0.77 kB
+test-results/build/fixture/assets/shell.fixture-repository-DTExav3O.js                     1.24 kB │ gzip:   0.71 kB
+test-results/build/fixture/assets/bd989-VLPlw6fL.js                                        1.28 kB │ gzip:   0.59 kB
+test-results/build/fixture/assets/AuthPage.module-B1BuUYlg.js                              1.31 kB │ gzip:   0.70 kB
+test-results/build/fixture/assets/AccountMenu-D6H4BMXu.js                                  1.39 kB │ gzip:   0.62 kB
+test-results/build/fixture/assets/Drawer-DfW4Q2x6.js                                       1.61 kB │ gzip:   0.82 kB
+test-results/build/fixture/assets/Invitations.module-Bf80GrRa.js                           1.66 kB │ gzip:   0.90 kB
+test-results/build/fixture/assets/Input-CgHV-zOk.js                                        1.67 kB │ gzip:   0.88 kB
+test-results/build/fixture/assets/Notifications-COBAfGWh.js                                1.89 kB │ gzip:   0.99 kB
+test-results/build/fixture/assets/ContentState-BTeymsjU.js                                 2.17 kB │ gzip:   1.13 kB
+test-results/build/fixture/assets/trip-catalog-BYAyNlOc.js                                 2.33 kB │ gzip:   1.06 kB
+test-results/build/fixture/assets/use-trip-plan-snapshot-DD0mQe0A.js                       2.64 kB │ gzip:   1.13 kB
+test-results/build/fixture/assets/5290c-DInDbAzD.js                                        2.95 kB │ gzip:   0.88 kB
+test-results/build/fixture/assets/price-watch.fixture-repository-BhvyFTIy.js               3.14 kB │ gzip:   1.54 kB
+test-results/build/fixture/assets/e73d3-B-Ym26aP.js                                        3.31 kB │ gzip:   1.27 kB
+test-results/build/fixture/assets/is-svg-component-B0869fuX.js                             3.34 kB │ gzip:   1.66 kB
+test-results/build/fixture/assets/OperationStatus-9I82z5Lx.js                              3.51 kB │ gzip:   1.68 kB
+test-results/build/fixture/assets/trip.fixture-repository-Tphsd_JY.js                      3.54 kB │ gzip:   1.45 kB
+test-results/build/fixture/assets/NotificationInbox-DTORW4-R.js                            3.71 kB │ gzip:   1.79 kB
+test-results/build/fixture/assets/TripHero-wOeQXdrU.js                                     4.90 kB │ gzip:   2.04 kB
+test-results/build/fixture/assets/fund.fixture-repository-C-zpnkqf.js                      4.93 kB │ gzip:   2.10 kB
+test-results/build/fixture/assets/plan.fixture-repository-Bd2EqGrX.js                      5.18 kB │ gzip:   2.26 kB
+test-results/build/fixture/assets/dist-BAzHyJJF.js                                         5.23 kB │ gzip:   1.94 kB
+test-results/build/fixture/assets/IdentityActionPage-lAE71Zyd.js                           5.95 kB │ gzip:   2.43 kB
+test-results/build/fixture/assets/plan-draft-DtDMd-6-.js                                   6.29 kB │ gzip:   2.42 kB
+test-results/build/fixture/assets/InvitationPage-BRYG04sy.js                               7.00 kB │ gzip:   2.90 kB
+test-results/build/fixture/assets/react-BZk3575t.js                                        7.87 kB │ gzip:   3.00 kB
+test-results/build/fixture/assets/AuthPage-Cm8_TBo8.js                                     9.80 kB │ gzip:   3.96 kB
+test-results/build/fixture/assets/designSystem-qmI16VKb.js                                10.00 kB │ gzip:   3.43 kB
+test-results/build/fixture/assets/FundPage-DQsMi2PH.js                                    11.14 kB │ gzip:   3.89 kB
+test-results/build/fixture/assets/SuccessToast-BMJp9YP1.js                                11.49 kB │ gzip:   4.22 kB
+test-results/build/fixture/assets/asset-map-DUmpj009.js                                   11.99 kB │ gzip:   2.46 kB
+test-results/build/fixture/assets/GeoapifyMap-VsVfX07o.js                                 13.32 kB │ gzip:   5.44 kB
+test-results/build/fixture/assets/TripOverviewPage-H5BoguBO.js                            15.41 kB │ gzip:   4.93 kB
+test-results/build/fixture/assets/ProfilePage-Cp7RzVM8.js                                 16.64 kB │ gzip:   6.15 kB
+test-results/build/fixture/assets/PackingPage-CLTuxB48.js                                 17.25 kB │ gzip:   6.29 kB
+test-results/build/fixture/assets/TripSettingsPage-DwIu9PVR.js                            20.39 kB │ gzip:   7.06 kB
+test-results/build/fixture/assets/TripListPage-BuEXce7D.js                                20.69 kB │ gzip:   6.45 kB
+test-results/build/fixture/assets/Ui-lPecKtvR.js                                          21.90 kB │ gzip:   7.04 kB
+test-results/build/fixture/assets/GatewayFundPage-Cs0cq8H7.js                             22.73 kB │ gzip:   7.25 kB
+test-results/build/fixture/assets/DressCodePage-CbHYzuHw.js                               23.37 kB │ gzip:   6.22 kB
+test-results/build/fixture/assets/MotionProvider-Bn4fUJXi.js                              24.06 kB │ gzip:   8.78 kB
+test-results/build/fixture/assets/es2015-DVXfUwnT.js                                      34.54 kB │ gzip:  11.99 kB
+test-results/build/fixture/assets/PriceWatchPage-C6ejuffO.js                              35.42 kB │ gzip:  11.80 kB
+test-results/build/fixture/assets/CreateTripPage-4apWysC1.js                              38.05 kB │ gzip:  10.64 kB
+test-results/build/fixture/assets/motion-features-CHgZXoaB.js                             45.61 kB │ gzip:  17.39 kB
+test-results/build/fixture/assets/MembersPage-SpDlQtIU.js                                 47.42 kB │ gzip:  12.95 kB
+test-results/build/fixture/assets/dist-CqnWfZbW.js                                        51.18 kB │ gzip:  17.95 kB
+test-results/build/fixture/assets/scene-assets-BBeDl6sm.js                                68.57 kB │ gzip:  11.80 kB
+test-results/build/fixture/assets/TripMapPage-BrmneoEx.js                                 71.31 kB │ gzip:  21.49 kB
+test-results/build/fixture/assets/leaflet-src-Dvea1573.js                                148.62 kB │ gzip:  43.33 kB
+test-results/build/fixture/assets/app-C50k2XU1.js                                        155.13 kB │ gzip:  43.57 kB
+test-results/build/fixture/assets/PlanPage-Cyk8MQnH.js                                   231.80 kB │ gzip:  73.33 kB
+test-results/build/fixture/assets/ac8db-QGV1_wYv.js                                      329.71 kB │ gzip: 106.90 kB
+
+[32m✓ built in 1.20s[39m
+
+Running 214 tests using 2 workers
+
+  ✓    2 tests\e2e\app-shell.spec.ts:4:3 › workspace projection sections use real routes 1440 (1.7s)
+  ✓    1 tests\e2e\app-shell.spec.ts:4:3 › workspace projection sections use real routes 402 (2.2s)
+  ✓    3 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 1440×800 (2.4s)
+  ✓    4 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 1440×960 (2.6s)
+  ✓    5 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 1366×600 (2.1s)
+  ✓    6 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 1366×520 (2.4s)
+  ✓    7 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 1024×600 (2.1s)
+  ✓    8 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 820×600 (2.3s)
+  ✓    9 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 768×1024 (3.1s)
+  ✓   10 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 402×874 (2.8s)
+  ✓   11 tests\e2e\app-shell.spec.ts:134:3 › workspace boundaries 320×480 (2.8s)
+  ✓   12 tests\e2e\app-shell.spec.ts:300:1 › mobile scroll waits for the lazy Plan route after drawer navigation (2.1s)
+  ✓   14 tests\e2e\app-shell.spec.ts:399:3 › shared state contract / (799ms)
+  ✓   15 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /login (690ms)
+  ✓   13 tests\e2e\app-shell.spec.ts:340:1 › drawer traps focus, closes with Escape/backdrop, and keeps background scroll locked (2.1s)
+  ✓   16 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /register (782ms)
+  ✓   17 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /trips (1.1s)
+  ✓   18 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /trips/11111111-1111-4111-8111-111111111111 (1.6s)
+  ✓   19 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /trips/11111111-1111-4111-8111-111111111111/plan (1.5s)
+  ✓   20 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /trips/11111111-1111-4111-8111-111111111111/members (1.4s)
+  ✓   21 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /profile (1.0s)
+  ✓   22 tests\e2e\app-shell.spec.ts:399:3 › shared state contract /admin (724ms)
+  ✓   23 tests\e2e\app-shell.spec.ts:469:3 › Admin permission and shell 1440×800 (908ms)
+  ✓   24 tests\e2e\app-shell.spec.ts:469:3 › Admin permission and shell 1024×520 (836ms)
+  ✓   25 tests\e2e\app-shell.spec.ts:469:3 › Admin permission and shell 402×600 (944ms)
+  ✓   27 tests\e2e\app-shell.spec.ts:535:1 › CP04 Web Home guest menu and 404 recovery keep public routes distinct (1.3s)
+  ✓   28 tests\e2e\app-shell.spec.ts:571:1 › CP04 authenticated Web Home keeps account and inbox access beside Menu (1.9s)
+  ✓   29 tests\e2e\app-shell.spec.ts:596:1 › CP04 Web trip drawer follows the approved navigation composition (921ms)
+  ✓   26 tests\e2e\app-shell.spec.ts:514:1 › Guest public/auth pages have responsive header and natural scrolling (5.5s)
+  ✓   31 tests\e2e\auth-fixture.spec.ts:3:1 › guest header opens the matching Home sections from Home and login (1.1s)
+  ✓   30 tests\e2e\app-shell.spec.ts:625:1 › guest assets and expanded sidebar decorations retain source geometry (2.5s)
+  ✓   32 tests\e2e\auth-fixture.spec.ts:21:3 › demo account opens User preview without API or persistent session 1440 (3.1s)
+  ✓   33 tests\e2e\auth-fixture.spec.ts:21:3 › demo account opens User preview without API or persistent session 402 (3.3s)
+  ✓   34 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 2560px (1.7s)
+  ✓   35 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1920px (1.6s)
+  ✓   36 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1440px (1.4s)
+  ✓   37 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1366px (1.4s)
+  ✓   38 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1200px (1.3s)
+  ✓   39 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1101px (1.3s)
+  ✓   40 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1100px (1.2s)
+  ✓   41 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 1024px (1.2s)
+  ✓   42 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 820px (1.2s)
+  ✓   43 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 768px (1.4s)
+  ✓   44 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 402px (1.0s)
+  ✓   45 tests\e2e\auth-fixture.spec.ts:99:3 › Home cloud layers cover the viewport at 320px (1.1s)
+  ✘   46 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 1440x800 (3.8s)
+  ✓   47 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 1366x600 (5.6s)
+  ✓   48 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 1366x520 (5.7s)
+  ✓   49 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 1024x600 (5.4s)
+  ✓   50 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 820x600 (5.3s)
+  ✓   51 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 768x600 (5.6s)
+  ✓   52 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 402x874 (5.0s)
+  ✓   53 tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 320x480 (4.4s)
+  ✓   54 tests\e2e\auth-fixture.spec.ts:335:1 › registration validates and remains unavailable without session or redirect (1.3s)
+  ✓   55 tests\e2e\auth-fixture.spec.ts:358:1 › mobile profile keeps draft through error and never reports saved (1.2s)
+  ✓   56 tests\e2e\cp04-review.spec.ts:21:3 › CP04 fixture guest and signed-in Home review 1440 (7.5s)
+  ✓   57 tests\e2e\cp04-review.spec.ts:21:3 › CP04 fixture guest and signed-in Home review 402 (6.9s)
+  ✓   58 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x520 (2.1s)
+  ✓   59 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x600 (2.2s)
+  ✓   60 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x900 (2.1s)
+  ✓   61 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x950 (2.1s)
+  ✓   62 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x951 (2.1s)
+  ✓   63 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x960 (2.2s)
+  ✓   64 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x985 (2.1s)
+  ✓   65 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x986 (2.1s)
+  ✓   66 tests\e2e\cp04-review.spec.ts:66:3 › CP04 trip sidebar shows Settings on first render at 1440x990 (2.1s)
+  ✓   67 tests\e2e\cp04-review.spec.ts:109:3 › CP04 fixture recovery and 404 remain reachable 1440x960 (4.3s)
+  ✓   68 tests\e2e\cp04-review.spec.ts:109:3 › CP04 fixture recovery and 404 remain reachable 402x874 (4.2s)
+  ✓   69 tests\e2e\cp04-review.spec.ts:109:3 › CP04 fixture recovery and 404 remain reachable 320x480 (3.3s)
+  ✓   71 tests\e2e\cp04-review.spec.ts:165:1 › CP04 fixture reduced-motion trip drawer keeps keyboard recovery (896ms)
+  ✓   70 tests\e2e\cp04-review.spec.ts:109:3 › CP04 fixture recovery and 404 remain reachable 1366x520 (3.5s)
+  ✓   72 tests\e2e\cp04-zoom.spec.ts:6:1 › CP04 native browser 200% zoom keeps Shell, recovery and Profile reachable (3.7s)
+  ✓   73 tests\e2e\cp05-review.spec.ts:56:3 › CP05 fixture Web visual and axe review 1440 (9.9s)
+  ✓   74 tests\e2e\cp05-review.spec.ts:56:3 › CP05 fixture Web visual and axe review 402 (8.9s)
+  ✓   75 tests\e2e\cp05-review.spec.ts:107:3 › CP05 fixture Web routes reflow and controls remain reachable 320x600 (5.2s)
+  ✓   77 tests\e2e\cp05-review.spec.ts:134:1 › CP05 fixture reduced-motion Trip drawer returns keyboard focus (1.6s)
+  ✓   76 tests\e2e\cp05-review.spec.ts:107:3 › CP05 fixture Web routes reflow and controls remain reachable 1366x520 (5.8s)
+  ✓   79 tests\e2e\cp11-regressions.spec.ts:4:3 › CP11 fixture: register skip link appears only while focused at 402px (1.2s)
+  ✓   80 tests\e2e\cp11-regressions.spec.ts:4:3 › CP11 fixture: register skip link appears only while focused at 320px (1.2s)
+  ✓   81 tests\e2e\design-system.spec.ts:11:3 › shared foundation layout 1440x800 (858ms)
+  ✓   78 tests\e2e\cp05-zoom.spec.ts:8:1 › CP05 native browser 200% zoom keeps Trip Web routes usable (5.0s)
+  ✓   82 tests\e2e\design-system.spec.ts:11:3 › shared foundation layout 1366x520 (907ms)
+  ✓   83 tests\e2e\design-system.spec.ts:11:3 › shared foundation layout 820x600 (951ms)
+  ✓   84 tests\e2e\design-system.spec.ts:11:3 › shared foundation layout 768x1024 (898ms)
+  ✓   85 tests\e2e\design-system.spec.ts:11:3 › shared foundation layout 402x874 (934ms)
+  ✓   86 tests\e2e\design-system.spec.ts:11:3 › shared foundation layout 320x480 (903ms)
+  ✓   87 tests\e2e\design-system.spec.ts:101:1 › shared drawer keyboard, backdrop, scrolling and focus return (765ms)
+  ✓   88 tests\e2e\design-system.spec.ts:133:1 › native Select keyboard and field focus survive errors (642ms)
+  ✓   90 tests\e2e\design-system.spec.ts:178:3 › nested popup restores focus and scroll with motion no-preference (1.1s)
+  ✓   89 tests\e2e\design-system.spec.ts:154:1 › hover and pressed variants preserve focus, disabled controls and field errors (1.1s)
+  ✓   91 tests\e2e\design-system.spec.ts:178:3 › nested popup restores focus and scroll with motion reduce (651ms)
+  ✓   92 tests\e2e\foundations-cp03.spec.ts:12:3 › CP03 fields, recovery and accessibility 1440 (2.2s)
+  ✓   93 tests\e2e\foundations-cp03.spec.ts:67:3 › CP03 Auth required fields and invalid recovery 1440 (1.9s)
+  ✓   94 tests\e2e\foundations-cp03.spec.ts:12:3 › CP03 fields, recovery and accessibility 1366 (2.1s)
+  ✓   95 tests\e2e\foundations-cp03.spec.ts:67:3 › CP03 Auth required fields and invalid recovery 1366 (1.9s)
+  ✓   96 tests\e2e\foundations-cp03.spec.ts:12:3 › CP03 fields, recovery and accessibility 768 (2.0s)
+  ✓   97 tests\e2e\foundations-cp03.spec.ts:67:3 › CP03 Auth required fields and invalid recovery 768 (1.8s)
+  ✓   99 tests\e2e\foundations-cp03.spec.ts:67:3 › CP03 Auth required fields and invalid recovery 402 (1.9s)
+  ✓   98 tests\e2e\foundations-cp03.spec.ts:12:3 › CP03 fields, recovery and accessibility 402 (2.0s)
+  ✓  101 tests\e2e\foundations-cp03.spec.ts:67:3 › CP03 Auth required fields and invalid recovery 320 (1.9s)
+  ✓  100 tests\e2e\foundations-cp03.spec.ts:12:3 › CP03 fields, recovery and accessibility 320 (2.2s)
+  ✓  103 tests\e2e\foundations-cp03.spec.ts:111:1 › computed shared text, field error, focus and primary gradient contrast (447ms)
+  ✓  102 tests\e2e\foundations-cp03.spec.ts:87:1 › reduced motion removes shared button displacement but keeps state feedback (631ms)
+  ✓  105 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 1440x800 (1.1s)
+  ✓  106 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 1366x600 (976ms)
+  ✓  104 tests\e2e\foundations-zoom.spec.ts:6:1 › CP03 native browser 200% zoom keeps fields, modal footer and focus reachable (2.6s)
+  ✓  107 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 1024x600 (1.0s)
+  ✓  108 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 820x600 (963ms)
+  ✓  109 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 768x600 (1.0s)
+  ✓  110 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 402x874 (1.1s)
+  ✓  111 tests\e2e\fund-preview.spec.ts:14:3 › Fund preview 320x600 (1.1s)
+  ✓  112 tests\e2e\fund-preview.spec.ts:49:1 › Fund preview states stay truthful and do not claim a ledger mutation (1.3s)
+  ✘  113 tests\e2e\layout-consistency.spec.ts:33:3 › workspace routes share one frame, header and hero at 1440x900 (8.5s)
+  ✘  114 tests\e2e\layout-consistency.spec.ts:33:3 › workspace routes share one frame, header and hero at 1920x1080 (8.5s)
+  ✘  115 tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1440x900 (462ms)
+  ✘  116 tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1920x1080 (655ms)
+  ✘  117 tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1366x768 (657ms)
+  ✘  118 tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1200x800 (630ms)
+  ✓  119 tests\e2e\members-preview.spec.ts:13:3 › Members preview 1440x800 (1.8s)
+  ✓  120 tests\e2e\members-preview.spec.ts:13:3 › Members preview 1366x600 (1.6s)
+  ✓  121 tests\e2e\members-preview.spec.ts:13:3 › Members preview 1366x520 (1.5s)
+  ✓  122 tests\e2e\members-preview.spec.ts:13:3 › Members preview 1024x600 (1.4s)
+  ✓  123 tests\e2e\members-preview.spec.ts:13:3 › Members preview 820x600 (1.5s)
+  ✓  124 tests\e2e\members-preview.spec.ts:13:3 › Members preview 768x600 (1.5s)
+  ✓  125 tests\e2e\members-preview.spec.ts:13:3 › Members preview 402x874 (1.6s)
+  ✓  126 tests\e2e\members-preview.spec.ts:13:3 › Members preview 320x480 (1.5s)
+  ✓  128 tests\e2e\packing-list.spec.ts:6:3 › Packing List preview suggestions › read-only preview keeps the existing disabled item controls (1.2s)
+  ✓  127 tests\e2e\members-preview.spec.ts:66:1 › member and invitation states, terminal statuses, draft and permission (2.4s)
+  ✓  129 tests\e2e\packing-list.spec.ts:22:3 › Packing List preview suggestions › desktop opens the right drawer and accepts a suggested item (949ms)
+  ✓  130 tests\e2e\packing-list.spec.ts:41:3 › Packing List preview suggestions › mobile keeps custom category suggestion inside the form flow (1.2s)
+  ✓  131 tests\e2e\packing-list.spec.ts:53:3 › Packing List preview suggestions › keeps the last item edit action visible and usable (1.2s)
+  ✓  132 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 1440x800 (1.8s)
+  ✓  133 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 1366x600 (1.6s)
+  ✓  134 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 1366x520 (1.7s)
+  ✓  135 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 1024x600 (1.7s)
+  ✓  136 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 820x600 (1.5s)
+  ✓  137 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 768x600 (1.6s)
+  ✓  138 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 402x874 (1.5s)
+  ✓  139 tests\e2e\plan-preview.spec.ts:13:3 › Plan preview 320x480 (1.5s)
+  ✓  140 tests\e2e\plan-preview.spec.ts:109:1 › Plan states keep selection and pending/unknown do not claim saved (1.3s)
+  ✓  142 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 1440x800 (863ms)
+  ✓  141 tests\e2e\plan-preview.spec.ts:139:1 › keyboard drag moves an activity between the local pool and the selected day (2.1s)
+  ✓  143 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 1366x600 (913ms)
+  ✓  144 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 1024x600 (851ms)
+  ✓  145 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 820x600 (966ms)
+  ✓  146 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 768x600 (981ms)
+  ✓  147 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 402x874 (1.5s)
+  ✓  148 tests\e2e\price-watch-preview.spec.ts:14:3 › Price Watch preview 320x600 (933ms)
+  ✓  150 tests\e2e\price-watch-preview.spec.ts:60:1 › Price Watch capability controls explain that preview actions do not mutate data (1.2s)
+  ✓  149 tests\e2e\price-watch-preview.spec.ts:35:1 › Price Watch preserves an old price when provider fails and keeps commands truthful (1.4s)
+  ✓  151 tests\e2e\trip-list.spec.ts:95:3 › Trip List layout 1440×800 (1.4s)
+  ✓  152 tests\e2e\trip-list.spec.ts:95:3 › Trip List layout 1366×520 (1.3s)
+  ✓  153 tests\e2e\trip-list.spec.ts:95:3 › Trip List layout 820×900 (1.2s)
+  ✓  154 tests\e2e\trip-list.spec.ts:95:3 › Trip List layout 768×900 (1.7s)
+  ✓  155 tests\e2e\trip-list.spec.ts:95:3 › Trip List layout 402×874 (1.5s)
+  ✓  156 tests\e2e\trip-list.spec.ts:95:3 › Trip List layout 320×600 (1.6s)
+  ✓  157 tests\e2e\trip-list.spec.ts:223:3 › Trip List local filters search and date sorting 1440 (1.5s)
+  ✓  158 tests\e2e\trip-list.spec.ts:295:3 › Trip List read states preserve filters and Guest cannot read 1440 (1.6s)
+  ✓  159 tests\e2e\trip-list.spec.ts:223:3 › Trip List local filters search and date sorting 402 (1.3s)
+  ✓  160 tests\e2e\trip-list.spec.ts:295:3 › Trip List read states preserve filters and Guest cannot read 402 (1.6s)
+  ✓  161 tests\e2e\trip-list.spec.ts:350:1 › Trip List preserves filter search and sort across viewport changes (1.1s)
+  ✓  162 tests\e2e\trip-list.spec.ts:370:1 › Trip List keyboard links open six Overview routes and Back returns to list (1.7s)
+  ✓  163 tests\e2e\trip-list.spec.ts:397:1 › Trip List Mobile drawer keyboard backdrop and same-route navigation restore focus (2.1s)
+  ✓  164 tests\e2e\trip-list.spec.ts:449:1 › Trip List route aliases preserve layout and authenticated permission policy (1.7s)
+  ✓  165 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 1440x900 (1.4s)
+  ✓  166 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 1366x800 (1.2s)
+  ✓  167 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 1101x800 (1.3s)
+  ✓  168 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 1024x900 (1.3s)
+  ✓  169 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 820x900 (1.4s)
+  ✓  170 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 769x900 (1.3s)
+  ✓  171 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 768x900 (1.4s)
+  ✓  172 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 402x900 (1.3s)
+  ✓  174 tests\e2e\trip-map.spec.ts:80:1 › Collapsed sidebar icon points toward the content (448ms)
+  ✓  173 tests\e2e\trip-map.spec.ts:42:3 › Map layout and place scrolling fit 320x700 (1.3s)
+  ✓  175 tests\e2e\trip-map.spec.ts:88:1 › Map filters use semantic status colors and accessible targets (1.3s)
+  ✓  176 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 2560x960 (1.3s)
+  ✓  178 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1440x960 (1.3s)
+  ✓  177 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1920x960 (1.3s)
+  ✓  179 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1440x800 (1.3s)
+  ✓  180 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1366x600 (1.3s)
+  ✓  181 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1366x520 (1.3s)
+  ✓  182 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1200x800 (1.3s)
+  ✓  183 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1101x800 (1.3s)
+  ✓  184 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1100x800 (1.3s)
+  ✓  185 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 1024x768 (1.3s)
+  ✓  186 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 820x768 (1.3s)
+  ✓  187 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 768x1024 (1.2s)
+  ✓  188 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 402x874 (1.3s)
+  ✓  189 tests\e2e\trip-overview.spec.ts:92:3 › Trip overview reaches the final content at 320x600 (1.2s)
+  ✓  190 tests\e2e\trip-overview.spec.ts:122:1 › Trip overview uses all available desktop width with the expanded and collapsed sidebar (1.7s)
+  ✓  191 tests\e2e\trip-overview.spec.ts:204:1 › Trip overview workspace grows for a long fifth activity and keeps its end reachable (1.3s)
+  ✓  192 tests\e2e\trip-overview.spec.ts:241:1 › Trip overview keeps navigation, metadata states and scroll boundaries stable (1.4s)
+  ✓  193 tests\e2e\trip-settings.spec.ts:15:3 › Trip Settings view is reachable at 1440x960 (1.2s)
+  ✓  194 tests\e2e\trip-settings.spec.ts:15:3 › Trip Settings view is reachable at 1366x600 (1.2s)
+  ✓  195 tests\e2e\trip-settings.spec.ts:15:3 › Trip Settings view is reachable at 1024x600 (1.1s)
+  ✓  196 tests\e2e\trip-settings.spec.ts:15:3 › Trip Settings view is reachable at 768x1024 (1.2s)
+  ✓  197 tests\e2e\trip-settings.spec.ts:15:3 › Trip Settings view is reachable at 402x874 (1.2s)
+  ✓  198 tests\e2e\trip-settings.spec.ts:15:3 › Trip Settings view is reachable at 320x480 (1.2s)
+  ✓  199 tests\e2e\trip-settings.spec.ts:47:1 › Owner enters edit from Settings, saves supported fields and returns to view (1.2s)
+  ✓  200 tests\e2e\trip-settings.spec.ts:65:1 › Hero edit and mobile drawer both navigate to Settings view (1.5s)
+  ✓  201 tests\e2e\trip-workspace-projections.spec.ts:13:3 › Create Trip preserves a retryable draft and fits 1440x800 (1.2s)
+  ✓  202 tests\e2e\trip-workspace-projections.spec.ts:13:3 › Create Trip preserves a retryable draft and fits 1366x520 (1.2s)
+  ✓  203 tests\e2e\trip-workspace-projections.spec.ts:13:3 › Create Trip preserves a retryable draft and fits 820x800 (1.2s)
+  ✓  204 tests\e2e\trip-workspace-projections.spec.ts:13:3 › Create Trip preserves a retryable draft and fits 768x800 (1.2s)
+  ✓  205 tests\e2e\trip-workspace-projections.spec.ts:13:3 › Create Trip preserves a retryable draft and fits 402x800 (1.3s)
+  ✓  206 tests\e2e\trip-workspace-projections.spec.ts:13:3 › Create Trip preserves a retryable draft and fits 320x640 (1.2s)
+  ✓  207 tests\e2e\trip-workspace-projections.spec.ts:33:3 › read-only workspace projections remain usable at 1440 (3.0s)
+  ✓  208 tests\e2e\trip-workspace-projections.spec.ts:33:3 › read-only workspace projections remain usable at 402 (3.0s)
+  ✓  209 tests\e2e\web-fix-regressions.spec.ts:17:1 › Settings updates keep cached Trip, Plan and shell projections consistent across navigation (1.7s)
+  ✓  210 tests\e2e\web-fix-regressions.spec.ts:42:1 › two tabs preserve edits to different activities and reload the combined draft (6.5s)
+  ✓  211 tests\e2e\web-fix-regressions.spec.ts:67:1 › same-activity conflict preserves typed input until explicit reload or cancel (6.2s)
+  ✓  212 tests\e2e\web-fix-regressions.spec.ts:92:3 › Plan, Map and CreateTrip remain usable with getter storage failure (3.0s)
+  ✓  213 tests\e2e\web-fix-regressions.spec.ts:92:3 › Plan, Map and CreateTrip remain usable with quota storage failure (3.1s)
+  ✓  214 tests\e2e\web-fix-regressions.spec.ts:131:1 › Fund tabs support arrows, wraparound, Home, End and Tab with synchronized panels (1.2s)
+
+
+  1) tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 1440x800 ────────────────────────────
+
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      100912 pixels (ratio 0.04 of all image pixels) are different.
+
+      Snapshot: home-guest-1440.png
+
+    Call log:
+      - Expect "toHaveScreenshot(home-guest-1440.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 100912 pixels (ratio 0.04 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 100912 pixels (ratio 0.04 of all image pixels) are different.
+
+
+      258 |           content: 'details.preview { display: none !important; }',
+      259 |         });
+    > 260 |         await expect(page).toHaveScreenshot('home-guest-1440.png', {
+          |                            ^
+      261 |           animations: 'disabled',
+      262 |           fullPage: true,
+      263 |           maxDiffPixelRatio: 0.03,
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\auth-fixture.spec.ts:260:28
+
+    attachment #1: home-guest-1440 (image/png) ─────────────────────────────────────────────────────
+    Expected: tests\e2e\__screenshots__\win32\auth-fixture.spec.ts\home-guest-1440.png
+    Received: test-results\fixture-preview\auth-fixture-Auth-public-layout-1440x800\home-guest-1440-actual.png
+    Diff:     test-results\fixture-preview\auth-fixture-Auth-public-layout-1440x800\home-guest-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\fixture-preview\auth-fixture-Auth-public-layout-1440x800\error-context.md
+
+  2) tests\e2e\layout-consistency.spec.ts:33:3 › workspace routes share one frame, header and hero at 1440x900 
+
+    Error: locator.boundingBox: Error: strict mode violation: getByRole('region', { name: 'Thông tin chuyến đi' }) resolved to 2 elements:
+        1) <section data-compact="true" class="_hero_clzip_83" data-variant="landscape" aria-label="Thông tin chuyến đi">…</section> aka getByText('Đà Nẵng – Hội An22 – 25/09/20264 thành viênĐang diễn raChỉnh sửaChia sẻ')
+        2) <section class="_card_12wmd_42" aria-labelledby="trip-information-heading">…</section> aka getByText('Thông tin chuyến điChỉnh sửa thông tinTên chuyến điĐà Nẵng – Hội AnĐiểm đến chí')
+
+    Call log:
+      - waiting for getByRole('region', { name: 'Thông tin chuyến đi' })
+
+
+      44 |       await page.goto(`/trips/${tripId}${route.path}`);
+      45 |       const label = `${route.name} @${viewport.width}`;
+    > 46 |       const box = (await hero(page).boundingBox())!;
+         |                                     ^
+      47 |       expect(box, `${label} hero`).not.toBeNull();
+      48 |       near(box.x, expected.x, `${label} hero x`);
+      49 |       near(box.y, expected.y, `${label} hero y`);
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\layout-consistency.spec.ts:46:37
+
+    Error Context: test-results\fixture-preview\layout-consistency-workspa-40cca-header-and-hero-at-1440x900\error-context.md
+
+  3) tests\e2e\layout-consistency.spec.ts:33:3 › workspace routes share one frame, header and hero at 1920x1080 
+
+    Error: locator.boundingBox: Error: strict mode violation: getByRole('region', { name: 'Thông tin chuyến đi' }) resolved to 2 elements:
+        1) <section data-compact="true" class="_hero_clzip_83" data-variant="landscape" aria-label="Thông tin chuyến đi">…</section> aka getByText('Đà Nẵng – Hội An22 – 25/09/20264 thành viênĐang diễn raChỉnh sửaChia sẻ')
+        2) <section class="_card_12wmd_42" aria-labelledby="trip-information-heading">…</section> aka getByText('Thông tin chuyến điChỉnh sửa thông tinTên chuyến điĐà Nẵng – Hội AnĐiểm đến chí')
+
+    Call log:
+      - waiting for getByRole('region', { name: 'Thông tin chuyến đi' })
+
+
+      44 |       await page.goto(`/trips/${tripId}${route.path}`);
+      45 |       const label = `${route.name} @${viewport.width}`;
+    > 46 |       const box = (await hero(page).boundingBox())!;
+         |                                     ^
+      47 |       expect(box, `${label} hero`).not.toBeNull();
+      48 |       near(box.x, expected.x, `${label} hero x`);
+      49 |       near(box.y, expected.y, `${label} hero y`);
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\layout-consistency.spec.ts:46:37
+
+    Error Context: test-results\fixture-preview\layout-consistency-workspa-a3fca-eader-and-hero-at-1920x1080\error-context.md
+
+  4) tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1440x900 
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 4
+    Received length: 0
+    Received array:  []
+
+      78 |     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
+      79 |     const lower = await edges('[data-region="trip-overview-workspace"] > *');
+    > 80 |     expect(kpi).toHaveLength(4);
+         |                 ^
+      81 |     expect(lower).toHaveLength(3);
+      82 |     // Itinerary spans KPI columns 1-2, the map is column 3, the aside is column 4.
+      83 |     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\layout-consistency.spec.ts:80:17
+
+    Error Context: test-results\fixture-preview\layout-consistency-overvie-952c4-re-column-edges-at-1440x900\error-context.md
+
+  5) tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1920x1080 
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 4
+    Received length: 0
+    Received array:  []
+
+      78 |     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
+      79 |     const lower = await edges('[data-region="trip-overview-workspace"] > *');
+    > 80 |     expect(kpi).toHaveLength(4);
+         |                 ^
+      81 |     expect(lower).toHaveLength(3);
+      82 |     // Itinerary spans KPI columns 1-2, the map is column 3, the aside is column 4.
+      83 |     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\layout-consistency.spec.ts:80:17
+
+    Error Context: test-results\fixture-preview\layout-consistency-overvie-c1d58-e-column-edges-at-1920x1080\error-context.md
+
+  6) tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1366x768 
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 4
+    Received length: 0
+    Received array:  []
+
+      78 |     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
+      79 |     const lower = await edges('[data-region="trip-overview-workspace"] > *');
+    > 80 |     expect(kpi).toHaveLength(4);
+         |                 ^
+      81 |     expect(lower).toHaveLength(3);
+      82 |     // Itinerary spans KPI columns 1-2, the map is column 3, the aside is column 4.
+      83 |     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\layout-consistency.spec.ts:80:17
+
+    Error Context: test-results\fixture-preview\layout-consistency-overvie-ea4fd-re-column-edges-at-1366x768\error-context.md
+
+  7) tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1200x800 
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 4
+    Received length: 0
+    Received array:  []
+
+      78 |     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
+      79 |     const lower = await edges('[data-region="trip-overview-workspace"] > *');
+    > 80 |     expect(kpi).toHaveLength(4);
+         |                 ^
+      81 |     expect(lower).toHaveLength(3);
+      82 |     // Itinerary spans KPI columns 1-2, the map is column 3, the aside is column 4.
+      83 |     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e\layout-consistency.spec.ts:80:17
+
+    Error Context: test-results\fixture-preview\layout-consistency-overvie-4b0ff-re-column-edges-at-1200x800\error-context.md
+
+  7 failed
+    tests\e2e\auth-fixture.spec.ts:208:3 › Auth/public layout 1440x800 ─────────────────────────────
+    tests\e2e\layout-consistency.spec.ts:33:3 › workspace routes share one frame, header and hero at 1440x900 
+    tests\e2e\layout-consistency.spec.ts:33:3 › workspace routes share one frame, header and hero at 1920x1080 
+    tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1440x900 
+    tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1920x1080 
+    tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1366x768 
+    tests\e2e\layout-consistency.spec.ts:66:3 › overview KPI and workspace rows share column edges at 1200x800 
+  207 passed (3.7m)
+file:///d:/Desktop/NHAP/PBL6/Wolfari-web/scripts/e2e-built.mjs:19
+      code === 0 ? accept() : reject(Error(`CHILD_EXIT_${code ?? signal}`)),
+                                     ^
+
+Error: CHILD_EXIT_1
+    at ChildProcess.<anonymous> (file:///d:/Desktop/NHAP/PBL6/Wolfari-web/scripts/e2e-built.mjs:19:38)
+    at Object.onceWrapper (node:events:631:26)
+    at ChildProcess.emit (node:events:509:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:295:12)
+
+Node.js v24.19.0
+exit 1

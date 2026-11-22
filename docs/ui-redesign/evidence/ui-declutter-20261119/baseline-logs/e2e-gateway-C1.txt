@@ -1,0 +1,331 @@
+[36mvite v8.3.4 [32mbuilding client environment for production...[36m[39m
+transforming...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 2919 modules transformed.
+rendering chunks...
+computing gzip size...
+test-results/build/gateway/index.html                                                      1.18 kB │ gzip:   0.50 kB
+test-results/build/gateway/assets/44363-Dnc2vCAu.png                                       1.86 kB
+test-results/build/gateway/assets/b329f-BLz362UB.svg                                       4.17 kB │ gzip:   1.23 kB
+test-results/build/gateway/assets/95ec9-SDrSm5cj.svg                                       4.53 kB │ gzip:   1.68 kB
+test-results/build/gateway/assets/969e1-CmrqPxZh.svg                                       4.54 kB │ gzip:   1.68 kB
+test-results/build/gateway/assets/9ca6f-D5Z7ULiw.svg                                       4.83 kB │ gzip:   1.68 kB
+test-results/build/gateway/assets/32882-BuR1_srp.svg                                       5.77 kB │ gzip:   2.35 kB
+test-results/build/gateway/assets/039dc-MMX5ou6V.svg                                       5.86 kB │ gzip:   1.28 kB
+test-results/build/gateway/assets/patrick-hand-vietnamese-400-normal-CZjY324Y.woff         6.49 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-400-normal-BuGn0gnm.woff       6.56 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-600-normal-DkpCIyan.woff       6.88 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-500-normal-CfdwVo8-.woff       6.88 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-700-normal-By_5yT39.woff       6.89 kB
+test-results/build/gateway/assets/5a593-BarKZqrj.svg                                       8.24 kB │ gzip:   2.45 kB
+test-results/build/gateway/assets/a16a3-DofLal5J.svg                                       8.28 kB │ gzip:   1.90 kB
+test-results/build/gateway/assets/ddfc7-BMnqBe8B.png                                       9.62 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-400-normal-CRcqvyg1.woff2     11.53 kB
+test-results/build/gateway/assets/patrick-hand-vietnamese-400-normal-65jA92mZ.woff2       11.57 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-500-normal-DREgrEoJ.woff2     12.17 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-600-normal-nyU-ZL2p.woff2     12.17 kB
+test-results/build/gateway/assets/be-vietnam-pro-vietnamese-700-normal-Csr0PCuG.woff2     12.46 kB
+test-results/build/gateway/assets/4bccc-D7t6Ohdm.png                                      12.97 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-400-normal-bXgqVju9.woff           16.43 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-700-normal-C2EtzaOi.woff           16.90 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-500-normal-BJkVuMHw.woff           16.99 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-600-normal-5IO4e7bK.woff           17.01 kB
+test-results/build/gateway/assets/patrick-hand-latin-400-normal-Df9_VoRQ.woff             17.65 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-400-normal-PpnXBOrz.woff2          21.16 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-500-normal-B6LVzGNe.woff2          21.89 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-600-normal-BZDkUTrt.woff2          22.03 kB
+test-results/build/gateway/assets/be-vietnam-pro-latin-700-normal-DlW1Zbsh.woff2          22.15 kB
+test-results/build/gateway/assets/4ff86-DqY-Irqy.png                                      23.67 kB
+test-results/build/gateway/assets/patrick-hand-latin-400-normal-B7HHA2Vw.woff2            23.94 kB
+test-results/build/gateway/assets/1dc61-BJI8CjGz.png                                      27.60 kB
+test-results/build/gateway/assets/916ba-zzTcfguj.png                                      32.61 kB
+test-results/build/gateway/assets/6059f-2gKAuTut.png                                      40.02 kB
+test-results/build/gateway/assets/42524-Bpp6kOMc.png                                      44.70 kB
+test-results/build/gateway/assets/a84f7-KRRgzD-S.png                                      47.80 kB
+test-results/build/gateway/assets/3a3f8-Cl-_OnZw.png                                      48.72 kB
+test-results/build/gateway/assets/8b8b5-DkVHiSbk.png                                      72.61 kB
+test-results/build/gateway/assets/2dc85-DROnVtLO.png                                     335.60 kB
+test-results/build/gateway/assets/16cac-ZW08gMZN.png                                     475.43 kB
+test-results/build/gateway/assets/06bd1-9iR9yAvz.png                                   2,698.78 kB
+test-results/build/gateway/assets/CapabilityNote-CTRimchz.css                              0.46 kB │ gzip:   0.25 kB
+test-results/build/gateway/assets/TripOverviewPage-CHFHEYBX.css                            1.42 kB │ gzip:   0.55 kB
+test-results/build/gateway/assets/Notifications-BHi1lXw5.css                               1.71 kB │ gzip:   0.63 kB
+test-results/build/gateway/assets/Button-GjSGLd3K.css                                      2.84 kB │ gzip:   0.94 kB
+test-results/build/gateway/assets/Invitations-DF5k1fOt.css                                 2.94 kB │ gzip:   0.89 kB
+test-results/build/gateway/assets/Drawer-BgujksgV.css                                      3.19 kB │ gzip:   1.05 kB
+test-results/build/gateway/assets/ProfilePage-vT_RcfZM.css                                 4.53 kB │ gzip:   1.24 kB
+test-results/build/gateway/assets/DemoWorkspace-Dz9rF2Cu.css                               4.95 kB │ gzip:   1.41 kB
+test-results/build/gateway/assets/TripSettingsPage-CEdKGNR8.css                            6.21 kB │ gzip:   1.60 kB
+test-results/build/gateway/assets/AuthPage-CrN2pPjL.css                                    7.20 kB │ gzip:   2.05 kB
+test-results/build/gateway/assets/GatewayFundPage-CKtWQrCZ.css                             9.73 kB │ gzip:   2.24 kB
+test-results/build/gateway/assets/PackingPage--bj6JxCX.css                                11.83 kB │ gzip:   2.85 kB
+test-results/build/gateway/assets/TripHero-D4MoW9V9.css                                   15.19 kB │ gzip:   3.47 kB
+test-results/build/gateway/assets/PriceWatchPage-DuEITpPx.css                             15.38 kB │ gzip:   3.27 kB
+test-results/build/gateway/assets/GeoapifyMap-OYnlHoig.css                                15.93 kB │ gzip:   6.70 kB
+test-results/build/gateway/assets/DressCodePage-0GlisSrM.css                              15.99 kB │ gzip:   3.13 kB
+test-results/build/gateway/assets/MembersPage-BqQsxzdy.css                                16.55 kB │ gzip:   3.26 kB
+test-results/build/gateway/assets/CreateTripPage-D3agAJgK.css                             17.53 kB │ gzip:   3.77 kB
+test-results/build/gateway/assets/PlanPage-DMCmYNNH.css                                   23.26 kB │ gzip:   4.70 kB
+test-results/build/gateway/assets/TripMapPage-BiMxTMu4.css                                25.61 kB │ gzip:   5.25 kB
+test-results/build/gateway/assets/TripListPage-CdfpX7Gb.css                               51.67 kB │ gzip:   7.65 kB
+test-results/build/gateway/assets/index-CkOWYKf9.css                                     113.47 kB │ gzip:  22.10 kB
+test-results/build/gateway/assets/trip-query-keys-BXnqlEhj.js                              0.09 kB │ gzip:   0.09 kB
+test-results/build/gateway/assets/plan-BGd-BzLW.js                                         0.12 kB │ gzip:   0.11 kB
+test-results/build/gateway/assets/CapabilityNote-otll2j1X.js                               0.24 kB │ gzip:   0.20 kB
+test-results/build/gateway/assets/Notifications.module-7Mf6bFP-.js                         0.27 kB │ gzip:   0.17 kB
+test-results/build/gateway/assets/DemoWorkspace.module-DvhYzKJ-.js                         0.41 kB │ gzip:   0.23 kB
+test-results/build/gateway/assets/QueryClientProvider-B33L5-p8.js                          0.44 kB │ gzip:   0.30 kB
+test-results/build/gateway/assets/use-identity-task-DQXKvuq8.js                            0.44 kB │ gzip:   0.30 kB
+test-results/build/gateway/assets/TripPlanBoundary-BvQ3yFAk.js                             0.47 kB │ gzip:   0.28 kB
+test-results/build/gateway/assets/Textarea-CFdPi1UV.js                                     0.48 kB │ gzip:   0.30 kB
+test-results/build/gateway/assets/command-failure-BE14gbdL.js                              0.56 kB │ gzip:   0.37 kB
+test-results/build/gateway/assets/browser-storage-B4ajCdc-.js                              0.72 kB │ gzip:   0.36 kB
+test-results/build/gateway/assets/rolldown-runtime-XKyaHtl9.js                             0.72 kB │ gzip:   0.42 kB
+test-results/build/gateway/assets/2e748-DMbBi9k-.js                                        1.00 kB │ gzip:   0.48 kB
+test-results/build/gateway/assets/trip-list-query-DzgDhBj2.js                              1.01 kB │ gzip:   0.64 kB
+test-results/build/gateway/assets/Button-Df_AYe1u.js                                       1.02 kB │ gzip:   0.49 kB
+test-results/build/gateway/assets/useInfiniteQuery-DSfLNHQ6.js                             1.11 kB │ gzip:   0.47 kB
+test-results/build/gateway/assets/bd989-VLPlw6fL.js                                        1.28 kB │ gzip:   0.59 kB
+test-results/build/gateway/assets/AuthPage.module-B1BuUYlg.js                              1.31 kB │ gzip:   0.70 kB
+test-results/build/gateway/assets/AccountMenu-3he9cA7a.js                                  1.44 kB │ gzip:   0.64 kB
+test-results/build/gateway/assets/Drawer-CgP0bf8Z.js                                       1.64 kB │ gzip:   0.83 kB
+test-results/build/gateway/assets/Invitations.module-Bf80GrRa.js                           1.66 kB │ gzip:   0.90 kB
+test-results/build/gateway/assets/Input-B9Ds9nwt.js                                        1.69 kB │ gzip:   0.89 kB
+test-results/build/gateway/assets/Notifications-pckmyi4w.js                                1.89 kB │ gzip:   0.98 kB
+test-results/build/gateway/assets/use-trip-plan-snapshot-BJupBihg.js                       2.64 kB │ gzip:   1.13 kB
+test-results/build/gateway/assets/04603-Bfu0HwZ_.js                                        3.41 kB │ gzip:   0.95 kB
+test-results/build/gateway/assets/OperationStatus-DIW31NAZ.js                              3.57 kB │ gzip:   1.70 kB
+test-results/build/gateway/assets/info-CupgfYdB.js                                         3.68 kB │ gzip:   1.80 kB
+test-results/build/gateway/assets/NotificationInbox-CS6ERSvg.js                            3.74 kB │ gzip:   1.80 kB
+test-results/build/gateway/assets/TripHero-CNgY8dKR.js                                     4.97 kB │ gzip:   2.07 kB
+test-results/build/gateway/assets/dist-DCiHuZJ4.js                                         5.22 kB │ gzip:   1.94 kB
+test-results/build/gateway/assets/IdentityActionPage-BBZbtpdx.js                           6.02 kB │ gzip:   2.46 kB
+test-results/build/gateway/assets/plan-draft-DE8EkJEM.js                                   6.29 kB │ gzip:   2.42 kB
+test-results/build/gateway/assets/InvitationPage-BdbsHS8b.js                               7.04 kB │ gzip:   2.91 kB
+test-results/build/gateway/assets/react-BZk3575t.js                                        7.87 kB │ gzip:   3.00 kB
+test-results/build/gateway/assets/AuthPage-BXtlpRZA.js                                     9.87 kB │ gzip:   4.01 kB
+test-results/build/gateway/assets/FundPage-D-P5FpOp.js                                    11.17 kB │ gzip:   3.91 kB
+test-results/build/gateway/assets/SuccessToast-BTqEXLby.js                                11.52 kB │ gzip:   4.24 kB
+test-results/build/gateway/assets/Ui-DULAtI_A.js                                          12.70 kB │ gzip:   4.43 kB
+test-results/build/gateway/assets/GeoapifyMap-CxD-r_lV.js                                 13.35 kB │ gzip:   5.45 kB
+test-results/build/gateway/assets/TripOverviewPage-DbfDMyzJ.js                            15.45 kB │ gzip:   4.97 kB
+test-results/build/gateway/assets/ProfilePage-_Rv56RO7.js                                 16.61 kB │ gzip:   6.14 kB
+test-results/build/gateway/assets/PackingPage-DCRU3obq.js                                 17.33 kB │ gzip:   6.33 kB
+test-results/build/gateway/assets/TripSettingsPage-BQDZESfs.js                            20.43 kB │ gzip:   7.08 kB
+test-results/build/gateway/assets/GatewayFundPage-CXmm-96D.js                             22.76 kB │ gzip:   7.29 kB
+test-results/build/gateway/assets/DressCodePage-BboJVSXN.js                               23.44 kB │ gzip:   6.26 kB
+test-results/build/gateway/assets/TripListPage-Dk69DxIE.js                                32.61 kB │ gzip:   8.65 kB
+test-results/build/gateway/assets/PriceWatchPage-Kunjnes4.js                              33.72 kB │ gzip:  11.31 kB
+test-results/build/gateway/assets/es2015-Bvq7m7Rr.js                                      34.57 kB │ gzip:  12.00 kB
+test-results/build/gateway/assets/CreateTripPage-IhdF37Wn.js                              38.13 kB │ gzip:  10.68 kB
+test-results/build/gateway/assets/motion-features-BrVrLMI6.js                             45.53 kB │ gzip:  17.38 kB
+test-results/build/gateway/assets/MembersPage-B4S0NTTc.js                                 47.47 kB │ gzip:  12.98 kB
+test-results/build/gateway/assets/dist-3gvUGlZI.js                                        51.17 kB │ gzip:  17.94 kB
+test-results/build/gateway/assets/TripMapPage-CxHB2_NM.js                                 71.38 kB │ gzip:  21.51 kB
+test-results/build/gateway/assets/scene-assets-CJ5eJKcD.js                                71.75 kB │ gzip:  12.74 kB
+test-results/build/gateway/assets/chunk-OB3PAWPO-BRakk17R.js                              93.77 kB │ gzip:  31.12 kB
+test-results/build/gateway/assets/leaflet-src-Dvea1573.js                                148.62 kB │ gzip:  43.33 kB
+test-results/build/gateway/assets/PlanPage-ug3BuwOE.js                                   259.11 kB │ gzip:  82.84 kB
+test-results/build/gateway/assets/index-ClZOlbLF.js                                      395.13 kB │ gzip: 120.94 kB
+
+[32m✓ built in 1.24s[39m
+
+Running 148 tests using 2 workers
+
+  ✓    1 tests\e2e-gateway\admin-placeholder.spec.ts:4:3 › Gateway Admin role guard and truthful placeholder at Web 402 (2.4s)
+  ✓    2 tests\e2e-gateway\admin-placeholder.spec.ts:4:3 › Gateway Admin role guard and truthful placeholder at Web 1440 (2.7s)
+  ✓    3 tests\e2e-gateway\cp05-create-axe.spec.ts:9:3 › CP05 Gateway Create axe review 1440 (2.7s)
+  ✓    4 tests\e2e-gateway\cp05-create-axe.spec.ts:9:3 › CP05 Gateway Create axe review 402 (2.6s)
+  ✓    5 tests\e2e-gateway\cp05-create-modal.spec.ts:8:3 › CP05 Gateway Create success dialog focus and accessibility 1440 (3.5s)
+  ✓    6 tests\e2e-gateway\cp05-create-modal.spec.ts:8:3 › CP05 Gateway Create success dialog focus and accessibility 402 (3.8s)
+  ✓    8 tests\e2e-gateway\cp06-composition.spec.ts:18:3 › CP06 HTTP mock: Plan composition and location-create 820x900 (4.1s)
+  ✓    7 tests\e2e-gateway\cp06-composition.spec.ts:18:3 › CP06 HTTP mock: Plan composition and location-create 1440x960 (4.8s)
+  ✓   10 tests\e2e-gateway\cp06-composition.spec.ts:18:3 › CP06 HTTP mock: Plan composition and location-create 320x600 (4.0s)
+  ✓    9 tests\e2e-gateway\cp06-composition.spec.ts:18:3 › CP06 HTTP mock: Plan composition and location-create 402x874 (4.9s)
+  ✓   12 tests\e2e-gateway\cp06-editor.spec.ts:10:3 › CP06 HTTP mock: centered activity editor remains usable at 1440px (2.6s)
+  ✓   11 tests\e2e-gateway\cp06-composition.spec.ts:18:3 › CP06 HTTP mock: Plan composition and location-create 1366x520 (4.1s)
+  ✓   13 tests\e2e-gateway\cp06-editor.spec.ts:10:3 › CP06 HTTP mock: centered activity editor remains usable at 320px (3.0s)
+  ✓   14 tests\e2e-gateway\cp06-readonly.spec.ts:6:1 › HTTP mock: revoked Plan edit rights keep day and pool navigation read only (3.5s)
+  ✓   16 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: map 820x900 (2.8s)
+  ✓   15 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: map 1440x960 (4.5s)
+  ✓   18 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: map 320x600 (2.7s)
+  ✓   17 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: map 402x874 (4.5s)
+  ✓   19 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: map 1366x520 (2.2s)
+  ✓   21 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: dress-code 820x900 (2.2s)
+  ✓   20 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: dress-code 1440x960 (4.2s)
+  ✓   23 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: dress-code 320x600 (2.6s)
+  ✓   22 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: dress-code 402x874 (4.2s)
+  ✓   24 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: dress-code 1366x520 (2.8s)
+  ✓   25 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: packing 1440x960 (3.7s)
+  ✓   26 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: packing 820x900 (2.4s)
+  ✓   28 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: packing 320x600 (2.8s)
+  ✓   27 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: packing 402x874 (4.1s)
+  ✓   29 tests\e2e-gateway\cp07-composition.spec.ts:196:5 › CP07 HTTP mock composition: packing 1366x520 (2.4s)
+  ✓   31 tests\e2e-gateway\cp07-projections.spec.ts:95:1 › CP07 Map reads only saved locations and filters scheduled/unscheduled locally (2.2s)
+  ✓   30 tests\e2e-gateway\cp07-native-zoom.spec.ts:125:1 › CP07 Gateway Map, Dress and Packing fit native Chrome 200% zoom (6.1s)
+  ✓   32 tests\e2e-gateway\cp07-projections.spec.ts:130:1 › CP07 Dress projects real scope/description and local scope filter without save controls (2.2s)
+  ✓   33 tests\e2e-gateway\cp07-projections.spec.ts:192:1 › CP07 Packing reports real progress and renders completed status without write actions (2.5s)
+  ✓   34 tests\e2e-gateway\cp07-projections.spec.ts:248:1 › CP07 empty Map/Dress/Packing remain readable and issue no writes (4.1s)
+  ✓   35 tests\e2e-gateway\cp07-projections.spec.ts:305:3 › CP07 map holds loading until Plan read completes (2.1s)
+  ✓   36 tests\e2e-gateway\cp07-projections.spec.ts:305:3 › CP07 dress-code holds loading until Plan read completes (2.2s)
+  ✓   37 tests\e2e-gateway\cp07-projections.spec.ts:305:3 › CP07 packing holds loading until Plan read completes (2.2s)
+  ✓   38 tests\e2e-gateway\cp07-projections.spec.ts:337:3 › CP07 map exposes Plan read error and retry (2.7s)
+  ✓   39 tests\e2e-gateway\cp07-projections.spec.ts:337:3 › CP07 dress-code exposes Plan read error and retry (2.8s)
+  ✓   41 tests\e2e-gateway\cp07-projections.spec.ts:349:1 › CP07 read permission denial blocks all three projection routes (1.6s)
+  ✓   40 tests\e2e-gateway\cp07-projections.spec.ts:337:3 › CP07 packing exposes Plan read error and retry (2.6s)
+  ✓   42 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: members 1440x960 (3.3s)
+  ✓   43 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: members 820x900 (2.5s)
+  ✓   44 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: members 768x1024 (2.7s)
+  ✓   45 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: members 402x874 (3.4s)
+  ✓   46 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: members 320x600 (2.1s)
+  ✓   47 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: members 1366x520 (2.7s)
+  ✓   48 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: invitations 1440x960 (2.7s)
+  ✓   49 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: invitations 820x900 (2.7s)
+  ✓   50 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: invitations 768x1024 (2.2s)
+  ✓   51 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: invitations 402x874 (3.2s)
+  ✓   52 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: invitations 320x600 (2.6s)
+  ✓   53 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: invitations 1366x520 (2.7s)
+  ✓   54 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: policy 1440x960 (3.0s)
+  ✓   56 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: policy 768x1024 (2.2s)
+  ✓   55 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: policy 820x900 (2.7s)
+  ✓   58 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: policy 320x600 (2.8s)
+  ✓   57 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: policy 402x874 (3.5s)
+  ✓   59 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: policy 1366x520 (2.6s)
+  ✓   60 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: recipient 1440x960 (2.6s)
+  ✓   61 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: recipient 820x900 (1.7s)
+  ✓   62 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: recipient 768x1024 (1.8s)
+  ✓   63 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: recipient 402x874 (2.5s)
+  ✓   64 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: recipient 320x600 (2.0s)
+  ✓   65 tests\e2e-gateway\cp08-composition.spec.ts:20:5 › CP08 HTTP mock composition: recipient 1366x520 (1.8s)
+  ✓   66 tests\e2e-gateway\cp08-lifecycle.spec.ts:8:1 › HTTP mock: Owner removal stays pending until operation confirmation and keeps status across tabs (2.5s)
+  ✓   67 tests\e2e-gateway\cp08-lifecycle.spec.ts:70:1 › HTTP mock: Member leave keeps the same intent after unknown outcome and exposes confirmed result after access loss (2.4s)
+  ✓   68 tests\e2e-gateway\cp08-native-zoom.spec.ts:35:1 › CP08 Members, invitations, policy and recipient fit native Chrome 200% zoom (4.4s)
+  ✓   69 tests\e2e-gateway\cp11-plan-native-zoom.spec.ts:33:1 › CP11 HTTP mock: Plan navigation and centered editor fit native Chrome 200% zoom (4.0s)
+  ✓   70 tests\e2e-gateway\cp11-shell-current.spec.ts:5:1 › CP11 HTTP mock: Trip Drawer has one current page and preserves account navigation (4.0s)
+  ✓   71 tests\e2e-gateway\finance-operations.spec.ts:7:1 › HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; pagination does not manufacture balance (5.2s)
+  ✓   72 tests\e2e-gateway\finance-operations.spec.ts:159:1 › HTTP mock: a not-enabled Fund shows the setup form and stacks context on narrow Web (2.6s)
+  ✓   74 tests\e2e-gateway\identity.spec.ts:13:1 › login, profile save, private avatar replacement and paginated session revoke (2.2s)
+  ✓   73 tests\e2e-gateway\finance-refresh.spec.ts:6:1 › HTTP mock: Finance waits for authoritative refresh before a new intent and preserves an already-open draft on conflict (3.2s)
+  ✓   75 tests\e2e-gateway\identity.spec.ts:50:1 › profile conflict retains draft and uses refreshed version only on explicit retry (1.3s)
+  ✓   76 tests\e2e-gateway\identity.spec.ts:68:1 › avatar attach error remains explicit and preserves the old picture (1.5s)
+  ✓   77 tests\e2e-gateway\identity.spec.ts:85:1 › uncertain password change clears inputs, prevents replay and offers sign-in (1.7s)
+  ✓   78 tests\e2e-gateway\identity.spec.ts:106:1 › password change rejects bad credentials, then clears the session on success (1.7s)
+  ✓   79 tests\e2e-gateway\identity.spec.ts:147:1 › later session page failure preserves loaded items and retry can recover (1.9s)
+  ✓   80 tests\e2e-gateway\identity.spec.ts:163:1 › expiry during a private read clears profile and redirects without reloading (1.6s)
+  ✓   81 tests\e2e-gateway\identity.spec.ts:175:1 › reset rejects a missing token locally and an expired token without clearing the active session (1.1s)
+  ✓   82 tests\e2e-gateway\identity.spec.ts:196:1 › private queries wait for bootstrap and anonymous redirect preserves returnTo (513ms)
+  ✓   83 tests\e2e-gateway\identity.spec.ts:213:1 › expired session redirects without showing private profile data (1.2s)
+  ✓   84 tests\e2e-gateway\identity.spec.ts:225:1 › verification scrubs token, prevents repeat submission, then notifies login (1.5s)
+  ✓   86 tests\e2e-gateway\identity.spec.ts:263:3 › verification failure 400 stays on page with a safe message (689ms)
+  ✓   87 tests\e2e-gateway\identity.spec.ts:263:3 › verification failure 429 stays on page with a safe message (526ms)
+  ✓   85 tests\e2e-gateway\identity.spec.ts:241:1 › password recovery uses a generic notice, reset token is scrubbed and login follows success (2.1s)
+  ✓   88 tests\e2e-gateway\identity.spec.ts:263:3 › verification failure 503 stays on page with a safe message (551ms)
+  ✓   89 tests\e2e-gateway\identity.spec.ts:277:1 › registration accepted does not authenticate and runtime pending is truthful (947ms)
+  ✓   90 tests\e2e-gateway\identity.spec.ts:305:3 › Gateway profile responsive and keyboard controls at 1440 (1.8s)
+  ✓   91 tests\e2e-gateway\identity.spec.ts:305:3 › Gateway profile responsive and keyboard controls at 768 (1.7s)
+  ✓   92 tests\e2e-gateway\identity.spec.ts:305:3 › Gateway profile responsive and keyboard controls at 402 (1.6s)
+  ✓   93 tests\e2e-gateway\identity.spec.ts:305:3 › Gateway profile responsive and keyboard controls at 320 (1.6s)
+  ✓   95 tests\e2e-gateway\invitations.spec.ts:58:1 › HTTP mock: anonymous deep link scrubs token, returns through login, accepts, and opens Trip (751ms)
+  ✓   96 tests\e2e-gateway\invitations.spec.ts:84:1 › HTTP mock: invitation decline has a terminal confirmation on mobile (589ms)
+  ✓   97 tests\e2e-gateway\invitations.spec.ts:101:1 › HTTP mock: keyboard activation keeps invitation response accessible and terminal (562ms)
+  ✓   94 tests\e2e-gateway\invitations.spec.ts:6:1 › HTTP mock: Owner creates EMAIL/LINK and explicitly manages pending invitations (3.1s)
+  ✓   98 tests\e2e-gateway\members-policy.spec.ts:14:1 › HTTP mock: Members pagination preserves opaque cursors, deduplicates IDs, and reveals departed rows only on request (2.7s)
+  ✓   99 tests\e2e-gateway\members-policy.spec.ts:48:1 › HTTP mock: a later-page read error keeps loaded rows and retry uses the same cursor (2.7s)
+  ✓  101 tests\e2e-gateway\members-policy.spec.ts:106:1 › HTTP mock: policy conflict refetches membership revision and requires a new explicit submission (2.3s)
+  ✓  100 tests\e2e-gateway\members-policy.spec.ts:71:1 › HTTP mock: active Owner saves basic policy and confirms it from the refreshed Trip projection (2.7s)
+  ✓  102 tests\e2e-gateway\members-policy.spec.ts:139:1 › HTTP mock: unknown policy outcome is not called saved and retry reuses the same intent (3.3s)
+  ✓  103 tests\e2e-gateway\members-policy.spec.ts:169:1 › HTTP mock: SELECTED uses membership IDs and OWNER_ONLY preserves inactive assignments after reload (3.9s)
+  ✓  104 tests\e2e-gateway\members-policy.spec.ts:203:1 › HTTP mock: a Member cannot open or write Plan policy (2.4s)
+  -  106 tests\e2e-gateway\places-leaflet.spec.ts:3:1 › HTTP mock tiles failure: real Leaflet pins, selection, attribution and manual coordinates
+  -  107 tests\e2e-gateway\places-overture.spec.ts:103:1 › HTTP mock (a): without a keyword the map loads by bbox, clusters and selects a pin
+  -  108 tests\e2e-gateway\places-overture.spec.ts:180:1 › HTTP mock (a2): a cluster opens with the keyboard (Enter) like a click
+  ✓  105 tests\e2e-gateway\members-policy.spec.ts:218:1 › HTTP mock: an archived Trip keeps Owner policy read-only without writes (2.5s)
+  -  109 tests\e2e-gateway\places-overture.spec.ts:206:1 › HTTP mock (c): BBOX_TOO_LARGE and zoom < 11 ask to zoom in without loading
+  ✓  110 tests\e2e-gateway\places-overture.spec.ts:258:1 › HTTP mock (b): group chip sends category, keeps the keyword and survives reload (3.6s)
+  ✓  111 tests\e2e-gateway\places-overture.spec.ts:328:1 › HTTP mock (d): an Overture POI shows its provenance and is added to Day 2 (4.4s)
+  -  113 tests\e2e-gateway\places-overture.spec.ts:507:1 › HTTP mock (f): bbox explore never auto-picks a result; a click or pin does
+  ✓  112 tests\e2e-gateway\places-overture.spec.ts:444:1 › HTTP mock (e): a pre-Overture backend keeps the previous behaviour (2.7s)
+  ✓  114 tests\e2e-gateway\places-overture.spec.ts:544:3 › HTTP mock (g) DoD step 2: "cau rong" keeps the golden place first, labelled Wolfari and auto-picked (2.8s)
+  ✓  115 tests\e2e-gateway\places-overture.spec.ts:544:3 › HTTP mock (g) DoD step 2: "cho han" keeps the golden place first, labelled Wolfari and auto-picked (2.2s)
+  ✓  116 tests\e2e-gateway\places-overture.spec.ts:544:3 › HTTP mock (g) DoD step 2: "ba na" keeps the golden place first, labelled Wolfari and auto-picked (2.8s)
+  ✓  117 tests\e2e-gateway\places-overture.spec.ts:606:1 › HTTP mock (h) W14: search starts from the Trip's first saved place (2.6s)
+  ✓  119 tests\e2e-gateway\places-overture.spec.ts:715:1 › HTTP mock (e2): a backend that ignores bbox and lacks the new fields still works (2.8s)
+  ✘  118 tests\e2e-gateway\places-overture.spec.ts:646:1 › HTTP mock (i): a long category shortens or hides; province and source + date never truncate (3.2s)
+  ✓  120 tests\e2e-gateway\places-provider.spec.ts:7:3 › HTTP mock: explicit POI search, save, attach and reload (1440) (4.7s)
+  ✓  121 tests\e2e-gateway\places-provider.spec.ts:7:3 › HTTP mock: explicit POI search, save, attach and reload (390) (5.2s)
+  ✓  122 tests\e2e-gateway\places-provider.spec.ts:143:1 › HTTP mock: viewer cannot save manual pins (2.5s)
+  ✓  123 tests\e2e-gateway\places-provider.spec.ts:152:1 › HTTP mock: existing checkbox recovers the same save after reload, then removes the pin (4.1s)
+  ✓  124 tests\e2e-gateway\places-provider.spec.ts:248:1 › HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that day (4.4s)
+  ✓  125 tests\e2e-gateway\plan.spec.ts:9:3 › HTTP mock: Plan CRUD, completion and full reorder (desktop) (4.1s)
+  ✓  126 tests\e2e-gateway\plan.spec.ts:9:3 › HTTP mock: Plan CRUD, completion and full reorder (mobile) (4.4s)
+  ✓  127 tests\e2e-gateway\plan.spec.ts:55:1 › HTTP mock: Gateway exposes only the shared server Plan, never a competing local draft editor (2.1s)
+  ✓  128 tests\e2e-gateway\plan.spec.ts:69:1 › HTTP mock: Plan editor dialog remains scrollable at 2x CSS zoom and returns keyboard focus (2.9s)
+  ✓  129 tests\e2e-gateway\price-observations-cp10.spec.ts:8:1 › Gateway Price Watch keeps loaded observations through a cursor error without inventing a fare (3.9s)
+  ✓  130 tests\e2e-gateway\timeline-interaction.spec.ts:16:1 › Gateway drag saves one PATCH with Trip-wide position, cancels safely and moves across days (4.3s)
+  ✓  131 tests\e2e-gateway\timeline-interaction.spec.ts:59:1 › Gateway timed drag is blocked with a detail path; a conflict keeps the draft and revoked rights block writes (3.4s)
+  ✓  132 tests\e2e-gateway\timeline-interaction.spec.ts:97:1 › Gateway keyboard drag and split resize remain operable without a mouse (2.8s)
+  ✓  133 tests\e2e-gateway\timeline-interaction.spec.ts:122:1 › Gateway touch drag uses the same reorder contract (3.2s)
+  ✓  134 tests\e2e-gateway\timeline-interaction.spec.ts:157:1 › Gateway compact organizer uses a sheet with Escape and restored focus (2.6s)
+  ✓  136 tests\e2e-gateway\trip-overview.spec.ts:66:1 › HTTP mock: Trip read error does not masquerade as a permission denial or trigger panel reads (611ms)
+  ✓  135 tests\e2e-gateway\trip-overview.spec.ts:14:1 › HTTP mock: overview retains source regions and isolates Plan, Fund and Members results (1.8s)
+  ✓  137 tests\e2e-gateway\trips.spec.ts:7:1 › HTTP mock: login, cursor list, detail, create and conflict-safe settings update (5.8s)
+  ✓  138 tests\e2e-gateway\ui-acceptance.spec.ts:15:3 › Gateway visual and accessibility 1440x900 (19.5s)
+  ✓  139 tests\e2e-gateway\ui-acceptance.spec.ts:15:3 › Gateway visual and accessibility 1366x520 (14.2s)
+  ✓  140 tests\e2e-gateway\ui-acceptance.spec.ts:15:3 › Gateway visual and accessibility 820x900 (12.0s)
+  ✓  141 tests\e2e-gateway\ui-acceptance.spec.ts:15:3 › Gateway visual and accessibility 768x1024 (12.5s)
+  ✓  142 tests\e2e-gateway\ui-acceptance.spec.ts:15:3 › Gateway visual and accessibility 402x874 (11.2s)
+  ✓  143 tests\e2e-gateway\ui-acceptance.spec.ts:15:3 › Gateway visual and accessibility 320x600 (11.9s)
+  ✓  144 tests\e2e-gateway\ui-acceptance.spec.ts:143:1 › Gateway inbox closes on route change and restores body scrolling (2.0s)
+  ✓  146 tests\e2e-gateway\ui-upgrade.spec.ts:4:1 › Gateway Home uses the branded public presentation with real motion and no fixture controls (1.6s)
+  ✓  145 tests\e2e-gateway\ui-acceptance.spec.ts:161:1 › Gateway trip card menu opens settings without exposing unavailable actions (2.6s)
+  ✓  147 tests\e2e-gateway\ui-upgrade.spec.ts:27:1 › Inbox reads from API, survives a later-page error and preferences preserve overrides (2.4s)
+  ✓  148 tests\e2e-gateway\ui-upgrade.spec.ts:128:1 › Price Watch create retries the same idempotency key after unknown result, then pause/resume/stop (9.0s)
+
+
+  1) tests\e2e-gateway\places-overture.spec.ts:646:1 › HTTP mock (i): a long category shortens or hides; province and source + date never truncate 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1372
+    Received:    1396.796875
+
+      685 |   const lineBox = (await line.boundingBox())!;
+      686 |   const sourceBox = (await line.locator('[data-part="source"]').boundingBox())!;
+    > 687 |   expect(sourceBox.x + sourceBox.width).toBeLessThanOrEqual(lineBox.x + lineBox.width + 1);
+          |                                         ^
+      688 |   expect(lineBox.height).toBeLessThan(24);
+      689 |   // The long category gives way: shortened with an ellipsis or hidden entirely.
+      690 |   const category = line.locator('[data-part="category"]');
+        at d:\Desktop\NHAP\PBL6\Wolfari-web\tests\e2e-gateway\places-overture.spec.ts:687:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\gateway-preview\places-overture-HTTP-mock--a7ccb--source-date-never-truncate\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\gateway-preview\places-overture-HTTP-mock--a7ccb--source-date-never-truncate\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\gateway-preview\places-overture-HTTP-mock--a7ccb--source-date-never-truncate\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\gateway-preview\places-overture-HTTP-mock--a7ccb--source-date-never-truncate\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e-gateway\places-overture.spec.ts:646:1 › HTTP mock (i): a long category shortens or hides; province and source + date never truncate 
+  5 skipped
+  142 passed (4.0m)
+file:///d:/Desktop/NHAP/PBL6/Wolfari-web/scripts/e2e-built.mjs:19
+      code === 0 ? accept() : reject(Error(`CHILD_EXIT_${code ?? signal}`)),
+                                     ^
+
+Error: CHILD_EXIT_1
+    at ChildProcess.<anonymous> (file:///d:/Desktop/NHAP/PBL6/Wolfari-web/scripts/e2e-built.mjs:19:38)
+    at Object.onceWrapper (node:events:631:26)
+    at ChildProcess.emit (node:events:509:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:295:12)
+
+Node.js v24.19.0
+exit 1

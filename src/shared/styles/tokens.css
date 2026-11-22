@@ -1,4 +1,4 @@
-/* Sources and Web adaptations: docs/design-system-phase2.md. */
+/* Sources and Web adaptations: docs/archive/implementation/design-system-phase2.md. */
 :root {
   --color-white: #fff;
   --color-ink: #06458b;
@@ -42,9 +42,11 @@
   --font-body: 'Be Vietnam Pro', sans-serif;
   --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
   --font-handwritten: 'Patrick Hand', 'Be Vietnam Pro', cursive;
+  --font-size-caption: 12px;
   --font-size-small: 13px;
   --font-size-label: 14px;
   --font-size-body: 16px;
+  --font-size-subtitle: 18px;
   --font-size-card-title: 20px;
   --font-size-title: 24px;
   --font-size-heading: 32px;
@@ -117,6 +119,18 @@
   --field-text: var(--color-text);
   --field-border-default: var(--color-field-line);
   --card-padding: var(--space-24);
+  /* Shared workspace layout (UI declutter plan C0). Margins stay 18/22: tests lock 220 + 18 and width - 22. */
+  /* Full width, matching develop's TripWorkspace frame; the 1220px cap (D1) is a pending delta. */
+  --workspace-max-width: none;
+  --page-padding-top: 8px;
+  --page-padding-right: 22px;
+  --page-padding-bottom: 24px;
+  --page-padding-left: 18px;
+  --page-header-gap: 14px;
+  --grid-gap: 16px;
+  --side-panel-width: minmax(300px, 372px);
+  --radius-panel: var(--radius-8);
+  --radius-hero: var(--radius-card);
   --card-padding-narrow: var(--space-16);
   --card-surface: var(--color-surface);
   /* Existing timings, not the unapproved CP02 motion proposals. */

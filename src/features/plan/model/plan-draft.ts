@@ -19,11 +19,6 @@ export interface PlanDraftPayloadV1 {
   readonly activities: readonly PlanDraftActivity[];
 }
 
-export interface PlanDraftState {
-  readonly payload: PlanDraftPayloadV1;
-  readonly storageStatus: 'saved' | 'memory';
-}
-
 export type PlanDraftMove = {
   readonly activityId: string;
   readonly target:

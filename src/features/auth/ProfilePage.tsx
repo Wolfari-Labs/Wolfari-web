@@ -71,6 +71,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const [avatarError, setAvatarError] = useState(false);
   const [password, setPassword] = useState({ current: '', next: '', confirmation: '' });
   const [passwordError, setPasswordError] = useState<ReactNode>(null);
+  const [passwordUncertain, setPasswordUncertain] = useState(false);
   const [sessionFeedback, setSessionFeedback] = useState<ReactNode>(null);
   const [endingSession, setEndingSession] = useState(false);
   const avatarInput = useRef<HTMLInputElement>(null);
@@ -233,23 +234,40 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     );
   };
 
+  const passwordOutcomeUnknown = () => {
+    setPasswordUncertain(true);
+    setPassword({ current: '', next: '', confirmation: '' });
+    setPasswordError(
+      'Chưa xác nhận được đổi mật khẩu. Không gửi lại yêu cầu này; hãy đăng nhập bằng mật khẩu mới hoặc yêu cầu khôi phục.',
+    );
+  };
+  const returnToPasswordLogin = async (notice: 'password-changed' | 'password-uncertain') => {
+    setEndingSession(true);
+    setPassword({ current: '', next: '', confirmation: '' });
+    // Leave the private route before notifying its guard. AuthPage preserves this
+    // reauthentication destination while the old session is being cleared.
+    await navigate('/login', { replace: true, flushSync: true, state: { identityNotice: notice } });
+    sessionManager?.clear?.();
+    await queryClient.cancelQueries();
+    queryClient.removeQueries();
+  };
   const submitPassword = (event: FormEvent) => {
     event.preventDefault();
-    if (busy) return;
+    if (busy || passwordUncertain) return;
     if (!repository.changePassword) {
       setPasswordError('Chưa đổi được mật khẩu. Vui lòng thử lại.');
       return;
     }
     const invalid = !password.current
       ? 'profile-current-password'
-      : Array.from(password.next).length < 15 || Array.from(password.next).length > 128
+      : Array.from(password.next).length < 8 || Array.from(password.next).length > 128
         ? 'profile-new-password'
         : password.next !== password.confirmation
           ? 'profile-confirm-password'
           : null;
     if (invalid) {
       setPasswordError(
-        'Nhập mật khẩu hiện tại; mật khẩu mới cần từ 15 đến 128 ký tự và phải khớp khi nhập lại.',
+        'Nhập mật khẩu hiện tại; mật khẩu mới cần từ 8 đến 128 ký tự và phải khớp khi nhập lại.',
       );
       document.getElementById(invalid)?.focus();
       return;
@@ -264,25 +282,11 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
           signal,
         });
         signal.throwIfAborted();
-        if (changed.status === 'changed') {
-          setEndingSession(true);
-          setPassword({ current: '', next: '', confirmation: '' });
-          // Leave the private route before notifying its guard; otherwise the guard's
-          // expiry redirect can replace this explicit success notice/URL.
-          await navigate('/login', {
-            replace: true,
-            flushSync: true,
-            state: { identityNotice: 'password-changed' },
-          });
-          sessionManager?.clear?.();
-          await queryClient.cancelQueries();
-          queryClient.removeQueries();
-        } else setPasswordError(mutationMessage(changed.error));
+        if (changed.status === 'changed') await returnToPasswordLogin('password-changed');
+        else if (changed.error.code === 'SERVICE_UNAVAILABLE') passwordOutcomeUnknown();
+        else setPasswordError(mutationMessage(changed.error));
       },
-      () =>
-        setPasswordError(
-          'Chưa thể xác nhận đổi mật khẩu. Không tự gửi lại yêu cầu; kiểm tra bằng cách đăng nhập.',
-        ),
+      passwordOutcomeUnknown,
     );
   };
 
@@ -467,7 +471,6 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
           </form>
           <section className={styles.panel} aria-labelledby="profile-notifications">
             <h2 id="profile-notifications">Thông báo & thiết bị</h2>
-            <p className={styles.muted}>Mỗi người tự quản lý kênh nhận thông báo của mình.</p>
             <NotificationPreferences key={profile.id} actor={profile.id} />
             <details
               onToggle={(event) => setShowSessions(event.currentTarget.open)}
@@ -548,7 +551,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 type="password"
                 autoComplete="current-password"
                 required
-                disabled={busy}
+                disabled={busy || passwordUncertain}
                 value={password.current}
                 onChange={(event) => setPassword({ ...password, current: event.target.value })}
               />
@@ -558,7 +561,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 type="password"
                 autoComplete="new-password"
                 required
-                disabled={busy}
+                disabled={busy || passwordUncertain}
                 value={password.next}
                 onChange={(event) => setPassword({ ...password, next: event.target.value })}
               />
@@ -568,7 +571,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                 type="password"
                 autoComplete="new-password"
                 required
-                disabled={busy}
+                disabled={busy || passwordUncertain}
                 value={password.confirmation}
                 onChange={(event) => setPassword({ ...password, confirmation: event.target.value })}
               />
@@ -581,22 +584,31 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
             <Button
               type="submit"
               variant="outline"
-              disabled={busy}
+              disabled={busy || passwordUncertain}
               loading={pending === 'password'}
             >
               Đổi mật khẩu
             </Button>
+            {passwordUncertain && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={busy}
+                onClick={() => {
+                  void returnToPasswordLogin('password-uncertain');
+                }}
+              >
+                Đến trang đăng nhập
+              </Button>
+            )}
           </form>
         </div>
       )}
       {previewEnabled && (
-        <details className="preview" data-preview="profile">
+        <details className="preview" data-preview="profile" data-profile-version={profile?.version}>
           <summary>Profile preview · Dữ liệu minh họa</summary>
           {profile && (
-            <p>
-              Phiên bản hồ sơ: {profile.version} ·{' '}
-              {profile.emailVerifiedAt ? 'Email đã xác minh' : 'Email chưa xác minh'}
-            </p>
+            <p>{profile.emailVerifiedAt ? 'Email đã xác minh' : 'Email chưa xác minh'}</p>
           )}
           <Select
             label="Trạng thái hồ sơ"

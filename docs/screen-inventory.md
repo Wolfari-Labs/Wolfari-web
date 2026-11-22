@@ -101,7 +101,7 @@ Các màn hình dưới đây xuất hiện trong Figma hoặc domain architectu
 
 ## Whole-project inventory · 15/10/2026
 
-Scope người dùng chốt “toàn bộ”. [Full screen map](figma-screen-map-2026-10-15.md): 3 pages, 150 cấp-page frame/board/set, 17 sets/81 variants, 2.149 prototype entries, 110 unwired patterns (136 occurrences). [Snapshot JSON](figma-inventory-2026-10-15.json) giữ node/action/ownership/overflow/capability; [runtime matrix](runtime-evidence-2026-10-15.md) giữ Gateway/handler/schema/permission/error/version/idempotency.
+Scope người dùng chốt “toàn bộ”. [Full screen map](archive/implementation/figma-screen-map-2026-10-15.md): 3 pages, 150 cấp-page frame/board/set, 17 sets/81 variants, 2.149 prototype entries, 110 unwired patterns (136 occurrences). [Snapshot JSON](figma-inventory-2026-10-15.json) giữ node/action/ownership/overflow/capability; [runtime matrix](archive/implementation/runtime-evidence-2026-10-15.md) giữ Gateway/handler/schema/permission/error/version/idempotency.
 
 Capability labels chuẩn: `runtime-ready`, `runtime-candidate`, `partial-runtime`, `mock-only`, `unknown`. `runtime-ready-candidate` ở baseline là alias của `runtime-candidate`, không runtime-ready. `shell-ready` là route/layout Web; `target-only` là product scope, không API readiness.
 
@@ -150,16 +150,16 @@ Ngày 15/10/2026, người dùng chốt dùng sáu trip Desktop làm catalog can
 
 ### Phase 3 Auth fixture implementation
 
-Home, Login, Register và Self profile đã có fixture bodies trên các route inventory hiện có. Mobile edit profile inline, không thêm route; các frame native notification/verification/reset vẫn target-only. Xem [mapping và gaps](auth-fixture-phase3.md).
+Home, Login, Register và Self profile đã có fixture bodies trên các route inventory hiện có. Mobile edit profile inline, không thêm route; các frame native notification/verification/reset vẫn target-only. Xem [mapping và gaps](archive/implementation/auth-fixture-phase3.md).
 
 ### Phase 3 Trip Overview
 
-`3:31`/`3:32`/`317:2032` → `/trips/:tripId` đã có fixture metadata body, active Member/Owner. Aggregate projections unavailable; target-only routes giữ nguyên. [Mapping](trip-overview-phase3.md).
+`3:31`/`3:32`/`317:2032` → `/trips/:tripId` đã có fixture metadata body, active Member/Owner. Aggregate projections unavailable; target-only routes giữ nguyên. [Mapping](archive/implementation/trip-overview-phase3.md).
 
 ### Phase 3 Plan preview
 
-`20:236`/`439:2028`/`317:2033` → existing Plan route đã có read preview; activity disclosure không tạo route. Overview composition ngày đầu dùng PlanRepository; các projection Finance/Travel khác vẫn unavailable. [Mapping](plan-preview-phase3.md).
+`20:236`/`439:2028`/`317:2033` → existing Plan route đã có read preview; activity disclosure không tạo route. Overview composition ngày đầu dùng PlanRepository; các projection Finance/Travel khác vẫn unavailable. [Mapping](archive/implementation/plan-preview-phase3.md).
 
 ### Phase 3 Members / Invitation preview
 
-`25:360`/`317:2040` → Members read body. `475:2294`/`317:2041` chỉ local preview panel, vẫn not-yet-routed; không thêm URL response/verify/reset/share. Nullable identity hiển thị ID/neutral icon, không sample names. [Mapping và visual/runtime gaps](members-preview-phase3.md).
+`25:360`/`317:2040` → Members read body. `475:2294`/`317:2041` chỉ local preview panel, vẫn not-yet-routed; không thêm URL response/verify/reset/share. Nullable identity hiển thị ID/neutral icon, không sample names. [Mapping và visual/runtime gaps](archive/implementation/members-preview-phase3.md).

@@ -214,7 +214,8 @@ test('SRS12: location and Dress writes survive reload with shared revisions', as
   await dialog.getByRole('button', { name: 'Lưu địa điểm' }).click();
   await expect(dialog).toHaveCount(0);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Bảo tàng thủ công' })).toBeVisible();
+  // The POI map lists saved places and pre-selects the first one after a reload.
+  await expect(page.getByRole('article', { name: 'Đang chọn Bảo tàng thủ công' })).toBeVisible();
   await page.goto(`${root}/dress-code`);
   await page.getByRole('button', { name: 'Thêm dress code', exact: true }).click();
   await dialog.getByLabel('Ngày', { exact: true }).selectOption('2026-11-02');
@@ -414,7 +415,15 @@ test('SRS12: maximum saved locations and every linked Activity block unsafe dele
   await login(page);
   await page.goto(`${root}/map`);
   await expect(page.getByRole('button', { name: 'Thêm địa điểm', exact: true })).toBeDisabled();
-  await page.getByRole('button', { name: 'Xóa địa điểm', exact: true }).click();
+  // Edit/delete for a saved place sit on the selected-place card of the POI map.
+  await page
+    .locator('[data-region="place-list"]')
+    .getByRole('button', { name: /^\d+ Địa điểm 20 / })
+    .click();
+  await page
+    .getByRole('article', { name: 'Đang chọn Địa điểm 20' })
+    .getByRole('button', { name: 'Xóa địa điểm', exact: true })
+    .click();
   await expect(
     page.getByText('Gỡ hoặc đổi địa điểm của các Activity sau trước khi xóa:'),
   ).toBeVisible();

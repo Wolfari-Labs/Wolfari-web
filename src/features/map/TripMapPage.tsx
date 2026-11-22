@@ -5,6 +5,7 @@ import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Select } from '../../shared/components/Select';
 import headingPinIcon from '../../shared/assets/figma/trip-map-heading-pin.svg';
 import headingCloudArtwork from '../../shared/assets/figma/trip-map-heading-cloud.svg';
@@ -410,13 +411,11 @@ function PreviewMapPage() {
         {data && (
           <>
             <div className={styles.mapContent}>
-              <div className={styles.breadcrumb}>
-                <Link to={paths.trips}>Chuyến đi của tôi</Link>
-                <span aria-hidden="true">›</span>
-                <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
-                <span aria-hidden="true">›</span>
-                <h1>Bản đồ &amp; địa điểm</h1>
-              </div>
+              <PageBreadcrumb
+                className={styles.breadcrumb}
+                items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
+                current="Bản đồ địa điểm"
+              />
               <div className={styles.hero}>
                 <TripHero trip={data.trip} compact variant="landscape" />
               </div>
@@ -434,7 +433,13 @@ function PreviewMapPage() {
                       <h2>Tìm kiếm &amp; chọn địa điểm</h2>
                       <p>Tìm kiếm mọi địa điểm. Địa điểm đã chọn sẽ được ghim trên bản đồ.</p>
                     </div>
-                    <img className={styles.headingCloud} src={headingCloudArtwork} width="74" height="31" alt="" />
+                    <img
+                      className={styles.headingCloud}
+                      src={headingCloudArtwork}
+                      width="74"
+                      height="31"
+                      alt=""
+                    />
                   </header>
                   <div
                     className={`${styles.localNotice} ${storageStatus === 'saved' ? styles.visuallyHidden : ''}`}
@@ -787,8 +792,7 @@ function PreviewMapPage() {
                 </section>
               </div>
               <CapabilityNote id="map-provider-note">
-                <strong>Bản đồ nền chưa được cấu hình</strong>. Bản đồ đang là minh họa Figma trong
-                preview; Google Maps sẽ được dùng khi có browser key.
+                <strong>Bản đồ nền chưa được cấu hình</strong>.
               </CapabilityNote>
             </div>
             <PlaceDetail

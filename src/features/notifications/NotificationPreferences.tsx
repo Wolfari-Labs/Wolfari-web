@@ -94,12 +94,15 @@ export function NotificationPreferences({ actor }: { actor: string }) {
         disabled={busy}
         onChange={(email_enabled) => setDraft({ ...value, email_enabled })}
       />
-      <Switch
-        label="Cho phép push trên thiết bị đã đăng ký"
-        checked={value.push_enabled}
-        disabled={busy}
-        onChange={(push_enabled) => setDraft({ ...value, push_enabled })}
-      />
+      <div className={styles.switchRow}>
+        <Switch
+          label="Cho phép push trên thiết bị đã đăng ký"
+          checked={value.push_enabled}
+          disabled={busy}
+          onChange={(push_enabled) => setDraft({ ...value, push_enabled })}
+        />
+        <span className={styles.soon}>Sắp có</span>
+      </div>
       <details>
         <summary>Tùy chọn từng nhóm</summary>
         {notificationGroups.map((group) => (

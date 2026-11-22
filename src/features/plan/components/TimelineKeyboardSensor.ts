@@ -26,6 +26,8 @@ export class TimelineKeyboardSensor extends KeyboardSensor {
       return;
     }
     next.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    // Scrolling moves every target; re-measure now so the drop does not hit a stale shape.
+    for (const droppable of this.manager.registry.droppables) droppable.refreshShape();
     const rect = next.getBoundingClientRect();
     event.preventDefault();
     this.manager.actions.move({

@@ -365,7 +365,11 @@ test('mobile profile keeps draft through error and never reports saved', async (
   await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Bản nháp local');
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
   await expect(page.getByText(/Chưa lưu được thay đổi/)).toBeVisible();
-  await expect(page.getByText(/Phiên bản hồ sơ: 1/)).toBeVisible();
+  // A25: the version moved from visible text to data-profile-version; same behavioural check.
+  await expect(page.locator('[data-preview="profile"]')).toHaveAttribute(
+    'data-profile-version',
+    '1',
+  );
   await page.getByText('Phiên đăng nhập', { exact: true }).click();
   await expect(page.getByText('Phiên đăng nhập 1')).toBeVisible();
 });

@@ -1,6 +1,6 @@
 export const runtimeStatuses = ['ACTIVE', 'PAUSED', 'EXPIRED', 'STOPPED'] as const;
 export interface WatchFields {
-  provider: 'MOCK_FLIGHT';
+  provider: 'MOCK_FLIGHT' | 'TRAVELPAYOUTS_CACHE';
   origin: string;
   destination: string;
   departure_date: string;
@@ -28,6 +28,9 @@ export interface RuntimeObservation {
   provider: string;
   observedAt: string;
   fetchedAt: string;
+  providerFoundAt?: string | null;
+  providerExpiresAt?: string | null;
+  dataKind?: string | null;
 }
 export type WatchIntent = {
   method: 'POST' | 'PATCH';
@@ -45,7 +48,7 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
     Number.isFinite(Date.parse(v)) &&
     new Date(v).toISOString().slice(0, 10) === v;
   if (
-    f.provider !== 'MOCK_FLIGHT' ||
+    !['MOCK_FLIGHT', 'TRAVELPAYOUTS_CACHE'].includes(f.provider) ||
     f.currency !== 'VND' ||
     !/^[A-Z]{3}$/.test(f.origin) ||
     !/^[A-Z]{3}$/.test(f.destination) ||
@@ -70,6 +73,15 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
   )
     throw Error('Invalid cabin');
   const p = f.passengers;
+  if (
+    f.provider === 'TRAVELPAYOUTS_CACHE' &&
+    (f.journey_type !== 'ONE_WAY' ||
+      f.cabin_class !== 'ECONOMY' ||
+      p?.adults !== 1 ||
+      p?.children !== 0 ||
+      p?.infants !== 0)
+  )
+    throw Error('Unsupported cache query');
   if (
     !p ||
     ![p.adults, p.children, p.infants].every((n) => Number.isInteger(n) && n >= 0 && n <= 9) ||
