@@ -30,7 +30,7 @@ Các test khóa hình học/màu của thiết kế cũ (sidebar 220/72px, hero 
 
 ## Việc còn mở
 
-- Ảnh chuẩn Linux Home đã cập nhật ngày 22/11 từ ảnh CI Linux được đối chiếu với bản Windows và source hiện tại; chờ CI mới xác minh. Xem [PR31_CI_REPAIR.md](PR31_CI_REPAIR.md) để phân biệt lỗi cũ và bằng chứng mới.
+- Ảnh chuẩn Linux Home đã cập nhật ngày 22/11 và xác minh trong CI `45014561827` tại commit `8e219d1` (cả 3 job PASS). Giữ ảnh Web V2 này khi giải quyết conflict với nhánh POI. Xem [PR31_CI_REPAIR.md](PR31_CI_REPAIR.md) để phân biệt lỗi cũ và bằng chứng mới.
 - Màn chưa có route/tính năng: W13, W21, A00, A02.1, A04.1 (V2-D13).
 
 ## Tinh chỉnh 22/11/2026

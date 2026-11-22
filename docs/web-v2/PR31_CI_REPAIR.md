@@ -76,3 +76,24 @@ Post-fix built HTTP-mock repetitions: 10/10 PASS across 1440px and 390px.
 Scoped lint, typecheck, scoped formatting and `git diff --check`: PASS.
 Full dev HTTP-mock provider test file: 5/5 PASS. Full Linux CI must run again
 for the new head.
+
+## Verified follow-up and base-branch conflict resolution
+
+Follow-up commit `8e219d1` passed all three jobs in
+https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/45014561827.
+The dev fixture suite passed 252 tests; dev and built Gateway suites each
+passed 208 with five existing skips, including both POI viewport cases.
+
+PR #31 targets `feat/web-poi-integration`. Merging its `79495cc` head into
+the redesign branch produced one binary conflict: the base branch's older
+Home baseline versus the Web V2 baseline verified above. Retained the exact
+Web V2 PNG from `8e219d1` (SHA-256 recorded above), not the pre-redesign image.
+Imported the base branch's Drawer keyboard accessibility and post-refresh
+drag-focus fixes with their regression tests. No other conflict occurred.
+
+Merge verification: focused Drawer/drag-lifecycle/commands/arrangement unit
+tests 64/64 PASS; lint/typecheck and both production/Preview builds PASS.
+Built Gateway HTTP-mock drag-and-drop plus Price Watch keyboard-scroll/axe
+checks 10/10 PASS. Built fixture Home snapshot/layout and Drawer focus-trap
+checks 2/2 PASS. Diff/format checks PASS; no unresolved index entries.
+The prior green run does not substitute for CI on the new merge commit.
