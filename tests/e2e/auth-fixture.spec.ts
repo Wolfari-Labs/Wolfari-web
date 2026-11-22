@@ -44,8 +44,15 @@ for (const width of [1440, 402])
     await expect(
       page.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }).last(),
     ).toBeVisible();
-    // Web v2 Home (Figma 938:7830): four sections inside the shell gutter; no cloud layers.
-    for (const layout of ['home-hero', 'home-features', 'home-inspiration', 'home-footer']) {
+    // Web v2 Home product tour: every section stays inside the shell gutter.
+    for (const layout of [
+      'home-hero',
+      'home-features',
+      'home-tour',
+      'home-steps',
+      'home-inspiration',
+      'home-footer',
+    ]) {
       const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
       expect(bounds).not.toBeNull();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
@@ -53,8 +60,8 @@ for (const width of [1440, 402])
     }
     if (width === 1440) {
       for (const [layout, height] of [
-        ['home-hero', 566],
-        ['home-features', 335],
+        ['home-hero', 680],
+        ['home-features', 702],
       ] as const) {
         const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
         expect(bounds).not.toBeNull();
@@ -91,23 +98,36 @@ for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 4
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
 
-    for (const layout of ['home-hero', 'home-features', 'home-inspiration', 'home-footer']) {
+    for (const layout of [
+      'home-hero',
+      'home-features',
+      'home-tour',
+      'home-steps',
+      'home-inspiration',
+      'home-footer',
+    ]) {
       const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
       expect(bounds).not.toBeNull();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
       expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width + 1);
     }
 
+    const collage = await page.locator('[data-layout="home-collage"]').boundingBox();
+    expect(collage).not.toBeNull();
+    if (width >= 1100) {
+      // Two-column hero: the headline keeps a clear gap from the product preview.
+      const title = await page.getByRole('heading', { level: 1 }).boundingBox();
+      expect(title).not.toBeNull();
+      expect(title!.x + title!.width).toBeLessThan(collage!.x - 24);
+    }
     if (width >= 1440) {
-      // Figma 933:7734: 1296px content column at x=72 of the 1440 frame, photo frame at x=728.
+      // 1240px content column centred in the shell main (x=100 at 1440); preview at x=770.
       const frame = await page.locator('[data-layout="home-hero-frame"]').boundingBox();
-      const collage = await page.locator('[data-layout="home-collage"]').boundingBox();
       expect(frame).not.toBeNull();
-      expect(collage).not.toBeNull();
-      expect(Math.abs(frame!.x - ((width - 1440) / 2 + 72))).toBeLessThanOrEqual(1);
-      expect(Math.abs(frame!.width - 1296)).toBeLessThanOrEqual(1);
-      expect(Math.abs(collage!.x - ((width - 1440) / 2 + 728))).toBeLessThanOrEqual(4);
-      expect(Math.abs(collage!.width - 640)).toBeLessThanOrEqual(4);
+      expect(Math.abs(frame!.x - ((width - 1440) / 2 + 100))).toBeLessThanOrEqual(1);
+      expect(Math.abs(frame!.width - 1240)).toBeLessThanOrEqual(1);
+      expect(Math.abs(collage!.x - ((width - 1440) / 2 + 770))).toBeLessThanOrEqual(4);
+      expect(Math.abs(collage!.width - 570)).toBeLessThanOrEqual(4);
     }
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -154,10 +174,12 @@ for (const size of [
       await page.evaluate(() => document.fonts.ready);
       if (size.width === 1440 && route === '/') {
         const targets = [
-          ['home-hero', 112, 566],
-          ['home-features', 820, 335],
-          ['home-inspiration', 1255, 459],
-          ['home-footer', 1814, 391],
+          ['home-hero', 120, 680],
+          ['home-features', 896, 702],
+          ['home-tour', 1694, 1622],
+          ['home-steps', 3411, 290],
+          ['home-inspiration', 3797, 401],
+          ['home-footer', 4294, 293],
         ] as const;
         for (const [layout, y, height] of targets) {
           const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
@@ -166,7 +188,7 @@ for (const size of [
           expect(Math.abs(bounds!.height - height)).toBeLessThanOrEqual(4);
         }
         for (const [layout, target] of [
-          ['home-collage', { x: 728, y: 112, width: 640, height: 566 }],
+          ['home-collage', { x: 770, y: 152, width: 570, height: 640 }],
         ] as const) {
           const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
           expect(bounds).not.toBeNull();
