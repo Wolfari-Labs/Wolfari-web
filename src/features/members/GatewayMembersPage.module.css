@@ -88,7 +88,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-blue);
   color: var(--v2-white);
   box-shadow:
@@ -102,10 +102,12 @@
     var(--v2-inset-badge);
 }
 
+/* Members tab: the roster takes the full width; role guidance is a collapsible note inside it.
+   The policy tab keeps its form + guidance pair. */
 .workspace,
 .policyWorkspace {
   display: grid;
-  grid-template-columns: minmax(0, 700fr) minmax(0, 384fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
   align-items: stretch;
 }
@@ -162,7 +164,6 @@
 .inviteButton {
   flex-shrink: 0;
 }
-.intro,
 .metadata,
 .cardHeader p {
   color: var(--v2-sub);
@@ -197,10 +198,6 @@
   background: var(--v2-lilac);
   color: var(--v2-violet-text);
 }
-.note[data-tone='fund'] h3 {
-  background: var(--v2-mint);
-  color: var(--v2-success-text);
-}
 .note[data-tone='transfer'] h3 {
   background: var(--v2-butter);
   color: var(--v2-warning-text);
@@ -227,35 +224,41 @@
   background: var(--v2-butter);
   color: var(--v2-warning-text);
 }
-/* W12 "Rời hoặc xóa thành viên" (943:12931): peach note pinned to the card bottom. */
-.lifecycleNote {
+/* Role guidance: collapsed by default under the roster, pinned to the card bottom. */
+.roleHelp {
   margin-top: auto;
+  padding: 0 14px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
 }
-.note[data-tone='danger'] {
-  background: var(--v2-peach);
-  color: var(--color-status-danger);
+.page .roleHelp > summary {
+  gap: 8px;
+  color: var(--v2-nav-text);
+  font: 700 13px/18px var(--v2-font);
 }
-.note[data-tone='danger'] h3 {
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  font-size: 13px;
+.roleHelp > summary svg {
+  flex-shrink: 0;
+  color: var(--v2-violet-text);
+}
+.roleHelp dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 8px 16px;
+  margin: 0;
+  padding: 2px 0 14px;
+  font: 600 13px/18px var(--v2-font);
+}
+.roleHelp dt {
+  color: var(--v2-ink);
   font-weight: 800;
 }
-.fundLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  align-self: flex-start;
-  min-height: 44px;
-  margin-top: auto;
-  padding-inline: 6px;
-  color: var(--v2-blue);
-  font: 800 14px/normal var(--v2-font);
-  text-decoration: none;
+.roleHelp dd {
+  margin: 0;
+  color: var(--v2-nav-text);
 }
-.fundLink:hover {
-  text-decoration: underline;
+.roleHelp a {
+  color: var(--v2-blue);
+  font-weight: 700;
 }
 
 /* Member rows (943:12868). */
@@ -442,12 +445,19 @@
   .memberRow {
     grid-template-columns: 1fr;
   }
+  .roleHelp dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .roleHelp dd + dt {
+    margin-top: 8px;
+  }
   .memberRow > button {
     max-width: 100%;
     justify-self: start;
   }
   .actions {
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
   }
   .actions > .refresh {
     margin-left: 0;

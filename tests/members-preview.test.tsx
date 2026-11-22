@@ -19,7 +19,11 @@ import { createGatewayMembershipRepository } from '../src/infrastructure/reposit
 import { createGatewayInvitationRepository } from '../src/infrastructure/repositories/invitation.gateway-repository';
 import { selectMembersRepositories } from '../src/infrastructure/repositories/select-members-repositories';
 import { previewTripId, fixtureTripCatalog } from '../src/infrastructure/fixtures/trip-catalog';
-import type { PlanEditPolicy, TripRepository, UpdatePlanPolicyResult } from '../src/features/trips/repositories/trip.repository';
+import type {
+  PlanEditPolicy,
+  TripRepository,
+  UpdatePlanPolicyResult,
+} from '../src/features/trips/repositories/trip.repository';
 const req = (
   scenario: (typeof membershipScenarios)[number] = 'success',
   tripId = previewTripId,
@@ -198,7 +202,7 @@ it('renders nullable identity and keeps invitation draft through errors without 
     within(region).queryByText(/Trang Nguyễn|Hà Nguyễn|Quyên Trần|Tân Lê/),
   ).not.toBeInTheDocument();
   expect(listInvitations).not.toHaveBeenCalled();
-  await userEvent.click(screen.getByRole('button', { name: 'Lời mời · Xem trước' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Lời mời' }));
   await screen.findByText('linh@example.com');
   await userEvent.click(screen.getByRole('button', { name: 'Kiểm tra lời mời' }));
   expect(screen.getByLabelText('Email người nhận')).toHaveFocus();
@@ -212,14 +216,14 @@ it('renders nullable identity and keeps invitation draft through errors without 
   await userEvent.click(screen.getByRole('button', { name: 'Kiểm tra lời mời' }));
   await screen.findByText(/Chưa gửi lời mời, tạo link hoặc thay đổi thành viên/);
   expect(screen.getByText(/Membership revision 1/)).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Gửi lại' })).toBeDisabled();
+  expect(screen.queryByRole('button', { name: 'Gửi lại' })).not.toBeInTheDocument();
   await userEvent.selectOptions(screen.getByLabelText('Trạng thái thao tác preview'), 'unknown');
   expect(screen.getByText(/Chưa xác nhận gửi lời mời/)).toBeInTheDocument();
 });
 it('Member cannot read Owner invitation projection and Guest performs no private reads', async () => {
   const { listInvitations } = mount({ tripId: '33333333-3333-4333-8333-333333333333' });
   await screen.findByText(/^User aaaaaaaa/);
-  expect(screen.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Lời mời' })).toBeDisabled();
   expect(listInvitations).not.toHaveBeenCalled();
 });
 it('Guest performs no private reads', async () => {
@@ -292,7 +296,9 @@ it('loads opaque member pages, deduplicates IDs, and resets pagination when show
   });
   mount({ membership: { listMembers } });
   const region = await screen.findByRole('region', { name: 'Danh sách thành viên' });
-  expect(listMembers).toHaveBeenCalledWith(expect.objectContaining({ limit: 100, includeLeft: false }));
+  expect(listMembers).toHaveBeenCalledWith(
+    expect.objectContaining({ limit: 100, includeLeft: false }),
+  );
   await userEvent.click(within(region).getByRole('button', { name: 'Tải thêm thành viên' }));
   await within(region).findByText('2 thành viên đã tải');
   expect(listMembers.mock.calls[1]?.[0]).toMatchObject({ cursor: 'next/+==', limit: 100 });
@@ -373,8 +379,12 @@ it('keeps fixture policy controls unavailable and gates the real policy tab by a
   expect(screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' })).toHaveValue(
     'SELECTED_MEMBERS',
   );
-  expect(screen.getByRole('option', { name: /thành viên được chọn · chưa thể chỉnh sửa/i })).toBeDisabled();
-  expect(screen.getByText(/Backend chưa cung cấp projection/)).toBeInTheDocument();
+  expect(
+    screen.getByRole('option', { name: /thành viên được chọn · chưa thể chỉnh sửa/i }),
+  ).toBeDisabled();
+  expect(
+    screen.getByText(/Chưa thể xem hoặc chỉnh sửa danh sách thành viên được chọn/),
+  ).toBeInTheDocument();
   expect(withWriter.updatePlanPolicy).not.toHaveBeenCalled();
 });
 
@@ -386,7 +396,10 @@ it('keeps unknown policy writes unresolved and retries the same intent only afte
   const getTrip = vi.fn(async (request: Parameters<TripRepository['getTrip']>[0]) => {
     const result = await base.getTrip(request);
     return result.status === 'ready'
-      ? { ...result, data: { ...result.data, planEditPolicy: savedPolicy, membershipRevision: revision } }
+      ? {
+          ...result,
+          data: { ...result.data, planEditPolicy: savedPolicy, membershipRevision: revision },
+        }
       : result;
   });
   const updatePlanPolicy = vi.fn<NonNullable<TripRepository['updatePlanPolicy']>>((intent) => {
@@ -405,7 +418,10 @@ it('keeps unknown policy writes unresolved and retries the same intent only afte
   });
   mount({ preview: false, trip: { ...base, getTrip, updatePlanPolicy } });
   await userEvent.click(await screen.findByRole('button', { name: 'Quyền sửa lịch trình' }));
-  await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }), 'ALL_MEMBERS');
+  await userEvent.selectOptions(
+    screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' }),
+    'ALL_MEMBERS',
+  );
   await userEvent.click(screen.getByRole('button', { name: 'Lưu quyền' }));
   await waitFor(() => expect(screen.getByRole('button', { name: 'Đang lưu' })).toBeDisabled());
   expect(updatePlanPolicy).toHaveBeenCalledTimes(1);
@@ -438,27 +454,32 @@ it('retains the policy draft after conflict, refetches revision, and requires an
   const getTrip = vi.fn(async (request: Parameters<TripRepository['getTrip']>[0]) => {
     const result = await base.getTrip(request);
     return result.status === 'ready'
-      ? { ...result, data: { ...result.data, planEditPolicy: savedPolicy, membershipRevision: revision } }
+      ? {
+          ...result,
+          data: { ...result.data, planEditPolicy: savedPolicy, membershipRevision: revision },
+        }
       : result;
   });
-  const updatePlanPolicy = vi.fn<NonNullable<TripRepository['updatePlanPolicy']>>(async (intent) => {
-    if (!conflicted) {
-      conflicted = true;
+  const updatePlanPolicy = vi.fn<NonNullable<TripRepository['updatePlanPolicy']>>(
+    async (intent) => {
+      if (!conflicted) {
+        conflicted = true;
+        savedPolicy = intent.policy;
+        revision += 1;
+        return {
+          status: 'error',
+          error: { code: 'STATE_CONFLICT', correlationId: 'policy-conflict', retryable: false },
+        };
+      }
       savedPolicy = intent.policy;
       revision += 1;
       return {
-        status: 'error',
-        error: { code: 'STATE_CONFLICT', correlationId: 'policy-conflict', retryable: false },
+        status: 'updated',
+        data: { policy: savedPolicy, editorMemberIds: [], membershipRevision: revision },
+        correlationId: 'policy-confirmed',
       };
-    }
-    savedPolicy = intent.policy;
-    revision += 1;
-    return {
-      status: 'updated',
-      data: { policy: savedPolicy, editorMemberIds: [], membershipRevision: revision },
-      correlationId: 'policy-confirmed',
-    };
-  });
+    },
+  );
   mount({ preview: false, trip: { ...base, getTrip, updatePlanPolicy } });
   await userEvent.click(await screen.findByRole('button', { name: 'Quyền sửa lịch trình' }));
   const select = screen.getByRole('combobox', { name: 'Ai có thể sửa lịch trình' });

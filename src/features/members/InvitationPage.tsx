@@ -300,7 +300,7 @@ function InvitationResponse({
               </span>
               Vai trò khi tham gia
             </dt>
-            <dd>Member</dd>
+            <dd>Thành viên</dd>
           </div>
         </dl>
       )}

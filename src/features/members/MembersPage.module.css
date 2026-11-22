@@ -41,7 +41,7 @@
   }
 }
 
-/* Tabs row (943:12837): white pill segmented control + lilac owner note. */
+/* Tabs row (943:12837): white pill segmented control. */
 .top {
   display: flex;
   align-items: center;
@@ -85,20 +85,6 @@
     color: var(--v2-ink);
   }
 }
-.ownerNote {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px 8px 12px;
-  border-radius: var(--v2-radius-pill);
-  background: var(--v2-lilac);
-  color: var(--v2-violet-text);
-  font: 700 13px/normal var(--v2-font);
-}
-.ownerNote svg {
-  flex-shrink: 0;
-}
-
 /* Shared card header: D/Icon badge (44px, radius 15) + title. */
 .cardHeader {
   display: flex;
@@ -125,7 +111,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-blue);
   color: var(--v2-white);
   box-shadow:
@@ -145,15 +131,14 @@
     var(--v2-inset-badge);
 }
 
-/* Members tab: 700px roster card + 384px responsibilities card. */
+/* Members tab: the roster takes the full width; role guidance is a collapsible note inside it. */
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 700fr) minmax(0, 384fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
   align-items: stretch;
 }
 .memberPanel,
-.responsibilities,
 .policyPanel,
 .invitationForm,
 .invitationList {
@@ -165,10 +150,6 @@
   border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
-}
-.responsibilities {
-  gap: 10px;
-  padding: 20px;
 }
 @media (min-width: 769px) {
   .workspace,
@@ -189,11 +170,6 @@
   margin: 0;
   color: var(--v2-ink);
   font: 800 20px/normal var(--v2-font);
-}
-.help {
-  margin: 2px 0 0;
-  color: var(--v2-sub);
-  font: 600 13px/18px var(--v2-font);
 }
 .inviteButton {
   flex-shrink: 0;
@@ -223,7 +199,8 @@
 }
 .rosterHead {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 160px 152px;
+  /* Role sits next to the name (not at the far edge) so the eye does not travel 800px. */
+  grid-template-columns: minmax(0, 420px) 160px;
   column-gap: 12px;
   padding-inline: 14px;
   color: var(--v2-sub);
@@ -241,7 +218,7 @@
 }
 .members > li {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 160px 152px;
+  grid-template-columns: 38px minmax(0, 370px) 160px;
   column-gap: 12px;
   align-items: center;
   min-width: 0;
@@ -365,95 +342,42 @@
 .role.owner::before {
   content: '★ ' / '';
 }
-.members > li > button {
-  justify-self: start;
-}
-.transferButton {
-  padding: 7px 14px 7px 12px;
-  white-space: nowrap;
-  background: var(--v2-sky);
-  color: var(--v2-blue);
-  font-size: 12px;
-  line-height: 16px;
-  box-shadow: none;
-}
-.lifecycleNote {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: auto;
-  padding-top: 4px;
-}
-.lifecycle {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.lifecycle > button {
-  padding: 8px 16px;
-  font-size: 13px;
-}
-
-/* W12 "Rời hoặc xóa thành viên" note (943:12931): peach surface, danger text. */
-.lifecycleNote > div[role='status'] {
-  border-color: transparent;
-  border-radius: var(--v2-radius-row);
-  background: var(--v2-peach);
-  color: var(--color-status-danger);
-  font: 600 12px/17px var(--v2-font);
-}
-
-/* Responsibilities (943:12934): #f7f9ff rows with pastel tag headings. */
-.responsibilities > .cardHeader {
-  margin-bottom: 2px;
-}
-.responsibilities section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 10px 14px;
+/* Role guidance: collapsed by default, directly under the roster. */
+.roleHelp {
+  margin-top: 4px;
+  padding: 0 14px;
   border-radius: var(--v2-radius-row);
   background: var(--v2-row);
 }
-.responsibilities h3 {
-  margin: 0 0 2px;
-  padding: 5px 10px;
-  border-radius: var(--v2-radius-pill);
-  background: var(--v2-lilac);
+.roleHelp > summary {
+  gap: 8px;
+  color: var(--v2-nav-text);
+  font: 700 13px/18px var(--v2-font);
+}
+.roleHelp > summary svg {
+  flex-shrink: 0;
   color: var(--v2-violet-text);
-  font: 700 12px/normal var(--v2-font);
 }
-.responsibilities section[data-tone='fund'] h3 {
-  background: var(--v2-mint);
-  color: var(--v2-success-text);
+.roleHelp dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 8px 16px;
+  margin: 0;
+  padding: 2px 0 14px;
+  font: 600 13px/18px var(--v2-font);
 }
-.responsibilities section[data-tone='policy'] h3 {
-  background: var(--v2-sky);
-  color: #2f63c4;
+.roleHelp dt {
+  color: var(--v2-ink);
+  font-weight: 800;
 }
-.responsibilities section[data-tone='transfer'] h3 {
-  background: var(--v2-butter);
-  color: var(--v2-warning-text);
-}
-.responsibilities p {
+.roleHelp dd {
   margin: 0;
   color: var(--v2-nav-text);
-  font: 600 13px/18px var(--v2-font);
   overflow-wrap: anywhere;
 }
-.responsibilities .fundLink {
-  align-self: flex-start;
-  margin-top: auto;
-  padding: 6px;
-  background: transparent;
+.roleHelp a {
   color: var(--v2-blue);
-  font-size: 14px;
-  box-shadow: none;
-}
-.responsibilities .fundLink:disabled {
-  background: transparent;
-  color: var(--v2-sub);
+  font-weight: 700;
 }
 
 /* Policy tab (943:13185 left card). */
@@ -508,7 +432,7 @@
 }
 .invitationList li {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) auto;
+  grid-template-columns: 32px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
@@ -561,17 +485,10 @@
   color: var(--v2-sub);
   font: 600 12px/16px var(--v2-font);
 }
-.invitationActions {
-  display: flex;
-  gap: 6px;
-}
-.invitationActions > button {
-  padding: 6px 12px;
-  font-size: 12px;
-  line-height: 16px;
-}
 .terminalNote {
-  margin-top: auto;
+  margin: auto 0 0;
+  color: var(--v2-sub);
+  font: 600 12px/16px var(--v2-font);
 }
 .revisions {
   font-size: var(--font-size-caption);
@@ -583,32 +500,11 @@
   margin-top: 20px;
 }
 
-@media (min-width: 1101px) and (max-width: 1280px), (max-width: 900px) {
-  .members > li {
-    grid-template-columns: 38px minmax(0, 1fr) auto;
-    row-gap: 8px;
-  }
-  .members > li > .role {
-    margin-left: 0;
-  }
-  .members > li > button {
-    grid-column: 2 / -1;
-  }
-  .rosterHead {
-    grid-template-columns: 1fr auto;
-  }
-  .rosterHead > :last-child {
-    display: none;
-  }
-}
 @media (max-width: 1100px) {
   .workspace,
   .invitationWorkspace {
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
-  }
-  .ownerNote {
-    display: none;
   }
 }
 @media (max-width: 768px) {
@@ -634,7 +530,6 @@
     font-size: 13px;
   }
   .memberPanel,
-  .responsibilities,
   .policyPanel,
   .invitationForm,
   .invitationList {
@@ -661,9 +556,15 @@
     padding: 12px;
     gap: 8px 10px;
   }
-  .members > li > .role,
-  .members > li > button {
+  .members > li > .role {
     grid-column: 2;
+  }
+  .roleHelp dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .roleHelp dd + dt {
+    margin-top: 8px;
   }
   .identity details:not(.preview) > summary {
     min-height: 44px;
@@ -673,12 +574,6 @@
   }
   .inviteRow > button {
     margin-bottom: 0;
-  }
-  .invitationList li {
-    grid-template-columns: 32px minmax(0, 1fr);
-  }
-  .invitationActions {
-    grid-column: 2;
   }
 }
 @media (max-width: 380px) {

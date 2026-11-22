@@ -383,7 +383,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
                   className={styles.changePhoto}
                   loading={pending === 'avatar'}
                   disabled={busy || !repository.uploadAvatar}
-                  title="Upload ảnh"
+                  title="Tải ảnh đại diện"
                   icon={<Camera size={14} strokeWidth={2.2} />}
                   onClick={() => avatarInput.current?.click()}
                 >
@@ -442,8 +442,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
               />
             </div>
             <p className={styles.roleNote}>
-              Chỉnh sửa hồ sơ không làm thay đổi vai trò Owner/Member, Fund Holder hoặc quyền trong
-              Trip.
+              Hồ sơ không thay đổi vai trò, trách nhiệm quỹ hay quyền của bạn trong các chuyến đi.
             </p>
             {!profile.emailVerifiedAt && (
               <Alert tone="info">
@@ -464,26 +463,28 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
               </div>
             )}
             <div className={styles.formFooter}>
-              <Button
-                variant="outline"
-                className={styles.logout}
-                type="button"
-                icon={<LogOut size={17} strokeWidth={2.2} />}
-                disabled={busy || !sessionManager?.logout}
-                loading={pending === 'logout'}
-                onClick={() =>
-                  void run(
-                    'logout',
-                    async (signal) => {
-                      await sessionManager?.logout?.(signal);
-                      navigate('/login', { replace: true });
-                    },
-                    () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
-                  )
-                }
-              >
-                {sessionManager?.logout ? 'Đăng xuất' : 'Đăng xuất (chưa khả dụng)'}
-              </Button>
+              {sessionManager?.logout && (
+                <Button
+                  variant="outline"
+                  className={styles.logout}
+                  type="button"
+                  icon={<LogOut size={17} strokeWidth={2.2} />}
+                  disabled={busy}
+                  loading={pending === 'logout'}
+                  onClick={() =>
+                    void run(
+                      'logout',
+                      async (signal) => {
+                        await sessionManager?.logout?.(signal);
+                        navigate('/login', { replace: true });
+                      },
+                      () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
+                    )
+                  }
+                >
+                  Đăng xuất
+                </Button>
+              )}
               <Button
                 className={styles.save}
                 type="submit"

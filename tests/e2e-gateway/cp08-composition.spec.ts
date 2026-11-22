@@ -60,7 +60,15 @@ for (const view of ['members', 'invitations', 'policy', 'recipient'] as const) {
             : '[data-flow="gateway-members"]',
         );
         await expect(root).toBeVisible();
-        if (view === 'members' || view === 'policy' || view === 'invitations') {
+        if (view === 'members') {
+          // Role guidance is a collapsed note inside the full-width roster, not a second column.
+          const primary = root.locator('[data-cp08-primary]');
+          await expect(root.locator('[data-cp08-secondary]')).toHaveCount(0);
+          await expect(
+            primary.locator('details summary').filter({ hasText: 'Vai trò và trách nhiệm' }),
+          ).toBeVisible();
+        }
+        if (view === 'policy' || view === 'invitations') {
           const primary = root.locator('[data-cp08-primary]');
           const secondary = root.locator('[data-cp08-secondary]');
           const a = (await primary.boundingBox())!;

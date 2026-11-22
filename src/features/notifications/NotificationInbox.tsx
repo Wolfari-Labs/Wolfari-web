@@ -102,7 +102,13 @@ export default function NotificationInbox({
   return (
     <>
       {!repository ? (
-        <Alert>Hộp thư chỉ khả dụng khi đăng nhập bằng tài khoản thật.</Alert>
+        <div className={styles.empty}>
+          <span className={styles.emptyBadge}>
+            <Icon name="bell" size={30} />
+          </span>
+          <h3>Chưa có thông báo</h3>
+          <p>Thông báo mới sẽ xuất hiện tại đây.</p>
+        </div>
       ) : (
         <>
           <div className={styles.chips}>
