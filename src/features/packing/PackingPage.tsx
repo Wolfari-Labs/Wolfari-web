@@ -188,7 +188,7 @@ export function PackingPage() {
         <PageBreadcrumb
           className={styles.breadcrumb}
           items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-          current="Đồ đạc"
+          current="Hành lý"
           mobile={
             <div className={styles.breadcrumb}>
               <Link to={paths.trips}>Chuyến đi của tôi</Link>
@@ -199,7 +199,7 @@ export function PackingPage() {
                   <span aria-hidden="true">›</span>
                 </>
               )}
-              <h1>Đồ đạc</h1>
+              <h1>Hành lý</h1>
             </div>
           }
         />
@@ -219,7 +219,7 @@ export function PackingPage() {
               <Icon name="luggage" size={22} />
             </span>
             <div>
-              <h2>Đồ đạc</h2>
+              <h2>Hành lý</h2>
               <p>
                 {progress.completed}/{progress.total} món đã hoàn thành
               </p>

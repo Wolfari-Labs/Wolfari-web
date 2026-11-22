@@ -27,8 +27,9 @@ describe('Overview fund summary', () => {
   });
   it.each([null, '0'])('does not divide by absent/zero budget %s', (budget) => {
     render(<OverviewFundSummary fund={{ ...fund, budget_amount: budget }} />);
+    // No ratio: no bar at all (an empty track would read as a measured 0%).
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    expect(screen.getByRole('img')).toHaveAccessibleName(/Chưa đặt ngân sách|Ngân sách 0/);
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(
       screen.getByText(budget === null ? 'Chưa đặt ngân sách' : 'Ngân sách 0 ₫'),
     ).toBeVisible();
@@ -47,9 +48,10 @@ describe('Overview fund summary', () => {
     expect(screen.getByText('922337203685477580700% ngân sách · 1 ₫')).toBeVisible();
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
   });
-  it.each([null, undefined])('keeps an unmeasured track for missing fund %s', (value) => {
+  it.each([null, undefined])('hides the progress bar for missing fund %s', (value) => {
     render(<OverviewFundSummary fund={value} />);
-    expect(screen.getByRole('img')).toBeVisible();
+    expect(screen.getByText(value === null ? 'Chưa bật quỹ nhóm.' : 'Chưa khả dụng')).toBeVisible();
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
 });

@@ -186,9 +186,7 @@ export function MapViewport({
           alt=""
         />
       )}
-      {!runtimeMap && !googleMapReady && !googleConfigured && (
-        <span className={styles.providerUnavailableLabel}>Bản đồ nền chưa được cấu hình</span>
-      )}
+      {!runtimeMap && !googleMapReady && <span className={styles.mapArtLabel}>Minh họa</span>}
       {!runtimeMap && !googleMapReady && (
         <img
           className={styles.mobileMapArtwork}
@@ -295,8 +293,9 @@ export function MapViewport({
         </>
       )}
 
-      <p className={styles.mapSuggestion}>
-        {onSearchArea ? (
+      {/* Only a real search action earns the pill; the illustrative map has nothing to explore. */}
+      {onSearchArea && (
+        <p className={styles.mapSuggestion}>
           <button
             type="button"
             onClick={onSearchArea}
@@ -304,10 +303,8 @@ export function MapViewport({
           >
             ☀ Khám phá thêm địa điểm gần lộ trình
           </button>
-        ) : (
-          '☀ Khám phá thêm địa điểm gần lộ trình'
-        )}
-      </p>
+        </p>
+      )}
     </section>
   );
 }

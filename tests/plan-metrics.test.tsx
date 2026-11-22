@@ -35,7 +35,7 @@ describe('Gateway Plan source metrics', () => {
     expect(metric('hoạt động').getByText('4')).toBeVisible();
     expect(metric('địa điểm').getByText('6')).toBeVisible();
     expect(metric('trải nghiệm').getByText('7 giờ 30 phút')).toBeVisible();
-    expect(metric('di chuyển').getByText('—')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.queryByText(/Chưa có dữ liệu/)).not.toBeInTheDocument();
     expect(screen.queryByText(/9 giờ 15 phút|1 giờ 20 phút/)).not.toBeInTheDocument();
   });
@@ -77,7 +77,7 @@ describe('Gateway Plan source metrics', () => {
     expect(metric('hoạt động').getByText('2')).toBeVisible();
     expect(metric('địa điểm').getByText('1')).toBeVisible();
     expect(metric('trải nghiệm').getByText('2 giờ 30 phút')).toBeVisible();
-    expect(metric('di chuyển').getByText('—')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.getByText('1 hoạt động chưa tính giờ')).toBeVisible();
 
     rendered.rerender(<PlanMetrics trip={trip} plan={mixed} day={day2!} />);
@@ -93,7 +93,7 @@ describe('Gateway Plan source metrics', () => {
     expect(metric('hoạt động').getByText('1')).toBeVisible();
     expect(metric('địa điểm').getByText('0')).toBeVisible();
     expect(metric('trải nghiệm').getByText('—')).toBeVisible();
-    expect(metric('di chuyển').getByText('—')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.getByText('1 hoạt động chưa tính giờ')).toBeVisible();
   });
 
@@ -121,7 +121,7 @@ describe('Gateway Plan source metrics', () => {
     expect(metric('hoạt động').getByText('1')).toBeVisible();
     expect(metric('địa điểm').getByText('1')).toBeVisible();
     expect(metric('trải nghiệm').getByText('—')).toBeVisible();
-    expect(metric('di chuyển').getByText('—')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.getByText('1 hoạt động chưa tính giờ').tagName).toBe('SMALL');
     expect(
       screen.queryByText(/Ngày \d|Chưa có dữ liệu|có giờ|gắn hoạt động|đã chọn/),

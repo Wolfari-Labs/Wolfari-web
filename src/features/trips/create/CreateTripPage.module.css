@@ -235,7 +235,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-blue);
   color: var(--v2-white);
   box-shadow:
@@ -1077,7 +1077,7 @@
     display: block;
     height: 156px;
     overflow: hidden;
-    border-radius: 15px;
+    border-radius: 12px;
     box-shadow: 0 10px 24px rgb(25 83 114 / 14%);
   }
 
@@ -1176,7 +1176,7 @@
 
   .successDialog {
     padding: 18px 20px;
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
   }
 
   .success h1 {
@@ -1262,7 +1262,7 @@
   .mapCard,
   .suggestions {
     border: 0;
-    border-radius: 34px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-white);
     box-shadow: var(--v2-shadow-card), var(--v2-inset);
   }
@@ -1392,21 +1392,23 @@
     box-shadow: var(--v2-shadow-float), var(--v2-inset);
   }
 
-  /* Trip style chips (938:9204, D/Chip). */
+  /* Trip style chips (938:9204, D/Chip). Tighter padding keeps the four chips on one row in the
+     half-width column with the wider Be Vietnam Pro face. */
   .styleChoices {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
 
   .styleChoices button {
     min-height: 37px;
-    padding: 9px 16px;
+    padding: 9px 10px;
+    white-space: nowrap;
     border: 0;
     border-radius: var(--v2-radius-pill);
     background: var(--v2-white);
     color: var(--v2-nav-text);
-    font: 700 14px/normal var(--v2-font);
+    font: 700 13px/normal var(--v2-font);
     box-shadow: var(--v2-shadow-drop);
   }
 
@@ -1492,7 +1494,7 @@
   .uploadCover {
     min-height: 140px;
     border: 0;
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-dashed-surface);
   }
 
@@ -1512,7 +1514,7 @@
     width: 44px;
     height: 44px;
     margin-bottom: 2px;
-    border-radius: 15px;
+    border-radius: 12px;
     background: var(--v2-gradient-violet);
     color: var(--v2-white);
     box-shadow:
@@ -1589,7 +1591,7 @@
     flex-direction: column;
     gap: 12px;
     padding: 16px 12px 12px;
-    border-radius: 32px;
+    border-radius: var(--v2-radius-tile);
   }
 
   .mapCard > h2,
@@ -1606,7 +1608,7 @@
     min-height: 250px;
     padding: 0;
     overflow: hidden;
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-track);
   }
 
@@ -1660,7 +1662,7 @@
     gap: 12px;
     padding: 10px 16px 10px 10px;
     border: 0;
-    border-radius: 22px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-white);
     box-shadow: var(--v2-shadow-float), var(--v2-inset);
   }
@@ -1692,7 +1694,7 @@
     flex-direction: column;
     gap: 10px;
     padding: 20px 22px;
-    border-radius: 32px;
+    border-radius: var(--v2-radius-tile);
   }
 
   .suggestions h2 {
@@ -1739,7 +1741,7 @@
     align-items: center;
     gap: 16px;
     padding: 14px 24px 14px 18px;
-    border-radius: 30px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-gradient-mascot);
     box-shadow: var(--v2-shadow-card), var(--v2-inset);
   }
@@ -1781,7 +1783,7 @@
   }
 
   .gatewayMapIllustration {
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-track);
   }
 

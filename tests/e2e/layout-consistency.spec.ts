@@ -83,9 +83,9 @@ for (const viewport of [...viewports, { width: 1366, height: 768 }, { width: 120
     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
     const lower = await edges('[data-region="trip-overview-workspace"] > *');
     expect(kpi).toHaveLength(4);
-    expect(lower).toHaveLength(3);
-    // Web v2 W04: four equal stat tiles over a 520 / 340 / 204 row; only the outer edges align.
+    expect(lower).toHaveLength(2);
+    // Web v2 W04: four equal stat tiles over a 3:2 itinerary / map row; only outer edges align.
     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
-    near(lower[2]!.right, kpi[3]!.right, 'aside right = KPI 4 right');
+    near(lower[1]!.right, kpi[3]!.right, 'map right = KPI 4 right');
   });
 }

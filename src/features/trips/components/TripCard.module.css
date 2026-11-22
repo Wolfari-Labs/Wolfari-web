@@ -4,9 +4,7 @@
   min-width: 0;
   border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
-  box-shadow:
-    var(--v2-shadow-drop),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-drop), var(--v2-inset);
   font-family: var(--v2-font);
   transition:
     transform var(--motion-control) var(--motion-control-easing),
@@ -14,9 +12,7 @@
 }
 .card:hover {
   transform: translateY(-2px);
-  box-shadow:
-    var(--v2-shadow-float),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .link {
   display: flex;
@@ -31,7 +27,7 @@
   position: relative;
   height: 150px;
   overflow: hidden;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-sky);
 }
 .photo img,
@@ -157,13 +153,13 @@
 
 /* Featured trip: 34px radius, white → #eef4ff surface, 376px photo, 30px title, progress. */
 .featured {
-  border-radius: 34px;
+  border-radius: var(--v2-radius-tile);
   background: linear-gradient(to bottom, var(--v2-white), #eef4ff);
-  box-shadow:
-    var(--v2-shadow-float),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
-@media (min-width: 1101px) {
+/* Two regular cards stack beside the featured card (also in the two-column 769–1100 grid), so
+   the neighbour card is never stretched to the featured height. */
+@media (min-width: 769px) {
   .featured {
     grid-row: span 2;
   }
@@ -174,7 +170,7 @@
 }
 .featured .photo {
   height: 376px;
-  border-radius: 26px;
+  border-radius: var(--v2-radius-tile);
 }
 .featured .status {
   top: 14px;
@@ -227,9 +223,7 @@
   background: var(--v2-gradient);
   color: var(--v2-white);
   font: 800 15px/normal var(--v2-font);
-  box-shadow:
-    var(--v2-shadow-float),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .mascot {
   position: absolute;

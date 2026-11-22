@@ -66,7 +66,7 @@ function PackingSummary({
   const completed = plan.data.packingItems.filter((item) => item.status === 'COMPLETED').length;
   return (
     <OverviewProgress
-      percent={total ? Math.round((completed / total) * 100) : 0}
+      percent={total ? Math.round((completed / total) * 100) : null}
       label={`${completed}/${total} món đã chuẩn bị`}
     >
       <p className={styles.summaryValue}>
@@ -154,25 +154,27 @@ export function TripOverview({
             <Link
               className={styles.cardLink}
               to={paths.packing(trip.id)}
-              aria-label="Tiến độ Packing list"
+              aria-label="Tiến độ hành lý"
             />
             <div className={styles.statHead}>
               <IconBadge icon="luggage" tone="amber" />
-              <h2>Tiến độ Packing list</h2>
+              <h2>Tiến độ hành lý</h2>
             </div>
             <div className={styles.cardContent}>
               <PackingSummary trip={trip} plan={plan} onRetry={onRetry} />
             </div>
           </section>
-          <section className={`${styles.stat} ${styles.weatherCard}`}>
+          <section className={`${styles.stat} ${styles.fareCard}`} data-region="trip-overview-fare">
+            <Link
+              className={styles.cardLink}
+              to={paths.priceWatch(trip.id)}
+              aria-label="Theo dõi giá vé"
+            />
             <div className={styles.statHead}>
-              <IconBadge icon="sun" tone="coral" />
-              <h2>Thời tiết</h2>
+              <IconBadge icon="price" tone="coral" />
+              <h2>Theo dõi giá vé</h2>
             </div>
-            <div className={styles.cardContent}>
-              <p className={styles.summaryValue}>—</p>
-              <p className={styles.summaryDetail}>Chưa có dữ liệu thời tiết</p>
-            </div>
+            <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
           </section>
         </div>
         <div className={styles.workspace} data-region="trip-overview-workspace">
@@ -210,29 +212,6 @@ export function TripOverview({
               <span>Minh họa</span>
             </div>
           </section>
-          <div className={styles.aside}>
-            <section
-              className={`${styles.panel} ${styles.farePanel}`}
-              data-region="trip-overview-fare"
-            >
-              <Link
-                className={styles.cardLink}
-                to={paths.priceWatch(trip.id)}
-                aria-label="Theo dõi giá vé"
-              />
-              <IconBadge icon="price" tone="coral" />
-              <h2>Theo dõi giá vé</h2>
-              <div className={styles.fareContent}>{fareContent ?? <OverviewEmptyFare />}</div>
-            </section>
-            <div className={styles.postcard} data-region="trip-overview-postcard">
-              <IconBadge icon="compass" tone="amber" />
-              <p>
-                Mỗi chuyến đi
-                <br />
-                là một câu chuyện
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </>

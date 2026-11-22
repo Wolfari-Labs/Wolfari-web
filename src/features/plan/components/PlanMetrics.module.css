@@ -30,7 +30,7 @@
   place-items: center;
   width: 36px;
   height: 36px;
-  border-radius: 14px;
+  border-radius: var(--v2-radius-thumb);
   background: var(--v2-sky);
   color: var(--v2-blue);
 }
@@ -43,11 +43,6 @@
 .metric:nth-child(3) .icon {
   background: var(--v2-butter);
   color: #f5a623;
-}
-
-.metric:nth-child(4) .icon {
-  background: var(--v2-mint);
-  color: #2dbe7a;
 }
 
 .copy {
@@ -84,13 +79,14 @@
 @media (max-width: 900px) {
   .metrics {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px 12px;
   }
 }
 
 @media (max-width: 480px) {
   .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 14px;
   }
 }

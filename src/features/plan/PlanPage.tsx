@@ -8,7 +8,7 @@ import {
   type RefObject,
   type KeyboardEvent,
 } from 'react';
-import { useParams, useOutletContext } from 'react-router';
+import { Link, useParams, useOutletContext } from 'react-router';
 import { Accessibility } from '@dnd-kit/dom';
 import {
   DragDropProvider,
@@ -867,9 +867,20 @@ export function PlanView({
               </small>
             </button>
           ))}
-          <Button variant="outline" disabled icon={<Icon name="plus" size={18} />}>
-            Thêm ngày
-          </Button>
+          {/* Days come from the trip dates, so "Thêm ngày" opens the trip edit form (owners only)
+              instead of a permanently disabled button. */}
+          {trip.currentMembership.role === 'OWNER' &&
+            trip.permissions.canUpdate &&
+            trip.lifecycle !== 'ARCHIVED' && (
+              <Link
+                className={styles.addDay}
+                to={`${paths.settings(trip.id)}?mode=edit`}
+                title="Thêm ngày bằng cách đổi ngày kết thúc chuyến đi"
+              >
+                <Icon name="plus" size={18} />
+                Thêm ngày
+              </Link>
+            )}
         </div>
         <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       </div>

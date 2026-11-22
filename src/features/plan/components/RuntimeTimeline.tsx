@@ -72,8 +72,10 @@ function DayTarget({
       onClick={onClick}
     >
       {day !== 'ALL' && day !== 'POOL' ? (
+        // "Ngày 1" sits over the date; a hidden separator keeps the name "Ngày 1 · 22/09".
         <span>
-          {label.split(' · ')[0]} ·<small>{label.split(' · ')[1]}</small>
+          {label.split(' · ')[0]} <span className={styles.srOnly}>·</span>{' '}
+          <small>{label.split(' · ')[1]}</small>
         </span>
       ) : (
         label

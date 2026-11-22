@@ -1,6 +1,7 @@
-/* Web v2 W04 / W05 trip overview (Figma 932:7192, 938:8073): photo hero, four D/Stat tiles and the
-   itinerary / map / side column row. Desktop geometry: 1104 = 4 x 261 + 3 x 20 and
-   520 + 340 + 204 + 2 x 20; the lower row fills the viewport down to the shell gutter. */
+/* Web v2 W04 / W05 trip overview (Figma 932:7192, 938:8073): photo hero, four D/Stat tiles (day,
+   fund, packing, fare) and the itinerary / map row. The Figma side column (fare card + brand
+   postcard) is folded away: fare tracking is the fourth tile (W04 puts "Giá vé" there) and the
+   member count already sits in the hero, so the itinerary gets the width its day tabs need. */
 .page {
   --overview-gap: 20px;
   position: relative;
@@ -135,7 +136,7 @@
 }
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 520fr) minmax(0, 340fr) minmax(0, 204fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: var(--overview-gap);
   height: clamp(340px, calc(100dvh - 550px), 560px);
   min-height: 0;
@@ -143,8 +144,7 @@
 
 /* Cards. A native link covers each card; nested controls stay above it. */
 .stat,
-.panel,
-.postcard {
+.panel {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -168,8 +168,7 @@
 }
 .stat :is(button, select, input, [role='alert']),
 .panel :is(button, select, input, [role='alert']),
-.itineraryPanel ol,
-.fareContent a {
+.itineraryPanel ol {
   position: relative;
   z-index: 3;
 }
@@ -189,7 +188,7 @@
   place-items: center;
   width: 46px;
   height: 46px;
-  border-radius: 16px;
+  border-radius: var(--v2-radius-thumb);
   color: var(--v2-white);
   box-shadow: var(--v2-inset-badge);
 }
@@ -235,7 +234,7 @@
 .packingCard {
   background: var(--v2-butter);
 }
-.weatherCard {
+.fareCard {
   background: var(--v2-peach);
 }
 .statHead {
@@ -331,7 +330,7 @@
   line-height: 16px;
 }
 
-/* White panels: itinerary, map and fare tracker. */
+/* White panels: itinerary and map. */
 .panel {
   background: var(--v2-white);
 }
@@ -391,7 +390,7 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-track);
 }
 .mapArtwork > img {
@@ -411,70 +410,6 @@
   font: 700 12px/normal var(--v2-font);
   box-shadow: var(--v2-shadow-drop);
 }
-.aside {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-height: 0;
-}
-.farePanel {
-  flex: 1 1 auto;
-  align-items: flex-start;
-  gap: 10px;
-  min-height: 0;
-  padding: 20px 18px;
-  overflow: hidden;
-}
-.farePanel > .badge {
-  width: 44px;
-  height: 44px;
-  border-radius: 15px;
-}
-.farePanel > h2 {
-  color: var(--v2-sub);
-  font: 700 13px/normal var(--v2-font);
-}
-.fareContent {
-  position: relative;
-  width: 100%;
-  min-height: 0;
-  overflow: auto;
-  color: var(--v2-ink);
-  font: 700 13px/18px var(--v2-font);
-}
-.fareContent p {
-  margin: 0;
-}
-.fareContent > p:first-child {
-  color: var(--v2-ink);
-  font: 800 22px/28px var(--v2-font);
-}
-.fareContent .summaryDetail {
-  margin-top: 4px;
-}
-.fareContent a {
-  display: inline-block;
-  padding-block: 4px;
-  color: var(--v2-blue);
-}
-/* The Figma weather tile slot (932:7455) holds the brand postcard: no weather data exists. */
-.postcard {
-  flex: 0 0 auto;
-  gap: 10px;
-  padding: 20px 18px;
-  background: var(--v2-gradient-mascot);
-}
-.postcard > .badge {
-  width: 44px;
-  height: 44px;
-  border-radius: 15px;
-}
-.postcard p {
-  margin: 0;
-  color: var(--v2-ink);
-  font: 800 17px/23px var(--v2-font);
-}
-
 .metadata {
   font-size: 12px;
   overflow-wrap: anywhere;
@@ -507,7 +442,7 @@
     margin: 0;
     padding: 2px 10px;
     overflow: auto;
-    border-radius: 12px;
+    border-radius: var(--v2-radius-thumb);
     background: rgb(255 255 255 / 85%);
   }
 }
@@ -517,19 +452,11 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .workspace {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
     height: auto;
   }
   .itineraryPanel,
   .mapPanel {
     height: 410px;
-  }
-  .aside {
-    grid-column: 1 / -1;
-    flex-direction: row;
-  }
-  .aside > * {
-    flex: 1 1 0;
   }
 }
 @media (max-width: 768px) {
@@ -561,9 +488,6 @@
     left: 70px;
     right: 14px;
   }
-  .aside {
-    flex-direction: column;
-  }
   .metadata dl {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -580,11 +504,12 @@
 .summaries .summaryValue {
   color: var(--v2-ink);
 }
-/* Mobile cards grow with their content, so the fare copy never becomes a non-focusable scroller. */
-@media (max-width: 768px) {
-  .fareContent {
-    overflow: visible;
-  }
+/* Call-to-action copy in a tile (the whole tile is the link). Blue is under 4.5:1 on peach. */
+.summaries .summaryLink {
+  margin: 4px 0 0;
+  color: var(--v2-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 /* Gateway member-loading note: a pill over the hero under the breadcrumb, so the W04 rows keep
    their Figma positions (hero 232, tiles at +256). */
@@ -603,4 +528,8 @@
     background: rgb(255 255 255 / 92%);
     color: var(--v2-ink);
   }
+}
+/* Stat tiles show at most two short lines: never an inner scroller (axe scrollable-region-focusable). */
+.summaries .cardContent {
+  overflow: visible;
 }

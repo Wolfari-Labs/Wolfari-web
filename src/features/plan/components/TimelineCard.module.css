@@ -8,7 +8,7 @@
   min-height: 70px;
   padding: 8px 8px 8px 6px;
   border: 1.5px solid #e6ecfa;
-  border-radius: 26px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-row);
   color: var(--v2-ink);
   font-family: var(--v2-font);

@@ -588,8 +588,8 @@ function PreviewCreateTripPage() {
               </fieldset>
 
               <p className={styles.draftNote}>
-                Điểm đến, thành viên, phong cách, ngân sách, mẫu và ảnh bìa đang được giữ trong bản
-                nháp trên thiết bị này; máy chủ hiện chỉ lưu thông tin chuyến đi cơ bản.
+                Chuyến đi được tạo với tên, ngày và mô tả. Điểm đến, số thành viên, phong cách, ngân
+                sách, mẫu và ảnh bìa chỉ được giữ trong bản nháp trên thiết bị này.
               </p>
               {requestMessage && <Alert live>{requestMessage}</Alert>}
 
@@ -655,7 +655,8 @@ function PreviewCreateTripPage() {
               <div>
                 <strong>Biến ý tưởng thành hành trình đáng nhớ!</strong>
                 <p>
-                  Wolfari sẽ gợi ý lịch trình, dress code và hành lý ngay sau khi bạn tạo chuyến đi.
+                  Sau khi tạo, cả nhóm có thể cùng lên lịch trình, chọn dress code và chuẩn bị hành
+                  lý.
                 </p>
               </div>
             </div>

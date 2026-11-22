@@ -685,7 +685,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       maxLength={200}
                       value={query}
                       onChange={(event) => setQuery(event.target.value)}
-                      placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
+                      placeholder="Tìm địa điểm, quán ăn…"
                     />
                     <button
                       type="button"
@@ -926,26 +926,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                           </option>
                         ))}
                       </Select>
-                    </div>
-                    <div className={styles.mapType} role="group" aria-label="Kiểu bản đồ">
-                      <button
-                        type="button"
-                        aria-pressed={true}
-                        onClick={() => setNotice('Đang hiển thị bản đồ Geoapify.')}
-                      >
-                        Bản đồ
-                      </button>
-                      <button
-                        type="button"
-                        aria-pressed={false}
-                        onClick={() =>
-                          setNotice(
-                            'Nguồn Geoapify hiện tại chưa cung cấp lớp vệ tinh. Bản đồ đường phố vẫn hoạt động.',
-                          )
-                        }
-                      >
-                        Vệ tinh
-                      </button>
                     </div>
                   </div>
                   <MapViewport

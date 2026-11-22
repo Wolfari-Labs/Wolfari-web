@@ -123,7 +123,8 @@
   gap: 8px;
   margin: -4px -6px -10px;
   padding: 4px 6px 10px;
-  scrollbar-width: none;
+  /* A thin bar only appears when the chips overflow, so hidden days stay discoverable. */
+  scrollbar-width: thin;
 }
 .summary[data-overview] .days button {
   flex: 0 0 auto;
@@ -136,6 +137,16 @@
   font: 700 14px/18px var(--v2-font);
   white-space: nowrap;
   box-shadow: var(--v2-shadow-drop), var(--v2-inset);
+}
+@media (max-width: 1100px) {
+  /* Be Vietnam Pro is wide: compact chips keep four days visible in the narrower itinerary. */
+  .summary[data-overview] .days {
+    gap: 6px;
+  }
+  .summary[data-overview] .days button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
 }
 .summary[data-overview] .days button:hover {
   color: var(--v2-ink);
@@ -172,7 +183,7 @@
   padding: 10px 14px 10px 10px;
   gap: 12px;
   border: 0;
-  border-radius: 26px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-dashed-surface);
 }
 .summary[data-overview] .activityLink {

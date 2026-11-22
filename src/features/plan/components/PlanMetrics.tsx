@@ -62,7 +62,8 @@ export function PlanMetrics({
   const withoutTime = durations.filter((value) => value === null).length;
 
   // Web v2 W06 "day stats" (Figma 933:7468): the scope is carried by the region name and the
-  // selected day tab, so each metric shows the short Figma label.
+  // selected day tab, so each metric shows the short Figma label. The Figma "di chuyển" metric is
+  // omitted: no travel-time source exists, and a permanent "—" is not information.
   return (
     <section className={styles.strip} aria-label={`Tóm tắt lịch trình · ${scope}`}>
       <div className={styles.metrics}>
@@ -92,15 +93,6 @@ export function PlanMetrics({
             <strong>{durationLabel(knownMinutes)}</strong>
             <span>trải nghiệm</span>
             {withoutTime > 0 && <small>{withoutTime} hoạt động chưa tính giờ</small>}
-          </div>
-        </div>
-        <div className={styles.metric}>
-          <span className={styles.icon} aria-hidden="true">
-            <Icon name="car" size={18} />
-          </span>
-          <div className={styles.copy}>
-            <strong>—</strong>
-            <span>di chuyển</span>
           </div>
         </div>
       </div>

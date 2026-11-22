@@ -84,7 +84,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 6px;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-sky);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
   color: var(--v2-ink);
@@ -141,7 +141,7 @@
   flex-direction: column;
   gap: 18px;
   padding: 32px 22px 32px;
-  border-radius: 36px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
@@ -222,16 +222,6 @@
   color: var(--v2-danger-text);
   font-size: 13px;
   font-weight: 700;
-}
-.previewNote {
-  margin: 0;
-  padding: 10px 14px;
-  border-radius: var(--v2-radius-row);
-  background: var(--v2-sky);
-  color: var(--v2-ink);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 18px;
 }
 .card .submit {
   width: 100%;
