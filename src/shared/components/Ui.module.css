@@ -262,7 +262,7 @@
   flex-shrink: 0;
   width: 44px;
   height: 44px;
-  border-radius: var(--v2-radius-pill);
+  border-radius: var(--v2-radius-round);
   background: var(--v2-gradient-diagonal);
   color: var(--v2-white);
   font-size: var(--font-size-label);
@@ -273,7 +273,7 @@
 @media (max-width: 768px) {
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
   .avatar {
-    border-radius: 15px;
+    border-radius: 12px;
   }
 }
 .avatar img {

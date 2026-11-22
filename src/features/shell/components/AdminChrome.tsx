@@ -1,16 +1,6 @@
 import { Link } from 'react-router';
 import type { ReactNode } from 'react';
-import {
-  Bell,
-  ClipboardList,
-  Clock,
-  Compass,
-  Info,
-  Link2,
-  Tag,
-  Users,
-  type LucideIcon,
-} from 'lucide-react';
+import { ClipboardList, Clock, Compass, Link2, Tag, Users, type LucideIcon } from 'lucide-react';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSnapshot } from '../model/shell';
 import { BrandWordmark } from '../../../shared/components/BrandWordmark';
@@ -28,7 +18,7 @@ export const adminSections: {
   { id: 'accounts', label: 'Tài khoản', letter: 'N', icon: Users },
   { id: 'providers', label: 'Tích hợp', letter: 'P', icon: Link2 },
   { id: 'monitoring', label: 'Giám sát', letter: 'G', icon: Clock },
-  { id: 'audit', label: 'Audit & hỗ trợ', letter: 'A', icon: ClipboardList },
+  { id: 'audit', label: 'Nhật ký & hỗ trợ', letter: 'A', icon: ClipboardList },
   { id: 'configuration', label: 'Cấu hình', letter: 'C', icon: Tag },
 ];
 export function AdminPlaceholder() {
@@ -78,13 +68,6 @@ export function AdminSidebar({ children }: { children: ReactNode }) {
       </div>
       <p className={styles.sectionLabel}>QUẢN TRỊ</p>
       {children}
-      <div className={styles.reminder}>
-        <p className={styles.reminderTitle}>
-          <Info size={16} strokeWidth={2} aria-hidden="true" />
-          Phạm vi Admin
-        </p>
-        <p>Quản trị hệ thống không thay quyền trong Trip.</p>
-      </div>
     </div>
   );
 }
@@ -100,15 +83,12 @@ export function AdminTopbar({
     <header className={styles.topbar} data-node-id="937:8031">
       <div className={styles.topbarTitle}>
         <span>{adminSections.find((item) => item.id === section)?.label}</span>
-        <span>Wolfari · System Admin</span>
+        <span>Wolfari · Quản trị hệ thống</span>
       </div>
       <div className={styles.actions}>
-        <button className={styles.bell} disabled aria-label="Thông báo Admin · Chưa triển khai">
-          <Bell size={20} strokeWidth={1.8} aria-hidden="true" />
-        </button>
         <span className={styles.account}>
           <span className={styles.avatar} aria-hidden="true">
-            A
+            {viewer?.fullName.trim().charAt(0).toLocaleUpperCase('vi') || 'A'}
           </span>
           {viewer && (
             <Link to={paths.profile}>

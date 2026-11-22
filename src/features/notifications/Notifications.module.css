@@ -3,7 +3,7 @@
   position: relative;
   width: 44px;
   height: 44px;
-  border-radius: var(--v2-radius-pill);
+  border-radius: var(--v2-radius-round);
   background: var(--v2-white);
   color: var(--v2-ink);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
@@ -191,7 +191,7 @@
   height: 44px;
   display: grid;
   place-items: center;
-  border-radius: 15px;
+  border-radius: 12px;
   color: var(--v2-white);
   background: var(--v2-gradient-green);
   box-shadow:
@@ -256,7 +256,7 @@
   min-width: 0;
   padding: 12px 18px 12px 14px;
   border: 1.5px solid #e3e9f7;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   overflow-wrap: anywhere;
 }
@@ -270,7 +270,7 @@
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border-radius: 15px;
+  border-radius: 12px;
   color: var(--v2-white);
   background: var(--v2-gradient-blue);
   box-shadow:
@@ -435,7 +435,7 @@
   height: 64px;
   display: grid;
   place-items: center;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   color: var(--v2-white);
   background: var(--v2-gradient-violet);
   box-shadow:

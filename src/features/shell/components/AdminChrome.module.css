@@ -86,37 +86,6 @@
 .navIcon {
   flex-shrink: 0;
 }
-.reminder {
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 12px;
-  padding: 16px;
-  border-radius: 24px;
-  background: #f1edff;
-}
-.reminder p {
-  margin: 0;
-  color: var(--v2-sub);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 17px;
-  overflow-wrap: anywhere;
-}
-.reminder .reminderTitle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--v2-ink);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 19px;
-}
-.reminderTitle svg {
-  flex-shrink: 0;
-  color: var(--v2-violet-text);
-}
 
 .topbar {
   display: flex;
@@ -155,22 +124,6 @@
   align-items: center;
   gap: 12px;
 }
-.bell {
-  display: grid;
-  width: var(--target-min);
-  height: var(--target-min);
-  place-items: center;
-  padding: 0;
-  border: 0;
-  border-radius: var(--v2-radius-pill);
-  background: var(--v2-white);
-  box-shadow: var(--v2-shadow-card), var(--v2-inset);
-  color: var(--v2-ink);
-}
-.bell:disabled {
-  color: var(--v2-sub);
-  cursor: not-allowed;
-}
 .account {
   display: flex;
   min-width: 0;
@@ -196,7 +149,7 @@
   height: 38px;
   flex-shrink: 0;
   place-items: center;
-  border-radius: var(--v2-radius-pill);
+  border-radius: var(--v2-radius-round);
   background: linear-gradient(to right, #8f7bff, var(--v2-grad-start));
   color: var(--v2-white);
   font-size: 16px;
@@ -235,11 +188,6 @@
   line-height: 21px;
 }
 
-@media (max-height: 760px) {
-  .reminder {
-    display: none;
-  }
-}
 @media (max-width: 1100px) {
   .topbar {
     padding-left: 20px;
