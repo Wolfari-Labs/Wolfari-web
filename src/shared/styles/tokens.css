@@ -5,11 +5,11 @@
   --color-ink: #1f2a44;
   --color-muted: #5f6d86;
   --color-line: #e6ecfa;
-  --color-selected: #eef3ff;
+  --color-selected: #eef1f6;
   --color-blue: #2e6ad4;
   --color-green: #2dbe7a;
   --color-pale: #f7f9ff;
-  --color-background: #eef3ff;
+  --color-background: #f4f6fa;
   --color-nav: #4a5770;
   --color-active: #2e6ad4;
   --color-field-line: #dfe6f7;
@@ -22,8 +22,8 @@
   --color-status-warning-surface: #fff7df;
   --color-status-danger: #a34b4b;
   --color-status-danger-surface: #fff0f0;
-  --color-gradient-start: #5b8cff;
-  --color-gradient-end: #3cc9b0;
+  --color-gradient-start: #1f5fd1;
+  --color-gradient-end: #1f5fd1;
   --action-gradient: linear-gradient(
     to right,
     var(--color-gradient-start),
@@ -40,7 +40,7 @@
   --ios-mint: #e8f2ef;
   --ios-amber: #f8f3e8;
   --ios-peach: #f8e4d8;
-  --font-body: 'Nunito', 'Be Vietnam Pro', sans-serif;
+  --font-body: 'Be Vietnam Pro', 'Nunito', sans-serif;
   --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
   --font-handwritten: 'Patrick Hand', 'Be Vietnam Pro', cursive;
   --font-size-caption: 12px;
@@ -77,11 +77,11 @@
   --radius-10: 10px;
   --radius-12: 12px;
   --radius-16: 16px;
-  --radius-button: 999px;
+  --radius-button: 10px;
   --radius-6: 6px;
-  --radius-control: 20px;
-  --radius-card: 28px;
-  --radius-dialog: 32px;
+  --radius-control: 10px;
+  --radius-card: 16px;
+  --radius-dialog: 20px;
   --color-border: var(--color-line);
   --color-primary: var(--color-action-primary);
   --color-surface: var(--color-white);
@@ -130,7 +130,7 @@
   --page-header-gap: 14px;
   --grid-gap: 16px;
   --side-panel-width: minmax(300px, 372px);
-  --radius-panel: 28px;
+  --radius-panel: 16px;
   --radius-hero: var(--radius-card);
   --card-padding-narrow: var(--space-16);
   --card-surface: var(--color-surface);
@@ -152,7 +152,7 @@
 
   /* Web v2 · Pastel mềm 3D (Figma 930:6658, components 930:6659). Values copied from the
      Figma nodes; see docs/web-v2/FIGMA_V2_INVENTORY.md. */
-  --v2-font: 'Nunito', 'Be Vietnam Pro', sans-serif;
+  --v2-font: 'Be Vietnam Pro', 'Nunito', sans-serif;
   --v2-font-brand: 'Baloo 2', 'Nunito', sans-serif;
   --v2-ink: #1f2a44;
   /* Text roles darkened minimally from Figma (#6a7891, #8a97b0, #3c7be8, #9a6a12, #6b4ee6) to
@@ -162,9 +162,9 @@
   --v2-muted: #5d6a83;
   --v2-blue: #2e6ad4;
   --v2-white: #fff;
-  --v2-track: #eef3ff;
-  --v2-field: #f4f6fd;
-  --v2-row: #f7f9ff;
+  --v2-track: #eef1f6;
+  --v2-field: #f3f5f9;
+  --v2-row: #f7f8fb;
   --v2-dashed-surface: #f6f8ff;
   --v2-dashed-line: #9db8f5;
   --v2-sky: #dce9ff;
@@ -176,32 +176,37 @@
   --v2-success-text: #1f7a52;
   --v2-warning-text: #8c600f;
   --v2-danger-text: #c2412d;
-  --v2-grad-start: #5b8cff;
-  --v2-grad-end: #3cc9b0;
-  --v2-gradient: linear-gradient(to right, var(--v2-grad-start), var(--v2-grad-end));
-  --v2-gradient-diagonal: linear-gradient(135deg, #5b8cff 0%, #3cc9b0 71.429%);
-  --v2-gradient-blue: linear-gradient(135deg, #7ba7ff 0%, #3c7be8 71.429%);
-  --v2-gradient-green: linear-gradient(135deg, #5ee0b0 0%, #2dbe7a 71.429%);
-  --v2-gradient-amber: linear-gradient(135deg, #ffd66b 0%, #f5a623 71.429%);
-  --v2-gradient-coral: linear-gradient(135deg, #ffa48c 0%, #ff6f59 71.429%);
-  --v2-gradient-violet: linear-gradient(135deg, #a58bff 0%, #6b4ee6 71.429%);
-  --v2-gradient-mascot: linear-gradient(to bottom, #fff0c2, #ffe0d4);
-  --v2-page-background: linear-gradient(146.3deg, #eaf0ff 0%, #f3f0ff 50%, #e9fbf3 100%);
-  --v2-radius-pill: 999px;
-  --v2-radius-tile: 28px;
-  --v2-radius-nav: 30px;
-  --v2-radius-panel: 32px;
-  --v2-radius-thumb: 20px;
-  --v2-radius-field: 20px;
-  --v2-radius-row: 18px;
+  /* Refined V2 (user direction 22/11/2026, V2-D15): flat brand blue instead of the Figma
+     blue→teal gradient, solid icon tiles, a flat page tint and tighter radii. The Figma values
+     stay documented in docs/web-v2/V2_DESIGN_DELTAS.md. */
+  --v2-grad-start: #1f5fd1;
+  --v2-grad-end: #1f5fd1;
+  --v2-gradient: #1f5fd1;
+  --v2-gradient-diagonal: #1f5fd1;
+  --v2-gradient-blue: #2f6fe0;
+  --v2-gradient-green: #1e9e6a;
+  --v2-gradient-amber: #e3920c;
+  --v2-gradient-coral: #e5603f;
+  --v2-gradient-violet: #6a4fd8;
+  --v2-gradient-mascot: linear-gradient(to bottom, #fff4d6, #ffe7dc);
+  --v2-page-background: linear-gradient(#f4f6fa, #f4f6fa);
+  --v2-radius-pill: 10px;
+  --v2-radius-round: 999px;
+  --v2-radius-tile: 16px;
+  --v2-radius-nav: 18px;
+  --v2-radius-panel: 20px;
+  --v2-radius-thumb: 12px;
+  --v2-radius-field: 10px;
+  --v2-radius-row: 10px;
   --v2-field-height: 56px;
-  --v2-shadow-drop: 0 8px 10px rgb(92 122 199 / 12%);
-  --v2-shadow-card: 0 8px 20px -4px rgb(92 122 199 / 12%);
-  --v2-shadow-float: 0 12px 28px -4px rgb(92 122 199 / 18%);
-  --v2-shadow-nav: 0 12px 14px rgb(92 122 199 / 18%);
-  --v2-shadow-active: 0 6px 14px -4px rgb(60 123 232 / 28%);
-  --v2-inset: inset 0 -4px 10px rgb(51 64 115 / 6%), inset 0 2px 3px rgb(255 255 255 / 90%);
-  --v2-inset-badge: inset 0 2px 3px rgb(255 255 255 / 55%);
+  --v2-shadow-drop: 0 1px 2px rgb(15 23 42 / 6%);
+  --v2-shadow-card: 0 1px 2px rgb(15 23 42 / 5%), 0 6px 16px -10px rgb(15 23 42 / 14%);
+  --v2-shadow-float: 0 2px 4px rgb(15 23 42 / 6%), 0 12px 24px -12px rgb(15 23 42 / 22%);
+  --v2-shadow-nav: 0 1px 2px rgb(15 23 42 / 6%), 0 8px 20px -14px rgb(15 23 42 / 20%);
+  --v2-shadow-active: none;
+  /* Hairline edge instead of the Figma clay highlight. */
+  --v2-inset: inset 0 0 0 1px rgb(15 23 42 / 7%);
+  --v2-inset-badge: none;
   --v2-shell-gutter: 24px;
   --v2-shell-top: 20px;
   --v2-topnav-height: 76px;

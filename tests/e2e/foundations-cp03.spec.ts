@@ -92,7 +92,7 @@ test('reduced motion removes shared button displacement but keeps state feedback
   const button = page.getByRole('button', { name: 'Xem minh họa', exact: true });
   await button.hover();
   await expect(button).toHaveCSS('transform', 'none');
-  await expect(button).toHaveCSS('background-color', 'rgb(238, 243, 255)');
+  await expect(button).toHaveCSS('background-color', 'rgb(238, 241, 246)');
   await page.mouse.down();
   await expect(button).toHaveCSS('transform', 'none');
   await page.mouse.up();
@@ -156,31 +156,7 @@ test('computed shared text, field error, focus and primary gradient contrast', a
     contentType: 'application/json',
   });
   await writeFile(info.outputPath('contrast-ratios.json'), JSON.stringify(ratios, null, 2));
-  // The Web v2 primary gradient (#5b8cff → #3cc9b0, Figma 930:6698) is tracked separately below.
+  // Refined V2 uses a flat brand blue for primary actions, so white text meets AA (V2-D15).
   for (const [name, ratio] of Object.entries(ratios))
-    if (name !== 'gradientMinimum') expect(ratio, name).toBeGreaterThanOrEqual(4.5);
-});
-
-// V2-D09 (docs/web-v2/V2_DESIGN_DELTAS.md): white text on the Figma V2 gradient reaches only
-// ~2.1:1 at the teal end. Kept as the Figma brand look pending a design decision; re-enable
-// this check once the gradient (or the text treatment on it) is approved for AA.
-test.fixme('V2-D09 primary gradient keeps white text at AA contrast', async ({ page }) => {
-  await page.goto('/design-system.html');
-  const minimum = await page.evaluate(() => {
-    const style = getComputedStyle(document.documentElement);
-    const rgb = (name: string) => {
-      const hex = style.getPropertyValue(name).trim().replace('#', '');
-      return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
-    };
-    const luminance = (color: number[]) =>
-      color
-        .map((value) => {
-          const channel = value / 255;
-          return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-        })
-        .reduce((sum, value, i) => sum + value * [0.2126, 0.7152, 0.0722][i]!, 0);
-    const end = rgb('--color-gradient-end');
-    return 1.05 / (luminance(end) + 0.05);
-  });
-  expect(minimum).toBeGreaterThanOrEqual(4.5);
+    expect(ratio, name).toBeGreaterThanOrEqual(4.5);
 });

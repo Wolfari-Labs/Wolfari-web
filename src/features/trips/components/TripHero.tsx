@@ -80,10 +80,7 @@ export function TripHero({
             Chỉnh sửa
           </button>
         )}
-        <button type="button" className={styles.share} disabled title="Chia sẻ chưa khả dụng">
-          <Icon name="share" size={17} />
-          Chia sẻ
-        </button>
+        {/* Sharing has no Web route yet (W13/W21), so no permanently disabled CTA is shown. */}
       </div>
     </section>
   );
