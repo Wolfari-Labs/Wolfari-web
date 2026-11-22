@@ -50,6 +50,7 @@ export function FinanceStateBar({
   onBudget,
   onDestination,
   disabled,
+  actions,
 }: {
   status: 'OPEN' | 'CLOSING' | 'CLOSED';
   holderName: string;
@@ -60,6 +61,8 @@ export function FinanceStateBar({
   onBudget?: () => void;
   onDestination?: () => void;
   disabled?: boolean;
+  /** Page-level controls for this fund (e.g. reload), shown with the status header. */
+  actions?: ReactNode;
 }) {
   const statusLabel =
     status === 'OPEN' ? 'Đang mở' : status === 'CLOSING' ? 'Đang chốt' : 'Đã đóng';
@@ -69,16 +72,9 @@ export function FinanceStateBar({
         <Icon name={status === 'OPEN' ? 'fund' : status === 'CLOSING' ? 'hourglass' : 'lock'} size={22} />
       </span>
       <div className={styles.financeStateCopy}>
-        <div className={styles.financeEyebrow}>
-          <Badge>VietQR</Badge>
-          <span>Quỹ nhóm</span>
-        </div>
         <h2>Quỹ nhóm · {statusLabel}</h2>
         <p>
-          Người giữ quỹ: {holderName}. {owner ? 'Bạn là chủ chuyến. ' : ''}
-          {holder
-            ? 'Bạn là người giữ quỹ.'
-            : 'Tiền về thẳng tài khoản người giữ quỹ; ứng dụng ghi nhận và đối chiếu, không giữ tiền.'}
+          Người giữ quỹ: {holder ? 'bạn' : holderName}.{owner ? ' Bạn là chủ chuyến.' : ''}
         </p>
         {balance && format && (
           <span className={styles.financeSrOnly}>Số dư ghi sổ {format(balance)}</span>
@@ -86,7 +82,7 @@ export function FinanceStateBar({
       </div>
       <span className={styles.financeRoleBadge}>
         <Badge tone={status === 'OPEN' ? 'success' : 'warning'}>
-          {holder ? 'Fund Holder' : 'Thành viên'}
+          {holder ? 'Người giữ quỹ' : 'Thành viên'}
         </Badge>
       </span>
       {owner && onBudget && (
@@ -104,6 +100,7 @@ export function FinanceStateBar({
           Thông tin nhận tiền
         </Button>
       )}
+      {actions}
     </section>
   );
 }

@@ -140,9 +140,9 @@ test('Fund tabs support arrows, wraparound, Home, End and Tab with synchronized 
   await tabs.getByRole('tab', { name: 'Chi quỹ', exact: true }).focus();
   for (const [key, title] of [
     ['ArrowRight', 'Đóng góp'],
-    ['End', 'Lịch sử'],
+    ['End', 'Hoàn dư'],
     ['ArrowRight', 'Chi quỹ'],
-    ['ArrowLeft', 'Lịch sử'],
+    ['ArrowLeft', 'Hoàn dư'],
     ['Home', 'Chi quỹ'],
   ]) {
     await page.keyboard.press(key!);

@@ -31,6 +31,18 @@ const labels = {
   STOPPED: 'Đã dừng',
 };
 const money = (s: string) => new Intl.NumberFormat('vi-VN').format(BigInt(s)) + ' ₫';
+/** Provider codes stay in data; the UI names the source in plain Vietnamese. */
+const providerLabel = (provider: string) =>
+  provider === 'TRAVELPAYOUTS_CACHE'
+    ? 'bộ nhớ đệm Travelpayouts'
+    : provider === 'MOCK_FLIGHT'
+      ? 'giá mô phỏng'
+      : provider;
+/** yyyy-MM-dd → dd/MM/yyyy without timezone conversion. */
+const isoDate = (value: string) =>
+  /^\d{4}-\d{2}-\d{2}/.test(value)
+    ? `${value.slice(8, 10)}/${value.slice(5, 7)}/${value.slice(0, 4)}`
+    : value;
 const providerErrors = new Map([
   ['PROVIDER_AUTH_FAILED', 'Token nguồn giá bị từ chối.'],
   ['PROVIDER_RATE_LIMITED', 'Đang chờ hạn mức nguồn giá.'],
@@ -76,11 +88,11 @@ function Observations({
     <>
       <h3>Lịch sử giá quan sát</h3>
       <p>
-        Nguồn: {watch.fields.provider}. Lần kiểm tra mới nhất:{' '}
+        Nguồn: {providerLabel(watch.fields.provider)}. Kiểm tra gần nhất:{' '}
         {source?.lastCheckedAt
           ? new Date(source.lastCheckedAt).toLocaleString('vi-VN')
           : 'Chưa kiểm tra'}
-        . Lần kế tiếp:{' '}
+        . Kiểm tra tiếp theo:{' '}
         {source?.nextCheckAt
           ? new Date(source.nextCheckAt).toLocaleString('vi-VN')
           : 'Chưa lên lịch'}
@@ -88,13 +100,13 @@ function Observations({
       </p>
       {source?.lastCheckStatus === 'NO_RESULT' && (
         <Alert tone="info">
-          Lần kiểm tra gần nhất không có giá đúng tuyến/ngày (NO_RESULT); không phải giá 0.
+          Lần kiểm tra gần nhất không có giá đúng tuyến/ngày; không phải giá 0.
         </Alert>
       )}
       {cached && (
         <p>
-          Giá cache tham khảo · 1 người lớn, một chiều, phổ thông. Không phải giá đặt vé trực tiếp.
-          Chu kỳ kiểm tra 6 giờ; lịch sử chưa có dữ liệu có thể do không có giá đúng tuyến/ngày.
+          Giá tham khảo từ bộ nhớ đệm · 1 người lớn, một chiều, phổ thông. Không phải giá đặt vé
+          trực tiếp. Kiểm tra mỗi 6 giờ; lịch sử trống có thể do không có giá đúng tuyến/ngày.
         </p>
       )}
       {source?.lastError && (
@@ -160,7 +172,8 @@ function Observations({
           <li key={row.id}>
             <strong>{money(row.price)}</strong>
             <p>
-              Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn: {row.provider}
+              Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn:{' '}
+              {providerLabel(row.provider)}
             </p>
             <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
             {row.provider === 'TRAVELPAYOUTS_CACHE' && (
@@ -170,7 +183,7 @@ function Observations({
                 {row.providerFoundAt
                   ? new Date(row.providerFoundAt).toLocaleString('vi-VN')
                   : 'Không rõ'}{' '}
-                · Giá cache tham khảo
+                · Giá tham khảo
               </small>
             )}
           </li>
@@ -415,8 +428,8 @@ function WatchWorkspace({
   const providerBadge = (
     <Badge tone="warning">
       {import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
-        ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
-        : 'MOCK_FLIGHT · Mô phỏng'}
+        ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo'
+        : 'Nguồn: giá mô phỏng'}
     </Badge>
   );
   return (
@@ -488,7 +501,7 @@ function WatchWorkspace({
                     {item.fields.origin} <span aria-label="đến">→</span> {item.fields.destination}
                   </h2>
                   <p>
-                    {item.fields.departure_date} ·{' '}
+                    {isoDate(item.fields.departure_date)} ·{' '}
                     {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'}
                   </p>
                   <p className={styles.metadata}>Ngưỡng cảnh báo</p>

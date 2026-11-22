@@ -40,6 +40,14 @@ const date = (value: string | null) =>
 const time = (value: string | null) =>
   value ? `${date(value)} · ${value.slice(11, 16)}` : 'Chưa cập nhật';
 
+/** Provider codes stay in data; the UI names the source in plain Vietnamese. */
+const providerLabel = (value: string) =>
+  value.startsWith('MOCK_FLIGHT')
+    ? 'Giá mô phỏng'
+    : value.startsWith('TRAVELPAYOUTS_CACHE')
+      ? 'Bộ nhớ đệm Travelpayouts'
+      : value;
+
 const journeyLabel = (value: JourneyType) => (value === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều');
 
 const cabinLabel = (value: CabinClass) =>
@@ -78,89 +86,118 @@ function ErrorState({ error, retry }: { error: DomainError; retry: () => void })
 function WatchList({
   watches,
   selectedId,
-  environment,
-  canCreate,
+  view,
   onSelect,
   onCreate,
 }: {
   watches: readonly PriceWatchItem[];
   selectedId: string;
-  environment: PriceWatchViewModel['providerEnvironment'];
-  canCreate: boolean;
+  view: PriceWatchViewModel;
   onSelect: (id: string) => void;
   onCreate: () => void;
 }) {
   return (
     <section className={styles.listPanel} aria-labelledby="price-watch-list-title">
       <div className={`${styles.panelHeading} ${styles.listHeading}`}>
-        <div className={styles.titleRow}>
-          <h2 id="price-watch-list-title">Theo dõi của chuyến đi</h2>
-          <span className={styles.environmentBadge}>{environment}</span>
-        </div>
-        <Button onClick={onCreate} disabled={!canCreate} icon={<Icon name="plus" size={17} />}>
+        <h2 id="price-watch-list-title">Theo dõi của chuyến đi</h2>
+        <Button
+          onClick={onCreate}
+          disabled={!view.permissions.canCreate}
+          title={view.permissions.canCreate ? undefined : 'Bạn chưa có quyền tạo theo dõi'}
+          icon={<Icon name="plus" size={17} />}
+        >
           Tạo theo dõi
         </Button>
       </div>
       <div className={styles.watchList}>
         {watches.map((watch) => (
-          <button
-            className={`${styles.watchCard} ${watch.id === selectedId ? styles.selected : ''}`}
-            key={watch.id}
-            type="button"
-            aria-pressed={watch.id === selectedId}
-            data-price-state={
-              watch.status !== 'ACTIVE' ? 'inactive' : reachedThreshold(watch) ? 'reached' : 'above'
-            }
-            onClick={() => onSelect(watch.id)}
-          >
-            <span className={styles.watchIcon} aria-hidden="true">
-              <Icon name="price" size={22} />
-            </span>
-            <span className={styles.watchMain}>
-              <span className={styles.route}>
-                {watch.origin.split(' (')[0]} → {watch.destination.split(' (')[0]}
+          <div className={styles.watchItem} key={watch.id}>
+            <button
+              className={`${styles.watchCard} ${watch.id === selectedId ? styles.selected : ''}`}
+              type="button"
+              aria-pressed={watch.id === selectedId}
+              data-price-state={
+                watch.status !== 'ACTIVE'
+                  ? 'inactive'
+                  : reachedThreshold(watch)
+                    ? 'reached'
+                    : 'above'
+              }
+              onClick={() => onSelect(watch.id)}
+            >
+              <span className={styles.watchIcon} aria-hidden="true">
+                <Icon name="price" size={22} />
               </span>
-              <span className={styles.watchMeta}>
-                {journeyLabel(watch.journeyType)} · {date(watch.departureDate)}
-                {watch.returnDate ? ` – ${date(watch.returnDate)}` : ''}
+              <span className={styles.watchMain}>
+                <span className={styles.route}>
+                  {watch.origin.split(' (')[0]} → {watch.destination.split(' (')[0]}
+                </span>
+                <span className={styles.watchMeta}>
+                  {journeyLabel(watch.journeyType)} · {date(watch.departureDate)}
+                  {watch.returnDate ? ` – ${date(watch.returnDate)}` : ''}
+                </span>
+                <span className={styles.watchOwner}>
+                  {watch.passengers.adults + watch.passengers.children + watch.passengers.infants}{' '}
+                  hành khách · {cabinLabel(watch.cabin)} ·{' '}
+                  {watch.selfOwned
+                    ? 'Bạn tạo'
+                    : `Tạo bởi ${watch.owner.displayName ?? 'thành viên'}`}
+                </span>
               </span>
-              <span className={styles.watchOwner}>
-                {watch.passengers.adults + watch.passengers.children + watch.passengers.infants}{' '}
-                hành khách · {cabinLabel(watch.cabin)} ·{' '}
-                {watch.selfOwned ? 'Bạn tạo' : `Tạo bởi ${watch.owner.displayName ?? 'thành viên'}`}
+              <span className={styles.watchBottom}>
+                <span>
+                  <small>Giá quan sát</small>
+                  <strong data-price-state={reachedThreshold(watch) ? 'reached' : 'above'}>
+                    {money(watch.latestPriceVnd)}
+                  </strong>
+                </span>
+                <span>
+                  <small>Ngưỡng</small>
+                  <strong>{money(watch.thresholdVnd)}</strong>
+                </span>
+                <em data-status={watch.status}>
+                  {watch.status === 'ACTIVE'
+                    ? reachedThreshold(watch)
+                      ? 'Đạt ngưỡng'
+                      : 'Chưa đạt'
+                    : statusLabel[watch.status]}
+                </em>
               </span>
-            </span>
-            <span className={styles.watchBottom}>
-              <span>
-                <small>Giá quan sát</small>
-                <strong data-price-state={reachedThreshold(watch) ? 'reached' : 'above'}>
-                  {money(watch.latestPriceVnd)}
-                </strong>
-              </span>
-              <span>
-                <small>Ngưỡng</small>
-                <strong>{money(watch.thresholdVnd)}</strong>
-              </span>
-              <em data-status={watch.status}>
-                {watch.status === 'ACTIVE'
-                  ? reachedThreshold(watch)
-                    ? 'Đạt ngưỡng'
-                    : 'Chưa đạt'
-                  : statusLabel[watch.status]}
-              </em>
-            </span>
-            <small className={styles.providerMeta}>
-              Nguồn: {watch.provider} · {time(watch.observedAt)}
-              <br />
-              Giá quan sát gần nhất; chưa bao gồm thay đổi mới.
-            </small>
-          </button>
+              <small className={styles.providerMeta}>
+                {watch.observedAt
+                  ? `Cập nhật ${time(watch.observedAt)}`
+                  : 'Chưa có lần cập nhật giá'}
+              </small>
+            </button>
+            {watch.id === selectedId && <WatchActions watch={watch} view={view} />}
+          </div>
         ))}
       </div>
       <p className={styles.listNote}>
-        <Icon name="info" size={16} /> Nguồn MOCK_FLIGHT · Giá mô phỏng, không phải giá thị trường.
-        Wolfari không đặt vé.
+        <Icon name="info" size={16} /> Giá mô phỏng, không phải giá thị trường. Wolfari không đặt
+        vé.
       </p>
+      <details className={styles.help}>
+        <summary>Cách hoạt động</summary>
+        <ol className={styles.steps}>
+          {[
+            ['Theo dõi', 'Lưu giá, nguồn và thời điểm quan sát.'],
+            ['So sánh', 'So sánh giá mới với ngưỡng VND.'],
+            ['Thông báo', 'Chỉ người tạo nhận cảnh báo.'],
+            ['Bạn quyết định', 'Bạn tự đặt vé ở dịch vụ bên ngoài.'],
+          ].map(([title, description], index) => (
+            <li className={styles.step} key={title}>
+              <span className={styles.stepNumber} aria-hidden="true">
+                {index + 1}
+              </span>
+              <span className={styles.stepCopy}>
+                <strong>{title}</strong>
+                <span>{description}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </details>
     </section>
   );
 }
@@ -315,7 +352,7 @@ function ObservationRow({ item }: { item: PriceObservation }) {
     <tr>
       <td>{time(item.observedAt)}</td>
       <td>{money(item.priceVnd)}</td>
-      <td>{item.provider}</td>
+      <td>{providerLabel(item.provider)}</td>
       <td>
         {item.status === 'OBSERVED'
           ? 'Đã quan sát'
@@ -330,23 +367,28 @@ function ObservationRow({ item }: { item: PriceObservation }) {
 
 function WatchActions({ watch, view }: { watch: PriceWatchItem; view: PriceWatchViewModel }) {
   const [commandMessage, setCommandMessage] = useState('');
+  const providerIssue = watch.dataQuality === 'STALE' || watch.dataQuality === 'PROVIDER_ERROR';
+  const noPermission = 'Bạn chưa có quyền với thao tác này';
   const previewCommand = (label: string) => {
     setCommandMessage(
       `${label} chỉ là xem trước quyền · Chưa gửi yêu cầu và chưa thay đổi theo dõi.`,
     );
   };
   return (
-    <div className={styles.actionStrip} aria-label="Thao tác theo dõi">
-      <span className={styles.actionOwner}>
-        {watch.selfOwned
-          ? 'Theo dõi của bạn'
-          : `Theo dõi của ${watch.owner.displayName ?? 'thành viên'}`}
-      </span>
+    <div className={styles.actionStrip} role="group" aria-label="Thao tác theo dõi">
+      {providerIssue && (
+        <Alert live>
+          {watch.dataQuality === 'PROVIDER_ERROR'
+            ? `Nguồn giá đang lỗi · giữ lại giá gần nhất ${money(watch.latestPriceVnd)}.`
+            : `Giá gần nhất ${money(watch.latestPriceVnd)} đã quá thời gian cập nhật dự kiến.`}
+        </Alert>
+      )}
       {watch.selfOwned ? (
         <>
           <Button
             variant="outline"
             disabled={!view.permissions.canEditOwn}
+            title={view.permissions.canEditOwn ? undefined : noPermission}
             onClick={() => previewCommand('Chỉnh sửa')}
           >
             Chỉnh sửa
@@ -354,6 +396,13 @@ function WatchActions({ watch, view }: { watch: PriceWatchItem; view: PriceWatch
           <Button
             variant="outline"
             disabled={!view.permissions.canPauseOwn || watch.status === 'PAUSED'}
+            title={
+              !view.permissions.canPauseOwn
+                ? noPermission
+                : watch.status === 'PAUSED'
+                  ? 'Theo dõi đang tạm dừng'
+                  : undefined
+            }
             onClick={() => previewCommand('Tạm dừng')}
           >
             Tạm dừng
@@ -361,6 +410,13 @@ function WatchActions({ watch, view }: { watch: PriceWatchItem; view: PriceWatch
           <Button
             variant="outline"
             disabled={!view.permissions.canResumeOwn || watch.status !== 'PAUSED'}
+            title={
+              !view.permissions.canResumeOwn
+                ? noPermission
+                : watch.status !== 'PAUSED'
+                  ? 'Chỉ tiếp tục được khi theo dõi đang tạm dừng'
+                  : undefined
+            }
             onClick={() => previewCommand('Tiếp tục')}
           >
             Tiếp tục
@@ -368,6 +424,7 @@ function WatchActions({ watch, view }: { watch: PriceWatchItem; view: PriceWatch
           <Button
             variant="plain"
             disabled={!view.permissions.canStopOwn}
+            title={view.permissions.canStopOwn ? undefined : noPermission}
             onClick={() => previewCommand('Dừng')}
           >
             Dừng
@@ -377,49 +434,14 @@ function WatchActions({ watch, view }: { watch: PriceWatchItem; view: PriceWatch
         <Button
           variant="outline"
           disabled={!view.permissions.canStopAny}
+          title={view.permissions.canStopAny ? undefined : noPermission}
           onClick={() => previewCommand('Dừng theo dõi của thành viên')}
         >
           Dừng theo dõi này
         </Button>
       )}
-      <p className={styles.mutationNote}>
-        Bản xem trước · Thao tác không gửi yêu cầu và không thay đổi dữ liệu.
-      </p>
       {commandMessage && <Alert live>{commandMessage}</Alert>}
     </div>
-  );
-}
-
-function PriceInfo({ watch, view }: { watch: PriceWatchItem; view: PriceWatchViewModel }) {
-  const providerIssue = watch.dataQuality === 'STALE' || watch.dataQuality === 'PROVIDER_ERROR';
-  return (
-    <section className={styles.infoPanel} aria-labelledby="price-info-title">
-      <h2 id="price-info-title">Cách theo dõi hoạt động</h2>
-      <div className={styles.steps}>
-        {[
-          ['1', 'Theo dõi', 'Lưu giá, nguồn và thời điểm quan sát.'],
-          ['2', 'So sánh', 'So sánh giá mới với ngưỡng VND.'],
-          ['3', 'Thông báo', 'Chỉ người tạo nhận cảnh báo.'],
-          ['4', 'Bạn quyết định', 'Bạn tự đặt vé ở dịch vụ bên ngoài.'],
-        ].map(([number, title, description], index) => (
-          <div className={index === 3 ? styles.stepCream : styles.step} key={number}>
-            <span className={styles.stepNumber}>{number}</span>
-            <span className={styles.stepCopy}>
-              <strong>{title}</strong>
-              <p>{description}</p>
-            </span>
-          </div>
-        ))}
-      </div>
-      {providerIssue && (
-        <Alert live>
-          {watch.dataQuality === 'PROVIDER_ERROR'
-            ? `Nguồn giá đang lỗi · giữ lại giá gần nhất ${money(watch.latestPriceVnd)}.`
-            : `Giá gần nhất ${money(watch.latestPriceVnd)} đã quá thời gian cập nhật dự kiến.`}
-        </Alert>
-      )}
-      <WatchActions watch={watch} view={view} />
-    </section>
   );
 }
 
@@ -463,20 +485,14 @@ function PriceWatchWorkspace({ data, timezone }: { data: PriceWatchViewModel; ti
   };
   return (
     <div className={styles.workspace} data-region="price-watch-workspace">
-      <div className={styles.mainColumn}>
-        <WatchList
-          watches={data.watches}
-          selectedId={selected.id}
-          environment={data.providerEnvironment}
-          canCreate={data.permissions.canCreate}
-          onSelect={setSelectedId}
-          onCreate={focusCreateForm}
-        />
-        <TrendChart watch={selected} />
-      </div>
-      <div className={styles.sideColumn}>
-        <PriceInfo watch={selected} view={data} />
-      </div>
+      <WatchList
+        watches={data.watches}
+        selectedId={selected.id}
+        view={data}
+        onSelect={setSelectedId}
+        onCreate={focusCreateForm}
+      />
+      <TrendChart watch={selected} />
       <PriceWatchOverlay
         open={creating}
         title="Tạo theo dõi giá vé"

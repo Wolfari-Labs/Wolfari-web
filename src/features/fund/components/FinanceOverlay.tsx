@@ -91,6 +91,13 @@ const sectionMeta: Record<
   },
 };
 
+const fundStatusLabel: Record<string, string> = {
+  OPEN: 'đang mở',
+  CLOSING: 'đang đóng',
+  CLOSED: 'đã đóng',
+  NOT_ENABLED: 'chưa bật',
+};
+
 export function FinanceOverlay({
   open,
   onDismiss,
@@ -165,7 +172,7 @@ export function FinanceOverlay({
               <Icon name="plan" size={22} />
               <div>
                 <strong>{tripName}</strong>
-                <span>Finance {status} · VND</span>
+                <span>Quỹ {fundStatusLabel[status] ?? status} · VND</span>
               </div>
             </div>
             <nav className={styles.nav}>
@@ -183,7 +190,7 @@ export function FinanceOverlay({
               ))}
             </nav>
             <p className={styles.permissionNote}>
-              Theo SRS: quyền thao tác được kiểm tra theo Owner, Member và Fund Holder.
+              Quyền thao tác theo vai trò: chủ chuyến, thành viên và người giữ quỹ.
             </p>
           </aside>
           <main className={styles.main}>

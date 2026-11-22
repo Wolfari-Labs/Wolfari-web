@@ -93,7 +93,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   );
   await page.screenshot({ path: test.info().outputPath('fund-populated.png'), fullPage: true });
   const filterNote = page.locator('[data-finance-filter-note]');
-  await expect(filterNote).toContainText('Số dư và tổng tiền lấy từ projection Finance.');
+  await expect(filterNote).toContainText('Bộ lọc chỉ áp dụng cho các giao dịch đã tải.');
   await expect(filterNote).toHaveCount(1);
   const noteBounds = await filterNote.boundingBox();
   const tableBounds = await page
@@ -254,7 +254,7 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   expect(writes).toBe(0);
   fundReadFails = false;
   await dialog.getByRole('button', { name: 'Tải lại quỹ' }).click();
-  await expect(dialog).toContainText('Finance OPEN');
+  await expect(dialog).toContainText('Quỹ đang mở · VND');
   await expect(page.getByRole('heading', { name: 'Chưa thể tải nội dung' })).toHaveCount(0);
   await expect(page.getByLabel('Ngân sách (VND)')).toHaveValue('1000000');
   expect(writes).toBe(0);

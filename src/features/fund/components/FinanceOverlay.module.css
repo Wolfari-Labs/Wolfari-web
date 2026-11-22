@@ -627,7 +627,7 @@
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-green);
   color: var(--v2-white);
   box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
