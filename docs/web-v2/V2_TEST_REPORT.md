@@ -20,7 +20,8 @@ Không có kết quả nào ở trên là PASS với backend thật.
 
 - Chụp màn hình 1440×960 và so với `get_screenshot` của node Figma, mỗi nhóm màn ít nhất 2 vòng: W02, W04/W05, W06/W06.1, W07/W07.1, W08, W09, W10 (fixture), W11/W11.0, W12/W12.1, W14/W14.1, W03, W01 (guest/đã đăng nhập), W16/W17, W18, A01.
 - Khung chung đo bằng script: top nav (24,20,1392×76), sidebar (24,112,264), nội dung x=312 y=112 rộng 1104, W/Trip header cao 84, hero W04 232, ô thống kê 138, hàng dưới 410 — khớp Figma.
-- Chỉ kiểm tra bằng CSS/test, chưa xem trực quan: các trạng thái Gateway W06.2, W10.1–W10.11, Gateway members/create; overlay W15.
+- Gateway HTTP-mock đã chụp và đối soát 22/11: Quỹ nhóm OPEN/CLOSING/CLOSED + hộp thoại cài đặt (W10/W10.1), Lịch trình + bản đồ ngày (W06.2); sửa breadcrumb Quỹ nhóm Gateway nằm trong W/Trip header.
+- Chỉ kiểm tra bằng CSS/test, chưa xem trực quan: các bước con W10.2–W10.11 trong hộp thoại, Gateway members/create; overlay W15.
 - Không phải pixel parity tuyệt đối: font render, ảnh dữ liệu thật và các sai lệch có chủ đích trong [V2_DESIGN_DELTAS.md](V2_DESIGN_DELTAS.md).
 
 ## Test đã cập nhật theo V2

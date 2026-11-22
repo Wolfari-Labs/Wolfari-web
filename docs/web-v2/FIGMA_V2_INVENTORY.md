@@ -43,7 +43,7 @@ Nguồn: file `hdy2sOZk6rfjKXKDJ9HW9y`, trang `930:6658` "Wolfari · Web v2", đ
 | `938:7830` | W01.1 · Trang chủ — Đã đăng nhập | / (đã đăng nhập) | HomeRoute | DONE |
 | `938:8073` | W05 · Tổng quan — thu gọn | /trips/:id | TripOverview (sidebar thu gọn) | DONE |
 | `938:8364` | W06.1 · Lịch trình — Chưa xếp lịch | /trips/:id/plan | PlanPage | DONE |
-| `938:8712` | W06.2 · Lịch trình — Bản đồ ngày | /trips/:id/plan | PlanPage | STYLED, chưa đối soát trực quan (Gateway) |
+| `938:8712` | W06.2 · Lịch trình — Bản đồ ngày | /trips/:id/plan | PlanPage | DONE (Gateway HTTP-mock, đối soát 22/11) |
 | `938:9069` | W03 · Tạo chuyến đi | /trips/new | CreateTripPage | DONE |
 | `938:9333` | W07 · Bản đồ & địa điểm | /trips/:id/map | GatewayMapPage/TripMapPage | DONE |
 | `938:9626` | W07.1 · Bản đồ & địa điểm — sau khi chọn | /trips/:id/map | GatewayMapPage/TripMapPage | DONE |
@@ -54,7 +54,7 @@ Nguồn: file `hdy2sOZk6rfjKXKDJ9HW9y`, trang `930:6658` "Wolfari · Web v2", đ
 | `941:10218` | W11.0 · Theo dõi giá vé — Tạo mới | /trips/:id/price-watch | PriceWatchPage | DONE |
 | `941:10529` | W11.1 · Theo dõi giá vé — Đã tạo | /trips/:id/price-watch | PriceWatchPage | STYLED, chưa đối soát trực quan (Gateway) |
 | `942:10026` | W10 · Quỹ nhóm | /trips/:id/fund | FundPage/GatewayFundPage | DONE |
-| `942:10403` | W10.1 · Quỹ nhóm — Quản lý Fund Holder | /trips/:id/fund | FundPage/GatewayFundPage | STYLED, chưa đối soát trực quan (Gateway) |
+| `942:10403` | W10.1 · Quỹ nhóm — Quản lý Fund Holder | /trips/:id/fund | FundPage/GatewayFundPage | DONE (Gateway HTTP-mock, đối soát 22/11) |
 | `942:10836` | W10.2 · Bàn giao Fund Holder — Chờ chấp nhận | /trips/:id/fund | FundPage/GatewayFundPage | STYLED, chưa đối soát trực quan (Gateway) |
 | `942:11265` | W10.3 · Bàn giao Fund Holder — Đối chiếu | /trips/:id/fund | FundPage/GatewayFundPage | STYLED, chưa đối soát trực quan (Gateway) |
 | `942:11704` | W10.4 · Bàn giao Fund Holder — Hoàn tất | /trips/:id/fund | FundPage/GatewayFundPage | STYLED, chưa đối soát trực quan (Gateway) |
