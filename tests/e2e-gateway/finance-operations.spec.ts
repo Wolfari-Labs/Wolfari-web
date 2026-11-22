@@ -104,9 +104,10 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await page.screenshot({ path: test.info().outputPath('fund-filter-note.png') });
   const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
   expect(scan.violations).toEqual([]);
+  // The page h1 is the current breadcrumb item inside W/Trip header 937:7647 (12px).
   await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toHaveCSS(
     'font-size',
-    '13px',
+    '12px',
   );
   await expect(page.getByRole('region', { name: 'Thao tác chi tiết Finance' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Tải thêm giao dịch' }).click();
