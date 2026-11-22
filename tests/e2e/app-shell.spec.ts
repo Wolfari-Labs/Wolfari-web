@@ -544,7 +544,7 @@ test('CP04 Web Home guest menu and 404 recovery keep public routes distinct', as
 }, info) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto('/');
-  for (const section of ['hero', 'features', 'inspiration', 'footer'])
+  for (const section of ['hero', 'features', 'tour', 'steps', 'inspiration', 'footer'])
     await expect(page.locator(`[data-layout="home-${section}"]`)).toBeVisible();
   await expect(
     page.getByRole('heading', { level: 2, name: 'Điểm đến được yêu thích' }),
