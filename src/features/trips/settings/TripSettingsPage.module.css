@@ -1,5 +1,6 @@
-/* Web v2 W14 Cài đặt (Figma 943:16283) and W14.1 Chỉnh sửa thông tin (943:16565): 540px
-   information card + 544px management card, #f7f9ff rows with white icon chips. */
+/* Web v2 W14 Cài đặt (Figma 943:16283) and W14.1 Chỉnh sửa thông tin (943:16565): a full-width
+   information card (cover beside the rows) and a slim members & notifications strip below it,
+   #f7f9ff rows with white icon chips. Empty optional fields are not rendered. */
 .page {
   composes: page from '../../../shared/styles/WorkspacePage.module.css';
   width: 100%;
@@ -35,10 +36,32 @@
 
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, 540fr) minmax(0, 544fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
   margin-top: 20px;
   align-items: start;
+}
+
+/* View: cover on the left, information rows on the right (stacked below 1101px). */
+.viewBody {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+@media (min-width: 1101px) {
+  .viewBody {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .viewBody .coverRow,
+  .viewBody .coverRow picture,
+  .viewBody .coverRow img {
+    height: 100%;
+    min-height: 200px;
+  }
 }
 
 .card {
@@ -92,7 +115,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-blue);
   color: var(--v2-white);
   box-shadow:
@@ -124,7 +147,7 @@
 .coverField {
   position: relative;
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: var(--v2-radius-tile);
 }
 
 .coverField .fieldLabel {
@@ -217,6 +240,19 @@
 .form {
   display: grid;
   gap: 12px;
+}
+
+.formPair {
+  display: grid;
+  gap: 12px 16px;
+  min-width: 0;
+}
+
+@media (min-width: 1101px) {
+  .formPair {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
 }
 
 .fieldChip {
@@ -312,14 +348,25 @@
   margin-top: 4px;
 }
 
-/* Management card (943:16283 "Thành viên & nhắc nhở"). */
+/* Members & notifications strip (943:16283 "Thành viên & nhắc nhở"), now a slim row. */
 .management {
-  gap: 10px;
-  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px 20px;
+  padding: 14px 20px;
 }
 
-.management h2 {
-  font-size: 18px;
+.card.management h2 {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.managementRows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
 }
 
 .memberHeading {
@@ -328,7 +375,8 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 4px 12px;
-  padding: 8px 12px;
+  min-height: 48px;
+  padding: 6px 14px 6px 12px;
   border-radius: var(--v2-radius-row);
   background: #f4f1ff;
 }
@@ -359,17 +407,6 @@
 
 .textLink:hover {
   text-decoration: underline;
-}
-
-.settingSection {
-  display: grid;
-  gap: 8px;
-}
-
-.settingSection h3 {
-  margin: 0;
-  color: var(--v2-sub);
-  font: 700 12px/16px var(--v2-font);
 }
 
 .settingRow {
@@ -411,7 +448,8 @@
 }
 
 @media (max-width: 1100px) {
-  .columns {
+  .management,
+  .managementRows {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -461,7 +499,7 @@
 
   .card {
     padding: 18px 16px;
-    border-radius: 22px;
+    border-radius: var(--v2-radius-tile);
   }
 
   .card h2 {

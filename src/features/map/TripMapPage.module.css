@@ -263,7 +263,7 @@
   .desktopFilters button,
   .desktopFilters > span {
     font-size: 11px;
-    border-radius: 15px;
+    border-radius: 12px;
   }
 }
 
@@ -485,7 +485,7 @@
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
   .statusChip {
     font-size: 10px;
-    border-radius: 15px;
+    border-radius: 12px;
   }
 }
 
@@ -543,7 +543,7 @@
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
   .routeSelector select,
   .mapType button {
-    border-radius: 17px;
+    border-radius: 12px;
   }
 }
 
@@ -615,8 +615,19 @@
   display: none;
 }
 
-.providerUnavailableLabel {
-  display: none;
+/* The fixture map is illustrative art, so it carries the one "Minh họa" label (CONTENT_RULES 3). */
+.mapArtLabel {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3;
+  padding: 5px 12px;
+  border-radius: var(--v2-radius-pill);
+  background: rgb(255 255 255 / 92%);
+  color: var(--v2-sub);
+  font: 700 12px/normal var(--v2-font);
+  box-shadow: var(--v2-shadow-drop);
+  pointer-events: none;
 }
 
 .desktopMapArtwork,
@@ -2015,11 +2026,14 @@
   }
 
   /* Filter chips (D/Chip): gradient when active, white clay chip otherwise. */
+  /* Four chips do not fit 348px in Be Vietnam Pro: wrap inside the panel instead of clipping. */
   .desktopFilters {
+    flex-wrap: wrap;
     gap: 6px;
     min-height: 0;
-    margin: -2px -18px -10px -2px;
-    padding: 2px 18px 10px 2px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
   }
 
   .desktopFilters button,
@@ -2029,8 +2043,9 @@
   .desktopFilters .filterScheduled,
   .desktopFilters .filterUnscheduled {
     min-height: 31px;
-    padding: 7px 14px;
+    padding: 7px 12px;
     border: 0 !important;
+    white-space: nowrap;
     border-radius: var(--v2-radius-pill);
     background: var(--v2-white) !important;
     color: var(--v2-sub) !important;
@@ -2278,7 +2293,7 @@
 
   .viewport {
     height: 100%;
-    border-radius: 26px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-track);
   }
 
@@ -2359,6 +2374,11 @@
     color: var(--v2-nav-text);
     font-size: 12px;
     font-weight: 700;
+  }
+
+  /* Without the map-type switch (illustrative or Geoapify map) the legend takes its row. */
+  .mapPanel:not(:has(.mapType)) .legend {
+    top: 16px;
   }
 
   .legend span {
@@ -2455,7 +2475,7 @@
     min-height: 0;
     padding: 10px 16px 10px 10px;
     border: 0;
-    border-radius: 26px;
+    border-radius: var(--v2-radius-tile);
     background: var(--v2-white);
     box-shadow: var(--v2-shadow-float), var(--v2-inset);
   }

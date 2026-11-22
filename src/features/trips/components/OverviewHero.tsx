@@ -81,10 +81,6 @@ export function OverviewHero({
             Chỉnh sửa
           </button>
         )}
-        <button type="button" className={styles.share} disabled title="Chia sẻ chưa khả dụng">
-          <Icon name="share" size={18} />
-          Chia sẻ
-        </button>
       </div>
     </section>
   );

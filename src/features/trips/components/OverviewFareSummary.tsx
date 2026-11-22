@@ -30,11 +30,11 @@ export function OverviewFareSummary({ tripId, actor }: { tripId: string; actor: 
     .size;
   return count ? (
     <>
-      <p>
+      <p className={styles.summaryValue}>
         {count}
-        {query.hasNextPage ? '+' : ''} mục theo dõi
+        {query.hasNextPage ? '+' : ''} mục
       </p>
-      <p className={styles.summaryDetail}>Nguồn mô phỏng · MOCK_FLIGHT</p>
+      <p className={styles.summaryDetail}>Đang theo dõi · giá mô phỏng</p>
     </>
   ) : (
     <OverviewEmptyFare />

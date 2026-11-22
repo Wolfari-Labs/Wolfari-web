@@ -37,7 +37,7 @@
 .map,
 .unavailable {
   min-height: 240px;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
 }
 .map {
   overflow: hidden;

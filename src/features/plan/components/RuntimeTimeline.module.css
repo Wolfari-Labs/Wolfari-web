@@ -22,8 +22,9 @@
   min-height: 60px;
   padding: 10px 18px;
   border: 0;
-  border-radius: 24px;
+  border-radius: var(--v2-radius-tile);
   font: 800 16px/normal var(--v2-font);
+  white-space: nowrap;
 }
 .days button[aria-pressed='false'] {
   background: var(--v2-white);
@@ -188,7 +189,7 @@
   min-height: 72px;
   padding: 10px 8px;
   border: 1.5px dashed #cbbcff;
-  border-radius: 24px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-card);
 }
@@ -285,7 +286,7 @@
   min-height: 30px;
   padding: 6px;
   border: 2px dashed transparent;
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   color: var(--v2-sub);
   font: 700 13px/18px var(--v2-font);
   text-align: center;
@@ -353,7 +354,7 @@
   max-width: 450px;
   padding: 14px 18px;
   border: 1.5px solid var(--v2-blue);
-  border-radius: 22px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-float);
   color: var(--v2-ink);

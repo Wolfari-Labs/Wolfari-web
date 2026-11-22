@@ -222,7 +222,8 @@ export function AuthPage({
                   type="password"
                   name="password"
                   autoComplete={register ? 'new-password' : 'current-password'}
-                  placeholder={register ? 'Từ 8 đến 128 ký tự' : 'Mật khẩu của bạn'}
+                  placeholder={register ? undefined : 'Mật khẩu của bạn'}
+                  {...(register ? { hint: 'Từ 8 đến 128 ký tự.' } : {})}
                   value={values.password}
                   error={errors.password}
                   onChange={(e) => field('password', e.target.value)}
@@ -262,7 +263,6 @@ export function AuthPage({
                       aria-describedby={errors.acceptedTerms ? 'auth-terms-error' : undefined}
                     />
                     Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật
-                    {previewEnabled ? ' (xem trước)' : ''}
                   </label>
                   {errors.acceptedTerms && (
                     <p className={styles.error} role="alert" id="auth-terms-error">
@@ -271,17 +271,8 @@ export function AuthPage({
                   )}
                 </>
               )}
-              {(previewEnabled || register) && (
-                <p className={styles.previewNote}>
-                  {previewEnabled
-                    ? register
-                      ? 'Mật khẩu từ 8–128 ký tự. Bản xem trước chưa tạo tài khoản hoặc gửi thông tin đăng ký.'
-                      : 'Bản xem trước giao diện. Thông tin đăng nhập không được gửi và không tạo phiên truy cập thật.'
-                    : register
-                      ? 'Mật khẩu cần từ 8 đến 128 ký tự.'
-                      : 'Mật khẩu phân biệt chữ hoa, chữ thường và không được gửi vào URL.'}
-                </p>
-              )}
+              {/* The password rule sits on its field; the fixture-mode warning lives once in the
+                  preview disclosure below the form. */}
               {demoError && (
                 <Alert tone="error">
                   Email hoặc mật khẩu demo chưa đúng. Dùng tài khoản minh họa trong bảng xem trước.

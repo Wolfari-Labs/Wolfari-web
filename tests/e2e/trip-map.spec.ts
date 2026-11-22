@@ -82,9 +82,12 @@ for (const viewport of viewports) {
       await expect(route).toHaveCSS('color', 'rgb(31, 42, 68)');
       await expect(route).toHaveCSS('background-color', 'rgb(255, 255, 255)');
       await expect(route).toHaveCSS('font-weight', '700');
-      const icons = page.getByLabel('Chú thích trạng thái địa điểm').locator('[aria-hidden]');
-      await expect(icons).toHaveCount(3);
-      for (const icon of await icons.all()) {
+      // The row status chips carry the state, so the list legend is gone; the per-row state
+      // icons keep their circle and glyph centred.
+      await expect(page.getByLabel('Chú thích trạng thái địa điểm')).toHaveCount(0);
+      const icons = page.locator('[data-region="place-list"] [role="img"]');
+      await expect(icons.first()).toBeVisible();
+      for (const icon of (await icons.all()).slice(0, 3)) {
         const circle = (await icon.locator('img').nth(0).boundingBox())!;
         const glyph = (await icon.locator('img').nth(1).boundingBox())!;
         expect(Math.abs(circle.x + circle.width / 2 - glyph.x - glyph.width / 2)).toBeLessThan(0.5);
@@ -114,8 +117,8 @@ test('Map filters use semantic status colors and accessible targets', async ({ p
   const scheduled = filters.getByRole('button', { name: /Trong lịch/ });
   const unscheduled = filters.getByRole('button', { name: /Chưa xếp/ });
 
-  // Web V2 D/Chip (Figma W07 938:9545): gradient active chip, white clay chips otherwise.
-  await expect(all).toHaveCSS('background-image', /linear-gradient/);
+  // Refined V2 (V2-D15): solid brand-blue active chip, white chips otherwise.
+  await expect(all).toHaveCSS('background-color', 'rgb(31, 95, 209)');
   await expect(selected).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(scheduled).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(scheduled).toHaveCSS('border-top-width', '0px');

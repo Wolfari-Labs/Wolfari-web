@@ -101,7 +101,7 @@
   overflow: hidden;
   aspect-ratio: 640 / 500;
   border: 6px solid var(--v2-white);
-  border-radius: 44px;
+  border-radius: var(--v2-radius-panel);
   box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .heroPhoto img {
@@ -127,7 +127,7 @@
   flex-direction: column;
   gap: 10px;
   padding: 10px 10px 15px;
-  border-radius: 28px;
+  border-radius: var(--v2-radius-tile);
   background: linear-gradient(to bottom, var(--v2-white), #eef4ff);
   box-shadow: var(--v2-shadow-nav), var(--v2-inset);
 }
@@ -330,7 +330,7 @@
 .destinationPhoto {
   overflow: hidden;
   aspect-ratio: 286 / 240;
-  border-radius: 24px;
+  border-radius: var(--v2-radius-tile);
   background: var(--v2-sky);
 }
 .destinationCard[data-tone='mint'] .destinationPhoto {
@@ -498,10 +498,17 @@
     gap: 22px;
     padding-top: 78px;
   }
+  /* Be Vietnam Pro sets "Cho những chuyến đi" ~10.5x its font size wide. The copy column is
+     100vw - 784px (photo 640 + gutters), so the nowrap title scales with it instead of running
+     under the photo below ~1470px; 64px (Figma) from there up. */
   .heroCopy h1 {
-    font-size: 64px;
-    line-height: 74px;
+    font-size: clamp(38px, calc((100vw - 800px) * 0.095), 64px);
+    line-height: 1.16;
     white-space: nowrap;
+  }
+  /* Keep the copy clear of the featured card that overlaps the photo's left edge. */
+  .heroDescription {
+    max-width: clamp(522px, calc(100vw - 918px), 560px);
   }
   .heroVisual {
     padding: 38px 0 0;
@@ -520,10 +527,12 @@
     height: 140px;
     object-fit: cover;
   }
+  /* Figma overhang (-110px) from 1440 up; narrower screens tuck the card under the photo's edge
+     so it never covers the hero copy or buttons. */
   .featuredCard {
     top: 288px;
     bottom: auto;
-    left: -110px;
+    left: clamp(-110px, calc(1330px - 100vw), 40px);
     width: 290px;
   }
   .statTile {

@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
-import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
@@ -38,6 +37,12 @@ const scopeLabels: Record<DressScope, string> = {
 };
 
 const tags = ['Tắm biển', 'Tham quan', 'Ăn uống'];
+
+/** `2026-09-22` → `22/09/2026` (date-only values; no timezone shift). */
+function displayPlanDate(value: string) {
+  const [year, month, day] = value.split('-');
+  return year && month && day ? `${day}/${month}/${year}` : value;
+}
 
 function sourceLabel(source: DressCodeViewModel['source']) {
   return source === 'DSS' ? 'Gợi ý từ mẫu du lịch' : 'Đã đưa vào kế hoạch';
@@ -103,8 +108,7 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         <Icon name="dress" size={22} />
       </span>
       <div className={styles.palette}>
-        <span>Minh họa</span>
-        <div aria-label="Bảng màu minh họa">
+        <div role="img" aria-label="Bảng màu gợi ý">
           {swatches.map((swatch) => (
             <img key={swatch} src={swatch} alt="" />
           ))}
@@ -129,7 +133,7 @@ function OutfitCard({ item, index }: { item: DressCodeViewModel; index: number }
         {item.source === 'DSS' && <small>Nguồn: Gợi ý đã lưu trước đây</small>}
         {isEvening && (
           <small>
-            Hoạt động: Ăn tối · {item.planDate ?? '12/10/2026'}
+            Hoạt động: Ăn tối{item.planDate && ` · ${displayPlanDate(item.planDate)}`}
             <br />
             Nguồn: Mẫu du lịch · 10/10, 09:00
           </small>
@@ -187,7 +191,7 @@ function PreviewDressCodePage() {
       <PageBreadcrumb
         className={styles.breadcrumb}
         items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Trang phục"
+        current="Dress code"
       />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
@@ -283,11 +287,10 @@ function PreviewDressCodePage() {
               onChange={setDraftDescription}
               multiline
             />
-            <div className={styles.editorNote}>
-              <p>Ảnh và bảng màu đều là minh họa mẫu.</p>
+            <div className={styles.editorNote} role="status">
               <p>
                 {draftChecked
-                  ? 'Bản nháp đã được kiểm tra cục bộ.'
+                  ? 'Bản nháp hợp lệ, chưa được lưu vào kế hoạch.'
                   : 'Bản nháp chưa được lưu vào kế hoạch.'}
               </p>
             </div>
@@ -306,16 +309,15 @@ function PreviewDressCodePage() {
                 });
                 setDraftChecked(valid);
                 setDraftError(
-                  valid ? '' : 'Nhập tiêu đề (tối đa 100 ký tự) và chọn ngày hoặc Activity hợp lệ.',
+                  valid
+                    ? ''
+                    : 'Nhập tiêu đề (tối đa 100 ký tự) và chọn ngày hoặc hoạt động hợp lệ.',
                 );
               }}
             >
               Kiểm tra bản nháp
             </Button>
             {draftError && <p role="alert">{draftError}</p>}
-            <CapabilityNote tone="info">
-              Gợi ý và chỉnh sửa chỉ tạo bản nháp cục bộ; chưa gửi thay đổi lên kế hoạch.
-            </CapabilityNote>
           </aside>
         </div>
       </TripPlanBoundary>

@@ -667,7 +667,7 @@
     width: 44px;
     height: 44px;
     margin-right: 4px;
-    border-radius: 15px;
+    border-radius: 12px;
     background: var(--v2-gradient-amber);
     box-shadow:
       0 6px 6px rgb(245 166 35 / 32%),
@@ -1054,8 +1054,9 @@
     gap: 12px;
     height: auto;
   }
+  /* Filters and "Thêm vật dụng" share the second row instead of the button wrapping alone. */
   .summary > .toolbar {
-    flex: 1 1 100%;
+    flex: 1 1 auto;
     flex-wrap: wrap;
     height: auto;
     padding: 0;
@@ -1066,9 +1067,13 @@
   .list {
     overflow-x: auto;
   }
+  /* Be Vietnam Pro: "SỐ LƯỢNG" / "THAO TÁC" need ~76px in the uppercase header. */
   .tableHead,
   .row {
-    grid-template-columns: 24px minmax(120px, 1fr) 64px 130px 124px 56px;
+    grid-template-columns: 24px minmax(120px, 1fr) 80px 130px 124px 76px;
     column-gap: 10px;
+  }
+  .tableHead > span {
+    white-space: nowrap;
   }
 }

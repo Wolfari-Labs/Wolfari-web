@@ -350,9 +350,7 @@
     padding: 0 20px;
     border-radius: var(--v2-radius-pill);
     background: var(--v2-white);
-    box-shadow:
-      var(--v2-shadow-card),
-      var(--v2-inset);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
   }
   .toolbar {
     margin: 26px 0 28px;
@@ -369,9 +367,7 @@
     background: var(--v2-white);
     color: var(--v2-sub);
     font: 700 14px/18px var(--v2-font);
-    box-shadow:
-      var(--v2-shadow-drop),
-      var(--v2-inset);
+    box-shadow: var(--v2-shadow-drop), var(--v2-inset);
   }
   .statuses button[aria-pressed='true'] {
     background: var(--v2-gradient);
@@ -404,9 +400,7 @@
     background-color: var(--v2-white);
     color: var(--v2-nav-text);
     font: 700 14px/18px var(--v2-font);
-    box-shadow:
-      var(--v2-shadow-card),
-      var(--v2-inset);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
   }
   .grid {
     gap: 22px 24px;
@@ -421,6 +415,7 @@
 @media (min-width: 769px) and (max-width: 1100px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
   }
 }
 .createTile {
@@ -452,9 +447,7 @@
   border-radius: var(--v2-radius-thumb);
   background: var(--v2-gradient);
   color: var(--v2-white);
-  box-shadow:
-    var(--v2-shadow-float),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .createTile:hover {
   background: var(--v2-white);

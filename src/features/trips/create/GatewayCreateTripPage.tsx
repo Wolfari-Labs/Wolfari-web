@@ -210,7 +210,7 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
           clientRequestId: crypto.randomUUID(),
         };
         if (!persist(draft, snapshot))
-          throw Error('Cần bật bộ nhớ phiên để lưu yêu cầu an toàn trước khi tạo Trip.');
+          throw Error('Cần bật bộ nhớ phiên để lưu yêu cầu an toàn trước khi tạo chuyến đi.');
         setIntent(snapshot);
       }
       sending.current = true;
