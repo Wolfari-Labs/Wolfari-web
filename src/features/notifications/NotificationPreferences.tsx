@@ -39,8 +39,9 @@ export function NotificationPreferences({ actor }: { actor: string }) {
     [conflict, setConflict] = useState(false);
   const [success, setSuccess] = useState('');
   const value = draft ?? query.data;
-  if (!repository)
-    return <Alert>Tùy chọn nhận thông báo khả dụng khi sử dụng tài khoản thật.</Alert>;
+  // Without an account-backed repository (fixture preview) there is nothing to configure; the
+  // app-wide preview indicator already explains that.
+  if (!repository) return null;
   if (!value)
     return query.isPending ? (
       <ContentState state="loading" />

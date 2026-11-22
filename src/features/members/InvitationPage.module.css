@@ -44,7 +44,7 @@
   padding: 16px;
   display: flex;
   align-items: flex-start;
-  border-radius: 30px;
+  border-radius: var(--v2-radius-tile);
   background: linear-gradient(135deg, var(--v2-sky) 0%, var(--v2-lilac) 52%, var(--v2-mint) 100%);
 }
 .response[data-has-trip] .banner {
@@ -211,14 +211,14 @@
     width: calc(100% - 20px);
     margin-block: 64px 24px;
     padding: 10px 10px 20px;
-    border-radius: 30px;
+    border-radius: var(--v2-radius-tile);
   }
   .response > :not(.responseHeader, .mascot),
   .responseHeader > :not(.banner) {
     margin-inline: 8px;
   }
   .banner {
-    border-radius: 22px;
+    border-radius: var(--v2-radius-tile);
   }
   .response[data-has-trip] .banner {
     min-height: 120px;

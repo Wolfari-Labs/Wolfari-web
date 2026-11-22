@@ -5,8 +5,7 @@ import { Button } from '../../shared/components/Button';
 import { Globe } from 'lucide-react';
 import styles from './Notifications.module.css';
 const labels = {
-  'missing-config':
-    'Chưa cấu hình Firebase cho môi trường này. Chức năng đăng ký push chưa khả dụng.',
+  'missing-config': 'Thông báo trên trình duyệt chưa được thiết lập cho môi trường này.',
   unsupported: 'Trình duyệt chưa hỗ trợ push hoặc website chưa dùng HTTPS/localhost.',
   idle: 'Chưa đăng ký thông báo trên trình duyệt này.',
   denied:
@@ -39,8 +38,8 @@ export function BrowserPushPanel({ service, actor }: { service: BrowserPush; act
         {state.busy ? 'Đang cập nhật đăng ký…' : state.message || labels[state.state]}
       </Alert>
       <p className={styles.deviceNote}>
-        Đăng ký thiết bị khác với tùy chọn “Cho phép push”. Lưu thiết bị thành công không có nghĩa
-        backend đã gửi hoặc trình duyệt đã nhận thông báo.
+        Đăng ký thiết bị là bước riêng với tùy chọn “Cho phép push” và không đảm bảo trình duyệt đã
+        nhận được thông báo.
       </p>
       <div className={styles.deviceActions}>
         <Button

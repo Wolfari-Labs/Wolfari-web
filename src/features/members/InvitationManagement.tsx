@@ -287,15 +287,13 @@ export function InvitationManagement({
           <div>
             <h2>Mời thành viên</h2>
             <p>
-              Người nhận trở thành Member sau khi chấp nhận. Quyền sửa lịch trình và trách nhiệm quỹ
-              được quản lý riêng.
+              Người nhận tham gia chuyến đi sau khi chấp nhận. Quyền sửa lịch trình và trách nhiệm
+              quỹ không tự đi kèm.
             </p>
           </div>
         </div>
         {!allowed && (
-          <Alert>
-            Chỉ Owner có quyền cập nhật chuyến đi đang hoạt động mới được quản lý lời mời.
-          </Alert>
+          <Alert>Chỉ chủ chuyến của chuyến đi đang hoạt động mới được quản lý lời mời.</Alert>
         )}
         <Select
           label="Loại lời mời"

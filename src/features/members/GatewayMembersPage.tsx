@@ -346,16 +346,20 @@ function Workspace({
                       <legend>Ai có thể sửa lịch trình</legend>
                       {(
                         [
-                          ['OWNER_ONLY', 'Chỉ chủ chuyến', 'Chỉ Owner được chỉnh sửa lịch trình.'],
+                          [
+                            'OWNER_ONLY',
+                            'Chỉ chủ chuyến',
+                            'Chỉ chủ chuyến được chỉnh sửa lịch trình.',
+                          ],
                           [
                             'ALL_MEMBERS',
                             'Mọi thành viên đang hoạt động',
-                            'Owner và mọi Member đang tham gia được chỉnh sửa lịch trình.',
+                            'Chủ chuyến và mọi thành viên đang tham gia được chỉnh sửa lịch trình.',
                           ],
                           [
                             'SELECTED_MEMBERS',
                             'Thành viên được chọn',
-                            'Owner và các Member được chọn bên dưới được chỉnh sửa lịch trình.',
+                            'Chủ chuyến và các thành viên được chọn bên dưới được chỉnh sửa lịch trình.',
                           ],
                         ] as const
                       ).map(([value, label, description]) => (
@@ -370,9 +374,7 @@ function Workspace({
                           />
                           <span>
                             <strong>{label}</strong>
-                            <small>
-                              {value} · {description}
-                            </small>
+                            <small>{description}</small>
                           </span>
                         </label>
                       ))}
@@ -399,7 +401,7 @@ function Workspace({
                         {!members.isPending &&
                           !members.isError &&
                           !items.some((m) => !m.leftAt && m.role !== 'OWNER') && (
-                            <p>Chưa có Member đang hoạt động trong các trang đã tải.</p>
+                            <p>Chưa có thành viên đang hoạt động trong các trang đã tải.</p>
                           )}
                         {items
                           .filter((m) => !m.leftAt && m.role !== 'OWNER')
@@ -473,8 +475,8 @@ function Workspace({
                 <div className={styles.note} data-tone="owner">
                   <h3>Điểm cần nhớ</h3>
                   <p>
-                    Owner luôn có quyền sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp
-                    quyền lại.
+                    Chủ chuyến luôn có quyền sửa lịch trình. Thành viên rời rồi tham gia lại cần
+                    được cấp quyền lại.
                   </p>
                 </div>
                 <div className={styles.note} data-tone="policy">
@@ -497,12 +499,7 @@ function Workspace({
             <div className={styles.workspace}>
               <section className={styles.panel} aria-label="Danh sách thành viên" data-cp08-primary>
                 <div className={styles.panelHeading}>
-                  <div>
-                    <h2>Thành viên chuyến đi</h2>
-                    <p className={styles.intro}>
-                      Vai trò trong chuyến đi và trách nhiệm quỹ được quản lý riêng.
-                    </p>
-                  </div>
+                  <h2>Thành viên chuyến đi</h2>
                   {owner && (
                     <Button
                       className={styles.inviteButton}
@@ -630,54 +627,29 @@ function Workspace({
                     Rời chuyến đi
                   </Button>
                 )}
-                <div className={`${styles.note} ${styles.lifecycleNote}`} data-tone="danger">
-                  <h3>Rời hoặc xóa thành viên</h3>
-                  <p>
-                    Hệ thống kiểm tra trách nhiệm quỹ và khoản đóng góp còn chờ. Thành viên chỉ thay
-                    đổi sau khi có kết quả xác nhận; đóng hộp thoại không hủy yêu cầu đã gửi.
-                  </p>
-                </div>
+                <details className={styles.roleHelp}>
+                  <summary>
+                    <Icon name="crown" size={16} />
+                    Vai trò và trách nhiệm
+                  </summary>
+                  <dl>
+                    <dt>Chủ chuyến</dt>
+                    <dd>Quản lý thành viên, lời mời và quyền sửa lịch trình.</dd>
+                    <dt>Người giữ quỹ</dt>
+                    <dd>
+                      Trách nhiệm riêng, không đi kèm vai trò chủ chuyến.{' '}
+                      <Link to={paths.fund(tripId)}>Xem tại Quỹ nhóm</Link>
+                    </dd>
+                    <dt>Quyền sửa lịch trình</dt>
+                    <dd>Không cấp quyền quản lý thành viên hay xác nhận giao dịch quỹ.</dd>
+                    <dt>Rời hoặc xóa</dt>
+                    <dd>
+                      Hệ thống kiểm tra trách nhiệm quỹ và khoản đóng góp còn chờ. Thành viên chỉ
+                      thay đổi sau khi có kết quả xác nhận; đóng hộp thoại không hủy yêu cầu đã gửi.
+                    </dd>
+                  </dl>
+                </details>
               </section>
-              <aside
-                className={styles.guidance}
-                aria-label="Quyền và trách nhiệm"
-                data-cp08-secondary
-              >
-                <div className={styles.cardHeader}>
-                  <span className={styles.iconBadge} data-tone="violet" aria-hidden="true">
-                    <Icon name="crown" size={22} />
-                  </span>
-                  <h2>Quyền &amp; trách nhiệm</h2>
-                </div>
-                <div className={styles.note} data-tone="owner">
-                  <h3>Owner</h3>
-                  <p>
-                    Mỗi chuyến đi có một chủ chuyến quản lý thành viên, lời mời và quyền sửa lịch
-                    trình.
-                  </p>
-                </div>
-                <div className={styles.note} data-tone="fund">
-                  <h3>Fund Holder</h3>
-                  <p>
-                    Trách nhiệm quỹ độc lập với vai trò Owner. Xem thông tin người giữ quỹ tại Quỹ
-                    nhóm.
-                  </p>
-                </div>
-                <div className={styles.note} data-tone="policy">
-                  <h3>Quyền sửa lịch trình</h3>
-                  <p>
-                    Chính sách này không cấp quyền quản lý thành viên hay xác nhận giao dịch quỹ.
-                  </p>
-                </div>
-                <div className={styles.note} data-tone="transfer">
-                  <h3>Chuyển Owner</h3>
-                  <p>Thao tác chuyển chủ chuyến chưa được hỗ trợ trên giao diện hiện tại.</p>
-                </div>
-                <Link className={styles.fundLink} to={paths.fund(tripId)}>
-                  <Icon name="fund" size={16} />
-                  Xem trách nhiệm tại Quỹ nhóm →
-                </Link>
-              </aside>
             </div>
           )}
         </>

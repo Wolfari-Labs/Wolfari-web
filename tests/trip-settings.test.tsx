@@ -82,7 +82,9 @@ describe('Trip Settings', () => {
     const user = userEvent.setup();
     const { router, updateTrip } = mount();
     expect(await screen.findByRole('heading', { name: 'Thông tin chuyến đi' })).toBeInTheDocument();
-    expect(screen.getByText('Chưa có mô tả công khai.')).toBeInTheDocument();
+    // Optional fields without data are not rendered as placeholder rows.
+    expect(screen.queryByText('Mô tả công khai')).not.toBeInTheDocument();
+    expect(screen.queryByText('Chưa có dữ liệu')).not.toBeInTheDocument();
     expect(
       screen.queryByRole('heading', { name: 'Chỉnh sửa thông tin chuyến đi' }),
     ).not.toBeInTheDocument();
@@ -103,8 +105,9 @@ describe('Trip Settings', () => {
     expect(publicDescription).toHaveValue('');
     expect(publicDescription.className).toContain('currentValue');
     const readOnly = screen.getByRole('region', { name: 'Thông tin chỉ xem' });
-    expect(readOnly).toHaveTextContent('Điểm đến');
-    expect(readOnly).toHaveTextContent('Ngân sách dự kiến');
+    expect(readOnly).toHaveTextContent('Ngày bắt đầu');
+    expect(readOnly).toHaveTextContent('Ngày kết thúc');
+    expect(readOnly).not.toHaveTextContent('Chưa có dữ liệu');
     expect(readOnly.querySelectorAll('input')).toHaveLength(0);
     expect(screen.queryByRole('button', { name: 'Thay ảnh' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Lưu thay đổi' })).toBeDisabled();
