@@ -43,3 +43,36 @@ directory and reran successfully. No application/test assertion was changed.
 
 The user explicitly authorized this CI repair and push. No PR merge,
 deployment, secret changes or new redesign checkpoint are authorized here.
+
+## Follow-up: POI test sampled an incomplete arrangement
+
+Commit `ac51b03` passed the built fixture job in
+https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/45013323857,
+verifying the refreshed Linux baseline. The built Gateway job exposed an
+intermittent failure in `places-provider.spec.ts` at 390px: 207 passed,
+5 existing skips, one failure (expected one write, observed two).
+
+Artifact `browser-built-gateway-1` (`14750888051`) contains the failure trace.
+It shows exactly one POST to `/activities`, followed by one PUT to
+`/activities/order`, both successful. The create uses plan version 2; the
+order uses version 3 and contains the original two IDs plus the new ID.
+This matches `buildPlanArrangement` / `planArrangementCommand`: creation
+and the full-order write are separate, sequential commands, not duplicate
+activity creation.
+
+The original test polled for a transient total of one request, then navigated
+away without waiting for arrangement completion. It passed 10/10 local
+repetitions, but adding a wait for the refreshed activity handle to become
+enabled reproduced the exact expected-1/received-2 failure deterministically.
+
+The correction retains that completion wait, asserts exactly two requests
+(one POST, one PUT), and verifies their paths, linked location/date, chained
+versions, different idempotency keys, full order and exactly one new activity.
+It also checks that reload introduces no further writes. Existing save,
+reload, API, map and responsive assertions remain. No application code or
+timeout is changed.
+
+Post-fix built HTTP-mock repetitions: 10/10 PASS across 1440px and 390px.
+Scoped lint, typecheck, scoped formatting and `git diff --check`: PASS.
+Full dev HTTP-mock provider test file: 5/5 PASS. Full Linux CI must run again
+for the new head.
