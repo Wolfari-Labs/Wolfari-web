@@ -21,6 +21,8 @@ for (const size of [
     await expect(page.getByRole('heading', { name: 'Theo dõi giá vé' }).first()).toBeVisible();
     await expect(page.getByText('2.350.000đ', { exact: true }).first()).toBeVisible();
     await expect(page.getByText(/Giá mô phỏng, không phải giá thị trường/)).toBeVisible();
+    // The source is stated once in plain words; provider codes are not shown.
+    await expect(page.getByText(/MOCK_FLIGHT/)).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
@@ -31,7 +33,7 @@ for (const size of [
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByRole('region', { name: 'Lịch sử giá vé' })).toHaveCSS(
       'border-radius',
-      size.width >= 768 ? '28px' : '24px',
+      '16px',
     );
     const create = page.getByRole('button', { name: 'Tạo theo dõi', exact: true });
     await create.click();
@@ -76,7 +78,13 @@ test('Price Watch capability controls explain that preview actions do not mutate
 }) => {
   await page.goto(route);
   const actions = page.getByLabel('Thao tác theo dõi');
+  await expect(actions).toHaveCount(1);
   await actions.getByRole('button', { name: 'Chỉnh sửa' }).click();
   await expect(actions.getByRole('status')).toContainText('Chưa gửi yêu cầu');
-  await expect(page.getByText(/Thao tác không gửi yêu cầu/)).toBeVisible();
+  await expect(actions.getByRole('status')).toContainText('chưa thay đổi theo dõi');
+  // How-it-works is a collapsed help, not a permanent column.
+  const help = page.locator('details', { has: page.getByText('Cách hoạt động', { exact: true }) });
+  await expect(help).not.toHaveAttribute('open', '');
+  await help.getByText('Cách hoạt động', { exact: true }).click();
+  await expect(help.getByText('Bạn tự đặt vé ở dịch vụ bên ngoài.')).toBeVisible();
 });

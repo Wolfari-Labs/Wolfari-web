@@ -10,7 +10,6 @@ const financeAssets = {
   contribution: '/assets/finance-v12/514da.svg',
   expense: '/assets/finance-v12/f8a51.svg',
   refund: '/assets/finance-v12/0ff3f.svg',
-  download: '/assets/finance-v12/23b0f.svg',
 } as const;
 
 export interface FinanceTransactionRow {
@@ -122,6 +121,7 @@ export function FinanceTransactionPanel({
   loadingMore = false,
   onLoadMore,
   footer,
+  memberAction,
 }: {
   rows: readonly FinanceTransactionRow[];
   format: (value: string | null) => string;
@@ -131,6 +131,8 @@ export function FinanceTransactionPanel({
   loadingMore?: boolean;
   onLoadMore?: () => void;
   footer?: ReactNode;
+  /** Optional control placed beside the member filter (e.g. loading more member names). */
+  memberAction?: ReactNode;
 }) {
   const [filter, setFilter] = useState<FinanceTransactionFilter>('ALL');
   const [member, setMember] = useState('ALL');
@@ -212,6 +214,7 @@ export function FinanceTransactionPanel({
             ))}
           </select>
         </label>
+        {memberAction}
         <label className={styles.selectLabel}>
           Loại giao dịch
           <select
@@ -225,18 +228,9 @@ export function FinanceTransactionPanel({
             <option value="REVERSAL">Đảo bút toán</option>
           </select>
         </label>
-        <button
-          type="button"
-          className={styles.export}
-          disabled
-          title="Xuất dữ liệu chưa có trong contract Finance"
-        >
-          <img src={financeAssets.download} alt="" aria-hidden="true" />
-          <span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span>
-        </button>
       </div>
       <div className={styles.loadedOnly} data-finance-filter-note="true">
-        {footer ?? <p>Bộ lọc áp dụng trên các giao dịch đã tải.</p>}
+        {footer ?? <p>Bộ lọc chỉ áp dụng cho các giao dịch đã tải.</p>}
       </div>
       {feedback}
       {loading ? (
@@ -285,7 +279,7 @@ export function FinanceTransactionPanel({
                       {isExpanded && (
                         <dl className={styles.details}>
                           <div>
-                            <dt>Sequence</dt>
+                            <dt>Số thứ tự</dt>
                             <dd>{row.sequence}</dd>
                           </div>
                           <div>
@@ -293,7 +287,7 @@ export function FinanceTransactionPanel({
                             <dd>{format(row.balanceAfter)}</dd>
                           </div>
                           <div>
-                            <dt>Actor</dt>
+                            <dt>Người thực hiện</dt>
                             <dd>{row.actorName}</dd>
                           </div>
                           {row.reason && (

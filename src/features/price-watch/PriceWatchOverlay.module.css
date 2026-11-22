@@ -93,7 +93,7 @@
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-coral);
   color: var(--v2-white);
   box-shadow:
@@ -134,6 +134,6 @@
     padding-inline: 14px;
   }
   .modal {
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
   }
 }

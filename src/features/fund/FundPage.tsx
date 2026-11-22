@@ -9,6 +9,7 @@ import { useFundRepository } from './repositories/fund-context';
 import {
   fundScenarios,
   isMoneyVnd,
+  type ClosureStatus,
   type ContributionStatus,
   type ExpenseStatus,
   type FundScenario,
@@ -58,10 +59,16 @@ const expenseLabel: Record<ExpenseStatus, string> = {
 };
 const refundLabel: Record<RefundStatus, string> = {
   PENDING: 'Đang chờ',
-  HOLDER_REPORTED: 'Holder đã báo',
+  HOLDER_REPORTED: 'Người giữ quỹ đã báo',
   CONFIRMED: 'Đã xác nhận',
   CANCELLED: 'Đã hủy',
   REVERSED: 'Đã đảo ngược',
+};
+
+const closureLabel: Record<ClosureStatus, string> = {
+  PENDING_CONFIRMATIONS: 'Đang chờ xác nhận',
+  COMPLETED: 'Đã hoàn tất',
+  CANCELLED: 'Đã hủy',
 };
 
 type StatusTone = 'success' | 'warning' | 'danger' | 'neutral';
@@ -87,6 +94,11 @@ const refundTone: Record<RefundStatus, StatusTone> = {
   CANCELLED: 'neutral',
   REVERSED: 'danger',
 };
+const fundStatusLabel = (status: FundViewModel['fund']['status']) =>
+  status === 'OPEN' ? 'Đang mở' : status === 'CLOSING' ? 'Đang đóng' : 'Đã đóng';
+/** Disabled preview actions keep their reason in the native tooltip. */
+const previewActionReason = 'Chưa khả dụng trong bản xem trước';
+
 /** Decorative initial derived from the display name already shown beside it. */
 const initial = (name: string | null) => name?.trim().charAt(0).toLocaleUpperCase('vi-VN') || '·';
 
@@ -102,7 +114,7 @@ function ErrorState({ error, retry }: { error: DomainError; retry: () => void })
 }
 
 function FundWorkspace({ data }: { data: FundViewModel }) {
-  const [tab, setTab] = useState<'expenses' | 'contributions' | 'outside' | 'refunds' | 'history'>('expenses');
+  const [tab, setTab] = useState<'expenses' | 'contributions' | 'outside' | 'refunds'>('expenses');
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
   const [paidAt, setPaidAt] = useState('2026-10-12');
@@ -141,33 +153,29 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
         <span className={styles.bannerIcon} aria-hidden="true"><Icon name={statusIcon} size={22} /></span>
         <div className={styles.bannerCopy}>
           <div className={styles.bannerTitle}>
-            <h2>Quỹ nhóm · {data.fund.status === 'OPEN' ? 'Đang mở' : data.fund.status === 'CLOSING' ? 'Đang đóng' : 'Đã đóng'}</h2>
-            <span className={styles.environment}>{data.environment} · {data.fund.status}</span>
+            <h2>Quỹ nhóm · {fundStatusLabel(data.fund.status)}</h2>
           </div>
-          <p>{data.viewerRole === 'HOLDER' ? 'Bạn là Fund Holder.' : 'Bạn là thành viên của quỹ này.'} Dữ liệu chỉ là bản xem trước, không giữ hoặc chuyển tiền thật.</p>
+          <p>{data.viewerRole === 'HOLDER' ? 'Bạn là người giữ quỹ.' : 'Bạn là thành viên của quỹ này.'}</p>
         </div>
         <div className={styles.bannerActions}>
-          <span className={styles.holder}>{data.viewerRole}</span>
-          <Button variant="outline" disabled aria-describedby="fund-command-note" icon={<Icon name="lock" size={17} />}>Bắt đầu đóng quỹ</Button>
-          <Button variant="outline" disabled aria-describedby="fund-command-note" icon={<Icon name="members" size={17} />}>Thông tin giữ quỹ</Button>
+          <Button variant="outline" disabled title={previewActionReason} icon={<Icon name="lock" size={17} />}>Bắt đầu đóng quỹ</Button>
+          <Button variant="outline" disabled title={previewActionReason} icon={<Icon name="members" size={17} />}>Thông tin giữ quỹ</Button>
         </div>
-        <CapabilityNote id="fund-command-note" tone="warning">
-          Các thao tác Finance đang bị vô hiệu hóa trong bản xem trước; chưa có Gateway command.
-        </CapabilityNote>
       </section>
       {closure && (
         <section className={styles.closure} aria-label="Trạng thái đóng quỹ" data-closed={closure.closedAt ? 'true' : 'false'}>
           <span className={styles.closureIcon} aria-hidden="true"><Icon name={closure.closedAt ? 'lock' : 'hourglass'} size={18} /></span>
-          <div><strong>Closure: {closure.status}</strong><span>{closure.closedAt ? `Hoàn tất ${date(closure.closedAt)}` : 'Chờ đủ xác nhận'}</span></div>
-          {closure.blockers.length ? <ul>{closure.blockers.map((blocker) => <li key={blocker.code}>{blocker.label}{blocker.amount ? ` · ${formatMoneyVnd(blocker.amount)}` : ''}</li>)}</ul> : <span className={styles.clear}>Không còn blocker</span>}
+          <div><strong>Đóng quỹ · {closureLabel[closure.status]}</strong>{closure.closedAt && <span>Ngày {date(closure.closedAt)}</span>}</div>
+          {closure.blockers.length ? <ul>{closure.blockers.map((blocker) => <li key={blocker.code}>{blocker.label}{blocker.amount ? ` · ${formatMoneyVnd(blocker.amount)}` : ''}</li>)}</ul> : <span className={styles.clear}>Không còn khoản cần xử lý</span>}
         </section>
       )}
       <section className={styles.metrics} aria-label="Tổng hợp quỹ">
         <div data-tone="budget"><span className={styles.metricIcon} aria-hidden="true"><Icon name="tag" size={22} /></span><p><span>Ngân sách mục tiêu</span><strong>{formatMoneyVnd(data.fund.budgetAmount)}</strong></p></div>
         <div data-tone="contributions"><span className={styles.metricIcon} aria-hidden="true"><Icon name="members" size={22} /></span><p><span>Đóng góp đã xác nhận</span><strong className={styles.green}>{formatMoneyVnd(data.totals.confirmedContributions)}</strong></p></div>
         <div data-tone="expenses"><span className={styles.metricIcon} aria-hidden="true"><Icon name="receipt" size={22} /></span><p><span>Đã chi từ quỹ</span><strong className={styles.blue}>{formatMoneyVnd(data.totals.confirmedExpenses)}</strong></p></div>
-        <div data-tone="available"><span className={styles.metricIcon} aria-hidden="true"><Icon name="fund" size={22} /></span><p><span>Khả dụng · đang giữ {formatMoneyVnd(data.fund.reservedRefund)}</span><strong className={styles.teal}>{formatMoneyVnd(data.fund.availableBalance)}</strong></p></div>
+        <div data-tone="available"><span className={styles.metricIcon} aria-hidden="true"><Icon name="fund" size={22} /></span><p><span>Khả dụng</span><strong className={styles.teal}>{formatMoneyVnd(data.fund.availableBalance)}</strong><small className={styles.metricHint}>Giữ hoàn dư {formatMoneyVnd(data.fund.reservedRefund)}</small></p></div>
       </section>
+      <div className={styles.moneyNote}><Icon name="info" size={16} /> Wolfari ghi nhận và đối chiếu, không giữ hoặc chuyển tiền thật.</div>
       <div className={styles.workspace}>
         <section className={styles.ledger} aria-label="Sổ quỹ">
           <div className={styles.tabs} role="tablist" aria-label="Các vùng quỹ">
@@ -176,7 +184,6 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
               ['contributions', 'Đóng góp'],
               ['outside', 'Ngoài quỹ'],
               ['refunds', 'Hoàn dư'],
-              ['history', 'Lịch sử'],
             ] as const).map(([value, label]) => (
               <button key={value} id={`fund-tab-${value}`} type="button" role="tab" aria-selected={tab === value} aria-controls="fund-tabpanel" tabIndex={tab === value ? 0 : -1} onClick={() => setTab(value)} onKeyDown={(event) => {
                 const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
@@ -193,37 +200,35 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
             ))}
           </div>
           {tab === 'expenses' ? (
-            <div id="fund-tabpanel" className={styles.table} role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>
-              <div className={styles.tableHead} role="row"><span>#</span><span>Hạng mục</span><span>Số tiền</span><span>Người thực hiện</span><span>Ngày</span><span>Trạng thái</span></div>
-              {data.expenses.map((item, index) => <div className={styles.row} role="row" key={item.id}><span>{index + 1}</span><strong>{item.title}</strong><b>{formatMoneyVnd(item.amount)}</b><span className={styles.person}><i aria-hidden="true">{initial(item.presentation.displayName)}</i>{item.presentation.displayName ?? 'Thành viên'}</span><span>{date(item.paidAt)}</span><em data-tone={expenseTone[item.status]}>{expenseLabel[item.status]}</em></div>)}
+            <div id="fund-tabpanel" role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>
+              <div className={styles.table} role="table" aria-label="Khoản chi từ quỹ">
+              <div className={styles.tableHead} role="row"><span role="columnheader">#</span><span role="columnheader">Hạng mục</span><span role="columnheader">Số tiền</span><span role="columnheader">Người thực hiện</span><span role="columnheader">Ngày</span><span role="columnheader">Trạng thái</span></div>
+              {data.expenses.map((item, index) => <div className={styles.row} role="row" key={item.id}><span role="cell">{index + 1}</span><strong role="cell">{item.title}</strong><b role="cell">{formatMoneyVnd(item.amount)}</b><span className={styles.person} role="cell"><i aria-hidden="true">{initial(item.presentation.displayName)}</i>{item.presentation.displayName ?? 'Thành viên'}</span><span role="cell">{date(item.paidAt)}</span><em role="cell" data-tone={expenseTone[item.status]}>{expenseLabel[item.status]}</em></div>)}
+            </div>
             </div>
           ) : tab === 'contributions' ? (
             <ul id="fund-tabpanel" className={styles.simpleList} role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>{data.contributions.map((item) => <li key={item.id}><strong>{item.presentation.displayName ?? 'Thành viên'}</strong><span>{formatMoneyVnd(item.amount)}</span><em data-tone={contributionTone[item.status]}>{contributionLabel[item.status]}</em></li>)}</ul>
           ) : tab === 'outside' ? (
             <ul id="fund-tabpanel" className={styles.simpleList} role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>{data.notes.map((item) => <li key={item.id}><strong>{item.description}</strong><span>{formatMoneyVnd(item.amount)}</span><em data-tone="neutral">Ngoài sổ quỹ</em></li>)}</ul>
-          ) : tab === 'refunds' ? (
-            <ul id="fund-tabpanel" className={styles.simpleList} role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>{data.refunds.map((item) => <li key={item.id}><strong>{item.reason ?? 'Hoàn dư'}</strong><span>{formatMoneyVnd(item.amount)}</span><em data-tone={refundTone[item.status]}>{refundLabel[item.status]}</em></li>)}</ul>
           ) : (
-            <ul id="fund-tabpanel" className={styles.simpleList} role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>{data.ledger.map((item) => <li key={item.id}><strong>#{item.sequence} · {item.presentation.title}</strong><span>{item.direction} {formatMoneyVnd(item.amount)}</span><em data-tone="neutral">Số dư {formatMoneyVnd(item.balanceAfter)}</em></li>)}</ul>
+            <ul id="fund-tabpanel" className={styles.simpleList} role="tabpanel" aria-labelledby={`fund-tab-${tab}`} tabIndex={0}>{data.refunds.map((item) => <li key={item.id}><strong>{item.reason ?? 'Hoàn dư'}</strong><span>{formatMoneyVnd(item.amount)}</span><em data-tone={refundTone[item.status]}>{refundLabel[item.status]}</em></li>)}</ul>
           )}
-          <div className={styles.balanceNote}>Số dư ghi sổ {formatMoneyVnd(data.fund.currentBalance)} − đang giữ {formatMoneyVnd(data.fund.reservedRefund)} = khả dụng {formatMoneyVnd(data.fund.availableBalance)}. Đề nghị chưa xác nhận chưa được ghi sổ. {data.nextCursor ? `Còn trang ledger tiếp theo: ${data.nextCursor}` : ''}</div>
+          <div className={styles.balanceNote}>Số dư ghi sổ {formatMoneyVnd(data.fund.currentBalance)} − đang giữ {formatMoneyVnd(data.fund.reservedRefund)} = khả dụng {formatMoneyVnd(data.fund.availableBalance)}. Đề nghị chưa xác nhận chưa được ghi sổ.{data.nextCursor ? ' Còn giao dịch cũ hơn chưa tải.' : ''}</div>
         </section>
         <section className={styles.formPanel} aria-labelledby="fund-draft-title">
           <div className={styles.formHeader}>
             <span className={styles.formIcon} aria-hidden="true"><Icon name="receipt" size={22} /></span>
             <div>
               <h2 id="fund-draft-title">Đề nghị chi từ quỹ</h2>
-              <p className={styles.formHint}>Fund Holder xác nhận trước khi ghi sổ.</p>
+              <p className={styles.formHint}>Người giữ quỹ xác nhận trước khi ghi sổ.</p>
             </div>
           </div>
-          <CapabilityNote tone="warning">Bản nháp chỉ kiểm tra dữ liệu trên trình duyệt; chưa gửi request và chưa ghi sổ.</CapabilityNote>
           <Select label="Hạng mục" value={category} onChange={(e) => setCategory(e.target.value)} disabled={readOnly}><option value="">Chọn hạng mục</option><option value="hotel">Khách sạn</option><option value="transport">Di chuyển</option><option value="food">Ăn uống</option></Select>
           <div className={styles.twoFields}>
             <Input label="Số tiền (VND)" aria-label="Số tiền (VND)" inputMode="numeric" placeholder="Nhập số tiền" value={amount} onChange={(e) => setAmount(e.target.value)} disabled={readOnly} leadingIcon={<span className={styles.fieldChip}><Icon name="fund" size={18} /></span>} />
             <Input label="Ngày chi" type="date" value={paidAt} onChange={(e) => setPaidAt(e.target.value)} disabled={readOnly} leadingIcon={<span className={styles.fieldChip}><Icon name="calendar" size={18} /></span>} />
           </div>
           <Input label="Ghi chú" placeholder="Nhập ghi chú..." value={note} onChange={(e) => setNote(e.target.value)} disabled={readOnly} leadingIcon={<span className={styles.fieldChip}><Icon name="edit" size={18} /></span>} />
-          <div className={styles.receipt}>Bản nháp · Chưa gửi, chưa trừ số dư</div>
           {draftMessage && <Alert live>{draftMessage}</Alert>}
           <Button onClick={submitDraft} disabled={readOnly} icon={<Icon name="check" size={17} />}>Kiểm tra bản nháp</Button>
         </section>
@@ -238,7 +243,6 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
       <FinanceTransactionPanel
         rows={transactionRows}
         format={formatMoneyVnd}
-        footer={<p>Preview chỉ lọc các giao dịch ledger có sẵn trong fixture.</p>}
       />
       <FinanceOverlay
         open={financeOverlayOpen}
@@ -247,11 +251,11 @@ function FundWorkspace({ data }: { data: FundViewModel }) {
         onSectionChange={setFinanceSection}
         tripName="Đà Nẵng 3N2Đ"
         status={data.fund.status}
-        role={data.viewerRole}
+        role={data.viewerRole === 'HOLDER' ? 'Người giữ quỹ' : 'Thành viên'}
         returnFocusRef={financeSettingsRef}
-        context={<><h3>Tình trạng &amp; mục tiêu</h3><p>{data.environment} · {data.fund.status} · VND</p><p>Người giữ quỹ: {data.viewerRole === 'HOLDER' ? 'Bạn' : 'Được chỉ định trong dữ liệu'}</p></>}
+        context={<><h3>Tình trạng &amp; mục tiêu</h3><p>Quỹ {fundStatusLabel(data.fund.status).toLocaleLowerCase('vi-VN')} · VND</p><p>Người giữ quỹ: {data.viewerRole === 'HOLDER' ? 'Bạn' : 'Thành viên khác'}</p></>}
       >
-        {financeSection === 'general' ? <><h3>Cấu hình quỹ chung</h3><p>Fixture hiển thị cấu hình theo SRS, không gửi mutation.</p></> : financeSection === 'contributions' ? <><h3>Đợt đóng góp</h3><p>{data.contributions.length} khoản đóng góp trong dữ liệu minh họa.</p></> : <CapabilityNote tone="warning">Vùng này chưa có Gateway contract; fixture chỉ hiển thị read-only, không tạo bút toán giả.</CapabilityNote>}
+        {financeSection === 'general' ? <><h3>Cấu hình quỹ chung</h3><p>Ngân sách mục tiêu {formatMoneyVnd(data.fund.budgetAmount)}.</p></> : financeSection === 'contributions' ? <><h3>Đợt đóng góp</h3><p>{data.contributions.length} khoản đóng góp.</p></> : <CapabilityNote tone="warning">Phần này chưa khả dụng; chỉ xem, không tạo giao dịch.</CapabilityNote>}
       </FinanceOverlay>
     </>
   );

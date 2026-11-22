@@ -355,7 +355,7 @@
   flex: 0 0 auto;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-green);
   color: var(--v2-white);
   box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
@@ -511,7 +511,7 @@
   gap: 12px;
   min-width: 0;
   padding: 14px;
-  border-radius: 26px;
+  border-radius: var(--v2-radius-tile);
   background: var(--metric-surface);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
@@ -569,6 +569,29 @@
 .metrics .teal {
   color: var(--v2-ink);
 }
+/* Secondary figure under a tile amount (reserved refund); wraps instead of clipping. */
+.metrics .metricHint {
+  color: #56637b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+/* One money disclaimer per page, directly under the totals. */
+.moneyNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 10px 0 0;
+  color: #56637b;
+  font-family: var(--v2-font);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+}
+.moneyNote svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 404px);
@@ -625,7 +648,8 @@
 .tableHead,
 .row {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1.2fr) minmax(0, 1.05fr) minmax(0, 1.55fr) minmax(0, 0.95fr) 100px;
+  /* Amount and date keep a floor so money and dates are never ellipsized. */
+  grid-template-columns: 28px minmax(0, 1.2fr) minmax(96px, 1.05fr) minmax(0, 1.55fr) minmax(84px, 0.95fr) 100px;
   align-items: center;
   gap: 8px;
   min-width: 0;
@@ -862,12 +886,13 @@
   .stateBar {
     flex-wrap: wrap;
   }
+  /* Stack the draft form under the ledger so amounts and names are not clipped. */
   .workspace {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 36%);
+    grid-template-columns: minmax(0, 1fr);
   }
   .tableHead,
   .row {
-    grid-template-columns: 24px minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr) 100px;
+    grid-template-columns: 24px minmax(0, 1.2fr) minmax(96px, 1fr) minmax(0, 1.1fr) minmax(84px, 1fr) 100px;
     padding-inline: 10px;
   }
   .tabs button {
@@ -1145,7 +1170,7 @@
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
-  border-radius: 15px;
+  border-radius: 12px;
   background: var(--v2-gradient-green);
   color: var(--v2-white);
   box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
@@ -1185,7 +1210,7 @@
   min-height: 72px;
   padding: 14px;
   border: 0;
-  border-radius: 26px;
+  border-radius: var(--v2-radius-tile);
   background: var(--kpi-surface);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
   font-family: var(--v2-font);
