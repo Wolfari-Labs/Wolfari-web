@@ -62,7 +62,9 @@ export function Drawer({
               </Dialog.Close>
             )}
           </div>
-          <div className={styles.content}>{children}</div>
+          <div className={styles.content} role="region" aria-label={label} tabIndex={0}>
+            {children}
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

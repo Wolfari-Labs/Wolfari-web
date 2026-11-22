@@ -53,7 +53,7 @@ export function useGatewayDnd({
   const lists = useRef(new Map<string | null, HTMLElement>());
   const dayTargets = useRef(new Map<string | null, HTMLElement>());
   const managerRef = useRef<DragDropManager | null>(null);
-  const pendingFocus = useRef<Source | null>(null);
+  const pendingFocus = useRef<{ source: Source; afterVersion?: number } | null>(null);
   const submitting = useRef(false);
   const touch = useRef<{
     source: Source;
@@ -126,10 +126,18 @@ export function useGatewayDnd({
     handle.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     return document.activeElement === handle;
   };
-  // Snapshot refresh and pending=false may be separate React commits. Do not lose the
-  // focus request while the matching handle is temporarily disabled or has a new ID.
+  // Snapshot refresh and pending=false may be separate React commits. Focusing the
+  // old row and consuming the request before the new order commits loses focus when
+  // React moves that DOM node. Successful writes must reach a newer plan version;
+  // canceled/failed drops can restore focus against the existing snapshot.
   useLayoutEffect(() => {
-    if (!submitting.current && pendingFocus.current && focusSource(pendingFocus.current))
+    const pending = pendingFocus.current;
+    if (
+      !submitting.current &&
+      pending &&
+      (pending.afterVersion === undefined || plan.planVersion > pending.afterVersion) &&
+      focusSource(pending.source)
+    )
       pendingFocus.current = null;
   });
 
@@ -152,7 +160,7 @@ export function useGatewayDnd({
       intent.target.index;
   const finish = async (source: Source, intent: GatewayDropIntent | null, canceled = false) => {
     setDrag(null);
-    pendingFocus.current = source;
+    pendingFocus.current = { source };
     if (!canEdit || canceled || !intent || isNoop(intent) || submitting.current) {
       setAnnouncement('Không thay đổi lịch trình.');
       return;
@@ -160,10 +168,12 @@ export function useGatewayDnd({
     if (intent.target.day === null) openPool();
     else revealDay(intent.target.day);
     submitting.current = true;
+    pendingFocus.current = { source, afterVersion: plan.planVersion };
     setAnnouncement('Đang lưu sắp xếp lịch trình…');
     try {
       const saved = await onArrange({ source: intent.source, target: intent.target });
       if (!saved) {
+        pendingFocus.current = { source };
         const sourceWasInPool =
           source.type === 'LOCATION' ||
           !ordered.some(
@@ -180,6 +190,7 @@ export function useGatewayDnd({
           : 'Chưa xác nhận lưu hoàn tất. Xem thông báo lịch trình trước khi tiếp tục.',
       );
     } catch {
+      pendingFocus.current = { source };
       setAnnouncement('Chưa xác nhận lưu hoàn tất. Xem thông báo lịch trình.');
     } finally {
       submitting.current = false;
@@ -199,7 +210,7 @@ export function useGatewayDnd({
       clearTouch();
       if (!nativeTouch && drag?.mode === 'pointer')
         void managerRef.current?.actions.stop({ canceled: true, event });
-      pendingFocus.current = source;
+      pendingFocus.current = { source };
       setDrag(null);
       setAnnouncement('Đã hủy kéo thả. Không thay đổi lịch trình.');
     };
@@ -290,7 +301,7 @@ export function useGatewayDnd({
       const current = touch.current;
       clearTouch();
       if (!current) return;
-      pendingFocus.current = source;
+      pendingFocus.current = { source };
       setDrag(null);
       setAnnouncement('Đã hủy kéo thả. Không thay đổi lịch trình.');
       requestFocus((value) => value + 1);
@@ -475,7 +486,7 @@ export function useGatewayDnd({
           ? day
           : (active.intent?.target.day ?? null);
     if (targetDay === null && !poolOpen) {
-      pendingFocus.current = source;
+      pendingFocus.current = { source };
       openPool();
     }
     const index =

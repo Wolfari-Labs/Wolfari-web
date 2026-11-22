@@ -173,6 +173,29 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
     .analyze();
   expect(scan.violations).toEqual([]);
   await history.screenshot({ path: testInfo.outputPath('price-observations-web402.png') });
+
+  // A short viewport guarantees overflow across OS font metrics.
+  await page.setViewportSize({ width: 402, height: 480 });
+  const scrollRegion = history.getByRole('region', { name: 'Chi tiết theo dõi giá' });
+  await expect(scrollRegion).toHaveAttribute('tabindex', '0');
+  // The final page has no pagination controls: the read-only region itself
+  // must remain reachable and scrollable with a keyboard.
+  await history.getByRole('button', { name: 'Đóng chi tiết theo dõi giá' }).focus();
+  await page.keyboard.press('Tab');
+  await expect(scrollRegion).toBeFocused();
+  await scrollRegion.evaluate((element) => {
+    element.scrollTop = 0;
+  });
+  await expect
+    .poll(() => scrollRegion.evaluate((element) => element.scrollHeight > element.clientHeight))
+    .toBe(true);
+  await page.keyboard.press('ArrowDown');
+  await expect.poll(() => scrollRegion.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+  const shortViewportScan = await new AxeBuilder({ page })
+    .include('[role="dialog"]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(shortViewportScan.violations).toEqual([]);
   await page.keyboard.press('Escape');
   await expect(history).toBeHidden();
   await expect(trigger).toBeFocused();
