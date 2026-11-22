@@ -9,9 +9,9 @@ Ngày chạy: 22/11/2026, Windows 11, Node 24, Chromium Playwright. Nền: `feat
 | Typecheck | `tsc --noEmit` | PASS | Tĩnh |
 | Lint | `eslint .` | PASS | Tĩnh |
 | Unit/component | `vitest run` | **887/887 PASS** | Mocked API |
-| E2E Preview fixture | `node scripts/e2e-built.mjs fixture` | **251 PASS, 1 SKIP** (`test.fixme` V2-D09) | Fixture |
+| E2E Preview fixture | `node scripts/e2e-built.mjs fixture` | **251 PASS** (sau tinh chỉnh V2-D15/D16, kiểm tra gradient đã bật lại) | Fixture |
 | E2E Gateway HTTP-mock | `node scripts/e2e-built.mjs gateway` | **208 PASS, 5 SKIP** (Leaflet, cần `WOLFARI_LEAFLET_TEST=true`) | Mocked API |
-| Axe `color-contrast` | quét 18 route ở 1440 và 402px | 0 vi phạm | Fixture |
+| Axe WCAG 2.1 AA (tất cả rule) | quét 16 route ở 1440 và 402px | 0 vi phạm | Fixture |
 | Backend thật | — | NOT_RUN | — |
 
 Không có kết quả nào ở trên là PASS với backend thật.
@@ -31,5 +31,8 @@ Các test khóa hình học/màu của thiết kế cũ (sidebar 220/72px, hero 
 ## Việc còn mở
 
 - Ảnh chuẩn `tests/e2e/__screenshots__/linux/auth-fixture.spec.ts/home-guest-1440.png` (CI Linux) cần tạo lại trên Linux; bản `win32` đã cập nhật.
-- V2-D09: chữ trắng trên gradient `#5b8cff → #3cc9b0` dưới AA.
 - Màn chưa có route/tính năng: W13, W21, A00, A02.1, A04.1 (V2-D13).
+
+## Tinh chỉnh 22/11/2026
+
+Theo yêu cầu "bớt bo tròn, đỡ AI, cuốn hút hơn" và "cân nhắc nội dung hiển thị": V2-D15 (hình khối, màu, font) và V2-D16 ([CONTENT_RULES.md](CONTENT_RULES.md)). Kiểm tra lại sau tinh chỉnh: tsc/eslint PASS, unit 887/887, fixture 251/251, Gateway 208 PASS + 5 skip Leaflet, axe 0 vi phạm.
