@@ -19,7 +19,9 @@ import { PriceWatchOverlay } from './PriceWatchOverlay';
 import { SuccessToast } from '../../shared/components/SuccessToast';
 import { Icon } from '../../shared/components/Icon';
 import { Alert } from '../../shared/components/Alert';
-import { Badge, ConfirmDialog } from '../../shared/components/Ui';
+import { ActionMenu, Badge, ConfirmDialog } from '../../shared/components/Ui';
+import { PriceHistoryChart } from './PriceHistoryChart';
+import mascot from '../../shared/assets/v2/mascot-reading-map.png';
 import { ContentState } from '../../shared/components/ContentState';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
 import priceStyles from './RuntimePriceWatchPage.module.css';
@@ -30,7 +32,30 @@ const labels = {
   EXPIRED: 'Hết hạn',
   STOPPED: 'Đã dừng',
 };
+const cabinLabels = {
+  ECONOMY: 'Phổ thông',
+  PREMIUM_ECONOMY: 'Phổ thông đặc biệt',
+  BUSINESS: 'Thương gia',
+  FIRST: 'Hạng nhất',
+} as const;
 const money = (s: string) => new Intl.NumberFormat('vi-VN').format(BigInt(s)) + ' ₫';
+/** Provider codes stay in data; the UI names the source in plain Vietnamese. */
+const providerLabel = (provider: string) =>
+  provider === 'TRAVELPAYOUTS_CACHE'
+    ? 'bộ nhớ đệm Travelpayouts'
+    : provider === 'MOCK_FLIGHT'
+      ? 'giá mô phỏng'
+      : provider;
+/** Short dd/MM axis label in the device timezone, like the other history timestamps. */
+const dayMonth = (value: string) => {
+  const at = new Date(value);
+  return `${String(at.getDate()).padStart(2, '0')}/${String(at.getMonth() + 1).padStart(2, '0')}`;
+};
+/** yyyy-MM-dd → dd/MM/yyyy without timezone conversion. */
+const isoDate = (value: string) =>
+  /^\d{4}-\d{2}-\d{2}/.test(value)
+    ? `${value.slice(8, 10)}/${value.slice(5, 7)}/${value.slice(0, 4)}`
+    : value;
 const providerErrors = new Map([
   ['PROVIDER_AUTH_FAILED', 'Token nguồn giá bị từ chối.'],
   ['PROVIDER_RATE_LIMITED', 'Đang chờ hạn mức nguồn giá.'],
@@ -72,30 +97,86 @@ function Observations({
       found <= Date.now() &&
       Date.now() - found <= 48 * 3600000 &&
       (!latest?.providerExpiresAt || Date.parse(latest.providerExpiresAt) > Date.now()));
+  const chartRows = [...rows].sort((a, b) => Date.parse(a.observedAt) - Date.parse(b.observedAt));
   return (
-    <>
-      <h3>Lịch sử giá quan sát</h3>
-      <p>
-        Nguồn: {watch.fields.provider}. Lần kiểm tra mới nhất:{' '}
-        {source?.lastCheckedAt
-          ? new Date(source.lastCheckedAt).toLocaleString('vi-VN')
-          : 'Chưa kiểm tra'}
-        . Lần kế tiếp:{' '}
-        {source?.nextCheckAt
-          ? new Date(source.nextCheckAt).toLocaleString('vi-VN')
-          : 'Chưa lên lịch'}
-        .
+    // Focusable so keyboard users can scroll the drawer when the chart makes it overflow.
+    <div className={priceStyles.history} role="region" aria-label="Lịch sử giá" tabIndex={0}>
+      <div className={priceStyles.historyHead}>
+        <h3>Lịch sử giá quan sát</h3>
+        <p>
+          {watch.fields.origin} → {watch.fields.destination} ·{' '}
+          {watch.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'} ·{' '}
+          {isoDate(watch.fields.departure_date)}
+        </p>
+      </div>
+      {latest ? (
+        <p className={priceStyles.latest}>
+          <strong>{money(latest.price)}</strong>{' '}
+          <Badge
+            tone={
+              !source?.stale &&
+              freshReference &&
+              BigInt(latest.price) < BigInt(watch.fields.threshold_price)
+                ? 'success'
+                : 'neutral'
+            }
+          >
+            {source?.stale
+              ? 'Giá lịch sử trước lần lỗi nguồn'
+              : !freshReference
+                ? 'Giá cũ / chưa rõ tuổi nguồn'
+                : 'Quan sát gần nhất đã tải'}
+          </Badge>
+        </p>
+      ) : (
+        !query.isPending &&
+        !query.isError && (
+          <p className={priceStyles.noPrice}>
+            <Icon name="history" size={22} />
+            Chưa có giá quan sát.
+          </p>
+        )
+      )}
+      {chartRows.length > 1 && (
+        <PriceHistoryChart
+          points={chartRows.map((row) => ({
+            id: row.id,
+            amount: BigInt(row.price),
+            axisLabel: dayMonth(row.observedAt),
+            title: `${new Date(row.observedAt).toLocaleString('vi-VN')} · ${money(row.price)}`,
+          }))}
+          threshold={BigInt(watch.fields.threshold_price)}
+          label={`Biểu đồ các giá đã tải ${watch.fields.origin} đến ${watch.fields.destination}`}
+          description="Giá quan sát đã tải theo thời gian. Đường nét đứt là ngưỡng cảnh báo."
+        />
+      )}
+      <p className={priceStyles.sourceNote}>
+        <Icon name="info" size={16} />
+        <span>
+          Nguồn: {providerLabel(watch.fields.provider)}. Kiểm tra gần nhất:{' '}
+          {source?.lastCheckedAt
+            ? new Date(source.lastCheckedAt).toLocaleString('vi-VN')
+            : 'Chưa kiểm tra'}
+          . Kiểm tra tiếp theo:{' '}
+          {source?.nextCheckAt
+            ? new Date(source.nextCheckAt).toLocaleString('vi-VN')
+            : 'Chưa lên lịch'}
+          .
+        </span>
       </p>
+      {cached && (
+        <p className={priceStyles.sourceNote}>
+          <Icon name="info" size={16} />
+          <span>
+            Giá tham khảo từ bộ nhớ đệm · 1 người lớn, một chiều, phổ thông. Không phải giá đặt vé
+            trực tiếp. Kiểm tra mỗi 6 giờ; lịch sử trống có thể do không có giá đúng tuyến/ngày.
+          </span>
+        </p>
+      )}
       {source?.lastCheckStatus === 'NO_RESULT' && (
         <Alert tone="info">
-          Lần kiểm tra gần nhất không có giá đúng tuyến/ngày (NO_RESULT); không phải giá 0.
+          Lần kiểm tra gần nhất không có giá đúng tuyến/ngày; không phải giá 0.
         </Alert>
-      )}
-      {cached && (
-        <p>
-          Giá cache tham khảo · 1 người lớn, một chiều, phổ thông. Không phải giá đặt vé trực tiếp.
-          Chu kỳ kiểm tra 6 giờ; lịch sử chưa có dữ liệu có thể do không có giá đúng tuyến/ngày.
-        </p>
       )}
       {source?.lastError && (
         <Alert tone="warning">
@@ -126,41 +207,20 @@ function Observations({
           </Button>
         </Alert>
       )}
-      {latest ? (
-        <p className={styles.money}>
-          {money(latest.price)}{' '}
-          <Badge
-            tone={
-              !source?.stale &&
-              freshReference &&
-              BigInt(latest.price) < BigInt(watch.fields.threshold_price)
-                ? 'success'
-                : 'neutral'
-            }
-          >
-            {source?.stale
-              ? 'Giá lịch sử trước lần lỗi nguồn'
-              : !freshReference
-                ? 'Giá cũ / chưa rõ tuổi nguồn'
-                : 'Quan sát gần nhất đã tải'}
-          </Badge>
-        </p>
-      ) : (
-        !query.isPending && !query.isError && <p>Chưa có giá quan sát.</p>
-      )}
       {!!rows.length && (
-        <p>
+        <p className={priceStyles.caveat}>
           Lịch sử chỉ gồm các quan sát đã tải; thời điểm quan sát và nhận dữ liệu ở từng dòng. Thời
           gian hiển thị theo múi giờ thiết bị. Không xác nhận giá hiện tại hoặc giá thấp nhất của
           toàn bộ lịch sử.
         </p>
       )}
-      <ul className={styles.list}>
+      <ul className={priceStyles.observations}>
         {rows.map((row) => (
           <li key={row.id}>
             <strong>{money(row.price)}</strong>
             <p>
-              Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn: {row.provider}
+              Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn:{' '}
+              {providerLabel(row.provider)}
             </p>
             <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
             {row.provider === 'TRAVELPAYOUTS_CACHE' && (
@@ -170,7 +230,7 @@ function Observations({
                 {row.providerFoundAt
                   ? new Date(row.providerFoundAt).toLocaleString('vi-VN')
                   : 'Không rõ'}{' '}
-                · Giá cache tham khảo
+                · Giá tham khảo
               </small>
             )}
           </li>
@@ -185,7 +245,7 @@ function Observations({
           Tải thêm lịch sử
         </Button>
       )}
-    </>
+    </div>
   );
 }
 export function RuntimePriceWatchPage() {
@@ -412,13 +472,10 @@ function WatchWorkspace({
       )}
     </>
   );
-  const providerBadge = (
-    <Badge tone="warning">
-      {import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
-        ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
-        : 'MOCK_FLIGHT · Mô phỏng'}
-    </Badge>
-  );
+  const providerNote =
+    import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+      ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo'
+      : 'Nguồn: giá mô phỏng';
   return (
     <section
       className={`${styles.page} ${priceStyles.page} ${tripWorkspaceStyles.fullWidth}`}
@@ -427,11 +484,11 @@ function WatchWorkspace({
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
       <TripHero trip={trip} compact variant="landscape" />
       <div className={priceStyles.heading}>
-        <div>
-          <p className={styles.metadata}>CHỦ ĐỘNG CHO CHUYẾN ĐI</p>
+        <div className={priceStyles.headingText}>
           <h1 ref={formContextRef} tabIndex={-1}>
             Theo dõi giá vé
           </h1>
+          <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
         </div>
         <Button
           icon={<Icon name="plus" />}
@@ -441,13 +498,21 @@ function WatchWorkspace({
           Tạo theo dõi
         </Button>
       </div>
-      <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
       {!editing && recovery}
       <div className={priceStyles.workspace} data-region="price-watch-workspace">
         <section className={priceStyles.workspaceMain} aria-label="Danh sách theo dõi giá">
-          <div className={styles.actions}>
-            {providerBadge}
-            <Button variant="outline" onClick={() => void query.refetch()} disabled={busy}>
+          <div className={priceStyles.toolbar}>
+            <p className={priceStyles.sourceNote}>
+              <Icon name="info" size={16} />
+              <span>{providerNote}</span>
+            </p>
+            <Button
+              variant="plain"
+              size="compact"
+              icon={<Icon name="refresh" size={16} />}
+              onClick={() => void query.refetch()}
+              disabled={busy}
+            >
               Làm mới
             </Button>
           </div>
@@ -467,70 +532,102 @@ function WatchWorkspace({
           )}
           {!query.isPending && !query.isError && !items.length && (
             <div className={priceStyles.empty}>
-              <Icon name="price" size={40} />
-              <h2>Chờ một mức giá hợp lý</h2>
-              <p>Tạo theo dõi đầu tiên bằng mã sân bay, ngày đi và ngân sách của bạn.</p>
+              <img className={priceStyles.emptyArt} src={mascot} alt="" />
+              <div>
+                <h2>Chưa có theo dõi giá nào</h2>
+                <p>Tạo theo dõi đầu tiên bằng mã sân bay, ngày đi và mức giá mong muốn của bạn.</p>
+              </div>
             </div>
           )}
           <div className={priceStyles.grid}>
             {items.map((item) => {
               const own = item.ownerId === trip.currentMembership.userId,
                 active = item.status === 'ACTIVE' || item.status === 'PAUSED';
+              const canStop =
+                active && writable && (own || trip.currentMembership.role === 'OWNER');
+              const passengers = Object.values(item.fields.passengers).reduce((a, b) => a + b, 0);
               return (
-                <article key={item.id} className={priceStyles.card}>
-                  <div className={priceStyles.heading}>
-                    <Icon name="price" />
-                    <Badge tone={item.status === 'ACTIVE' ? 'success' : 'neutral'}>
+                <article key={item.id} className={priceStyles.card} data-status={item.status}>
+                  <div className={priceStyles.cardTop}>
+                    <h2>
+                      {item.fields.origin} <span aria-label="đến">→</span> {item.fields.destination}
+                    </h2>
+                    <span className={priceStyles.status} data-status={item.status}>
+                      {item.status === 'PAUSED' && <Icon name="pause" size={14} />}
                       {labels[item.status]}
-                    </Badge>
+                    </span>
                   </div>
-                  <h2>
-                    {item.fields.origin} <span aria-label="đến">→</span> {item.fields.destination}
-                  </h2>
-                  <p>
-                    {item.fields.departure_date} ·{' '}
-                    {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'}
+                  <p className={priceStyles.meta}>
+                    {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'} ·{' '}
+                    {isoDate(item.fields.departure_date)}
+                    {item.fields.return_date ? ` – ${isoDate(item.fields.return_date)}` : ''} ·{' '}
+                    {passengers} khách
+                    {item.fields.cabin_class
+                      ? ` · ${cabinLabels[item.fields.cabin_class]}`
+                      : ''} · {own ? 'Bạn tạo' : 'Thành viên khác tạo'}
                   </p>
-                  <p className={styles.metadata}>Ngưỡng cảnh báo</p>
-                  <strong className={styles.money}>{money(item.fields.threshold_price)}</strong>
-                  <div className={styles.actions}>
-                    <Button variant="outline" onClick={() => setSelected(item.id)}>
+                  <div className={priceStyles.threshold}>
+                    <span>
+                      <small>Ngưỡng cảnh báo</small>
+                      <strong>{money(item.fields.threshold_price)}</strong>
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="compact"
+                      icon={<Icon name="history" size={16} />}
+                      onClick={() => setSelected(item.id)}
+                    >
                       Lịch sử giá
                     </Button>
-                    {own && active && writable && (
-                      <>
-                        <Button
-                          variant="ghost"
-                          disabled={busy || blocked}
-                          onClick={() => openForm(item)}
-                        >
-                          Sửa
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          disabled={busy || blocked || !!editing}
-                          onClick={() =>
-                            void send({
-                              method: 'POST',
-                              path: `/api/v1/price-watches/${item.id}/${item.status === 'ACTIVE' ? 'pause' : 'resume'}`,
-                              body: { expected_version: item.version },
-                            })
-                          }
-                        >
-                          {item.status === 'ACTIVE' ? 'Tạm dừng' : 'Tiếp tục'}
-                        </Button>
-                      </>
-                    )}
-                    {active && writable && (own || trip.currentMembership.role === 'OWNER') && (
-                      <Button
-                        variant="ghost"
-                        disabled={busy || blocked || !!editing}
-                        onClick={() => setStop(item)}
-                      >
-                        Dừng
-                      </Button>
-                    )}
                   </div>
+                  {active && writable && (
+                    <div className={priceStyles.cardActions}>
+                      {own && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="compact"
+                            icon={<Icon name="edit" size={16} />}
+                            disabled={busy || blocked}
+                            onClick={() => openForm(item)}
+                          >
+                            Chỉnh sửa
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="compact"
+                            icon={
+                              <Icon name={item.status === 'ACTIVE' ? 'pause' : 'play'} size={16} />
+                            }
+                            disabled={busy || blocked || !!editing}
+                            onClick={() =>
+                              void send({
+                                method: 'POST',
+                                path: `/api/v1/price-watches/${item.id}/${item.status === 'ACTIVE' ? 'pause' : 'resume'}`,
+                                body: { expected_version: item.version },
+                              })
+                            }
+                          >
+                            {item.status === 'ACTIVE' ? 'Tạm dừng' : 'Tiếp tục'}
+                          </Button>
+                        </>
+                      )}
+                      {!own && (
+                        <p className={priceStyles.reason}>Chỉ người tạo mới chỉnh sửa được.</p>
+                      )}
+                      {canStop && (
+                        <span className={priceStyles.more}>
+                          <ActionMenu
+                            label={`Thêm thao tác cho ${item.fields.origin} đến ${item.fields.destination}`}
+                            disabled={busy || blocked || !!editing}
+                            items={[
+                              { label: 'Dừng theo dõi', danger: true, action: () => setStop(item) },
+                            ]}
+                          />
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </article>
               );
             })}

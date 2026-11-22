@@ -21,7 +21,7 @@ test('HTTP mock: unconfigured browser push is truthful, accessible and never req
   await page.goto('/profile');
   const panel = page.getByRole('group', { name: 'Thông báo trên trình duyệt này' });
   await expect(panel).toBeVisible();
-  await expect(panel.getByText(/Chưa cấu hình Firebase/)).toBeVisible();
+  await expect(panel.getByText(/chưa được thiết lập cho môi trường này/)).toBeVisible();
   await expect(panel.getByRole('button', { name: 'Bật thông báo trình duyệt' })).toBeDisabled();
   for (const width of [1440, 768, 402, 320]) {
     await page.setViewportSize({ width, height: 900 });

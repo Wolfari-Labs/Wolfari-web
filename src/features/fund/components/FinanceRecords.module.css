@@ -40,3 +40,20 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2: record cards use the soft row surface instead of hairline boxes. */
+.record {
+  border: 0;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+  font-family: var(--v2-font);
+}
+.record h3 {
+  color: var(--v2-ink);
+  font-weight: 800;
+}
+.details dt {
+  color: #56637b;
+  font-weight: 700;
+}

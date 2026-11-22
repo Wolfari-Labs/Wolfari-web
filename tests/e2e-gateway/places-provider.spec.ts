@@ -116,18 +116,44 @@ for (const width of [1440, 390])
       .getByRole('button', { name: /^Ngày 1 ·/ })
       .click();
     const placeHandle = page.getByRole('button', { name: 'Kéo địa điểm Hoi An POI', exact: true });
+    const originalActivityIds = model.activities.map((activity) => activity.id);
+    const versionBeforeAttach = trip.plan_version;
     await placeHandle.focus();
     await page.keyboard.press('Enter');
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
-    await expect.poll(() => model.writes.length).toBe(1);
+    await expect(
+      page.getByRole('button', { name: 'Kéo hoạt động Hoi An POI', exact: true }),
+    ).toBeEnabled();
+    // Arrangement is create + full-order PUT. Wait for the refreshed, enabled
+    // activity before inspecting writes or navigating away; a transient count of
+    // one races the second request and can abort the unfinished arrangement.
+    expect(model.writes).toHaveLength(2);
+    expect(model.writes.map(({ method, path }) => ({ method, path }))).toEqual([
+      { method: 'POST', path: `/api/v1/trips/${tripId}/activities` },
+      { method: 'PUT', path: `/api/v1/trips/${tripId}/activities/order` },
+    ]);
     expect(model.writes[0]!.body.scheduled_date).toBe(trip.start_at.slice(0, 10));
     expect(model.writes[0]!.body.selected_location_id).toBe('77777777-1111-4111-8111-111111111111');
+    expect(model.writes[0]!.body.expected_plan_version).toBe(versionBeforeAttach);
+    const attached = model.activities.filter(
+      (activity) => activity.selected_location_id === '77777777-1111-4111-8111-111111111111',
+    );
+    expect(attached).toHaveLength(1);
+    const expectedOrder = [...originalActivityIds, attached[0]!.id];
+    expect(model.writes[1]!.body).toEqual({
+      expected_plan_version: versionBeforeAttach + 1,
+      activity_ids: expectedOrder,
+    });
+    expect(model.writes[0]!.key).not.toBe(model.writes[1]!.key);
+    expect(model.activities.map((activity) => activity.id)).toEqual(expectedOrder);
+    await expect(placeHandle).toHaveCount(0);
     await page.goto(`/trips/${tripId}/map`);
     await page.reload();
     await expect(
       page.getByRole('checkbox', { name: 'Bỏ chọn Hoi An POI', exact: true }),
     ).toBeDisabled();
+    expect(model.writes).toHaveLength(2);
     // Without a browser key the map shows its notice; with one (demo machine) Leaflet renders.
     await expect(
       page

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Badge } from '../../../shared/components/Ui';
 import { Button } from '../../../shared/components/Button';
+import { Icon, type IconName } from '../../../shared/components/Icon';
 import styles from '../FundPage.module.css';
 
 export type FinanceTab = 'contributions' | 'history' | 'members' | 'expenses' | 'refunds';
@@ -19,15 +20,18 @@ export function FinanceKpis({
   format: (value: string | null) => string;
 }) {
   const items = [
-    ['Ngân sách mục tiêu', budget, 'budget'],
-    ['Số dư ghi sổ', balance, 'balance'],
-    ['Đang giữ cho hoàn dư', reserved, 'reserved'],
-    ['Khả dụng', available, 'available'],
-  ] as const;
+    ['Ngân sách mục tiêu', budget, 'budget', 'tag'],
+    ['Số dư ghi sổ', balance, 'balance', 'receipt'],
+    ['Đang giữ cho hoàn dư', reserved, 'reserved', 'hourglass'],
+    ['Khả dụng', available, 'available', 'fund'],
+  ] as const satisfies readonly (readonly [string, string | null, string, IconName])[];
   return (
     <section className={styles.financeKpis} aria-label="Tổng quan quỹ">
-      {items.map(([label, value, tone]) => (
+      {items.map(([label, value, tone, icon]) => (
         <div className={styles.financeKpi} data-tone={tone} key={label}>
+          <i className={styles.financeKpiIcon} aria-hidden="true">
+            <Icon name={icon} size={22} />
+          </i>
           <span>{label}</span>
           <strong>{format(value)}</strong>
         </div>
@@ -46,6 +50,7 @@ export function FinanceStateBar({
   onBudget,
   onDestination,
   disabled,
+  actions,
 }: {
   status: 'OPEN' | 'CLOSING' | 'CLOSED';
   holderName: string;
@@ -56,22 +61,20 @@ export function FinanceStateBar({
   onBudget?: () => void;
   onDestination?: () => void;
   disabled?: boolean;
+  /** Page-level controls for this fund (e.g. reload), shown with the status header. */
+  actions?: ReactNode;
 }) {
   const statusLabel =
     status === 'OPEN' ? 'Đang mở' : status === 'CLOSING' ? 'Đang chốt' : 'Đã đóng';
   return (
-    <section className={styles.financeStateBar} aria-label="Trạng thái quỹ">
+    <section className={styles.financeStateBar} aria-label="Trạng thái quỹ" data-status={status}>
+      <span className={styles.financeStateIcon} aria-hidden="true">
+        <Icon name={status === 'OPEN' ? 'fund' : status === 'CLOSING' ? 'hourglass' : 'lock'} size={22} />
+      </span>
       <div className={styles.financeStateCopy}>
-        <div className={styles.financeEyebrow}>
-          <Badge>VietQR</Badge>
-          <span>Quỹ nhóm</span>
-        </div>
         <h2>Quỹ nhóm · {statusLabel}</h2>
         <p>
-          Người giữ quỹ: {holderName}. {owner ? 'Bạn là chủ chuyến. ' : ''}
-          {holder
-            ? 'Bạn là người giữ quỹ.'
-            : 'Tiền về thẳng tài khoản người giữ quỹ; ứng dụng ghi nhận và đối chiếu, không giữ tiền.'}
+          Người giữ quỹ: {holder ? 'bạn' : holderName}.{owner ? ' Bạn là chủ chuyến.' : ''}
         </p>
         {balance && format && (
           <span className={styles.financeSrOnly}>Số dư ghi sổ {format(balance)}</span>
@@ -79,7 +82,7 @@ export function FinanceStateBar({
       </div>
       <span className={styles.financeRoleBadge}>
         <Badge tone={status === 'OPEN' ? 'success' : 'warning'}>
-          {holder ? 'Fund Holder' : 'Thành viên'}
+          {holder ? 'Người giữ quỹ' : 'Thành viên'}
         </Badge>
       </span>
       {owner && onBudget && (
@@ -97,6 +100,7 @@ export function FinanceStateBar({
           Thông tin nhận tiền
         </Button>
       )}
+      {actions}
     </section>
   );
 }

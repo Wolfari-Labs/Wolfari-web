@@ -1,6 +1,7 @@
 import { useRef, type ReactNode, type RefObject } from 'react';
 import { Drawer } from '../../shared/components/Drawer';
 import { Button } from '../../shared/components/Button';
+import { Icon } from '../../shared/components/Icon';
 import styles from './PriceWatchOverlay.module.css';
 
 export function PriceWatchOverlay({
@@ -37,10 +38,13 @@ export function PriceWatchOverlay({
       overlayClassName={styles.backdrop ?? ''}
     >
       <header className={styles.header}>
+        <span className={styles.headerIcon} aria-hidden="true">
+          <Icon name="price" size={22} />
+        </span>
         <h2 ref={focus} tabIndex={-1}>
           {title}
         </h2>
-        <Button variant="outline" disabled={busy} onClick={onDismiss}>
+        <Button variant="plain" size="compact" disabled={busy} onClick={onDismiss}>
           ← Trở lại
         </Button>
       </header>

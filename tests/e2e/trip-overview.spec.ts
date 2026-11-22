@@ -46,10 +46,14 @@ async function assertViewportBounded(page: Page) {
     };
   });
   expect(m.dw).toBeLessThanOrEqual(m.w);
-  expect(m.dh).toBeLessThanOrEqual(m.h);
-  expect(m.overflow).toBeLessThanOrEqual(1);
   expect(m.horizontal).toBeLessThanOrEqual(1);
-  expect(m.bottom).toBeLessThanOrEqual(m.h + 1);
+  // Web v2: the desktop shell stays inside the viewport (main scrolls); the overview itself
+  // fits one screen at the Figma frame size (W04 932:7192 is 1440x960) and taller/wider.
+  if (m.w > 768) expect(m.dh).toBeLessThanOrEqual(m.h);
+  if (m.w >= 1101 && m.h >= 900) {
+    expect(m.overflow).toBeLessThanOrEqual(1);
+    expect(m.bottom).toBeLessThanOrEqual(m.h + 1);
+  }
 }
 for (const [width, height] of viewports) {
   test(
@@ -62,22 +66,31 @@ for (const [width, height] of viewports) {
       await openOverview(page, width, height);
       await assertViewportBounded(page);
       await assertOverviewCardLayout(page);
-      for (const region of ['fund', 'packing']) {
+      // The fixture has no fund: its tile shows copy only, no empty progress track.
+      await expect(
+        page.locator('[data-region="trip-overview-fund"] [role="progressbar"]'),
+      ).toHaveCount(0);
+      for (const region of ['packing']) {
         const panel = page.locator(`[data-region="trip-overview-${region}"]`);
-        const bar = panel.locator('[role="progressbar"], [role="img"]');
+        const bar = panel.getByRole('progressbar');
         const cardBox = (await panel.boundingBox())!,
           barBox = (await bar.boundingBox())!;
-        expect(cardBox.y + cardBox.height - barBox.y - barBox.height).toBeGreaterThanOrEqual(20);
-        expect(cardBox.y + cardBox.height - barBox.y - barBox.height).toBeLessThanOrEqual(25);
-        const copy = (await panel.locator('p').last().boundingBox())!;
-        expect(barBox.y - copy.y - copy.height).toBeGreaterThanOrEqual(12);
+        // Web v2 W04: the track sits in the tile's top row, beside the badge and above the copy.
+        expect(barBox.y).toBeGreaterThanOrEqual(cardBox.y);
+        const copy = (await panel.locator('p').first().boundingBox())!;
+        expect(copy.y - barBox.y - barBox.height).toBeGreaterThanOrEqual(8);
+        expect(copy.y + copy.height).toBeLessThanOrEqual(cardBox.y + cardBox.height);
       }
       const link = itinerary(page).getByRole('link', { name: /Xem chi tiết lịch trình/ });
       await link.scrollIntoViewIfNeeded();
       await expect(link).toBeVisible();
-      const postcard = page.locator('[data-region="trip-overview-postcard"]');
-      await postcard.scrollIntoViewIfNeeded();
-      await expect(postcard).toBeVisible();
+      // Fare tracking is the fourth stat tile; the decorative postcard column is gone.
+      await expect(page.locator('[data-region="trip-overview-postcard"]')).toHaveCount(0);
+      const fare = page
+        .locator('[data-region="trip-overview-summaries"]')
+        .locator('[data-region="trip-overview-fare"]');
+      await fare.scrollIntoViewIfNeeded();
+      await expect(fare).toBeVisible();
       await assertViewportBounded(page);
       expect(apiRequests).toEqual([]);
       await page.screenshot({ path: info.outputPath('overview-' + width + 'x' + height + '.png') });
@@ -91,32 +104,34 @@ test('Trip overview matches refreshed Figma columns and keeps the shell and sche
   for (const state of ['expanded', 'collapsed'] as const) {
     if (state === 'collapsed')
       await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
+    // Web v2 sidebar 930:6836 (264px) and collapsed 937:7692 (84px), 24px gutters.
     await expect(page.getByRole('complementary')).toHaveCSS(
       'width',
-      state === 'expanded' ? '220px' : '72px',
+      state === 'expanded' ? '264px' : '84px',
     );
-    const left = (state === 'expanded' ? 220 : 72) + 18;
+    const left = 24 + (state === 'expanded' ? 264 : 84) + 24;
     for (const region of ['trip-hero', 'trip-overview-summaries', 'trip-overview-workspace']) {
       const box = (await page.locator('[data-region="' + region + '"]').boundingBox())!;
       expect(Math.abs(box.x - left)).toBeLessThanOrEqual(1);
-      expect(Math.abs(box.x + box.width - 1418)).toBeLessThanOrEqual(1);
+      expect(Math.abs(box.x + box.width - 1416)).toBeLessThanOrEqual(1);
     }
     await expect(page.locator('[data-region="trip-hero"]')).toHaveAttribute(
       'data-variant',
-      'landscape',
+      'photo',
     );
-    expect((await page.locator('[data-region="trip-hero"]').boundingBox())!.height).toBe(150);
+    // W04: 232px photo hero, 410px lower row.
+    expect((await page.locator('[data-region="trip-hero"]').boundingBox())!.height).toBe(232);
     const board = (await workspace(page).boundingBox())!;
-    expect(board.height).toBe(401);
+    expect(board.height).toBe(410);
     const columns = await workspace(page)
       .locator(':scope > *')
       .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
-    expect(columns).toHaveLength(3);
+    expect(columns).toHaveLength(2);
     await assertOverviewCardLayout(page);
-    const summaryColumns = await page
-      .locator('[data-region="trip-overview-summaries"] > section')
-      .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
-    expect(Math.abs(columns[0]! - summaryColumns[0]! - summaryColumns[1]! - 13)).toBeLessThan(1);
+    // Lower row: itinerary and map at 3:2 with a 20px gap (650 + 434 expanded at 1440).
+    if (state === 'expanded')
+      for (const [index, width] of [650, 434].entries())
+        expect(Math.abs(columns[index]! - width)).toBeLessThanOrEqual(1);
     const assets = await page.locator('[data-flow="trip-overview"] img').evaluateAll((els) =>
       els.map((el) => {
         const image = el as HTMLImageElement;
@@ -171,7 +186,13 @@ test('Selected day updates the KPI and preserves real navigation and honest unav
     .click();
   await expect(summary.getByText('0 hoạt động', { exact: true })).toBeVisible();
   await expect(itinerary(page).getByText('Chưa có hoạt động trong ngày này.')).toBeVisible();
-  await expect(summary.getByText('Chưa có dữ liệu thời tiết')).toBeVisible();
+  // No weather feature exists, so no weather tile; the fourth tile tracks fares instead.
+  await expect(summary.getByText(/thời tiết/i)).toHaveCount(0);
+  await expect(
+    summary
+      .locator('[data-region="trip-overview-fare"]')
+      .getByText('Chưa theo dõi', { exact: true }),
+  ).toBeVisible();
   await expect(
     page.locator('[data-region="trip-overview-map"]').getByText('Minh họa', { exact: true }),
   ).toBeVisible();
@@ -218,7 +239,8 @@ test('Trip feature pages share the exact schedule banner and real trip identity'
     await expect(
       hero.getByRole('heading', { name: 'Đà Nẵng – Hội An', exact: true }),
     ).toBeVisible();
-    await expect(hero.getByRole('button', { name: 'Chia sẻ' })).toBeDisabled();
+    // Sharing is not available on Web yet, so the header shows no disabled share CTA.
+    await expect(hero.getByRole('button', { name: 'Chia sẻ' })).toHaveCount(0);
     await expect(hero.getByRole('link', { name: 'Chỉnh sửa' })).toHaveAttribute(
       'href',
       trip + '/settings',
@@ -234,8 +256,9 @@ test('Trip feature pages share the exact schedule banner and real trip identity'
         text: el.textContent,
       };
     });
+    // Web v2 W04: the overview uses its own photo hero; every feature page shares W/Trip header.
     if (route === 'plan') schedule = signature;
-    else expect(signature).toEqual(schedule);
+    else if (route !== '') expect(signature).toEqual(schedule);
   }
 });
 test('Refreshed overview has no scoped accessibility violations', async ({ page }, info) => {
@@ -251,7 +274,7 @@ test('Refreshed overview has no scoped accessibility violations', async ({ page 
 for (const [region, name, route] of [
   ['day', 'Lịch trình trong ngày', 'plan'],
   ['fund', 'Ngân sách / Quỹ nhóm', 'fund'],
-  ['packing', 'Tiến độ Packing list', 'packing'],
+  ['packing', 'Tiến độ hành lý', 'packing'],
   ['itinerary', 'Lịch trình', 'plan'],
   ['map', 'Xem bản đồ địa điểm', 'map'],
   ['fare', 'Theo dõi giá vé', 'price-watch'],
@@ -264,7 +287,8 @@ for (const [region, name, route] of [
     const link = card.getByRole('link', { name, exact: true });
     await expect(link).toHaveAttribute('href', `${trip}/${route}`);
     // Click the card padding, not a text link.
-    await card.click({ position: { x: 5, y: 5 } });
+    // Inside the padding but clear of the 28px rounded corner (corners are not hit-testable).
+    await card.click({ position: { x: 10, y: 60 } });
     await expect(page).toHaveURL(`${trip}/${route}`);
     await openOverview(page);
     await link.focus();
@@ -287,21 +311,23 @@ test('Card links keep middle-click semantics and accessible colors with compact 
   await popup.close();
   await expect(page).toHaveURL(trip);
   const fare = page.locator('[data-region="trip-overview-fare"]');
-  await expect(fare.locator('p')).toHaveText(['—', 'Chưa có dữ liệu']);
+  await expect(fare.locator('p')).toHaveText(['Chưa theo dõi', 'Tạo theo dõi giá →']);
   const map = page.locator('[data-region="trip-overview-map"]');
   await expect(map.getByRole('link')).toHaveCount(1);
   await expect(map.getByText(/Xem chi tiết/)).toHaveCount(0);
+  // Refined V2 (V2-D15): the selected day chip is solid brand blue.
   await expect(itinerary(page).locator('button[aria-pressed="true"]')).toHaveCSS(
     'background-color',
-    'rgb(0, 127, 153)',
+    'rgb(31, 95, 209)',
   );
-  await expect(itinerary(page).locator('time').first()).toHaveCSS('color', 'rgb(0, 121, 159)');
-  await expect(map.getByRole('link')).toHaveCSS('color', 'rgb(0, 121, 159)');
+  await expect(itinerary(page).locator('time').first()).toHaveCSS('color', 'rgb(99, 70, 222)');
+  await expect(map.getByRole('link')).toHaveCSS('color', 'rgb(46, 106, 212)');
   const progress = page.locator('[data-region="trip-overview-packing"]').getByRole('progressbar');
   await expect(progress).toBeVisible();
-  await expect(progress).toHaveCSS('height', '12px');
-  await expect(progress).toHaveCSS('background-color', 'rgb(231, 235, 238)');
-  await expect(progress.locator('span')).toHaveCSS('background-color', 'rgb(58, 205, 98)');
+  await expect(progress).toHaveCSS('height', '8px');
+  await expect(progress).toHaveCSS('background-color', 'rgba(255, 255, 255, 0.75)');
+  // Refined V2 (V2-D15): the packing fill is the solid amber of its tile.
+  await expect(progress.locator('span')).toHaveCSS('background-color', 'rgb(227, 146, 12)');
   await itinerary(page).locator('li').first().click();
   await expect(page).toHaveURL(`${trip}/plan`);
 });

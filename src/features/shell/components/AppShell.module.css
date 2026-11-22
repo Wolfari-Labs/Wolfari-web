@@ -783,3 +783,396 @@
   background: var(--color-pale);
   box-shadow: var(--shadow-selection);
 }
+
+/* ---------------------------------------------------------------------------------------------
+ * Web v2 shell (Figma 930:6659): floating top nav 930:6745, trip sidebar 930:7331,
+ * collapsed sidebar 937:7692. Desktop only; the ≤768px header keeps its layout with V2 colours.
+ * ------------------------------------------------------------------------------------------- */
+.shell {
+  --desktop-header-height: calc(var(--v2-shell-top) + var(--v2-topnav-height));
+  color: var(--v2-ink);
+}
+@media (min-width: 769px) {
+  .shell {
+    padding-top: var(--v2-shell-top);
+  }
+  .desktopHeader {
+    height: var(--v2-topnav-height);
+    margin: 0 var(--v2-shell-gutter);
+    padding: 0 14px 0 24px;
+    border: 0;
+    border-radius: var(--v2-radius-nav);
+    background: var(--v2-white);
+    box-shadow:
+      var(--v2-shadow-nav),
+      var(--v2-inset);
+    z-index: 2;
+  }
+  .logo,
+  .logo img {
+    width: auto;
+    height: auto;
+  }
+  .headerNav {
+    height: auto;
+    gap: 4px;
+    padding: 5px;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-track);
+  }
+  .headerNav a,
+  .headerNav button {
+    height: auto;
+    min-height: 44px;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: var(--v2-radius-pill);
+    background: transparent;
+    color: var(--v2-sub);
+    font: 700 15px/normal var(--v2-font);
+  }
+  .headerNav button:disabled {
+    color: var(--v2-sub);
+  }
+  .headerNav a:hover {
+    background: rgb(255 255 255 / 70%);
+  }
+  .headerNav a[aria-current='page'] {
+    color: var(--v2-white);
+    background: var(--v2-gradient);
+    box-shadow: var(--v2-shadow-active);
+  }
+  .headerNav a[aria-current='page']::after {
+    content: none;
+  }
+  .account {
+    min-width: 0;
+    gap: 12px;
+    padding: 0;
+    border: 0;
+  }
+  .profileGroup {
+    gap: 0;
+    padding: 1px 2px 1px 5px;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    box-shadow:
+      var(--v2-shadow-card),
+      var(--v2-inset);
+  }
+  .profile {
+    min-height: 44px;
+    padding: 0;
+    gap: 10px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    color: var(--v2-ink);
+    font: 700 15px/normal var(--v2-font);
+  }
+  .profile:hover,
+  .profile[data-state='open'] {
+    background: transparent;
+  }
+  .profileGroup :global(.avatarV2),
+  .profile > span[aria-hidden='true'] {
+    width: 36px;
+    height: 36px;
+  }
+  .profileChevron {
+    width: 44px;
+    height: 44px;
+    color: var(--v2-sub);
+    border-radius: var(--v2-radius-pill);
+  }
+  .outline,
+  .primary {
+    width: auto;
+    min-height: 0;
+    padding: 12px 22px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    font: 800 15px/normal var(--v2-font);
+  }
+  .outline {
+    color: var(--v2-ink);
+    background: var(--v2-white);
+    box-shadow:
+      var(--v2-shadow-card),
+      var(--v2-inset);
+  }
+  .primary {
+    color: var(--v2-white);
+    background: var(--v2-gradient);
+    box-shadow:
+      var(--v2-shadow-float),
+      var(--v2-inset);
+  }
+  .layout {
+    gap: var(--v2-shell-gutter);
+    padding: 16px var(--v2-shell-gutter) 0;
+  }
+  .tripShell .layout,
+  .adminShell .layout {
+    padding-bottom: var(--v2-shell-gutter);
+  }
+  .sidebar,
+  .collapsed {
+    width: var(--v2-sidebar-width);
+    height: 100%;
+    padding: 20px 14px 14px;
+    gap: 4px;
+    border: 0;
+    border-radius: var(--v2-radius-panel);
+    background: var(--v2-white);
+    box-shadow:
+      var(--v2-shadow-drop),
+      var(--v2-inset);
+  }
+  .collapsed {
+    width: var(--v2-sidebar-collapsed-width);
+    align-items: center;
+    padding: 20px 0 16px;
+  }
+  .sidebarHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    min-height: 21px;
+    padding: 0 0 6px 14px;
+  }
+  .collapsed .sidebarHead {
+    order: 2;
+    padding: 0;
+    margin-top: 10px;
+  }
+  .sidebarSection {
+    margin: 0;
+    color: var(--v2-muted);
+    font: 700 12px/normal var(--v2-font);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .sidebar .collapseButton,
+  .collapsed .collapseButton {
+    display: grid;
+    place-items: center;
+    flex-direction: row;
+    width: 44px;
+    height: 44px;
+    min-height: 0;
+    margin: -14px -8px -14px 0;
+    padding: 0;
+    border-radius: var(--v2-radius-pill);
+    background: transparent;
+    color: var(--v2-muted);
+  }
+  .sidebar .collapseButton:hover {
+    background: var(--v2-track);
+  }
+  .collapsed .collapseButton {
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    background: var(--v2-track);
+    color: var(--v2-sub);
+  }
+  .sidebar nav,
+  .collapsed nav {
+    flex: 0 1 auto;
+    gap: 4px;
+    padding: 0;
+  }
+  .collapsed nav {
+    gap: 8px;
+  }
+  .sidebar nav button,
+  .sidebar nav a,
+  .collapsed nav button,
+  .collapsed nav a {
+    min-height: 0;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--v2-radius-pill);
+    background: transparent;
+    color: var(--v2-nav-text);
+    font: 700 15px/normal var(--v2-font);
+  }
+  .collapsed nav button,
+  .collapsed nav a {
+    width: 46px;
+    height: 46px;
+    padding: 13px;
+  }
+  .sidebar nav a:hover,
+  .collapsed nav a:hover {
+    background: var(--v2-track);
+    box-shadow: none;
+  }
+  .sidebar nav .selectedSection,
+  .collapsed nav .selectedSection {
+    color: var(--v2-white);
+    background: var(--v2-gradient);
+    box-shadow: var(--v2-shadow-active);
+  }
+  .sidebar nav .selectedSection:hover,
+  .collapsed nav .selectedSection:hover {
+    background: var(--v2-gradient);
+    box-shadow: var(--v2-shadow-active);
+  }
+  .selectedSection::before {
+    content: none;
+  }
+  .main {
+    padding: 0;
+  }
+  .flowMain {
+    padding: 0 0 var(--v2-shell-gutter);
+  }
+  .tripMain {
+    padding: 0 0 2px;
+    border-radius: var(--v2-radius-panel);
+  }
+}
+.mascotCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-gradient-mascot);
+}
+.mascotCard img {
+  width: 96px;
+  height: 80px;
+  object-fit: cover;
+}
+.mascotCard p {
+  margin: 0;
+  color: var(--v2-ink);
+  font: 800 16px/normal var(--v2-font);
+}
+.mascotCard span {
+  width: 200px;
+  max-width: 100%;
+  color: var(--v2-sub);
+  font: 600 12px/16px var(--v2-font);
+}
+.drawerMascot {
+  margin: 16px;
+}
+@media (max-height: 760px) and (min-width: 769px) {
+  .mascotCard {
+    display: none;
+  }
+}
+@media (max-height: 700px) and (min-width: 769px) {
+  .sidebar {
+    padding-block: 12px;
+  }
+  .sidebar nav {
+    gap: 0;
+  }
+  .sidebarHead {
+    padding-bottom: 2px;
+  }
+}
+/* Below the full desktop width the top nav keeps its icons and hides the labels visually. */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .headerNav a,
+  .headerNav button {
+    min-width: 44px;
+    padding: 10px 13px;
+  }
+  .navLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .logo > span {
+    zoom: 0.8;
+  }
+  .outline,
+  .primary {
+    padding-inline: 16px;
+  }
+}
+@media (max-width: 768px) {
+  .mobileLogo,
+  .drawerHeader a {
+    width: auto;
+    height: auto;
+    min-height: 44px;
+  }
+  .mobileLogo > span,
+  .drawerHeader a > span {
+    zoom: 0.7;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Web v2 Admin shell (Figma A01 946:16838): floating 264px sidebar 937:8030 at 24,24 and a 76px
+ * floating top bar 937:8031 beside it; content scrolls inside main.
+ * ------------------------------------------------------------------------------------------- */
+@media (min-width: 769px) {
+  .adminShell {
+    --admin-sidebar-width: 264px;
+    --admin-header-height: 76px;
+    column-gap: var(--v2-shell-gutter);
+    row-gap: 12px;
+    padding: var(--v2-shell-gutter);
+    background: var(--v2-page-background);
+  }
+  .adminSidebar {
+    min-width: 0;
+  }
+  .adminShell .main {
+    padding: 8px 4px 4px;
+    border-radius: 0;
+  }
+}
+/* Absolutely positioned helpers (visually hidden captions, select chevrons) stay inside the
+   scrolling main instead of extending the document. */
+.tripMain {
+  position: relative;
+}
+/* 769–1100px: the trip sidebar uses the Figma collapsed form (937:7692, 84px icon rail) so the
+   content keeps a usable width; the toggle still switches the explicit collapsed state. */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .sidebar {
+    width: var(--v2-sidebar-collapsed-width);
+    align-items: center;
+    padding: 20px 0 16px;
+  }
+  .sidebar .sidebarSection,
+  .sidebar .mascotCard,
+  .sidebar nav span {
+    display: none;
+  }
+  .sidebar .sidebarHead {
+    order: 2;
+    padding: 0;
+    margin-top: 10px;
+  }
+  .sidebar .collapseButton {
+    margin: 0;
+    background: var(--v2-track);
+  }
+  .sidebar nav {
+    gap: 8px;
+  }
+  .sidebar nav button,
+  .sidebar nav a {
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 13px;
+  }
+}

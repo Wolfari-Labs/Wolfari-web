@@ -221,3 +221,61 @@
     --field-border: var(--color-blue);
   }
 }
+
+/* Web v2 D/Input (Figma 892:7870 via 942:10341): 13px bold label, 56px #f4f6fd box, radius 20,
+   15px semibold text, #8a97b0 placeholder. Borders only appear for focus and errors. */
+.field {
+  font-family: var(--v2-font);
+}
+.field label {
+  color: var(--v2-ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 18px;
+}
+.inputRow,
+.select,
+.textarea {
+  --field-border: transparent;
+  border-color: transparent;
+  border-radius: var(--v2-radius-field);
+  background: var(--v2-field);
+  color: var(--v2-ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+.inputRow,
+.select {
+  min-height: var(--v2-field-height);
+}
+.inputRow {
+  gap: 10px;
+  padding-inline: 16px;
+}
+.input {
+  min-height: 54px;
+  font-weight: 600;
+}
+.select {
+  padding-inline: 16px 40px;
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--v2-muted);
+}
+.inputRow:focus-within,
+.select:focus-visible {
+  --field-border: var(--v2-blue);
+  background: var(--v2-white);
+}
+.inputRow.invalid,
+.textarea.invalid,
+.select.invalid {
+  --field-border: var(--color-field-error);
+  border-color: var(--color-field-error);
+}
+.hint {
+  color: var(--v2-muted);
+  font-size: 12px;
+  font-weight: 700;
+}

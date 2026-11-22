@@ -23,7 +23,7 @@ test.describe('Packing List preview suggestions', () => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(route);
     await expect(
-      page.getByRole('heading', { name: 'Đồ đạc', level: 1, exact: true }),
+      page.getByRole('heading', { name: 'Hành lý', level: 1, exact: true }),
     ).toBeVisible();
     await page.getByRole('button', { name: /Thêm vật dụng/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Thêm vật dụng' });

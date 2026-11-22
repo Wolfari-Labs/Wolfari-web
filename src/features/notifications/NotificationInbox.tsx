@@ -10,7 +10,28 @@ import { ContentState } from '../../shared/components/ContentState';
 import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
 import type { NotificationItem } from './notification.repository';
+import {
+  Bell,
+  CalendarDays,
+  Check,
+  ChevronRight,
+  Luggage,
+  Plane,
+  Settings,
+  UserPlus,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react';
 import styles from './Notifications.module.css';
+/** Presentation only: the badge tone/glyph mirrors the destination mapping below. */
+function kind(type: string): { tone: string; Glyph: LucideIcon } {
+  if (type.includes('PRICE')) return { tone: 'coral', Glyph: Plane };
+  if (type.includes('PLAN')) return { tone: 'blue', Glyph: CalendarDays };
+  if (type.includes('PACKING')) return { tone: 'amber', Glyph: Luggage };
+  if (/CONTRIBUTION|CLOSURE/.test(type)) return { tone: 'green', Glyph: Wallet };
+  if (type.includes('INVITATION')) return { tone: 'violet', Glyph: UserPlus };
+  return { tone: 'blue', Glyph: Bell };
+}
 function destination(item: NotificationItem) {
   if (!item.tripId) return null;
   if (item.type.includes('PRICE')) return paths.priceWatch(item.tripId);
@@ -81,12 +102,19 @@ export default function NotificationInbox({
   return (
     <>
       {!repository ? (
-        <Alert>Hộp thư chỉ khả dụng khi đăng nhập bằng tài khoản thật.</Alert>
+        <div className={styles.empty}>
+          <span className={styles.emptyBadge}>
+            <Icon name="bell" size={30} />
+          </span>
+          <h3>Chưa có thông báo</h3>
+          <p>Thông báo mới sẽ xuất hiện tại đây.</p>
+        </div>
       ) : (
         <>
-          <div className={styles.filters}>
+          <div className={styles.chips}>
             <Button
               variant={!unread ? 'secondary' : 'ghost'}
+              className={styles.chip}
               aria-pressed={!unread}
               onClick={() => setUnread(false)}
             >
@@ -94,6 +122,7 @@ export default function NotificationInbox({
             </Button>
             <Button
               variant={unread ? 'secondary' : 'ghost'}
+              className={styles.chip}
               aria-pressed={unread}
               onClick={() => setUnread(true)}
             >
@@ -135,38 +164,58 @@ export default function NotificationInbox({
           )}
           {!inbox.isPending && !inbox.isError && !items.length && (
             <div className={styles.empty}>
-              <Icon name="bell" size={36} />
+              <span className={styles.emptyBadge}>
+                <Icon name="bell" size={30} />
+              </span>
               <h3>Bạn đã xem hết rồi</h3>
               <p>Thông báo mới sẽ xuất hiện tại đây.</p>
             </div>
           )}
           <ul className={styles.list}>
-            {items.map((item) => (
-              <li key={item.id} data-unread={!item.readAt || undefined}>
-                <strong>{item.title}</strong>
-                <p>{item.body}</p>
-                <time dateTime={item.createdAt}>
-                  {new Date(item.createdAt).toLocaleString('vi-VN')}
-                </time>
-                <div className={styles.filters}>
-                  {destination(item) && (
-                    <Link to={destination(item)!} onClick={onNavigate}>
-                      Xem chi tiết
-                    </Link>
-                  )}
-                  {!item.readAt && (
-                    <Button
-                      variant="plain"
-                      loading={marking === item.id}
-                      disabled={!!marking || readUnknown}
-                      onClick={() => void mark(item.id)}
-                    >
-                      Đánh dấu đã đọc
-                    </Button>
-                  )}
-                </div>
-              </li>
-            ))}
+            {items.map((item) => {
+              const { tone, Glyph } = kind(item.type);
+              return (
+                <li key={item.id} data-unread={!item.readAt || undefined}>
+                  <span className={styles.itemBadge} data-tone={tone} aria-hidden="true">
+                    <Glyph size={22} strokeWidth={2.2} aria-hidden="true" />
+                  </span>
+                  <div className={styles.itemBody}>
+                    <strong>{item.title}</strong>
+                    <p>{item.body}</p>
+                    <div className={styles.itemMeta}>
+                      <time dateTime={item.createdAt}>
+                        {new Date(item.createdAt).toLocaleString('vi-VN')}
+                      </time>
+                      <div className={styles.itemActions}>
+                        {destination(item) && (
+                          <Link
+                            to={destination(item)!}
+                            onClick={onNavigate}
+                            className={styles.detailLink}
+                          >
+                            <ChevronRight size={14} strokeWidth={2.6} aria-hidden="true" />
+                            Xem chi tiết
+                          </Link>
+                        )}
+                        {!item.readAt && (
+                          <Button
+                            variant="plain"
+                            className={styles.markRead}
+                            icon={<Check size={14} strokeWidth={2.6} />}
+                            loading={marking === item.id}
+                            disabled={!!marking || readUnknown}
+                            onClick={() => void mark(item.id)}
+                          >
+                            Đánh dấu đã đọc
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {!item.readAt && <span className={styles.unreadDot} aria-hidden="true" />}
+                </li>
+              );
+            })}
           </ul>
           {inbox.hasNextPage && (
             <Button
@@ -179,13 +228,23 @@ export default function NotificationInbox({
           )}
         </>
       )}
-      <Link
-        to={`${paths.profile}#notifications`}
-        onClick={onNavigate}
-        className={styles.preferencesLink}
-      >
-        Tùy chọn thông báo
-      </Link>
+      <div className={styles.preferencesCard}>
+        <span className={styles.itemBadge} data-tone="violet" aria-hidden="true">
+          <Settings size={22} strokeWidth={2.2} aria-hidden="true" />
+        </span>
+        <p className={styles.preferencesTitle}>Tùy chọn nhận thông báo</p>
+        <p className={styles.preferencesText}>
+          Email, push, thiết bị và cảnh báo giá được quản lý ở cấp tài khoản cá nhân.
+        </p>
+        <Link
+          to={`${paths.profile}#notifications`}
+          onClick={onNavigate}
+          className={styles.preferencesLink}
+        >
+          <Settings size={18} strokeWidth={2.2} aria-hidden="true" />
+          Tùy chọn thông báo
+        </Link>
+      </div>
     </>
   );
 }

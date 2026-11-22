@@ -49,12 +49,12 @@ export function GatewayDressCodePage() {
       <PageBreadcrumb
         className={styles.breadcrumb}
         items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Trang phục"
+        current="Dress code"
         mobile={
           <nav className={styles.breadcrumb} aria-label="Đường dẫn">
             <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
             <span aria-hidden="true">›</span>
-            <span>Trang phục</span>
+            <span>Dress code</span>
           </nav>
         }
       />
@@ -62,7 +62,7 @@ export function GatewayDressCodePage() {
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         {data && (
           <>
-            {!desktop && <h1 className={styles.visuallyHidden}>Trang phục</h1>}
+            {!desktop && <h1 className={styles.visuallyHidden}>Dress code</h1>}
             <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
             {snapshot.refreshFailed && (
               <CapabilityNote tone="warning">
@@ -164,16 +164,10 @@ export function GatewayDressCodePage() {
                     xem được; người có quyền sửa kế hoạch mới thêm, sửa, xóa.
                   </p>
                 ) : (
-                  <>
-                    <p>
-                      Trang này hiển thị hướng dẫn đã lưu trong kế hoạch. Thêm, sửa, tải ảnh và áp
-                      dụng gợi ý chưa khả dụng trong chế độ này.
-                    </p>
-                    <p>
-                      Ảnh phối đồ và bảng màu trong bản thiết kế là hình minh họa, chưa gắn với từng
-                      hướng dẫn đã lưu.
-                    </p>
-                  </>
+                  <p>
+                    Trang này hiển thị hướng dẫn đã lưu trong kế hoạch. Thêm, sửa, tải ảnh và áp
+                    dụng gợi ý chưa khả dụng trong chế độ này.
+                  </p>
                 )}
               </aside>
             </div>

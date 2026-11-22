@@ -8,7 +8,7 @@ import {
   type RefObject,
   type KeyboardEvent,
 } from 'react';
-import { useParams, useOutletContext } from 'react-router';
+import { Link, useParams, useOutletContext } from 'react-router';
 import { Accessibility } from '@dnd-kit/dom';
 import {
   DragDropProvider,
@@ -38,7 +38,7 @@ import {
   type PlanDraftEdit,
   type PlanDraftMove,
 } from './model/plan-draft';
-import { activityTime, planDays } from './model/plan-presentation';
+import { activityTime, dayHeading, planDays } from './model/plan-presentation';
 import { Drawer } from '../../shared/components/Drawer';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { TimelineCard } from './components/TimelineCard';
@@ -48,6 +48,8 @@ import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
+import { Icon } from '../../shared/components/Icon';
+import mascotReading from '../../shared/assets/v2/mascot-reading-map.png';
 import mountain from '../../shared/assets/figma/eb8f3.svg';
 import meal from '../../shared/assets/figma/41563.svg';
 import beach from '../../shared/assets/figma/e9568.svg';
@@ -465,6 +467,7 @@ function ActivityPool({
         <Input
           label="Tìm trong hoạt động đã chọn"
           type="search"
+          leadingIcon={<Icon name="search" size={18} />}
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Tìm trong địa điểm/hoạt động đã chọn…"
@@ -502,6 +505,7 @@ function ActivityPool({
           </li>
         )}
       </ul>
+      <img className={styles.poolMascot} src={mascotReading} alt="" />
       <div className={styles.localNotice} role="status">
         <strong>Chỉ lưu trên thiết bị này</strong>
         <span>Chưa đồng bộ với thành viên khác · Nháp hết hạn sau 30 ngày.</span>
@@ -689,16 +693,23 @@ function PlannerWorkspace({
       aria-labelledby={compact ? 'planner-day-title' : 'plan-day-title'}
     >
       <div className={styles.toolbar}>
-        <h2 id={compact ? 'planner-day-title' : 'plan-day-title'}>
-          Lịch trình ngày {planDays(trip.startAt, trip.endAt, trip.timezone).indexOf(day) + 1}
-        </h2>
+        <h2 id={compact ? 'planner-day-title' : 'plan-day-title'}>{dayHeading(day)}</h2>
         <span className={styles.progress}>
           {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
         </span>
-        <Button variant="outline" disabled title="Bản đồ chưa khả dụng trong Preview">
+        <Button
+          variant="outline"
+          disabled
+          title="Bản đồ chưa khả dụng trong Preview"
+          icon={<Icon name="mapFolded" size={18} />}
+        >
           Hiện bản đồ
         </Button>
-        <Button aria-pressed onClick={() => closeRef.current?.focus()}>
+        <Button
+          aria-pressed
+          icon={<Icon name="plus" size={18} />}
+          onClick={() => closeRef.current?.focus()}
+        >
           Thêm hoạt động
         </Button>
       </div>
@@ -841,25 +852,38 @@ export function PlanView({
           khi tải lại hoặc đóng tab.
         </Alert>
       )}
-      <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
-        {days.map((date, index) => (
-          <button
-            key={date}
-            type="button"
-            aria-pressed={date === day}
-            onClick={() => onDayChange(date)}
-          >
-            Ngày {index + 1}
-            <small>
-              {date.slice(8, 10)}/{date.slice(5, 7)}
-            </small>
-          </button>
-        ))}
-        <Button variant="outline" disabled>
-          + Thêm ngày
-        </Button>
+      <div className={styles.dayBar}>
+        <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
+          {days.map((date, index) => (
+            <button
+              key={date}
+              type="button"
+              aria-pressed={date === day}
+              onClick={() => onDayChange(date)}
+            >
+              Ngày {index + 1}
+              <small>
+                {date.slice(8, 10)}/{date.slice(5, 7)}
+              </small>
+            </button>
+          ))}
+          {/* Days come from the trip dates, so "Thêm ngày" opens the trip edit form (owners only)
+              instead of a permanently disabled button. */}
+          {trip.currentMembership.role === 'OWNER' &&
+            trip.permissions.canUpdate &&
+            trip.lifecycle !== 'ARCHIVED' && (
+              <Link
+                className={styles.addDay}
+                to={`${paths.settings(trip.id)}?mode=edit`}
+                title="Thêm ngày bằng cách đổi ngày kết thúc chuyến đi"
+              >
+                <Icon name="plus" size={18} />
+                Thêm ngày
+              </Link>
+            )}
+        </div>
+        <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       </div>
-      <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       <DragDropProvider
         sensors={[PointerSensor]}
         plugins={(defaults) => [
@@ -891,14 +915,18 @@ export function PlanView({
           <div className={styles.columns}>
             <section className={styles.timeline} aria-labelledby="plan-day-title">
               <div className={styles.toolbar}>
-                <h2 id="plan-day-title">Lịch trình ngày {days.indexOf(day) + 1}</h2>
+                <h2 id="plan-day-title">{dayHeading(day)}</h2>
                 <span className={styles.progress}>
                   {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
                 </span>
-                <Button variant="outline" disabled>
+                <Button variant="outline" disabled icon={<Icon name="mapFolded" size={18} />}>
                   Hiện bản đồ
                 </Button>
-                <Button ref={addButtonRef} onClick={onPlannerOpen}>
+                <Button
+                  ref={addButtonRef}
+                  icon={<Icon name="plus" size={18} />}
+                  onClick={onPlannerOpen}
+                >
                   Thêm hoạt động
                 </Button>
               </div>

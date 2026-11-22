@@ -10,9 +10,9 @@ import { useMembersRepositories } from './repositories/members-context';
 import { invitationResponseAttempt, invitationToken } from './invitation-token';
 import type { DomainError } from '../../shared/types/result';
 import { invitationErrorMessage, refreshInvitationProjections } from './invitation-feedback';
-import styles from './Invitations.module.css';
-import mascot from '../../shared/assets/figma/4ff86.png';
-import send from '../../shared/assets/figma/ac8db.svg';
+import { CalendarClock, Check, Compass, Hourglass, Mail, X } from 'lucide-react';
+import styles from './InvitationPage.module.css';
+import mascot from '../../shared/assets/v2/mascot-waving.png';
 
 const invitationStatus = {
   PENDING: 'Đang chờ phản hồi',
@@ -34,14 +34,18 @@ function ResponseCard({
   children: ReactNode;
 }) {
   return (
-    <section className={styles.response} data-flow="invitation-response">
+    <section
+      className={styles.response}
+      data-flow="invitation-response"
+      data-has-trip={tripName ? true : undefined}
+    >
+      <img className={styles.mascot} src={mascot} alt="" width={150} height={124} />
       <header className={styles.responseHeader}>
-        <img src={mascot} alt="" width={118} height={118} />
-        <div>
+        <div className={styles.banner}>
           <h1>{title}</h1>
-          {tripName && <h2>{tripName}</h2>}
-          {subtitle}
         </div>
+        {tripName && <h2>{tripName}</h2>}
+        {subtitle}
       </header>
       {children}
     </section>
@@ -85,8 +89,10 @@ export function InvitationPage() {
     return (
       <ResponseCard>
         <p>Đăng nhập bằng tài khoản nhận lời mời để tiếp tục.</p>
-        <Link to="/login?returnTo=%2Finvitations">Đăng nhập</Link> ·{' '}
-        <Link to="/register?returnTo=%2Finvitations">Đăng ký</Link>
+        <p className={styles.authLinks}>
+          <Link to="/login?returnTo=%2Finvitations">Đăng nhập</Link> ·{' '}
+          <Link to="/register?returnTo=%2Finvitations">Đăng ký</Link>
+        </p>
       </ResponseCard>
     );
   return (
@@ -241,9 +247,14 @@ function InvitationResponse({
       {...(preview ? { tripName: preview.tripName } : {})}
       subtitle={
         preview && (
-          <p>
-            {preview.inviterDisplayName || 'Một thành viên'} mời bạn tham gia{' '}
-            <strong>{preview.tripName}</strong>.
+          <p className={styles.inviter}>
+            <span className={styles.inviterIcon} aria-hidden="true">
+              <Mail size={16} strokeWidth={2.2} />
+            </span>
+            <span>
+              {preview.inviterDisplayName || 'Một thành viên'} mời bạn tham gia{' '}
+              <strong>{preview.tripName}</strong>.
+            </span>
           </p>
         )
       }
@@ -264,17 +275,32 @@ function InvitationResponse({
       )}
       {preview && (
         <dl className={styles.responseMetadata}>
-          <div>
-            <dt>Hết hạn</dt>
+          <div data-tone="sky">
+            <dt>
+              <span className={styles.tileIcon} aria-hidden="true">
+                <CalendarClock size={16} strokeWidth={2.2} />
+              </span>
+              Hết hạn
+            </dt>
             <dd>{new Date(preview.expiresAt).toLocaleString('vi-VN')}</dd>
           </div>
-          <div>
-            <dt>Trạng thái lời mời</dt>
+          <div data-tone="butter">
+            <dt>
+              <span className={styles.tileIcon} aria-hidden="true">
+                <Hourglass size={16} strokeWidth={2.2} />
+              </span>
+              Trạng thái lời mời
+            </dt>
             <dd>{invitationStatus[preview.status]}</dd>
           </div>
-          <div>
-            <dt>Vai trò khi tham gia</dt>
-            <dd>Member</dd>
+          <div data-tone="lilac">
+            <dt>
+              <span className={styles.tileIcon} aria-hidden="true">
+                <Compass size={16} strokeWidth={2.2} />
+              </span>
+              Vai trò khi tham gia
+            </dt>
+            <dd>Thành viên</dd>
           </div>
         </dl>
       )}
@@ -282,13 +308,14 @@ function InvitationResponse({
         <div className={styles.responseActions}>
           <Button
             variant="outline"
+            icon={<X size={18} strokeWidth={2.4} />}
             disabled={pending || (attempt !== null && attempt.action !== 'decline')}
             onClick={() => void respond('decline')}
           >
             {attempt?.action === 'decline' ? 'Thử lại từ chối' : 'Từ chối'}
           </Button>
           <Button
-            icon={<img src={send} alt="" width={18} height={18} />}
+            icon={<Check size={18} strokeWidth={2.6} />}
             disabled={pending || (attempt !== null && attempt.action !== 'accept')}
             onClick={() => void respond('accept')}
           >
@@ -300,16 +327,22 @@ function InvitationResponse({
         <Alert>Lời mời này không còn chờ phản hồi.</Alert>
       )}
       {!previewQuery.isPending && !attempt && (
-        <Button variant="outline" disabled={pending} onClick={() => void refreshPreview()}>
+        <Button
+          variant="outline"
+          className={styles.recheck}
+          disabled={pending}
+          onClick={() => void refreshPreview()}
+        >
           Kiểm tra lại lời mời
         </Button>
       )}
-      <p>
+      <p className={styles.note}>
         Lời mời qua email yêu cầu tài khoản đúng email và đã xác minh. Bạn có thể kiểm tra email tại{' '}
         <Link to={paths.profile}>Hồ sơ</Link>, rồi quay lại đây.
       </p>
       <Button
         variant="plain"
+        className={styles.switchAccount}
         disabled={pending}
         onClick={() => {
           active.current?.abort();

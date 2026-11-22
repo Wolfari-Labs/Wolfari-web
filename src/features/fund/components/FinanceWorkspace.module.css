@@ -298,3 +298,94 @@
     font-weight: 600;
   }
 }
+
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2 (Figma W10.x side panels): pill buttons, soft row surfaces, no hairline boxes. */
+.workspace {
+  font-family: var(--v2-font);
+}
+.workspace h3,
+.summary h3,
+.workspace section h2 {
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-weight: 800;
+}
+.workspace button {
+  border-radius: var(--v2-radius-pill);
+  font-size: 13px;
+}
+.fields dd,
+.rules > div {
+  border: 0;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+}
+.fields dt,
+.rules dt {
+  color: #56637b;
+  font-weight: 700;
+}
+.note {
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-sky);
+  color: #2f63c4;
+  font-weight: 600;
+}
+.workspace section {
+  border: 0;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.workspace ul > li,
+.workspace ul > li:nth-child(odd) {
+  border: 0;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+}
+.workspace .destinationList > li,
+.workspace .destinationList > li:nth-child(odd) {
+  border-radius: 0;
+  background: transparent;
+}
+.table {
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  font-size: 13px;
+}
+.table th {
+  background: transparent;
+  color: #5d6a82;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.table td {
+  background: var(--v2-row);
+  color: var(--v2-nav-text);
+  font-weight: 700;
+}
+.table td:first-child {
+  border-radius: var(--v2-radius-row) 0 0 var(--v2-radius-row);
+}
+.table td:last-child {
+  border-radius: 0 var(--v2-radius-row) var(--v2-radius-row) 0;
+}
+.table tbody tr:nth-child(even) {
+  background: transparent;
+}
+@media (max-width: 700px) {
+  .table tr {
+    border: 0;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-row);
+  }
+  .table td,
+  .table td:first-child,
+  .table td:last-child {
+    border-radius: 0;
+    background: transparent;
+  }
+}

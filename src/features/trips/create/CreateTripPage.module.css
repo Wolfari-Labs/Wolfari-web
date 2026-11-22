@@ -34,11 +34,27 @@
   margin-bottom: 24px;
 }
 
-.eyebrow {
-  margin: 0 0 5px;
-  color: var(--color-action-primary);
-  font-size: var(--font-size-small);
-  font-weight: var(--weight-bold);
+.trail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 4px;
+  color: var(--v2-muted);
+  font: 700 13px/normal var(--v2-font);
+}
+
+.trail a {
+  color: var(--v2-sub);
+  text-decoration: none;
+}
+
+.trail a:hover {
+  color: var(--v2-blue);
+}
+
+.trail span {
+  color: #2f63c4;
 }
 
 .pageHeader h1 {
@@ -58,15 +74,6 @@
   margin: 8px 0 0;
   color: var(--color-muted);
   font-size: var(--font-size-label);
-}
-
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: #075495;
-  font-size: var(--font-size-label);
-  font-weight: 600;
 }
 
 .stepper {
@@ -208,6 +215,45 @@
 .mobileDestinationPreview,
 .mobileActions {
   display: none;
+}
+
+/* Card header (938:9124): D/Icon badge 44px + 22px title. */
+.formHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.formHeader > div {
+  min-width: 0;
+}
+
+.iconBadge {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--v2-gradient-blue);
+  color: var(--v2-white);
+  box-shadow:
+    0 6px 12px -2px rgb(60 123 232 / 32%),
+    var(--v2-inset-badge);
+}
+
+/* D/Input icon chip (892:7872): 32px sky square, 18px blue glyph. */
+.fieldChip {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: -4px;
+  border-radius: 12px;
+  background: var(--v2-sky);
+  color: var(--v2-blue);
 }
 
 .errorSummary {
@@ -588,7 +634,7 @@
   background: linear-gradient(150deg, #eaf9fc, #f8fdff);
 }
 
-.mapArea img {
+.mapArea > img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -619,7 +665,7 @@
   right: 25%;
 }
 
-.mapArea span {
+.mapArea > span {
   position: absolute;
   bottom: 14px;
   color: #608099;
@@ -628,7 +674,7 @@
 }
 @media (max-width: 768px) {
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .mapArea span {
+  .mapArea > span {
     font-size: 11px;
   }
 }
@@ -891,11 +937,10 @@
     margin-block: 16px 24px;
   }
 
-  .gatewayPage .pageHeader > a {
+  .gatewayPage .trail a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    margin-top: 8px;
     font-size: 14px;
   }
   .gatewayPage .destinationPanel {
@@ -1032,7 +1077,7 @@
     display: block;
     height: 156px;
     overflow: hidden;
-    border-radius: 15px;
+    border-radius: 12px;
     box-shadow: 0 10px 24px rgb(25 83 114 / 14%);
   }
 
@@ -1131,7 +1176,7 @@
 
   .successDialog {
     padding: 18px 20px;
-    border-radius: 24px;
+    border-radius: var(--v2-radius-tile);
   }
 
   .success h1 {
@@ -1149,5 +1194,628 @@
   }
   .stepper button {
     font-size: 9px;
+  }
+}
+
+/* Desktop-only Web v2 parts are hidden until the desktop block below enables them. */
+.mapCard > h2,
+.mascotCard,
+.mapPin,
+.mapArt {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .formHeader:not(.gatewayIntro) {
+    display: none;
+  }
+
+  .gatewayIntro .iconBadge {
+    display: none;
+  }
+}
+
+/* Web v2 W03 Tạo chuyến đi (Figma 938:9069): page header at the content origin, 780px form card
+   and a 564px right column with map, popular destinations and the mascot card. */
+@media (min-width: 769px) {
+  .page {
+    min-height: 0;
+    padding: 12px 0 24px 24px;
+    overflow: visible;
+    background: transparent;
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+  }
+
+  .banner {
+    display: none;
+  }
+
+  .pageHeader,
+  .layout,
+  .topAlert {
+    width: 100%;
+  }
+
+  .pageHeader {
+    margin-bottom: 30px;
+  }
+
+  .pageHeader h1 {
+    color: var(--v2-ink);
+    font: 800 38px/normal var(--v2-font);
+  }
+
+  .pageHeader p:last-child {
+    margin: 4px 0 0;
+    color: var(--v2-sub);
+    font: 600 17px/normal var(--v2-font);
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 780fr) minmax(0, 564fr);
+    gap: 24px;
+  }
+
+  .formCard,
+  .gatewayCapability,
+  .mapCard,
+  .suggestions {
+    border: 0;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  /* One two-column grid across both steps: members|style and budget|template pair up. */
+  .formCard {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+    align-content: start;
+    padding: 28px 30px;
+  }
+
+  .formCard > .formHeader,
+  .formCard > .errorSummary {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  .formCard > .formStep {
+    display: contents;
+  }
+
+  .stepOne > *,
+  .stepTwo > * {
+    grid-column: 1 / -1;
+  }
+
+  .stepOne > .memberField,
+  .stepTwo > .choiceField {
+    grid-column: auto;
+  }
+
+  .stepTwo > .budgetField {
+    grid-column: 1;
+  }
+
+  .stepTwo > .templateField {
+    grid-column: 2;
+  }
+
+  .formHeader h2,
+  .gatewayIntro h2 {
+    margin: 0;
+    color: var(--v2-ink);
+    font: 800 22px/normal var(--v2-font);
+  }
+
+  .formHeader p,
+  .gatewayIntro p {
+    margin: 2px 0 0;
+    color: var(--v2-sub);
+    font: 600 14px/normal var(--v2-font);
+  }
+
+  .dates {
+    gap: 20px;
+  }
+
+  .destinationField > label {
+    color: var(--v2-ink);
+    font: 700 13px/18px var(--v2-font);
+  }
+
+  .memberField legend,
+  .choiceField legend,
+  .templateField legend,
+  .coverField legend {
+    padding: 0;
+    color: var(--v2-nav-text);
+    font: 700 13px/18px var(--v2-font);
+  }
+
+  .destinationInput {
+    gap: 10px;
+    min-height: var(--v2-field-height);
+    padding: 0 16px 0 12px;
+    border: 0;
+    border-radius: var(--v2-radius-field);
+    background: var(--v2-field);
+  }
+
+  .destinationInput:focus-within {
+    outline: 2px solid var(--v2-blue);
+    outline-offset: -2px;
+    background: var(--v2-white);
+  }
+
+  .destinationInput.invalid {
+    box-shadow: inset 0 0 0 1px var(--color-field-error);
+  }
+
+  .destinationInput .fieldChip {
+    margin-left: 0;
+  }
+
+  .destinationInput input {
+    min-height: 54px;
+    padding-left: 0;
+    color: var(--v2-ink);
+    font: 600 15px/22px var(--v2-font);
+  }
+
+  .destinationInput input::placeholder {
+    color: var(--v2-muted);
+  }
+
+  /* Member count (938:9189): 48px tiles, gradient when selected. */
+  .memberField > div {
+    grid-template-columns: repeat(6, minmax(0, 52px));
+    gap: 8px;
+  }
+
+  .memberField button {
+    min-height: 48px;
+    border: 0;
+    border-radius: 16px;
+    background: #f3f6ff;
+    color: var(--v2-nav-text);
+    font: 800 17px/normal var(--v2-font);
+  }
+
+  .memberField button[aria-pressed='true'] {
+    border: 0;
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+    box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  }
+
+  /* Trip style chips (938:9204, D/Chip). Tighter padding keeps the four chips on one row in the
+     half-width column with the wider Be Vietnam Pro face. */
+  .styleChoices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .styleChoices button {
+    min-height: 37px;
+    padding: 9px 10px;
+    white-space: nowrap;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    color: var(--v2-nav-text);
+    font: 700 13px/normal var(--v2-font);
+    box-shadow: var(--v2-shadow-drop);
+  }
+
+  .styleChoices img {
+    display: none;
+  }
+
+  .styleChoices button[aria-pressed='true'] {
+    border: 0;
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+    box-shadow: var(--v2-shadow-active);
+  }
+
+  .currency {
+    top: 45px;
+    right: 16px;
+    color: var(--v2-sub);
+    font: 800 12px/16px var(--v2-font);
+  }
+
+  .budgetField small {
+    color: var(--v2-sub);
+    font: 700 12px/normal var(--v2-font);
+  }
+
+  /* Template (938:9214 "Mẫu chuyến đi"): a 56px field holding three segment options. */
+  .templateField > div {
+    gap: 4px;
+    margin-top: 8px;
+    padding: 4px;
+    border-radius: var(--v2-radius-field);
+    background: var(--v2-field);
+  }
+
+  .templateField button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 48px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--v2-nav-text);
+    box-shadow: none;
+  }
+
+  .templateField button > span {
+    color: var(--v2-blue);
+    font-size: 15px;
+  }
+
+  .templateField strong {
+    color: inherit;
+    font: 700 13px/normal var(--v2-font);
+  }
+
+  .templateNote {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .templateField button[aria-pressed='true'] {
+    border: 0;
+    background: var(--v2-white);
+    color: var(--v2-ink);
+    box-shadow: var(--v2-shadow-card);
+  }
+
+  /* Cover (938:9244 "cover upload"): dashed upload zone beside the three preset covers. */
+  .coverChoices {
+    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .coverChoices button,
+  .uploadCover {
+    min-height: 140px;
+    border: 0;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-dashed-surface);
+  }
+
+  .coverChoices button img,
+  .uploadCover > img {
+    height: 140px;
+  }
+
+  .uploadCover {
+    gap: 6px;
+    border: 2px dashed var(--v2-dashed-line);
+  }
+
+  .uploadCover .uploadBadge {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 2px;
+    border-radius: 12px;
+    background: var(--v2-gradient-violet);
+    color: var(--v2-white);
+    box-shadow:
+      0 6px 12px -2px rgb(107 78 230 / 32%),
+      var(--v2-inset-badge);
+  }
+
+  .uploadCover strong {
+    color: var(--v2-ink);
+    font: 800 15px/normal var(--v2-font);
+  }
+
+  .uploadCover small {
+    color: var(--v2-muted);
+    font: 600 12px/normal var(--v2-font);
+  }
+
+  .selectedCover {
+    border-color: var(--v2-grad-start) !important;
+    box-shadow: 0 0 0 3px var(--v2-grad-start);
+  }
+
+  .draftNote {
+    margin: 0;
+    padding: 11px 14px;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-sky);
+    color: #2f63c4;
+    font: 600 13px/1.5 var(--v2-font);
+  }
+
+  .errorSummary {
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-peach);
+    color: var(--color-status-danger);
+    font-family: var(--v2-font);
+  }
+
+  .actions {
+    gap: 12px;
+    padding-top: 6px;
+  }
+
+  .actions > a {
+    min-height: 46px;
+    padding: 13px 22px 13px 20px;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    color: var(--v2-ink);
+    font: 800 15px/normal var(--v2-font);
+    text-decoration: none;
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .actions > button:last-child {
+    padding: 13px 22px 13px 20px;
+    font-size: 15px;
+  }
+
+  /* Right column (938:9259). */
+  .destinationPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .mapCard {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 12px 12px;
+    border-radius: var(--v2-radius-tile);
+  }
+
+  .mapCard > h2,
+  .suggestions h2 {
+    display: block;
+    margin: 0;
+    padding-inline: 10px;
+    color: var(--v2-ink);
+    font: 800 20px/normal var(--v2-font);
+  }
+
+  .mapArea {
+    display: block;
+    min-height: 250px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-track);
+  }
+
+  .mapArea::before,
+  .mapArea::after {
+    content: none;
+  }
+
+  .mapArea .mapArt {
+    display: block;
+  }
+
+  .mapArea .mapHint {
+    top: 14px;
+    right: auto;
+    bottom: auto;
+    left: 16px;
+    padding: 5px 10px;
+    border-radius: var(--v2-radius-pill);
+    background: rgb(255 255 255 / 90%);
+    color: var(--v2-nav-text);
+    font: 700 12px/normal var(--v2-font);
+  }
+
+  .mapPin {
+    position: absolute;
+    z-index: 2;
+    top: 90px;
+    left: 61%;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 3px solid var(--v2-white);
+    border-radius: 50%;
+    background: var(--v2-gradient-amber);
+    color: var(--v2-white);
+    font-size: 16px;
+    font-style: normal;
+    box-shadow: var(--v2-shadow-nav);
+  }
+
+  .selectedDestination {
+    position: absolute;
+    z-index: 2;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: 352px;
+    margin: 0;
+    gap: 12px;
+    padding: 10px 16px 10px 10px;
+    border: 0;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  }
+
+  .selectedDestination > img {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+  }
+
+  .selectedDestination small {
+    color: var(--v2-blue);
+    font: 700 11px/normal var(--v2-font);
+  }
+
+  .selectedDestination strong {
+    margin-top: 1px;
+    color: var(--v2-ink);
+    font: 800 16px/normal var(--v2-font);
+  }
+
+  .selectedDestination span {
+    color: var(--v2-sub);
+    font: 600 12px/17px var(--v2-font);
+  }
+
+  .suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 22px;
+    border-radius: var(--v2-radius-tile);
+  }
+
+  .suggestions h2 {
+    padding: 0;
+  }
+
+  .suggestions > div {
+    gap: 10px;
+  }
+
+  .suggestions button {
+    gap: 10px;
+    min-height: 62px;
+    padding: 8px 12px 8px 8px;
+    border: 2px solid transparent;
+    border-radius: var(--v2-radius-thumb);
+    background: var(--v2-row);
+  }
+
+  .suggestions button[aria-pressed='true'] {
+    border-color: var(--v2-grad-start);
+    background: #eef4ff;
+  }
+
+  .suggestions img {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+
+  .suggestions strong {
+    color: var(--v2-ink);
+    font: 800 15px/normal var(--v2-font);
+  }
+
+  .suggestions small {
+    color: var(--v2-sub);
+    font: 700 12px/normal var(--v2-font);
+  }
+
+  /* Mascot card (938:9330). */
+  .mascotCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 24px 14px 18px;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-gradient-mascot);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .mascotCard img {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+  }
+
+  .mascotCard strong {
+    display: block;
+    color: var(--v2-ink);
+    font: 800 18px/normal var(--v2-font);
+  }
+
+  .mascotCard p {
+    margin: 4px 0 0;
+    color: var(--v2-sub);
+    font: 600 14px/20px var(--v2-font);
+  }
+
+  /* Gateway aside keeps its capability note inside one v2 card. */
+  .gatewayCapability {
+    display: block;
+    padding: 20px 22px 24px;
+  }
+
+  .gatewayCapabilityHeading h2,
+  .gatewayCapabilityBody h3 {
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-weight: 800;
+  }
+
+  .gatewayCapabilityHeading h2 {
+    font-size: 20px;
+  }
+
+  .gatewayMapIllustration {
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-track);
+  }
+
+  .gatewayForm {
+    display: block;
+  }
+
+  .gatewayForm > fieldset {
+    gap: 18px;
+  }
+
+  .gatewayForm > p {
+    color: var(--v2-sub);
+    font: 600 14px/1.5 var(--v2-font);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1180px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page {
+    padding-right: 24px;
+  }
+}
+/* Template options keep their labels on one line: the control spans the full form row. */
+@media (min-width: 769px) {
+  .templateField {
+    grid-column: 1 / -1;
+  }
+  .templateField strong {
+    white-space: nowrap;
   }
 }

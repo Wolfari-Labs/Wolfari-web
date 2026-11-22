@@ -146,7 +146,7 @@ describe('trip map projection', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: 'Tìm địa điểm' })).toHaveAttribute(
       'placeholder',
-      'Tìm địa điểm, quán ăn, điểm tham quan...',
+      'Tìm địa điểm, quán ăn…',
     );
     expect(screen.getByRole('group', { name: 'Lọc địa điểm' })).toHaveTextContent('Tất cả');
     expect(screen.queryByText(/(?:Ã|Â|Ä‘|áº)/)).not.toBeInTheDocument();

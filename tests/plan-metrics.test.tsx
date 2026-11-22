@@ -32,10 +32,10 @@ describe('Gateway Plan source metrics', () => {
     render(<PlanMetrics trip={trip} plan={plan} day="ALL" />);
 
     expect(screen.getByRole('region', { name: 'Tóm tắt lịch trình · Cả chuyến' })).toBeVisible();
-    expect(metric('Hoạt động · Cả chuyến').getByText('4')).toBeVisible();
-    expect(metric('Địa điểm · Cả chuyến').getByText('6')).toBeVisible();
-    expect(metric('Trải nghiệm · Cả chuyến').getByText('7 giờ 30 phút')).toBeVisible();
-    expect(metric('Di chuyển · Cả chuyến').getByText('—')).toBeVisible();
+    expect(metric('hoạt động').getByText('4')).toBeVisible();
+    expect(metric('địa điểm').getByText('6')).toBeVisible();
+    expect(metric('trải nghiệm').getByText('7 giờ 30 phút')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.queryByText(/Chưa có dữ liệu/)).not.toBeInTheDocument();
     expect(screen.queryByText(/9 giờ 15 phút|1 giờ 20 phút/)).not.toBeInTheDocument();
   });
@@ -74,26 +74,26 @@ describe('Gateway Plan source metrics', () => {
     const rendered = render(<PlanMetrics trip={trip} plan={mixed} day={day1!} />);
 
     expect(screen.getByRole('region', { name: 'Tóm tắt lịch trình · 22/9' })).toBeVisible();
-    expect(metric('Hoạt động · 22/9').getByText('2')).toBeVisible();
-    expect(metric('Địa điểm · 22/9').getByText('1')).toBeVisible();
-    expect(metric('Trải nghiệm · 22/9').getByText('2 giờ 30 phút')).toBeVisible();
-    expect(metric('Di chuyển · 22/9').getByText('—')).toBeVisible();
+    expect(metric('hoạt động').getByText('2')).toBeVisible();
+    expect(metric('địa điểm').getByText('1')).toBeVisible();
+    expect(metric('trải nghiệm').getByText('2 giờ 30 phút')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.getByText('1 hoạt động chưa tính giờ')).toBeVisible();
 
     rendered.rerender(<PlanMetrics trip={trip} plan={mixed} day={day2!} />);
-    expect(metric('Hoạt động · 23/9').getByText('1')).toBeVisible();
-    expect(metric('Trải nghiệm · 23/9').getByText('2 giờ')).toBeVisible();
+    expect(metric('hoạt động').getByText('1')).toBeVisible();
+    expect(metric('trải nghiệm').getByText('2 giờ')).toBeVisible();
     expect(screen.queryByText('1 hoạt động chưa tính giờ')).not.toBeInTheDocument();
 
     rendered.rerender(<PlanMetrics trip={trip} plan={mixed} day={day3!} />);
-    expect(metric('Hoạt động · 24/9').getByText('0')).toBeVisible();
-    expect(metric('Trải nghiệm · 24/9').getByText('—')).toBeVisible();
+    expect(metric('hoạt động').getByText('0')).toBeVisible();
+    expect(metric('trải nghiệm').getByText('—')).toBeVisible();
 
     rendered.rerender(<PlanMetrics trip={trip} plan={mixed} day="POOL" />);
-    expect(metric('Hoạt động · Chưa chọn ngày').getByText('1')).toBeVisible();
-    expect(metric('Địa điểm · Chưa chọn ngày').getByText('0')).toBeVisible();
-    expect(metric('Trải nghiệm · Chưa chọn ngày').getByText('—')).toBeVisible();
-    expect(metric('Di chuyển · Chưa chọn ngày').getByText('—')).toBeVisible();
+    expect(metric('hoạt động').getByText('1')).toBeVisible();
+    expect(metric('địa điểm').getByText('0')).toBeVisible();
+    expect(metric('trải nghiệm').getByText('—')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.getByText('1 hoạt động chưa tính giờ')).toBeVisible();
   });
 
@@ -118,10 +118,10 @@ describe('Gateway Plan source metrics', () => {
       />,
     );
     expect(screen.getByRole('region', { name: 'Tóm tắt lịch trình · 6/11' })).toBeVisible();
-    expect(metric('Hoạt động · 6/11').getByText('1')).toBeVisible();
-    expect(metric('Địa điểm · 6/11').getByText('1')).toBeVisible();
-    expect(metric('Trải nghiệm · 6/11').getByText('—')).toBeVisible();
-    expect(metric('Di chuyển · 6/11').getByText('—')).toBeVisible();
+    expect(metric('hoạt động').getByText('1')).toBeVisible();
+    expect(metric('địa điểm').getByText('1')).toBeVisible();
+    expect(metric('trải nghiệm').getByText('—')).toBeVisible();
+    expect(screen.queryByText('di chuyển')).not.toBeInTheDocument();
     expect(screen.getByText('1 hoạt động chưa tính giờ').tagName).toBe('SMALL');
     expect(
       screen.queryByText(/Ngày \d|Chưa có dữ liệu|có giờ|gắn hoạt động|đã chọn/),

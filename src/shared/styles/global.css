@@ -8,7 +8,7 @@
 body {
   margin: 0;
   font-family: var(--font-body);
-  background: var(--color-background);
+  background: var(--color-background) var(--v2-page-background) fixed;
   color: var(--color-ink);
   font-size: var(--font-size-body);
   line-height: 1.6;
@@ -39,9 +39,15 @@ a {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
+/* Route changes move focus to main programmatically; only keyboard users (skip link, Tab) see
+   the ring, drawn inside the content so it never frames the whole page after a mouse click. */
 #main-content:focus {
+  outline: none;
+}
+#main-content:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
+  outline-offset: calc(var(--focus-width) * -1);
+  border-radius: var(--v2-radius-panel);
 }
 .screen-title {
   color: var(--color-ink);
@@ -121,5 +127,66 @@ details[open]:not(.preview) > summary::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Web v2 trip header (Figma 937:7647): every trip page breadcrumb sits inside the trip card's
+   text column when the card follows it, directly or as the first child of the next block. */
+@media (min-width: 769px) {
+  #main-content nav[aria-label='Đường dẫn'] {
+    gap: 4px;
+    color: var(--v2-muted);
+    font: 700 12px/normal var(--v2-font);
+  }
+  #main-content nav[aria-label='Đường dẫn'] a {
+    min-height: 16px;
+    color: var(--v2-muted);
+  }
+  #main-content nav[aria-label='Đường dẫn'] a:hover {
+    color: var(--v2-blue);
+  }
+  #main-content nav[aria-label='Đường dẫn'] h1 {
+    margin: 0;
+    color: var(--v2-blue);
+    font: 700 12px/normal var(--v2-font);
+  }
+  #main-content nav[aria-label='Đường dẫn']:is(
+      :has(+ [data-region='trip-hero']),
+      :has(+ * > [data-region='trip-hero']:first-child)
+    ) {
+    position: relative;
+    z-index: 1;
+    top: 8px;
+    display: flex;
+    align-items: flex-start;
+    width: max-content;
+    height: 0;
+    min-height: 0;
+    margin: 0 0 0 88px;
+    overflow: visible;
+  }
+}
+/* Web v2: trip pages start at the content origin (Figma x=312, y=112), like W/Trip header. */
+@media (min-width: 769px) {
+  #main-content[data-layout='trip'] > * {
+    padding-top: 0;
+    padding-inline: 0;
+  }
+}
+/* Fixture-only shell preview controls float in the bottom-right gutter so they never change
+   the Web v2 page geometry (they are not part of the Figma frames). */
+@media (min-width: 769px) {
+  #main-content > details.preview[data-preview='shell'] {
+    position: fixed;
+    z-index: 6;
+    right: 24px;
+    bottom: 2px;
+    max-width: min(560px, calc(100vw - 48px));
+    max-height: 40dvh;
+    margin: 0;
+    padding: 2px 10px;
+    overflow: auto;
+    border-radius: 12px;
+    background: rgb(255 255 255 / 85%);
   }
 }
