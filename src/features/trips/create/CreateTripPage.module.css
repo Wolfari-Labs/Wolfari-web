@@ -1810,3 +1810,12 @@
     padding-right: 24px;
   }
 }
+/* Template options keep their labels on one line: the control spans the full form row. */
+@media (min-width: 769px) {
+  .templateField {
+    grid-column: 1 / -1;
+  }
+  .templateField strong {
+    white-space: nowrap;
+  }
+}
