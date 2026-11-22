@@ -533,3 +533,11 @@
 .summaries .cardContent {
   overflow: visible;
 }
+/* Stat tile labels wrap to two lines instead of being cut ("Lịch trình trong ngày"). */
+.stat h2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+}

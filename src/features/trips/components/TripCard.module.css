@@ -250,3 +250,9 @@
     display: none;
   }
 }
+/* The waving mascot only fits beside the featured card on wide layouts. */
+@media (max-width: 1280px) {
+  .mascot {
+    display: none;
+  }
+}

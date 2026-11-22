@@ -39,9 +39,15 @@ a {
   outline: var(--focus-width) solid var(--focus-color);
   outline-offset: var(--focus-offset);
 }
+/* Route changes move focus to main programmatically; only keyboard users (skip link, Tab) see
+   the ring, drawn inside the content so it never frames the whole page after a mouse click. */
 #main-content:focus {
+  outline: none;
+}
+#main-content:focus-visible {
   outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
+  outline-offset: calc(var(--focus-width) * -1);
+  border-radius: var(--v2-radius-panel);
 }
 .screen-title {
   color: var(--color-ink);
