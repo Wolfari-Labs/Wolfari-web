@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
 import { useGatewayDnd } from '../src/features/plan/hooks/use-gateway-dnd';
 import type { GatewayPlanMove } from '../src/features/plan/model/plan-arrangement';
 import type { ActivityViewModel, PlanViewModel } from '../src/features/plan/model/plan';
@@ -39,25 +40,36 @@ const plan: PlanViewModel = {
 function Harness({
   canEdit = true,
   onArrange,
+  snapshot,
 }: {
   canEdit?: boolean;
   onArrange: (move: GatewayPlanMove) => Promise<boolean>;
+  snapshot?: PlanViewModel;
 }) {
+  const [savedPlan, setSavedPlan] = useState(plan);
+  const currentPlan = snapshot ?? savedPlan;
   const dnd = useGatewayDnd({
-    plan,
+    plan: currentPlan,
     timezone: 'UTC',
     day,
     canEdit,
     poolOpen: false,
     openPool: () => undefined,
     revealDay: () => undefined,
-    onArrange,
+    onArrange: async (move) => {
+      const saved = await onArrange(move);
+      // Successful real arrangements refresh an authoritative, newer snapshot.
+      // Tests supplying snapshot control its commit independently of the promise.
+      if (saved && !snapshot)
+        setSavedPlan((previous) => ({ ...previous, planVersion: previous.planVersion + 1 }));
+      return saved;
+    },
   });
   return (
     <div onTouchStartCapture={dnd.onTouchStartCapture}>
       <output data-testid="dragging">{dnd.draggingKey ?? 'idle'}</output>
       <ol ref={(element) => dnd.registerList(day, element)}>
-        {plan.activities.map((item) => (
+        {currentPlan.activities.map((item) => (
           <li key={item.id} data-plan-activity={item.id}>
             <button
               data-gateway-handle={`activity:${item.id}`}
@@ -126,6 +138,43 @@ function expectTouchReleased() {
 }
 
 describe('Gateway native touch gesture lifecycle', () => {
+  it('waits for the refreshed snapshot before consuming a successful drop focus request', async () => {
+    let resolveSave!: (saved: boolean) => void;
+    const onArrange = vi.fn(
+      () =>
+        new Promise<boolean>((resolve) => {
+          resolveSave = resolve;
+        }),
+    );
+    const view = render(<Harness onArrange={onArrange} snapshot={plan} />);
+    beginTouch();
+    endTouch();
+    const source = screen.getByRole('button', { name: 'Kéo a' });
+    await act(async () => resolveSave(true));
+    // The promise/pending state can settle before React commits the new order.
+    expect(source).not.toHaveFocus();
+    const refreshed = {
+      ...plan,
+      planVersion: 2,
+      activities: [activity('b', 0), activity('a', 1)],
+    };
+    view.rerender(<Harness onArrange={onArrange} snapshot={refreshed} />);
+    expect(screen.getByRole('button', { name: 'Kéo a' })).toHaveFocus();
+    screen.getByRole('button', { name: 'Kéo b' }).focus();
+    view.rerender(<Harness onArrange={onArrange} snapshot={{ ...refreshed }} />);
+    expect(screen.getByRole('button', { name: 'Kéo b' })).toHaveFocus();
+    expect(onArrange).toHaveBeenCalledTimes(1);
+  });
+
+  it('restores focus after a failed save without requiring a new snapshot version', async () => {
+    const onArrange = vi.fn().mockResolvedValue(false);
+    render(<Harness onArrange={onArrange} snapshot={plan} />);
+    beginTouch();
+    endTouch();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Kéo a' })).toHaveFocus());
+    expect(onArrange).toHaveBeenCalledTimes(1);
+  });
+
   it('still commits an active touch drop once and restores handle focus', async () => {
     const onArrange = vi.fn<(move: GatewayPlanMove) => Promise<boolean>>().mockResolvedValue(true);
     render(<Harness onArrange={onArrange} />);

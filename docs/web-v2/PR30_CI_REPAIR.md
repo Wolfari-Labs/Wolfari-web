@@ -81,3 +81,38 @@ live Backend tests performed. Full browser suites were not rerun locally.
 The user explicitly authorized commit/push and repeated repair/verification
 until the PR checks pass. A fresh GitHub Actions run is pending this repair
 commit; existing checkpoint acceptance records are not reclassified.
+
+## Remote round 1 and follow-up
+
+Repair commit `c71dfb4` was pushed with explicit user authorization.
+PR run https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/44995612895
+passed all three jobs: 889 unit tests, 251 fixture tests in both dev/built modes,
+208 Gateway tests with 5 existing skips in both modes. Both original CI defects
+are verified fixed on Linux.
+
+Push run https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/44995610353
+passed both built jobs but its dev Gateway suite failed 1/213 tests (207 passed,
+5 skipped): `gateway-plan-dnd.spec.ts:47` lost handle focus after the third
+pointer reorder. Downloaded the failure trace; server and rendered order were
+correct, but the handle remained inactive. The original test passed 10/10 local
+repetitions, confirming that a single passing rerun is insufficient evidence.
+
+Source review identified a focus/snapshot race: the save promise and enabled
+handles can settle before React commits the refreshed plan. The hook consumed
+its pending focus request against the old row; a later DOM reorder can lose
+that focus. Added a deterministic regression that separates promise settlement
+from snapshot commit (FAIL before the fix). A successful arrangement now keeps
+the focus request until a newer authoritative plan version is rendered; failed,
+canceled and no-op moves still restore against the existing snapshot. No API,
+idempotency, ordering or timestamp-reset semantics changed.
+
+Post-follow-up local Windows verification:
+
+- Focused unit tests: 62/62 PASS; full unit suite: 79 files, 891/891 PASS.
+- Lint/typecheck, scoped Prettier and `git diff --check`: PASS.
+- Dev Gateway HTTP-mock drag-and-drop suite: 9/9 PASS.
+- Gateway production and fixture Preview bundles: PASS; the previously failing pointer-sort case
+  passed 10/10 repetitions against that built bundle with one worker.
+
+Remote verification is pending the follow-up push. No assertion removal or
+timeout increase; the full browser suites are left to the fresh Linux CI runs.
