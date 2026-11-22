@@ -30,7 +30,7 @@ Các test khóa hình học/màu của thiết kế cũ (sidebar 220/72px, hero 
 
 ## Việc còn mở
 
-- Ảnh chuẩn `tests/e2e/__screenshots__/linux/auth-fixture.spec.ts/home-guest-1440.png` (CI Linux) cần tạo lại trên Linux; bản `win32` đã cập nhật.
+- Ảnh chuẩn Linux Home đã cập nhật ngày 22/11 từ ảnh CI Linux được đối chiếu với bản Windows và source hiện tại; chờ CI mới xác minh. Xem [PR31_CI_REPAIR.md](PR31_CI_REPAIR.md) để phân biệt lỗi cũ và bằng chứng mới.
 - Màn chưa có route/tính năng: W13, W21, A00, A02.1, A04.1 (V2-D13).
 
 ## Tinh chỉnh 22/11/2026
