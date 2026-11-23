@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import type { ReactNode } from 'react';
-import { ClipboardList, Clock, Compass, Link2, Tag, Users, type LucideIcon } from 'lucide-react';
+import { ClipboardList, Clock, Compass, Link2, Tag, Users, Search, Bell, ChevronDown, type LucideIcon } from 'lucide-react';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSnapshot } from '../model/shell';
 import { BrandWordmark } from '../../../shared/components/BrandWordmark';
@@ -86,6 +86,14 @@ export function AdminTopbar({
         <span>Wolfari · Quản trị hệ thống</span>
       </div>
       <div className={styles.actions}>
+        <label className={styles.search}>
+          <Search size={18} aria-hidden="true" />
+          <span className={styles.srOnly}>Tìm kiếm quản trị</span>
+          <input type="search" placeholder="Tìm email, tên hoặc mã Trip…" aria-label="Tìm email, tên hoặc mã Trip" />
+        </label>
+        <button type="button" className={styles.iconButton} aria-label="Thông báo quản trị" disabled>
+          <Bell size={20} aria-hidden="true" />
+        </button>
         <span className={styles.account}>
           <span className={styles.avatar} aria-hidden="true">
             {viewer?.fullName.trim().charAt(0).toLocaleUpperCase('vi') || 'A'}
@@ -96,6 +104,7 @@ export function AdminTopbar({
               {viewer.systemRole === 'ADMIN' ? ' · Admin' : ''}
             </Link>
           )}
+          <ChevronDown size={16} aria-hidden="true" className={styles.accountChevron} />
         </span>
       </div>
     </header>

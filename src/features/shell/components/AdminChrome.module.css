@@ -124,6 +124,23 @@
   align-items: center;
   gap: 12px;
 }
+.search {
+  display: flex;
+  width: 284px;
+  height: 43px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 0 16px;
+  border-radius: 999px;
+  background: #f3f6ff;
+  color: #8a97b0;
+}
+.search input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: #1f2a44; font: 600 14px/20px var(--v2-font); }
+.search input::placeholder { color: #8a97b0; opacity: 1; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.iconButton { display: grid; width: 44px; height: 44px; place-items: center; padding: 0; border: 0; border-radius: 999px; background: var(--v2-white); color: var(--v2-ink); box-shadow: var(--v2-shadow-card), var(--v2-inset); }
+.iconButton:disabled { cursor: not-allowed; opacity: .75; }
+.accountChevron { color: #8a97b0; }
 .account {
   display: flex;
   min-width: 0;

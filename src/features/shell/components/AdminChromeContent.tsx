@@ -48,6 +48,7 @@ function Heading({icon,tone='blue',title,subtitle,children}:{icon:string;tone?:s
 }
 function Note({children,tone='muted',title}:{children:ReactNode;tone?:string;title?:string}) {return <div className={styles.note} data-tone={tone}>{title && <strong>{title}</strong>}<p>{children}</p></div>;}
 function EmptyData(){return <p className={styles.empty} role="status">Chưa có kết nối dữ liệu quản trị. Không hiển thị số liệu giả.</p>;}
+function AdminDataBoundary(){return <div className={styles.dataBoundary} role="status"><span className={styles.dataBoundaryDot} aria-hidden="true" /><div><strong>Dữ liệu quản trị chưa khả dụng</strong><p>Backend hiện chỉ cung cấp thông tin vai trò và hồ sơ của phiên đăng nhập. Các số liệu hệ thống và thao tác Admin sẽ được mở khi có contract riêng.</p></div></div>}
 function Tag({children,tone}:{children:ReactNode;tone?:string}){return <span className={styles.tag} data-tone={tone}>{children}</span>;}
 function TripStatus({counts,bars=false}:{counts:AdminViewModel['tripCounts'];bars?:boolean}) {return <div className={styles.tripStatus} data-bars={bars || undefined}>
   {['Đang lên kế hoạch','Đang diễn ra','Đã lưu trữ'].map((label,index)=><div key={label}><span>{label}</span><strong>{number(counts[index] ?? null)}</strong>{bars && <div className={styles.track}><i style={{width: counts[index] === null ? '0%' : `${[74,26,9][index]}%`}} /></div>}</div>)}
@@ -67,6 +68,7 @@ export function AdminWorkspaceView({section,model=unavailableAdminModel,onUnavai
   const unavailable=()=>onUnavailable('Thao tác quản trị');
   return <section className={styles.workspace} data-admin-section={section}>
     <p className={styles.description}>{descriptions[section]}</p>
+    <AdminDataBoundary />
     {section==='overview' ? <>
       <div className={styles.stats}>{[
         {value:number(model.accounts),label:'Tài khoản',detail:model.lockedAccounts===null?'Chưa có dữ liệu':`${number(model.lockedAccounts)} tài khoản bị khóa`,tone:'blue',icon:usersIcon},
