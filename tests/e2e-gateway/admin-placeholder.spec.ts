@@ -1,7 +1,7 @@
 import { test, expect, login } from './gateway-fixture';
 
 for (const width of [1440, 402]) {
-  test(`Gateway Admin role guard and truthful placeholder at Web ${width}`, async ({
+  test(`Gateway Admin role guard and truthful unavailable state at Web ${width}`, async ({
     page,
     gateway,
   }) => {
@@ -16,12 +16,12 @@ for (const width of [1440, 402]) {
 
     gateway.profile.system_role = 'ADMIN';
     await page.reload();
-    const placeholder = page.getByRole('status').filter({
-      has: page.getByRole('heading', { name: 'Chức năng quản trị chưa khả dụng' }),
+    const unavailable = page.getByRole('status').filter({
+      hasText: 'Dữ liệu quản trị chưa khả dụng',
     });
-    await expect(placeholder).toBeVisible();
-    await expect(placeholder).toContainText(
-      'Vai trò Admin không tự cấp quyền xem hoặc chỉnh sửa chuyến đi.',
+    await expect(unavailable).toBeVisible();
+    await expect(unavailable).toContainText(
+      'Backend hiện chỉ cung cấp thông tin vai trò và hồ sơ của phiên đăng nhập',
     );
     await expect(page.getByRole('heading', { name: 'Bạn không có quyền truy cập' })).toHaveCount(0);
     await page.screenshot({ path: test.info().outputPath(`admin-placeholder-${width}.png`) });
@@ -31,8 +31,8 @@ for (const width of [1440, 402]) {
       .getByRole('navigation', { name: 'Điều hướng Admin' })
       .filter({ visible: true });
     await navigation.getByRole('button', { name: 'Tài khoản', exact: true }).press('Enter');
-    await expect(page.getByRole('heading', { level: 1, name: 'Tài khoản' })).toBeVisible();
-    await expect(placeholder).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Người dùng' })).toBeVisible();
+    await expect(unavailable).toBeVisible();
     await expect(page.locator('#main-content')).toBeFocused();
     await expect(page).toHaveURL('/admin');
     expect(gateway.calls.filter((call) => call.path.startsWith('/api/v1/admin'))).toEqual([]);
@@ -43,6 +43,6 @@ for (const width of [1440, 402]) {
     gateway.profile.system_role = 'USER';
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Bạn không có quyền truy cập' })).toBeVisible();
-    await expect(placeholder).toHaveCount(0);
+    await expect(unavailable).toHaveCount(0);
   });
 }
