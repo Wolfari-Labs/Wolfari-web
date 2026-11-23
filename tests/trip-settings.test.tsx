@@ -68,7 +68,7 @@ describe('Trip Settings', () => {
       publicDescription: 'Mô tả công khai mới',
       archivedAt: null,
       planEditPolicy: 'OWNER_ONLY',
-      presentation: { memberCount: null, cover: null },
+      presentation: { memberCount: null, coverAvailable: false, cover: null },
     });
     expect(updated?.pages[0]).toBe(cache.pages[0]);
     expect(updated?.pages[1]?.items[0]).toMatchObject({
@@ -88,7 +88,7 @@ describe('Trip Settings', () => {
     expect(
       screen.queryByRole('heading', { name: 'Chỉnh sửa thông tin chuyến đi' }),
     ).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Quản lý thành viên' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Xem thành viên chuyến đi' })).toHaveAttribute(
       'href',
       `/trips/${previewTripId}/members`,
     );

@@ -1,7 +1,4 @@
-/* Web v2 W04 / W05 trip overview (Figma 932:7192, 938:8073): photo hero, four D/Stat tiles (day,
-   fund, packing, fare) and the itinerary / map row. The Figma side column (fare card + brand
-   postcard) is folded away: fare tracking is the fourth tile (W04 puts "Giá vé" there) and the
-   member count already sits in the hero, so the itinerary gets the width its day tabs need. */
+/* Figma W04/W05: every source region is retained, including the price/weather side column. */
 .page {
   --overview-gap: 20px;
   position: relative;
@@ -136,9 +133,9 @@
 }
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 520fr) minmax(0, 340fr) minmax(0, 204fr);
   gap: var(--overview-gap);
-  height: clamp(340px, calc(100dvh - 550px), 560px);
+  height: 410px;
   min-height: 0;
 }
 
@@ -188,7 +185,7 @@
   place-items: center;
   width: 46px;
   height: 46px;
-  border-radius: var(--v2-radius-thumb);
+  border-radius: 16px;
   color: var(--v2-white);
   box-shadow: var(--v2-inset-badge);
 }
@@ -238,14 +235,15 @@
   background: var(--v2-peach);
 }
 .statHead {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  min-width: 0;
+  display: contents;
 }
 .stat h2 {
   min-width: 0;
-  padding-top: 4px;
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  padding-top: 0;
   overflow: hidden;
   color: var(--v2-sub);
   font: 700 13px/18px var(--v2-font);
@@ -263,6 +261,25 @@
   display: flex;
   flex: 1;
   overflow: visible;
+}
+.stat .cardContent {
+  overflow: visible;
+}
+.stat .summaryDetail,
+.stat .summaryLink,
+.stat .progressTrack {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.stat .cardContent:has(:global([data-overview][data-compact])) :global(p:not(:first-child)) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 .summaryValue,
 .cardContent .summaryValue {
@@ -390,14 +407,56 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  border-radius: var(--v2-radius-tile);
+  border-radius: 22px;
   background: var(--v2-track);
 }
 .mapArtwork > img {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: none;
+}
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.farePanel {
+  height: 223px;
+  gap: 10px;
+  padding: 20px 18px;
+}
+.farePanel .badge,
+.weatherPanel .badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+}
+.farePanel h2,
+.weatherPanel h2 {
+  font: 600 13px/18px var(--v2-font);
+  color: var(--v2-sub);
+}
+.farePanel .summaryValue {
+  font-size: 24px;
+  line-height: 33px;
+}
+.weatherPanel {
+  position: relative;
+  height: 152px;
+  gap: 10px;
+  padding: 20px 18px;
+  background: linear-gradient(to bottom, #fff0c2, #ffe0d4);
+}
+.weatherValue {
+  margin: 0;
+  font: 800 22px/30px var(--v2-font);
+}
+.weatherUnavailable {
+  position: absolute;
+  right: 18px;
+  bottom: 22px;
+  color: var(--v2-sub);
+  font: 600 11px/16px var(--v2-font);
 }
 .mapArtwork > span {
   position: absolute;
@@ -453,6 +512,12 @@
   }
   .workspace {
     height: auto;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+  .aside {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .itineraryPanel,
   .mapPanel {
@@ -479,6 +544,10 @@
     margin-top: 16px;
   }
   .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .aside {
+    grid-column: auto;
     grid-template-columns: minmax(0, 1fr);
   }
   .stat {

@@ -40,6 +40,7 @@ export interface TripListItem {
   };
   readonly presentation: {
     readonly memberCount: number | null;
+    readonly coverAvailable: boolean;
     readonly cover: {
       readonly src: string;
       readonly mobileSrc: string | null;

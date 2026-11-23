@@ -8,7 +8,7 @@ import {
   type RefObject,
   type KeyboardEvent,
 } from 'react';
-import { Link, useParams, useOutletContext } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { Accessibility } from '@dnd-kit/dom';
 import {
   DragDropProvider,
@@ -21,7 +21,6 @@ import {
 } from '@dnd-kit/react';
 import { useSortable } from '@dnd-kit/react/sortable';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
 import { useTripPlanSnapshot } from './hooks/use-trip-plan-snapshot';
@@ -40,7 +39,6 @@ import {
 } from './model/plan-draft';
 import { activityTime, dayHeading, planDays } from './model/plan-presentation';
 import { Drawer } from '../../shared/components/Drawer';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { TimelineCard } from './components/TimelineCard';
 import { MotionProvider } from '../../shared/components/MotionProvider';
 import { Button } from '../../shared/components/Button';
@@ -55,6 +53,8 @@ import meal from '../../shared/assets/figma/41563.svg';
 import beach from '../../shared/assets/figma/e9568.svg';
 import walk from '../../shared/assets/figma/9c64a.svg';
 import { PlanMetrics } from './components/PlanMetrics';
+import { PlanDayMap } from './components/PlanDayMap';
+import daySun from '../../shared/assets/figma/trips-plan/day-sun.svg';
 import dragIcon from '../../shared/assets/figma/56e25.svg';
 import moreIcon from '../../shared/assets/figma/ca9fb.svg';
 import styles from './PlanPage.module.css';
@@ -796,6 +796,7 @@ export function PlanView({
   const items = draftActivitiesForDay(activities, day);
   const allPoolItems = unscheduledDraftActivities(activities);
   const [query, setQuery] = useState('');
+  const [mapExpanded, setMapExpanded] = useState(false);
   const dnd = usePreviewDnd({
     activities,
     day,
@@ -844,7 +845,7 @@ export function PlanView({
   return (
     <>
       <div className={styles.hero}>
-        <TripHero trip={trip} compact variant="landscape" />
+        <TripHero trip={trip} compact variant="schedule" />
       </div>
       {storageStatus === 'memory' && (
         <Alert tone="warning" live>
@@ -863,23 +864,23 @@ export function PlanView({
             >
               Ngày {index + 1}
               <small>
-                {date.slice(8, 10)}/{date.slice(5, 7)}
+                <span>{date.slice(8, 10)}/{date.slice(5, 7)}</span>
+                <span className={styles.dayWeather} title="Chưa có dữ liệu thời tiết" aria-label="Thời tiết chưa có dữ liệu"><img src={daySun} alt="" />—</span>
               </small>
             </button>
           ))}
-          {/* Days come from the trip dates, so "Thêm ngày" opens the trip edit form (owners only)
-              instead of a permanently disabled button. */}
           {trip.currentMembership.role === 'OWNER' &&
             trip.permissions.canUpdate &&
             trip.lifecycle !== 'ARCHIVED' && (
-              <Link
+              <button
+                type="button"
                 className={styles.addDay}
-                to={`${paths.settings(trip.id)}?mode=edit`}
-                title="Thêm ngày bằng cách đổi ngày kết thúc chuyến đi"
+                disabled
+                title="Chưa hỗ trợ thay đổi ngày của chuyến đi"
               >
                 <Icon name="plus" size={18} />
                 Thêm ngày
-              </Link>
+              </button>
             )}
         </div>
         <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
@@ -912,15 +913,15 @@ export function PlanView({
         onDragEnd={dnd.onDragEnd}
       >
         {!plannerOpen && (
-          <div className={styles.columns}>
+          <div className={`${styles.columns} ${mapExpanded ? styles.mapExpanded : ''}`}>
             <section className={styles.timeline} aria-labelledby="plan-day-title">
               <div className={styles.toolbar}>
                 <h2 id="plan-day-title">{dayHeading(day)}</h2>
                 <span className={styles.progress}>
                   {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
                 </span>
-                <Button variant="outline" disabled icon={<Icon name="mapFolded" size={18} />}>
-                  Hiện bản đồ
+                <Button variant="outline" aria-pressed={mapExpanded} onClick={() => setMapExpanded(!mapExpanded)} icon={<Icon name="mapFolded" size={18} />}>
+                  {mapExpanded ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
                 </Button>
                 <Button
                   ref={addButtonRef}
@@ -940,6 +941,7 @@ export function PlanView({
                 dnd={dnd}
               />
             </section>
+            <PlanDayMap trip={trip} plan={{ ...plan, activities }} day={day} compact={!mapExpanded} onClose={() => setMapExpanded(false)} />
           </div>
         )}
         {plannerOpen && (
@@ -1006,14 +1008,10 @@ function GatewayPlanPage() {
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   return (
     <section className={styles.page} data-flow="plan-server">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Lịch trình"
-      />
+      <h1 className={styles.srOnly}>Lịch trình</h1>
       {snapshot.state.status === 'ready' ? (
         <>
-          <TripHero trip={snapshot.state.trip} compact variant="landscape" />
+          <TripHero trip={snapshot.state.trip} compact variant="schedule" />
           <GatewayPlanPanel
             key={`${tripId}:${snapshot.state.trip.currentMembership.id}`}
             trip={snapshot.state.trip}
@@ -1076,11 +1074,7 @@ function PreviewPlanPage() {
       data-local-draft="true"
       data-node-id="20:236"
     >
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Lịch trình"
-      />
+      <h1 className={styles.srOnly}>Lịch trình</h1>
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}

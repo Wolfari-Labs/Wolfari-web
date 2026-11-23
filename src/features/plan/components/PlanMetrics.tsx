@@ -1,7 +1,9 @@
 import type { PlanViewModel, ActivityViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { localDate, planDays } from '../model/plan-presentation';
-import { Icon } from '../../../shared/components/Icon';
+import calendarIcon from '../../../shared/assets/figma/trips-plan/metric-calendar.svg';
+import pinIcon from '../../../shared/assets/figma/trips-plan/metric-pin.svg';
+import clockIcon from '../../../shared/assets/figma/trips-plan/metric-clock.svg';
 import styles from './PlanMetrics.module.css';
 
 function activityDay(activity: ActivityViewModel, timezone: string) {
@@ -61,15 +63,13 @@ export function PlanMetrics({
   const knownMinutes = durations.reduce<number>((sum, value) => sum + (value ?? 0), 0);
   const withoutTime = durations.filter((value) => value === null).length;
 
-  // Web v2 W06 "day stats" (Figma 933:7468): the scope is carried by the region name and the
-  // selected day tab, so each metric shows the short Figma label. The Figma "di chuyển" metric is
-  // omitted: no travel-time source exists, and a permanent "—" is not information.
+  // Retain all four Web v2 slots. A missing travel-time feed is an unknown value, not zero.
   return (
     <section className={styles.strip} aria-label={`Tóm tắt lịch trình · ${scope}`}>
       <div className={styles.metrics}>
         <div className={styles.metric}>
           <span className={styles.icon} aria-hidden="true">
-            <Icon name="calendar" size={18} />
+            <img src={calendarIcon} alt="" />
           </span>
           <div className={styles.copy}>
             <strong>{activities.length}</strong>
@@ -78,7 +78,7 @@ export function PlanMetrics({
         </div>
         <div className={styles.metric}>
           <span className={styles.icon} aria-hidden="true">
-            <Icon name="map" size={18} />
+            <img src={pinIcon} alt="" />
           </span>
           <div className={styles.copy}>
             <strong>{locations}</strong>
@@ -87,7 +87,7 @@ export function PlanMetrics({
         </div>
         <div className={styles.metric}>
           <span className={styles.icon} aria-hidden="true">
-            <Icon name="clock" size={18} />
+            <img src={clockIcon} alt="" />
           </span>
           <div className={styles.copy}>
             <strong>{durationLabel(knownMinutes)}</strong>

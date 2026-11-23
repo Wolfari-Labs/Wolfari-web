@@ -2,6 +2,7 @@
 .card {
   position: relative;
   min-width: 0;
+  min-height: 281px;
   border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-drop), var(--v2-inset);
@@ -27,7 +28,7 @@
   position: relative;
   height: 150px;
   overflow: hidden;
-  border-radius: var(--v2-radius-tile);
+  border-radius: 22px;
   background: var(--v2-sky);
 }
 .photo img,
@@ -139,6 +140,12 @@
   position: absolute;
   top: 14px;
   right: 14px;
+  opacity: 0;
+  transition: opacity var(--motion-control);
+}
+.card:hover .more,
+.card:focus-within .more {
+  opacity: 1;
 }
 .more :global(button) {
   width: 44px;
@@ -153,7 +160,8 @@
 
 /* Featured trip: 34px radius, white → #eef4ff surface, 376px photo, 30px title, progress. */
 .featured {
-  border-radius: var(--v2-radius-tile);
+  min-height: 584px;
+  border-radius: 34px;
   background: linear-gradient(to bottom, var(--v2-white), #eef4ff);
   box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
@@ -170,7 +178,7 @@
 }
 .featured .photo {
   height: 376px;
-  border-radius: var(--v2-radius-tile);
+  border-radius: 26px;
 }
 .featured .status {
   top: 14px;
@@ -179,6 +187,7 @@
 .featured .body {
   gap: 10px;
   padding: 0 10px;
+  min-height: 160px;
 }
 .featured .body h2 {
   font-size: 30px;
@@ -240,6 +249,9 @@
   right: 92px;
 }
 @media (max-width: 768px) {
+  .featured {
+    min-height: 0;
+  }
   .featured .photo {
     height: 220px;
   }

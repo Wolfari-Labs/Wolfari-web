@@ -1,0 +1,1811 @@
+{
+  "commit": "7a7f90b61af90709adeced7cc0e274ee35a2837c",
+  "sourceHash": "5630360029ED882FDC77E23AEE524446ABD3DB842C92D88BD12A263A8A437EAA",
+  "routes": [
+    "/",
+    "/trips",
+    "/trips/new",
+    "/trips/:tripId",
+    "/trips/:tripId/plan",
+    "/trips/:tripId/map",
+    "/trips/:tripId/dress-code",
+    "/trips/:tripId/packing",
+    "/trips/:tripId/members",
+    "/trips/:tripId/fund",
+    "/trips/:tripId/price-watch",
+    "/trips/:tripId/settings",
+    "/profile",
+    "/invitations",
+    "/invitations/local",
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/verify-email",
+    "/reset-password",
+    "/admin",
+    "*"
+  ],
+  "files": [
+    {
+      "file": "src/app/App.tsx",
+      "lines": 356
+    },
+    {
+      "file": "src/app/error-boundary.tsx",
+      "lines": 25
+    },
+    {
+      "file": "src/app/gateway-context.tsx",
+      "lines": 5
+    },
+    {
+      "file": "src/app/HomeRoute.tsx",
+      "lines": 58
+    },
+    {
+      "file": "src/app/providers.tsx",
+      "lines": 106
+    },
+    {
+      "file": "src/app/query-client.ts",
+      "lines": 8
+    },
+    {
+      "file": "src/app/route-context.ts",
+      "lines": 8
+    },
+    {
+      "file": "src/app/route-paths.ts",
+      "lines": 24
+    },
+    {
+      "file": "src/app/router.tsx",
+      "lines": 210
+    },
+    {
+      "file": "src/app/safe-return-to.ts",
+      "lines": 13
+    },
+    {
+      "file": "src/app/session-context.tsx",
+      "lines": 37
+    },
+    {
+      "file": "src/features/auth/AuthPage.module.css",
+      "lines": 385
+    },
+    {
+      "file": "src/features/auth/AuthPage.tsx",
+      "lines": 353
+    },
+    {
+      "file": "src/features/auth/IdentityActionPage.tsx",
+      "lines": 256
+    },
+    {
+      "file": "src/features/auth/model/auth-validation.ts",
+      "lines": 26
+    },
+    {
+      "file": "src/features/auth/model/demo-access.ts",
+      "lines": 16
+    },
+    {
+      "file": "src/features/auth/model/identity.ts",
+      "lines": 138
+    },
+    {
+      "file": "src/features/auth/ProfilePage.module.css",
+      "lines": 272
+    },
+    {
+      "file": "src/features/auth/ProfilePage.tsx",
+      "lines": 619
+    },
+    {
+      "file": "src/features/auth/repositories/identity-context.tsx",
+      "lines": 21
+    },
+    {
+      "file": "src/features/auth/use-identity-task.ts",
+      "lines": 35
+    },
+    {
+      "file": "src/features/dress-code/dress-code.ts",
+      "lines": 29
+    },
+    {
+      "file": "src/features/dress-code/DressCodePage.module.css",
+      "lines": 237
+    },
+    {
+      "file": "src/features/dress-code/DressCodePage.tsx",
+      "lines": 327
+    },
+    {
+      "file": "src/features/dress-code/GatewayDressCodePage.module.css",
+      "lines": 199
+    },
+    {
+      "file": "src/features/dress-code/GatewayDressCodePage.tsx",
+      "lines": 178
+    },
+    {
+      "file": "src/features/fund/components/ClosurePanel.tsx",
+      "lines": 231
+    },
+    {
+      "file": "src/features/fund/components/ExpensePanel.tsx",
+      "lines": 175
+    },
+    {
+      "file": "src/features/fund/components/FinanceAction.tsx",
+      "lines": 177
+    },
+    {
+      "file": "src/features/fund/components/FinanceDesktop.module.css",
+      "lines": 29
+    },
+    {
+      "file": "src/features/fund/components/FinanceDesktop.tsx",
+      "lines": 194
+    },
+    {
+      "file": "src/features/fund/components/FinanceHistoryPanel.tsx",
+      "lines": 99
+    },
+    {
+      "file": "src/features/fund/components/FinanceOverlay.module.css",
+      "lines": 567
+    },
+    {
+      "file": "src/features/fund/components/FinanceOverlay.tsx",
+      "lines": 219
+    },
+    {
+      "file": "src/features/fund/components/FinancePresentation.tsx",
+      "lines": 174
+    },
+    {
+      "file": "src/features/fund/components/FinanceRecords.module.css",
+      "lines": 43
+    },
+    {
+      "file": "src/features/fund/components/FinanceWorkspace.module.css",
+      "lines": 301
+    },
+    {
+      "file": "src/features/fund/components/FinancialNotesPanel.tsx",
+      "lines": 133
+    },
+    {
+      "file": "src/features/fund/components/RefundPanel.tsx",
+      "lines": 216
+    },
+    {
+      "file": "src/features/fund/FundPage.module.css",
+      "lines": 842
+    },
+    {
+      "file": "src/features/fund/FundPage.tsx",
+      "lines": 243
+    },
+    {
+      "file": "src/features/fund/GatewayFundPage.tsx",
+      "lines": 1430
+    },
+    {
+      "file": "src/features/fund/model/fund.ts",
+      "lines": 243
+    },
+    {
+      "file": "src/features/fund/model/runtime-fund.ts",
+      "lines": 228
+    },
+    {
+      "file": "src/features/fund/repositories/fund-context.tsx",
+      "lines": 21
+    },
+    {
+      "file": "src/features/home/editorial-landing.ts",
+      "lines": 26
+    },
+    {
+      "file": "src/features/home/HomePage.module.css",
+      "lines": 946
+    },
+    {
+      "file": "src/features/home/HomePage.tsx",
+      "lines": 303
+    },
+    {
+      "file": "src/features/home/model/home.ts",
+      "lines": 43
+    },
+    {
+      "file": "src/features/home/repositories/home-context.tsx",
+      "lines": 18
+    },
+    {
+      "file": "src/features/map/GatewayMapPage.module.css",
+      "lines": 672
+    },
+    {
+      "file": "src/features/map/GatewayMapPage.tsx",
+      "lines": 418
+    },
+    {
+      "file": "src/features/map/google-places.ts",
+      "lines": 209
+    },
+    {
+      "file": "src/features/map/MapViewport.tsx",
+      "lines": 216
+    },
+    {
+      "file": "src/features/map/place-selection-store.ts",
+      "lines": 189
+    },
+    {
+      "file": "src/features/map/PlaceDetail.tsx",
+      "lines": 96
+    },
+    {
+      "file": "src/features/map/TravelTools.tsx",
+      "lines": 215
+    },
+    {
+      "file": "src/features/map/trip-map.ts",
+      "lines": 183
+    },
+    {
+      "file": "src/features/map/TripMapPage.module.css",
+      "lines": 1566
+    },
+    {
+      "file": "src/features/map/TripMapPage.tsx",
+      "lines": 821
+    },
+    {
+      "file": "src/features/members/GatewayMembersPage.module.css",
+      "lines": 259
+    },
+    {
+      "file": "src/features/members/GatewayMembersPage.tsx",
+      "lines": 711
+    },
+    {
+      "file": "src/features/members/invitation-feedback.ts",
+      "lines": 34
+    },
+    {
+      "file": "src/features/members/invitation-management-attempt.ts",
+      "lines": 47
+    },
+    {
+      "file": "src/features/members/invitation-token.ts",
+      "lines": 80
+    },
+    {
+      "file": "src/features/members/InvitationManagement.tsx",
+      "lines": 495
+    },
+    {
+      "file": "src/features/members/InvitationPage.tsx",
+      "lines": 335
+    },
+    {
+      "file": "src/features/members/Invitations.module.css",
+      "lines": 192
+    },
+    {
+      "file": "src/features/members/MembersPage.module.css",
+      "lines": 524
+    },
+    {
+      "file": "src/features/members/MembersPage.tsx",
+      "lines": 900
+    },
+    {
+      "file": "src/features/members/model/members.ts",
+      "lines": 137
+    },
+    {
+      "file": "src/features/members/repositories/members-context.tsx",
+      "lines": 23
+    },
+    {
+      "file": "src/features/notifications/notification.repository.ts",
+      "lines": 26
+    },
+    {
+      "file": "src/features/notifications/NotificationInbox.tsx",
+      "lines": 192
+    },
+    {
+      "file": "src/features/notifications/NotificationPreferences.tsx",
+      "lines": 157
+    },
+    {
+      "file": "src/features/notifications/Notifications.module.css",
+      "lines": 88
+    },
+    {
+      "file": "src/features/notifications/Notifications.tsx",
+      "lines": 48
+    },
+    {
+      "file": "src/features/packing/components/PackingCombobox.tsx",
+      "lines": 38
+    },
+    {
+      "file": "src/features/packing/components/PackingItemDrawer.module.css",
+      "lines": 11
+    },
+    {
+      "file": "src/features/packing/components/PackingItemDrawer.tsx",
+      "lines": 145
+    },
+    {
+      "file": "src/features/packing/packing.ts",
+      "lines": 314
+    },
+    {
+      "file": "src/features/packing/PackingPage.module.css",
+      "lines": 504
+    },
+    {
+      "file": "src/features/packing/PackingPage.tsx",
+      "lines": 477
+    },
+    {
+      "file": "src/features/plan/components/DeferredReadPage.tsx",
+      "lines": 102
+    },
+    {
+      "file": "src/features/plan/components/GatewayPlanPanel.module.css",
+      "lines": 138
+    },
+    {
+      "file": "src/features/plan/components/GatewayPlanPanel.tsx",
+      "lines": 575
+    },
+    {
+      "file": "src/features/plan/components/PlanDayMap.module.css",
+      "lines": 99
+    },
+    {
+      "file": "src/features/plan/components/PlanDayMap.tsx",
+      "lines": 192
+    },
+    {
+      "file": "src/features/plan/components/PlanMetrics.module.css",
+      "lines": 141
+    },
+    {
+      "file": "src/features/plan/components/PlanMetrics.tsx",
+      "lines": 111
+    },
+    {
+      "file": "src/features/plan/components/PlanSummary.module.css",
+      "lines": 247
+    },
+    {
+      "file": "src/features/plan/components/PlanSummary.tsx",
+      "lines": 172
+    },
+    {
+      "file": "src/features/plan/components/PreparationActions.module.css",
+      "lines": 28
+    },
+    {
+      "file": "src/features/plan/components/PreparationActions.tsx",
+      "lines": 615
+    },
+    {
+      "file": "src/features/plan/components/RecommendationPanel.tsx",
+      "lines": 320
+    },
+    {
+      "file": "src/features/plan/components/RuntimeTimeline.module.css",
+      "lines": 412
+    },
+    {
+      "file": "src/features/plan/components/RuntimeTimeline.tsx",
+      "lines": 757
+    },
+    {
+      "file": "src/features/plan/components/ScheduleValidation.tsx",
+      "lines": 58
+    },
+    {
+      "file": "src/features/plan/components/TimelineCard.module.css",
+      "lines": 187
+    },
+    {
+      "file": "src/features/plan/components/TimelineCard.tsx",
+      "lines": 57
+    },
+    {
+      "file": "src/features/plan/components/TimelineKeyboardSensor.ts",
+      "lines": 37
+    },
+    {
+      "file": "src/features/plan/components/TimelineSurface.module.css",
+      "lines": 195
+    },
+    {
+      "file": "src/features/plan/components/TripCommandsProvider.tsx",
+      "lines": 72
+    },
+    {
+      "file": "src/features/plan/components/TripPlanBoundary.tsx",
+      "lines": 12
+    },
+    {
+      "file": "src/features/plan/hooks/use-gateway-dnd.ts",
+      "lines": 521
+    },
+    {
+      "file": "src/features/plan/hooks/use-plan-commands.ts",
+      "lines": 296
+    },
+    {
+      "file": "src/features/plan/hooks/use-plan-draft.ts",
+      "lines": 140
+    },
+    {
+      "file": "src/features/plan/hooks/use-preview-dnd.ts",
+      "lines": 239
+    },
+    {
+      "file": "src/features/plan/hooks/use-trip-plan-snapshot.ts",
+      "lines": 178
+    },
+    {
+      "file": "src/features/plan/model/plan-arrangement.ts",
+      "lines": 371
+    },
+    {
+      "file": "src/features/plan/model/plan-command-intent.ts",
+      "lines": 142
+    },
+    {
+      "file": "src/features/plan/model/plan-draft.ts",
+      "lines": 425
+    },
+    {
+      "file": "src/features/plan/model/plan-drop-intent.ts",
+      "lines": 104
+    },
+    {
+      "file": "src/features/plan/model/plan-presentation.ts",
+      "lines": 30
+    },
+    {
+      "file": "src/features/plan/model/plan-query-keys.ts",
+      "lines": 7
+    },
+    {
+      "file": "src/features/plan/model/plan.ts",
+      "lines": 168
+    },
+    {
+      "file": "src/features/plan/model/preparation.ts",
+      "lines": 216
+    },
+    {
+      "file": "src/features/plan/model/travel.ts",
+      "lines": 86
+    },
+    {
+      "file": "src/features/plan/PlanPage.module.css",
+      "lines": 885
+    },
+    {
+      "file": "src/features/plan/PlanPage.tsx",
+      "lines": 1202
+    },
+    {
+      "file": "src/features/plan/repositories/plan-context.tsx",
+      "lines": 18
+    },
+    {
+      "file": "src/features/price-watch/model/price-watch.ts",
+      "lines": 122
+    },
+    {
+      "file": "src/features/price-watch/model/runtime-price-watch.ts",
+      "lines": 101
+    },
+    {
+      "file": "src/features/price-watch/PriceWatchForm.tsx",
+      "lines": 226
+    },
+    {
+      "file": "src/features/price-watch/PriceWatchOverlay.module.css",
+      "lines": 71
+    },
+    {
+      "file": "src/features/price-watch/PriceWatchOverlay.tsx",
+      "lines": 51
+    },
+    {
+      "file": "src/features/price-watch/PriceWatchPage.module.css",
+      "lines": 103
+    },
+    {
+      "file": "src/features/price-watch/PriceWatchPage.tsx",
+      "lines": 546
+    },
+    {
+      "file": "src/features/price-watch/repositories/price-watch-context.tsx",
+      "lines": 21
+    },
+    {
+      "file": "src/features/price-watch/RuntimePriceWatchPage.module.css",
+      "lines": 112
+    },
+    {
+      "file": "src/features/price-watch/RuntimePriceWatchPage.tsx",
+      "lines": 562
+    },
+    {
+      "file": "src/features/shell/components/AccountMenu.tsx",
+      "lines": 58
+    },
+    {
+      "file": "src/features/shell/components/AdminChrome.module.css",
+      "lines": 195
+    },
+    {
+      "file": "src/features/shell/components/AdminChrome.tsx",
+      "lines": 111
+    },
+    {
+      "file": "src/features/shell/components/AppShell.module.css",
+      "lines": 741
+    },
+    {
+      "file": "src/features/shell/components/AppShell.tsx",
+      "lines": 540
+    },
+    {
+      "file": "src/features/shell/hooks/use-shell.ts",
+      "lines": 13
+    },
+    {
+      "file": "src/features/shell/model/shell.ts",
+      "lines": 63
+    },
+    {
+      "file": "src/features/shell/repositories/repository-context.tsx",
+      "lines": 18
+    },
+    {
+      "file": "src/features/shell/repositories/shell.repository.ts",
+      "lines": 12
+    },
+    {
+      "file": "src/features/trips/components/OverviewEmptyFare.tsx",
+      "lines": 13
+    },
+    {
+      "file": "src/features/trips/components/OverviewFareSummary.tsx",
+      "lines": 43
+    },
+    {
+      "file": "src/features/trips/components/OverviewFundSummary.tsx",
+      "lines": 39
+    },
+    {
+      "file": "src/features/trips/components/OverviewProgress.tsx",
+      "lines": 31
+    },
+    {
+      "file": "src/features/trips/components/TripCard.module.css",
+      "lines": 199
+    },
+    {
+      "file": "src/features/trips/components/TripCard.tsx",
+      "lines": 82
+    },
+    {
+      "file": "src/features/trips/components/TripHero.tsx",
+      "lines": 77
+    },
+    {
+      "file": "src/features/trips/components/TripListHero.module.css",
+      "lines": 228
+    },
+    {
+      "file": "src/features/trips/components/TripListHero.tsx",
+      "lines": 46
+    },
+    {
+      "file": "src/features/trips/components/TripWorkspace.module.css",
+      "lines": 46
+    },
+    {
+      "file": "src/features/trips/create/create-trip.ts",
+      "lines": 137
+    },
+    {
+      "file": "src/features/trips/create/CreateTripPage.module.css",
+      "lines": 1023
+    },
+    {
+      "file": "src/features/trips/create/CreateTripPage.tsx",
+      "lines": 590
+    },
+    {
+      "file": "src/features/trips/create/CreateTripSuccess.tsx",
+      "lines": 49
+    },
+    {
+      "file": "src/features/trips/create/GatewayCreateTripPage.tsx",
+      "lines": 413
+    },
+    {
+      "file": "src/features/trips/GatewayOverview.tsx",
+      "lines": 152
+    },
+    {
+      "file": "src/features/trips/hooks/use-trip-list.ts",
+      "lines": 29
+    },
+    {
+      "file": "src/features/trips/model/trip-detail.ts",
+      "lines": 20
+    },
+    {
+      "file": "src/features/trips/model/trip-list-cache.ts",
+      "lines": 23
+    },
+    {
+      "file": "src/features/trips/model/trip-list-query.ts",
+      "lines": 70
+    },
+    {
+      "file": "src/features/trips/model/trip-list.ts",
+      "lines": 55
+    },
+    {
+      "file": "src/features/trips/model/trip-query-keys.ts",
+      "lines": 10
+    },
+    {
+      "file": "src/features/trips/repositories/repository-context.tsx",
+      "lines": 21
+    },
+    {
+      "file": "src/features/trips/repositories/trip.repository.ts",
+      "lines": 105
+    },
+    {
+      "file": "src/features/trips/settings/TripSettingsPage.module.css",
+      "lines": 504
+    },
+    {
+      "file": "src/features/trips/settings/TripSettingsPage.tsx",
+      "lines": 757
+    },
+    {
+      "file": "src/features/trips/TripDashboard.module.css",
+      "lines": 699
+    },
+    {
+      "file": "src/features/trips/TripListPage.module.css",
+      "lines": 345
+    },
+    {
+      "file": "src/features/trips/TripListPage.tsx",
+      "lines": 285
+    },
+    {
+      "file": "src/features/trips/TripOverviewContent.tsx",
+      "lines": 254
+    },
+    {
+      "file": "src/features/trips/TripOverviewPage.module.css",
+      "lines": 449
+    },
+    {
+      "file": "src/features/trips/TripOverviewPage.tsx",
+      "lines": 92
+    },
+    {
+      "file": "src/infrastructure/fixtures/demo-access.ts",
+      "lines": 15
+    },
+    {
+      "file": "src/infrastructure/fixtures/fund.fixture-repository.ts",
+      "lines": 257
+    },
+    {
+      "file": "src/infrastructure/fixtures/home.fixture-repository.ts",
+      "lines": 64
+    },
+    {
+      "file": "src/infrastructure/fixtures/identity.fixture-repository.ts",
+      "lines": 61
+    },
+    {
+      "file": "src/infrastructure/fixtures/invitation.fixture-repository.ts",
+      "lines": 66
+    },
+    {
+      "file": "src/infrastructure/fixtures/membership.fixture-repository.ts",
+      "lines": 55
+    },
+    {
+      "file": "src/infrastructure/fixtures/plan.fixture-repository.ts",
+      "lines": 236
+    },
+    {
+      "file": "src/infrastructure/fixtures/price-watch.fixture-repository.ts",
+      "lines": 225
+    },
+    {
+      "file": "src/infrastructure/fixtures/shell.fixture-repository.ts",
+      "lines": 77
+    },
+    {
+      "file": "src/infrastructure/fixtures/trip-catalog.ts",
+      "lines": 156
+    },
+    {
+      "file": "src/infrastructure/fixtures/trip-store.ts",
+      "lines": 33
+    },
+    {
+      "file": "src/infrastructure/fixtures/trip.fixture-repository.ts",
+      "lines": 176
+    },
+    {
+      "file": "src/infrastructure/http/api-error.ts",
+      "lines": 15
+    },
+    {
+      "file": "src/infrastructure/http/cursor-page.ts",
+      "lines": 17
+    },
+    {
+      "file": "src/infrastructure/http/decode.ts",
+      "lines": 54
+    },
+    {
+      "file": "src/infrastructure/http/domain-error.ts",
+      "lines": 45
+    },
+    {
+      "file": "src/infrastructure/http/envelope.ts",
+      "lines": 69
+    },
+    {
+      "file": "src/infrastructure/http/http-client.ts",
+      "lines": 230
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "lines": 594
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "lines": 206
+    },
+    {
+      "file": "src/infrastructure/operations/policy-intent.ts",
+      "lines": 53
+    },
+    {
+      "file": "src/infrastructure/repositories/finance-closure-decoder.ts",
+      "lines": 111
+    },
+    {
+      "file": "src/infrastructure/repositories/finance-decoders.ts",
+      "lines": 220
+    },
+    {
+      "file": "src/infrastructure/repositories/finance-extended-decoders.ts",
+      "lines": 101
+    },
+    {
+      "file": "src/infrastructure/repositories/fund.gateway-repository.ts",
+      "lines": 168
+    },
+    {
+      "file": "src/infrastructure/repositories/home.gateway-repository.ts",
+      "lines": 18
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "lines": 326
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "lines": 318
+    },
+    {
+      "file": "src/infrastructure/repositories/membership.gateway-repository.ts",
+      "lines": 151
+    },
+    {
+      "file": "src/infrastructure/repositories/notification.gateway-repository.ts",
+      "lines": 82
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "lines": 447
+    },
+    {
+      "file": "src/infrastructure/repositories/price-watch.gateway-repository.ts",
+      "lines": 20
+    },
+    {
+      "file": "src/infrastructure/repositories/runtime-price-watch.gateway-repository.ts",
+      "lines": 102
+    },
+    {
+      "file": "src/infrastructure/repositories/select-fund-repository.ts",
+      "lines": 19
+    },
+    {
+      "file": "src/infrastructure/repositories/select-home-repository.ts",
+      "lines": 15
+    },
+    {
+      "file": "src/infrastructure/repositories/select-identity-repository.ts",
+      "lines": 19
+    },
+    {
+      "file": "src/infrastructure/repositories/select-members-repositories.ts",
+      "lines": 27
+    },
+    {
+      "file": "src/infrastructure/repositories/select-plan-repository.ts",
+      "lines": 17
+    },
+    {
+      "file": "src/infrastructure/repositories/select-price-watch-repository.ts",
+      "lines": 16
+    },
+    {
+      "file": "src/infrastructure/repositories/select-shell-repository.ts",
+      "lines": 20
+    },
+    {
+      "file": "src/infrastructure/repositories/select-trip-repository.ts",
+      "lines": 20
+    },
+    {
+      "file": "src/infrastructure/repositories/shell.gateway-repository.ts",
+      "lines": 114
+    },
+    {
+      "file": "src/infrastructure/repositories/travel.gateway-repository.ts",
+      "lines": 191
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "lines": 461
+    },
+    {
+      "file": "src/infrastructure/session/access-token-store.ts",
+      "lines": 14
+    },
+    {
+      "file": "src/infrastructure/session/coordinated-session.ts",
+      "lines": 82
+    },
+    {
+      "file": "src/infrastructure/session/session-manager.ts",
+      "lines": 211
+    },
+    {
+      "file": "src/main.tsx",
+      "lines": 211
+    },
+    {
+      "file": "src/preview/design-system.module.css",
+      "lines": 121
+    },
+    {
+      "file": "src/preview/design-system.tsx",
+      "lines": 322
+    },
+    {
+      "file": "src/shared/assets/asset-map.ts",
+      "lines": 54
+    },
+    {
+      "file": "src/shared/assets/scene-assets.ts",
+      "lines": 169
+    },
+    {
+      "file": "src/shared/components/Alert.module.css",
+      "lines": 43
+    },
+    {
+      "file": "src/shared/components/Alert.tsx",
+      "lines": 32
+    },
+    {
+      "file": "src/shared/components/Avatar.tsx",
+      "lines": 36
+    },
+    {
+      "file": "src/shared/components/Button.module.css",
+      "lines": 145
+    },
+    {
+      "file": "src/shared/components/Button.tsx",
+      "lines": 46
+    },
+    {
+      "file": "src/shared/components/ButtonLink.tsx",
+      "lines": 28
+    },
+    {
+      "file": "src/shared/components/CapabilityNote.module.css",
+      "lines": 16
+    },
+    {
+      "file": "src/shared/components/CapabilityNote.tsx",
+      "lines": 19
+    },
+    {
+      "file": "src/shared/components/Checkbox.tsx",
+      "lines": 21
+    },
+    {
+      "file": "src/shared/components/ContentState.module.css",
+      "lines": 36
+    },
+    {
+      "file": "src/shared/components/ContentState.tsx",
+      "lines": 81
+    },
+    {
+      "file": "src/shared/components/Drawer.module.css",
+      "lines": 158
+    },
+    {
+      "file": "src/shared/components/Drawer.tsx",
+      "lines": 71
+    },
+    {
+      "file": "src/shared/components/Field.module.css",
+      "lines": 205
+    },
+    {
+      "file": "src/shared/components/Field.tsx",
+      "lines": 68
+    },
+    {
+      "file": "src/shared/components/Icon.tsx",
+      "lines": 82
+    },
+    {
+      "file": "src/shared/components/Input.tsx",
+      "lines": 59
+    },
+    {
+      "file": "src/shared/components/motion-features.ts",
+      "lines": 2
+    },
+    {
+      "file": "src/shared/components/MotionProvider.tsx",
+      "lines": 13
+    },
+    {
+      "file": "src/shared/components/NavigationButton.module.css",
+      "lines": 27
+    },
+    {
+      "file": "src/shared/components/NavigationButton.tsx",
+      "lines": 22
+    },
+    {
+      "file": "src/shared/components/OperationStatus.tsx",
+      "lines": 115
+    },
+    {
+      "file": "src/shared/components/Select.tsx",
+      "lines": 44
+    },
+    {
+      "file": "src/shared/components/Skeleton.module.css",
+      "lines": 18
+    },
+    {
+      "file": "src/shared/components/Skeleton.tsx",
+      "lines": 6
+    },
+    {
+      "file": "src/shared/components/SplitPanel.module.css",
+      "lines": 40
+    },
+    {
+      "file": "src/shared/components/SplitPanel.tsx",
+      "lines": 127
+    },
+    {
+      "file": "src/shared/components/SuccessToast.tsx",
+      "lines": 26
+    },
+    {
+      "file": "src/shared/components/Textarea.tsx",
+      "lines": 29
+    },
+    {
+      "file": "src/shared/components/TravelCollage.module.css",
+      "lines": 125
+    },
+    {
+      "file": "src/shared/components/TravelCollage.tsx",
+      "lines": 31
+    },
+    {
+      "file": "src/shared/components/Ui.module.css",
+      "lines": 384
+    },
+    {
+      "file": "src/shared/components/Ui.tsx",
+      "lines": 211
+    },
+    {
+      "file": "src/shared/components/VietnameseDateInput.module.css",
+      "lines": 33
+    },
+    {
+      "file": "src/shared/components/VietnameseDateInput.tsx",
+      "lines": 64
+    },
+    {
+      "file": "src/shared/lib/browser-storage.ts",
+      "lines": 60
+    },
+    {
+      "file": "src/shared/lib/calendar.ts",
+      "lines": 34
+    },
+    {
+      "file": "src/shared/lib/command-failure.ts",
+      "lines": 11
+    },
+    {
+      "file": "src/shared/lib/runtime-validation.ts",
+      "lines": 8
+    },
+    {
+      "file": "src/shared/lib/use-write-scope.ts",
+      "lines": 21
+    },
+    {
+      "file": "src/shared/styles/breakpoints.ts",
+      "lines": 9
+    },
+    {
+      "file": "src/shared/styles/DemoWorkspace.module.css",
+      "lines": 205
+    },
+    {
+      "file": "src/shared/styles/fonts.css",
+      "lines": 11
+    },
+    {
+      "file": "src/shared/styles/global.css",
+      "lines": 126
+    },
+    {
+      "file": "src/shared/styles/tokens.css",
+      "lines": 138
+    },
+    {
+      "file": "src/shared/types/operations.ts",
+      "lines": 11
+    },
+    {
+      "file": "src/shared/types/result.ts",
+      "lines": 19
+    },
+    {
+      "file": "src/shared/types/runtime-services.ts",
+      "lines": 8
+    },
+    {
+      "file": "src/vite-env.d.ts",
+      "lines": 2
+    }
+  ],
+  "endpoints": [
+    {
+      "file": "src/features/price-watch/model/runtime-price-watch.ts",
+      "line": 93,
+      "contract": "value.path !== `/api/v1/trips/${tripId}/price-watches` ||"
+    },
+    {
+      "file": "src/infrastructure/http/http-client.ts",
+      "line": 37,
+      "contract": "!path.startsWith('/api/v1/') ||"
+    },
+    {
+      "file": "src/infrastructure/http/http-client.ts",
+      "line": 40,
+      "contract": "!url.pathname.startsWith('/api/v1/') ||"
+    },
+    {
+      "file": "src/infrastructure/http/http-client.ts",
+      "line": 43,
+      "contract": "throw new Error('Gateway requests require a same-origin /api/v1/ path');"
+    },
+    {
+      "file": "src/infrastructure/http/http-client.ts",
+      "line": 217,
+      "contract": "!path.startsWith('/api/v1/auth/')"
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "line": 173,
+      "contract": "const fund = () => '/api/v1/funds/' + d.uuid(i.fundId);"
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "line": 177,
+      "contract": "return { path: `/api/v1/trips/${i.tripId}/fund`, method: 'POST' };"
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "line": 191,
+      "contract": "return { path: `/api/v1/trips/${i.tripId}/leave`, method: 'POST' };"
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "line": 193,
+      "contract": "return { path: `/api/v1/trips/${i.tripId}/members/${resource()}`, method: 'DELETE' };"
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "line": 205,
+      "contract": "path: '/api/v1/contributions/' + resource() + action,"
+    },
+    {
+      "file": "src/infrastructure/operations/command-coordinator.ts",
+      "line": 539,
+      "contract": "const r = await client.read('/api/v1/operations/' + i.key, {"
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "line": 181,
+      "contract": "const root = '/api/v1/funds/' + d.uuid(fundId);"
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "line": 184,
+      "contract": "return { path: '/api/v1/closures/' + d.uuid(resourceId) + '/' + kind.slice(8), method: 'POST' };"
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "line": 187,
+      "contract": "return { path: '/api/v1/refunds/' + d.uuid(resourceId) + '/' + kind.slice(7), method: 'POST' };"
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "line": 189,
+      "contract": "return { path: '/api/v1/contributions/' + d.uuid(resourceId) + '/reverse', method: 'POST' };"
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "line": 193,
+      "contract": "path: '/api/v1/notes/' + d.uuid(resourceId),"
+    },
+    {
+      "file": "src/infrastructure/operations/finance-commands.ts",
+      "line": 200,
+      "contract": "'/api/v1/expenses/' +"
+    },
+    {
+      "file": "src/infrastructure/repositories/fund.gateway-repository.ts",
+      "line": 48,
+      "contract": "const root = (id: string) => '/api/v1/funds/' + d.uuid(id);"
+    },
+    {
+      "file": "src/infrastructure/repositories/fund.gateway-repository.ts",
+      "line": 70,
+      "contract": "'/api/v1/closures/' + d.uuid(id),"
+    },
+    {
+      "file": "src/infrastructure/repositories/fund.gateway-repository.ts",
+      "line": 105,
+      "contract": "'/api/v1/trips/' + d.uuid(tripId) + '/fund',"
+    },
+    {
+      "file": "src/infrastructure/repositories/fund.gateway-repository.ts",
+      "line": 150,
+      "contract": "'/api/v1/contributions/' + d.uuid(id) + '/vietqr',"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 83,
+      "contract": "const result = await client.read('/api/v1/me', { signal });"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 98,
+      "contract": "const result = await client.read(`/api/v1/me/sessions?${query.toString()}`, { signal });"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 173,
+      "contract": "const result = await client.write('/api/v1/me', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 197,
+      "contract": "const result = await client.write(`/api/v1/me/sessions/${encodeURIComponent(sessionId)}`, {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 211,
+      "contract": "const result = await client.read('/api/v1/me/avatar', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 237,
+      "contract": "const result = await client.write('/api/v1/me/avatar', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 257,
+      "contract": "const result = await client.write('/api/v1/me/password-change', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 271,
+      "contract": "const result = await client.write('/api/v1/auth/email-verifications', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 285,
+      "contract": "const result = await client.write('/api/v1/auth/email-verifications/confirm', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 299,
+      "contract": "const result = await client.write('/api/v1/auth/password-reset-requests', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/identity.gateway-repository.ts",
+      "line": 313,
+      "contract": "const result = await client.write('/api/v1/auth/password-resets', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "line": 128,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/invitations?${params.toString()}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "line": 202,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/invitations`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "line": 268,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/invitations/${encodeURIComponent(invitationId)}/${action}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "line": 290,
+      "contract": "command('/api/v1/invitations/preview', 'POST', { token }, signal, undefined, (value) => {"
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "line": 296,
+      "contract": "command('/api/v1/invitations/accept', 'POST', { token }, signal, idempotencyKey, (value) => {"
+    },
+    {
+      "file": "src/infrastructure/repositories/invitation.gateway-repository.ts",
+      "line": 311,
+      "contract": "command('/api/v1/invitations/decline', 'POST', { token }, signal, idempotencyKey, (value) => {"
+    },
+    {
+      "file": "src/infrastructure/repositories/membership.gateway-repository.ts",
+      "line": 56,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/members?${params.toString()}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/notification.gateway-repository.ts",
+      "line": 49,
+      "contract": "await client.read('/api/v1/me/notifications?' + query, signal ? { signal } : {}),"
+    },
+    {
+      "file": "src/infrastructure/repositories/notification.gateway-repository.ts",
+      "line": 56,
+      "contract": "await client.write(`/api/v1/me/notifications/${encodeURIComponent(id)}/read`, {"
+    },
+    {
+      "file": "src/infrastructure/repositories/notification.gateway-repository.ts",
+      "line": 65,
+      "contract": "(await client.read('/api/v1/me/notification-preferences', signal ? { signal } : {})).data,"
+    },
+    {
+      "file": "src/infrastructure/repositories/notification.gateway-repository.ts",
+      "line": 72,
+      "contract": "await client.write('/api/v1/me/notification-preferences', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 244,
+      "contract": "const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/plan`, {"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 275,
+      "contract": "const root = `/api/v1/trips/${encodeURIComponent(tripId)}`;"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 376,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/activities`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 392,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/activities/${encodeURIComponent(activityId)}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 408,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/activities/${encodeURIComponent(activityId)}/completion`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 423,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/activities/${encodeURIComponent(activityId)}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/plan.gateway-repository.ts",
+      "line": 438,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/activities/order`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/runtime-price-watch.gateway-repository.ts",
+      "line": 74,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/price-watches?${pageQuery(cursor)}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/runtime-price-watch.gateway-repository.ts",
+      "line": 82,
+      "contract": "`/api/v1/price-watches/${encodeURIComponent(id)}/observations?${pageQuery(cursor)}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/shell.gateway-repository.ts",
+      "line": 90,
+      "contract": "const profile = await client.read('/api/v1/me', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/shell.gateway-repository.ts",
+      "line": 95,
+      "contract": "? await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}`, {"
+    },
+    {
+      "file": "src/infrastructure/repositories/travel.gateway-repository.ts",
+      "line": 104,
+      "contract": "const root = (tripId: string) => `/api/v1/trips/${encodeURIComponent(tripId)}`;"
+    },
+    {
+      "file": "src/infrastructure/repositories/travel.gateway-repository.ts",
+      "line": 108,
+      "contract": "`/api/v1/travel/places?${new URLSearchParams({ trip_id: tripId, q: query })}`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/travel.gateway-repository.ts",
+      "line": 130,
+      "contract": "const response = await client.write('/api/v1/travel/routes', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "line": 271,
+      "contract": "const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`, { signal, includeCredentials: true });"
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "line": 279,
+      "contract": "const result = await client.write('/api/v1/trips', {"
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "line": 320,
+      "contract": "const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}`, {"
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "line": 353,
+      "contract": "`/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`,"
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "line": 382,
+      "contract": "const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}`, {"
+    },
+    {
+      "file": "src/infrastructure/repositories/trip.gateway-repository.ts",
+      "line": 415,
+      "contract": "const result = await client.read(`/api/v1/trips?${params.toString()}`, {"
+    },
+    {
+      "file": "src/infrastructure/session/session-manager.ts",
+      "line": 59,
+      "contract": "const response = await client.read('/api/v1/auth/csrf', {"
+    },
+    {
+      "file": "src/infrastructure/session/session-manager.ts",
+      "line": 85,
+      "contract": "const response = await client.write('/api/v1/auth/refresh', {"
+    },
+    {
+      "file": "src/infrastructure/session/session-manager.ts",
+      "line": 150,
+      "contract": "await client.write('/api/v1/auth/logout', {"
+    },
+    {
+      "file": "src/infrastructure/session/session-manager.ts",
+      "line": 166,
+      "contract": "const response = await client.write('/api/v1/auth/login', {"
+    },
+    {
+      "file": "src/infrastructure/session/session-manager.ts",
+      "line": 196,
+      "contract": "const response = await client.write('/api/v1/auth/register', {"
+    }
+  ],
+  "tests": [
+    {
+      "file": "tests/e2e/app-shell.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 13
+    },
+    {
+      "file": "tests/e2e/auth-fixture.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 6
+    },
+    {
+      "file": "tests/e2e/cp04-review.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 4
+    },
+    {
+      "file": "tests/e2e/cp04-zoom.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/cp05-review.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e/cp05-zoom.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/cp11-regressions.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/design-system.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 5
+    },
+    {
+      "file": "tests/e2e/foundations-cp03.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 4
+    },
+    {
+      "file": "tests/e2e/foundations-zoom.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/fund-preview.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e/members-preview.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e/packing-list.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 4
+    },
+    {
+      "file": "tests/e2e/plan-draft-time.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/plan-preview-dnd.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 8
+    },
+    {
+      "file": "tests/e2e/plan-preview.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e/plan-redesign.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/price-watch-preview.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e/timeline-rail.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/trip-list.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 7
+    },
+    {
+      "file": "tests/e2e/trip-map.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 5
+    },
+    {
+      "file": "tests/e2e/trip-overview.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 9
+    },
+    {
+      "file": "tests/e2e/trip-settings.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e/trip-width.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e/trip-workspace-projections.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e/web-fix-regressions.spec.ts",
+      "mode": "FIXTURE",
+      "cases": 5
+    },
+    {
+      "file": "tests/e2e-demo1/demo1.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 10
+    },
+    {
+      "file": "tests/e2e-demo1/gateway-dnd.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e-demo1/report-web.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 4
+    },
+    {
+      "file": "tests/e2e-demo1/w02-headed.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 4
+    },
+    {
+      "file": "tests/e2e-demo1/w03-headed.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 4
+    },
+    {
+      "file": "tests/e2e-demo1/w05-headed.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e-gateway/admin-placeholder.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp05-create-axe.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp05-create-modal.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp06-composition.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp06-editor.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp06-readonly.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp07-composition.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp07-native-zoom.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp07-projections.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 7
+    },
+    {
+      "file": "tests/e2e-gateway/cp08-composition.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp08-lifecycle.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e-gateway/cp08-native-zoom.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp11-plan-native-zoom.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/cp11-shell-current.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/finance-closure.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/finance-history.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/finance-integration.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e-gateway/finance-notes.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e-gateway/finance-operations.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 2
+    },
+    {
+      "file": "tests/e2e-gateway/finance-refresh.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/finance-refund.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/finance-reversal.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/gateway-plan-dnd.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 7
+    },
+    {
+      "file": "tests/e2e-gateway/identity.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 14
+    },
+    {
+      "file": "tests/e2e-gateway/invitations.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 5
+    },
+    {
+      "file": "tests/e2e-gateway/members-policy.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 8
+    },
+    {
+      "file": "tests/e2e-gateway/plan.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e-gateway/preparation-srs12.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 10
+    },
+    {
+      "file": "tests/e2e-gateway/price-observations-cp10.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/timeline-interaction.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 5
+    },
+    {
+      "file": "tests/e2e-gateway/timeline-rail.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/trip-overview.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 6
+    },
+    {
+      "file": "tests/e2e-gateway/trip-width.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/trips.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 1
+    },
+    {
+      "file": "tests/e2e-gateway/ui-acceptance.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e-gateway/ui-upgrade.spec.ts",
+      "mode": "HTTP_MOCK",
+      "cases": 3
+    },
+    {
+      "file": "tests/e2e-live/demo.spec.mjs",
+      "mode": "LIVE_REQUIRES_ENV_REVIEW",
+      "cases": 4
+    }
+  ]
+}

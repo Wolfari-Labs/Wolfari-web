@@ -126,10 +126,13 @@ export function createTravelRepository(client: GatewayHttpClient): TravelReposit
         });
       });
     },
-    async route(tripId, coordinates, mode, signal) {
-      const response = await client.write('/api/v1/travel/routes', {
+    async route(_tripId, coordinates, mode, signal) {
+      const response = await client.write('/api/v1/travel/route', {
         method: 'POST',
-        body: { trip_id: tripId, coordinates, travel_mode: mode },
+        body: {
+          coordinates,
+          mode,
+        },
         signal,
         includeCredentials: true,
       });

@@ -8,6 +8,7 @@ import type { PlaceRoute } from '../../map/places';
 import { useRuntimeServices } from '../../../app/gateway-context';
 import { Button } from '../../../shared/components/Button';
 import { Icon } from '../../../shared/components/Icon';
+import cameraMascot from '../../../shared/assets/figma/trips-plan/camera-mascot.png';
 import styles from './PlanDayMap.module.css';
 export function dayMapLocations(
   plan: Pick<PlanViewModel, 'activities' | 'selectedLocations'>,
@@ -88,12 +89,14 @@ export function PlanDayMap({
   day,
   onClose,
   closeRef,
+  compact = false,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
   day: string;
   onClose: () => void;
   closeRef?: Ref<HTMLButtonElement>;
+  compact?: boolean;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const locations = useMemo(
@@ -125,13 +128,14 @@ export function PlanDayMap({
         ? 'Bản đồ nhóm chưa chọn ngày'
         : `Bản đồ lịch trình ngày ${number || day}`;
   return (
+    <div className={`${styles.column} ${compact ? styles.compact : ''}`}>
     <section className={styles.panel} aria-label={title} data-plan-day-map={day}>
       <header className={styles.header}>
         <div>
-          <h3>{title}</h3>
-          <p>{locations.length} địa điểm gắn với hoạt động đã xếp lịch</p>
+          <h3>{compact && number > 0 ? `Bản đồ ngày ${number}` : title}</h3>
+          <p className={styles.srOnly}>{locations.length} địa điểm gắn với hoạt động đã xếp lịch</p>
         </div>
-        <Button
+        {!compact && <Button
           ref={closeRef}
           variant="outline"
           size="icon"
@@ -139,9 +143,10 @@ export function PlanDayMap({
           onClick={onClose}
         >
           <Icon name="close" size={18} />
-        </Button>
+        </Button>}
+        <a className={styles.mapLink} href={`/trips/${encodeURIComponent(trip.id)}/map?day=${encodeURIComponent(day)}`}><Icon name="mapFolded" size={14} />Mở bản đồ lớn</a>
       </header>
-      <div className={styles.map} style={{ height: 240 }}>
+      <div className={styles.map}>
         <GeoapifyMap
           embedded
           points={points}
@@ -159,8 +164,8 @@ export function PlanDayMap({
           {dayRoute.summary}
         </p>
       )}
-      <div className={styles.listRegion}>
-        <h4>Địa điểm trong lịch trình</h4>
+      <details className={styles.listRegion}>
+        <summary>Địa điểm trong lịch trình</summary>
         {locations.length ? (
           <ol className={styles.list}>
             {locations.map((p) => (
@@ -174,7 +179,9 @@ export function PlanDayMap({
         ) : (
           <p className={styles.empty}>Chưa có địa điểm nào trong ngày đang xem.</p>
         )}
-      </div>
+      </details>
     </section>
+    {compact && <aside className={styles.tip}><img src={cameraMascot} alt="" /><div><strong>Mẹo từ Wolfari</strong><p>Kiểm tra thời tiết và chuẩn bị đồ dùng phù hợp trước khi khởi hành nhé!</p></div></aside>}
+    </div>
   );
 }

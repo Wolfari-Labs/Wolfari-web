@@ -13,7 +13,9 @@ import type { AdminSection, ShellSection, ShellSnapshot } from '../model/shell';
 import mascot from '../../../shared/assets/v2/mascot-waving.png';
 import { BrandWordmark } from '../../../shared/components/BrandWordmark';
 import styles from './AppShell.module.css';
-import { Icon as UiIcon, type IconName } from '../../../shared/components/Icon';
+import { Icon as UiIcon } from '../../../shared/components/Icon';
+import { FigmaTopIcon, FigmaTripIcon } from '../../../shared/components/FigmaNavigationIcon';
+import expandIcon from '../../../shared/assets/figma/shell/26153.svg';
 import { Avatar } from '../../../shared/components/Avatar';
 import { useAnimate } from 'motion/react-mini';
 import { NavigationButton } from '../../../shared/components/NavigationButton';
@@ -31,16 +33,16 @@ const NavigationDrawer = lazy(() =>
 );
 
 // Web v2 trip sidebar (Figma 930:7331): labels and glyphs follow the V2 components.
-const sections: { id: ShellSection; label: string; icon: IconName }[] = [
-  { id: 'overview', label: 'Tổng quan', icon: 'compass' },
-  { id: 'map', label: 'Bản đồ & địa điểm', icon: 'mapFolded' },
-  { id: 'plan', label: 'Lịch trình', icon: 'calendar' },
-  { id: 'dress', label: 'Dress code', icon: 'dress' },
-  { id: 'packing', label: 'Hành lý', icon: 'luggage' },
-  { id: 'members', label: 'Thành viên', icon: 'members' },
-  { id: 'fund', label: 'Quỹ nhóm', icon: 'fund' },
-  { id: 'fare', label: 'Theo dõi giá vé', icon: 'price' },
-  { id: 'settings', label: 'Cài đặt', icon: 'settings' },
+const sections: { id: Exclude<ShellSection, 'tools'>; label: string }[] = [
+  { id: 'overview', label: 'Tổng quan' },
+  { id: 'map', label: 'Bản đồ & địa điểm' },
+  { id: 'plan', label: 'Lịch trình' },
+  { id: 'dress', label: 'Dress code' },
+  { id: 'packing', label: 'Hành lý' },
+  { id: 'members', label: 'Thành viên' },
+  { id: 'fund', label: 'Quỹ nhóm' },
+  { id: 'fare', label: 'Theo dõi giá vé' },
+  { id: 'settings', label: 'Cài đặt' },
 ];
 
 function MascotCard({ className }: { className?: string | undefined }) {
@@ -224,8 +226,12 @@ export function AppShell({
             title={item.label}
             onClick={selectDestination}
           >
-            <UiIcon name={item.icon} />
-            <span>{item.label}</span>
+            {({ isActive }) => (
+              <>
+                <FigmaTripIcon section={item.id} active={isActive} />
+                <span>{item.label}</span>
+              </>
+            )}
           </NavLink>
         ) : (
           <NavigationButton
@@ -236,7 +242,7 @@ export function AppShell({
             title={`${item.label} · Chưa khả dụng`}
             onClick={() => selectTrip(item.id)}
           >
-            <UiIcon name={item.icon} />
+            <FigmaTripIcon section={item.id} />
             <span>{item.label}</span>
           </NavigationButton>
         ),
@@ -296,6 +302,29 @@ export function AppShell({
       {adminLayout ? <UiIcon name="menu" /> : 'Menu'}
     </button>
   );
+  // Auth frames in Web v2 have their own brand/hero and start at canvas origin (0,0).
+  // Keep the same main focus target and all route/session guards in App.
+  if (
+    [
+      paths.login,
+      paths.register,
+      paths.forgotPassword,
+      paths.verifyEmail,
+      paths.resetPassword,
+      '/admin/login',
+    ].includes(currentPath)
+  ) {
+    return (
+      <div className={styles.authShell}>
+        <a className={styles.skip} href="#main-content">
+          Đến nội dung chính
+        </a>
+        <main ref={contentScope} id="main-content" tabIndex={-1} data-layout="auth">
+          {children}
+        </main>
+      </div>
+    );
+  }
   return (
     <div
       className={`${styles.shell} ${dressRoute ? styles.dressRoute : ''} ${adminLayout ? styles.adminShell : tripLayout || listLayout ? styles.tripShell : styles.flowShell}`}
@@ -309,20 +338,28 @@ export function AppShell({
         </div>
       ) : (
         <>
-          <header className={styles.desktopHeader} data-node-id="135:483">
+          <header
+            className={styles.desktopHeader}
+            data-node-id={
+              guest
+                ? '930:6661'
+                : selectedHeader === 'schedule'
+                  ? '930:6790'
+                  : selectedHeader === 'trips'
+                    ? '930:6745'
+                    : '930:6700'
+            }
+          >
             <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
               <BrandWordmark />
             </Link>
             <nav aria-label="Điều hướng chính" className={styles.headerNav}>
-              <NavLink end to={paths.home}>
-                <UiIcon name="compass" size={18} />
+              <Link to={paths.home} aria-current={!guest && home ? 'page' : undefined}>
+                <FigmaTopIcon section="home" active={!guest && home} />
                 <span className={styles.navLabel}>Trang chủ</span>
-              </NavLink>
-              <Link
-                to={paths.trips}
-                aria-current={selectedHeader === 'trips' ? 'page' : undefined}
-              >
-                <UiIcon name="luggage" size={18} />
+              </Link>
+              <Link to={paths.trips} aria-current={selectedHeader === 'trips' ? 'page' : undefined}>
+                <FigmaTopIcon section="trips" active={selectedHeader === 'trips'} />
                 <span className={styles.navLabel}>Chuyến đi của tôi</span>
               </Link>
               {canReadTrip && snapshot?.trip ? (
@@ -330,12 +367,12 @@ export function AppShell({
                   aria-current={schedule ? 'page' : undefined}
                   to={paths.plan(snapshot.trip.id)}
                 >
-                  <UiIcon name="calendar" size={18} />
+                  <FigmaTopIcon section="schedule" active={schedule} />
                   <span className={styles.navLabel}>Lên lịch</span>
                 </Link>
               ) : (
                 <button disabled title="Chọn chuyến đi để mở lịch trình">
-                  <UiIcon name="calendar" size={18} />
+                  <FigmaTopIcon section="schedule" />
                   <span className={styles.navLabel}>Lên lịch</span>
                 </button>
               )}
@@ -420,7 +457,7 @@ export function AppShell({
           <aside
             ref={desktopSidebar}
             className={collapsed ? styles.collapsed : styles.sidebar}
-            data-node-id={collapsed ? '135:1042' : '135:484'}
+            data-node-id={collapsed ? '937:7692' : '930:6836'}
           >
             <div className={styles.sidebarHead}>
               {!collapsed && <p className={styles.sidebarSection}>Chuyến đi</p>}
@@ -430,7 +467,16 @@ export function AppShell({
                 aria-expanded={!collapsed}
                 onClick={() => setCollapsed((value) => !value)}
               >
-                <UiIcon name={collapsed ? 'chevronRight' : 'chevronLeft'} size={20} />
+                {collapsed ? (
+                  <>
+                    <img src={expandIcon} alt="" />
+                    <span className={styles.expandFallbackIcon}>
+                      <UiIcon name="chevronRight" size={18} />
+                    </span>
+                  </>
+                ) : (
+                  <UiIcon name="chevronLeft" size={20} />
+                )}
               </button>
             </div>
             {tripNavigation()}
@@ -441,9 +487,7 @@ export function AppShell({
           ref={contentScope}
           id="main-content"
           tabIndex={-1}
-          data-layout={
-            adminLayout ? 'admin' : tripLayout ? 'trip' : listLayout ? 'list' : 'flow'
-          }
+          data-layout={adminLayout ? 'admin' : tripLayout ? 'trip' : listLayout ? 'list' : 'flow'}
           className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout || fullBleed ? styles.listMain : ''}`}
         >
           {children}

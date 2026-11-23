@@ -169,6 +169,7 @@ export function createFixturePlanRepository(
                 publicDescription: null,
                 source: 'MANUAL',
                 planVersion: trip.planVersion,
+                referenceImageAvailable: false,
               },
               {
                 id: 'c0000000-0000-4000-8000-000000000002',
@@ -181,6 +182,7 @@ export function createFixturePlanRepository(
                 publicDescription: null,
                 source: 'MANUAL',
                 planVersion: trip.planVersion,
+                referenceImageAvailable: false,
               },
               {
                 id: 'c0000000-0000-4000-8000-000000000003',
@@ -193,6 +195,7 @@ export function createFixturePlanRepository(
                 publicDescription: 'Mang theo nón và đồ chống nắng.',
                 source: 'DSS',
                 planVersion: trip.planVersion,
+                referenceImageAvailable: false,
               },
             ]
           : [],

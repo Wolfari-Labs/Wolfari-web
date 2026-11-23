@@ -134,6 +134,44 @@ export interface Bank {
   name: string;
   short_name: string;
 }
+export interface BankTransfer {
+  id: string;
+  provider: 'SEPAY';
+  provider_transaction_id: string;
+  transfer_type: 'IN' | 'OUT';
+  amount: string;
+  content: string;
+  account_number_masked: string;
+  bank_gateway: string;
+  processing_status: 'MATCHED' | 'UNMATCHED' | 'NEEDS_REVIEW' | 'IGNORED' | 'RESOLVED';
+  contribution_id: string | null;
+  review_reason: string | null;
+  transaction_at: string | null;
+  received_at: string;
+  processed_at: string | null;
+  resolution: 'RETURNED_TO_SENDER' | 'HANDLED_IN_APP' | 'NOT_OURS' | null;
+  resolution_note: string | null;
+  resolved_by_user_id: string | null;
+  resolved_at: string | null;
+}
+export interface ClosureReadiness {
+  ready: boolean;
+  fund_status: 'OPEN' | 'CLOSING' | 'CLOSED';
+  current_balance: string;
+  blockers: {
+    kind:
+      | 'BALANCE_NOT_ZERO'
+      | 'CONTRIBUTIONS_OPEN'
+      | 'EXPENSES_OPEN'
+      | 'REFUNDS_OPEN'
+      | 'PAYMENTS_OPEN'
+      | 'PAYMENT_WEBHOOKS_OPEN'
+      | 'BANK_TRANSFERS_REVIEW'
+      | 'HOLDER_HANDOVER_OPEN';
+    count: number;
+  }[];
+  bank_transfers_needing_review: number;
+}
 export interface FundRuntime {
   paymentRecovery?: {
     load(actor: string, trip: string): string;
@@ -201,6 +239,8 @@ export interface FundRuntime {
   expenseReceipt?(expenseId: string, signal?: AbortSignal): Promise<Blob>;
   /** Newest-first Holder handovers of a Fund (at most 100). */
   handovers?(fundId: string, signal?: AbortSignal): Promise<HolderHandover[]>;
+  bankTransfers?(fundId: string, signal?: AbortSignal): Promise<BankTransfer[]>;
+  closureReadiness?(fundId: string, signal?: AbortSignal): Promise<ClosureReadiness>;
 }
 export interface FinanceHistory {
   id: string;

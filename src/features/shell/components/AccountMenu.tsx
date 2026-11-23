@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import { Avatar } from '../../../shared/components/Avatar';
 import { Icon } from '../../../shared/components/Icon';
+import chevron from '../../../shared/assets/figma/shell/a9913.svg';
 import styles from './AppShell.module.css';
 import ui from '../../../shared/components/Ui.module.css';
 
@@ -27,7 +28,7 @@ export function AccountMenu({ name }: { name: string }) {
           <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
         </Link>
         <DropdownMenu.Trigger className={styles.profileChevron} aria-label="Mở menu tài khoản">
-          <Icon name="chevron" size={16} />
+          <img src={chevron} alt="" aria-hidden="true" />
         </DropdownMenu.Trigger>
       </div>
       <DropdownMenu.Portal>

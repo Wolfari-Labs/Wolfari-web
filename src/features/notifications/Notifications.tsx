@@ -1,20 +1,11 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation } from 'react-router';
+import { Link } from 'react-router';
 import { useRuntimeServices } from '../../app/gateway-context';
-import { Drawer } from '../../shared/components/Drawer';
-import { Button } from '../../shared/components/Button';
-import { Icon } from '../../shared/components/Icon';
-import { ContentState } from '../../shared/components/ContentState';
+import { paths } from '../../app/route-paths';
+import bellIcon from '../../shared/assets/figma/new-surfaces/8dc2f.svg';
 import styles from './Notifications.module.css';
-const Inbox = lazy(() => import('./NotificationInbox'));
 export function Notifications({ actor }: { actor: string }) {
-  const repository = useRuntimeServices()?.notifications,
-    { pathname } = useLocation();
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  const repository = useRuntimeServices()?.notifications;
   const dot = useQuery({
     queryKey: ['notifications', actor, 'unread-indicator'],
     queryFn: ({ signal }) => repository!.list(true, null, signal),
@@ -24,24 +15,13 @@ export function Notifications({ actor }: { actor: string }) {
     retry: false,
   });
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
+      <Link
+        to={paths.notifications}
         className={styles.bell}
         aria-label={dot.data?.items.length ? 'Thông báo · Có tin chưa đọc' : 'Thông báo'}
-        onClick={() => setOpen(true)}
       >
-        <Icon name="bell" />
+        <img src={bellIcon} alt="" />
         {!!dot.data?.items.length && <span className={styles.dot} />}
-      </Button>
-      <Drawer open={open} label="Thông báo" side="right" onDismiss={() => setOpen(false)}>
-        {open && (
-          <Suspense fallback={<ContentState state="loading" />}>
-            <Inbox key={actor} actor={actor} onNavigate={() => setOpen(false)} />
-          </Suspense>
-        )}
-      </Drawer>
-    </>
+      </Link>
   );
 }

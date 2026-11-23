@@ -42,6 +42,11 @@ export function ClosurePanel({
     queryFn: ({ pageParam, signal }) => runtime.closures!(fund.id, trip.id, pageParam, signal),
     getNextPageParam: (p) => p.nextCursor ?? undefined,
   });
+  const readiness = useQuery({
+    queryKey: ['finance', actor, trip.id, 'closure-readiness', fund.id],
+    enabled: !!runtime.closureReadiness,
+    queryFn: ({ signal }) => runtime.closureReadiness!(fund.id, signal),
+  });
   const detail = useQuery({
     queryKey: ['finance', actor, trip.id, 'closure', selected],
     enabled: !!selected,
@@ -63,6 +68,8 @@ export function ClosurePanel({
         blocked ||
         list.isFetching ||
         list.isError ||
+        (kind === 'closure-create' &&
+          (!readiness.data?.ready || readiness.isFetching || readiness.isError)) ||
         extraBlocked ||
         (!!entry && (detail.isFetching || detail.isError))
       }
@@ -97,6 +104,57 @@ export function ClosurePanel({
         Finance {fund.status}. CLOSED chỉ đọc, không có mở lại. Backend kiểm tra số dư bằng 0 và các
         nghĩa vụ còn lại trước khi chốt.
       </p>
+      {runtime.closureReadiness ? (
+        <section className={styles.record} aria-label="Điều kiện đóng quỹ">
+          <h3>Điều kiện đóng quỹ</h3>
+          {readiness.isPending && <p role="status">Đang kiểm tra điều kiện…</p>}
+          {readiness.isError && (
+            <ContentState
+              state="error"
+              error={toDomainError(readiness.error)}
+              onRetry={() => void readiness.refetch()}
+            />
+          )}
+          {readiness.data && (
+            <>
+              <p>
+                {readiness.data.ready
+                  ? 'Đã đủ điều kiện bắt đầu đóng quỹ.'
+                  : readiness.data.fund_status !== 'OPEN'
+                    ? `Quỹ hiện ở trạng thái ${readiness.data.fund_status}.`
+                    : 'Cần xử lý các mục sau trước khi bắt đầu đóng quỹ.'}
+              </p>
+              <p>Số dư hiện tại: {readiness.data.current_balance} VND</p>
+              {!!readiness.data.blockers.length && (
+                <ul>
+                  {readiness.data.blockers.map((blocker) => (
+                    <li key={blocker.kind}>
+                      {blocker.kind === 'BALANCE_NOT_ZERO'
+                        ? 'Số dư quỹ chưa bằng 0'
+                        : blocker.kind === 'CONTRIBUTIONS_OPEN'
+                          ? 'Khoản đóng góp còn mở'
+                          : blocker.kind === 'EXPENSES_OPEN'
+                            ? 'Khoản chi còn mở'
+                            : blocker.kind === 'REFUNDS_OPEN'
+                              ? 'Khoản hoàn tiền còn mở'
+                              : blocker.kind === 'PAYMENTS_OPEN'
+                                ? 'Thanh toán còn chờ xử lý'
+                                : blocker.kind === 'PAYMENT_WEBHOOKS_OPEN'
+                                  ? 'Webhook thanh toán còn cần đối soát'
+                                  : blocker.kind === 'BANK_TRANSFERS_REVIEW'
+                                    ? 'Chuyển khoản ngân hàng còn cần xem xét'
+                                    : 'Còn quy trình bàn giao Fund Holder'}
+                      : {blocker.count}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </section>
+      ) : (
+        <p>Danh sách điều kiện đóng quỹ chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
+      )}
       {owner && fund.status === 'OPEN' && action('closure-create', 'Bắt đầu chốt quỹ')}
       {list.isPending && <p role="status">Đang tải đợt chốt…</p>}
       {list.isError && (

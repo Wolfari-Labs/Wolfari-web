@@ -7,6 +7,7 @@ import { ContentState } from '../../../shared/components/ContentState';
 import { activityTime, activitiesForDay, localDate, planDays } from '../model/plan-presentation';
 import { paths } from '../../../app/route-paths';
 import styles from './PlanSummary.module.css';
+import moreAsset from '../../../shared/assets/figma/trips-plan/more.svg';
 export function PlanSummary({
   trip,
   result,
@@ -137,6 +138,7 @@ export function PlanSummary({
                         alt={a.presentation.cover.alt}
                       />
                     )}
+                    {overview && <img className={styles.more} src={moreAsset} alt="" />}
                   </li>
                 ))}
               </ol>
@@ -144,7 +146,7 @@ export function PlanSummary({
           )}
         </>
       )}
-      {!compact && <Link to={paths.plan(trip.id)}>Xem chi tiết lịch trình →</Link>}
+      {!compact && <Link to={paths.plan(trip.id)} aria-label="Xem chi tiết lịch trình">{overview ? 'Xem tất cả' : 'Xem chi tiết lịch trình →'}</Link>}
     </div>
   );
 }

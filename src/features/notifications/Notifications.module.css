@@ -1,5 +1,7 @@
 /* Figma 930:6780 icon-btn/bell: 44px white disc, ink bell, coral unread dot. */
 .bell.bell {
+  display: grid;
+  place-items: center;
   position: relative;
   width: 44px;
   height: 44px;

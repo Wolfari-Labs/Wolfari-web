@@ -43,6 +43,7 @@ function gatewayTrip(overrides: Record<string, unknown> = {}) {
     plan_version: source.planVersion,
     membership_revision: source.membershipRevision,
     export_revision: source.exportRevision,
+    cover_image_available: false,
     current_membership: {
       id: source.currentMembership.id,
       trip_id: source.id,
@@ -61,6 +62,7 @@ describe('Trip repository boundary', () => {
     { id: undefined },
     { timezone: 'invalid/timezone' },
     { plan_version: '1' },
+    { cover_image_available: undefined },
     { permissions: { can_read: 'false', can_update: true } },
     { current_membership: { ...gatewayTrip().current_membership, trip_id: 'another' } },
   ])('rejects malformed Trip without coercing permission or scope %#', async (override) => {
@@ -94,6 +96,7 @@ describe('Trip repository boundary', () => {
             plan_version: 1,
             membership_revision: 1,
             export_revision: 2,
+            cover_image_available: false,
             current_membership: {
               id: source.currentMembership.id,
               trip_id: source.id,
@@ -285,7 +288,7 @@ describe('Trip repository boundary', () => {
         id: previewTripId,
         description: 'Mô tả nội bộ',
         publicDescription: 'Mô tả công khai',
-        presentation: { memberCount: null, cover: null },
+        presentation: { memberCount: null, coverAvailable: false, cover: null },
       },
     });
     expect(read).toHaveBeenCalledExactlyOnceWith(`/api/v1/trips/${previewTripId}`, {
@@ -655,9 +658,16 @@ describe('Trip List fixture projection', () => {
   });
 
   it('preserves unknown enrichment instead of fabricating a cover or member count', async () => {
-    const record = { ...firstRecord(), presentation: { memberCount: null, cover: null } };
+    const record = {
+      ...firstRecord(),
+      presentation: { memberCount: null, coverAvailable: false, cover: null },
+    };
     const result = await items(createFixtureTripRepository({ records: [record] }));
-    expect(result[0]?.presentation).toEqual({ memberCount: null, cover: null });
+    expect(result[0]?.presentation).toEqual({
+      memberCount: null,
+      coverAvailable: false,
+      cover: null,
+    });
   });
 
   it.each([

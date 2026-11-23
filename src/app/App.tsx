@@ -62,6 +62,7 @@ export function App({
   // Keep opaque route params untouched; this canonical path is only for known route policy/chrome.
   const policyPath = pathname.replace(/\/+$/, '').toLowerCase() || '/';
   const adminLayout = handle?.layout === 'admin' || policyPath === paths.admin;
+  const publicShareRoute = policyPath.startsWith('/share/');
   const listLayout = handle?.layout === 'trip-list' || policyPath === paths.trips;
   const ownContentTitle = listLayout || handle?.contentTitle;
   const requiresViewer =
@@ -92,16 +93,17 @@ export function App({
     requiresViewer &&
     (sessionStatus === 'unknown' || sessionStatus === 'anonymous' || sessionStatus === 'expired');
   const standaloneAuthRoute =
-    !!sessionManager &&
+    publicShareRoute || (!!sessionManager &&
     [
       paths.login,
+      paths.adminLogin,
       paths.register,
       paths.forgotPassword,
       paths.verifyEmail,
       paths.resetPassword,
       paths.invitations,
       '/invitations/local',
-    ].includes(policyPath);
+    ].includes(policyPath));
   // This authenticated screen owns its Trip read guard. Keep it mounted after a
   // successful leave: the actor can still poll their operation even though Trip
   // reads now return 404. No Trip data is exposed by bypassing shell chrome.
@@ -110,7 +112,7 @@ export function App({
   const query = useShell(tripId ?? null, scenario, shellQueryEnabled);
   const result = query.data;
   const snapshot =
-    sessionManager && sessionStatus !== 'authenticated'
+    publicShareRoute || (sessionManager && sessionStatus !== 'authenticated')
       ? null
       : result?.status === 'ready'
         ? result.data
@@ -131,7 +133,7 @@ export function App({
       policyPath !== paths.login &&
       policyPath !== paths.register
     ) {
-      navigate(`${paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname + search))}`, {
+      navigate(`${adminLayout ? paths.adminLogin : paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname + search))}`, {
         replace: true,
       });
       return;
@@ -143,14 +145,14 @@ export function App({
       policyPath !== paths.login &&
       policyPath !== paths.register
     ) {
-      navigate(`${paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname + search))}`, {
+      navigate(`${adminLayout ? paths.adminLogin : paths.login}?returnTo=${encodeURIComponent(safeReturnTo(pathname + search))}`, {
         replace: true,
       });
     }
-  }, [navigate, pathname, search, policyPath, requiresViewer, result, sessionStatus]);
+  }, [navigate, pathname, search, policyPath, requiresViewer, result, sessionStatus, adminLayout]);
   const title = adminLayout
     ? adminSections.find((item) => item.id === adminSection)?.label
-    : tripId
+    : handle?.title ?? (tripId
       ? {
           overview: 'Tổng quan chuyến đi',
           plan: 'Lịch trình',
@@ -163,7 +165,7 @@ export function App({
           settings: 'Cài đặt',
           tools: 'Tiện ích',
         }[effectiveSection]
-      : (handle?.title ?? 'Không gian làm việc');
+      : 'Không gian làm việc');
   useEffect(() => {
     document.title = title ? `${title} · Wolfari` : 'Wolfari';
   }, [title]);
@@ -197,6 +199,7 @@ export function App({
   const routeContext: RouteContext = {
     viewer: snapshot?.viewer ?? null,
     previewEnabled: !!previewTripPath,
+    adminSection,
     ...(previewTripPath && demoAccess
       ? {
           demoLogin: {

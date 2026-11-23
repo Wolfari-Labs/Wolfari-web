@@ -75,6 +75,18 @@ export interface TripListRequest {
   readonly limit?: number;
 }
 
+export type TripManagementAction = 'ARCHIVE' | 'REOPEN' | 'DELETE' | 'TRANSFER';
+export interface PersonalReminder {
+  readonly id: string;
+  readonly trip_id: string;
+  readonly source_type: 'ACTIVITY' | 'PACKING';
+  readonly source_id: string;
+  readonly remind_at: string;
+  readonly source_at: string | null;
+  readonly status: 'PENDING' | 'PROCESSING' | 'SENT' | 'CANCELLED' | 'FAILED';
+  readonly created_at: string;
+}
+
 // The adapter is session-scoped; the caller cannot select another viewer through a user ID.
 export interface TripRepository {
   getPlanPolicy?(request: { tripId: string; signal: AbortSignal }): Promise<ReadResult<PlanPolicySnapshot>>;
@@ -101,4 +113,43 @@ export interface TripRepository {
     readonly idempotencyKey: string;
     readonly signal: AbortSignal;
   }): Promise<UpdatePlanPolicyResult>;
+  uploadCover?(request: {
+    readonly tripId: string;
+    readonly file: File;
+    readonly signal: AbortSignal;
+  }): Promise<TripDetailViewModel>;
+  removeCover?(request: {
+    readonly tripId: string;
+    readonly signal: AbortSignal;
+  }): Promise<TripDetailViewModel>;
+  getCover?(request: { readonly tripId: string; readonly signal: AbortSignal }): Promise<Blob>;
+  manageTrip?(request: {
+    readonly tripId: string;
+    readonly action: TripManagementAction;
+    readonly reason: string;
+    readonly newOwnerMemberId?: string;
+    readonly expectedPlanVersion: number;
+    readonly expectedMembershipRevision: number;
+    readonly expectedExportRevision: number;
+    readonly idempotencyKey: string;
+    readonly signal: AbortSignal;
+  }): Promise<{ readonly action: TripManagementAction; readonly planVersion: number }>;
+  listReminders?(request: {
+    readonly tripId: string;
+    readonly signal: AbortSignal;
+  }): Promise<readonly PersonalReminder[]>;
+  createReminder?(request: {
+    readonly tripId: string;
+    readonly sourceType: PersonalReminder['source_type'];
+    readonly sourceId: string;
+    readonly remindAt: string;
+    readonly idempotencyKey: string;
+    readonly signal: AbortSignal;
+  }): Promise<PersonalReminder>;
+  cancelReminder?(request: {
+    readonly tripId: string;
+    readonly reminderId: string;
+    readonly signal: AbortSignal;
+  }): Promise<PersonalReminder>;
+  planPdf?(request: { readonly tripId: string; readonly signal: AbortSignal }): Promise<Blob>;
 }

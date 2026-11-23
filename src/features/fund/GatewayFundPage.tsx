@@ -19,6 +19,7 @@ import { RefundPanel } from './components/RefundPanel';
 import { BankPicker } from './components/BankPicker';
 import { PaymentPanel } from './components/PaymentPanel';
 import { ClosurePanel } from './components/ClosurePanel';
+import { BankTransferPanel } from './components/BankTransferPanel';
 import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
 import { HandoverPanel } from './components/HandoverPanel';
 import { isFinanceCommand } from '../../shared/types/operations';
@@ -1417,6 +1418,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'bank-transfers' && fund && runtime.bankTransfers ? (
+              <BankTransferPanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={baseBlocked || fundQuery.isError}
+              />
             ) : financeSection === 'audit' && fund && runtime.history ? (
               <FinanceHistoryPanel
                 runtime={runtime}
@@ -1539,11 +1547,15 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                       ? 'Hoàn tiền'
                       : financeSection === 'handover'
                         ? 'Bàn giao Fund Holder'
+                        : financeSection === 'bank-transfers'
+                          ? 'Chuyển khoản ngân hàng'
                         : 'Đóng Finance'
                 }
               >
                 {financeSection === 'handover'
                   ? 'Bàn giao người giữ quỹ chưa được hỗ trợ.'
+                  : financeSection === 'bank-transfers'
+                    ? 'Danh sách chuyển khoản ngân hàng chưa khả dụng trong chế độ dữ liệu hiện tại.'
                   : 'Chức năng này đang được tích hợp trên Web, hiện chỉ có thể xem tổng quan giao dịch.'}
               </FinanceUnavailable>
             )}

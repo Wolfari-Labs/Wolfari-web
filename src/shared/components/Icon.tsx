@@ -79,6 +79,7 @@ const icons = {
   down: ArrowDown,
   edit: Pencil,
   delete: Trash2,
+  trash: Trash2,
   refresh: RefreshCw,
   info: Info,
   logout: LogOut,

@@ -308,7 +308,7 @@ describe('Trip List route slice', () => {
     const source = fixtureTripCatalog[0];
     if (!source) throw new Error('Expected canonical fixture');
     const repository = createFixtureTripRepository({
-      records: [{ ...source, presentation: { memberCount: null, cover: null } }],
+      records: [{ ...source, presentation: { memberCount: null, coverAvailable: false, cover: null } }],
     });
     mount({ tripRepository: repository });
     await loaded();

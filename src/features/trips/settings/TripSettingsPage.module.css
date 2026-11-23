@@ -1,6 +1,4 @@
-/* Web v2 W14 Cài đặt (Figma 943:16283) and W14.1 Chỉnh sửa thông tin (943:16565): a full-width
-   information card (cover beside the rows) and a slim members & notifications strip below it,
-   #f7f9ff rows with white icon chips. Empty optional fields are not rendered. */
+/* Figma W14/W14.1: information card at left; reminders and management stacked at right. */
 .page {
   composes: page from '../../../shared/styles/WorkspacePage.module.css';
   width: 100%;
@@ -36,13 +34,13 @@
 
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 540fr) minmax(0, 544fr);
+  gap: 20px;
   margin-top: 20px;
   align-items: start;
 }
 
-/* View: cover on the left, information rows on the right (stacked below 1101px). */
+/* Cover sits above the source's five information rows. */
 .viewBody {
   display: grid;
   gap: 12px;
@@ -51,17 +49,16 @@
 
 @media (min-width: 1101px) {
   .viewBody {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: 16px;
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .viewBody .coverRow,
   .viewBody .coverRow picture,
   .viewBody .coverRow img {
-    height: 100%;
-    min-height: 200px;
+    height: 150px;
+    min-height: 150px;
   }
+  .columns > .card { min-height: 720px; }
 }
 
 .card {
@@ -115,7 +112,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: 15px;
   background: var(--v2-gradient-blue);
   color: var(--v2-white);
   box-shadow:
@@ -137,7 +134,9 @@
 .editButton {
   padding: 8px 14px 8px 12px;
   background: var(--v2-sky);
-  color: #2f63c4;
+  color: var(--v2-blue);
+  min-height: 32px;
+  border: 0;
   font-size: 12px;
   line-height: 16px;
   box-shadow: none;
@@ -147,7 +146,7 @@
 .coverField {
   position: relative;
   overflow: hidden;
-  border-radius: var(--v2-radius-tile);
+  border-radius: 24px;
 }
 
 .coverField .fieldLabel {
@@ -348,23 +347,26 @@
   margin-top: 4px;
 }
 
-/* Members & notifications strip (943:16283 "Thành viên & nhắc nhở"), now a slim row. */
+/* The source right column remains visible even when the service is unavailable. */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
 .management {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 10px 20px;
-  padding: 14px 20px;
+  gap: 10px;
+  padding: 18px 20px;
 }
 
 .card.management h2 {
-  font-size: 15px;
-  line-height: 20px;
+  font-size: 18px;
+  line-height: 25px;
 }
 
 .managementRows {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   min-width: 0;
 }
@@ -375,7 +377,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 4px 12px;
-  min-height: 48px;
+  min-height: 34px;
   padding: 6px 14px 6px 12px;
   border-radius: var(--v2-radius-row);
   background: #f4f1ff;
@@ -448,11 +450,86 @@
 }
 
 @media (max-width: 1100px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .management,
   .managementRows {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+.reminderCaption,
+.capabilityNote {
+  color: var(--v2-muted);
+  font: 700 12px/16px var(--v2-font);
+}
+.reminderRow,
+.managementAction {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 10px 6px 12px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--v2-row);
+  text-align: left;
+}
+.reminderRow > span,
+.managementAction > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.reminderRow strong,
+.managementAction strong {
+  display: block;
+  color: var(--v2-ink);
+  font: 800 13px/18px var(--v2-font);
+}
+.reminderRow small,
+.managementAction small {
+  display: block;
+  color: var(--v2-muted);
+  font: 700 11px/15px var(--v2-font);
+}
+.unavailableSwitch {
+  width: 50px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--v2-track);
+}
+.unavailableSwitch span {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 5px rgb(31 42 68 / 12%);
+}
+.tripManagement {
+  gap: 10px;
+  padding: 18px 20px;
+}
+.iconBadge[data-tone='coral'] {
+  background: var(--v2-gradient-coral);
+}
+.financeNotice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: var(--v2-butter);
+  color: var(--v2-warning-text);
+  font: 700 12px/18px var(--v2-font);
+}
+.financeNotice svg { flex-shrink: 0; }
+.managementAction { opacity: 1; cursor: not-allowed; }
+.managementAction[data-destructive] { background: #fff5f2; }
+.managementAction[data-destructive] strong { color: #e84d35; }
 
 @media (max-width: 768px) {
   .page {

@@ -37,7 +37,7 @@ export function TravelTools({
   const [search, setSearch] = useState<{ query: string; nonce: number } | null>(null);
   const [from, setFrom] = useState(''),
     [to, setTo] = useState('');
-  const [mode, setMode] = useState<'WALKING' | 'DRIVING' | 'CYCLING'>('WALKING');
+  const [mode, setMode] = useState<'WALKING' | 'DRIVING'>('WALKING');
   const [request, setRequest] = useState<{
     from: string;
     to: string;
@@ -172,7 +172,6 @@ export function TravelTools({
           >
             <option value="WALKING">Đi bộ</option>
             <option value="DRIVING">Ô tô</option>
-            <option value="CYCLING">Xe đạp</option>
           </Select>
           <Button
             disabled={!service || !from || !to || from === to || routeResult.isFetching}

@@ -13,6 +13,7 @@ export type FinanceSection =
   | 'expenses'
   | 'refunds'
   | 'receiving'
+  | 'bank-transfers'
   | 'handover'
   | 'closure';
 
@@ -25,6 +26,7 @@ const sections: readonly { id: FinanceSection; label: string; icon: IconName }[]
   { id: 'notes', label: 'Ngoài quỹ', icon: 'fund' },
   { id: 'refunds', label: 'Hoàn tiền', icon: 'refresh' },
   { id: 'receiving', label: 'Thông tin nhận tiền', icon: 'fund' },
+  { id: 'bank-transfers', label: 'Chuyển khoản ngân hàng', icon: 'refresh' },
   { id: 'handover', label: 'Bàn giao Fund Holder', icon: 'members' },
   { id: 'closure', label: 'Đóng Finance', icon: 'close' },
   { id: 'audit', label: 'Lịch sử thao tác', icon: 'refresh' },
@@ -78,6 +80,11 @@ const sectionMeta: Record<
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / THÔNG TIN NHẬN TIỀN',
     heading: 'Thông tin nhận tiền',
     description: 'Quản lý đích nhận và xác nhận trách nhiệm của Fund Holder.',
+  },
+  'bank-transfers': {
+    eyebrow: 'QUỸ NHÓM / ĐỐI SOÁT NGÂN HÀNG',
+    heading: 'Chuyển khoản ngân hàng',
+    description: 'Xem giao dịch do ngân hàng ghi nhận và lưu kết quả xử lý những khoản cần xem xét.',
   },
   handover: {
     eyebrow: 'QUỸ NHÓM / CÀI ĐẶT / BÀN GIAO FUND HOLDER',

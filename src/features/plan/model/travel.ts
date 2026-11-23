@@ -70,7 +70,7 @@ export interface TravelRepository {
   route(
     tripId: string,
     coordinates: Coordinate[],
-    mode: 'WALKING' | 'DRIVING' | 'CYCLING',
+    mode: 'WALKING' | 'DRIVING',
     signal: AbortSignal,
   ): Promise<ProviderResult<RouteResult>>;
   recommend(

@@ -157,7 +157,14 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
     capabilities: Object.fromEntries(
       preparationCapabilities.map((key) => [
         key,
-        data.capabilities != null &&
+        ![
+          'route_order_request',
+          'route_order_apply',
+          'packing_dress_request',
+          'packing_dress_apply',
+          'schedule_validation',
+        ].includes(key) &&
+          data.capabilities != null &&
           record(data.capabilities)[
             ['packing_items_write', 'packing_assignment', 'packing_completion'].includes(key)
               ? 'packing_write'
@@ -207,6 +214,7 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
         publicDescription: text(dressCode.public_description),
         source: source(dressCode.source),
         planVersion: number(dressCode.plan_version),
+        referenceImageAvailable: bool(dressCode.reference_image_available),
       };
     }),
     packingItems: packingItems.map((value) => {
@@ -264,6 +272,31 @@ export function createGatewayPlanRepository(
   };
   if (!client) return repository;
 
+  repository.uploadDressCodeImage = async ({ tripId, file, signal }) => {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    const result = await client.write(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/dress-code-images`,
+      { method: 'POST', body: form, signal, includeCredentials: true },
+    );
+    const data = record(result.data);
+    const imageId = uuid(data.image_id);
+    if (data.mime_type !== 'image/jpeg' || !Number.isInteger(data.size_bytes) ||
+        Number(data.size_bytes) < 1 || Number(data.size_bytes) > 2 * 1024 * 1024)
+      invalid();
+    return imageId;
+  };
+  repository.dressCodeImage = async ({ tripId, dressCodeId, signal }) => {
+    const result = await client.read(
+      `/api/v1/trips/${encodeURIComponent(tripId)}/dress-codes/${encodeURIComponent(dressCodeId)}/reference-image`,
+      { responseType: 'bytes', signal, includeCredentials: true },
+    );
+    if (!(result.data instanceof ArrayBuffer) || !result.data.byteLength ||
+        result.contentType?.split(';')[0]?.trim().toLowerCase() !== 'image/jpeg')
+      invalid();
+    return new Blob([result.data], { type: 'image/jpeg' });
+  };
+
   repository.mutatePreparation = async ({
     tripId,
     expectedPlanVersion,
@@ -285,7 +318,7 @@ export function createGatewayPlanRepository(
         error: { code: 'VERSION_CONFLICT', correlationId: null, retryable: false },
       };
     const collection = intent.operation.startsWith('location-')
-      ? 'locations'
+      ? 'selected-locations'
       : intent.operation.startsWith('dress-')
         ? 'dress-codes'
         : apply

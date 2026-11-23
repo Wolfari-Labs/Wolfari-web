@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { paths } from '../../../app/route-paths';
 import { Button } from '../../../shared/components/Button';
 import { Input } from '../../../shared/components/Input';
@@ -32,6 +32,7 @@ import { packingDateToIso, packingFormFromItem } from '../../packing/packing';
 import { validCalendarDate } from '../../../shared/lib/calendar';
 import { planDays } from '../model/plan-presentation';
 import { DressSuggestions } from '../../dress-code/DressSuggestions';
+import { DressCodeReferenceImage } from '../../dress-code/DressCodeReferenceImage';
 import styles from './PreparationActions.module.css';
 
 export interface PreparationProps {
@@ -120,6 +121,7 @@ function initialFields(
       label: v?.label ?? '',
       description: v?.description ?? '',
       publicDescription: v?.publicDescription ?? '',
+      referenceImageId: '',
     };
   }
   const v = item as PackingItemViewModel | undefined;
@@ -140,6 +142,8 @@ export function PreparationActions({
 }: PreparationProps & { module: Module; item?: Item; candidate?: LocationWrite }) {
   const { trip, plan } = props;
   const commands = usePreparationCommands(props);
+  const repository = usePlanRepository();
+  const queryClient = useQueryClient();
   const capability =
     module === 'location'
       ? 'locations_write'
@@ -148,6 +152,12 @@ export function PreparationActions({
         : 'packing_items_write';
   const enabled =
     activePlan(trip) && plan.permissions.canEdit && plan.capabilities?.[capability] === true;
+  const imageEnabled =
+    module === 'dress' &&
+    activePlan(trip) &&
+    plan.permissions.canEdit &&
+    plan.capabilities?.dress_code_images_write === true &&
+    !!repository.uploadDressCodeImage;
   const days = module === 'dress' ? planDays(trip.startAt, trip.endAt, trip.timezone) : [];
   const [draft, setDraft] = useState<{
     fields: Record<string, string>;
@@ -156,6 +166,7 @@ export function PreparationActions({
   } | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
+  const [imageBusy, setImageBusy] = useState(false);
   const affected =
     item && module === 'location'
       ? plan.activities.filter((a) => a.selectedLocationId === item.id)
@@ -171,6 +182,27 @@ export function PreparationActions({
   };
   const update = (key: string, value: string) =>
     setDraft((d) => (d ? { ...d, fields: { ...d.fields, [key]: value } } : d));
+  const uploadDressCodeImage = async (file?: File) => {
+    if (!file || !draft || !imageEnabled || imageBusy) return;
+    if (!['image/jpeg', 'image/png'].includes(file.type) || file.size > 2 * 1024 * 1024) {
+      setError('Ảnh tham khảo phải là JPEG hoặc PNG, tối đa 2 MiB.');
+      return;
+    }
+    setImageBusy(true);
+    setError('');
+    try {
+      const imageId = await repository.uploadDressCodeImage!({
+        tripId: trip.id,
+        file,
+        signal: new AbortController().signal,
+      });
+      update('referenceImageId', imageId);
+    } catch {
+      setError('Chưa tải được ảnh tham khảo. Nội dung Dress code chưa được thay đổi.');
+    } finally {
+      setImageBusy(false);
+    }
+  };
   const save = async () => {
     if (!draft || !enabled || commands.locked) return;
     if (draft.version !== plan.planVersion) {
@@ -221,6 +253,12 @@ export function PreparationActions({
         label: f.label?.trim(),
         description: f.description?.trim() || null,
         publicDescription: f.publicDescription?.trim() || null,
+        ...(f.referenceImageId === '__REMOVE__'
+          ? { referenceImageId: null }
+          : f.referenceImageId &&
+              /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(f.referenceImageId)
+            ? { referenceImageId: f.referenceImageId }
+            : {}),
       };
     } else {
       if (f.dueDate && !validCalendarDate(f.dueDate)) {
@@ -255,7 +293,13 @@ export function PreparationActions({
       );
       return;
     }
-    if (await commands.submit(intent)) setDraft(null);
+    if (await commands.submit(intent)) {
+      if (module === 'dress' && item)
+        await queryClient.invalidateQueries({
+          queryKey: ['plan', trip.id, 'dress-code-image', item.id],
+        });
+      setDraft(null);
+    }
   };
   if (!enabled) return null;
   return (
@@ -421,6 +465,46 @@ export function PreparationActions({
                     value={draft.fields.publicDescription}
                     onChange={(e) => update('publicDescription', e.target.value)}
                   />
+                  {item && (item as DressCodeViewModel).referenceImageAvailable &&
+                    draft.fields.referenceImageId !== '__REMOVE__' && (
+                      <DressCodeReferenceImage
+                        tripId={trip.id}
+                        dressCodeId={item.id}
+                        available
+                      />
+                    )}
+                  {imageEnabled && (
+                    <section className={styles.form} aria-label="Ảnh tham khảo dress code">
+                      <label>
+                        Ảnh tham khảo (JPEG/PNG, tối đa 2 MiB)
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png"
+                          disabled={imageBusy || commands.pending}
+                          onChange={(event) => {
+                            void uploadDressCodeImage(event.currentTarget.files?.[0]);
+                            event.currentTarget.value = '';
+                          }}
+                        />
+                      </label>
+                      {draft.fields.referenceImageId &&
+                        draft.fields.referenceImageId !== '__REMOVE__' && (
+                          <p role="status">Ảnh đã tải lên, sẽ được gắn khi lưu Dress code.</p>
+                        )}
+                      {((item as DressCodeViewModel | undefined)?.referenceImageAvailable ||
+                        (draft.fields.referenceImageId &&
+                          draft.fields.referenceImageId !== '__REMOVE__')) &&
+                        draft.fields.referenceImageId !== '__REMOVE__' && (
+                          <Button
+                            variant="outline"
+                            disabled={imageBusy || commands.pending}
+                            onClick={() => update('referenceImageId', '__REMOVE__')}
+                          >
+                            Gỡ ảnh tham khảo
+                          </Button>
+                        )}
+                    </section>
+                  )}
                 </>
               )}
               {module === 'packing' && (

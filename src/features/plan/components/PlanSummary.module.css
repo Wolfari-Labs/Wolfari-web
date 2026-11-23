@@ -183,8 +183,8 @@
   padding: 10px 14px 10px 10px;
   gap: 12px;
   border: 0;
-  border-radius: var(--v2-radius-tile);
-  background: var(--v2-dashed-surface);
+  border-radius: 26px;
+  background: #f6f8ff;
 }
 .summary[data-overview] .activityLink {
   position: absolute;
@@ -239,6 +239,12 @@
 .summary[data-overview] .activityCopy small {
   color: var(--v2-sub);
   font: 700 13px/18px var(--v2-font);
+}
+.summary[data-overview] .more {
+  order: 4;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
 }
 /* "Xem chi tiết" sits in the card header row, opposite the panel title. */
 .summary[data-overview] > a {

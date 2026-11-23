@@ -2,7 +2,8 @@
    Layered on the Ui.module.css toast primitives (positioning, swipe and motion stay there). */
 .toast.toast {
   gap: 12px;
-  padding: 6px 8px 6px 10px;
+  position: relative;
+  padding: 10px 22px 10px 10px;
   border: 0;
   border-radius: var(--v2-radius-pill);
   background: var(--v2-white);
@@ -11,7 +12,7 @@
   font-family: var(--v2-font);
   font-size: 15px;
   font-weight: 800;
-  line-height: 20px;
+  line-height: normal;
 }
 .badge {
   display: grid;
@@ -28,8 +29,17 @@
   overflow-wrap: anywhere;
 }
 .close.close {
+  position: absolute;
+  right: -10px;
+  top: -12px;
+  opacity: 0;
   border-radius: var(--v2-radius-pill);
   color: var(--v2-sub);
+}
+.toast:hover .close.close,
+.close.close:focus-visible {
+  opacity: 1;
+  background: white;
 }
 .close.close:hover {
   background: var(--v2-track);

@@ -4,7 +4,10 @@ import type { TripDetailViewModel } from '../model/trip-detail';
 import { tripDateLabel } from '../model/trip-list-query';
 import { paths } from '../../../app/route-paths';
 import { Icon } from '../../../shared/components/Icon';
+import editAsset from '../../../shared/assets/figma/trips-plan/edit.svg';
+import shareAsset from '../../../shared/assets/figma/trips-plan/share.svg';
 import styles from './OverviewHero.module.css';
+import { useTripCoverImage } from '../hooks/use-trip-cover-image';
 
 const lifecycleLabels = {
   UPCOMING: 'Sắp tới',
@@ -27,16 +30,17 @@ export function OverviewHero({
   dayLabel?: string | undefined;
 }) {
   const canEdit = trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED';
+  const cover = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
   return (
     <section
       className={styles.hero}
       data-region="trip-hero"
       data-variant="photo"
-      data-cover={trip.presentation.cover ? 'photo' : 'gradient'}
+      data-cover={cover.src ? 'photo' : 'gradient'}
       aria-label="Thông tin chuyến đi"
       style={
-        trip.presentation.cover
-          ? ({ '--trip-cover': `url("${trip.presentation.cover.src}")` } as CSSProperties)
+        cover.src
+          ? ({ '--trip-cover': `url("${cover.src}")` } as CSSProperties)
           : undefined
       }
     >
@@ -54,20 +58,16 @@ export function OverviewHero({
             {lifecycleLabels[trip.lifecycle]}
           </span>
           <span className={styles.dates}>{tripDateLabel(trip)}</span>
-          <span className={styles.dot} aria-hidden="true">
-            ·
-          </span>
-          <Link className={styles.members} to={paths.members(trip.id)}>
-            {trip.presentation.memberCount === null
-              ? 'Thành viên'
-              : `${trip.presentation.memberCount} thành viên`}
-          </Link>
         </p>
       </div>
       <div className={styles.actions}>
+        <Link className={styles.members} to={paths.members(trip.id)} title="Ảnh thành viên chưa khả dụng">
+          <Icon name="members" size={18} />
+          {trip.presentation.memberCount === null ? 'Thành viên' : `${trip.presentation.memberCount} thành viên`}
+        </Link>
         {canEdit ? (
           <Link className={styles.edit} to={paths.settings(trip.id)}>
-            <Icon name="edit" size={18} />
+            <img src={editAsset} alt="" />
             Chỉnh sửa
           </Link>
         ) : (
@@ -77,10 +77,14 @@ export function OverviewHero({
             disabled
             title="Bạn không có quyền chỉnh sửa chuyến đi"
           >
-            <Icon name="edit" size={18} />
+            <img src={editAsset} alt="" />
             Chỉnh sửa
           </button>
         )}
+        <Link className={styles.share} to={`/trips/${encodeURIComponent(trip.id)}/share`}>
+          <img src={shareAsset} alt="" />
+          Chia sẻ
+        </Link>
       </div>
     </section>
   );

@@ -1,188 +1,163 @@
-.bellPlaceholder {
-  display: inline-block;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-}
+/* Figma Web v2 930:6659. One responsive shell; historical visual overrides are removed. */
 .shell {
+  --desktop-header-height: 96px;
   min-height: 100dvh;
-  --desktop-header-height: var(--header-height);
+  padding-top: 20px;
+  color: var(--v2-ink);
 }
 .tripShell {
   height: 100dvh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
-.flowShell {
+.flowShell,
+.authShell {
   min-height: 100dvh;
 }
+.authShell main {
+  min-width: 0;
+}
 .skip {
-  min-height: var(--target-min);
-  min-width: var(--target-min);
   position: fixed;
+  z-index: 150;
   top: 8px;
   left: 8px;
-  z-index: 10;
-  transform: translateY(-180%);
-  padding: 12px;
+  min-height: 44px;
+  padding: 12px 18px;
+  border-radius: 999px;
   background: white;
+  color: var(--v2-ink);
+  transform: translateY(-180%);
 }
 .skip:focus {
   transform: none;
 }
 .desktopHeader {
   position: relative;
+  z-index: 2;
   flex-shrink: 0;
-  height: var(--desktop-header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px 0 49px;
-  background: white;
-  border-bottom: 1px solid #dff0f7;
-  box-shadow: var(--shadow-header);
   gap: 24px;
+  height: 76px;
+  margin-inline: 24px;
+  padding: 0 14px 0 24px;
+  border-radius: 30px;
+  background: white;
+  box-shadow: var(--v2-shadow-nav), var(--v2-inset);
 }
 .logo {
-  min-height: var(--target-min);
   display: flex;
   align-items: center;
-  width: 155px;
-  height: 51.667px;
   flex-shrink: 0;
-}
-.logo img {
-  width: 155px;
-  height: 51.667px;
-  object-fit: contain;
+  min-height: 44px;
 }
 .headerNav {
   display: flex;
   align-items: center;
-  gap: 26px;
-  height: 100%;
-}
-@media (min-width: 1101px) {
-  .headerNav {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  background: #eef3ff;
 }
 .headerNav a,
 .headerNav button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 6px;
-  height: 100%;
-  font-size: var(--font-size-label);
-  line-height: 22px;
-  font-weight: 500;
+  flex-shrink: 0;
+  padding: 10px 18px;
   border: 0;
-  background: white;
-  position: relative;
-  color: #0a55a1;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--v2-sub);
   white-space: nowrap;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .headerNav a,
-  .headerNav button {
-    font-size: 14.5px;
-  }
+  font: 700 15px/normal var(--v2-font);
 }
 .headerNav img {
-  width: 20px;
-  height: 20px;
+  display: block;
+  flex-shrink: 0;
+}
+.headerNav a:hover {
+  background: rgb(255 255 255 / 70%);
 }
 .headerNav a[aria-current='page'] {
-  color: var(--color-action-primary);
+  color: white;
+  background: var(--v2-gradient);
+  box-shadow: var(--v2-shadow-active);
 }
-.headerNav a[aria-current='page']::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 3px;
-  bottom: 2px;
-  border-radius: var(--radius-6);
-  background: #079fc5;
+.headerNav button:disabled {
+  color: var(--v2-sub);
 }
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .headerNav a[aria-current='page']::after {
-    border-radius: 2px;
-  }
-}
-.account,
-.profile {
-  border: 1px solid transparent;
-  background: transparent;
-  border-radius: var(--radius-12);
-  padding: 4px 8px;
-  transition: background-color 160ms ease;
-  min-height: var(--target-min);
+.account {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .account,
-  .profile {
-    border-radius: 14px;
-  }
-}
-.account {
-  min-width: 260px;
-  justify-content: center;
-}
-.profile {
-  min-width: var(--target-min);
-  justify-content: center;
-  font-size: var(--font-size-small);
-  line-height: 20px;
-  font-weight: 600;
-  color: #075495;
-  white-space: nowrap;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .profile {
-    font-size: 13.5px;
-  }
+.bellPlaceholder {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
 }
 .profileGroup {
   display: flex;
   align-items: center;
-  gap: 2px;
-  min-height: var(--target-min);
+  gap: 10px;
+  padding: 5px 16px 5px 5px;
+  border-radius: 999px;
+  background: white;
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: var(--v2-ink);
+  white-space: nowrap;
+  font: 700 15px/normal var(--v2-font);
+}
+.profileGroup :global(.avatarV2),
+.profile > span[aria-hidden='true'] {
+  width: 36px;
+  height: 36px;
 }
 .profileChevron {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 36px;
+  padding: 0;
   border: 0;
-  border-radius: var(--radius-12);
+  border-radius: 999px;
   background: transparent;
-  color: #075495;
+  color: var(--v2-sub);
 }
-.profileChevron:hover,
-.profileChevron[data-state='open'] {
-  background: var(--color-pale);
+.profileChevron::after {
+  content: '';
+  position: absolute;
+  inset: -4px -10px;
 }
-.profileChevron[data-state='open'] svg {
+.profileChevron img {
+  display: block;
+}
+.profileChevron[data-state='open'] img {
   transform: rotate(180deg);
 }
-.profile:hover,
-.profile[data-state='open'] {
-  background: var(--color-pale);
-}
 .accountName {
-  max-width: 145px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -194,845 +169,178 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }
 .profileCompactName {
   display: none;
 }
-.bell {
-  min-width: var(--target-min);
-  min-height: var(--target-min);
-  background: transparent;
-  padding: 0;
-  border: 0;
-}
-.bell img {
-  width: 22px;
-  height: 22px;
-}
-.avatar {
-  display: block;
-  width: 40px;
-  height: 40px;
-  border: 2px solid #41b5d2;
-  border-radius: var(--radius-20);
-  background: #fff6ef;
-  overflow: hidden;
-  position: relative;
-}
-.avatar img {
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  left: -14px;
-  top: -9px;
-  object-fit: contain;
-}
 .outline,
 .primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--target-min);
-  border-radius: var(--radius-10);
-  font-size: var(--font-size-label);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .outline,
-  .primary {
-    font-size: 15px;
-  }
+  padding: 12px 22px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font: 800 15px/normal var(--v2-font);
 }
 .outline {
-  width: 122px;
-  border: 1px solid var(--color-line);
+  background: white;
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .primary {
-  width: 132px;
-  gap: 8px;
-  background: var(--action-gradient);
   color: white;
-}
-.primary img {
-  width: 18px;
-  height: 18px;
+  background: var(--v2-gradient);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .layout {
   display: flex;
+  gap: 24px;
+  padding: 16px 24px 0;
   min-height: calc(100dvh - var(--desktop-header-height));
 }
 .tripShell .layout {
   flex: 1;
-  height: auto;
   min-height: 0;
+  padding-bottom: 24px;
 }
 .sidebar,
 .collapsed {
   display: flex;
   flex-direction: column;
+  gap: 4px;
   flex-shrink: 0;
-  background: white;
-  border-right: 1px solid #d7eaf2;
-  width: var(--sidebar-width);
-  height: 100%;
   min-height: 0;
-  padding: 12px 8px 16px;
+  width: 264px;
+  height: 100%;
+  padding: 20px 14px 14px;
+  border-radius: 32px;
+  background: white;
+  box-shadow: var(--v2-shadow-drop), var(--v2-inset);
 }
 .collapsed {
-  width: var(--sidebar-width-collapsed);
+  align-items: center;
+  width: 84px;
+  padding: 20px 0 16px;
+}
+.sidebarHead {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 22px;
+  padding: 0 0 6px 14px;
+}
+.sidebarSection {
+  margin: 0;
+  color: var(--v2-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font: 700 12px/normal var(--v2-font);
+}
+.collapseButton {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--v2-muted);
+  opacity: 0;
+}
+.sidebar:hover .collapseButton,
+.collapseButton:focus-visible {
+  opacity: 1;
+}
+.collapseButton:hover {
+  background: #eef3ff;
+}
+.expandFallbackIcon {
+  display: none;
+}
+.collapsed .sidebarHead {
+  order: 2;
+  padding: 0;
+  margin-top: 10px;
+}
+.collapsed .collapseButton {
+  position: static;
+  width: 44px;
+  height: 44px;
+  opacity: 1;
+  background: #eef3ff;
 }
 .sidebar nav,
 .collapsed nav {
-  min-height: 0;
-  overflow-y: auto;
-  padding-block: 4px;
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
+  flex: 0 1 auto;
+  min-height: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 .sidebar nav {
-  /* Allocate the available desktop height before scrolling a selected item. */
-  gap: clamp(5px, calc(100dvh - 980px), 10px);
+  width: 100%;
+}
+.collapsed nav {
+  gap: 8px;
 }
 .sidebar nav button,
 .sidebar nav a,
 .collapsed nav button,
 .collapsed nav a {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  min-height: var(--target-min);
-  border: 0;
-  border-radius: var(--radius-nav);
-  background: white;
-  color: #0a55a1;
-  padding: 0 12px 0 16px;
-  text-align: left;
-  font-size: var(--font-size-small);
-  line-height: 20px;
-  white-space: nowrap;
   position: relative;
-}
-.sidebar nav button,
-.sidebar nav a,
-.collapsed nav button,
-.collapsed nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex-shrink: 0;
+  min-height: 0;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--v2-nav-text);
+  text-align: left;
+  white-space: nowrap;
+  font: 700 15px/normal var(--v2-font);
 }
 .sidebar nav img,
 .collapsed nav img {
-  width: 22px;
-  height: 22px;
+  display: block;
   flex-shrink: 0;
 }
 .collapsed nav button,
 .collapsed nav a {
-  padding: 0;
   justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 13px;
 }
 .collapsed nav span {
   display: none;
 }
-.sidebar nav .selectedSection,
-.collapsed nav .selectedSection {
-  background: #e8f7fa;
-  color: var(--color-action-primary);
-}
-.selectedSection::before {
-  position: absolute;
-  content: '';
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 4px;
-  border-radius: var(--radius-6);
-  background: #079fc5;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .selectedSection::before {
-    border-radius: 2px;
-  }
-}
-.sidebarDecoration {
-  flex-shrink: 0;
-  margin-top: auto;
-  padding-top: 88px;
-  min-height: 338px;
-  position: relative;
-}
-.sidebarDecoration p {
-  font-family: var(--font-handwritten);
-  font-size: var(--font-size-subtitle);
-  line-height: 52px;
-  color: #079cc5;
-  margin: 0 26px;
-  height: 48px;
-  font-weight: 700;
-}
-.routeDecoration {
-  position: absolute;
-  top: 136px;
-  left: 34px;
-  width: 145px;
-  height: 40px;
-}
-.readingMascot {
-  display: block;
-  width: 166px;
-  height: 166px;
-  margin: 32px auto 0;
-  object-fit: contain;
-}
-.collapseButton {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
-  margin-top: auto;
-  border: 0;
-  background: white;
-  color: var(--color-muted);
-  padding: 0;
-  min-height: 60px;
-  font-size: var(--font-size-small);
-  line-height: 20px;
-}
-.collapsed {
-  padding-bottom: 22px;
-}
-.collapsed .collapseButton {
-  min-height: var(--target-min);
-}
-.collapseButton strong {
-  font-size: var(--font-size-title);
-  line-height: 32px;
-  color: #0089c7;
-}
-.collapseButton img {
-  width: 28px;
-  height: 28px;
-}
-
-.collapseIconReversed {
-  transform: none;
-}
-.main {
-  flex: 1;
-  min-width: 0;
-  padding: 28px;
-}
-.tripMain {
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-.flowMain {
-  overflow: visible;
-}
-.mobileHeader {
-  display: none;
-}
-.dressRoute .mobileHeader {
-  display: none;
-}
-.mobileMenuButton {
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border: 1px solid rgb(10 85 161 / 14%);
-  border-radius: var(--radius-10);
-  background: white;
-  color: var(--color-ink);
-  font-size: 22px;
-  line-height: 1;
-}
-.adminShell {
-  height: 100dvh;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: var(--admin-sidebar-width) minmax(0, 1fr);
-  grid-template-rows: var(--admin-header-height) minmax(0, 1fr);
-}
-.adminShell .layout {
-  display: contents;
-}
-.adminTopbar {
-  grid-column: 2;
-  grid-row: 1;
-  min-width: 0;
-}
-.adminSidebar {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  min-height: 0;
-}
-.adminShell .main {
-  grid-column: 2;
-  grid-row: 2;
-  min-height: 0;
-}
-@media (max-width: 1100px) and (min-width: 769px) {
-  .desktopHeader {
-    padding: 0 20px;
-    gap: 16px;
-  }
-  .logo,
-  .logo img {
-    width: 112px;
-    height: 38px;
-  }
-  .headerNav a,
-  .headerNav button {
-    font-size: var(--font-size-small);
-  }
-  .outline {
-    width: 96px;
-  }
-  .primary {
-    width: 104px;
-  }
-  .account {
-    gap: 8px;
-  }
-  .headerNav {
-    gap: 12px;
-  }
-  .account {
-    min-width: 0;
-  }
-  .profile .accountName {
-    display: none;
-  }
-  .profile .profileCompactName {
-    display: block;
-  }
-}
-@media (max-height: 950px) and (min-width: 769px) {
-  .main {
-    padding-block: 20px;
-  }
-  .sidebarDecoration {
-    display: none;
-  }
-  .sidebar nav,
-  .collapsed nav {
-    gap: 6px;
-  }
-  .sidebar nav button,
-  .sidebar nav a,
-  .collapsed nav button,
-  .collapsed nav a {
-    min-height: var(--target-min);
-  }
-  .selectedSection::before {
-    height: 100%;
-  }
-  .collapseButton {
-    min-height: 44px;
-  }
-}
-@media (max-width: 768px) {
-  .shell {
-    background: var(--color-background);
-    color: var(--color-ink);
-    min-height: 100dvh;
-    height: auto;
-    overflow: visible;
-  }
-  .tripShell {
-    height: auto;
-    overflow: visible;
-  }
-  .desktopHeader,
-  .sidebar,
-  .collapsed,
-  .adminTopbar,
-  .adminSidebar {
-    display: none;
-  }
-  .mobileHeader {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 72px;
-    padding: 0 16px;
-    margin-top: env(safe-area-inset-top, 0px);
-    background: white;
-    border-bottom: 1px solid #dff0f7;
-    font-family: var(--font-body);
-  }
-  .adminMobileHeader {
-    display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 44px;
-    gap: 12px;
-    height: 54px;
-    margin-inline: 24px;
-    padding: 0;
-    background: transparent;
-    border: 0;
-  }
-  .dressRoute .mobileHeader {
-    display: none;
-  }
-  .mobileMenuButton {
-    font-family: var(--font-body);
-    width: 84px;
-    height: 44px;
-    border-color: var(--color-line);
-    border-radius: 18px;
-    font-size: 15px;
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-  .adminMobileHeader .mobileMenuButton {
-    width: 44px;
-    border-color: rgb(10 85 161 / 14%);
-    border-radius: 10px;
-  }
-  .mobileLogo,
-  .mobileLogo img {
-    width: 130px;
-    height: 43.333px;
-    object-fit: contain;
-  }
-  .mobileLogo {
-    margin-right: auto;
-    min-height: var(--target-min);
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .adminMobileHeader .mobileLogo {
-    justify-self: center;
-    margin-right: 0;
-  }
-  .adminMobileHeader .mobileLogo,
-  .adminMobileHeader .mobileLogo img {
-    width: 112px;
-    height: 38px;
-  }
-  .mobileAccount {
-    min-width: 44px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0;
-    background: transparent;
-    color: var(--color-ink);
-  }
-  .mobileAccount > img {
-    width: 22px;
-    height: 22px;
-  }
-  .adminShell {
-    display: block;
-    height: auto;
-    min-height: 100dvh;
-  }
-  .adminShell .layout {
-    display: block;
-    min-height: calc(100dvh - 54px);
-  }
-  .tripShell .layout {
-    min-height: calc(100dvh - 72px);
-    height: auto;
-  }
-  .layout {
-    min-height: calc(100dvh - 72px);
-    height: auto;
-  }
-  .main {
-    padding: 12px 24px calc(24px + env(safe-area-inset-bottom, 0px));
-    overflow: visible;
-  }
-}
-@media (max-width: 360px) {
-  .mobileLogo,
-  .mobileLogo img {
-    width: 112px;
-    height: 38px;
-  }
-  .mobileMenuButton {
-    width: 72px;
-  }
-  .adminMobileHeader {
-    margin-inline: 16px;
-  }
-  .main {
-    padding-inline: 16px;
-  }
-}
-.main.listMain {
-  padding: 0;
-}
-.listMain > :global(.preview),
-.listMain > h1 {
-  margin: 24px;
-}
-.mobileAccountActions {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex-shrink: 0;
-}
-.adminMobileHeader .mobileAccountActions {
-  justify-self: end;
-}
-.navigationDrawer.navigationDrawer {
-  width: min(300px, 86vw);
-  padding: 0;
-  gap: 0;
-  border-right: 1px solid #d7eaf2;
-}
-.navigationDrawer > :last-child {
-  padding: 0;
-}
-.drawerHeader {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 72px;
-  min-height: 72px;
-  padding: 0 16px;
-  background: white;
-}
-.drawerHeader a,
-.drawerHeader img {
-  display: block;
-  width: 120px;
-  height: 40px;
-  object-fit: contain;
-}
-.drawerClose {
-  min-width: 70px;
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-16);
-  background: white;
-  color: var(--color-ink);
-  font: 500 15px/22px var(--font-body);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .drawerClose {
-    border-radius: 18px;
-  }
-}
-.navigationDrawer.navigationDrawer nav {
-  padding: 8px;
-  gap: 8px;
-}
-.drawerDecoration {
-  min-height: 276px;
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
-}
-.drawerDecoration p {
-  margin: 20px 0 0 74px;
-  color: #079cc5;
-  font: 700 18px/52px var(--font-handwritten);
-}
-.drawerRoute {
-  position: absolute;
-  left: 82px;
-  top: 79px;
-  width: 145px;
-  height: 40px;
-}
-.drawerMascot {
-  display: block;
-  width: 166px;
-  height: 166px;
-  margin: -14px auto 0;
-  object-fit: contain;
-}
-@media (max-height: 700px) {
-  .drawerDecoration {
-    display: none;
-  }
-}
-.sidebar nav svg,
-.collapsed nav svg,
-.headerNav svg {
-  flex-shrink: 0;
-}
-.sidebar nav a,
-.collapsed nav a {
-  transition:
-    background 160ms,
-    box-shadow 160ms;
-}
 .sidebar nav a:hover,
 .collapsed nav a:hover {
-  background: var(--color-pale);
-  box-shadow: var(--shadow-selection);
+  background: #eef3ff;
 }
-
-/* ---------------------------------------------------------------------------------------------
- * Web v2 shell (Figma 930:6659): floating top nav 930:6745, trip sidebar 930:7331,
- * collapsed sidebar 937:7692. Desktop only; the ≤768px header keeps its layout with V2 colours.
- * ------------------------------------------------------------------------------------------- */
-.shell {
-  --desktop-header-height: calc(var(--v2-shell-top) + var(--v2-topnav-height));
-  color: var(--v2-ink);
+.sidebar nav .selectedSection,
+.collapsed nav .selectedSection {
+  color: white;
+  background: var(--v2-gradient);
+  box-shadow: var(--v2-shadow-active);
 }
-@media (min-width: 769px) {
-  .shell {
-    padding-top: var(--v2-shell-top);
-  }
-  .desktopHeader {
-    height: var(--v2-topnav-height);
-    margin: 0 var(--v2-shell-gutter);
-    padding: 0 14px 0 24px;
-    border: 0;
-    border-radius: var(--v2-radius-nav);
-    background: var(--v2-white);
-    box-shadow:
-      var(--v2-shadow-nav),
-      var(--v2-inset);
-    z-index: 2;
-  }
-  .logo,
-  .logo img {
-    width: auto;
-    height: auto;
-  }
-  .headerNav {
-    height: auto;
-    gap: 4px;
-    padding: 5px;
-    border-radius: var(--v2-radius-pill);
-    background: var(--v2-track);
-  }
-  .headerNav a,
-  .headerNav button {
-    height: auto;
-    min-height: 44px;
-    gap: 8px;
-    padding: 10px 18px;
-    border-radius: var(--v2-radius-pill);
-    background: transparent;
-    color: var(--v2-sub);
-    font: 700 15px/normal var(--v2-font);
-  }
-  .headerNav button:disabled {
-    color: var(--v2-sub);
-  }
-  .headerNav a:hover {
-    background: rgb(255 255 255 / 70%);
-  }
-  .headerNav a[aria-current='page'] {
-    color: var(--v2-white);
-    background: var(--v2-gradient);
-    box-shadow: var(--v2-shadow-active);
-  }
-  .headerNav a[aria-current='page']::after {
-    content: none;
-  }
-  .account {
-    min-width: 0;
-    gap: 12px;
-    padding: 0;
-    border: 0;
-  }
-  .profileGroup {
-    gap: 0;
-    padding: 1px 2px 1px 5px;
-    border-radius: var(--v2-radius-pill);
-    background: var(--v2-white);
-    box-shadow:
-      var(--v2-shadow-card),
-      var(--v2-inset);
-  }
-  .profile {
-    min-height: 44px;
-    padding: 0;
-    gap: 10px;
-    border: 0;
-    border-radius: var(--v2-radius-pill);
-    color: var(--v2-ink);
-    font: 700 15px/normal var(--v2-font);
-  }
-  .profile:hover,
-  .profile[data-state='open'] {
-    background: transparent;
-  }
-  .profileGroup :global(.avatarV2),
-  .profile > span[aria-hidden='true'] {
-    width: 36px;
-    height: 36px;
-  }
-  .profileChevron {
-    width: 44px;
-    height: 44px;
-    color: var(--v2-sub);
-    border-radius: var(--v2-radius-pill);
-  }
-  .outline,
-  .primary {
-    width: auto;
-    min-height: 0;
-    padding: 12px 22px;
-    border: 0;
-    border-radius: var(--v2-radius-pill);
-    font: 800 15px/normal var(--v2-font);
-  }
-  .outline {
-    color: var(--v2-ink);
-    background: var(--v2-white);
-    box-shadow:
-      var(--v2-shadow-card),
-      var(--v2-inset);
-  }
-  .primary {
-    color: var(--v2-white);
-    background: var(--v2-gradient);
-    box-shadow:
-      var(--v2-shadow-float),
-      var(--v2-inset);
-  }
-  .layout {
-    gap: var(--v2-shell-gutter);
-    padding: 16px var(--v2-shell-gutter) 0;
-  }
-  .tripShell .layout,
-  .adminShell .layout {
-    padding-bottom: var(--v2-shell-gutter);
-  }
-  .sidebar,
-  .collapsed {
-    width: var(--v2-sidebar-width);
-    height: 100%;
-    padding: 20px 14px 14px;
-    gap: 4px;
-    border: 0;
-    border-radius: var(--v2-radius-panel);
-    background: var(--v2-white);
-    box-shadow:
-      var(--v2-shadow-drop),
-      var(--v2-inset);
-  }
-  .collapsed {
-    width: var(--v2-sidebar-collapsed-width);
-    align-items: center;
-    padding: 20px 0 16px;
-  }
-  .sidebarHead {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    min-height: 21px;
-    padding: 0 0 6px 14px;
-  }
-  .collapsed .sidebarHead {
-    order: 2;
-    padding: 0;
-    margin-top: 10px;
-  }
-  .sidebarSection {
-    margin: 0;
-    color: var(--v2-muted);
-    font: 700 12px/normal var(--v2-font);
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-  }
-  .sidebar .collapseButton,
-  .collapsed .collapseButton {
-    display: grid;
-    place-items: center;
-    flex-direction: row;
-    width: 44px;
-    height: 44px;
-    min-height: 0;
-    margin: -14px -8px -14px 0;
-    padding: 0;
-    border-radius: var(--v2-radius-pill);
-    background: transparent;
-    color: var(--v2-muted);
-  }
-  .sidebar .collapseButton:hover {
-    background: var(--v2-track);
-  }
-  .collapsed .collapseButton {
-    width: 44px;
-    height: 44px;
-    margin: 0;
-    background: var(--v2-track);
-    color: var(--v2-sub);
-  }
-  .sidebar nav,
-  .collapsed nav {
-    flex: 0 1 auto;
-    gap: 4px;
-    padding: 0;
-  }
-  .collapsed nav {
-    gap: 8px;
-  }
-  .sidebar nav button,
-  .sidebar nav a,
-  .collapsed nav button,
-  .collapsed nav a {
-    min-height: 0;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: var(--v2-radius-pill);
-    background: transparent;
-    color: var(--v2-nav-text);
-    font: 700 15px/normal var(--v2-font);
-  }
-  .collapsed nav button,
-  .collapsed nav a {
-    width: 46px;
-    height: 46px;
-    padding: 13px;
-  }
-  .sidebar nav a:hover,
-  .collapsed nav a:hover {
-    background: var(--v2-track);
-    box-shadow: none;
-  }
-  .sidebar nav .selectedSection,
-  .collapsed nav .selectedSection {
-    color: var(--v2-white);
-    background: var(--v2-gradient);
-    box-shadow: var(--v2-shadow-active);
-  }
-  .sidebar nav .selectedSection:hover,
-  .collapsed nav .selectedSection:hover {
-    background: var(--v2-gradient);
-    box-shadow: var(--v2-shadow-active);
-  }
-  .selectedSection::before {
-    content: none;
-  }
-  .main {
-    padding: 0;
-  }
-  .flowMain {
-    padding: 0 0 var(--v2-shell-gutter);
-  }
-  .tripMain {
-    padding: 0 0 2px;
-    border-radius: var(--v2-radius-panel);
-  }
+.sidebar nav .selectedSection:hover,
+.collapsed nav .selectedSection:hover {
+  background: var(--v2-gradient);
 }
 .mascotCard {
   display: flex;
@@ -1041,8 +349,8 @@
   flex-shrink: 0;
   margin-top: auto;
   padding: 18px;
+  border-radius: 26px;
   overflow: hidden;
-  border-radius: var(--v2-radius-tile);
   background: var(--v2-gradient-mascot);
 }
 .mascotCard img {
@@ -1059,33 +367,161 @@
   width: 200px;
   max-width: 100%;
   color: var(--v2-sub);
-  font: 600 12px/16px var(--v2-font);
+  font: 600 13px/normal var(--v2-font);
+}
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+.tripMain {
+  position: relative;
+  min-height: 0;
+  padding-bottom: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 32px;
+}
+.flowMain {
+  overflow: visible;
+  padding-bottom: 24px;
+}
+.listMain,
+.dressRoute {
+  min-width: 0;
+}
+.mobileHeader {
+  display: none;
+}
+.mobileMenuButton,
+.drawerClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: white;
+  color: var(--v2-ink);
+  font: 800 14px/normal var(--v2-font);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.mobileLogo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.mobileAccountActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.mobileAccount {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: white;
+}
+.navigationDrawer.navigationDrawer {
+  width: min(320px, 90vw);
+  padding: 0;
+  gap: 0;
+  background: var(--v2-page-background);
+}
+.navigationDrawer > :last-child {
+  padding: 0;
+}
+.drawerHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+}
+.drawerHeader a > span {
+  zoom: 0.8;
+}
+.navigationDrawer nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 16px;
+}
+.navigationDrawer nav a,
+.navigationDrawer nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--v2-nav-text);
+  font: 700 15px/normal var(--v2-font);
+}
+.navigationDrawer nav .selectedSection,
+.navigationDrawer nav a[aria-current='page'] {
+  color: white;
+  background: var(--v2-gradient);
+  box-shadow: var(--v2-shadow-active);
 }
 .drawerMascot {
-  margin: 16px;
+  margin: 20px 16px;
 }
-@media (max-height: 760px) and (min-width: 769px) {
-  .mascotCard {
-    display: none;
-  }
+.adminShell {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  grid-template-rows: 76px minmax(0, 1fr);
+  column-gap: 24px;
+  row-gap: 12px;
+  height: 100dvh;
+  min-height: 0;
+  padding: 24px;
 }
-@media (max-height: 700px) and (min-width: 769px) {
-  .sidebar {
-    padding-block: 12px;
-  }
-  .sidebar nav {
-    gap: 0;
-  }
-  .sidebarHead {
-    padding-bottom: 2px;
-  }
+.adminShell .layout {
+  display: contents;
 }
-/* Below the full desktop width the top nav keeps its icons and hides the labels visually. */
+.adminTopbar {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+.adminSidebar {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  min-width: 0;
+  min-height: 0;
+}
+.adminShell .main {
+  grid-column: 2;
+  grid-row: 2;
+  padding: 8px 0 0;
+  border-radius: 0;
+}
 @media (min-width: 769px) and (max-width: 1100px) {
+  .desktopHeader {
+    gap: 12px;
+    padding-inline: 18px 12px;
+  }
+  .logo > span {
+    zoom: 0.8;
+  }
   .headerNav a,
   .headerNav button {
     min-width: 44px;
-    padding: 10px 13px;
+    padding-inline: 13px;
   }
   .navLabel {
     position: absolute;
@@ -1096,58 +532,18 @@
     clip-path: inset(50%);
     white-space: nowrap;
   }
-  .logo > span {
-    zoom: 0.8;
+  .profile .accountName {
+    display: none;
+  }
+  .profile .profileCompactName {
+    display: block;
   }
   .outline,
   .primary {
     padding-inline: 16px;
   }
-}
-@media (max-width: 768px) {
-  .mobileLogo,
-  .drawerHeader a {
-    width: auto;
-    height: auto;
-    min-height: 44px;
-  }
-  .mobileLogo > span,
-  .drawerHeader a > span {
-    zoom: 0.7;
-  }
-}
-
-/* ---------------------------------------------------------------------------------------------
- * Web v2 Admin shell (Figma A01 946:16838): floating 264px sidebar 937:8030 at 24,24 and a 76px
- * floating top bar 937:8031 beside it; content scrolls inside main.
- * ------------------------------------------------------------------------------------------- */
-@media (min-width: 769px) {
-  .adminShell {
-    --admin-sidebar-width: 264px;
-    --admin-header-height: 76px;
-    column-gap: var(--v2-shell-gutter);
-    row-gap: 12px;
-    padding: var(--v2-shell-gutter);
-    background: var(--v2-page-background);
-  }
-  .adminSidebar {
-    min-width: 0;
-  }
-  .adminShell .main {
-    padding: 8px 4px 4px;
-    border-radius: 0;
-  }
-}
-/* Absolutely positioned helpers (visually hidden captions, select chevrons) stay inside the
-   scrolling main instead of extending the document. */
-.tripMain {
-  position: relative;
-}
-/* 769–1100px: the trip sidebar uses the Figma collapsed form (937:7692, 84px icon rail) so the
-   content keeps a usable width; the toggle still switches the explicit collapsed state. */
-@media (min-width: 769px) and (max-width: 1100px) {
   .sidebar {
-    width: var(--v2-sidebar-collapsed-width);
+    width: 84px;
     align-items: center;
     padding: 20px 0 16px;
   }
@@ -1162,11 +558,15 @@
     margin-top: 10px;
   }
   .sidebar .collapseButton {
-    margin: 0;
-    background: var(--v2-track);
+    position: static;
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+    background: #eef3ff;
   }
   .sidebar nav {
     gap: 8px;
+    width: auto;
   }
   .sidebar nav button,
   .sidebar nav a {
@@ -1174,5 +574,88 @@
     width: 46px;
     height: 46px;
     padding: 13px;
+  }
+}
+@media (min-width: 769px) and (max-height: 760px) {
+  .sidebar .mascotCard {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .shell,
+  .tripShell,
+  .adminShell {
+    display: block;
+    height: auto;
+    min-height: 100dvh;
+    padding: 12px 0 0;
+    overflow: visible;
+  }
+  .desktopHeader,
+  .sidebar,
+  .collapsed,
+  .adminTopbar,
+  .adminSidebar {
+    display: none;
+  }
+  .mobileHeader {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 64px;
+    margin: 0 12px;
+    padding: 8px 12px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: var(--v2-shadow-nav), var(--v2-inset);
+  }
+  .mobileLogo > span {
+    zoom: 0.68;
+  }
+  .mobileHeader > .mobileMenuButton:last-child {
+    margin-left: auto;
+  }
+  .mobileAccountActions + .mobileMenuButton {
+    margin-left: 0;
+  }
+  .layout,
+  .tripShell .layout,
+  .adminShell .layout {
+    display: block;
+    min-height: 0;
+    padding: 16px 12px 24px;
+  }
+  .main,
+  .tripMain,
+  .flowMain,
+  .adminShell .main {
+    height: auto;
+    padding: 0;
+    overflow: visible;
+    border-radius: 0;
+  }
+  .mobileAccount :global(.avatarV2) {
+    width: 32px;
+    height: 32px;
+  }
+  .adminMobileHeader {
+    gap: 8px;
+  }
+}
+@media (max-width: 360px) {
+  .mobileHeader {
+    gap: 4px;
+    padding-inline: 8px;
+  }
+  .mobileLogo > span {
+    zoom: 0.55;
+  }
+  .mobileAccountActions {
+    gap: 2px;
+  }
+  .mobileMenuButton {
+    padding-inline: 10px;
   }
 }

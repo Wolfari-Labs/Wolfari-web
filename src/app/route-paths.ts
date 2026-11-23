@@ -1,6 +1,9 @@
 // Technical routes already proposed by implementation-baseline.md; feature bodies deferred.
 export const paths = {
   admin: '/admin',
+  adminLogin: '/admin/login',
+  notifications: '/notifications',
+  publicShare: (id: string) => `/share/${encodeURIComponent(id)}`,
   home: '/',
   trips: '/trips',
   newTrip: '/trips/new',
@@ -20,4 +23,5 @@ export const paths = {
   fund: (id: string) => `/trips/${encodeURIComponent(id)}/fund`,
   priceWatch: (id: string) => `/trips/${encodeURIComponent(id)}/price-watch`,
   settings: (id: string) => `/trips/${encodeURIComponent(id)}/settings`,
+  share: (id: string) => `/trips/${encodeURIComponent(id)}/share`,
 };

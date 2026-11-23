@@ -13,6 +13,7 @@ import { groupDressCodes } from './dress-code';
 import styles from './GatewayDressCodePage.module.css';
 import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
+import { DressCodeReferenceImage } from './DressCodeReferenceImage';
 
 type DressFilter = 'ALL' | DressCodeViewModel['scopeType'];
 const filters: readonly { value: DressFilter; label: string }[] = [
@@ -107,6 +108,11 @@ export function GatewayDressCodePage() {
                                 item.publicDescription ??
                                 'Chưa có mô tả trang phục.'}
                             </p>
+                            <DressCodeReferenceImage
+                              tripId={item.tripId}
+                              dressCodeId={item.id}
+                              available={item.referenceImageAvailable}
+                            />
                             <dl>
                               <div>
                                 <dt>Phạm vi</dt>

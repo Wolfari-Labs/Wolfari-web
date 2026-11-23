@@ -12,6 +12,7 @@ export function SplitPanel({
   initialSecondaryOpen = false,
   onSecondaryDismiss,
   variant = 'default',
+  initialRatio,
 }: {
   primary: ReactNode;
   secondary: ReactNode;
@@ -20,8 +21,15 @@ export function SplitPanel({
   initialSecondaryOpen?: boolean;
   onSecondaryDismiss?: () => void;
   variant?: 'default' | 'itinerary';
+  /** Initial primary-panel percentage; a saved user layout still takes precedence. */
+  initialRatio?: number;
 }) {
-  const defaultRatio = variant === 'itinerary' ? (680 / 1168) * 100 : 62;
+  const defaultRatio =
+    initialRatio !== undefined && Number.isFinite(initialRatio)
+      ? Math.min(75, Math.max(40, initialRatio))
+      : variant === 'itinerary'
+        ? (680 / 1168) * 100
+        : 62;
   const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1201px)').matches),
     [ratio] = useState(() => {
       try {

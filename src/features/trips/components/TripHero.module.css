@@ -98,16 +98,47 @@
   align-items: center;
   gap: 12px;
 }
+.memberStack {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 93px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--v2-track);
+  color: var(--v2-sub);
+  font: 700 12px/18px var(--v2-font);
+}
+.presence {
+  font-size: 11px;
+}
+.hero[data-variant='schedule'] {
+  height: 80px;
+  min-height: 80px;
+  gap: 14px;
+}
+.hero[data-variant='schedule'] .thumb {
+  width: 56px;
+  height: 56px;
+}
+.hero[data-variant='schedule'] .text {
+  padding-top: 0;
+  margin-left: 0;
+}
+.hero[data-variant='schedule'] .status {
+  display: none;
+}
 .edit,
 .share {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  padding: 11px 18px 11px 16px;
+  padding: 12px 20px 12px 18px;
   border: 0;
   border-radius: var(--v2-radius-pill);
-  font: 800 14px/normal var(--v2-font);
+  font: 800 15px/20px var(--v2-font);
   white-space: nowrap;
 }
 .edit {
@@ -147,6 +178,15 @@
   }
   .actions {
     width: 100%;
+  }
+  .hero[data-variant='schedule'] {
+    height: auto;
+  }
+  .presence {
+    display: none;
+  }
+  .memberStack {
+    min-width: 42px;
   }
   .edit,
   .share {

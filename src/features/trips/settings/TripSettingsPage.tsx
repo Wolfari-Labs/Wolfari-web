@@ -21,6 +21,8 @@ import coverFallback from '../../../shared/assets/figma/bd989.svg';
 import styles from './TripSettingsPage.module.css';
 import { calendarDate } from '../../../shared/lib/calendar';
 import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
+import { useTripCoverImage } from '../hooks/use-trip-cover-image';
+import { TripSettingsOperations } from './TripSettingsOperations';
 
 interface SavedSettingsAttempt {
   intent: UpdateTripIntent;
@@ -124,6 +126,7 @@ function RowIcon({ name }: { name: IconName }) {
 }
 
 function CoverPreview({ trip }: { trip: TripDetailViewModel }) {
+  const image = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
   const cover = trip.presentation.cover;
   return (
     <div className={styles.coverField}>
@@ -131,7 +134,7 @@ function CoverPreview({ trip }: { trip: TripDetailViewModel }) {
       <div className={styles.coverRow}>
         <picture>
           {cover?.mobileSrc && <source media="(max-width: 768px)" srcSet={cover.mobileSrc} />}
-          <img src={cover?.src ?? coverFallback} alt="" />
+          <img src={image.src ?? cover?.src ?? coverFallback} alt="" />
         </picture>
       </div>
     </div>
@@ -187,10 +190,7 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
           </div>
           {trip.presentation.memberCount !== null && (
             <div>
-              <dt>
-                <RowIcon name="members" />
-                Thành viên
-              </dt>
+              <dt><RowIcon name="members" />Thành viên</dt>
               <dd>{trip.presentation.memberCount} người</dd>
             </div>
           )}
@@ -615,32 +615,7 @@ function ManagementCard({
   trip: TripDetailViewModel;
   ownerName: string | null;
 }) {
-  const isOwner = trip.currentMembership.role === 'OWNER';
-  return (
-    <section className={`${styles.card} ${styles.management}`} aria-labelledby="management-heading">
-      <h2 id="management-heading">Thành viên &amp; thông báo</h2>
-      <div className={styles.managementRows}>
-        <div className={styles.memberHeading}>
-          <p>
-            <Icon name="crown" size={16} />
-            <span>
-              {isOwner ? `Chủ chuyến: ${ownerName ?? 'Bạn'}` : 'Bạn là thành viên chuyến đi'}
-            </span>
-          </p>
-          <Link className={styles.textLink} to={paths.members(trip.id)}>
-            Quản lý thành viên <span aria-hidden="true">→</span>
-          </Link>
-        </div>
-        <Link className={styles.settingRow} to={`${paths.profile}#notifications`}>
-          <span className={styles.rowIcon} aria-hidden="true">
-            <Icon name="bell" size={16} />
-          </span>
-          <span>Mở tùy chọn thông báo</span>
-          <Icon name="chevronRight" size={16} />
-        </Link>
-      </div>
-    </section>
-  );
+  return <TripSettingsOperations key={`${trip.id}:${trip.currentMembership.userId}`} trip={trip} ownerName={ownerName} />;
 }
 
 export function TripSettingsPage() {
@@ -703,7 +678,8 @@ export function TripSettingsPage() {
       <PageBreadcrumb
         className={styles.breadcrumb}
         items={[
-          { label: 'Tổng quan chuyến đi', to: paths.trip(tripId) },
+          { label: 'Chuyến đi của tôi', to: paths.trips },
+          { label: trip?.name ?? 'Chuyến đi', to: paths.trip(tripId) },
           ...(editMode ? [{ label: 'Cài đặt', to: paths.settings(tripId) }] : []),
         ]}
         current={editMode ? 'Chỉnh sửa' : 'Cài đặt'}

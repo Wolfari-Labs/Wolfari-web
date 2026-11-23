@@ -6,6 +6,7 @@ import { ActionMenu } from '../../../shared/components/Ui';
 import { Icon } from '../../../shared/components/Icon';
 import mascot from '../../../shared/assets/v2/mascot-waving.png';
 import styles from './TripCard.module.css';
+import { useTripCoverImage } from '../hooks/use-trip-cover-image';
 
 const lifecycle: Record<TripLifecycle, string> = {
   UPCOMING: 'Sắp tới',
@@ -33,6 +34,7 @@ function tripDayProgress(trip: TripListItem, now = new Date()) {
 export function TripCard({ trip, featured }: { trip: TripListItem; featured: boolean }) {
   const navigate = useNavigate();
   const cover = trip.presentation.cover;
+  const coverImage = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
   const owner = trip.currentMembership.role === 'OWNER';
   const members = trip.presentation.memberCount;
   const progress = featured ? tripDayProgress(trip) : null;
@@ -45,8 +47,8 @@ export function TripCard({ trip, featured }: { trip: TripListItem; featured: boo
         aria-label={`Mở chuyến đi ${trip.name}`}
       >
         <div className={styles.photo}>
-          {cover ? (
-            <img src={cover.src} alt={cover.alt} />
+          {coverImage.src ? (
+            <img src={coverImage.src} alt={cover?.alt ?? ''} />
           ) : (
             <span className={styles.noCover} aria-label="Chưa có ảnh chuyến đi" />
           )}

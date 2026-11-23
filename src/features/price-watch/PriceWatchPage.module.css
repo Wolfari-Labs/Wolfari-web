@@ -335,6 +335,7 @@
 }
 .cardActions > button {
   min-height: 44px;
+  white-space: nowrap;
 }
 .more {
   margin-left: auto;
@@ -642,7 +643,7 @@ details.help > summary::after {
     margin-inline: 14px;
   }
   .cardActions > button {
-    flex: 1 1 0;
+    flex: 0 1 auto;
     min-width: 0;
     padding-inline: 10px;
   }

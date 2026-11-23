@@ -4,7 +4,10 @@ import type { TripDetailViewModel } from '../model/trip-detail';
 import { tripDateLabel } from '../model/trip-list-query';
 import { paths } from '../../../app/route-paths';
 import { Icon } from '../../../shared/components/Icon';
+import editAsset from '../../../shared/assets/figma/trips-plan/edit.svg';
+import shareAsset from '../../../shared/assets/figma/trips-plan/share.svg';
 import styles from './TripHero.module.css';
+import { useTripCoverImage } from '../hooks/use-trip-cover-image';
 
 const labels = {
   UPCOMING: 'Sắp tới',
@@ -16,7 +19,7 @@ const labels = {
 /**
  * Web v2 `W/Trip header` (Figma 937:7647): the trip card at the top of every trip page. The page
  * breadcrumb (with the page `h1`) is laid over the card's text column by WorkspacePage styles.
- * The Figma avatar stack is omitted: the trip detail carries only a member count, not members.
+ * Unavailable presence is never replaced with the sample people's identities from Figma.
  */
 export function TripHero({
   trip,
@@ -28,6 +31,7 @@ export function TripHero({
   variant?: 'photo' | 'schedule' | 'landscape';
 }) {
   const canEdit = trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED';
+  const cover = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
   return (
     <section
       className={styles.hero}
@@ -40,8 +44,8 @@ export function TripHero({
         className={styles.thumb}
         aria-hidden="true"
         style={
-          trip.presentation.cover
-            ? ({ '--trip-cover': `url("${trip.presentation.cover.src}")` } as CSSProperties)
+          cover.src
+            ? ({ '--trip-cover': `url("${cover.src}")` } as CSSProperties)
             : undefined
         }
       />
@@ -61,12 +65,17 @@ export function TripHero({
               ? 'Thành viên'
               : `${trip.presentation.memberCount} thành viên`}
           </Link>
+          <span className={styles.presence} title="Chưa có dữ liệu hiện diện trực tuyến"> · Trạng thái online chưa khả dụng</span>
         </p>
       </div>
       <div className={styles.actions}>
+        <Link className={styles.memberStack} to={paths.members(trip.id)} aria-label="Xem thành viên chuyến đi" title="Ảnh thành viên chưa khả dụng">
+          <Icon name="members" size={18} />
+          <span>{trip.presentation.memberCount ?? '—'}</span>
+        </Link>
         {canEdit ? (
           <Link className={styles.edit} to={paths.settings(trip.id)}>
-            <Icon name="edit" size={17} />
+            <img src={editAsset} alt="" />
             Chỉnh sửa
           </Link>
         ) : (
@@ -76,11 +85,14 @@ export function TripHero({
             disabled
             title="Bạn không có quyền chỉnh sửa chuyến đi"
           >
-            <Icon name="edit" size={17} />
+            <img src={editAsset} alt="" />
             Chỉnh sửa
           </button>
         )}
-        {/* Sharing has no Web route yet (W13/W21), so no permanently disabled CTA is shown. */}
+        <Link className={styles.share} to={`/trips/${encodeURIComponent(trip.id)}/share`}>
+          <img src={shareAsset} alt="" />
+          Chia sẻ
+        </Link>
       </div>
     </section>
   );

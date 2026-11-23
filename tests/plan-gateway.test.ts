@@ -96,6 +96,88 @@ describe('Plan Gateway contract', () => {
       },
     });
   });
+  it('suppresses recommendation and schedule capabilities absent from the Gateway contract', async () => {
+    const unsupported = [
+      'route_order_request',
+      'route_order_apply',
+      'packing_dress_request',
+      'packing_dress_apply',
+      'schedule_validation',
+    ] as const;
+    const { repo } = setup({
+      ...snapshot,
+      capabilities: Object.fromEntries(unsupported.map((key) => [key, true])),
+    });
+    const result = await repo.getPlan({ ...request(), scenario: 'success' });
+    expect(result.status).toBe('ready');
+    if (result.status === 'ready') {
+      for (const capability of unsupported)
+        expect(result.data.capabilities?.[capability]).toBe(false);
+      expect(result.data.capabilities?.routes).toBe(false);
+    }
+  });
+  it('uploads and reads private dress-code JPEGs using scoped routes', async () => {
+    const imageId = '44444444-4444-4444-8444-444444444444';
+    const transport = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            data: { image_id: imageId, mime_type: 'image/jpeg', size_bytes: 4 },
+            meta: { correlation_id: 'upload' },
+          }),
+          { status: 201, headers: { 'Content-Type': 'application/json' } },
+        ),
+      )
+      .mockResolvedValueOnce(
+        new Response(new Uint8Array([0xff, 0xd8, 0xff, 0xd9]), {
+          status: 200,
+          headers: { 'Content-Type': 'image/jpeg' },
+        }),
+      );
+    const client = createGatewayHttpClient({ transport });
+    const repository = createGatewayPlanRepository(undefined, client);
+    const file = new File(['jpeg'], 'reference.jpg', { type: 'image/jpeg' });
+    const signal = new AbortController().signal;
+    expect(
+      await repository.uploadDressCodeImage!({
+        tripId: request().tripId,
+        file,
+        signal,
+      }),
+    ).toBe(imageId);
+    expect(
+      await repository.dressCodeImage!({
+        tripId: request().tripId,
+        dressCodeId: activity.id,
+        signal,
+      }),
+    ).toMatchObject({ type: 'image/jpeg', size: 4 });
+    expect(transport.mock.calls[0]?.[0]).toBe(
+      `/api/v1/trips/${request().tripId}/dress-code-images`,
+    );
+    expect(transport.mock.calls[1]?.[0]).toBe(
+      `/api/v1/trips/${request().tripId}/dress-codes/${activity.id}/reference-image`,
+    );
+  });
+  it('requires the Gateway dress-code image availability flag instead of guessing', async () => {
+    const dressCode = {
+      id: '55555555-5555-4555-8555-555555555555',
+      trip_id: snapshot.trip_id,
+      scope_type: 'TRIP',
+      plan_date: null,
+      activity_id: null,
+      label: 'Warm layers',
+      description: null,
+      public_description: null,
+      source: 'MANUAL',
+      plan_version: snapshot.plan_version,
+    };
+    const { repo } = setup({ ...snapshot, dress_codes: [dressCode] });
+    expect(await repo.getPlan({ ...request(), scenario: 'success' })).toMatchObject({
+      status: 'error',
+    });
+  });
   it.each([
     { plan_version: undefined },
     { export_revision: 0 },

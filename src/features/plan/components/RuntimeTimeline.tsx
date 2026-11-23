@@ -28,6 +28,8 @@ import walk from '../../../shared/assets/figma/9c64a.svg';
 import styles from './RuntimeTimeline.module.css';
 import dragIcon from '../../../shared/assets/figma/56e25.svg';
 import moreIcon from '../../../shared/assets/figma/ca9fb.svg';
+import daySun from '../../../shared/assets/figma/trips-plan/day-sun.svg';
+import mapIcon from '../../../shared/assets/figma/trips-plan/plan-map-icon.svg';
 
 const activityIcons: Record<string, string> = {
   SIGHTSEEING: mountain,
@@ -75,7 +77,7 @@ function DayTarget({
         // "Ngày 1" sits over the date; a hidden separator keeps the name "Ngày 1 · 22/09".
         <span>
           {label.split(' · ')[0]} <span className={styles.srOnly}>·</span>{' '}
-          <small>{label.split(' · ')[1]}</small>
+          <small><span>{label.split(' · ')[1]}</span><span className={styles.dayWeather} title="Chưa có dữ liệu thời tiết" aria-label="Thời tiết chưa có dữ liệu"><img src={daySun} alt="" />—</span></small>
         </span>
       ) : (
         label
@@ -495,7 +497,10 @@ export function RuntimeTimeline({
           onClick={() => setDay(value)}
         />
       ))}
-      <span className={styles.dayUtilities}>
+      <button type="button" className={styles.addDay} disabled title="Chưa hỗ trợ thay đổi ngày của chuyến đi"><Icon name="plus" size={18} />Thêm ngày</button>
+      <details className={styles.dayUtilities}>
+        <summary aria-label="Phạm vi lịch trình"><img src={moreIcon} alt="" /></summary>
+        <div>
         {(['ALL', 'POOL'] as const).map((value) => (
           <DayTarget
             key={value}
@@ -510,7 +515,8 @@ export function RuntimeTimeline({
             }}
           />
         ))}
-      </span>
+        </div>
+      </details>
     </div>
   );
   const timeline = (
@@ -526,6 +532,7 @@ export function RuntimeTimeline({
           <Button
             ref={mapTrigger}
             variant="outline"
+            icon={<img src={mapIcon} alt="" />}
             aria-pressed={sidePanel === 'map'}
             onClick={() => setSidePanel(sidePanel === 'map' ? 'none' : 'map')}
           >
@@ -706,8 +713,10 @@ export function RuntimeTimeline({
         className={styles.workspace}
         onTouchStartCapture={dnd.onTouchStartCapture}
       >
-        {!compactPool && dayBar}
-        <PlanMetrics trip={trip} plan={plan} day={day} />
+        <div className={styles.dayBar}>
+          {!compactPool && dayBar}
+          <PlanMetrics trip={trip} plan={plan} day={day} />
+        </div>
         {!compactPool && feedback}
         {compactPool ? (
           <>
@@ -740,6 +749,7 @@ export function RuntimeTimeline({
         ) : sidePanel !== 'none' ? (
           <SplitPanel
             variant="itinerary"
+            initialRatio={sidePanel === 'pool' ? 700 / 1084 * 100 : 540 / 1084 * 100}
             key={sidePanel}
             storageKey={`wolfari:ui:plan-${sidePanel}-split`}
             primary={timeline}
@@ -769,7 +779,10 @@ export function RuntimeTimeline({
             }}
           />
         ) : (
-          timeline
+          <div className={styles.defaultColumns}>
+            {timeline}
+            <PlanDayMap trip={trip} plan={plan} day={day} compact onClose={() => setSidePanel('none')} />
+          </div>
         )}
       </div>
       <DragOverlay dropAnimation={reduced ? null : { duration: 180, easing: 'ease-out' }}>

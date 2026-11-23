@@ -1,7 +1,7 @@
 import daNang from '../../shared/assets/figma/1dc61.png';
 import phuQuoc from '../../shared/assets/figma/a84f7.png';
 import daLat from '../../shared/assets/figma/6059f.png';
-import hoiAn from '../../shared/assets/v2/destination-hoian.jpg';
+import hoiAn from '../../shared/assets/figma/home-auth/06bd1.png';
 import type { HomeLandingViewModel } from './model/home';
 /**
  * Public editorial content (Figma 933:7861 "Điểm đến được yêu thích"), not user trips, reviews,

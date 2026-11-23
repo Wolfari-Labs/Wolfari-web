@@ -1,6 +1,6 @@
 /* Web v2 W04 overview hero (Figma 932:7293): 232px cover photo, 5px white frame, 40px title. */
 .hero {
-  --overview-hero-shade: linear-gradient(to right, rgb(31 42 68 / 55%), rgb(31 42 68 / 0%) 60%);
+  --overview-hero-shade: linear-gradient(to right, rgb(31 42 68 / 45%), rgb(31 42 68 / 0%) 55%);
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -33,7 +33,6 @@
   color: var(--v2-white);
   font: 800 40px/normal var(--v2-font);
   text-overflow: ellipsis;
-  text-shadow: 0 2px 12px rgb(31 42 68 / 30%);
   white-space: nowrap;
 }
 .meta {
@@ -95,9 +94,12 @@
   margin-inline: -4px;
 }
 .members {
-  text-decoration: underline;
-  text-decoration-color: rgb(255 255 255 / 45%);
-  text-underline-offset: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 93px;
+  font: 700 12px/18px var(--v2-font);
+  text-decoration: none;
 }
 .members:hover {
   text-decoration-color: currentcolor;

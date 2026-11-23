@@ -4,6 +4,7 @@ import type { CommandCoordinator } from '../operations/command-coordinator';
 import { ApiError } from '../http/api-error';
 import * as d from '../http/decode';
 import { decodeClosure } from './finance-closure-decoder';
+import { decodeBankTransfer, decodeClosureReadiness } from './finance-operations-decoders';
 import { decodePaymentAttempt, decodePaymentException } from './payment-decoders';
 import { createPaymentRecovery } from './payment-recovery';
 import {
@@ -181,6 +182,25 @@ export function createGatewayFundRepository(
               read(
                 root(fundId) + '/holder-handovers',
                 (v) => d.list(d.object(v).items, (item) => decodeHandover(item, fundId)),
+                signal,
+              ),
+            bankTransfers: (fundId: string, signal?: AbortSignal) =>
+              read(
+                root(fundId) + '/bank-transfers',
+                (v) => {
+                  const items = d.list(d.object(v).items, (item) =>
+                    decodeBankTransfer(item, fundId),
+                  );
+                  if (items.length > 100 || new Set(items.map((item) => item.id)).size !== items.length)
+                    throw Error('Invalid bank transfer list');
+                  return items;
+                },
+                signal,
+              ),
+            closureReadiness: (fundId: string, signal?: AbortSignal) =>
+              read(
+                root(fundId) + '/closure-readiness',
+                decodeClosureReadiness,
                 signal,
               ),
             banks: (signal?: AbortSignal) =>

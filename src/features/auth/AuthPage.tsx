@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore, type FormEvent } from 'react';
+import { useEffect, useState, useSyncExternalStore, type FormEvent } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useOutletContext } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
 import { Input } from '../../shared/components/Input';
@@ -6,7 +6,13 @@ import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
 import { Select } from '../../shared/components/Select';
 import { BrandWordmark } from '../../shared/components/BrandWordmark';
-import { ArrowRight, Mail, LockKeyhole, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
+import { Drawer } from '../../shared/components/Drawer';
+import mailIcon from '../../shared/assets/figma/home-auth/3ed60.svg';
+import lockIcon from '../../shared/assets/figma/home-auth/b9783.svg';
+import arrowIcon from '../../shared/assets/figma/home-auth/ead6b.svg';
+import rememberSwitch from '../../shared/assets/figma/home-auth/b5db1.svg';
+import { AdminLoginHero, AdminLoginBadge, AdminLoginSubmitIcon } from '../shell/components/AdminLoginHero';
 import { AuthHero } from './AuthHero';
 import { validateAuth, type AuthFormValues, type AuthFormErrors } from './model/auth-validation';
 import styles from './AuthPage.module.css';
@@ -32,11 +38,14 @@ function authErrorMessage(code: string): string {
 export function AuthPage({
   mode,
   previewEnabled,
+  variant = 'default',
 }: {
   mode: 'login' | 'register';
   previewEnabled: boolean;
+  variant?: 'default' | 'admin';
 }) {
   const register = mode === 'register';
+  const admin = variant === 'admin';
   const context = useOutletContext<RouteContext | null>();
   const repository = useOptionalIdentityRepository();
   const navigate = useNavigate();
@@ -48,6 +57,11 @@ export function AuthPage({
     noSession,
   );
   const [registrationAccepted, setRegistrationAccepted] = useState(false);
+  const [registrationStep, setRegistrationStep] = useState<'credentials' | 'details'>('credentials');
+  const [unavailableFeature, setUnavailableFeature] = useState<string | null>(null);
+  useEffect(() => {
+    if (registrationStep === 'details') document.getElementById('auth-fullName')?.focus();
+  }, [registrationStep]);
   const identityNotice = (location.state as { identityNotice?: unknown } | null)?.identityNotice;
   // Password writes leave the private route before clearing its old session.
   // Keep this reauthentication destination stable during that transition.
@@ -93,6 +107,16 @@ export function AuthPage({
     event.preventDefault();
     if (preview === 'pending' || pending || registrationAccepted) return;
     const next = validateAuth(mode, values);
+    if (register && registrationStep === 'credentials') {
+      delete next.fullName;
+      delete next.acceptedTerms;
+      setErrors(next);
+      setFeedback(null);
+      const firstCredentialError = Object.keys(next)[0];
+      if (firstCredentialError) document.getElementById(`auth-${firstCredentialError}`)?.focus();
+      else setRegistrationStep('details');
+      return;
+    }
     setErrors(next);
     setFeedback(null);
     const first = Object.keys(next)[0];
@@ -141,7 +165,7 @@ export function AuthPage({
             );
           } else {
             const returnTo = new URLSearchParams(location.search).get('returnTo');
-            navigate(postAuthReturnTo(returnTo), { replace: true });
+            navigate(postAuthReturnTo(returnTo ?? (admin ? '/admin' : null)), { replace: true });
           }
         },
         () => showError('Chưa thể kết nối. Vui lòng thử lại.'),
@@ -151,20 +175,21 @@ export function AuthPage({
   if (sessionStatus === 'authenticated' && !previewEnabled && !reauthenticate)
     return (
       <Navigate
-        to={postAuthReturnTo(new URLSearchParams(location.search).get('returnTo'))}
+        to={postAuthReturnTo(new URLSearchParams(location.search).get('returnTo') ?? (admin ? '/admin' : null))}
         replace
       />
     );
   return (
     <section
-      className={`${styles.page} ${register ? styles.register : ''}`}
-      data-node-id={register ? '298:2007' : '298:1893'}
+      className={`${styles.page} ${register ? styles.register : ''} ${admin ? styles.admin : ''}`}
+      data-node-id={admin ? '946:16749' : register ? '944:15951' : '933:7623'}
+      data-registration-step={register ? registrationStep : undefined}
     >
-      <AuthHero
+      {admin ? <AdminLoginHero /> : <AuthHero
         title={
           register ? ['Cùng Wolfari', 'lên đường'] : ['Cho những chuyến đi', 'thật đẹp, cùng nhau']
         }
-      />
+      />}
       <div className={styles.formColumn}>
         <form
           className={styles.card}
@@ -172,16 +197,16 @@ export function AuthPage({
           onSubmit={(event) => void submit(event)}
           aria-label={register ? 'Biểu mẫu đăng ký' : 'Biểu mẫu đăng nhập'}
         >
-          <span className={styles.cardWordmark} aria-hidden="true">
+          {admin ? <AdminLoginBadge /> : <span className={styles.cardWordmark} aria-hidden="true">
             <BrandWordmark />
-          </span>
+          </span>}
           <header className={styles.cardHeader}>
-            <h1>{register ? 'Tạo tài khoản, chuẩn bị đi thôi!' : 'Chào mừng trở lại!'}</h1>
+            <h1>{admin ? 'Đăng nhập quản trị' : register ? registrationStep === 'details' ? 'Hoàn tất thông tin tài khoản' : 'Tạo tài khoản, chuẩn bị đi thôi!' : 'Chào mừng trở lại!'}</h1>
             {registrationAccepted && <h2>Kiểm tra email của bạn</h2>}
             <p>
               {registrationAccepted
                 ? 'Mở liên kết trong email để xác minh, sau đó đăng nhập bằng mật khẩu của bạn.'
-                : register
+                : admin ? 'Tài khoản cần có quyền Admin cấp hệ thống.' : register && registrationStep === 'details' ? 'Nhập tên hiển thị và xác nhận điều khoản để hoàn tất đăng ký. Chưa có yêu cầu tạo tài khoản nào được gửi.' : register
                   ? 'Đăng ký bằng email để bắt đầu tạo và tham gia các chuyến đi trong Wolfari.'
                   : 'Đăng nhập để tiếp tục lên kế hoạch cùng nhóm của bạn.'}
             </p>
@@ -189,7 +214,7 @@ export function AuthPage({
           {!registrationAccepted && (
             <>
               <div className={styles.fields}>
-                {register && (
+                {register && registrationStep === 'details' && (
                   <Input
                     id="auth-fullName"
                     required
@@ -202,7 +227,7 @@ export function AuthPage({
                     leadingIcon={<UserRound size={18} />}
                   />
                 )}
-                <Input
+                {(!register || registrationStep === 'credentials') && <Input
                   id="auth-email"
                   required
                   label="Email"
@@ -213,45 +238,48 @@ export function AuthPage({
                   value={values.email}
                   error={errors.email}
                   onChange={(e) => field('email', e.target.value)}
-                  leadingIcon={<Mail size={18} />}
-                />
-                <Input
+                  leadingIcon={<img src={mailIcon} alt="" />}
+                  autoFocus
+                />}
+                {(!register || registrationStep === 'credentials') && <Input
                   id="auth-password"
                   required
                   label="Mật khẩu"
                   type="password"
                   name="password"
                   autoComplete={register ? 'new-password' : 'current-password'}
-                  placeholder={register ? undefined : 'Mật khẩu của bạn'}
-                  {...(register ? { hint: 'Từ 8 đến 128 ký tự.' } : {})}
+                  placeholder={register ? 'Tạo mật khẩu' : 'Mật khẩu của bạn'}
                   value={values.password}
                   error={errors.password}
                   onChange={(e) => field('password', e.target.value)}
-                  leadingIcon={<LockKeyhole size={18} />}
-                />
-                {register && (
+                  leadingIcon={<img src={lockIcon} alt="" />}
+                />}
+                {register && registrationStep === 'credentials' && (
                   <Input
                     id="auth-confirmation"
                     required
-                    label="Nhập lại mật khẩu"
+                    label="Xác nhận mật khẩu"
                     type="password"
+                    placeholder="Nhập lại mật khẩu"
                     autoComplete="new-password"
                     value={values.confirmation}
                     error={errors.confirmation}
                     onChange={(e) => field('confirmation', e.target.value)}
-                    leadingIcon={<LockKeyhole size={18} />}
+                    leadingIcon={<img src={lockIcon} alt="" />}
                   />
                 )}
               </div>
-              {!register && (
+              {!register && !admin && (
                 <div className={styles.forgotRow}>
+                  <button type="button" className={styles.remember} onClick={() => setUnavailableFeature('Ghi nhớ đăng nhập chưa được hỗ trợ. Phiên đăng nhập hiện tại vẫn tuân theo chính sách của máy chủ.')}><span><img src={rememberSwitch} alt="" /></span>Ghi nhớ đăng nhập</button>
                   <Link className={styles.forgotLink} to="/forgot-password">
                     Quên mật khẩu?
                   </Link>
                 </div>
               )}
-              {register && (
+              {register && registrationStep === 'details' && (
                 <>
+                  <p className={styles.registrationEmail}>{values.email.trim()}</p>
                   <label className={styles.consent}>
                     <input
                       id="auth-acceptedTerms"
@@ -271,6 +299,8 @@ export function AuthPage({
                   )}
                 </>
               )}
+              {register && registrationStep === 'credentials' && <div className={styles.registrationNote}><strong>Dữ liệu đăng ký phải hợp lệ</strong><p>• Không tạo tài khoản khi dữ liệu thiếu hoặc không hợp lệ.<br />• Yêu cầu gửi lặp không được tạo tài khoản trùng.<br />• Chức năng yêu cầu đăng nhập chỉ dùng khi trạng thái tài khoản cho phép.</p></div>}
+              {admin && <div className={styles.adminNote}><strong>Kiểm tra quyền</strong><p>Sau xác thực, backend kiểm tra quyền Admin trước khi cấp truy cập Web Admin.</p></div>}
               {/* The password rule sits on its field; the fixture-mode warning lives once in the
                   preview disclosure below the form. */}
               {demoError && (
@@ -283,9 +313,12 @@ export function AuthPage({
                 type="submit"
                 loading={preview === 'pending' || !!pending}
               >
-                {register ? 'Tạo tài khoản' : 'Đăng nhập'}
-                <ArrowRight size={18} aria-hidden="true" className={styles.submitArrow} />
+                {admin && <AdminLoginSubmitIcon />}
+                {admin ? 'Đăng nhập Admin' : register ? 'Tạo tài khoản' : 'Đăng nhập'}
+                {!admin && <img src={arrowIcon} alt="" className={styles.submitArrow} />}
               </Button>
+              {register && registrationStep === 'details' && <Button variant="plain" disabled={!!pending} onClick={() => { setRegistrationStep('credentials'); setErrors({}); }}>Quay lại thông tin đăng nhập</Button>}
+              {!register && !admin && <><div className={styles.divider}><span />hoặc<span /></div><Button className={styles.google} variant="secondary" onClick={() => setUnavailableFeature('Đăng nhập với Google chưa được kết nối. Vui lòng đăng nhập bằng email và mật khẩu. Không có yêu cầu xác thực Google nào được gửi.')}>Tiếp tục với Google</Button></>}
             </>
           )}
           {pending && (
@@ -313,14 +346,14 @@ export function AuthPage({
               </Alert>
             </div>
           )}
-          <div className={styles.alternative}>
+          {!admin && <div className={styles.alternative}>
             <span>{register ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}</span>
             <Link
               to={`${register ? '/login' : '/register'}?returnTo=${encodeURIComponent(safeReturnTo(new URLSearchParams(location.search).get('returnTo')))}`}
             >
               {register ? 'Đăng nhập' : 'Đăng ký'}
             </Link>
-          </div>
+          </div>}
         </form>
         {previewEnabled && (
           <details className="preview" data-preview="auth-form" open={!!demoLogin}>
@@ -362,6 +395,7 @@ export function AuthPage({
           </details>
         )}
       </div>
+      <Drawer open={unavailableFeature !== null} label="Tính năng chưa khả dụng" side="center" onDismiss={() => setUnavailableFeature(null)}><Alert live={false}>{unavailableFeature}</Alert></Drawer>
     </section>
   );
 }

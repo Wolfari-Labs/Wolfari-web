@@ -1,6 +1,7 @@
 import { Icon } from './Icon';
 import styles from './Ui.module.css';
 import toastStyles from './SuccessToast.module.css';
+import checkIcon from '../assets/figma/controls/62792.svg';
 
 /** Only confirmed, non-critical success belongs here. Recovery stays in the page. */
 export function SuccessToast({ message, onDismiss }: { message: string; onDismiss: () => void }) {
@@ -14,7 +15,7 @@ export function SuccessToast({ message, onDismiss }: { message: string; onDismis
         className={`${styles.toast} ${toastStyles.toast}`}
       >
         <span className={toastStyles.badge} aria-hidden="true">
-          <Icon name="check" size={18} strokeWidth={2.4} />
+          <img src={checkIcon} alt="" />
         </span>
         <Toast.Title className={toastStyles.title}>{message}</Toast.Title>
         <Toast.Close

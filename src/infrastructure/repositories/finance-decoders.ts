@@ -10,6 +10,7 @@ import type {
   RuntimeFund,
   TransferInstruction,
 } from '../../features/fund/model/runtime-fund';
+import { decodeBankTransfer } from './finance-operations-decoders';
 import type { Intent } from '../operations/command-coordinator';
 import { decodeOperation } from '../operations/command-coordinator';
 import {
@@ -202,6 +203,13 @@ export function decodeBank(value: unknown): Bank {
   };
 }
 export function decodeFinanceReceipt(value: unknown, intent: Intent) {
+  if (intent.kind === 'bank-transfer-resolve') {
+    const row = decodeBankTransfer(value, d.uuid(intent.fundId));
+    d.scope(row.id, d.uuid(intent.resourceId));
+    if (row.processing_status !== 'RESOLVED' || row.resolution !== intent.body?.resolution)
+      throw Error('Invalid bank transfer receipt');
+    return row;
+  }
   if (intent.kind === 'payment-create' || intent.kind === 'payment-reconcile') {
     const row = decodePaymentAttempt(value);
     d.scope(

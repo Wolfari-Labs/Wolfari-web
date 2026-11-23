@@ -194,7 +194,7 @@ describe('SRS 1.2 preparation contracts', () => {
     const [url, options] = transport.mock.calls[0]!;
     expect(url).toContain(
       operation.startsWith('location')
-        ? '/locations'
+        ? '/selected-locations'
         : operation.startsWith('dress')
           ? '/dress-codes'
           : '/packing-items',
@@ -388,6 +388,18 @@ describe('provider and DSS read boundaries', () => {
     );
     expect(route.data?.distanceM).toBe(125);
     expect(route.meta.provider).toBe('test-provider');
+    expect(transport.mock.calls[0]?.[0]).toBe('/api/v1/travel/route');
+    expect(transport.mock.calls[0]?.[1]).toMatchObject({
+      method: 'POST',
+      credentials: 'include',
+    });
+    expect(JSON.parse(String(transport.mock.calls[0]?.[1]?.body))).toEqual({
+      coordinates: [
+        { latitude: 16, longitude: 108 },
+        { latitude: 17, longitude: 109 },
+      ],
+      mode: 'WALKING',
+    });
     expect(new Headers(transport.mock.calls[0]![1]?.headers).has('idempotency-key')).toBe(false);
   });
   it.each(['NO_RESULT', 'ERROR'])('missing route %s never becomes zero', async (status) => {

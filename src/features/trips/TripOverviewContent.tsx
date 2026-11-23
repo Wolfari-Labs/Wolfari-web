@@ -12,14 +12,20 @@ import { ContentState } from '../../shared/components/ContentState';
 import { paths } from '../../app/route-paths';
 import { localDate, planDays } from '../plan/model/plan-presentation';
 import { Icon, type IconName } from '../../shared/components/Icon';
-import mapArt from '../../shared/assets/v2/map-art.svg';
+import mapArt from '../../shared/assets/figma/trips-plan/overview-map.svg';
+import calendarIcon from '../../shared/assets/figma/trips-plan/calendar.svg';
+import walletIcon from '../../shared/assets/figma/trips-plan/wallet.svg';
+import luggageIcon from '../../shared/assets/figma/trips-plan/luggage.svg';
+import planeIcon from '../../shared/assets/figma/trips-plan/plane.svg';
+import sunIcon from '../../shared/assets/figma/trips-plan/sun.svg';
 import styles from './TripDashboard.module.css';
 
 /** Web v2 `D/Icon badge`: a gradient square with a white glyph (decorative). */
 function IconBadge({ icon, tone }: { icon: IconName; tone: 'blue' | 'green' | 'amber' | 'coral' }) {
+  const asset = { calendar: calendarIcon, fund: walletIcon, luggage: luggageIcon, price: planeIcon }[icon as 'calendar' | 'fund' | 'luggage' | 'price'];
   return (
     <span className={styles.badge} data-tone={tone} aria-hidden="true">
-      <Icon name={icon} size={22} strokeWidth={2} />
+      {asset ? <img src={asset} alt="" /> : <Icon name={icon} size={22} strokeWidth={2} />}
     </span>
   );
 }
@@ -120,7 +126,7 @@ export function TripOverview({
             />
             <div className={styles.statHead}>
               <IconBadge icon="calendar" tone="blue" />
-              <h2>Lịch trình trong ngày</h2>
+              <h2>Lịch trình hôm nay</h2>
             </div>
             <div className={styles.cardContent}>
               <PlanSummary
@@ -141,7 +147,7 @@ export function TripOverview({
             />
             <div className={styles.statHead}>
               <IconBadge icon="fund" tone="green" />
-              <h2>Ngân sách / Quỹ nhóm</h2>
+              <h2>Quỹ nhóm</h2>
             </div>
             <div className={styles.cardContent}>
               {fundContent ?? <OverviewFundSummary fund={undefined} />}
@@ -158,7 +164,7 @@ export function TripOverview({
             />
             <div className={styles.statHead}>
               <IconBadge icon="luggage" tone="amber" />
-              <h2>Tiến độ hành lý</h2>
+              <h2>Hành lý đã sẵn</h2>
             </div>
             <div className={styles.cardContent}>
               <PackingSummary trip={trip} plan={plan} onRetry={onRetry} />
@@ -183,7 +189,7 @@ export function TripOverview({
             data-region="trip-overview-itinerary"
           >
             <Link className={styles.cardLink} to={paths.plan(trip.id)} aria-label="Lịch trình" />
-            <h2>Lịch trình</h2>
+            <h2>Lịch trình hôm nay</h2>
             <PlanSummary
               trip={trip}
               result={plan}
@@ -201,7 +207,7 @@ export function TripOverview({
                 to={paths.map(trip.id)}
                 aria-label="Xem bản đồ địa điểm"
               >
-                Xem bản đồ
+                Mở
               </Link>
             </header>
             <div className={styles.mapArtwork}>
@@ -212,6 +218,20 @@ export function TripOverview({
               <span>Minh họa</span>
             </div>
           </section>
+          <aside className={styles.aside} aria-label="Giá vé và thời tiết">
+            <section className={`${styles.panel} ${styles.farePanel}`}>
+              <Link className={styles.cardLink} to={paths.priceWatch(trip.id)} aria-label="Chi tiết theo dõi giá vé" />
+              <IconBadge icon="price" tone="coral" />
+              <h2>Theo dõi giá vé</h2>
+              <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
+            </section>
+            <section className={`${styles.panel} ${styles.weatherPanel}`} aria-label="Thời tiết chưa khả dụng">
+              <span className={styles.badge} data-tone="amber" aria-hidden="true"><img src={sunIcon} alt="" /></span>
+              <h2>Thời tiết hôm nay</h2>
+              <p className={styles.weatherValue}>—</p>
+              <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>
+            </section>
+          </aside>
         </div>
       </div>
     </>

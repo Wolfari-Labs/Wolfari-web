@@ -11,7 +11,8 @@ body {
   background: var(--color-background) var(--v2-page-background) fixed;
   color: var(--color-ink);
   font-size: var(--font-size-body);
-  line-height: 1.6;
+  font-weight: 600;
+  line-height: 1.466666667;
   -webkit-font-smoothing: antialiased;
 }
 button,
@@ -150,7 +151,8 @@ details[open]:not(.preview) > summary::after {
     color: var(--v2-blue);
     font: 700 12px/normal var(--v2-font);
   }
-  #main-content nav[aria-label='Đường dẫn']:is(
+  #main-content
+    nav[aria-label='Đường dẫn']:is(
       :has(+ [data-region='trip-hero']),
       :has(+ * > [data-region='trip-hero']:first-child)
     ) {

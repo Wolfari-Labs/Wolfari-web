@@ -143,7 +143,7 @@ describe('unconnected Gateway transport foundation', () => {
       correlationId: 'avatar-correlation',
       contentType: 'image/png',
     });
-    expect(new Headers(transport.mock.calls[1]![1]?.headers).get('Accept')).toBe('image/png');
+    expect(new Headers(transport.mock.calls[1]![1]?.headers).get('Accept')).toBe('*/*');
   });
   it('refreshes once for a read 401 but never retries a mutation', async () => {
     const unauthorized = () =>

@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router';
 import { App } from './App';
 import { captureInvitationToken } from '../features/members/invitation-token';
 import { ContentState } from '../shared/components/ContentState';
-import { AdminPlaceholder } from '../features/shell/components/AdminChrome';
+import { AdminWorkspacePage } from '../features/shell/components/AdminChromeContent';
 import { lazy, Suspense, type ReactNode } from 'react';
 import { HomeRoute } from './HomeRoute';
 import type { DemoAccess } from '../features/auth/model/demo-access';
@@ -51,6 +51,9 @@ const PriceWatchPage = lazy(async () => ({
 const TripSettingsPage = lazy(async () => ({
   default: (await import('../features/trips/settings/TripSettingsPage')).TripSettingsPage,
 }));
+const NotificationCenterPage = lazy(async () => ({ default: (await import('../features/notifications/NotificationCenter')).NotificationCenterPage }));
+const SharingPage = lazy(async () => ({ default: (await import('../features/sharing/SharingPage')).SharingPage }));
+const PublicSharePage = lazy(async () => ({ default: (await import('../features/sharing/PublicSharePage')).PublicSharePage }));
 const feature = (element: ReactNode) => (
   <Suspense fallback={<ContentState state="loading" headingLevel={2} />}>{element}</Suspense>
 );
@@ -69,6 +72,26 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         />
       ),
       children: [
+        {
+          path: '/notifications',
+          element: feature(<NotificationCenterPage />),
+          handle: { title: 'Thông báo', requiresViewer: true, contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/trips/:tripId/share',
+          element: feature(<SharingPage />),
+          handle: { title: 'Xuất & chia sẻ', section: 'settings', requiresViewer: true, contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/share/:shareId',
+          element: feature(<PublicSharePage />),
+          handle: { title: 'Chuyến đi được chia sẻ', contentTitle: true, fullBleed: true },
+        },
+        {
+          path: '/admin/login',
+          element: feature(<AuthPage key="admin-login" mode="login" variant="admin" previewEnabled={!!previewTripPath} />),
+          handle: { title: 'Đăng nhập quản trị', contentTitle: true, fullBleed: true },
+        },
         {
           path: '/',
           element: feature(<HomeRoute />),
@@ -195,8 +218,8 @@ export function createRouter(previewTripPath: string | null, demoAccess?: DemoAc
         },
         {
           path: '/admin',
-          element: <AdminPlaceholder />,
-          handle: { layout: 'admin', requiresViewer: true },
+          element: <AdminWorkspacePage />,
+          handle: { layout: 'admin', requiresViewer: true, contentTitle: true, fullBleed: true },
         },
         {
           path: '*',

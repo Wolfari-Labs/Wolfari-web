@@ -57,6 +57,7 @@ export interface DressCodeViewModel {
   readonly publicDescription: string | null;
   readonly source: 'MANUAL' | 'PROVIDER' | 'DSS';
   readonly planVersion: number;
+  readonly referenceImageAvailable: boolean;
 }
 export interface PackingItemViewModel {
   readonly id: string;
@@ -103,6 +104,16 @@ export interface ActivityCreateInput {
 export type ActivityUpdateFields = Partial<ActivityCreateInput>;
 
 export interface PlanRepository {
+  uploadDressCodeImage?(request: {
+    readonly tripId: string;
+    readonly file: File;
+    readonly signal: AbortSignal;
+  }): Promise<string>;
+  dressCodeImage?(request: {
+    readonly tripId: string;
+    readonly dressCodeId: string;
+    readonly signal: AbortSignal;
+  }): Promise<Blob>;
   mutatePreparation?(request: {
     readonly tripId: string;
     readonly expectedPlanVersion: number;

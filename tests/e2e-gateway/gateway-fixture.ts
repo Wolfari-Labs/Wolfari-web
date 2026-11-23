@@ -35,6 +35,7 @@ export interface GatewayTrip {
   plan_version: number;
   membership_revision: number;
   export_revision: number;
+  cover_image_available: boolean;
   current_membership: {
     id: string;
     trip_id: string;
@@ -61,6 +62,7 @@ function trip(id: string, name: string, role: 'OWNER' | 'MEMBER'): GatewayTrip {
     plan_version: 1,
     membership_revision: 1,
     export_revision: 1,
+    cover_image_available: false,
     current_membership: {
       id: `a${id.slice(1)}`,
       trip_id: id,
