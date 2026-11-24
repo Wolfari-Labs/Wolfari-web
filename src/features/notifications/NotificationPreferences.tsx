@@ -115,7 +115,7 @@ export function NotificationPreferences({ actor }: { actor: string }) {
             onChange={(push_enabled) => setDraft({ ...value, push_enabled })}
           />
           <small>
-            Nhận thông báo đẩy trên thiết bị đã đăng ký <span className={styles.soon}>Sắp có</span>
+            Nhận thông báo đẩy trên thiết bị đã đăng ký
           </small>
         </div>
       </div>
