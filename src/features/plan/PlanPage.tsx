@@ -23,6 +23,8 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import type { RouteContext } from '../../app/route-context';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
+import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
+import { paths } from '../../app/route-paths';
 import { useTripPlanSnapshot } from './hooks/use-trip-plan-snapshot';
 import { usePlanDraft } from './hooks/use-plan-draft';
 import { usePreviewDnd, type PreviewDndControls } from './hooks/use-preview-dnd';
@@ -797,6 +799,7 @@ export function PlanView({
   const allPoolItems = unscheduledDraftActivities(activities);
   const [query, setQuery] = useState('');
   const [mapExpanded, setMapExpanded] = useState(false);
+  const [mapVisible, setMapVisible] = useState(true);
   const dnd = usePreviewDnd({
     activities,
     day,
@@ -809,6 +812,7 @@ export function PlanView({
   const [editing, setEditing] = useState<PlanDraftActivity | null>(null);
   const editReturnFocus = useRef<HTMLButtonElement | null>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
+  const mapButtonRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const compact = useCompactPlanner();
   useEffect(() => {
@@ -833,6 +837,7 @@ export function PlanView({
   );
   const closePlanner = () => {
     onPlannerClose();
+    setMapVisible(false);
     window.requestAnimationFrame(() => addButtonRef.current?.focus());
   };
   const closeEditor = () => {
@@ -844,9 +849,6 @@ export function PlanView({
   };
   return (
     <>
-      <div className={styles.hero}>
-        <TripHero trip={trip} compact variant="schedule" />
-      </div>
       {storageStatus === 'memory' && (
         <Alert tone="warning" live>
           Không thể lưu vào trình duyệt. Bản nháp chỉ được giữ trong bộ nhớ của tab này và sẽ mất
@@ -864,8 +866,16 @@ export function PlanView({
             >
               Ngày {index + 1}
               <small>
-                <span>{date.slice(8, 10)}/{date.slice(5, 7)}</span>
-                <span className={styles.dayWeather} title="Chưa có dữ liệu thời tiết" aria-label="Thời tiết chưa có dữ liệu"><img src={daySun} alt="" />—</span>
+                <span>
+                  {date.slice(8, 10)}/{date.slice(5, 7)}
+                </span>
+                <span
+                  className={styles.dayWeather}
+                  title="Chưa có dữ liệu thời tiết"
+                  aria-label="Thời tiết chưa có dữ liệu"
+                >
+                  <img src={daySun} alt="" />—
+                </span>
               </small>
             </button>
           ))}
@@ -913,15 +923,29 @@ export function PlanView({
         onDragEnd={dnd.onDragEnd}
       >
         {!plannerOpen && (
-          <div className={`${styles.columns} ${mapExpanded ? styles.mapExpanded : ''}`}>
+          <div
+            className={`${styles.columns} ${mapVisible ? (mapExpanded ? styles.mapExpanded : '') : styles.timelineOnly}`}
+          >
             <section className={styles.timeline} aria-labelledby="plan-day-title">
               <div className={styles.toolbar}>
                 <h2 id="plan-day-title">{dayHeading(day)}</h2>
                 <span className={styles.progress}>
                   {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
                 </span>
-                <Button variant="outline" aria-pressed={mapExpanded} onClick={() => setMapExpanded(!mapExpanded)} icon={<Icon name="mapFolded" size={18} />}>
-                  {mapExpanded ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
+                <Button
+                  ref={mapButtonRef}
+                  variant="outline"
+                  aria-pressed={mapVisible}
+                  onClick={() => {
+                    if (mapVisible) setMapVisible(false);
+                    else {
+                      setMapExpanded(true);
+                      setMapVisible(true);
+                    }
+                  }}
+                  icon={<Icon name="mapFolded" size={18} />}
+                >
+                  {mapVisible ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
                 </Button>
                 <Button
                   ref={addButtonRef}
@@ -941,7 +965,18 @@ export function PlanView({
                 dnd={dnd}
               />
             </section>
-            <PlanDayMap trip={trip} plan={{ ...plan, activities }} day={day} compact={!mapExpanded} onClose={() => setMapExpanded(false)} />
+            {mapVisible && (
+              <PlanDayMap
+                trip={trip}
+                plan={{ ...plan, activities }}
+                day={day}
+                compact={!mapExpanded}
+                onClose={() => {
+                  setMapVisible(false);
+                  mapButtonRef.current?.focus();
+                }}
+              />
+            )}
           </div>
         )}
         {plannerOpen && (
@@ -1003,15 +1038,29 @@ export function PlanPage() {
     </MotionProvider>
   );
 }
+function PlanHeader({ trip }: { trip: TripDetailViewModel }) {
+  return (
+    <>
+      <PageBreadcrumb
+        className={styles.breadcrumb}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(trip.id) }]}
+        current="Lịch trình"
+      />
+      <div className={styles.hero}>
+        <TripHero trip={trip} compact variant="landscape" />
+      </div>
+    </>
+  );
+}
 function GatewayPlanPage() {
   const { tripId = '' } = useParams();
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   return (
     <section className={styles.page} data-flow="plan-server">
-      <h1 className={styles.srOnly}>Lịch trình</h1>
+      {snapshot.state.status !== 'ready' && <h1 className={styles.srOnly}>Lịch trình</h1>}
       {snapshot.state.status === 'ready' ? (
         <>
-          <TripHero trip={snapshot.state.trip} compact variant="schedule" />
+          <PlanHeader trip={snapshot.state.trip} />
           <GatewayPlanPanel
             key={`${tripId}:${snapshot.state.trip.currentMembership.id}`}
             trip={snapshot.state.trip}
@@ -1074,7 +1123,7 @@ function PreviewPlanPage() {
       data-local-draft="true"
       data-node-id="20:236"
     >
-      <h1 className={styles.srOnly}>Lịch trình</h1>
+      {!(trip && effectivePlan) && <h1 className={styles.srOnly}>Lịch trình</h1>}
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
@@ -1086,6 +1135,7 @@ function PreviewPlanPage() {
         <ContentState state="loading" headingLevel={2} />
       ) : trip && effectivePlan ? (
         <>
+          <PlanHeader trip={trip} />
           {gateway && (
             <div>
               <Button

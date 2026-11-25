@@ -50,6 +50,7 @@ export function GeoapifyMap({
   autoFit = true,
   onViewport,
   initialView,
+  onSelectedScreenPosition,
 }: {
   points: readonly MapPoint[];
   selectedId?: string | null;
@@ -65,6 +66,7 @@ export function GeoapifyMap({
   onViewport?: (change: MapViewportChange) => void;
   /** First centre (W14: the Trip's first place); later changes are ignored. */
   initialView?: MapCenter;
+  onSelectedScreenPosition?: (position: { x: number; y: number } | null) => void;
 }) {
   const node = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -255,6 +257,24 @@ export function GeoapifyMap({
   useEffect(() => {
     if (ready && focus) map.current?.setView([focus.latitude, focus.longitude], 13);
   }, [focus, ready]);
+  useEffect(() => {
+    const m = map.current;
+    if (!ready || !m) return;
+    const selected = stablePoints.find((point) => point.id === selectedId);
+    const updatePosition = () => {
+      if (!selected) {
+        onSelectedScreenPosition?.(null);
+        return;
+      }
+      const point = m.latLngToContainerPoint([selected.latitude, selected.longitude]);
+      onSelectedScreenPosition?.({ x: point.x, y: point.y });
+    };
+    updatePosition();
+    m.on('move zoom resize', updatePosition);
+    return () => {
+      m.off('move zoom resize', updatePosition);
+    };
+  }, [ready, selectedId, stablePoints, onSelectedScreenPosition]);
   /** W13: credit Overture only while at least one Overture point is inside the frame. */
   function syncOvertureCredit(m: L.Map) {
     const bounds = m.getBounds();

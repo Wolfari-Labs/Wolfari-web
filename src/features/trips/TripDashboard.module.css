@@ -234,6 +234,25 @@
 .fareCard {
   background: var(--v2-peach);
 }
+.weatherCard {
+  background: linear-gradient(to bottom, #fff0c2, #ffe0d4);
+}
+.weatherCard .weatherValue {
+  position: absolute;
+  top: 18px;
+  left: 74px;
+  color: var(--v2-ink);
+  font: 800 24px/28px var(--v2-font);
+}
+.weatherCard .weatherUnavailable {
+  position: absolute;
+  top: 50px;
+  left: 74px;
+  right: 12px;
+  bottom: auto;
+  color: var(--v2-sub);
+  font: 600 11px/16px var(--v2-font);
+}
 .statHead {
   display: contents;
 }
@@ -308,6 +327,9 @@
   min-height: 0;
   overflow: auto;
   scrollbar-width: thin;
+}
+.stat .progressCopy {
+  overflow: visible;
 }
 /* The progress track sits beside the badge, under the tile label (top row of the tile). */
 .progressTrack {
@@ -420,28 +442,64 @@
   min-width: 0;
 }
 .farePanel {
-  height: 223px;
-  gap: 10px;
+  flex: 1;
+  gap: 8px;
+  min-height: 160px;
   padding: 20px 18px;
+  background: var(--v2-peach);
 }
-.farePanel .badge,
+.fareTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+.fareTop .cardContent {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 46px;
+}
+.farePanel h2 {
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
+}
+.farePanel .cardContent {
+  overflow: visible;
+}
+.farePanel .summaryValue {
+  font-size: 24px;
+  line-height: 28px;
+}
+.farePanel .summaryDetail {
+  color: var(--v2-sub);
+  font: 600 11px/16px var(--v2-font);
+}
+.farePanel .summaryLink {
+  position: absolute;
+  right: 18px;
+  bottom: 20px;
+  left: 18px;
+  margin: 0;
+  padding: 0;
+  color: var(--v2-blue-text);
+  font: 700 14px/normal var(--v2-font);
+}
 .weatherPanel .badge {
   width: 44px;
   height: 44px;
   border-radius: 15px;
 }
-.farePanel h2,
 .weatherPanel h2 {
   font: 600 13px/18px var(--v2-font);
   color: var(--v2-sub);
 }
-.farePanel .summaryValue {
-  font-size: 24px;
-  line-height: 33px;
-}
 .weatherPanel {
   position: relative;
-  height: 152px;
+  flex: 1;
+  min-height: 0;
   gap: 10px;
   padding: 20px 18px;
   background: linear-gradient(to bottom, #fff0c2, #ffe0d4);
@@ -516,7 +574,10 @@
   .aside {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .weatherPanel {
+    min-height: 152px;
   }
   .itineraryPanel,
   .mapPanel {
@@ -608,4 +669,162 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   white-space: normal;
+}
+
+@media (min-width: 1001px) and (max-height: 960px) {
+  .page {
+    height: 100%;
+    overflow: hidden;
+  }
+  .page > [data-region='trip-hero'] {
+    flex: 0 0 170px;
+    min-height: 0;
+    padding-top: 60px;
+    padding-bottom: 14px;
+  }
+  .dashboard {
+    flex: 1 1 auto;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .summaries {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    flex: 0 0 138px;
+  }
+  .stat {
+    height: 138px;
+  }
+  .workspace {
+    flex: 1 1 auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    height: auto;
+  }
+  .itineraryPanel {
+    grid-column: span 2;
+  }
+  .itineraryPanel,
+  .mapPanel {
+    height: 100%;
+    min-height: 0;
+  }
+  .aside {
+    grid-column: auto;
+    display: flex;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .itineraryPanel > div {
+    overflow-y: auto;
+  }
+  .weatherPanel {
+    flex: 1 1 auto;
+    height: auto;
+  }
+}
+@media (min-width: 1001px) and (max-height: 700px) {
+  :global(#main-content) .page > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero']),
+  .description {
+    top: 12px;
+  }
+  .page > [data-region='trip-hero'] {
+    flex-basis: 145px;
+    padding-top: 68px;
+    padding-bottom: 10px;
+  }
+  .page > [data-region='trip-hero'] h2 {
+    font-size: 30px;
+  }
+  .dashboard {
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .summaries {
+    flex-basis: 112px;
+  }
+  .stat {
+    height: 112px;
+    gap: 4px;
+    padding: 10px;
+  }
+  .stat .badge {
+    width: 36px;
+    height: 36px;
+  }
+  .stat .summaryValue {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .weatherCard .weatherValue {
+    top: 12px;
+    left: 54px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .weatherCard .weatherUnavailable {
+    top: 38px;
+    left: 54px;
+  }
+  .stat h2 {
+    bottom: 8px;
+    left: 10px;
+    right: 10px;
+    font-size: 11px;
+    line-height: 14px;
+  }
+  .progressTrack {
+    top: 32px;
+    left: 54px;
+  }
+  .aside {
+    gap: 8px;
+  }
+  .weatherPanel {
+    gap: 4px;
+    padding: 10px;
+  }
+  .weatherPanel .badge {
+    width: 36px;
+    height: 36px;
+  }
+  .weatherPanel {
+    position: relative;
+    padding-left: 54px;
+  }
+  .weatherPanel .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+  .weatherPanel .weatherValue {
+    font-size: 18px;
+    line-height: 20px;
+  }
+  .weatherUnavailable {
+    right: 10px;
+    bottom: 8px;
+  }
+  .farePanel {
+    gap: 2px;
+    min-height: 0;
+    padding: 10px;
+  }
+  .fareTop {
+    gap: 8px;
+  }
+  .fareTop .cardContent {
+    min-height: 36px;
+  }
+  .fareTop .badge {
+    width: 36px;
+    height: 36px;
+  }
+  .farePanel .summaryValue {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .farePanel .summaryLink {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
 }

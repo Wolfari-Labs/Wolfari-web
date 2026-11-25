@@ -136,9 +136,9 @@ describe('trip map projection', () => {
     );
 
     expect(
-      await screen.findByText('Bản đồ nền chưa được cấu hình', { selector: 'strong' }),
+      await screen.findByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' })).toBeInTheDocument();
+    expect(screen.queryByText('Bản đồ nền chưa được cấu hình')).not.toBeInTheDocument();
     expect(
       screen.getByText(
         'Lựa chọn chỉ được lưu trên thiết bị này, chưa đồng bộ với thành viên khác.',

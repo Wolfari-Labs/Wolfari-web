@@ -5,10 +5,16 @@
   position: relative;
   width: 44px;
   height: 44px;
+  flex-shrink: 0;
   border-radius: var(--v2-radius-round);
   background: var(--v2-white);
   color: var(--v2-ink);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.bell img {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 .dot {
   position: absolute;

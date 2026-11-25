@@ -165,15 +165,11 @@
   width: 23px;
   height: 23px;
 }
-.loadedOnly {
-  margin: 8px 0 10px;
-  color: var(--color-muted);
-  font-size: 11px;
-  line-height: 16px;
-}
 .tableWrap {
   overflow: auto;
   border-radius: 4px;
+  max-height: clamp(200px, 42dvh, 400px);
+  overscroll-behavior: contain;
 }
 .transactions table {
   width: 100%;
@@ -298,7 +294,7 @@
     flex-basis: 100%;
   }
   .selectLabel {
-    flex: 1;
+    flex: 0 0 150px;
   }
   .export {
     width: 61px;
@@ -325,7 +321,7 @@
   }
   .selectLabel {
     min-width: 0;
-    flex: 1;
+    flex: 0 0 150px;
   }
   .transactions th {
     padding: 0 10px;
@@ -426,23 +422,6 @@
   }
 }
 
-/* Keep the filter scope note in normal flow between controls and results. */
-.transactions .loadedOnly {
-  display: block;
-  margin: 12px 0;
-  min-width: 0;
-  color: var(--color-muted);
-  font-size: 12px;
-  line-height: 20px;
-  overflow-wrap: anywhere;
-}
-
-.transactions .loadedOnly > p {
-  margin: 0;
-  font: inherit;
-  line-height: inherit;
-}
-
 /* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
 /* Web v2 (Figma W10 · 942:10026): goal + transaction ledger cards on the V2 surface. */
 .goal,
@@ -534,6 +513,38 @@
   font-weight: 800;
   line-height: 24px;
 }
+.transactionsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex: 0 0 auto;
+}
+.transactionsHeader h2 {
+  margin: 0;
+}
+.statusSummary {
+  margin: 2px 0 0;
+  color: #56637b;
+  font: 600 12px/18px var(--v2-font);
+}
+.transactionsHeader .settings {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 0 18px;
+  background: var(--v2-gradient);
+  color: var(--v2-white);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
+}
+.transactionsHeader .settings:hover {
+  color: var(--v2-white);
+  filter: brightness(1.05);
+}
+.transactionsHeader .settings:focus-visible {
+  outline: 3px solid #244f9c;
+  outline-offset: 2px;
+}
 .filterGroup {
   flex: 0 1 auto;
   gap: 2px;
@@ -561,14 +572,32 @@
 }
 .toolbar {
   gap: 12px;
+  flex: 0 0 auto;
 }
 .toolbar > .selectLabel:first-of-type {
   margin-left: auto;
 }
 .selectLabel {
   color: transparent;
+  position: relative;
+  flex: 0 0 150px;
+  width: 150px;
+  min-width: 0;
+}
+.selectLabel::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 15px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--v2-ink);
+  border-bottom: 2px solid var(--v2-ink);
+  transform: rotate(45deg);
+  pointer-events: none;
 }
 .selectLabel select {
+  appearance: none;
   height: 42px;
   border: 0;
   border-radius: var(--v2-radius-pill);
@@ -587,10 +616,6 @@
 .export img {
   width: 20px;
   height: 20px;
-}
-.transactions .loadedOnly {
-  color: #5d6a82;
-  font-weight: 600;
 }
 .empty {
   border-radius: var(--v2-radius-row);
@@ -614,9 +639,12 @@
     font-size: 13px;
   }
   .transactions th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     height: 28px;
     padding: 0 14px;
-    background: transparent;
+    background: var(--v2-white);
     color: #5d6a82;
     font-size: 11px;
     font-weight: 700;
@@ -654,6 +682,14 @@
   }
 }
 @media (max-width: 560px) {
+  .transactionsHeader {
+    align-items: flex-start;
+  }
+  .transactionsHeader .settings {
+    min-height: 38px;
+    padding-inline: 10px;
+    font-size: 11px;
+  }
   .goalIcon {
     width: 40px;
     height: 40px;
@@ -672,6 +708,10 @@
   }
   .toolbar > .selectLabel:first-of-type {
     margin-left: 0;
+  }
+  .selectLabel {
+    width: 150px;
+    flex: 0 0 150px;
   }
 }
 /* Narrow desktop: the ledger toolbar wraps instead of pushing its selects past the card. */

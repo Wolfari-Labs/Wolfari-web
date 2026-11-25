@@ -40,12 +40,8 @@ import { OperationStatus, useCommandSession } from '../../shared/components/Oper
 import { toDomainError, money } from '../../shared/lib/runtime-validation';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import type { MembershipViewModel } from '../members/model/members';
-import { FinanceKpis, FinanceStateBar, FinanceUnavailable } from './components/FinancePresentation';
-import {
-  FinanceGoal,
-  FinanceTransactionPanel,
-  type FinanceTransactionRow,
-} from './components/FinanceDesktop';
+import { FinanceKpis, FinanceUnavailable } from './components/FinancePresentation';
+import { FinanceTransactionPanel, type FinanceTransactionRow } from './components/FinanceDesktop';
 import { FinanceOverlay, type FinanceSection } from './components/FinanceOverlay';
 import financeOverlayStyles from './components/FinanceOverlay.module.css';
 import workspaceStyles from './components/FinanceWorkspace.module.css';
@@ -870,25 +866,6 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       )}
       {fundShown && fund && (
         <>
-          <FinanceGoal
-            budget={fund.budget_amount}
-            amount={fund.current_balance}
-            format={formatVnd}
-            onSettings={() => setFinanceOverlayOpen(true)}
-            settingsRef={financeSettingsRef}
-          />
-          <FinanceStateBar
-            status={fund.status}
-            holderName={name(fund.holder_user_id)}
-            owner={owner}
-            holder={holder}
-            balance={fund.current_balance}
-            format={formatVnd}
-            disabled={blocked}
-            onBudget={() => open('budget')}
-            onDestination={() => open('destination-create')}
-            actions={reloadButton}
-          />
           {fund.status !== 'OPEN' && (
             <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
           )}
@@ -899,13 +876,12 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             available={fund.available_balance}
             format={formatVnd}
           />
-          <div className={fundStyles.moneyNote}>
-            <Icon name="info" size={16} /> Tiền chuyển thẳng vào tài khoản người giữ quỹ. Wolfari
-            ghi nhận và đối chiếu, không giữ hoặc chuyển tiền thật.
-          </div>
           <FinanceTransactionPanel
             rows={transactionRows}
             format={formatVnd}
+            statusSummary={`Quỹ ${fund.status === 'OPEN' ? 'đang mở' : fund.status === 'CLOSING' ? 'đang chốt' : 'đã đóng'} · Người giữ quỹ: ${holder ? 'bạn' : name(fund.holder_user_id)}`}
+            onSettings={() => setFinanceOverlayOpen(true)}
+            settingsRef={financeSettingsRef}
             loading={ledger.isPending}
             feedback={
               ledger.isError ? (
@@ -1549,14 +1525,14 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                         ? 'Bàn giao Fund Holder'
                         : financeSection === 'bank-transfers'
                           ? 'Chuyển khoản ngân hàng'
-                        : 'Đóng Finance'
+                          : 'Đóng Finance'
                 }
               >
                 {financeSection === 'handover'
                   ? 'Bàn giao người giữ quỹ chưa được hỗ trợ.'
                   : financeSection === 'bank-transfers'
                     ? 'Danh sách chuyển khoản ngân hàng chưa khả dụng trong chế độ dữ liệu hiện tại.'
-                  : 'Chức năng này đang được tích hợp trên Web, hiện chỉ có thể xem tổng quan giao dịch.'}
+                    : 'Chức năng này đang được tích hợp trên Web, hiện chỉ có thể xem tổng quan giao dịch.'}
               </FinanceUnavailable>
             )}
           </div>
@@ -1585,7 +1561,10 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
   });
   const trip = query.data?.status === 'ready' ? query.data.data : null;
   return (
-    <section className={`${styles.page} ${tripWorkspaceStyles.fullWidth}`} data-flow="fund-server">
+    <section
+      className={`${styles.page} ${tripWorkspaceStyles.fullWidth} ${fundStyles.gatewayPage}`}
+      data-flow="fund-server"
+    >
       <nav className={fundStyles.breadcrumb} aria-label="Đường dẫn">
         <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
         <span aria-hidden="true">›</span>

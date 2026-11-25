@@ -219,15 +219,29 @@ test('SRS12: location and Dress writes survive reload with shared revisions', as
   // The POI map lists saved places and pre-selects the first one after a reload.
   await expect(page.getByRole('article', { name: 'Đang chọn Bảo tàng thủ công' })).toBeVisible();
   await page.goto(`${root}/dress-code`);
-  await page.getByRole('button', { name: 'Thêm dress code', exact: true }).click();
+  await page.getByRole('button', { name: 'Tạo trang phục', exact: true }).click();
   await dialog.getByLabel('Ngày', { exact: true }).selectOption('2026-11-02');
   await dialog.getByLabel('Tiêu đề').fill('Áo chống nắng');
-  await dialog.getByRole('button', { name: 'Lưu dress code' }).click();
+  await dialog.getByRole('button', { name: 'Tạo trang phục', exact: true }).click();
   await expect(dialog).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Áo chống nắng' })).toBeVisible();
   expect(model.writes).toHaveLength(2);
   expect(model.writes[1]!.body.expected_plan_version).toBe(2);
   expect(model.rows.dress_codes[0]?.scope_type).toBe('DAY');
+  await page.getByRole('button', { name: 'Thao tác Áo chống nắng' }).click();
+  await page.getByRole('menuitem', { name: 'Chỉnh sửa' }).click();
+  await dialog.getByLabel('Tiêu đề').fill('Áo chống nắng mới');
+  await dialog.getByRole('button', { name: 'Lưu thay đổi' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Áo chống nắng mới' })).toBeVisible();
+  await page.getByRole('button', { name: 'Thao tác Áo chống nắng mới' }).click();
+  await page.getByRole('menuitem', { name: 'Xóa' }).click();
+  await page
+    .getByRole('alertdialog', { name: 'Xóa dress code?' })
+    .getByRole('button', { name: 'Xác nhận' })
+    .click();
+  await expect(page.getByRole('heading', { name: 'Áo chống nắng mới' })).toHaveCount(0);
+  expect(model.writes).toHaveLength(4);
 });
 test('SRS12: packing assignment uses item PATCH and editing preserves completion', async ({
   page,
@@ -326,7 +340,7 @@ test('SRS12: unknown Map write blocks Dress after route navigation; original jou
   await expect(dialog.getByText(/Chưa rõ kết quả lưu/)).toBeVisible();
   await dialog.getByRole('button', { name: 'Đóng', exact: true }).click();
   await page.goto(`${root}/dress-code`);
-  await expect(page.getByRole('button', { name: 'Thêm dress code', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Tạo trang phục', exact: true })).toBeDisabled();
   expect(model.writes).toHaveLength(1);
 });
 test('SRS12: narrow editor remains keyboard-accessible and has no automated accessibility violations', async ({
@@ -337,7 +351,7 @@ test('SRS12: narrow editor remains keyboard-accessible and has no automated acce
   await login(page);
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto(`${root}/dress-code`);
-  await page.getByRole('button', { name: 'Thêm dress code', exact: true }).click();
+  await page.getByRole('button', { name: 'Tạo trang phục', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
@@ -345,7 +359,7 @@ test('SRS12: narrow editor remains keyboard-accessible and has no automated acce
   await page.screenshot({ path: testInfo.outputPath('dress-editor-402.png') });
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Thêm dress code', exact: true })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Tạo trang phục', exact: true })).toBeFocused();
 });
 
 function place(n: number) {

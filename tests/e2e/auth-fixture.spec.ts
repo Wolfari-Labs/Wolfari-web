@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-test('guest Home navigation and standalone login follow Web v2', async ({ page }) => {
+test('guest Home navigation keeps the site header on login', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto('/');
-  // Figma 930:6661 (Active=Guest): Trang chủ, Chuyến đi của tôi, Lên lịch + two CTAs.
+  // Guest header: creating a trip requires a signed-in viewer.
   const nav = page.getByRole('navigation', { name: 'Điều hướng chính' });
   await expect(nav.getByRole('link', { name: 'Trang chủ', exact: true })).toHaveAttribute(
     'href',
@@ -13,15 +13,80 @@ test('guest Home navigation and standalone login follow Web v2', async ({ page }
     'href',
     '/trips',
   );
-  await expect(nav.getByRole('button', { name: 'Lên lịch', exact: true })).toBeDisabled();
+  const createTrip = nav.getByRole('link', { name: 'Tạo chuyến đi', exact: true });
+  await expect(createTrip).toHaveAttribute('href', '/login?returnTo=%2Ftrips%2Fnew');
   await expect(page.getByRole('link', { name: 'Bắt đầu miễn phí', exact: true })).toHaveAttribute(
     'href',
     '/register',
   );
-  await page.goto('/login');
+  await createTrip.click();
+  await expect(page).toHaveURL(/\/login\?returnTo=%2Ftrips%2Fnew$/);
   await expect(page.getByRole('form', { name: 'Biểu mẫu đăng nhập' })).toBeVisible();
   await expect(page.locator('main[data-layout="auth"]')).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Điều hướng chính' })).toHaveCount(0);
+  await expect(page.getByRole('navigation', { name: 'Điều hướng chính' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Quay lại', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Quay lại', exact: true }).click();
+  await expect(page).toHaveURL('/');
+});
+
+for (const size of [
+  { width: 1440, height: 800 },
+  { width: 1366, height: 600 },
+  { width: 402, height: 874 },
+  { width: 320, height: 480 },
+])
+  test(`login and registration fit the browser viewport at ${size.width}x${size.height}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(size);
+    for (const route of ['login', 'register']) {
+      await page.goto(`/${route}`);
+      const form = page.getByRole('form', {
+        name: route === 'login' ? 'Biểu mẫu đăng nhập' : 'Biểu mẫu đăng ký',
+      });
+      await expect(form).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Quay lại', exact: true })).toBeVisible();
+      await expect(
+        page.getByRole('navigation', {
+          name: size.width <= 768 ? 'Điều hướng tài khoản' : 'Điều hướng chính',
+        }),
+      ).toBeVisible();
+      const formColumn = form.locator('..');
+      const layout = await page.evaluate(() => {
+        const column = document.querySelector('main[data-auth-header] form')?.parentElement;
+        return {
+          viewportHeight: innerHeight,
+          documentHeight: document.documentElement.scrollHeight,
+          documentWidth: document.documentElement.scrollWidth,
+          columnHeight: column?.clientHeight ?? 0,
+        };
+      });
+      expect(layout.documentHeight).toBeLessThanOrEqual(layout.viewportHeight);
+      expect(layout.documentWidth).toBeLessThanOrEqual(size.width);
+      expect(layout.columnHeight).toBeGreaterThan(0);
+      await formColumn.evaluate((column) => {
+        column.scrollTop = column.scrollHeight;
+      });
+      const switchAuth = form.getByRole('link', {
+        name: route === 'login' ? 'Đăng ký' : 'Đăng nhập',
+      });
+      await switchAuth.scrollIntoViewIfNeeded();
+      await expect(switchAuth).toBeInViewport();
+      expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    }
+  });
+
+test('mobile registration back returns to login', async ({ page }) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.goto('/login');
+  await page
+    .getByRole('form', { name: 'Biểu mẫu đăng nhập' })
+    .getByRole('link', { name: 'Đăng ký' })
+    .click();
+  await expect(page).toHaveURL(/\/register\?/);
+  await page.getByRole('button', { name: 'Quay lại', exact: true }).click();
+  await expect(page).toHaveURL('/login');
+  await expect(page.getByRole('navigation', { name: 'Điều hướng tài khoản' })).toBeVisible();
 });
 
 for (const width of [1440, 402])
@@ -208,14 +273,13 @@ for (const size of [
         });
         const bounds = await form.boundingBox();
         expect(bounds).not.toBeNull();
-        const target =
-          route === '/login'
-            ? { x: 834, width: 520 }
-            : route === '/register'
-              ? { x: 834, width: 520 }
-              : { x: 48, y: 221, width: 560 };
-        for (const dimension of ['x', 'width'] as const)
-          expect(Math.abs(bounds![dimension] - target[dimension])).toBeLessThanOrEqual(4);
+        if (route === '/profile') {
+          expect(Math.abs(bounds!.x - 48)).toBeLessThanOrEqual(4);
+          expect(Math.abs(bounds!.width - 560)).toBeLessThanOrEqual(4);
+        } else {
+          expect(bounds!.x).toBeGreaterThanOrEqual(0);
+          expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(size.width);
+        }
         if (route === '/login') {
           expect(bounds!.height).toBeGreaterThan(450);
           expect(bounds!.y).toBeGreaterThanOrEqual(48);
@@ -236,6 +300,8 @@ for (const size of [
       await shellPreview.scrollIntoViewIfNeeded();
       // Desktop floats the fixture-only shell preview in the gutter; mobile keeps it in flow.
       if (size.width > 768) await expect(shellPreview).toBeInViewport();
+      else if (route === '/login' || route === '/register')
+        expect(await page.evaluate(() => scrollY)).toBe(0);
       else expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
       for (const img of await page.locator('img:visible').all()) {
         await img.scrollIntoViewIfNeeded();

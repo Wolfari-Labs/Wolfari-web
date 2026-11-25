@@ -132,26 +132,22 @@ for (const failure of ['getter', 'quota'] as const) {
   });
 }
 
-test('Fund tabs support arrows, wraparound, Home, End and Tab with synchronized panels', async ({
-  page,
-}) => {
+test('Fund transaction filters support arrows, wraparound, Home and End', async ({ page }) => {
   await page.goto(`${trip}/fund`);
-  const tabs = page.getByRole('tablist', { name: 'Các vùng quỹ' });
-  await tabs.getByRole('tab', { name: 'Chi quỹ', exact: true }).focus();
+  const tabs = page.getByRole('tablist', { name: 'Bộ lọc giao dịch' });
+  await tabs.getByRole('tab', { name: 'Tất cả', exact: true }).focus();
   for (const [key, title] of [
     ['ArrowRight', 'Đóng góp'],
-    ['End', 'Hoàn dư'],
-    ['ArrowRight', 'Chi quỹ'],
-    ['ArrowLeft', 'Hoàn dư'],
-    ['Home', 'Chi quỹ'],
+    ['End', 'Hoàn tiền'],
+    ['ArrowRight', 'Tất cả'],
+    ['ArrowLeft', 'Hoàn tiền'],
+    ['Home', 'Tất cả'],
   ]) {
     await page.keyboard.press(key!);
     const active = tabs.getByRole('tab', { name: title!, exact: true });
     await expect(active).toBeFocused();
     await expect(active).toHaveAttribute('aria-selected', 'true');
     await expect(active).toHaveAttribute('tabindex', '0');
-    await expect(page.getByRole('tabpanel', { name: title!, exact: true })).toBeVisible();
   }
-  await page.keyboard.press('Tab');
-  await expect(page.getByRole('tabpanel', { name: 'Chi quỹ', exact: true })).toBeFocused();
+  await expect(page.locator('[data-finance-transactions] tbody tr')).toHaveCount(5);
 });

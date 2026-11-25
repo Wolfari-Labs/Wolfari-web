@@ -4,7 +4,6 @@ import { Trash2 } from 'lucide-react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
-import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Select } from '../../shared/components/Select';
 import headingPinIcon from '../../shared/assets/figma/trip-map-heading-pin.svg';
@@ -24,6 +23,7 @@ import { planDays } from '../plan/model/plan-presentation';
 import { usePlanDraft } from '../plan/hooks/use-plan-draft';
 import { TripHero } from '../trips/components/TripHero';
 import { MapViewport } from './MapViewport';
+import { ExpandableMapPanel } from './ExpandableMapPanel';
 import { PlaceDetail } from './PlaceDetail';
 import {
   mapLocationPresentations,
@@ -719,11 +719,7 @@ function PreviewMapPage() {
                     </div>
                   )}
                 </section>
-                <section
-                  className={styles.mapPanel}
-                  aria-labelledby="map-panel-title"
-                  data-region="map-panel"
-                >
+                <ExpandableMapPanel>
                   <div className={styles.mapToolbar}>
                     <div className={styles.routeSelector}>
                       <span id="map-panel-title" className={styles.visuallyHidden}>
@@ -774,11 +770,8 @@ function PreviewMapPage() {
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />
-                </section>
+                </ExpandableMapPanel>
               </div>
-              <CapabilityNote id="map-provider-note">
-                <strong>Bản đồ nền chưa được cấu hình</strong>.
-              </CapabilityNote>
             </div>
             <PlaceDetail
               item={selectedItem}

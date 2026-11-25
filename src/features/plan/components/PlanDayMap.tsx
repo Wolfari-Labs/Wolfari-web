@@ -8,7 +8,6 @@ import type { PlaceRoute } from '../../map/places';
 import { useRuntimeServices } from '../../../app/gateway-context';
 import { Button } from '../../../shared/components/Button';
 import { Icon } from '../../../shared/components/Icon';
-import cameraMascot from '../../../shared/assets/figma/trips-plan/camera-mascot.png';
 import styles from './PlanDayMap.module.css';
 export function dayMapLocations(
   plan: Pick<PlanViewModel, 'activities' | 'selectedLocations'>,
@@ -129,59 +128,66 @@ export function PlanDayMap({
         : `Bản đồ lịch trình ngày ${number || day}`;
   return (
     <div className={`${styles.column} ${compact ? styles.compact : ''}`}>
-    <section className={styles.panel} aria-label={title} data-plan-day-map={day}>
-      <header className={styles.header}>
-        <div>
-          <h3>{compact && number > 0 ? `Bản đồ ngày ${number}` : title}</h3>
-          <p className={styles.srOnly}>{locations.length} địa điểm gắn với hoạt động đã xếp lịch</p>
+      <section className={styles.panel} aria-label={title} data-plan-day-map={day}>
+        <header className={styles.header}>
+          <div>
+            <h3>{compact && number > 0 ? `Bản đồ ngày ${number}` : title}</h3>
+            <p className={styles.srOnly}>
+              {locations.length} địa điểm gắn với hoạt động đã xếp lịch
+            </p>
+          </div>
+          <Button
+            ref={closeRef}
+            variant="outline"
+            size="icon"
+            aria-label="Ẩn bản đồ"
+            onClick={onClose}
+          >
+            <Icon name="close" size={18} />
+          </Button>
+          <a
+            className={styles.mapLink}
+            href={`/trips/${encodeURIComponent(trip.id)}/map?day=${encodeURIComponent(day)}`}
+          >
+            <Icon name="mapFolded" size={14} />
+            Mở bản đồ lớn
+          </a>
+        </header>
+        <div className={styles.map}>
+          <GeoapifyMap
+            embedded
+            points={points}
+            selectedId={selected}
+            onSelect={setSelected}
+            route={dayRoute.route}
+          />
         </div>
-        {!compact && <Button
-          ref={closeRef}
-          variant="outline"
-          size="icon"
-          aria-label="Ẩn bản đồ"
-          onClick={onClose}
-        >
-          <Icon name="close" size={18} />
-        </Button>}
-        <a className={styles.mapLink} href={`/trips/${encodeURIComponent(trip.id)}/map?day=${encodeURIComponent(day)}`}><Icon name="mapFolded" size={14} />Mở bản đồ lớn</a>
-      </header>
-      <div className={styles.map}>
-        <GeoapifyMap
-          embedded
-          points={points}
-          selectedId={selected}
-          onSelect={setSelected}
-          route={dayRoute.route}
-        />
-      </div>
-      {dayRoute.summary && (
-        <p
-          className={styles.routeSummary}
-          data-route-summary
-          data-estimated={dayRoute.estimated || undefined}
-        >
-          {dayRoute.summary}
-        </p>
-      )}
-      <details className={styles.listRegion}>
-        <summary>Địa điểm trong lịch trình</summary>
-        {locations.length ? (
-          <ol className={styles.list}>
-            {locations.map((p) => (
-              <li key={p.id}>
-                <strong>{p.name}</strong>
-                <span>{p.address ?? 'Chưa có địa chỉ'}</span>
-                {!validCoordinates(p) && <small>Chưa có tọa độ hợp lệ</small>}
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className={styles.empty}>Chưa có địa điểm nào trong ngày đang xem.</p>
+        {dayRoute.summary && (
+          <p
+            className={styles.routeSummary}
+            data-route-summary
+            data-estimated={dayRoute.estimated || undefined}
+          >
+            {dayRoute.summary}
+          </p>
         )}
-      </details>
-    </section>
-    {compact && <aside className={styles.tip}><img src={cameraMascot} alt="" /><div><strong>Mẹo từ Wolfari</strong><p>Kiểm tra thời tiết và chuẩn bị đồ dùng phù hợp trước khi khởi hành nhé!</p></div></aside>}
+        <details className={styles.listRegion}>
+          <summary>Địa điểm trong lịch trình</summary>
+          {locations.length ? (
+            <ol className={styles.list}>
+              {locations.map((p) => (
+                <li key={p.id}>
+                  <strong>{p.name}</strong>
+                  <span>{p.address ?? 'Chưa có địa chỉ'}</span>
+                  {!validCoordinates(p) && <small>Chưa có tọa độ hợp lệ</small>}
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className={styles.empty}>Chưa có địa điểm nào trong ngày đang xem.</p>
+          )}
+        </details>
+      </section>
     </div>
   );
 }

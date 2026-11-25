@@ -54,6 +54,17 @@ async function assertViewportBounded(page: Page) {
     expect(m.bottom).toBeLessThanOrEqual(m.h + 1);
   }
 }
+test('Trip overview shows weather above fare tracking without duplicates', async ({ page }) => {
+  await openOverview(page, 1440, 768);
+  await expect(page.locator('[data-region="trip-overview-fare"]')).toHaveCount(1);
+  await expect(page.locator('[data-region="trip-overview-weather"]')).toHaveCount(1);
+  await expect(
+    page
+      .locator('[data-region="trip-overview-summaries"]')
+      .getByRole('heading', { name: 'Thời tiết hôm nay' }),
+  ).toBeVisible();
+  await expect(workspace(page).getByRole('heading', { name: 'Theo dõi giá vé' })).toBeVisible();
+});
 for (const [width, height] of viewports) {
   test(
     'Trip overview stays within one browser viewport at ' + width + 'x' + height,
@@ -83,11 +94,9 @@ for (const [width, height] of viewports) {
       const link = itinerary(page).getByRole('link', { name: /Xem tất cả lịch trình/ });
       await link.scrollIntoViewIfNeeded();
       await expect(link).toBeVisible();
-      // Fare tracking is the fourth stat tile; the decorative postcard column is gone.
+      // Weather occupies the fourth tile; fare tracking occupies the lower side column.
       await expect(page.locator('[data-region="trip-overview-postcard"]')).toHaveCount(0);
-      const fare = page
-        .locator('[data-region="trip-overview-summaries"]')
-        .locator('[data-region="trip-overview-fare"]');
+      const fare = workspace(page).locator('[data-region="trip-overview-fare"]');
       await fare.scrollIntoViewIfNeeded();
       await expect(fare).toBeVisible();
       await assertViewportBounded(page);
@@ -126,7 +135,11 @@ test('Trip overview matches refreshed Figma columns and keeps the shell and sche
       .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
     expect(columns).toHaveLength(3);
     await assertOverviewCardLayout(page);
-    // Web v2 lower row: itinerary, map and fare/weather side column.
+    // The weather summary appears in the top row; the lower side column holds fare tracking.
+    await expect(page.locator('[data-region="trip-overview-fare"]')).toHaveCount(1);
+    await expect(
+      workspace(page).getByRole('heading', { name: 'Theo dõi giá vé', exact: true }),
+    ).toBeVisible();
     if (state === 'expanded')
       for (const [index, width] of [520, 340, 204].entries())
         expect(Math.abs(columns[index]! - width)).toBeLessThanOrEqual(1);
@@ -184,12 +197,12 @@ test('Selected day updates the KPI and preserves real navigation and honest unav
     .click();
   await expect(summary.getByText('0 hoạt động', { exact: true })).toBeVisible();
   await expect(itinerary(page).getByText('Chưa có hoạt động trong ngày này.')).toBeVisible();
-  // Weather is a separate side panel; the fourth summary tile tracks fares.
-  await expect(summary.getByText(/thời tiết/i)).toHaveCount(0);
+  // Weather occupies the fourth summary tile; fare tracking stays below.
+  await expect(summary.getByText(/thời tiết/i)).toBeVisible();
   await expect(
-    summary
+    workspace(page)
       .locator('[data-region="trip-overview-fare"]')
-      .getByText('Chưa theo dõi', { exact: true }),
+      .getByText('Chưa có dữ liệu', { exact: true }),
   ).toBeVisible();
   await expect(
     page.locator('[data-region="trip-overview-map"]').getByText('Minh họa', { exact: true }),
@@ -318,7 +331,7 @@ test('Card links keep middle-click semantics and accessible colors with compact 
   await popup.close();
   await expect(page).toHaveURL(trip);
   const fare = page.locator('[data-region="trip-overview-fare"]');
-  await expect(fare.locator('p')).toHaveText(['Chưa theo dõi', 'Tạo theo dõi giá →']);
+  await expect(fare.locator('p')).toHaveText(['—', 'Chưa có dữ liệu', 'Tạo theo dõi giá →']);
   const map = page.locator('[data-region="trip-overview-map"]');
   await expect(map.getByRole('link')).toHaveCount(1);
   await expect(map.getByText(/Xem chi tiết/)).toHaveCount(0);

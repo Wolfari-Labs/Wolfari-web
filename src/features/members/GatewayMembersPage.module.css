@@ -136,6 +136,12 @@
     min-height: max(480px, calc(100dvh - 301px));
   }
 }
+
+@media (min-width: 769px) and (max-height: 700px) {
+  .actions {
+    margin-block: 8px;
+  }
+}
 .panel h2,
 .guidance h2 {
   margin: 0;
@@ -332,6 +338,10 @@
   color: var(--v2-sub);
   font: 700 12px/16px var(--v2-font);
 }
+.list details:not([open]) > :not(summary),
+.roleHelp:not([open]) > :not(summary) {
+  display: none;
+}
 .form {
   min-width: 0;
   display: grid;
@@ -461,5 +471,62 @@
   }
   .actions > .refresh {
     margin-left: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .page,
+  .workspaceRoot {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .page {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .workspaceRoot {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .workspace > .panel {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .workspace .list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  .workspace .roleHelp {
+    flex: 0 0 auto;
+    max-height: 35%;
+    overflow-y: auto;
+  }
+
+  .policyWorkspace,
+  .invitationTab {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
   }
 }

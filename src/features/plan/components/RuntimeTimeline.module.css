@@ -193,7 +193,7 @@
   flex-direction: column;
   gap: 14px;
   min-width: 0;
-  height: max(440px, calc(100dvh - 339px));
+  height: var(--plan-workspace-height, max(440px, calc(100dvh - 339px)));
   padding: 20px;
   overflow: hidden;
   border-radius: var(--v2-radius-tile);

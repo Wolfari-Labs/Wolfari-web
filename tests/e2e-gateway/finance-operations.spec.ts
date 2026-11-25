@@ -88,20 +88,17 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   });
   await login(page);
   await page.goto(`/trips/${tripId}/fund`);
-  await expect(page.getByRole('region', { name: 'Trạng thái quỹ' })).toContainText(
+  await expect(page.locator('[data-finance-transactions]')).toContainText('Quỹ đang mở');
+  await expect(page.getByRole('region', { name: 'Tổng quan quỹ' })).toContainText(
     '9.007.199.254.740.993 ₫',
   );
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(720);
   await page.screenshot({ path: test.info().outputPath('fund-populated.png'), fullPage: true });
-  const filterNote = page.locator('[data-finance-filter-note]');
-  await expect(filterNote).toContainText('Bộ lọc chỉ áp dụng cho các giao dịch đã tải.');
-  await expect(filterNote).toHaveCount(1);
-  const noteBounds = await filterNote.boundingBox();
-  const tableBounds = await page
-    .getByRole('table', { name: 'Các giao dịch quỹ nhóm' })
-    .boundingBox();
-  expect(tableBounds!.y - (noteBounds!.y + noteBounds!.height)).toBeGreaterThanOrEqual(12);
-  await filterNote.scrollIntoViewIfNeeded();
-  await page.screenshot({ path: test.info().outputPath('fund-filter-note.png') });
+  await page.setViewportSize({ width: 320, height: 600 });
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(600);
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await expect(page.locator('[data-finance-filter-note]')).toHaveCount(0);
+  await expect(page.getByRole('table', { name: 'Các giao dịch quỹ nhóm' })).toBeVisible();
   const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
   expect(scan.violations).toEqual([]);
   // The page h1 is the current breadcrumb item inside W/Trip header 937:7647 (12px).
@@ -263,7 +260,14 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await expect(dialog.getByText(/Đang chờ kết nối phục hồi/)).toBeVisible();
   await expect(page.getByText(/Đã hoàn tất thao tác/)).toHaveCount(0);
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Sửa ngân sách', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Cài đặt quỹ', exact: true }).click();
+  await expect(
+    page.getByRole('dialog', { name: 'Cài đặt quỹ nhóm' }).getByRole('button', {
+      name: 'Sửa ngân sách',
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await page.getByRole('button', { name: 'Đóng cài đặt quỹ' }).click();
   review = true;
   await page.getByRole('button', { name: 'Kiểm tra lại kết quả' }).click();
   await expect(page.getByText(/Thao tác cần đối soát/)).toBeVisible();

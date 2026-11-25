@@ -110,7 +110,8 @@ test('Plan states keep selection and pending/unknown do not claim saved', async 
   await page.goto(route);
   await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   await page.getByRole('button', { name: /Ngày 2/ }).click();
-  await page.locator('[data-preview=plan] summary').click();
+  await page.locator('[data-preview=plan] summary').focus();
+  await page.keyboard.press('Enter');
   for (const [scenario, text] of [
     ['error', 'Chưa thể tải nội dung'],
     ['forbidden', 'Bạn không có quyền truy cập'],

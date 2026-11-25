@@ -14,6 +14,7 @@ import styles from './GatewayDressCodePage.module.css';
 import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 import { DressCodeReferenceImage } from './DressCodeReferenceImage';
+import { activePlan } from '../plan/model/preparation';
 
 type DressFilter = 'ALL' | DressCodeViewModel['scopeType'];
 const filters: readonly { value: DressFilter; label: string }[] = [
@@ -86,7 +87,17 @@ export function GatewayDressCodePage() {
                   </button>
                 ))}
               </div>
-              {!data.plan.capabilities?.dress_codes_write && (
+              {data.plan.capabilities?.dress_codes_write &&
+              data.plan.permissions.canEdit &&
+              activePlan(data.trip) ? (
+                <PreparationActions
+                  module="dress"
+                  dressControls
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+              ) : (
                 <span className={styles.badge}>Chỉ xem</span>
               )}
             </div>
@@ -102,6 +113,14 @@ export function GatewayDressCodePage() {
                             <header className={styles.cardHeader}>
                               <h3>{item.label}</h3>
                               <span>{scopeLabel(item)}</span>
+                              <PreparationActions
+                                module="dress"
+                                dressControls
+                                item={item}
+                                trip={data.trip}
+                                plan={data.plan}
+                                refresh={snapshot.retry}
+                              />
                             </header>
                             <p>
                               {item.description ??
@@ -129,13 +148,6 @@ export function GatewayDressCodePage() {
                                 </dd>
                               </div>
                             </dl>
-                            <PreparationActions
-                              module="dress"
-                              item={item}
-                              trip={data.trip}
-                              plan={data.plan}
-                              refresh={snapshot.retry}
-                            />
                           </article>
                         ))}
                       </div>
@@ -156,26 +168,6 @@ export function GatewayDressCodePage() {
                   </div>
                 )}
               </section>
-              <aside className={styles.readOnlyPanel} aria-label="Khả năng Dress code">
-                <h2>Tạo / Chỉnh sửa bộ phối</h2>
-                <PreparationActions
-                  module="dress"
-                  trip={data.trip}
-                  plan={data.plan}
-                  refresh={snapshot.retry}
-                />
-                {data.plan.capabilities?.dress_codes_write ? (
-                  <p>
-                    Thêm hướng dẫn cho cả chuyến, một ngày hoặc một hoạt động. Mọi thành viên đều
-                    xem được; người có quyền sửa kế hoạch mới thêm, sửa, xóa.
-                  </p>
-                ) : (
-                  <p>
-                    Trang này hiển thị hướng dẫn đã lưu trong kế hoạch. Thêm, sửa, tải ảnh và áp
-                    dụng gợi ý chưa khả dụng trong chế độ này.
-                  </p>
-                )}
-              </aside>
             </div>
             <RecommendationPanel
               type="PACKING_DRESS"

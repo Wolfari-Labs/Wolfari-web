@@ -121,7 +121,7 @@ for (const height of [960, 700, 520]) {
     const fare = page.locator('[data-region="trip-overview-fare"]');
     const emptyCopy = fare.getByText('Tạo theo dõi giá →', { exact: true });
     await expect(emptyCopy).toBeVisible();
-    await expect(fare.getByText('Chưa theo dõi', { exact: true })).toBeVisible();
+    await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toBeVisible();
     const fareBox = (await fare.boundingBox())!,
       copyBox = (await emptyCopy.boundingBox())!;
     expect(copyBox.y + copyBox.height).toBeLessThanOrEqual(fareBox.y + fareBox.height);
@@ -149,11 +149,11 @@ test('HTTP mock: fare read failure stays an error, retry gives the concise empty
   await signIn(page);
   const fare = page.locator('[data-region="trip-overview-fare"]');
   await expect(fare.getByRole('heading', { name: 'Chưa thể tải nội dung' })).toBeVisible();
-  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toHaveCount(0);
+  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toHaveCount(0);
   failing = false;
   await fare.getByRole('button', { name: 'Tải lại' }).click();
   await expect(page).toHaveURL(path);
-  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toBeVisible();
+  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toBeVisible();
   await expect(fare.getByText('Tạo theo dõi giá →', { exact: true })).toBeVisible();
   await fare.click({ position: { x: 8, y: 8 } });
   await expect(page).toHaveURL(`${path}/price-watch`);
@@ -201,7 +201,7 @@ test('HTTP mock: existing fare watches are not reported as empty or as live pric
   await expect(fare.getByText('Đang theo dõi · giá mô phỏng')).toBeVisible();
   // Provider codes such as MOCK_FLIGHT stay out of the UI copy.
   await expect(fare.getByText(/MOCK_FLIGHT/)).toHaveCount(0);
-  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toHaveCount(0);
+  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toHaveCount(0);
   await expect(fare.getByText(/9007199254740993|₫/)).toHaveCount(0);
 });
 
@@ -240,7 +240,7 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
     `${path}/price-watch`,
   );
   await expect(fare.getByText('Chưa khả dụng')).toHaveCount(0);
-  await expect(fare.getByText('Chưa theo dõi', { exact: true })).toBeVisible();
+  await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toBeVisible();
   await expect(overview.getByText('Không thể tải danh sách thành viên.')).toBeVisible();
   await expect(plan.getByText('0 hoạt động')).toHaveCount(0);
   await expect(packing.getByText('0/0 món')).toHaveCount(0);

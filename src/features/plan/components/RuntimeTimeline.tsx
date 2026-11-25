@@ -77,7 +77,16 @@ function DayTarget({
         // "Ngày 1" sits over the date; a hidden separator keeps the name "Ngày 1 · 22/09".
         <span>
           {label.split(' · ')[0]} <span className={styles.srOnly}>·</span>{' '}
-          <small><span>{label.split(' · ')[1]}</span><span className={styles.dayWeather} title="Chưa có dữ liệu thời tiết" aria-label="Thời tiết chưa có dữ liệu"><img src={daySun} alt="" />—</span></small>
+          <small>
+            <span>{label.split(' · ')[1]}</span>
+            <span
+              className={styles.dayWeather}
+              title="Chưa có dữ liệu thời tiết"
+              aria-label="Thời tiết chưa có dữ liệu"
+            >
+              <img src={daySun} alt="" />—
+            </span>
+          </small>
         </span>
       ) : (
         label
@@ -382,7 +391,7 @@ export function RuntimeTimeline({
     const requested = new URLSearchParams(window.location.search).get('day');
     return requested && days.includes(requested) ? requested : (days[0] ?? 'ALL');
   });
-  const [sidePanel, setSidePanel] = useState<'none' | 'pool' | 'map'>('none');
+  const [sidePanel, setSidePanel] = useState<'default' | 'none' | 'pool' | 'map'>('default');
   const [poolQuery, setPoolQuery] = useState('');
   const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1201px)').matches);
   const mapTrigger = useRef<HTMLButtonElement>(null);
@@ -402,6 +411,10 @@ export function RuntimeTimeline({
   const closePool = () => {
     setSidePanel('none');
     window.requestAnimationFrame(() => poolTrigger.current?.focus());
+  };
+  const closeMap = () => {
+    setSidePanel('none');
+    window.requestAnimationFrame(() => mapTrigger.current?.focus());
   };
   const dnd = useGatewayDnd({
     plan,
@@ -497,24 +510,34 @@ export function RuntimeTimeline({
           onClick={() => setDay(value)}
         />
       ))}
-      <button type="button" className={styles.addDay} disabled title="Chưa hỗ trợ thay đổi ngày của chuyến đi"><Icon name="plus" size={18} />Thêm ngày</button>
+      <button
+        type="button"
+        className={styles.addDay}
+        disabled
+        title="Chưa hỗ trợ thay đổi ngày của chuyến đi"
+      >
+        <Icon name="plus" size={18} />
+        Thêm ngày
+      </button>
       <details className={styles.dayUtilities}>
-        <summary aria-label="Phạm vi lịch trình"><img src={moreIcon} alt="" /></summary>
+        <summary aria-label="Phạm vi lịch trình">
+          <img src={moreIcon} alt="" />
+        </summary>
         <div>
-        {(['ALL', 'POOL'] as const).map((value) => (
-          <DayTarget
-            key={value}
-            day={value}
-            label={value === 'ALL' ? 'Tất cả' : 'Chưa chọn ngày'}
-            selected={day === value}
-            disabled={!canEdit || disabled}
-            dnd={dnd}
-            onClick={() => {
-              setDay(value);
-              if (value === 'POOL') setSidePanel('none');
-            }}
-          />
-        ))}
+          {(['ALL', 'POOL'] as const).map((value) => (
+            <DayTarget
+              key={value}
+              day={value}
+              label={value === 'ALL' ? 'Tất cả' : 'Chưa chọn ngày'}
+              selected={day === value}
+              disabled={!canEdit || disabled}
+              dnd={dnd}
+              onClick={() => {
+                setDay(value);
+                if (value === 'POOL') setSidePanel('none');
+              }}
+            />
+          ))}
         </div>
       </details>
     </div>
@@ -533,10 +556,13 @@ export function RuntimeTimeline({
             ref={mapTrigger}
             variant="outline"
             icon={<img src={mapIcon} alt="" />}
-            aria-pressed={sidePanel === 'map'}
-            onClick={() => setSidePanel(sidePanel === 'map' ? 'none' : 'map')}
+            aria-pressed={sidePanel === 'map' || sidePanel === 'default'}
+            onClick={() => {
+              if (sidePanel === 'map' || sidePanel === 'default') closeMap();
+              else setSidePanel('map');
+            }}
           >
-            {sidePanel === 'map' ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
+            {sidePanel === 'map' || sidePanel === 'default' ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
           </Button>
           {canEdit && (
             <Button
@@ -746,10 +772,10 @@ export function RuntimeTimeline({
               </div>
             </Drawer>
           </>
-        ) : sidePanel !== 'none' ? (
+        ) : sidePanel === 'pool' || sidePanel === 'map' ? (
           <SplitPanel
             variant="itinerary"
-            initialRatio={sidePanel === 'pool' ? 700 / 1084 * 100 : 540 / 1084 * 100}
+            initialRatio={sidePanel === 'pool' ? (700 / 1084) * 100 : (540 / 1084) * 100}
             key={sidePanel}
             storageKey={`wolfari:ui:plan-${sidePanel}-split`}
             primary={timeline}
@@ -757,32 +783,23 @@ export function RuntimeTimeline({
               sidePanel === 'pool' ? (
                 pool
               ) : (
-                <PlanDayMap
-                  trip={trip}
-                  plan={plan}
-                  day={day}
-                  onClose={() => {
-                    setSidePanel('none');
-                    mapTrigger.current?.focus();
-                  }}
-                />
+                <PlanDayMap trip={trip} plan={plan} day={day} onClose={closeMap} />
               )
             }
             secondaryLabel={sidePanel === 'map' ? 'Bản đồ lịch trình' : 'Hoạt động chưa xếp ngày'}
             initialSecondaryOpen
             onSecondaryDismiss={() => {
               if (sidePanel === 'pool') closePool();
-              else {
-                setSidePanel('none');
-                mapTrigger.current?.focus();
-              }
+              else closeMap();
             }}
           />
-        ) : (
+        ) : sidePanel === 'default' ? (
           <div className={styles.defaultColumns}>
             {timeline}
-            <PlanDayMap trip={trip} plan={plan} day={day} compact onClose={() => setSidePanel('none')} />
+            <PlanDayMap trip={trip} plan={plan} day={day} compact onClose={closeMap} />
           </div>
+        ) : (
+          timeline
         )}
       </div>
       <DragOverlay dropAnimation={reduced ? null : { duration: 180, easing: 'ease-out' }}>

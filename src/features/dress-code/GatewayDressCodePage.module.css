@@ -63,7 +63,7 @@
 
 .content {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(250px, 280px);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
 }
@@ -116,6 +116,10 @@
   margin-bottom: 10px;
 }
 
+.cardHeader > :last-child {
+  margin-left: auto;
+}
+
 .cardHeader h3 {
   margin: 0;
   color: var(--color-ink);
@@ -123,7 +127,7 @@
   overflow-wrap: anywhere;
 }
 
-.cardHeader span,
+.cardHeader > span,
 .badge {
   border: 1px solid var(--color-line);
   border-radius: 999px;
@@ -238,7 +242,7 @@
   }
 
   .badge,
-  .cardHeader span {
+  .cardHeader > span {
     border: 0;
     padding: 5px 10px;
     background: var(--v2-sky);
@@ -248,7 +252,7 @@
   }
 
   .content {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 384px);
+    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
 

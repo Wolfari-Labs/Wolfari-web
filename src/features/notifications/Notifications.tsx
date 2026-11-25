@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
 import { useRuntimeServices } from '../../app/gateway-context';
 import { paths } from '../../app/route-paths';
-import bellIcon from '../../shared/assets/figma/new-surfaces/8dc2f.svg';
+import bellIcon from '../../shared/assets/figma/new-surfaces/0e4d8.svg';
 import styles from './Notifications.module.css';
 export function Notifications({ actor }: { actor: string }) {
   const repository = useRuntimeServices()?.notifications;

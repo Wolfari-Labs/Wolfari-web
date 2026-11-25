@@ -119,6 +119,22 @@ details[open]:not(.preview) > summary::after {
   display: inline-flex;
   align-items: center;
 }
+@media (max-width: 768px) {
+  #main-content:has([data-flow^='fund-']) > details.preview[data-preview='shell'] {
+    position: fixed;
+    z-index: 5;
+    right: 8px;
+    bottom: 8px;
+    max-height: 40dvh;
+    margin: 0;
+    overflow: auto;
+  }
+}
+@media (max-width: 768px) {
+  #main-content:has([data-flow^='fund-']) {
+    overflow: hidden;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

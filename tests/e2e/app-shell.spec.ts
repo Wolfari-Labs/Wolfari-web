@@ -645,15 +645,14 @@ test('guest assets and expanded sidebar decorations follow Web v2', async ({ pag
   await loadedAssets(page);
   await page.screenshot({ path: info.outputPath('guest.png') });
   await page.goto(tripPath + '/plan');
-  await expect(page.getByRole('link', { name: 'Lên lịch', exact: true })).toHaveAttribute(
-    'aria-current',
-    'page',
-  );
-  await expect(
-    page.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }),
-  ).not.toHaveAttribute('aria-current', 'page');
+  const createTrip = page.getByRole('link', { name: 'Tạo chuyến đi', exact: true });
+  await expect(createTrip).toHaveAttribute('href', '/trips/new');
+  await expect(createTrip).not.toHaveAttribute('aria-current', 'page');
   // Figma 930:6887 mascot card: 96×80 mascot at the foot of the 264px sidebar.
   const mascot = (await page.locator('[class*="mascotCard"] img').first().boundingBox())!;
   expect(mascot.width).toBe(96);
   expect(mascot.height).toBe(80);
+  await createTrip.click();
+  await expect(page).toHaveURL(/\/trips\/new$/);
+  await expect(createTrip).toHaveAttribute('aria-current', 'page');
 });

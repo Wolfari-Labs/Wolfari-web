@@ -227,7 +227,7 @@ function Workspace({
     setReason('');
   };
   return (
-    <div ref={workspaceRef} tabIndex={-1}>
+    <div ref={workspaceRef} tabIndex={-1} className={styles.workspaceRoot}>
       <OperationStatus session={session} />
       {!readable ? (
         tripQuery.isPending ? (
@@ -292,7 +292,9 @@ function Workspace({
             </Button>
           </div>
           {tab === 'invitations' && owner ? (
-            <InvitationManagement key={actorId + ':' + tripId} trip={trip} active />
+            <div className={styles.invitationTab}>
+              <InvitationManagement key={actorId + ':' + tripId} trip={trip} active />
+            </div>
           ) : tab === 'policy' && owner ? (
             <div className={styles.policyWorkspace}>
               <section
@@ -544,7 +546,7 @@ function Workspace({
                     {members.hasNextPage ? ' · Còn trang tiếp theo' : ''}
                   </p>
                 )}
-                <ul className={styles.list}>
+                <ul className={styles.list} tabIndex={0} aria-label="Danh sách thành viên">
                   {items.map((m) => (
                     <li key={m.id}>
                       <div className={styles.memberRow}>

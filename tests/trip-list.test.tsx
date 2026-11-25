@@ -81,10 +81,9 @@ describe('Trip List route slice', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.queryByText('Chuyến đi riêng tư – không được hiển thị')).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /88888888/ })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute(
-      'href',
-      '/trips/new',
-    );
+    for (const link of screen.getAllByRole('link', { name: 'Tạo chuyến đi' })) {
+      expect(link).toHaveAttribute('href', '/trips/new');
+    }
     expect(screen.getByRole('link', { name: '+ Tạo một hành trình mới' })).toHaveAttribute(
       'href',
       '/trips/new',

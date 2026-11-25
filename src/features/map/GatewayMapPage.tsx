@@ -13,6 +13,7 @@ import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import pinIcon from '../../shared/assets/figma/8efc8.svg';
 import chevronIcon from '../../shared/assets/figma/ad884.svg';
 import { MapViewport } from './MapViewport';
+import { ExpandableMapPanel } from './ExpandableMapPanel';
 import { PlaceDetail } from './PlaceDetail';
 import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
@@ -110,6 +111,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   const group = parsePlaceGroup(urlParams.get('group'));
   const [searchedGroup, setSearchedGroup] = useState<PlaceGroup | null | undefined>(undefined);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [selectedMapPosition, setSelectedMapPosition] = useState<{ x: number; y: number } | null>(
+    null,
+  );
   const [manualOpen, setManualOpen] = useState(false);
   // W14: start from the Trip's first saved place (in itinerary order); Đà Nẵng otherwise.
   const [center, setCenter] = useState<MapCenter>(() => {
@@ -901,11 +905,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                   )}
                   {dataCredit && <p className={styles.dataCredit}>{dataCredit}</p>}
                 </section>
-                <section
-                  className={styles.mapPanel}
-                  aria-labelledby="map-panel-title"
-                  data-region="map-panel"
-                >
+                <ExpandableMapPanel>
                   <div className={styles.mapToolbar}>
                     <div className={styles.routeSelector}>
                       <span id="map-panel-title" className={styles.visuallyHidden}>
@@ -931,6 +931,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                   <MapViewport
                     items={visibleItems}
                     selectedLocationId={effectiveSelectedId}
+                    selectedScreenPosition={selectedMapPosition}
                     timezone={data.trip.timezone}
                     previewEnabled={false}
                     runtimeMap={
@@ -938,6 +939,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         embedded
                         points={points}
                         selectedId={effectiveSelectedId}
+                        onSelectedScreenPosition={setSelectedMapPosition}
                         onSelect={(id) => chooseLocation(id, true)}
                         onCenter={setCenter}
                         onViewport={setViewport}
@@ -985,7 +987,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />
-                </section>
+                </ExpandableMapPanel>
               </div>
             </div>
             <TravelTools

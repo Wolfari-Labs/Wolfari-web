@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '../../shared/components/Button';
 import desktopMapArtwork from '../../shared/assets/v2/map-art.svg';
 import desktopPlaceArtwork from '../../shared/assets/figma/a33fd.svg';
@@ -35,6 +35,7 @@ function locationPhoto(item: MapLocationPresentation | null, mobile = false) {
 export function MapViewport({
   items,
   selectedLocationId,
+  selectedScreenPosition,
   timezone,
   previewEnabled,
   mapType = 'roadmap',
@@ -48,6 +49,7 @@ export function MapViewport({
 }: {
   items: readonly MapLocationPresentation[];
   selectedLocationId: string | null;
+  selectedScreenPosition?: { x: number; y: number } | null;
   timezone: string;
   previewEnabled: boolean;
   mapType?: 'roadmap' | 'satellite';
@@ -63,6 +65,9 @@ export function MapViewport({
   autoSelectFirst?: boolean;
 }) {
   const mapCanvasRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLElement>(null);
+  const [cardPosition, setCardPosition] = useState<{ left: number; top: number } | null>(null);
   const [googleMapReady, setGoogleMapReady] = useState(false);
   const [mapProviderState, setMapProviderState] = useState<
     'idle' | 'loading' | 'ready' | 'unavailable'
@@ -76,6 +81,51 @@ export function MapViewport({
   const googleConfigured =
     !runtimeMap &&
     Boolean((import.meta.env.VITE_GOOGLE_MAPS_BROWSER_KEY as string | undefined)?.trim());
+
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current;
+    const card = cardRef.current;
+    if (!viewport || !card) return;
+    const updatePosition = () => {
+      const viewportBounds = viewport.getBoundingClientRect();
+      let point = selectedScreenPosition;
+      if (!runtimeMap) {
+        const marker = viewport.querySelector<HTMLElement>(
+          '[class*="marker"][aria-pressed="true"]',
+        );
+        if (marker) {
+          const bounds = marker.getBoundingClientRect();
+          point = {
+            x: bounds.left + bounds.width / 2 - viewportBounds.left,
+            y: bounds.top + bounds.height / 2 - viewportBounds.top,
+          };
+        }
+      }
+      if (!point) {
+        setCardPosition(null);
+        return;
+      }
+      const cardWidth = card.offsetWidth;
+      const cardHeight = card.offsetHeight;
+      const left =
+        point.x + 20 + cardWidth <= viewportBounds.width - 12
+          ? point.x + 20
+          : Math.max(12, point.x - cardWidth - 20);
+      const top = Math.max(
+        76,
+        Math.min(point.y - cardHeight / 2, viewportBounds.height - cardHeight - 54),
+      );
+      setCardPosition((previous) =>
+        previous?.left === left && previous.top === top ? previous : { left, top },
+      );
+    };
+    updatePosition();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(updatePosition);
+    observer.observe(viewport);
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [selected?.location.id, selectedScreenPosition, runtimeMap]);
 
   useEffect(() => {
     let disposed = false;
@@ -169,9 +219,9 @@ export function MapViewport({
 
   return (
     <section
+      ref={viewportRef}
       className={`${styles.viewport} ${googleMapReady ? styles.googleMapActive : ''}`}
       aria-label={runtimeMap ? 'Bản đồ hành trình' : 'Bản đồ hành trình minh họa'}
-      aria-describedby={runtimeMap ? undefined : 'map-provider-note'}
     >
       {runtimeMap && <div className={styles.googleMapCanvas}>{runtimeMap}</div>}
       {googleMapReady && (
@@ -243,7 +293,9 @@ export function MapViewport({
       {selected && (
         <>
           <article
+            ref={cardRef}
             className={styles.desktopPlaceCard}
+            style={cardPosition ? { left: cardPosition.left, top: cardPosition.top } : undefined}
             aria-label={`Đang chọn ${selected.location.name}`}
           >
             <img

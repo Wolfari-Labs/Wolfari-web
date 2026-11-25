@@ -272,12 +272,13 @@ export function PackingPage() {
             </div>
             {canWrite ? (
               <Button
+                icon={<Icon name="plus" size={18} />}
                 onClick={(event) => {
                   addButtonRef.current = event.currentTarget;
                   setDrawer({ open: true, mode: 'add', item: null });
                 }}
               >
-                <Icon name="plus" size={18} /> Thêm vật dụng
+                Thêm vật dụng
               </Button>
             ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
               <GatewayPackingEditor
@@ -304,209 +305,218 @@ export function PackingPage() {
                   : 'Quyền'}
               </span>
             </div>
-            {groups.length ? (
-              <div className={styles.groups}>
-                {groups.map((group) => {
-                  const isCollapsed = collapsed.has(group.category);
-                  const completed = group.items.filter(
-                    (item) => item.status === 'COMPLETED',
-                  ).length;
-                  return (
-                    <section key={group.category} className={styles.group}>
-                      <button
-                        className={styles.groupHeading}
-                        aria-expanded={!isCollapsed}
-                        onClick={() =>
-                          setCollapsed((current) => {
-                            const next = new Set(current);
-                            if (isCollapsed) next.delete(group.category);
-                            else next.add(group.category);
-                            return next;
-                          })
-                        }
-                      >
-                        <span>
-                          <Icon name="chevron" size={18} /> {group.category}
-                        </span>
-                        <em>
-                          ({completed}/{group.items.length})
-                        </em>
-                      </button>
-                      {!isCollapsed && (
-                        <div className={styles.table}>
-                          {group.items.map((item) => (
-                            <div
-                              className={
-                                previewEnabled ? styles.row : `${styles.row} ${styles.gatewayRow}`
-                              }
-                              key={item.id}
-                            >
-                              {previewEnabled ? (
-                                <button
-                                  className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
-                                  aria-label={`Đánh dấu ${item.name}`}
-                                  aria-pressed={item.status === 'COMPLETED'}
-                                  disabled={!data || !canTogglePacking(data.trip, data.plan, item)}
-                                  onClick={() => toggle(item)}
-                                >
-                                  {item.status === 'COMPLETED' ? (
-                                    <Icon name="check" size={18} />
-                                  ) : null}
-                                </button>
-                              ) : data && data.plan.capabilities?.packing_completion ? (
-                                <PackingCompletion
-                                  item={item}
-                                  trip={data.trip}
-                                  plan={data.plan}
-                                  refresh={snapshot.retry}
-                                  checkboxClassName={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
-                                />
-                              ) : (
-                                <span
-                                  className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
-                                  role="img"
-                                  aria-label={
-                                    item.status === 'COMPLETED'
-                                      ? 'Đã hoàn thành'
-                                      : 'Chưa hoàn thành'
-                                  }
-                                >
-                                  {item.status === 'COMPLETED' && <Icon name="check" size={18} />}
-                                </span>
-                              )}
-                              <div className={styles.name}>
-                                <strong>{item.name}</strong>
-                                {item.note && <small>{item.note}</small>}
-                                {!previewEnabled && item.completedAt && (
-                                  <small>
-                                    Hoàn thành:{' '}
-                                    {new Intl.DateTimeFormat('vi-VN', {
-                                      dateStyle: 'short',
-                                      timeStyle: 'short',
-                                      timeZone: data?.trip.timezone ?? 'UTC',
-                                    }).format(new Date(item.completedAt))}{' '}
-                                    ·{' '}
-                                    {item.completedByUserId === viewerUserId
-                                      ? 'Tôi'
-                                      : (roster.data?.find(
-                                          (m) => m.userId === item.completedByUserId,
-                                        )?.presentation.displayName ?? 'Thành viên')}
-                                  </small>
-                                )}
-                              </div>
-                              <span className={styles.quantity}>
-                                {!previewEnabled && (
-                                  <span className={styles.mobileReadLabel}>Số lượng: </span>
-                                )}
-                                {item.quantity} {item.unit ?? ''}
-                              </span>
-                              <span className={styles.assignee}>
-                                {!previewEnabled && (
-                                  <span className={styles.mobileReadLabel}>Người chuẩn bị: </span>
-                                )}
-                                {item.assignedMemberId === viewerMemberId
-                                  ? 'Tôi'
-                                  : item.assignedMemberId
-                                    ? previewEnabled
-                                      ? 'Đã phân công'
-                                      : (roster.data?.find((m) => m.id === item.assignedMemberId)
-                                          ?.presentation.displayName ??
-                                        (roster.isPending
-                                          ? 'Đang tải thành viên…'
-                                          : 'Không tải được thông tin thành viên'))
-                                    : 'Chưa phân công'}
-                              </span>
-                              <span className={styles.due}>
-                                {!previewEnabled && (
-                                  <span className={styles.mobileReadLabel}>Hạn chuẩn bị: </span>
-                                )}
-                                {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC') ? (
-                                  <>
-                                    <Icon
-                                      name="calendar"
-                                      size={14}
-                                      className={styles.dueIcon ?? ''}
-                                    />
-                                    {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC')}
-                                  </>
+            <div
+              className={styles.listBody}
+              role="region"
+              aria-label="Danh sách hành lý"
+              tabIndex={0}
+            >
+              {groups.length ? (
+                <div className={styles.groups}>
+                  {groups.map((group) => {
+                    const isCollapsed = collapsed.has(group.category);
+                    const completed = group.items.filter(
+                      (item) => item.status === 'COMPLETED',
+                    ).length;
+                    return (
+                      <section key={group.category} className={styles.group}>
+                        <button
+                          className={styles.groupHeading}
+                          aria-expanded={!isCollapsed}
+                          onClick={() =>
+                            setCollapsed((current) => {
+                              const next = new Set(current);
+                              if (isCollapsed) next.delete(group.category);
+                              else next.add(group.category);
+                              return next;
+                            })
+                          }
+                        >
+                          <span>
+                            <Icon name="chevron" size={18} /> {group.category}
+                          </span>
+                          <em>
+                            ({completed}/{group.items.length})
+                          </em>
+                        </button>
+                        {!isCollapsed && (
+                          <div className={styles.table}>
+                            {group.items.map((item) => (
+                              <div
+                                className={
+                                  previewEnabled ? styles.row : `${styles.row} ${styles.gatewayRow}`
+                                }
+                                key={item.id}
+                              >
+                                {previewEnabled ? (
+                                  <button
+                                    className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
+                                    aria-label={`Đánh dấu ${item.name}`}
+                                    aria-pressed={item.status === 'COMPLETED'}
+                                    disabled={
+                                      !data || !canTogglePacking(data.trip, data.plan, item)
+                                    }
+                                    onClick={() => toggle(item)}
+                                  >
+                                    {item.status === 'COMPLETED' ? (
+                                      <Icon name="check" size={18} />
+                                    ) : null}
+                                  </button>
+                                ) : data && data.plan.capabilities?.packing_completion ? (
+                                  <PackingCompletion
+                                    item={item}
+                                    trip={data.trip}
+                                    plan={data.plan}
+                                    refresh={snapshot.retry}
+                                    checkboxClassName={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
+                                  />
                                 ) : (
-                                  '—'
+                                  <span
+                                    className={`${styles.checkbox} ${item.status === 'COMPLETED' ? styles.checked : ''}`}
+                                    role="img"
+                                    aria-label={
+                                      item.status === 'COMPLETED'
+                                        ? 'Đã hoàn thành'
+                                        : 'Chưa hoàn thành'
+                                    }
+                                  >
+                                    {item.status === 'COMPLETED' && <Icon name="check" size={18} />}
+                                  </span>
                                 )}
-                              </span>
-                              {previewEnabled ? (
-                                <ActionMenu
-                                  label={`Thao tác ${item.name}`}
-                                  items={[
-                                    {
-                                      label: 'Chỉnh sửa',
-                                      disabled: !canWrite,
-                                      action: () => setDrawer({ open: true, mode: 'edit', item }),
-                                    },
-                                    {
-                                      label: 'Xóa',
-                                      disabled: !canWrite,
-                                      danger: true,
-                                      action: () => remove(item),
-                                    },
-                                  ]}
-                                />
-                              ) : data?.plan.capabilities?.packing_items_write ||
-                                data?.plan.capabilities?.packing_assignment ||
-                                data?.plan.capabilities?.packing_completion ? (
-                                <div className={styles.gatewayActions}>
-                                  {data && (
-                                    <>
-                                      <GatewayPackingEditor
-                                        key={`${tripId}:${viewerUserId}:${item.id}`}
-                                        addButtonRef={addButtonRef}
-                                        item={item}
-                                        trip={data.trip}
-                                        plan={data.plan}
-                                        refresh={snapshot.retry}
-                                      />
-                                    </>
+                                <div className={styles.name}>
+                                  <strong>{item.name}</strong>
+                                  {item.note && <small>{item.note}</small>}
+                                  {!previewEnabled && item.completedAt && (
+                                    <small>
+                                      Hoàn thành:{' '}
+                                      {new Intl.DateTimeFormat('vi-VN', {
+                                        dateStyle: 'short',
+                                        timeStyle: 'short',
+                                        timeZone: data?.trip.timezone ?? 'UTC',
+                                      }).format(new Date(item.completedAt))}{' '}
+                                      ·{' '}
+                                      {item.completedByUserId === viewerUserId
+                                        ? 'Tôi'
+                                        : (roster.data?.find(
+                                            (m) => m.userId === item.completedByUserId,
+                                          )?.presentation.displayName ?? 'Thành viên')}
+                                    </small>
                                   )}
                                 </div>
-                              ) : (
-                                <span className={styles.readOnlyRowLabel}>Chỉ xem</span>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </section>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className={styles.empty}>
-                <h2>{visibleItems.length ? 'Không có mục phù hợp' : 'Chưa có hành lý đã lưu'}</h2>
-                <p>Danh sách phù hợp sẽ xuất hiện tại đây.</p>
-              </div>
-            )}
-          </div>
-          {!canWrite &&
-            !data?.plan.capabilities?.packing_items_write &&
-            !data?.plan.capabilities?.packing_completion && (
-              <CapabilityNote>
-                {previewEnabled
-                  ? 'Danh sách hiện chỉ hỗ trợ xem.'
-                  : 'Danh sách hiện chỉ hỗ trợ xem. Trạng thái hoàn thành, thêm và sửa vật dụng chưa khả dụng trong chế độ này.'}
-              </CapabilityNote>
-            )}
-          {feedback && (
-            <div className={styles.feedback} role="status">
-              {feedback}
+                                <span className={styles.quantity}>
+                                  {!previewEnabled && (
+                                    <span className={styles.mobileReadLabel}>Số lượng: </span>
+                                  )}
+                                  {item.quantity} {item.unit ?? ''}
+                                </span>
+                                <span className={styles.assignee}>
+                                  {!previewEnabled && (
+                                    <span className={styles.mobileReadLabel}>Người chuẩn bị: </span>
+                                  )}
+                                  {item.assignedMemberId === viewerMemberId
+                                    ? 'Tôi'
+                                    : item.assignedMemberId
+                                      ? previewEnabled
+                                        ? 'Đã phân công'
+                                        : (roster.data?.find((m) => m.id === item.assignedMemberId)
+                                            ?.presentation.displayName ??
+                                          (roster.isPending
+                                            ? 'Đang tải thành viên…'
+                                            : 'Không tải được thông tin thành viên'))
+                                      : 'Chưa phân công'}
+                                </span>
+                                <span className={styles.due}>
+                                  {!previewEnabled && (
+                                    <span className={styles.mobileReadLabel}>Hạn chuẩn bị: </span>
+                                  )}
+                                  {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC') ? (
+                                    <>
+                                      <Icon
+                                        name="calendar"
+                                        size={14}
+                                        className={styles.dueIcon ?? ''}
+                                      />
+                                      {packingDueDate(item.dueAt, data?.trip.timezone ?? 'UTC')}
+                                    </>
+                                  ) : (
+                                    '—'
+                                  )}
+                                </span>
+                                {previewEnabled ? (
+                                  <ActionMenu
+                                    label={`Thao tác ${item.name}`}
+                                    items={[
+                                      {
+                                        label: 'Chỉnh sửa',
+                                        disabled: !canWrite,
+                                        action: () => setDrawer({ open: true, mode: 'edit', item }),
+                                      },
+                                      {
+                                        label: 'Xóa',
+                                        disabled: !canWrite,
+                                        danger: true,
+                                        action: () => remove(item),
+                                      },
+                                    ]}
+                                  />
+                                ) : data?.plan.capabilities?.packing_items_write ||
+                                  data?.plan.capabilities?.packing_assignment ||
+                                  data?.plan.capabilities?.packing_completion ? (
+                                  <div className={styles.gatewayActions}>
+                                    {data && (
+                                      <>
+                                        <GatewayPackingEditor
+                                          key={`${tripId}:${viewerUserId}:${item.id}`}
+                                          addButtonRef={addButtonRef}
+                                          item={item}
+                                          trip={data.trip}
+                                          plan={data.plan}
+                                          refresh={snapshot.retry}
+                                        />
+                                      </>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <span className={styles.readOnlyRowLabel}>Chỉ xem</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </section>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className={styles.empty}>
+                  <h2>{visibleItems.length ? 'Không có mục phù hợp' : 'Chưa có hành lý đã lưu'}</h2>
+                  <p>Danh sách phù hợp sẽ xuất hiện tại đây.</p>
+                </div>
+              )}
+              {!canWrite &&
+                !data?.plan.capabilities?.packing_items_write &&
+                !data?.plan.capabilities?.packing_completion && (
+                  <CapabilityNote>
+                    {previewEnabled
+                      ? 'Danh sách hiện chỉ hỗ trợ xem.'
+                      : 'Danh sách hiện chỉ hỗ trợ xem. Trạng thái hoàn thành, thêm và sửa vật dụng chưa khả dụng trong chế độ này.'}
+                  </CapabilityNote>
+                )}
+              {feedback && (
+                <div className={styles.feedback} role="status">
+                  {feedback}
+                </div>
+              )}
+              {data && !previewEnabled && (
+                <RecommendationPanel
+                  type="PACKING_DRESS"
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+              )}
             </div>
-          )}
-          {data && !previewEnabled && (
-            <RecommendationPanel
-              type="PACKING_DRESS"
-              trip={data.trip}
-              plan={data.plan}
-              refresh={snapshot.retry}
-            />
-          )}
+          </div>
         </TripPlanBoundary>
         <PackingItemDrawer
           open={drawer.open}

@@ -377,10 +377,9 @@ describe('Self/profile and Home composition', () => {
     const { listTrips } = mount('/');
     await userEvent.click(await screen.findByText('UI preview · Dữ liệu minh họa'));
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'success');
-    expect(await screen.findByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute(
-      'href',
-      '/trips/new',
-    );
+    for (const link of await screen.findAllByRole('link', { name: 'Tạo chuyến đi' })) {
+      expect(link).toHaveAttribute('href', '/trips/new');
+    }
     expect(screen.getAllByRole('link', { name: 'Chuyến đi của tôi' })).toEqual(
       expect.arrayContaining([expect.objectContaining({ pathname: '/trips' })]),
     );

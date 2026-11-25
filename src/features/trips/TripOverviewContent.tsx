@@ -175,17 +175,19 @@ export function TripOverview({
               <PackingSummary trip={trip} plan={plan} onRetry={onRetry} />
             </div>
           </section>
-          <section className={`${styles.stat} ${styles.fareCard}`} data-region="trip-overview-fare">
-            <Link
-              className={styles.cardLink}
-              to={paths.priceWatch(trip.id)}
-              aria-label="Theo dõi giá vé"
-            />
+          <section
+            className={`${styles.stat} ${styles.weatherCard}`}
+            data-region="trip-overview-weather"
+            aria-label="Thời tiết chưa khả dụng"
+          >
             <div className={styles.statHead}>
-              <IconBadge icon="price" tone="coral" />
-              <h2>Theo dõi giá vé</h2>
+              <span className={styles.badge} data-tone="amber" aria-hidden="true">
+                <img src={sunIcon} alt="" />
+              </span>
+              <h2>Thời tiết hôm nay</h2>
             </div>
-            <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
+            <p className={styles.weatherValue}>—</p>
+            <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>
           </section>
         </div>
         <div className={styles.workspace} data-region="trip-overview-workspace">
@@ -223,27 +225,21 @@ export function TripOverview({
               <span>Minh họa</span>
             </div>
           </section>
-          <aside className={styles.aside} aria-label="Giá vé và thời tiết">
-            <section className={`${styles.panel} ${styles.farePanel}`}>
+          <aside className={styles.aside} aria-label="Theo dõi giá vé">
+            <section
+              className={`${styles.panel} ${styles.farePanel}`}
+              data-region="trip-overview-fare"
+            >
               <Link
                 className={styles.cardLink}
                 to={paths.priceWatch(trip.id)}
-                aria-label="Chi tiết theo dõi giá vé"
+                aria-label="Theo dõi giá vé"
               />
-              <IconBadge icon="price" tone="coral" />
+              <div className={styles.fareTop}>
+                <IconBadge icon="price" tone="coral" />
+                <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
+              </div>
               <h2>Theo dõi giá vé</h2>
-              <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
-            </section>
-            <section
-              className={`${styles.panel} ${styles.weatherPanel}`}
-              aria-label="Thời tiết chưa khả dụng"
-            >
-              <span className={styles.badge} data-tone="amber" aria-hidden="true">
-                <img src={sunIcon} alt="" />
-              </span>
-              <h2>Thời tiết hôm nay</h2>
-              <p className={styles.weatherValue}>—</p>
-              <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>
             </section>
           </aside>
         </div>

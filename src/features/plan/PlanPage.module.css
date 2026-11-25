@@ -166,6 +166,9 @@
 .columns.mapExpanded {
   grid-template-columns: minmax(0, 540fr) minmax(0, 544fr);
 }
+.columns.timelineOnly {
+  grid-template-columns: minmax(0, 1fr);
+}
 /* W06.1 (Figma 938:8364): timeline 700 + unscheduled panel 384. */
 .columns.withPlanner {
   grid-template-columns: minmax(0, 700fr) minmax(0, 384fr);
@@ -181,7 +184,7 @@
   gap: 14px;
   min-width: 0;
   min-height: 0;
-  height: max(440px, calc(100dvh - 339px));
+  height: var(--plan-workspace-height, max(440px, calc(100dvh - 339px)));
   padding: 20px;
   overflow: hidden;
   border-radius: var(--v2-radius-tile);
@@ -751,8 +754,27 @@
 .page > :global(.preview) {
   margin-top: 20px;
 }
+@media (min-width: 1001px) {
+  .page {
+    --plan-workspace-height: max(260px, calc(100dvh - 329px));
+    padding-bottom: 0;
+  }
+  .page > :global(.preview) {
+    position: fixed;
+    z-index: 5;
+    right: 24px;
+    bottom: 2px;
+    max-width: min(560px, calc(100vw - 48px));
+    max-height: 40dvh;
+    margin: 0;
+    padding: 2px 10px;
+    overflow: auto;
+    border-radius: var(--v2-radius-thumb);
+    background: rgb(255 255 255 / 85%);
+  }
+}
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .columns,
   .columns.mapExpanded {
     grid-template-columns: minmax(0, 1fr);

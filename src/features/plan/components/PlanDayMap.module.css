@@ -2,7 +2,6 @@
 .column {
   display: flex;
   flex-direction: column;
-  gap: 20px;
   min-width: 0;
 }
 .panel {
@@ -21,7 +20,7 @@
   font-family: var(--v2-font);
 }
 .compact .panel {
-  height: 472px;
+  height: var(--plan-workspace-height, 472px);
 }
 .header {
   display: flex;
@@ -42,17 +41,7 @@
 }
 .header button {
   flex-shrink: 0;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
-.header button:focus-visible {
-  position: static;
-  width: 36px;
-  height: 36px;
-  clip-path: none;
+  margin-left: auto;
 }
 .mapLink {
   display: inline-flex;
@@ -89,29 +78,6 @@
 }
 .listRegion[open] summary {
   margin-bottom: 10px;
-}
-.tip {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-height: 134px;
-  padding: 12px 18px;
-  border-radius: 28px;
-  background: var(--v2-gradient-mascot);
-  color: var(--v2-ink);
-}
-.tip img {
-  width: 94px;
-  height: 110px;
-  object-fit: contain;
-}
-.tip strong {
-  font: 800 16px/22px var(--v2-font);
-}
-.tip p {
-  margin: 4px 0 0;
-  color: var(--v2-sub);
-  font: 600 14px/20px var(--v2-font);
 }
 .srOnly {
   position: absolute;

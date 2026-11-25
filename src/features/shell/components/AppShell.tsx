@@ -128,12 +128,12 @@ export function AppShell({
   const canReadTrip = snapshot?.trip?.permissions.canRead === true;
   const canReadAdmin = viewer?.systemRole === 'ADMIN';
   const home = currentPath === paths.home;
-  const schedule = currentPath.endsWith('/plan');
+  const creatingTrip = currentPath === paths.newTrip;
   const dressRoute = currentPath.endsWith('/dress-code');
   const selectedHeader = home
     ? 'home'
-    : schedule
-      ? 'schedule'
+    : creatingTrip
+      ? 'create'
       : currentPath.startsWith('/trips')
         ? 'trips'
         : 'none';
@@ -302,17 +302,120 @@ export function AppShell({
       {adminLayout ? <UiIcon name="menu" /> : 'Menu'}
     </button>
   );
-  // Auth frames in Web v2 have their own brand/hero and start at canvas origin (0,0).
-  // Keep the same main focus target and all route/session guards in App.
+  const desktopHeader = (
+    <header
+      className={styles.desktopHeader}
+      data-node-id={
+        guest
+          ? '930:6661'
+          : selectedHeader === 'create'
+            ? '930:6790'
+            : selectedHeader === 'trips'
+              ? '930:6745'
+              : '930:6700'
+      }
+    >
+      <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
+        <BrandWordmark />
+      </Link>
+      <nav aria-label="Điều hướng chính" className={styles.headerNav}>
+        <Link to={paths.home} aria-current={!guest && home ? 'page' : undefined}>
+          <FigmaTopIcon section="home" active={!guest && home} />
+          <span className={styles.navLabel}>Trang chủ</span>
+        </Link>
+        <Link to={paths.trips} aria-current={selectedHeader === 'trips' ? 'page' : undefined}>
+          <FigmaTopIcon section="trips" active={selectedHeader === 'trips'} />
+          <span className={styles.navLabel}>Chuyến đi của tôi</span>
+        </Link>
+        {viewer ? (
+          <Link aria-current={creatingTrip ? 'page' : undefined} to={paths.newTrip}>
+            <FigmaTopIcon section="schedule" active={creatingTrip} />
+            <span className={styles.navLabel}>Tạo chuyến đi</span>
+          </Link>
+        ) : (
+          <Link to={`${paths.login}?returnTo=${encodeURIComponent(paths.newTrip)}`}>
+            <FigmaTopIcon section="schedule" />
+            <span className={styles.navLabel}>Tạo chuyến đi</span>
+          </Link>
+        )}
+      </nav>
+      <div className={styles.account}>
+        {viewer ? (
+          <>
+            <Suspense fallback={<span className={styles.bellPlaceholder} aria-hidden="true" />}>
+              <Notifications key={viewer.id ?? 'preview'} actor={viewer.id ?? 'preview'} />
+            </Suspense>
+            <Suspense
+              fallback={
+                <Link to={paths.profile} className={styles.profile}>
+                  <Avatar name={viewer.fullName} />
+                  <span className={styles.accountName}>{viewer.fullName}</span>
+                  <span className={styles.profileCompactName}>
+                    {`${accountInitials(viewer.fullName)} ${viewer.fullName}`}
+                  </span>
+                  <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
+                </Link>
+              }
+            >
+              <AccountMenu name={viewer.fullName} />
+            </Suspense>
+          </>
+        ) : guest ? (
+          <>
+            <Link className={styles.outline} to={paths.login}>
+              Đăng nhập
+            </Link>
+            <Link className={styles.primary} to={paths.register}>
+              Bắt đầu miễn phí
+            </Link>
+          </>
+        ) : (
+          <span aria-label="Thông tin tài khoản chưa khả dụng">—</span>
+        )}
+      </div>
+    </header>
+  );
+  // Login and registration share the site header; recovery and admin auth retain their own frame.
+  if (currentPath === paths.login || currentPath === paths.register) {
+    return (
+      <div className={`${styles.authShell} ${styles.authWithHeader}`}>
+        <a className={styles.skip} href="#main-content">
+          Đến nội dung chính
+        </a>
+        {desktopHeader}
+        <header className={styles.mobileHeader}>
+          <Link to={paths.home} className={styles.mobileLogo} aria-label="Wolfari · Trang chủ">
+            <BrandWordmark />
+          </Link>
+          <nav aria-label="Điều hướng tài khoản" className={styles.authMobileNav}>
+            <Link to={paths.login} aria-current={currentPath === paths.login ? 'page' : undefined}>
+              Đăng nhập
+            </Link>
+            <Link
+              to={paths.register}
+              aria-current={currentPath === paths.register ? 'page' : undefined}
+            >
+              Đăng ký
+            </Link>
+          </nav>
+        </header>
+        <main
+          ref={contentScope}
+          id="main-content"
+          tabIndex={-1}
+          data-layout="auth"
+          data-auth-header
+        >
+          {children}
+        </main>
+      </div>
+    );
+  }
+  // Recovery and admin auth retain their standalone frame and route/session guards.
   if (
-    [
-      paths.login,
-      paths.register,
-      paths.forgotPassword,
-      paths.verifyEmail,
-      paths.resetPassword,
-      '/admin/login',
-    ].includes(currentPath)
+    [paths.forgotPassword, paths.verifyEmail, paths.resetPassword, '/admin/login'].includes(
+      currentPath,
+    )
   ) {
     return (
       <div className={styles.authShell}>
@@ -337,84 +440,7 @@ export function AppShell({
           <AdminTopbar snapshot={snapshot} section={adminSection} />
         </div>
       ) : (
-        <>
-          <header
-            className={styles.desktopHeader}
-            data-node-id={
-              guest
-                ? '930:6661'
-                : selectedHeader === 'schedule'
-                  ? '930:6790'
-                  : selectedHeader === 'trips'
-                    ? '930:6745'
-                    : '930:6700'
-            }
-          >
-            <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
-              <BrandWordmark />
-            </Link>
-            <nav aria-label="Điều hướng chính" className={styles.headerNav}>
-              <Link to={paths.home} aria-current={!guest && home ? 'page' : undefined}>
-                <FigmaTopIcon section="home" active={!guest && home} />
-                <span className={styles.navLabel}>Trang chủ</span>
-              </Link>
-              <Link to={paths.trips} aria-current={selectedHeader === 'trips' ? 'page' : undefined}>
-                <FigmaTopIcon section="trips" active={selectedHeader === 'trips'} />
-                <span className={styles.navLabel}>Chuyến đi của tôi</span>
-              </Link>
-              {canReadTrip && snapshot?.trip ? (
-                <Link
-                  aria-current={schedule ? 'page' : undefined}
-                  to={paths.plan(snapshot.trip.id)}
-                >
-                  <FigmaTopIcon section="schedule" active={schedule} />
-                  <span className={styles.navLabel}>Lên lịch</span>
-                </Link>
-              ) : (
-                <button disabled title="Chọn chuyến đi để mở lịch trình">
-                  <FigmaTopIcon section="schedule" />
-                  <span className={styles.navLabel}>Lên lịch</span>
-                </button>
-              )}
-            </nav>
-            <div className={styles.account}>
-              {viewer ? (
-                <>
-                  <Suspense
-                    fallback={<span className={styles.bellPlaceholder} aria-hidden="true" />}
-                  >
-                    <Notifications key={viewer.id ?? 'preview'} actor={viewer.id ?? 'preview'} />
-                  </Suspense>
-                  <Suspense
-                    fallback={
-                      <Link to={paths.profile} className={styles.profile}>
-                        <Avatar name={viewer.fullName} />
-                        <span className={styles.accountName}>{viewer.fullName}</span>
-                        <span className={styles.profileCompactName}>
-                          {`${accountInitials(viewer.fullName)} ${viewer.fullName}`}
-                        </span>
-                        <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
-                      </Link>
-                    }
-                  >
-                    <AccountMenu name={viewer.fullName} />
-                  </Suspense>
-                </>
-              ) : guest ? (
-                <>
-                  <Link className={styles.outline} to={paths.login}>
-                    Đăng nhập
-                  </Link>
-                  <Link className={styles.primary} to={paths.register}>
-                    Bắt đầu miễn phí
-                  </Link>
-                </>
-              ) : (
-                <span aria-label="Thông tin tài khoản chưa khả dụng">—</span>
-              )}
-            </div>
-          </header>
-        </>
+        desktopHeader
       )}
       <header
         className={`${styles.mobileHeader} ${adminLayout ? styles.adminMobileHeader : ''}`}

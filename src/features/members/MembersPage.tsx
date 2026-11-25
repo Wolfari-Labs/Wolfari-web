@@ -321,7 +321,7 @@ export function MembersView({
                       <span>Thành viên</span>
                       <span>Vai trò</span>
                     </div>
-                    <ul className={styles.members}>
+                    <ul className={styles.members} tabIndex={0} aria-label="Danh sách thành viên">
                       {items.map((member, index) => (
                         <li key={member.id} data-departed={member.leftAt !== null || undefined}>
                           <span className={styles.avatar} data-tone={index % 5}>
@@ -539,7 +539,11 @@ export function MembersView({
           </section>
         </div>
       )}
-      {invitationManagement && <div hidden={tab !== 'invitations'}>{invitationManagement}</div>}
+      {invitationManagement && (
+        <div className={styles.invitationManagement} hidden={tab !== 'invitations'}>
+          {invitationManagement}
+        </div>
+      )}
     </>
   );
 }

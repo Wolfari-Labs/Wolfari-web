@@ -157,6 +157,26 @@
   margin-top: 18px;
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.controls .scopeTabs {
+  margin-top: 0;
+}
+
+.createButton {
+  flex-shrink: 0;
+}
+
+.cardHeader > :last-child {
+  margin-left: auto;
+}
+
 .scopeTabs button {
   min-width: 140px;
   height: 34px;
@@ -188,7 +208,7 @@
 
 .contentGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 364px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
   margin-top: 20px;
@@ -456,7 +476,7 @@
 
 @media (max-width: 1200px) and (min-width: 769px) {
   .contentGrid {
-    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-columns: minmax(0, 1fr);
   }
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -700,7 +720,7 @@
 /* Side column only where the page is not collapsing to fewer columns. */
 @media (min-width: 1201px) {
   .contentGrid {
-    grid-template-columns: minmax(0, 1fr) var(--side-panel-width);
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -733,7 +753,7 @@
   }
 
   .contentGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 384px);
+    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
     margin-top: 20px;
   }
@@ -1120,5 +1140,33 @@
 
   .editor {
     min-height: 0;
+  }
+}
+
+.editor {
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (min-width: 769px) {
+  .createButton {
+    min-height: 44px;
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+  }
+}
+
+@media (max-width: 768px) {
+  .controls {
+    width: 100%;
+  }
+
+  .createButton {
+    width: 100%;
   }
 }

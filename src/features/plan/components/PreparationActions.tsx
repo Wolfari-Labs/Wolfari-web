@@ -8,7 +8,8 @@ import { Textarea } from '../../../shared/components/Textarea';
 import { Select } from '../../../shared/components/Select';
 import { Drawer } from '../../../shared/components/Drawer';
 import { Alert } from '../../../shared/components/Alert';
-import { ConfirmDialog } from '../../../shared/components/Ui';
+import { ActionMenu, ConfirmDialog } from '../../../shared/components/Ui';
+import { Icon } from '../../../shared/components/Icon';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import type {
   PlanViewModel,
@@ -138,8 +139,14 @@ export function PreparationActions({
   module,
   item,
   candidate,
+  dressControls = false,
   ...props
-}: PreparationProps & { module: Module; item?: Item; candidate?: LocationWrite }) {
+}: PreparationProps & {
+  module: Module;
+  item?: Item;
+  candidate?: LocationWrite;
+  dressControls?: boolean;
+}) {
   const { trip, plan } = props;
   const commands = usePreparationCommands(props);
   const repository = usePlanRepository();
@@ -304,19 +311,37 @@ export function PreparationActions({
   if (!enabled) return null;
   return (
     <div className={styles.actions}>
-      <Button
-        variant="outline"
-        disabled={
-          commands.locked || (!item && module === 'location' && plan.selectedLocations.length >= 50)
-        }
-        onClick={edit}
-      >
-        {item ? 'Sửa' : candidate ? 'Lưu' : 'Thêm'} {label}
-      </Button>
-      {item && (
-        <Button variant="outline" disabled={commands.locked} onClick={() => setDeleting(true)}>
-          Xóa {label}
-        </Button>
+      {dressControls && item ? (
+        <ActionMenu
+          label={`Thao tác ${(item as DressCodeViewModel).label}`}
+          icon={<Icon name="moreVertical" />}
+          disabled={commands.locked}
+          items={[
+            { label: 'Chỉnh sửa', action: edit },
+            { label: 'Xóa', danger: true, action: () => setDeleting(true) },
+          ]}
+        />
+      ) : (
+        <>
+          <Button
+            variant={dressControls ? 'primary' : 'outline'}
+            icon={dressControls ? <Icon name="plus" size={18} /> : undefined}
+            disabled={
+              commands.locked ||
+              (!item && module === 'location' && plan.selectedLocations.length >= 50)
+            }
+            onClick={edit}
+          >
+            {dressControls
+              ? 'Tạo trang phục'
+              : `${item ? 'Sửa' : candidate ? 'Lưu' : 'Thêm'} ${label}`}
+          </Button>
+          {item && (
+            <Button variant="outline" disabled={commands.locked} onClick={() => setDeleting(true)}>
+              Xóa {label}
+            </Button>
+          )}
+        </>
       )}
       {deleting && affected.length > 0 ? (
         <Alert>
@@ -353,7 +378,11 @@ export function PreparationActions({
       <Drawer
         open={!!draft}
         side="right"
-        label={`${item ? 'Sửa' : 'Thêm'} ${label}`}
+        label={
+          dressControls
+            ? `${item ? 'Chỉnh sửa' : 'Tạo'} trang phục`
+            : `${item ? 'Sửa' : 'Thêm'} ${label}`
+        }
         onDismiss={() => {
           if (!commands.pending) setDraft(null);
         }}
@@ -465,13 +494,10 @@ export function PreparationActions({
                     value={draft.fields.publicDescription}
                     onChange={(e) => update('publicDescription', e.target.value)}
                   />
-                  {item && (item as DressCodeViewModel).referenceImageAvailable &&
+                  {item &&
+                    (item as DressCodeViewModel).referenceImageAvailable &&
                     draft.fields.referenceImageId !== '__REMOVE__' && (
-                      <DressCodeReferenceImage
-                        tripId={trip.id}
-                        dressCodeId={item.id}
-                        available
-                      />
+                      <DressCodeReferenceImage tripId={trip.id} dressCodeId={item.id} available />
                     )}
                   {imageEnabled && (
                     <section className={styles.form} aria-label="Ảnh tham khảo dress code">
@@ -553,7 +579,7 @@ export function PreparationActions({
               type="submit"
               disabled={commands.locked || !enabled || draft.version !== plan.planVersion}
             >
-              Lưu {label}
+              {dressControls ? (item ? 'Lưu thay đổi' : 'Tạo trang phục') : `Lưu ${label}`}
             </Button>
             <Button variant="outline" disabled={commands.pending} onClick={() => setDraft(null)}>
               Đóng
