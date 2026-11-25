@@ -667,3 +667,28 @@
     background: rgb(255 255 255 / 85%);
   }
 }
+
+@media (min-width: 769px) and (max-height: 600px) {
+  .memberPanel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .panelHeading {
+    position: sticky;
+    z-index: 1;
+    top: -20px;
+    padding-block: 20px 8px;
+    margin-top: -20px;
+    background: var(--v2-white);
+  }
+
+  .members {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  .roleHelp {
+    max-height: none;
+  }
+}

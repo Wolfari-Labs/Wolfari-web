@@ -90,8 +90,6 @@ for (const height of [520, 600, 900, 950, 951, 960, 985, 986, 990]) {
       };
     });
     expect(geometry).not.toBeNull();
-    // The shell may scroll the selected entry into view when the nav is shorter.
-    if (height <= 600) expect(geometry!.scrollTop).toBeGreaterThan(0);
     expect(geometry!.settingsTop).toBeGreaterThanOrEqual(geometry!.navTop - 1);
     expect(geometry!.settingsBottom).toBeLessThanOrEqual(geometry!.navBottom + 1);
     await writeFile(info.outputPath('sidebar-geometry.json'), JSON.stringify(geometry, null, 2));

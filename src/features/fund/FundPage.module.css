@@ -1408,6 +1408,9 @@
   .page,
   .gatewayPage {
     height: calc(100dvh - 116px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .page > :global(.preview) {
     left: 8px;

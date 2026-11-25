@@ -2488,6 +2488,10 @@
     min-width: 0;
   }
 
+  .desktopPlaceCard > .cardProvenance {
+    grid-column: 1 / -1;
+  }
+
   .desktopPlaceCard strong {
     color: var(--v2-ink);
     font-size: 18px;
@@ -2596,6 +2600,12 @@
   .mapPanel {
     height: 100%;
     min-height: 0;
+  }
+  .page[data-flow='gateway-map-read'] {
+    overflow-y: auto;
+  }
+  .page[data-flow='gateway-map-read'] .mapContent {
+    flex: 0 0 100%;
   }
 }
 @media (min-width: 1001px) {

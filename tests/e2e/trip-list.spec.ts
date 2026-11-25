@@ -259,10 +259,11 @@ for (const width of [1440, 402]) {
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     if (width > 768) {
-      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute(
-        'href',
-        '/trips/new',
-      );
+      await expect(
+        page
+          .getByRole('region', { name: 'Danh sách chuyến đi' })
+          .getByRole('link', { name: 'Tạo chuyến đi', exact: true }),
+      ).toHaveAttribute('href', '/trips/new');
       // A26 (UI declutter): the three locked placeholder filters were removed, not just disabled.
       for (const label of ['Vai trò: Tất cả', 'Thời gian', 'Bộ lọc'])
         await expect(page.getByRole('button', { name: label, exact: true })).toHaveCount(0);

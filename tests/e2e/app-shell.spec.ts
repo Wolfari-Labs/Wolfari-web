@@ -529,7 +529,8 @@ test('Guest public/auth pages have responsive header and natural scrolling', asy
       await loadedAssets(page);
       await fillMain(page);
       await page.getByRole('button', { name: 'Acceptance content end' }).click();
-      expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+      if (route === '/') expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+      else expect(await page.evaluate(() => scrollY)).toBe(0);
     }
   }
 });

@@ -50,21 +50,17 @@ for (const viewport of viewports) {
       near(box.x, expected.x, `${label} hero x`);
       near(box.y, expected.y, `${label} hero y`);
       near(box.width, expected.width, `${label} hero width`);
-      near(box.height, route.name === 'plan' ? 80 : 84, `${label} hero height`);
+      near(box.height, 84, `${label} hero height`);
 
       // The page breadcrumb (with the h1) sits inside the trip header's text column.
-      if (route.name === 'plan') {
-        await expect(breadcrumb(page)).toHaveCount(0);
-      } else {
-        const crumb = (await breadcrumb(page).boundingBox())!;
-        near(crumb.y, expected.y + 8, `${label} breadcrumb y`);
-        near(crumb.x, expected.x + 88, `${label} breadcrumb x`);
-      }
+      const crumb = (await breadcrumb(page).boundingBox())!;
+      near(crumb.y, expected.y + 8, `${label} breadcrumb y`);
+      near(crumb.x, expected.x + 88, `${label} breadcrumb x`);
 
       const headings = page.getByRole('heading', { level: 1 });
       await expect(headings, `${label} exactly one visible h1`).toHaveCount(1);
       await expect(headings).toBeVisible();
-      if (route.name !== 'plan') await expect(headings).toHaveAttribute('aria-current', 'page');
+      await expect(headings).toHaveAttribute('aria-current', 'page');
     }
   });
 }

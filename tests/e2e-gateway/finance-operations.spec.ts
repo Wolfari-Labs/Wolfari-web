@@ -95,7 +95,9 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(720);
   await page.screenshot({ path: test.info().outputPath('fund-populated.png'), fullPage: true });
   await page.setViewportSize({ width: 320, height: 600 });
-  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(600);
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.scrollHeight))
+    .toBeLessThanOrEqual(600);
   await page.setViewportSize({ width: 1280, height: 720 });
   await expect(page.locator('[data-finance-filter-note]')).toHaveCount(0);
   await expect(page.getByRole('table', { name: 'Các giao dịch quỹ nhóm' })).toBeVisible();
