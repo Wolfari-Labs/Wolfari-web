@@ -7,6 +7,8 @@ import destinationPhoto from '../../shared/assets/figma/16cac.png';
 import type { MapLocationPresentation } from './trip-map';
 import { activityScheduleLabel, validCoordinates } from './trip-map';
 import { loadGoogleMapsSdk } from './google-places';
+import type { PlaceImage } from './places';
+import { PlacePhoto } from './PlacePhoto';
 import styles from './TripMapPage.module.css';
 
 type GoogleMapsRuntime = {
@@ -44,6 +46,7 @@ export function MapViewport({
   runtimeMap,
   selectedActions,
   selectedMeta,
+  selectedImage,
   autoSelectFirst = true,
 }: {
   items: readonly MapLocationPresentation[];
@@ -59,6 +62,7 @@ export function MapViewport({
   selectedActions?: ReactNode;
   /** Runtime source line for the selected place (POI-OVERTURE W10, FR-TI01). */
   selectedMeta?: ReactNode;
+  selectedImage?: PlaceImage | null;
   /** `false`: no card until the user picks a place (POI-OVERTURE bbox explore). */
   autoSelectFirst?: boolean;
 }) {
@@ -296,13 +300,11 @@ export function MapViewport({
             style={cardPosition ? { left: cardPosition.left, top: cardPosition.top } : undefined}
             aria-label={`Đang chọn ${selected.location.name}`}
           >
-            <img
-              src={locationPhoto(selected)}
-              width="230"
-              height="90"
-              alt={runtimeMap ? 'Ảnh minh họa giao diện; không phải ảnh địa điểm' : ''}
-              title={runtimeMap ? 'Ảnh minh họa' : undefined}
-            />
+            {runtimeMap ? (
+              <PlacePhoto image={selectedImage} name={selected.location.name} linked />
+            ) : (
+              <img src={locationPhoto(selected)} width="230" height="90" alt="" />
+            )}
             <strong>{selected.location.name}</strong>
             <span>⌖ {selected.location.address ?? 'Chưa có địa chỉ'}</span>
             {selectedMeta}
@@ -324,12 +326,11 @@ export function MapViewport({
             aria-label={`Đang chọn ${selected.location.name}`}
           >
             <div className={styles.mobilePlaceSummary}>
-              <img
-                src={runtimeMap ? desktopPlaceArtwork : locationPhoto(selected, true)}
-                width="60"
-                height="60"
-                alt={runtimeMap ? 'Ảnh minh họa' : ''}
-              />
+              {runtimeMap ? (
+                <PlacePhoto image={selectedImage} name={selected.location.name} compact linked />
+              ) : (
+                <img src={locationPhoto(selected, true)} width="60" height="60" alt="" />
+              )}
               <div>
                 <strong>{selected.location.name}</strong>
                 <span>{activityScheduleLabel(primaryActivity, timezone)}</span>

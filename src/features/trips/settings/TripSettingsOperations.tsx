@@ -35,6 +35,18 @@ interface ReminderAttempt {
   idempotencyKey: string;
 }
 
+type LifecycleSection = 'archive' | 'delete' | 'transfer';
+type OperationsSection = 'export' | 'notifications' | LifecycleSection;
+
+const lifecycleLabels: Record<TripManagementAction, string> = {
+  ARCHIVE: 'Lưu trữ chuyến đi',
+  REOPEN: 'Mở lại chuyến đi',
+  DELETE: 'Xóa chuyến đi',
+  TRANSFER: 'Chuyển quyền Owner',
+};
+
+function ignoreBusyChange() {}
+
 function validReminderAttempt(value: unknown): value is ReminderAttempt {
   if (!value || typeof value !== 'object') return false;
   const row = value as Partial<ReminderAttempt>;
@@ -145,7 +157,10 @@ function ReminderManager({
   );
   const [error, setError] = useState('');
   const [busyId, setBusyId] = useState('');
-  useEffect(() => onBusyChange(!!busyId), [busyId, onBusyChange]);
+  useEffect(() => {
+    onBusyChange(!!busyId);
+    return () => onBusyChange(false);
+  }, [busyId, onBusyChange]);
   const [attempt, setAttempt] = useState<ReminderAttempt | null>(initial.current.value);
   const [unknown, setUnknown] = useState(!!initial.current.value);
   const [invalidAttempt] = useState(initial.current.invalid);
@@ -391,54 +406,88 @@ function ReminderManager({
 
 function TripLifecycleManager({
   trip,
-  roster,
-  canLoadMoreRoster,
-  loadingRoster,
-  loadMoreRoster,
-  rosterError,
-  rosterUnavailable,
-  onDeleted,
+  section,
   onBusyChange,
   initialTransferMemberId,
 }: {
   trip: TripDetailViewModel;
-  roster: readonly MembershipViewModel[];
-  canLoadMoreRoster: boolean;
-  loadingRoster: boolean;
-  loadMoreRoster: () => void;
-  rosterError: boolean;
-  rosterUnavailable: boolean;
-  onDeleted: () => void;
+  section: LifecycleSection;
   onBusyChange: (busy: boolean) => void;
   initialTransferMemberId?: string;
 }) {
   const repository = useTripRepository();
+  const membership = useMembersRepositoriesOptional()?.membership;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const owner = trip.currentMembership.role === 'OWNER';
+  const archived = trip.lifecycle === 'ARCHIVED';
+  const requestedAction: TripManagementAction =
+    section === 'delete'
+      ? 'DELETE'
+      : section === 'transfer'
+        ? 'TRANSFER'
+        : archived
+          ? 'REOPEN'
+          : 'ARCHIVE';
   const key = `wolfari:trip-lifecycle:v1:${trip.currentMembership.userId}:${trip.id}`;
   const initial = useRef(readAttempt(key));
   const [attempt, setAttempt] = useState(initial.current.value);
   const [invalidAttempt, setInvalidAttempt] = useState(initial.current.invalid);
-  const [action, setAction] = useState<TripManagementAction>(
-    trip.lifecycle === 'ARCHIVED' ? 'REOPEN' : initialTransferMemberId ? 'TRANSFER' : 'ARCHIVE',
+  const action = attempt?.action ?? requestedAction;
+  const [reason, setReason] = useState(initial.current.value?.reason ?? '');
+  const [newOwner, setNewOwner] = useState(
+    initial.current.value?.newOwnerMemberId ?? initialTransferMemberId ?? '',
   );
-  const [reason, setReason] = useState('');
-  const [newOwner, setNewOwner] = useState(initialTransferMemberId ?? '');
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed, setConfirmed] = useState(!!initial.current.value);
   const [busy, setBusy] = useState(false);
-  useEffect(() => onBusyChange(busy), [busy, onBusyChange]);
+  useEffect(() => {
+    onBusyChange(busy);
+    return () => onBusyChange(false);
+  }, [busy, onBusyChange]);
   const [unknown, setUnknown] = useState(!!initial.current.value);
   const [error, setError] = useState('');
   const storage = useRef(createStorageFallback());
-
-  useEffect(() => {
-    if (attempt) {
-      setAction(attempt.action);
-      setReason(attempt.reason);
-      setNewOwner(attempt.newOwnerMemberId ?? '');
-      setConfirmed(true);
-    }
-  }, [attempt]);
+  const transferAvailable = !archived || !!attempt;
+  const roster = useInfiniteQuery({
+    queryKey: [
+      'members',
+      trip.id,
+      'trip-settings',
+      trip.currentMembership.userId,
+      trip.membershipRevision,
+    ],
+    enabled:
+      owner &&
+      !!repository.manageTrip &&
+      !!membership &&
+      action === 'TRANSFER' &&
+      !attempt &&
+      transferAvailable,
+    initialPageParam: undefined as string | undefined,
+    queryFn: async ({ signal, pageParam }) => {
+      if (!membership) throw Error('Members repository unavailable');
+      const result = await membership.listMembers({
+        tripId: trip.id,
+        scenario: 'success',
+        signal,
+        includeLeft: false,
+        limit: 100,
+        ...(pageParam ? { cursor: pageParam } : {}),
+      });
+      if (result.status === 'error') throw result.error;
+      return result.status === 'ready' ? result.data : { items: [], nextCursor: null };
+    },
+    getNextPageParam: (page) => page.nextCursor ?? undefined,
+  });
+  const candidates =
+    roster.data?.pages
+      .flatMap((page) => page.items)
+      .filter(
+        (member) =>
+          member.tripId === trip.id &&
+          member.leftAt === null &&
+          member.id !== trip.currentMembership.id,
+      ) ?? [];
 
   function persist(value: LifecycleAttempt | null) {
     const saved = storage.current.write(
@@ -466,10 +515,23 @@ function TripLifecycleManager({
     ]);
   }
   async function submit() {
-    if (!repository.manageTrip || busy || invalidAttempt) return;
+    if (
+      !repository.manageTrip ||
+      busy ||
+      invalidAttempt ||
+      !owner ||
+      !trip.permissions.canRead ||
+      trip.currentMembership.leftAt !== null ||
+      (!unknown && action === 'TRANSFER' && !transferAvailable)
+    )
+      return;
     let snapshot = attempt;
     if (!unknown) {
-      if (!reason.trim() || (action === 'TRANSFER' && !newOwner)) {
+      if (
+        !confirmed ||
+        !reason.trim() ||
+        (action === 'TRANSFER' && !candidates.some((member) => member.id === newOwner))
+      ) {
         setError('Nhập lý do và chọn thành viên mới nếu chuyển quyền Owner.');
         return;
       }
@@ -497,8 +559,11 @@ function TripLifecycleManager({
       persist(null);
       setAttempt(null);
       setUnknown(false);
+      setReason('');
+      setNewOwner('');
+      setConfirmed(false);
       await refresh();
-      if (snapshot.action === 'DELETE') onDeleted();
+      if (snapshot.action === 'DELETE') navigate(paths.trips, { replace: true });
     } catch (cause) {
       const status =
         cause && typeof cause === 'object' && 'status' in cause
@@ -527,19 +592,19 @@ function TripLifecycleManager({
   }
 
   if (!owner) return null;
-  const archived = trip.lifecycle === 'ARCHIVED';
-  const candidates = roster.filter(
-    (member) => member.leftAt === null && member.id !== trip.currentMembership.id,
-  );
   return (
     <section className={styles.section} aria-labelledby="trip-lifecycle-heading">
-      <h3 id="trip-lifecycle-heading">
-        {action === 'TRANSFER' ? 'Chuyển quyền Owner' : 'Lưu trữ chuyến đi'}
-      </h3>
+      <h3 id="trip-lifecycle-heading">{lifecycleLabels[requestedAction]}</h3>
       {!repository.manageTrip ? (
         <p>Lifecycle chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
       ) : (
         <>
+          {attempt && action !== requestedAction && (
+            <Alert tone="warning">
+              Yêu cầu “{lifecycleLabels[action]}” trước đó chưa xác định được kết quả. Hãy thử lại
+              đúng yêu cầu này trước khi thực hiện thao tác khác.
+            </Alert>
+          )}
           {invalidAttempt && (
             <Alert tone="warning">
               Yêu cầu lifecycle đã lưu không hợp lệ. Tải lại Trip trước khi gửi thao tác mới.
@@ -552,17 +617,6 @@ function TripLifecycleManager({
               void submit();
             }}
           >
-            <Select
-              label="Thao tác"
-              value={action}
-              disabled={!!attempt || busy}
-              onChange={(event) => setAction(event.target.value as TripManagementAction)}
-            >
-              {!archived && <option value="ARCHIVE">Lưu trữ chuyến đi</option>}
-              {archived && <option value="REOPEN">Mở lại chuyến đi</option>}
-              {!archived && <option value="TRANSFER">Chuyển quyền Owner</option>}
-              <option value="DELETE">Xóa chuyến đi</option>
-            </Select>
             {action === 'TRANSFER' && (
               <Select
                 label="Owner mới"
@@ -571,6 +625,9 @@ function TripLifecycleManager({
                 onChange={(event) => setNewOwner(event.target.value)}
               >
                 <option value="">Chọn thành viên</option>
+                {attempt && !candidates.some((member) => member.id === newOwner) && (
+                  <option value={newOwner}>Thành viên đã chọn trong yêu cầu đang chờ</option>
+                )}
                 {candidates.map((member) => (
                   <option key={member.id} value={member.id}>
                     {labelMember(member)}
@@ -595,21 +652,26 @@ function TripLifecycleManager({
               Tôi xác nhận thao tác này và đã kiểm tra các ràng buộc Finance.
             </label>
             {error && <Alert tone={unknown ? 'warning' : 'error'}>{error}</Alert>}
-            {rosterError && (
+            {action === 'TRANSFER' && !attempt && !transferAvailable && (
+              <Alert tone="warning">Mở lại chuyến đi trước khi chuyển quyền Owner.</Alert>
+            )}
+            {action === 'TRANSFER' && !attempt && roster.isError && (
               <Alert tone="error">Chưa tải đủ danh sách thành viên để chuyển quyền Owner.</Alert>
             )}
-            {rosterUnavailable && (
+            {action === 'TRANSFER' && !attempt && !membership && (
               <Alert tone="warning">
                 Danh sách thành viên chưa khả dụng để chuyển quyền Owner.
               </Alert>
             )}
-            {canLoadMoreRoster && (
+            {action === 'TRANSFER' && !attempt && roster.hasNextPage && (
               <Button
                 type="button"
                 variant="outline"
-                disabled={loadingRoster}
-                loading={loadingRoster}
-                onClick={loadMoreRoster}
+                disabled={roster.isFetchingNextPage}
+                loading={roster.isFetchingNextPage}
+                onClick={() => {
+                  if (!roster.isFetchingNextPage) void roster.fetchNextPage();
+                }}
               >
                 Tải thêm thành viên
               </Button>
@@ -622,7 +684,8 @@ function TripLifecycleManager({
                 invalidAttempt ||
                 !confirmed ||
                 (!unknown &&
-                  (!reason.trim() ||
+                  ((action === 'TRANSFER' && !transferAvailable) ||
+                    !reason.trim() ||
                     (action === 'TRANSFER' && !candidates.some((m) => m.id === newOwner))))
               }
               data-destructive={action === 'DELETE' || undefined}
@@ -656,78 +719,38 @@ export function TripSettingsOperations({
   initialTransferMemberId,
 }: {
   trip: TripDetailViewModel;
-  section: 'export' | 'notifications' | 'archive';
+  section: OperationsSection;
   onBusyChange?: (busy: boolean) => void;
   initialTransferMemberId?: string;
 }) {
-  const repository = useTripRepository();
-  const membersRepositories = useMembersRepositoriesOptional();
-  const membership = membersRepositories?.membership;
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const actor = trip.currentMembership.userId;
-  const roster = useInfiniteQuery({
-    queryKey: ['members', trip.id, 'trip-settings', actor, trip.membershipRevision],
-    enabled: !!membership,
-    initialPageParam: undefined as string | undefined,
-    queryFn: async ({ signal, pageParam }) => {
-      if (!membership) throw Error('Members repository unavailable');
-      const result = await membership.listMembers({
-        tripId: trip.id,
-        scenario: 'success',
-        signal,
-        includeLeft: false,
-        limit: 100,
-        ...(pageParam ? { cursor: pageParam } : {}),
-      });
-      if (result.status === 'error') throw result.error;
-      return result.status === 'ready' ? result.data : { items: [], nextCursor: null };
-    },
-    getNextPageParam: (page) => page.nextCursor ?? undefined,
-  });
-  const members =
-    roster.data?.pages
-      .flatMap((page) => page.items)
-      .filter((member) => member.tripId === trip.id && member.leftAt === null) ?? [];
-  const [pdfBusy, setPdfBusy] = useState(false);
-  const [reminderBusy, setReminderBusy] = useState(false);
-  const [lifecycleBusy, setLifecycleBusy] = useState(false);
-
-  useEffect(() => {
-    onBusyChange?.(pdfBusy || reminderBusy || lifecycleBusy);
-    return () => onBusyChange?.(false);
-  }, [pdfBusy, reminderBusy, lifecycleBusy, onBusyChange]);
+  const handleBusyChange = onBusyChange ?? ignoreBusyChange;
+  if (!trip.permissions.canRead || trip.currentMembership.leftAt !== null) return null;
 
   return (
     <div className={styles.column}>
-      <section className={styles.panel} hidden={section !== 'export'}>
-        <TripPlanExport
-          key={`${trip.id}:${actor}:${trip.planVersion}:${trip.membershipRevision}:${trip.exportRevision}`}
-          trip={trip}
-          onBusyChange={setPdfBusy}
-        />
-      </section>
-      <section className={styles.panel} hidden={section !== 'notifications'}>
-        <ReminderManager trip={trip} onBusyChange={setReminderBusy} />
-      </section>
-      <section className={styles.panel} hidden={section !== 'archive'}>
-        <TripLifecycleManager
-          trip={trip}
-          roster={members}
-          canLoadMoreRoster={!!roster.hasNextPage}
-          loadingRoster={roster.isFetchingNextPage}
-          rosterError={roster.isError}
-          rosterUnavailable={!!repository.manageTrip && !membership}
-          loadMoreRoster={() => {
-            if (roster.hasNextPage && !roster.isFetchingNextPage) void roster.fetchNextPage();
-          }}
-          onBusyChange={setLifecycleBusy}
-          {...(initialTransferMemberId ? { initialTransferMemberId } : {})}
-          onDeleted={() => {
-            void queryClient.invalidateQueries({ queryKey: ['trips', 'list'] });
-            navigate(paths.trips, { replace: true });
-          }}
-        />
+      <section className={styles.panel}>
+        {section === 'export' ? (
+          <TripPlanExport
+            key={`${trip.id}:${actor}:${trip.planVersion}:${trip.membershipRevision}:${trip.exportRevision}`}
+            trip={trip}
+            onBusyChange={handleBusyChange}
+          />
+        ) : section === 'notifications' ? (
+          <ReminderManager
+            key={`${trip.id}:${actor}`}
+            trip={trip}
+            onBusyChange={handleBusyChange}
+          />
+        ) : (
+          <TripLifecycleManager
+            key={`${trip.id}:${actor}:${section}`}
+            trip={trip}
+            section={section}
+            onBusyChange={handleBusyChange}
+            {...(initialTransferMemberId ? { initialTransferMemberId } : {})}
+          />
+        )}
       </section>
     </div>
   );

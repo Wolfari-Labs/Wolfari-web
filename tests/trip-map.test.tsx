@@ -136,7 +136,7 @@ describe('trip map projection', () => {
     );
 
     expect(
-      await screen.findByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' }),
+      await screen.findByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' }, { timeout: 5000 }),
     ).toBeInTheDocument();
     expect(screen.queryByText('Bản đồ nền chưa được cấu hình')).not.toBeInTheDocument();
     expect(

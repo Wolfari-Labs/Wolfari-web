@@ -97,6 +97,7 @@ export function TripOverview({
   fundContent,
   memberFeedback,
   fareContent,
+  weatherContent,
 }: {
   trip: TripDetailViewModel;
   plan: ReadResult<PlanViewModel> | { status: 'loading' };
@@ -104,6 +105,7 @@ export function TripOverview({
   fundContent?: ReactNode;
   memberFeedback?: ReactNode;
   fareContent?: ReactNode;
+  weatherContent?: (date: string) => ReactNode;
 }) {
   const [selectedDay, setSelectedDay] = useState(() => localDate(trip.startAt, trip.timezone));
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
@@ -178,16 +180,26 @@ export function TripOverview({
           <section
             className={`${styles.stat} ${styles.weatherCard}`}
             data-region="trip-overview-weather"
-            aria-label="Thời tiết chưa khả dụng"
+            aria-label={weatherContent ? 'Thời tiết chuyến đi' : 'Thời tiết chưa khả dụng'}
           >
             <div className={styles.statHead}>
               <span className={styles.badge} data-tone="amber" aria-hidden="true">
                 <img src={sunIcon} alt="" />
               </span>
-              <h2>Thời tiết hôm nay</h2>
+              <h2>
+                {weatherContent
+                  ? `Thời tiết ${selectedDay.slice(8)}/${selectedDay.slice(5, 7)}`
+                  : 'Thời tiết hôm nay'}
+              </h2>
             </div>
-            <p className={styles.weatherValue}>—</p>
-            <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>
+            {weatherContent ? (
+              weatherContent(selectedDay)
+            ) : (
+              <>
+                <p className={styles.weatherValue}>—</p>
+                <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>
+              </>
+            )}
           </section>
         </div>
         <div className={styles.workspace} data-region="trip-overview-workspace">

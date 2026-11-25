@@ -1,6 +1,6 @@
 export const runtimeStatuses = ['ACTIVE', 'PAUSED', 'EXPIRED', 'STOPPED'] as const;
 export interface WatchFields {
-  provider: 'MOCK_FLIGHT' | 'TRAVELPAYOUTS_CACHE';
+  provider?: 'MOCK_FLIGHT' | 'TRAVELPAYOUTS_CACHE';
   origin: string;
   destination: string;
   departure_date: string;
@@ -20,7 +20,7 @@ export interface RuntimeWatch {
   statusReason: string | null;
   version: number;
   expiresAt: string;
-  fields: WatchFields;
+  fields: WatchFields & { provider: 'MOCK_FLIGHT' | 'TRAVELPAYOUTS_CACHE' };
 }
 export interface RuntimeObservation {
   id: string;
@@ -48,7 +48,7 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
     Number.isFinite(Date.parse(v)) &&
     new Date(v).toISOString().slice(0, 10) === v;
   if (
-    !['MOCK_FLIGHT', 'TRAVELPAYOUTS_CACHE'].includes(f.provider) ||
+    (f.provider !== undefined && !['MOCK_FLIGHT', 'TRAVELPAYOUTS_CACHE'].includes(f.provider)) ||
     f.currency !== 'VND' ||
     !/^[A-Z]{3}$/.test(f.origin) ||
     !/^[A-Z]{3}$/.test(f.destination) ||

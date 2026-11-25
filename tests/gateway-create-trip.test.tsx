@@ -79,6 +79,20 @@ describe('Gateway Create Trip', () => {
     expect(screen.queryByText('Tên đã được sử dụng.')).not.toBeInTheDocument();
   });
 
+  it('validates and submits the supported trip budget as a decimal string', async () => {
+    const { user, createTrip } = setup();
+    await fill(user);
+    const budget = screen.getByLabelText('Ngân sách chuyến đi');
+    fireEvent.change(budget, { target: { value: '0' } });
+    await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
+    expect(budget).toHaveFocus();
+    expect(createTrip).not.toHaveBeenCalled();
+    fireEvent.change(budget, { target: { value: '999999999999' } });
+    await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
+    await waitFor(() => expect(createTrip).toHaveBeenCalledOnce());
+    expect(createTrip.mock.calls[0]![0].intent.budgetAmount).toBe('999999999999');
+  });
+
   it('isolates drafts between actors in one tab and never imports ownerless legacy drafts', async () => {
     sessionStorage.setItem('wolfari:create-trip:v2', JSON.stringify({ name: 'Private legacy' }));
     const { user, rerender, view } = setup();
@@ -103,6 +117,12 @@ describe('Gateway Create Trip', () => {
     });
     expect(intent).not.toHaveProperty('destination');
     unmount();
+    const record = JSON.parse(sessionStorage.getItem('wolfari:create-trip:v3:actor-A')!) as {
+      draft: Record<string, string>;
+      intent: unknown;
+    };
+    delete record.draft.budgetAmount;
+    sessionStorage.setItem('wolfari:create-trip:v3:actor-A', JSON.stringify(record));
     const next = setup();
     await next.user.click(screen.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }));
     expect(next.createTrip.mock.calls[0]![0].intent).toEqual(intent);

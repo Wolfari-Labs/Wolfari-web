@@ -95,6 +95,17 @@
   white-space: nowrap;
   overflow-wrap: normal;
 }
+.summaryActions {
+  display: flex;
+  grid-area: add;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+.summaryActions > button {
+  white-space: nowrap;
+}
 @media (max-width: 768px) {
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
   .summary > button {
@@ -497,6 +508,14 @@
   }
   .summary > .readOnlyBadge {
     grid-column: 1 / -1;
+  }
+  .summaryActions {
+    grid-area: auto;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+  }
+  .summaryActions > button {
+    flex: 1 1 140px;
   }
   .list {
     height: auto;

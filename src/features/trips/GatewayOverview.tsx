@@ -15,6 +15,7 @@ import { paths } from '../../app/route-paths';
 import { toDomainError } from '../../shared/lib/runtime-validation';
 import { OverviewFundSummary } from './components/OverviewFundSummary';
 import { OverviewFareSummary } from './components/OverviewFareSummary';
+import { TripWeatherSummary } from '../weather/TripWeather';
 import styles from './TripDashboard.module.css';
 
 export function GatewayOverview() {
@@ -138,6 +139,13 @@ export function GatewayOverview() {
           onRetry={() => void planQuery.refetch()}
           fundContent={fundContent}
           memberFeedback={memberFeedback}
+          weatherContent={(date) => (
+            <TripWeatherSummary
+              trip={displayTrip}
+              plan={plan.status === 'ready' ? plan.data : null}
+              date={date}
+            />
+          )}
           fareContent={
             <OverviewFareSummary
               key={`${tripId}:${actor}`}

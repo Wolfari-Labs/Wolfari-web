@@ -23,14 +23,20 @@ test(
   async ({ page }, info) => {
     const trip = await createTrip(page, info);
     await page.goto(trip.path + '/settings');
-    await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
+    await page.getByRole('button', { name: 'Chỉnh sửa thông tin', exact: true }).click();
+    await page.getByRole('button', { name: 'Chỉnh sửa mô tả công khai', exact: true }).click();
     await page
       .getByRole('textbox', { name: 'Mô tả công khai' })
       .fill('Mô tả tiếng Việt của chuyến đi TEST');
     await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
     await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
     await page.reload();
-    await expect(page.getByText('Mô tả tiếng Việt của chuyến đi TEST')).toBeVisible();
+    await page.getByRole('button', { name: 'Chỉnh sửa thông tin', exact: true }).click();
+    await expect(
+      page
+        .getByRole('dialog', { name: 'Chỉnh sửa thông tin', exact: true })
+        .getByText('Mô tả tiếng Việt của chuyến đi TEST'),
+    ).toBeVisible();
   },
 );
 test(

@@ -44,7 +44,7 @@ export interface GatewayTrip {
     joined_at: string;
     left_at: null;
   };
-  permissions: { can_read: boolean; can_update: boolean };
+  permissions: { can_read: boolean; can_update: boolean; can_invite?: boolean };
 }
 
 function trip(id: string, name: string, role: 'OWNER' | 'MEMBER'): GatewayTrip {
@@ -421,7 +421,7 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           const tripId = decodeURIComponent(invitationsMatch[1]!);
           const current = model.trips.find((item) => item.id === tripId);
           if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
-          if (current.current_membership.role !== 'OWNER')
+          if (current.current_membership.role !== 'OWNER' && !current.permissions.can_invite)
             return error(route, 403, 'PERMISSION_DENIED');
           if (method === 'GET' && !invitationsMatch[2]) {
             expect(url.searchParams.get('limit')).toBe('20');

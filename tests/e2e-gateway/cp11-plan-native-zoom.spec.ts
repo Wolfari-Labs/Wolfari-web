@@ -74,7 +74,7 @@ test('CP11 HTTP mock: Plan navigation and centered editor fit native Chrome 200%
   await page.goto(`/trips/${tripId}/plan`);
   await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
   await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+  await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
   const create = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
   await create.focus();
   await create.press('Enter');

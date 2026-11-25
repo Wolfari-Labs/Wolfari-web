@@ -1,6 +1,44 @@
 export type PlaceProvider = 'WOLFARI' | 'GEOAPIFY';
 /** POI-OVERTURE §2.1: which dataset a result came from (Overture rows use provider WOLFARI). */
 export type PlaceDataset = 'golden' | 'overture' | 'geoapify';
+export interface PlaceImage {
+  url: string;
+  thumbnailUrl: string;
+  smallUrl: string;
+  attribution: string;
+  sourceUrl: string;
+  license: string;
+}
+/** Additive photo metadata is optional, including for locations saved before photos existed. */
+export function placeImage(value: unknown): PlaceImage | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const image = value as Record<string, unknown>;
+  const match =
+    typeof image.url === 'string'
+      ? /^\/api\/v1\/travel\/poi-images\/([0-9a-f]{64})\/1280\.webp$/.exec(image.url)
+      : null;
+  if (
+    !match ||
+    image.thumbnail_url !== `/api/v1/travel/poi-images/${match[1]}/640.webp` ||
+    image.small_url !== `/api/v1/travel/poi-images/${match[1]}/320.webp` ||
+    typeof image.attribution !== 'string' ||
+    !image.attribution.trim() ||
+    typeof image.source_url !== 'string' ||
+    !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^\s]+$/.test(image.source_url) ||
+    typeof image.license !== 'string' ||
+    !/^(?:CC0-1\.0|PD|CC-BY(?:-SA)?-\d+\.\d+)$/.test(image.license) ||
+    image.is_placeholder !== false
+  )
+    return null;
+  return {
+    url: image.url as string,
+    thumbnailUrl: image.thumbnail_url as string,
+    smallUrl: image.small_url as string,
+    attribution: image.attribution,
+    sourceUrl: image.source_url,
+    license: image.license,
+  };
+}
 export interface DiscoveredPlace {
   id: string;
   name: string;
@@ -31,11 +69,14 @@ export interface DiscoveredPlace {
   confidence: number | null;
   dataRelease: string | null;
   fetchedAt: string | null;
+  heroImage?: PlaceImage | null;
 }
+export type RouteMode = 'DRIVING' | 'WALKING' | 'CYCLING';
 export interface PlaceRoute {
   distanceM: number;
   durationSeconds: number;
   geometry: readonly { latitude: number; longitude: number }[];
+  source?: import('../../infrastructure/http/envelope').GatewayMetadata['travelSource'];
 }
 export interface PlaceIntent {
   path: string;

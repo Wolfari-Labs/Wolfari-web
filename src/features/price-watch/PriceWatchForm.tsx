@@ -27,10 +27,11 @@ export function PriceWatchForm({
     prefix = useId();
   const [fields, setFields] = useState<WatchFields>(
     initial?.fields ?? {
-      provider:
-        !preview && import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
-          ? 'TRAVELPAYOUTS_CACHE'
-          : 'MOCK_FLIGHT',
+      ...(preview || import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'MOCK_FLIGHT'
+        ? { provider: 'MOCK_FLIGHT' as const }
+        : import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+          ? { provider: 'TRAVELPAYOUTS_CACHE' as const }
+          : {}),
       origin: '',
       destination: '',
       departure_date: '',
@@ -55,6 +56,7 @@ export function PriceWatchForm({
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const cached = fields.provider === 'TRAVELPAYOUTS_CACHE';
+  const usesDeadline = fields.provider !== 'MOCK_FLIGHT';
   const fieldProps = (name: string) => ({ id: `${prefix}-${name}`, name, error: errors[name] });
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -114,9 +116,11 @@ export function PriceWatchForm({
       <p className={formStyles.source}>
         <Icon name="info" size={16} />
         <span>
-          {cached
-            ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo cho 1 người lớn, một chiều, hạng phổ thông; không bảo đảm còn mua được.'
-            : 'Nguồn: giá mô phỏng, không phải giá thị trường.'}
+          {fields.provider === undefined
+            ? 'Nguồn giá theo cấu hình hệ thống.'
+            : cached
+              ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo cho 1 người lớn, một chiều, hạng phổ thông; không bảo đảm còn mua được.'
+              : 'Nguồn: giá mô phỏng, không phải giá thị trường.'}
         </span>
       </p>
       <fieldset disabled={disabled || busy} className={formStyles.fields}>
@@ -171,9 +175,9 @@ export function PriceWatchForm({
               onChange={(e) => setFields({ ...fields, departure_date: e.target.value })}
             />
             <Input
-              label={cached ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
+              label={usesDeadline ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
               hint={
-                cached
+                usesDeadline
                   ? 'Chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.'
                   : 'Theo giờ UTC, không phải giờ địa phương tại sân bay.'
               }

@@ -34,7 +34,7 @@ import { PreparationStatus, PackingCompletion } from '../plan/components/Prepara
 import { activePlan, canTogglePacking } from '../plan/model/preparation';
 import { GatewayPackingEditor } from './components/GatewayPackingEditor';
 import { usePackingMembers } from './use-packing-members';
-import { RecommendationPanel } from '../plan/components/RecommendationPanel';
+import { PreparationSuggestions } from '../plan/components/PreparationSuggestions';
 
 export function PackingPage() {
   const { tripId = '' } = useParams();
@@ -270,27 +270,38 @@ export function PackingPage() {
                 </Select>
               </div>
             </div>
-            {canWrite ? (
-              <Button
-                icon={<Icon name="plus" size={18} />}
-                onClick={(event) => {
-                  addButtonRef.current = event.currentTarget;
-                  setDrawer({ open: true, mode: 'add', item: null });
-                }}
-              >
-                Thêm vật dụng
-              </Button>
-            ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
-              <GatewayPackingEditor
-                key={`${tripId}:${viewerUserId}:create`}
-                addButtonRef={addButtonRef}
-                trip={data.trip}
-                plan={data.plan}
-                refresh={snapshot.retry}
-              />
-            ) : !previewEnabled ? (
-              <span className={styles.readOnlyBadge}>Chỉ xem</span>
-            ) : null}
+            <div className={styles.summaryActions}>
+              {data && !previewEnabled && (
+                <PreparationSuggestions
+                  key={`${tripId}:${viewerUserId}`}
+                  type="PACKING"
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+              )}
+              {canWrite ? (
+                <Button
+                  icon={<Icon name="plus" size={18} />}
+                  onClick={(event) => {
+                    addButtonRef.current = event.currentTarget;
+                    setDrawer({ open: true, mode: 'add', item: null });
+                  }}
+                >
+                  Thêm vật dụng
+                </Button>
+              ) : !previewEnabled && data?.plan.capabilities?.packing_items_write ? (
+                <GatewayPackingEditor
+                  key={`${tripId}:${viewerUserId}:create`}
+                  addButtonRef={addButtonRef}
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+              ) : !previewEnabled ? (
+                <span className={styles.readOnlyBadge}>Chỉ xem</span>
+              ) : null}
+            </div>
           </section>
           <div className={styles.list}>
             <div className={styles.tableHead}>
@@ -506,14 +517,6 @@ export function PackingPage() {
                 <div className={styles.feedback} role="status">
                   {feedback}
                 </div>
-              )}
-              {data && !previewEnabled && (
-                <RecommendationPanel
-                  type="PACKING_DRESS"
-                  trip={data.trip}
-                  plan={data.plan}
-                  refresh={snapshot.retry}
-                />
               )}
             </div>
           </div>

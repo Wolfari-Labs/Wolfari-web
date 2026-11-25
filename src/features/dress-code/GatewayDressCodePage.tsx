@@ -12,7 +12,7 @@ import { TripHero } from '../trips/components/TripHero';
 import { groupDressCodes } from './dress-code';
 import styles from './GatewayDressCodePage.module.css';
 import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
-import { RecommendationPanel } from '../plan/components/RecommendationPanel';
+import { PreparationSuggestions } from '../plan/components/PreparationSuggestions';
 import { DressCodeReferenceImage } from './DressCodeReferenceImage';
 import { activePlan } from '../plan/model/preparation';
 
@@ -87,6 +87,13 @@ export function GatewayDressCodePage() {
                   </button>
                 ))}
               </div>
+              <PreparationSuggestions
+                key={`${tripId}:${data.trip.currentMembership.userId}`}
+                type="DRESS_CODE"
+                trip={data.trip}
+                plan={data.plan}
+                refresh={snapshot.retry}
+              />
               {data.plan.capabilities?.dress_codes_write &&
               data.plan.permissions.canEdit &&
               activePlan(data.trip) ? (
@@ -169,12 +176,6 @@ export function GatewayDressCodePage() {
                 )}
               </section>
             </div>
-            <RecommendationPanel
-              type="PACKING_DRESS"
-              trip={data.trip}
-              plan={data.plan}
-              refresh={snapshot.retry}
-            />
           </>
         )}
       </TripPlanBoundary>

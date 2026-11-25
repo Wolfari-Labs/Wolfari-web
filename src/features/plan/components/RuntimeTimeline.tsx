@@ -30,6 +30,8 @@ import moreIcon from '../../../shared/assets/figma/ca9fb.svg';
 import daySun from '../../../shared/assets/figma/trips-plan/day-sun.svg';
 import mapIcon from '../../../shared/assets/figma/trips-plan/plan-map-icon.svg';
 import searchIcon from '../../../shared/assets/figma/ce7fc.svg';
+import { TripWeatherChip, TripWeatherCredit } from '../../weather/TripWeather';
+import { useRuntimeServices } from '../../../app/gateway-context';
 
 const activityIcons: Record<string, string> = {
   SIGHTSEEING: mountain,
@@ -51,6 +53,8 @@ function DayTarget({
   disabled,
   dnd,
   onClick,
+  trip,
+  plan,
 }: {
   day: string;
   label: string;
@@ -58,8 +62,11 @@ function DayTarget({
   disabled: boolean;
   dnd: GatewayDndControls;
   onClick: () => void;
+  trip: TripDetailViewModel;
+  plan: PlanViewModel;
 }) {
   const targetDay = day === 'POOL' ? null : day;
+  const weatherAvailable = !!useRuntimeServices()?.weather;
   const drop = useDroppable({ id: `day:${day}`, disabled: disabled || day === 'ALL' });
   return (
     <Button
@@ -79,12 +86,9 @@ function DayTarget({
           {label.split(' · ')[0]} <span className={styles.srOnly}>·</span>{' '}
           <small>
             <span>{label.split(' · ')[1]}</span>
-            <span
-              className={styles.dayWeather}
-              title="Chưa có dữ liệu thời tiết"
-              aria-label="Thời tiết chưa có dữ liệu"
-            >
-              <img src={daySun} alt="" />—
+            <span className={styles.dayWeather}>
+              <img src={daySun} alt="" />
+              {weatherAvailable ? <TripWeatherChip trip={trip} plan={plan} date={day} /> : '—'}
             </span>
           </small>
         </span>
@@ -374,6 +378,7 @@ export function RuntimeTimeline({
   actions,
   feedback,
   utilities,
+  recovery,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
@@ -387,7 +392,9 @@ export function RuntimeTimeline({
   actions?: ReactNode;
   feedback?: ReactNode;
   utilities?: ReactNode;
+  recovery?: ReactNode;
 }) {
+  const weatherAvailable = !!useRuntimeServices()?.weather;
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
   // `?day=YYYY-MM-DD` (e.g. from "Xem lịch trình Ngày N" on the Map) opens that day.
   const [day, setDay] = useState(() => {
@@ -511,6 +518,8 @@ export function RuntimeTimeline({
           disabled={!canEdit || disabled}
           dnd={dnd}
           onClick={() => setDay(value)}
+          trip={trip}
+          plan={plan}
         />
       ))}
       {days.length < 4 && (
@@ -534,6 +543,8 @@ export function RuntimeTimeline({
           setDay('ALL');
           if (sidePanel === 'pool') setSidePanel('none');
         }}
+        trip={trip}
+        plan={plan}
       />
     </div>
   );
@@ -570,29 +581,6 @@ export function RuntimeTimeline({
               Thêm hoạt động
             </Button>
           )}
-          <details className={styles.tools}>
-            <summary aria-label="Tùy chọn lịch trình">
-              <img src={moreIcon} alt="" />
-            </summary>
-            <div>
-              {actions}
-              {!compactPool && utilities}
-              {!canEdit && sidePanel !== 'pool' && (
-                <Button variant="outline" onClick={openPool}>
-                  Xem hoạt động chưa xếp lịch
-                </Button>
-              )}
-              {sidePanel === 'pool' && (
-                <Button variant="outline" onClick={() => setSidePanel('none')}>
-                  Ẩn danh sách
-                </Button>
-              )}
-              <p>
-                Kéo để sắp xếp. Hoạt động vừa thả và phần phía sau trong ngày sẽ chưa xếp giờ. Chọn
-                menu hoạt động để chỉnh sửa sau.
-              </p>
-            </div>
-          </details>
         </div>
       </div>
       <p role="status" aria-live="polite" className={styles.srOnly}>
@@ -671,6 +659,7 @@ export function RuntimeTimeline({
           <Icon name="close" size={18} />
         </Button>
       </div>
+      {actions && <div className={styles.poolActions}>{actions}</div>}
       <div className={styles.poolSearch}>
         <img src={searchIcon} width="18" height="18" alt="" />
         <input
@@ -700,6 +689,7 @@ export function RuntimeTimeline({
           />
         ))}
       </DropList>
+      {!recovery && utilities && <div className={styles.recoveryUtilities}>{utilities}</div>}
     </section>
   );
   const draggedTitle = dnd.draggingKey?.startsWith('activity:')
@@ -732,11 +722,21 @@ export function RuntimeTimeline({
         className={styles.workspace}
         onTouchStartCapture={dnd.onTouchStartCapture}
       >
-        <div className={styles.dayBar}>
-          {!compactPool && dayBar}
-          <PlanMetrics trip={trip} plan={plan} day={day} />
+        <div className={styles.weatherDayBar}>
+          <div className={styles.dayBar}>
+            {!compactPool && dayBar}
+            <PlanMetrics trip={trip} plan={plan} day={day} />
+          </div>
+          {!compactPool && weatherAvailable && (
+            <TripWeatherCredit
+              trip={trip}
+              plan={plan}
+              date={days.includes(day) ? day : (days[0] ?? '')}
+            />
+          )}
         </div>
         {!compactPool && feedback}
+        {!compactPool && recovery && <div className={styles.recoveryUtilities}>{recovery}</div>}
         {compactPool ? (
           <>
             <Button ref={poolTrigger} variant="outline" onClick={openPool}>
@@ -756,12 +756,19 @@ export function RuntimeTimeline({
                 onTouchStartCapture={dnd.onTouchStartCapture}
               >
                 {dayBar}
+                {weatherAvailable && (
+                  <TripWeatherCredit
+                    trip={trip}
+                    plan={plan}
+                    date={days.includes(day) ? day : (days[0] ?? '')}
+                  />
+                )}
                 {feedback}
+                {recovery && <div className={styles.recoveryUtilities}>{recovery}</div>}
                 <div className={styles.compactPlanner}>
                   {timeline}
                   {pool}
                 </div>
-                <div className={styles.recoveryUtilities}>{utilities}</div>
               </div>
             </Drawer>
           </>

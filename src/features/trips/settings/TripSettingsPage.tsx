@@ -1,14 +1,15 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { ContentState } from '../../../shared/components/ContentState';
-import { Icon, type IconName } from '../../../shared/components/Icon';
+import { Icon } from '../../../shared/components/Icon';
 import { PageBreadcrumb } from '../../../shared/components/PageBreadcrumb';
 import { Input } from '../../../shared/components/Input';
 import { Textarea } from '../../../shared/components/Textarea';
+import { VietnameseDateInput } from '../../../shared/components/VietnameseDateInput';
 import { TripHero } from '../components/TripHero';
 import type { TripDetailViewModel } from '../model/trip-detail';
 import type { TripListViewModel } from '../model/trip-list';
@@ -17,15 +18,32 @@ import { tripQueryKeys } from '../model/trip-query-keys';
 import { useTripRepository } from '../repositories/repository-context';
 import type { UpdateTripIntent, UpdateTripResult } from '../repositories/trip.repository';
 import styles from './TripSettingsPage.module.css';
-import { calendarDate } from '../../../shared/lib/calendar';
+import {
+  calendarDate,
+  lastTripDate,
+  nextCalendarDate,
+  validCalendarDate,
+} from '../../../shared/lib/calendar';
 import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
 import { useMembersRepositoriesOptional } from '../../members/repositories/members-context';
 import { TripSettingsOperations } from './TripSettingsOperations';
 import { TripSettingsOverlay, type TripSettingsSection } from './TripSettingsOverlay';
+import { TripCoverEditor } from './TripCoverEditor';
+import { TripSettingsHub } from './TripSettingsHub';
+import { localTimeToIso } from '../../plan/model/plan-draft';
+import { validTripBudget, validTripTimezone } from '../model/trip-metadata';
 
 interface SavedSettingsAttempt {
   intent: UpdateTripIntent;
-  draft: { name: string; description: string; publicDescription: string };
+  draft: {
+    name: string;
+    description: string;
+    publicDescription: string;
+    startDate?: string;
+    endDate?: string;
+    timezone?: string;
+    budgetAmount?: string;
+  };
 }
 
 function readSettingsAttempt(raw: string | null): SavedSettingsAttempt | null {
@@ -61,9 +79,27 @@ function readSettingsAttempt(raw: string | null): SavedSettingsAttempt | null {
     (parsedIntent.publicDescription !== undefined &&
       parsedIntent.publicDescription !== null &&
       typeof parsedIntent.publicDescription !== 'string') ||
+    (parsedIntent.startAt !== undefined &&
+      (typeof parsedIntent.startAt !== 'string' ||
+        !Number.isFinite(Date.parse(parsedIntent.startAt)))) ||
+    (parsedIntent.endAt !== undefined &&
+      (typeof parsedIntent.endAt !== 'string' ||
+        !Number.isFinite(Date.parse(parsedIntent.endAt)))) ||
+    (parsedIntent.timezone !== undefined && !validTripTimezone(parsedIntent.timezone)) ||
+    (parsedIntent.budgetAmount !== undefined &&
+      parsedIntent.budgetAmount !== null &&
+      (typeof parsedIntent.budgetAmount !== 'string' ||
+        !validTripBudget(parsedIntent.budgetAmount))) ||
+    ['startDate', 'endDate', 'timezone', 'budgetAmount'].some(
+      (field) => field in draft && typeof draft[field as keyof typeof draft] !== 'string',
+    ) ||
     (parsedIntent.name === undefined &&
       parsedIntent.description === undefined &&
-      parsedIntent.publicDescription === undefined)
+      parsedIntent.publicDescription === undefined &&
+      parsedIntent.startAt === undefined &&
+      parsedIntent.endAt === undefined &&
+      parsedIntent.timezone === undefined &&
+      parsedIntent.budgetAmount === undefined)
   )
     throw Error('Invalid settings journal');
   return { intent: parsedIntent, draft: draft as SavedSettingsAttempt['draft'] };
@@ -88,7 +124,9 @@ function mutationMessage(result: Exclude<UpdateTripResult, { status: 'updated' }
     case 'not-found':
       return 'Không tìm thấy chuyến đi để cập nhật.';
     case 'conflict':
-      return 'Thông tin chuyến đi đã thay đổi. Dữ liệu mới đã được tải lại; hãy kiểm tra bản nháp rồi xác nhận lưu lần nữa.';
+      return result.reason === 'TRIP_RANGE_CONFLICT'
+        ? 'Khoảng ngày hoặc múi giờ mới khiến hoạt động hoặc trang phục đã lên lịch nằm ngoài chuyến đi. Bản nháp được giữ lại. Hãy điều chỉnh các mục đó trong lịch trình hoặc chọn lại thời gian chuyến đi.'
+        : 'Thông tin chuyến đi đã thay đổi. Dữ liệu mới đã được tải lại; hãy kiểm tra bản nháp rồi xác nhận lưu lần nữa.';
     case 'unavailable':
       return 'Dịch vụ đang tạm gián đoạn. Bản nháp được giữ nguyên; bạn có thể thử lưu lại.';
     case 'unknown':
@@ -100,6 +138,10 @@ function mutationMessage(result: Exclude<UpdateTripResult, { status: 'updated' }
 
 function memberCountLabel(count: number | null) {
   return `${count ?? '—'} / —`;
+}
+
+function budgetLabel(value: string | null | undefined) {
+  return value ? `${new Intl.NumberFormat('vi-VN').format(BigInt(value))} ₫` : 'Chưa đặt ngân sách';
 }
 
 function ReadOnlyTripField({ label, value }: { label: string; value: string }) {
@@ -116,9 +158,11 @@ function ReadOnlyTripField({ label, value }: { label: string; value: string }) {
 function ReadOnlyTripSummary({
   trip,
   memberCount,
+  includeSchedule = true,
 }: {
   trip: TripDetailViewModel;
   memberCount: number | null;
+  includeSchedule?: boolean;
 }) {
   return (
     <>
@@ -127,109 +171,15 @@ function ReadOnlyTripSummary({
         label="Thành viên (hiện tại / tối đa)"
         value={memberCountLabel(memberCount)}
       />
-      <ReadOnlyTripField label="Ngày đi" value={displayDate(trip.startAt, trip.timezone)} />
-      <ReadOnlyTripField label="Ngày về" value={displayDate(trip.endAt, trip.timezone, true)} />
+      {includeSchedule && (
+        <>
+          <ReadOnlyTripField label="Ngày đi" value={displayDate(trip.startAt, trip.timezone)} />
+          <ReadOnlyTripField label="Ngày về" value={displayDate(trip.endAt, trip.timezone, true)} />
+          <ReadOnlyTripField label="Múi giờ" value={trip.timezone} />
+          <ReadOnlyTripField label="Ngân sách chuyến đi" value={budgetLabel(trip.budgetAmount)} />
+        </>
+      )}
     </>
-  );
-}
-
-function RowIcon({ name }: { name: IconName }) {
-  return (
-    <span className={styles.rowIcon} aria-hidden="true">
-      <Icon name={name} size={16} />
-    </span>
-  );
-}
-
-function TripInformationView({
-  trip,
-  memberCount,
-  onSettings,
-  settingsRef,
-}: {
-  trip: TripDetailViewModel;
-  memberCount: number | null;
-  onSettings: () => void;
-  settingsRef: RefObject<HTMLButtonElement | null>;
-}) {
-  return (
-    <section className={styles.card} aria-labelledby="trip-information-heading">
-      <div className={styles.cardHeading}>
-        <div className={styles.cardTitle}>
-          <span className={styles.iconBadge} aria-hidden="true">
-            <Icon name="settings" size={22} />
-          </span>
-          <div>
-            <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
-            <p>Tên, địa điểm, thành viên và thời gian chuyến đi.</p>
-          </div>
-        </div>
-        <Button
-          ref={settingsRef}
-          id="edit-trip-information"
-          className={styles.settingsButton}
-          icon={<Icon name="settings" size={18} />}
-          onClick={onSettings}
-        >
-          Cài đặt chuyến đi
-        </Button>
-      </div>
-      <div className={styles.viewBody}>
-        <dl className={styles.informationGrid}>
-          <div className={styles.fullWidth}>
-            <dt>
-              <RowIcon name="edit" />
-              Tên chuyến đi
-            </dt>
-            <dd>{trip.name}</dd>
-          </div>
-          <div>
-            <dt>
-              <RowIcon name="map" />
-              Địa điểm
-            </dt>
-            <dd>Chưa cập nhật</dd>
-          </div>
-          <div>
-            <dt>
-              <RowIcon name="members" />
-              Thành viên (hiện tại / tối đa)
-            </dt>
-            <dd>{memberCountLabel(memberCount)}</dd>
-          </div>
-          <div>
-            <dt>
-              <RowIcon name="calendar" />
-              Ngày đi
-            </dt>
-            <dd>{displayDate(trip.startAt, trip.timezone)}</dd>
-          </div>
-          <div>
-            <dt>
-              <RowIcon name="calendar" />
-              Ngày về
-            </dt>
-            <dd>{displayDate(trip.endAt, trip.timezone, true)}</dd>
-          </div>
-          <div className={styles.descriptionBox}>
-            <dt>
-              <RowIcon name="fileText" />
-              Mô tả chuyến đi
-            </dt>
-            <dd>{trip.description || 'Chưa có mô tả'}</dd>
-          </div>
-          {trip.publicDescription && (
-            <div className={styles.descriptionBox}>
-              <dt>
-                <RowIcon name="share" />
-                Mô tả công khai
-              </dt>
-              <dd>{trip.publicDescription}</dd>
-            </div>
-          )}
-        </dl>
-      </div>
-    </section>
   );
 }
 
@@ -239,6 +189,10 @@ function EditableTripField({
   editing,
   disabled,
   multiline = false,
+  date = false,
+  displayValue,
+  maxLength = 201,
+  numeric = false,
   error,
   onEdit,
   onChange,
@@ -248,14 +202,32 @@ function EditableTripField({
   editing: boolean;
   disabled: boolean;
   multiline?: boolean;
+  date?: boolean;
+  displayValue?: string;
+  maxLength?: number;
+  numeric?: boolean;
   error?: string | undefined;
   onEdit: () => void;
   onChange: (value: string) => void;
 }) {
+  const fieldRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (editing && date) fieldRef.current?.querySelector('input')?.focus();
+  }, [date, editing]);
   return (
-    <div className={styles.fieldBox} data-editing={editing}>
+    <div ref={fieldRef} className={styles.fieldBox} data-editing={editing}>
       {editing ? (
-        multiline ? (
+        date ? (
+          <VietnameseDateInput
+            id={`trip-settings-${label === 'Ngày đi' ? 'startDate' : 'endDate'}`}
+            label={label}
+            pickerLabel={`Lịch ${label.toLocaleLowerCase('vi-VN')}`}
+            value={value}
+            disabled={disabled}
+            error={error}
+            onValueChange={onChange}
+          />
+        ) : multiline ? (
           <Textarea
             label={label}
             value={value}
@@ -269,7 +241,8 @@ function EditableTripField({
             label={label}
             value={value}
             disabled={disabled}
-            maxLength={201}
+            maxLength={maxLength}
+            inputMode={numeric ? 'numeric' : undefined}
             error={error}
             autoFocus
             onChange={(event) => onChange(event.target.value)}
@@ -278,7 +251,7 @@ function EditableTripField({
       ) : (
         <div className={styles.displayField}>
           <span className={styles.fieldName}>{label}</span>
-          <p className={styles.fieldValue}>{value || 'Chưa có mô tả'}</p>
+          <p className={styles.fieldValue}>{displayValue ?? (value || 'Chưa có mô tả')}</p>
           <button
             type="button"
             className={styles.editFieldButton}
@@ -293,6 +266,7 @@ function EditableTripField({
           </button>
         </div>
       )}
+      {!editing && error && <Alert tone="error">{error}</Alert>}
     </div>
   );
 }
@@ -345,10 +319,25 @@ function TripInformationForm({
   const [publicDescription, setPublicDescription] = useState(
     restored.current.saved?.draft.publicDescription ?? trip.publicDescription ?? '',
   );
+  const [startDate, setStartDate] = useState(
+    restored.current.saved?.draft.startDate ?? calendarDate(trip.startAt, trip.timezone),
+  );
+  const [endDate, setEndDate] = useState(
+    restored.current.saved?.draft.endDate ?? lastTripDate(trip.endAt, trip.timezone),
+  );
+  const [timezone, setTimezone] = useState(restored.current.saved?.draft.timezone ?? trip.timezone);
+  const [budgetAmount, setBudgetAmount] = useState(
+    restored.current.saved?.draft.budgetAmount ?? trip.budgetAmount ?? '',
+  );
+  const [coverBusy, setCoverBusy] = useState(false);
   const [editing, setEditing] = useState({
     name: !!restored.current.saved,
     description: !!restored.current.saved,
     publicDescription: !!restored.current.saved,
+    startDate: restored.current.saved?.draft.startDate !== undefined,
+    endDate: restored.current.saved?.draft.endDate !== undefined,
+    timezone: restored.current.saved?.draft.timezone !== undefined,
+    budgetAmount: restored.current.saved?.draft.budgetAmount !== undefined,
   });
   const [result, setResult] = useState<Exclude<UpdateTripResult, { status: 'updated' }> | null>(
     null,
@@ -370,11 +359,23 @@ function TripInformationForm({
   const descriptionDirty = descriptionValue !== trip.description;
   const publicDescriptionValue = publicDescription.trim() === '' ? null : publicDescription;
   const publicDescriptionDirty = publicDescriptionValue !== trip.publicDescription;
-  const dirty = nameDirty || descriptionDirty || publicDescriptionDirty;
+  const timezoneDirty = timezone !== trip.timezone;
+  const startDateDirty = startDate !== calendarDate(trip.startAt, trip.timezone);
+  const endDateDirty = endDate !== lastTripDate(trip.endAt, trip.timezone);
+  const budgetValue = budgetAmount.trim() || null;
+  const budgetDirty = budgetValue !== (trip.budgetAmount ?? null);
+  const dirty =
+    nameDirty ||
+    descriptionDirty ||
+    publicDescriptionDirty ||
+    timezoneDirty ||
+    startDateDirty ||
+    endDateDirty ||
+    budgetDirty;
   const saveAttempt = (intent: UpdateTripIntent) => {
     const record: SavedSettingsAttempt = {
       intent,
-      draft: { name, description, publicDescription },
+      draft: { name, description, publicDescription, startDate, endDate, timezone, budgetAmount },
     };
     const saved =
       journal.current.write(
@@ -397,6 +398,32 @@ function TripInformationForm({
         : trimmedName.length > 200
           ? 'Tên chuyến đi không được vượt quá 200 ký tự.'
           : undefined;
+  const serverErrors = result?.status === 'validation-error' ? result.fieldErrors : {};
+  const startDateError =
+    serverErrors.startAt ||
+    (!validCalendarDate(startDate) ? 'Vui lòng chọn ngày đi hợp lệ.' : undefined);
+  const endDateError =
+    serverErrors.endAt ||
+    (!validCalendarDate(endDate)
+      ? 'Vui lòng chọn ngày về hợp lệ.'
+      : validCalendarDate(startDate) && endDate < startDate
+        ? 'Ngày về không thể trước ngày đi.'
+        : undefined);
+  const timezoneError =
+    serverErrors.timezone ||
+    (!validTripTimezone(timezone) ? 'Vui lòng nhập múi giờ IANA hợp lệ.' : undefined);
+  const budgetError =
+    serverErrors.budgetAmount ||
+    (budgetValue !== null && !validTripBudget(budgetValue)
+      ? 'Ngân sách phải là số nguyên từ 1 đến 999.999.999.999 ₫.'
+      : undefined);
+  const metadataInvalid = !!(
+    nameError ||
+    startDateError ||
+    endDateError ||
+    timezoneError ||
+    budgetError
+  );
 
   useEffect(() => () => controller.current?.abort(), []);
 
@@ -407,17 +434,19 @@ function TripInformationForm({
       return repository.updateTrip({ tripId: trip.id, intent, signal: controller.current.signal });
     },
   });
+  const fieldsDisabled = unresolvedIntent || mutation.isPending || refreshingConflict || coverBusy;
 
   useEffect(() => {
-    onLockChange(mutation.isPending || refreshingConflict || unresolvedIntent);
-  }, [mutation.isPending, refreshingConflict, unresolvedIntent, onLockChange]);
+    onLockChange(mutation.isPending || refreshingConflict || unresolvedIntent || coverBusy);
+  }, [mutation.isPending, refreshingConflict, unresolvedIntent, coverBusy, onLockChange]);
   useEffect(() => () => onLockChange(false), [onLockChange]);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (
       mutation.isPending ||
-      nameError ||
+      (!unresolvedIntent && metadataInvalid) ||
+      coverBusy ||
       refreshingConflict ||
       (!unresolvedIntent && (!dirty || refreshFailed || !canSave))
     )
@@ -431,11 +460,37 @@ function TripInformationForm({
     } else {
       setResult(null);
       setReviewedCurrent(false);
-      const changes: Pick<UpdateTripIntent, 'name' | 'description' | 'publicDescription'> = {
+      let changes: Omit<
+        UpdateTripIntent,
+        'expectedPlanVersion' | 'expectedExportRevision' | 'idempotencyKey'
+      > = {
         ...(nameDirty ? { name: trimmedName } : {}),
         ...(descriptionDirty ? { description: descriptionValue } : {}),
         ...(publicDescriptionDirty ? { publicDescription: publicDescriptionValue } : {}),
+        ...(timezoneDirty ? { timezone } : {}),
+        ...(budgetDirty ? { budgetAmount: budgetValue } : {}),
       };
+      try {
+        changes = {
+          ...changes,
+          ...(startDateDirty || timezoneDirty
+            ? { startAt: localTimeToIso(startDate, '00:00', timezone) }
+            : {}),
+          ...(endDateDirty || timezoneDirty
+            ? { endAt: localTimeToIso(nextCalendarDate(endDate), '00:00', timezone) }
+            : {}),
+        };
+      } catch {
+        setResult({
+          status: 'validation-error',
+          fieldErrors: {
+            startAt:
+              'Không thể xác định khoảng ngày trong múi giờ đã chọn. Hãy kiểm tra lại ngày và múi giờ.',
+          },
+          correlationId: null,
+        });
+        return;
+      }
       const fingerprint = JSON.stringify(changes);
       if (!attempt.current || attempt.current.fingerprint !== fingerprint) {
         attempt.current = {
@@ -544,6 +599,13 @@ function TripInformationForm({
   return (
     <section className={`${styles.card} ${styles.editCard}`} aria-labelledby="edit-trip-heading">
       <h2 id="edit-trip-heading">Chỉnh sửa thông tin chuyến đi</h2>
+      {repository.uploadCover && (
+        <TripCoverEditor
+          trip={trip}
+          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+          onBusyChange={setCoverBusy}
+        />
+      )}
       <form className={styles.form} onSubmit={(event) => void submit(event)} noValidate>
         {result && result.status !== 'validation-error' && !unresolvedIntent && (
           <Alert tone={result.status === 'conflict' ? 'warning' : 'error'}>
@@ -619,7 +681,7 @@ function TripInformationForm({
           label="Tên chuyến đi"
           value={name}
           editing={editing.name}
-          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+          disabled={fieldsDisabled}
           error={nameError}
           onEdit={() => setEditing((current) => ({ ...current, name: true }))}
           onChange={(value) => {
@@ -627,13 +689,69 @@ function TripInformationForm({
             setResult(null);
           }}
         />
-        <ReadOnlyTripSummary trip={trip} memberCount={memberCount} />
+        <ReadOnlyTripSummary trip={trip} memberCount={memberCount} includeSchedule={false} />
+        <EditableTripField
+          label="Ngày đi"
+          value={startDate}
+          displayValue={startDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$3/$2/$1')}
+          editing={editing.startDate}
+          date
+          disabled={fieldsDisabled}
+          error={startDateError}
+          onEdit={() => setEditing((current) => ({ ...current, startDate: true }))}
+          onChange={(value) => {
+            setStartDate(value);
+            setResult(null);
+          }}
+        />
+        <EditableTripField
+          label="Ngày về"
+          value={endDate}
+          displayValue={endDate.replace(/^(\d{4})-(\d{2})-(\d{2})$/, '$3/$2/$1')}
+          editing={editing.endDate}
+          date
+          disabled={fieldsDisabled}
+          error={endDateError}
+          onEdit={() => setEditing((current) => ({ ...current, endDate: true }))}
+          onChange={(value) => {
+            setEndDate(value);
+            setResult(null);
+          }}
+        />
+        <EditableTripField
+          label="Múi giờ"
+          value={timezone}
+          editing={editing.timezone}
+          maxLength={64}
+          disabled={fieldsDisabled}
+          error={timezoneError}
+          onEdit={() => setEditing((current) => ({ ...current, timezone: true }))}
+          onChange={(value) => {
+            setTimezone(value);
+            setResult(null);
+          }}
+        />
+        <EditableTripField
+          label="Ngân sách chuyến đi"
+          value={budgetAmount}
+          displayValue={budgetLabel(validTripBudget(budgetAmount) ? budgetAmount : null)}
+          editing={editing.budgetAmount}
+          numeric
+          maxLength={12}
+          disabled={fieldsDisabled}
+          error={budgetError}
+          onEdit={() => setEditing((current) => ({ ...current, budgetAmount: true }))}
+          onChange={(value) => {
+            setBudgetAmount(value);
+            setResult(null);
+          }}
+        />
         <EditableTripField
           label="Mô tả chuyến đi"
           value={description}
           editing={editing.description}
           multiline
-          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+          disabled={fieldsDisabled}
           error={result?.status === 'validation-error' ? result.fieldErrors.description : undefined}
           onEdit={() => setEditing((current) => ({ ...current, description: true }))}
           onChange={(value) => {
@@ -646,7 +764,7 @@ function TripInformationForm({
           value={publicDescription}
           editing={editing.publicDescription}
           multiline
-          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+          disabled={fieldsDisabled}
           error={
             result?.status === 'validation-error' ? result.fieldErrors.publicDescription : undefined
           }
@@ -657,18 +775,15 @@ function TripInformationForm({
           }}
         />
         <div className={styles.formActions}>
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            disabled={mutation.isPending || refreshingConflict || unresolvedIntent}
-          >
+          <Button variant="outline" onClick={onCancel} disabled={fieldsDisabled}>
             Hủy
           </Button>
           <Button
             type="submit"
             loading={mutation.isPending}
             disabled={
-              !!nameError ||
+              (!unresolvedIntent && metadataInvalid) ||
+              coverBusy ||
               refreshingConflict ||
               (unresolvedIntent ? !attempt.current : !dirty || refreshFailed || !canSave)
             }
@@ -695,9 +810,15 @@ export function TripSettingsPage() {
   const settingsRequested = editRequested || searchParams.get('mode') === 'settings';
   const sectionParam = searchParams.get('section');
   const activeSection: TripSettingsSection =
-    sectionParam === 'export' || sectionParam === 'notifications' || sectionParam === 'archive'
-      ? sectionParam
-      : 'information';
+    sectionParam === 'transfer' || (sectionParam === 'archive' && searchParams.has('transferTo'))
+      ? 'transfer'
+      : sectionParam === 'export' ||
+          sectionParam === 'notifications' ||
+          sectionParam === 'archive' ||
+          sectionParam === 'delete'
+        ? sectionParam
+        : 'information';
+  const originSection = useRef<TripSettingsSection>(activeSection);
   const query = useQuery({
     queryKey: tripQueryKeys.detail(tripId, 'success'),
     queryFn: ({ signal }) => repository.getTrip({ tripId, scenario: 'success', signal }),
@@ -727,6 +848,8 @@ export function TripSettingsPage() {
       trip?.membershipRevision,
     ],
     enabled:
+      settingsRequested &&
+      activeSection === 'information' &&
       !!membersRepositories &&
       !!trip?.permissions.canRead &&
       trip.currentMembership.leftAt === null,
@@ -764,15 +887,26 @@ export function TripSettingsPage() {
   const canEdit =
     trip?.currentMembership.role === 'OWNER' &&
     trip.permissions.canUpdate &&
+    trip.currentMembership.leftAt === null &&
     trip.lifecycle !== 'ARCHIVED';
   const deniedEdit = editRequested && !!trip && !canEdit;
   const settingsLocked = informationLocked || operationsBusy;
 
   useEffect(() => {
-    if (settingsRequested || !focusEditOnView.current) return;
+    if (settingsRequested) {
+      originSection.current = activeSection;
+      return;
+    }
+    if (!focusEditOnView.current) return;
     focusEditOnView.current = false;
-    requestAnimationFrame(() => document.getElementById('edit-trip-information')?.focus());
-  }, [settingsRequested]);
+    requestAnimationFrame(() => {
+      const trigger =
+        settingsRef.current ??
+        document.getElementById(`trip-settings-${originSection.current}`) ??
+        document.getElementById('trip-settings-information');
+      trigger?.focus();
+    });
+  }, [activeSection, settingsRequested]);
 
   useEffect(() => {
     if (!settingsRequested) {
@@ -798,10 +932,7 @@ export function TripSettingsPage() {
     <section className={styles.page} data-flow="trip-settings" data-node-id="25:676">
       <PageBreadcrumb
         className={styles.breadcrumb}
-        items={[
-          { label: 'Chuyến đi của tôi', to: paths.trips },
-          { label: trip?.name ?? 'Chuyến đi', to: paths.trip(tripId) },
-        ]}
+        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
         current="Cài đặt"
         mobile={
           <div className={styles.breadcrumb}>
@@ -825,10 +956,15 @@ export function TripSettingsPage() {
       ) : trip ? (
         <>
           <TripHero
-            trip={{ ...trip, presentation: { ...trip.presentation, memberCount } }}
+            trip={{
+              ...trip,
+              presentation: {
+                ...trip.presentation,
+                memberCount: memberCount ?? trip.presentation.memberCount,
+              },
+            }}
             compact
             variant="landscape"
-            showCover={false}
           />
           {notice && <Alert tone="success">{notice}</Alert>}
           {deniedEdit && (
@@ -836,39 +972,35 @@ export function TripSettingsPage() {
               Chuyến đi này chỉ có thể xem. Bạn không có quyền chỉnh sửa.
             </Alert>
           )}
-          <div className={styles.columns}>
-            <TripInformationView
-              trip={trip}
-              memberCount={memberCount}
-              settingsRef={settingsRef}
-              onSettings={() => {
-                setNotice(null);
-                setSearchParams({ mode: canEdit ? 'edit' : 'settings' });
-              }}
-            />
-          </div>
+          <TripSettingsHub
+            owner={
+              trip.currentMembership.role === 'OWNER' && trip.currentMembership.leftAt === null
+            }
+            archived={trip.lifecycle === 'ARCHIVED'}
+            onOpen={(section, trigger) => {
+              settingsRef.current = trigger;
+              setNotice(null);
+              setSearchParams(
+                section === 'information'
+                  ? { mode: canEdit ? 'edit' : 'settings' }
+                  : { mode: 'settings', section },
+              );
+            }}
+          />
           <TripSettingsOverlay
             open={settingsRequested}
             tripName={trip.name}
             section={activeSection}
             busy={settingsLocked}
-            owner={trip.currentMembership.role === 'OWNER'}
+            archived={trip.lifecycle === 'ARCHIVED'}
             returnFocusRef={settingsRef}
-            onSectionChange={(section) => {
-              if (settingsLocked) return;
-              setSearchParams(
-                section === 'information'
-                  ? { mode: canEdit ? 'edit' : 'settings' }
-                  : { mode: 'settings', section },
-                { replace: true },
-              );
-            }}
             onDismiss={() => {
               if (!settingsLocked) returnToView();
             }}
           >
-            <div hidden={activeSection !== 'information'}>
-              {canEdit ? (
+            {settingsRequested &&
+              activeSection === 'information' &&
+              (canEdit ? (
                 <TripInformationForm
                   key={`${trip.id}:${trip.currentMembership.userId}`}
                   trip={trip}
@@ -904,19 +1036,18 @@ export function TripSettingsPage() {
                     />
                   </div>
                 </section>
-              )}
-            </div>
-            <div hidden={activeSection === 'information'}>
+              ))}
+            {settingsRequested && activeSection !== 'information' && (
               <TripSettingsOperations
-                key={`${trip.id}:${trip.currentMembership.userId}`}
+                key={`${trip.id}:${trip.currentMembership.userId}:${activeSection}`}
                 trip={trip}
-                section={activeSection === 'information' ? 'export' : activeSection}
+                section={activeSection}
                 onBusyChange={setOperationsBusy}
                 {...(searchParams.get('transferTo')
                   ? { initialTransferMemberId: searchParams.get('transferTo')! }
                   : {})}
               />
-            </div>
+            )}
           </TripSettingsOverlay>
         </>
       ) : (

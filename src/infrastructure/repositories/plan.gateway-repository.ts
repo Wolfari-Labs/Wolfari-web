@@ -8,6 +8,7 @@ import type { DomainError } from '../../shared/types/result';
 import type { GatewayHttpClient } from '../http/http-client';
 import { toDomainError } from '../http/domain-error';
 import { validCalendarDate } from '../../shared/lib/calendar';
+import { createPreparationRecommendationsRepository } from './preparation-recommendations.gateway-repository';
 import {
   preparationCapabilities,
   parsePreparationIntent,
@@ -274,6 +275,7 @@ export function createGatewayPlanRepository(
       }),
   };
   if (!client) return repository;
+  repository.recommendations = createPreparationRecommendationsRepository(client);
 
   repository.uploadDressCodeImage = async ({ tripId, file, signal }) => {
     const form = new FormData();
@@ -284,8 +286,12 @@ export function createGatewayPlanRepository(
     );
     const data = record(result.data);
     const imageId = uuid(data.image_id);
-    if (data.mime_type !== 'image/jpeg' || !Number.isInteger(data.size_bytes) ||
-        Number(data.size_bytes) < 1 || Number(data.size_bytes) > 2 * 1024 * 1024)
+    if (
+      data.mime_type !== 'image/jpeg' ||
+      !Number.isInteger(data.size_bytes) ||
+      Number(data.size_bytes) < 1 ||
+      Number(data.size_bytes) > 2 * 1024 * 1024
+    )
       invalid();
     return imageId;
   };
@@ -294,8 +300,11 @@ export function createGatewayPlanRepository(
       `/api/v1/trips/${encodeURIComponent(tripId)}/dress-codes/${encodeURIComponent(dressCodeId)}/reference-image`,
       { responseType: 'bytes', signal, includeCredentials: true },
     );
-    if (!(result.data instanceof ArrayBuffer) || !result.data.byteLength ||
-        result.contentType?.split(';')[0]?.trim().toLowerCase() !== 'image/jpeg')
+    if (
+      !(result.data instanceof ArrayBuffer) ||
+      !result.data.byteLength ||
+      result.contentType?.split(';')[0]?.trim().toLowerCase() !== 'image/jpeg'
+    )
       invalid();
     return new Blob([result.data], { type: 'image/jpeg' });
   };

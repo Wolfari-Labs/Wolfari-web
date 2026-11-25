@@ -9,7 +9,9 @@ import type {
   PlaceIntent,
   PlaceProvider,
   PlaceRoute,
+  RouteMode,
 } from '../../features/map/places';
+import { placeImage } from '../../features/map/places';
 
 const optionalText = (value: unknown, max = 255) =>
   typeof value === 'string' && value.trim() && value.length <= max ? value.trim() : null;
@@ -77,6 +79,7 @@ export function decodePlace(value: unknown): DiscoveredPlace {
       typeof p.fetched_at === 'string' && Number.isFinite(Date.parse(p.fetched_at))
         ? p.fetched_at
         : null,
+    heroImage: placeImage(p.hero_image),
   };
 }
 const datasets: readonly PlaceDataset[] = ['golden', 'overture', 'geoapify'];
@@ -132,13 +135,15 @@ export function createPlacesRepository(client: GatewayHttpClient) {
     async route(
       coordinates: readonly { latitude: number; longitude: number }[],
       signal: AbortSignal,
+      mode: RouteMode = 'DRIVING',
     ) {
       const result = await client.write('/api/v1/travel/route', {
         method: 'POST',
-        body: { coordinates, mode: 'DRIVING' },
+        body: { coordinates, mode },
         signal,
       });
-      return decodeRoute(result.data);
+      if (result.metadata?.travelSource?.isMock) throw Error('Mock route is unavailable');
+      return { ...decodeRoute(result.data), source: result.metadata?.travelSource };
     },
     search,
     /**

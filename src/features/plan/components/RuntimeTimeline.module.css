@@ -12,6 +12,15 @@
   min-width: 0;
   margin-top: 20px;
 }
+.weatherDayBar {
+  position: relative;
+}
+.weatherDayBar > span {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+}
 .dayBar > :last-child {
   flex: 0 1 496px;
 }
@@ -114,44 +123,6 @@
   align-items: center;
   gap: 10px;
 }
-.tools {
-  position: relative;
-  flex-shrink: 0;
-}
-.tools summary {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  list-style: none;
-  cursor: pointer;
-}
-.tools summary::-webkit-details-marker {
-  display: none;
-}
-.tools summary:hover {
-  border-radius: 14px;
-  background: var(--v2-track);
-}
-.tools[open] > div {
-  position: absolute;
-  z-index: 5;
-  right: 0;
-  top: 48px;
-  width: min(320px, 70vw);
-  padding: 14px;
-  display: grid;
-  gap: 10px;
-  border-radius: var(--v2-radius-thumb);
-  background: var(--v2-white);
-  box-shadow: var(--v2-shadow-float), var(--v2-inset);
-  font: 600 13px/18px var(--v2-font);
-}
-.tools p {
-  margin: 0;
-  color: var(--v2-sub);
-  font: 600 12px/18px var(--v2-font);
-}
 .list {
   composes: list from './TimelineSurface.module.css';
 }
@@ -197,6 +168,12 @@
 }
 .poolClose {
   flex: 0 0 auto;
+}
+.poolActions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .poolHeader h2 {
   margin: 0;

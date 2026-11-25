@@ -1801,6 +1801,10 @@
   }
 }
 
+.gatewayForm > .gatewayIntro {
+  margin-bottom: 15px;
+}
+
 @media (min-width: 769px) and (max-width: 1180px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);

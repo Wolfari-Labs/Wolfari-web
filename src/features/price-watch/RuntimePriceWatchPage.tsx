@@ -566,7 +566,9 @@ function WatchWorkspace({
   const providerNote =
     provider === 'TRAVELPAYOUTS_CACHE'
       ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo'
-      : 'Nguồn: giá mô phỏng';
+      : provider === 'MOCK_FLIGHT'
+        ? 'Nguồn: giá mô phỏng'
+        : 'Nguồn giá theo cấu hình hệ thống';
   return (
     <section
       className={`${styles.page} ${priceStyles.page} ${tripWorkspaceStyles.fullWidth}`}

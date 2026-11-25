@@ -43,6 +43,7 @@ export type InvitationScenario = (typeof invitationScenarios)[number];
 export interface InvitationViewModel {
   readonly id: string;
   readonly tripId: string;
+  readonly invitedByUserId?: string | null;
   readonly invitationType: 'EMAIL' | 'LINK';
   readonly email: string | null;
   readonly status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'REVOKED' | 'EXPIRED';
@@ -109,11 +110,18 @@ export interface InvitationPreview {
 }
 export interface InvitationAcceptResult {
   readonly membership: MembershipViewModel;
-  readonly revisions: { readonly planVersion: number; readonly membershipRevision: number; readonly exportRevision: number };
+  readonly revisions: {
+    readonly planVersion: number;
+    readonly membershipRevision: number;
+    readonly exportRevision: number;
+  };
 }
 export type InvitationCommandResult<T> =
   | { readonly status: 'success'; readonly data: T; readonly correlationId: string | null }
-  | { readonly status: 'error'; readonly error: import('../../../shared/types/result').DomainError };
+  | {
+      readonly status: 'error';
+      readonly error: import('../../../shared/types/result').DomainError;
+    };
 interface InvitationCreateMetadata {
   readonly idempotencyKey: string;
   readonly expectedMembershipRevision: number;

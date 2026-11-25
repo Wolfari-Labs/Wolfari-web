@@ -104,6 +104,7 @@ export interface ActivityCreateInput {
 export type ActivityUpdateFields = Partial<ActivityCreateInput>;
 
 export interface PlanRepository {
+  recommendations?: import('./preparation-recommendation').PreparationRecommendationsRepository;
   uploadDressCodeImage?(request: {
     readonly tripId: string;
     readonly file: File;

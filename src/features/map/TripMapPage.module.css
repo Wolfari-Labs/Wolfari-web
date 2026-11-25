@@ -792,6 +792,67 @@
   margin-bottom: 8px;
   border-radius: var(--radius-10);
 }
+.desktopPlaceCard > [data-place-photo] {
+  flex: none;
+  margin-bottom: 8px;
+}
+.desktopPlaceCard > [data-place-photo] img,
+.desktopPlaceCard > [data-place-photo] > span:not([data-photo-credit]) {
+  height: 90px;
+}
+.desktopPlaceCard:has([data-place-photo]) {
+  padding-bottom: 44px;
+}
+.desktopPlaceCard > [data-place-photo] [data-photo-credit] {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  font-size: 11px;
+  line-height: 15px;
+}
+.routeModeSelector {
+  flex: none;
+  width: 126px;
+  margin-right: 54px;
+}
+.routeDetails {
+  flex: none;
+  padding: 0 12px 8px;
+  color: var(--v2-sub);
+  font: 600 12px/17px var(--v2-font);
+}
+.routeDetails > p {
+  margin: 0;
+}
+.placeRow:has([data-place-photo]) {
+  padding-bottom: 34px;
+}
+.placeRow [data-place-photo][data-compact] {
+  width: 56px;
+}
+.placeRow [data-place-photo][data-compact] [data-photo-credit] {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  left: 12px;
+  font-size: 10px;
+  line-height: 13px;
+}
+@media (min-width: 769px) {
+  .routeDetails {
+    position: absolute;
+    bottom: 14px;
+    right: 26px;
+    left: 26px;
+    z-index: 5;
+    padding: 0;
+    background: var(--v2-white);
+  }
+  .mapPanel:has(.routeDetails) .viewport {
+    height: calc(100% - 60px);
+  }
+}
 
 .desktopPlaceCard strong {
   font-size: var(--font-size-label);
@@ -2434,18 +2495,23 @@
     box-shadow: var(--v2-shadow-float), var(--v2-inset);
   }
 
-  .desktopPlaceCard > img {
+  .desktopPlaceCard > img,
+  .desktopPlaceCard > [data-place-photo] {
     grid-column: 1;
     grid-row: 1 / span 5;
     align-self: center;
     width: 82px;
-    height: 82px;
     margin: 0;
     border-radius: var(--v2-radius-thumb);
     object-fit: cover;
   }
+  .desktopPlaceCard > img,
+  .desktopPlaceCard > [data-place-photo] img,
+  .desktopPlaceCard > [data-place-photo] > span:not([data-photo-credit]) {
+    height: 82px;
+  }
 
-  .desktopPlaceCard > :not(img) {
+  .desktopPlaceCard > :not(img, [data-place-photo]) {
     grid-column: 2;
     min-width: 0;
   }

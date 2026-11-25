@@ -20,6 +20,24 @@ import {
   tripId,
 } from './plan-dnd-fixture';
 
+test.beforeEach(async ({ page, gateway }) => {
+  // Register after the Gateway catch-all; these cases exercise Plan recovery with no weather.
+  void gateway;
+  await page.route('**/api/v1/travel/weather?**', (route) =>
+    route.fulfill({
+      status: 503,
+      json: {
+        error: {
+          code: 'SERVICE_UNAVAILABLE',
+          message: 'Weather unavailable in DnD test',
+          retryable: false,
+        },
+        meta: { correlation_id: 'plan-dnd-weather-unavailable' },
+      },
+    }),
+  );
+});
+
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1200 });
 });
@@ -227,7 +245,6 @@ test('HTTP mock: a mid-arrangement conflict stops later commands, reports partia
   expect(mock.writes.some((write) => write.method === 'PUT')).toBe(false);
   await expect(page.getByRole('button', { name: 'Thêm hoạt động', exact: true })).toBeDisabled();
   await expect(page.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' })).toHaveCount(0);
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
   await page.getByRole('button', { name: 'Tải lại để đối chiếu', exact: true }).click();
   expect(mock.writes).toHaveLength(2);
   await expectDayOrder(page, mock, originalIds);
@@ -251,7 +268,6 @@ test('HTTP mock: an uncertain committed step retries exact idempotency payload a
   expect(mock.writes).toHaveLength(1);
   const originalWrite = structuredClone(mock.writes[0]!);
   await page.reload();
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
   const retry = page.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ', exact: true });
   await expect(retry).toBeDisabled();
   await page.getByRole('button', { name: 'Tải lại để đối chiếu', exact: true }).click();

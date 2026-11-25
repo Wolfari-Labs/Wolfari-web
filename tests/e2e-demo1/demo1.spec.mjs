@@ -60,8 +60,10 @@ async function fund(page, tripId) {
   await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
 }
 async function manualCreate(page) {
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
-  await page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true }).click();
+  const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
+  if (!(await manual.isVisible()))
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+  await manual.click();
 }
 async function editActivity(page, title) {
   const trigger = page

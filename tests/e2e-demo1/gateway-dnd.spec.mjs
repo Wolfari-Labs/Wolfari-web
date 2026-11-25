@@ -48,8 +48,9 @@ async function verifiedOwner(page) {
 }
 
 async function openTools(page) {
-  const summary = page.locator('summary[aria-label="Tùy chọn lịch trình"]');
-  if (!(await summary.evaluate((element) => element.parentElement.open))) await summary.click();
+  const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
+  if (!(await manual.isVisible()))
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
 }
 
 async function createActivity(page, title, times) {
@@ -222,7 +223,6 @@ test('Gateway DnD live: real receipts, suffix reset, persistent pool and unknown
   await keyboardDrop(page, 'C last', ['ArrowUp'], { waitForOrderReceipt: false });
   await expect(page.getByText(/Chưa xác định thay đổi đã được lưu hay chưa/)).toBeVisible();
   const committed = await readPlanAfterReload(page, tripId);
-  await openTools(page);
   await page.getByRole('button', { name: 'Tải lại để đối chiếu', exact: true }).click();
   const retry = page.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ', exact: true });
   await expect(retry).toBeEnabled();

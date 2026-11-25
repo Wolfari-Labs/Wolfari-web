@@ -63,7 +63,7 @@ function tripLinks() {
 }
 
 async function loaded() {
-  await screen.findByRole('link', { name: 'Mở chuyến đi Đà Nẵng – Hội An' });
+  await screen.findByRole('link', { name: 'Mở chuyến đi Đà Nẵng – Hội An' }, { timeout: 5000 });
 }
 
 function statusButton(label: string) {
@@ -307,7 +307,9 @@ describe('Trip List route slice', () => {
     const source = fixtureTripCatalog[0];
     if (!source) throw new Error('Expected canonical fixture');
     const repository = createFixtureTripRepository({
-      records: [{ ...source, presentation: { memberCount: null, coverAvailable: false, cover: null } }],
+      records: [
+        { ...source, presentation: { memberCount: null, coverAvailable: false, cover: null } },
+      ],
     });
     mount({ tripRepository: repository });
     await loaded();

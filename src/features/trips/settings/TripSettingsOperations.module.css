@@ -22,10 +22,6 @@
   background: var(--v2-row);
 }
 
-.panel[hidden] {
-  display: none;
-}
-
 .panel h2,
 .section h3,
 .panel p {

@@ -18,24 +18,23 @@
   background: white;
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
-.tabs a {
+.tabs button {
   padding: 10px 20px;
-  color: var(--v2-sub);
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 19px;
-  text-decoration: none;
+  border: 0;
   border-radius: 999px;
+  background: transparent;
+  color: var(--v2-sub);
+  font: 700 14px/19px var(--v2-font);
+  cursor: pointer;
 }
-.tabs a[aria-current] {
+.tabs button[aria-selected='true'] {
   color: white;
   background: var(--action-gradient);
 }
-.columns {
+.exportPanel[data-state='active'] {
   display: grid;
-  grid-template-columns: minmax(260px, 360fr) minmax(300px, 420fr) minmax(248px, 284fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 20px;
-  align-items: start;
 }
 .panel {
   display: flex;
@@ -47,11 +46,10 @@
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .options {
-  min-height: 659px;
   padding: 18px 20px;
 }
 .public {
-  min-height: 659px;
+  max-width: 44rem;
   padding: 18px;
   background: linear-gradient(white, #f4f1ff);
 }
@@ -218,10 +216,6 @@
   padding: 11px 18px;
   font: 800 14px/19px var(--v2-font);
 }
-.middle {
-  display: grid;
-  gap: 14px;
-}
 .preview {
   align-items: center;
   gap: 8px;
@@ -243,6 +237,7 @@
 }
 .document {
   display: flex;
+  margin-block: auto;
   width: 250px;
   max-width: 100%;
   min-height: 230px;
@@ -453,37 +448,18 @@
   padding: 9px 8px;
   font-size: 12px;
 }
-@media (max-width: 1200px) {
-  .columns {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-  .public {
-    grid-column: 1 / -1;
-    min-height: 480px;
-  }
-  .options {
-    min-height: 659px;
-  }
-}
 @media (max-width: 768px) {
   .page {
     padding: 16px;
   }
-  .columns {
+  .exportPanel[data-state='active'] {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .public {
-    grid-column: auto;
   }
   .tabs {
     margin-bottom: 16px;
   }
-  .tabs a {
+  .tabs button {
     padding: 10px 14px;
-  }
-  .options,
-  .public {
-    min-height: 580px;
   }
   .historyRow {
     flex-wrap: wrap;

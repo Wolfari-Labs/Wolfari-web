@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useState, type Ref } from 'react';
+import { useMemo, useState, type Ref } from 'react';
 import type { PlanViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { localDate, planDays } from '../model/plan-presentation';
 import { validCoordinates } from '../../map/trip-map';
 import { GeoapifyMap, type MapCenter, type MapRoute } from '../../map/GeoapifyMap';
-import type { PlaceRoute } from '../../map/places';
-import { useRuntimeServices } from '../../../app/gateway-context';
+import type { PlaceRoute, RouteMode } from '../../map/places';
+import { usePlaceRoute } from '../../map/use-place-route';
+import { RouteAttribution, routeModeLabels } from '../../map/RouteAttribution';
 import { Button } from '../../../shared/components/Button';
+import { Select } from '../../../shared/components/Select';
 import { Icon } from '../../../shared/components/Icon';
 import styles from './PlanDayMap.module.css';
 export function dayMapLocations(
@@ -31,52 +33,35 @@ export function dayMapLocations(
     return location ? [location] : [];
   });
 }
-/** Contract 4.4 accepts 2–25 stops. */
-const MAX_ROUTE_STOPS = 25;
-const ROUTE_DEBOUNCE_MS = 400;
 const kmFormat = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1 });
-export function routeSummary(route: PlaceRoute) {
+export function routeSummary(route: PlaceRoute, mode: RouteMode = 'DRIVING') {
   const minutes = Math.max(1, Math.round(route.durationSeconds / 60));
   const time =
     minutes >= 60 ? `${Math.floor(minutes / 60)} giờ ${minutes % 60} phút` : `${minutes} phút`;
-  return `${kmFormat.format(route.distanceM / 1000)} km · ${time} (ước lượng ô tô)`;
+  const kind =
+    mode === 'DRIVING'
+      ? 'ước lượng ô tô'
+      : mode === 'WALKING'
+        ? 'đi bộ ước tính'
+        : 'xe đạp ước tính';
+  return `${kmFormat.format(route.distanceM / 1000)} km · ${time} (${kind})`;
 }
 /**
  * Ordered stops of one day → OSRM route when available, otherwise a dashed straight line.
  * Only the stop sequence triggers a request, so marker selection never refetches.
  */
-function useDayRoute(stops: readonly MapCenter[]) {
-  const service = useRuntimeServices()?.places;
-  const key = JSON.stringify(stops);
-  const routable = !!service && stops.length >= 2 && stops.length <= MAX_ROUTE_STOPS;
-  const [result, setResult] = useState<{ key: string; route: PlaceRoute | null } | null>(null);
-  useEffect(() => {
-    if (!routable || !service) return;
-    const controller = new AbortController();
-    const timer = window.setTimeout(() => {
-      service
-        .route(JSON.parse(key) as MapCenter[], controller.signal)
-        .then((route) => setResult({ key, route }))
-        .catch(() => {
-          if (!controller.signal.aborted) setResult({ key, route: null });
-        });
-    }, ROUTE_DEBOUNCE_MS);
-    return () => {
-      window.clearTimeout(timer);
-      controller.abort();
-    };
-  }, [key, routable, service]);
-  if (stops.length < 2) return { route: null, summary: null, estimated: false };
-  const current = result?.key === key ? result.route : null;
-  const loading = routable && result?.key !== key;
+function useDayRoute(stops: readonly MapCenter[], mode: RouteMode) {
+  const { data: current, loading } = usePlaceRoute(stops, mode);
+  if (stops.length < 2) return { route: null, data: null, summary: null, estimated: false };
   const route: MapRoute = current
     ? { coordinates: current.geometry, estimated: false }
     : { coordinates: stops, estimated: true };
   return {
     route,
+    data: current,
     estimated: !current,
     summary: current
-      ? routeSummary(current)
+      ? routeSummary(current, mode)
       : loading
         ? 'Đang tính đường đi… (tạm nối thẳng)'
         : 'Đường chim bay — chưa kiểm tra di chuyển',
@@ -98,6 +83,7 @@ export function PlanDayMap({
   compact?: boolean;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [mode, setMode] = useState<RouteMode>('DRIVING');
   const locations = useMemo(
     () => dayMapLocations(plan, day, trip.timezone),
     [plan, day, trip.timezone],
@@ -118,7 +104,7 @@ export function PlanDayMap({
         : points.map((p) => ({ latitude: p.latitude, longitude: p.longitude })),
     [points, day],
   );
-  const dayRoute = useDayRoute(stops);
+  const dayRoute = useDayRoute(stops, mode);
   const number = planDays(trip.startAt, trip.endAt, trip.timezone).indexOf(day) + 1;
   const title =
     day === 'ALL'
@@ -146,6 +132,21 @@ export function PlanDayMap({
             <Icon name="close" size={18} />
           </Button>
         </header>
+        {stops.length >= 2 && (
+          <div className={styles.routeMode}>
+            <Select
+              label="Cách di chuyển"
+              value={mode}
+              onChange={(event) => setMode(event.target.value as RouteMode)}
+            >
+              {Object.entries(routeModeLabels).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </div>
+        )}
         <div className={styles.map}>
           <GeoapifyMap
             embedded
@@ -171,6 +172,7 @@ export function PlanDayMap({
             {dayRoute.summary}
           </p>
         )}
+        <RouteAttribution route={dayRoute.data} />
       </section>
     </div>
   );

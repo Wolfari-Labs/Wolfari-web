@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
@@ -6,6 +6,7 @@ import { Icon } from '../../../shared/components/Icon';
 import type { TripDetailViewModel } from '../model/trip-detail';
 import { useTripRepository } from '../repositories/repository-context';
 import { useTripCoverImage } from '../hooks/use-trip-cover-image';
+import { useWriteScope } from '../../../shared/lib/use-write-scope';
 import styles from './TripCoverEditor.module.css';
 
 export function TripCoverEditor({
@@ -23,6 +24,9 @@ export function TripCoverEditor({
   const coverSrc = cover.src ?? trip.presentation.cover?.src;
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const identity = `${trip.currentMembership.userId}:${trip.id}`;
+  const writeScope = useWriteScope(identity);
+  const inFlight = useRef<AbortSignal | null>(null);
   const canEdit =
     trip.currentMembership.role === 'OWNER' &&
     !trip.currentMembership.leftAt &&
@@ -30,13 +34,19 @@ export function TripCoverEditor({
     trip.lifecycle !== 'ARCHIVED' &&
     !trip.archivedAt;
 
+  useLayoutEffect(() => {
+    inFlight.current = null;
+    setBusy(false);
+    setError('');
+  }, [identity]);
+
   useEffect(() => {
     onBusyChange?.(busy);
     return () => onBusyChange?.(false);
   }, [busy, onBusyChange]);
 
   async function upload(file?: File) {
-    if (!file || busy || disabled || !canEdit) return;
+    if (!file || inFlight.current || busy || disabled || !canEdit) return;
     if (!['image/jpeg', 'image/png'].includes(file.type) || file.size > 5 * 1024 * 1024) {
       setError('Chọn ảnh JPEG hoặc PNG có dung lượng tối đa 5 MB.');
       return;
@@ -45,10 +55,14 @@ export function TripCoverEditor({
       setError('Tải ảnh bìa chưa khả dụng trong chế độ dữ liệu hiện tại.');
       return;
     }
+    const signal = writeScope();
+    if (signal.aborted) return;
+    inFlight.current = signal;
     setBusy(true);
     setError('');
     try {
-      await repository.uploadCover({ tripId: trip.id, file, signal: new AbortController().signal });
+      await repository.uploadCover({ tripId: trip.id, file, signal });
+      if (signal.aborted) return;
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['trip', 'cover', trip.id] }),
         queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
@@ -56,18 +70,23 @@ export function TripCoverEditor({
         queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
       ]);
     } catch {
-      setError('Chưa tải được ảnh bìa. Kiểm tra kết nối rồi thử lại.');
+      if (!signal.aborted) setError('Chưa tải được ảnh bìa. Kiểm tra kết nối rồi thử lại.');
     } finally {
-      setBusy(false);
+      if (inFlight.current === signal) inFlight.current = null;
+      if (!signal.aborted) setBusy(false);
     }
   }
 
   async function remove() {
-    if (!repository.removeCover || busy || disabled || !canEdit) return;
+    if (!repository.removeCover || inFlight.current || busy || disabled || !canEdit) return;
+    const signal = writeScope();
+    if (signal.aborted) return;
+    inFlight.current = signal;
     setBusy(true);
     setError('');
     try {
-      await repository.removeCover({ tripId: trip.id, signal: new AbortController().signal });
+      await repository.removeCover({ tripId: trip.id, signal });
+      if (signal.aborted) return;
       queryClient.removeQueries({ queryKey: ['trip', 'cover', trip.id] });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
@@ -75,9 +94,11 @@ export function TripCoverEditor({
         queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
       ]);
     } catch {
-      setError('Chưa xóa được ảnh bìa. Trạng thái hiện tại chưa thay đổi trên giao diện.');
+      if (!signal.aborted)
+        setError('Chưa xóa được ảnh bìa. Trạng thái hiện tại chưa thay đổi trên giao diện.');
     } finally {
-      setBusy(false);
+      if (inFlight.current === signal) inFlight.current = null;
+      if (!signal.aborted) setBusy(false);
     }
   }
 

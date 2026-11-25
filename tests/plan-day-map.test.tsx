@@ -135,6 +135,15 @@ describe('Plan day-map projection', () => {
           { latitude: 16, longitude: 108 },
           { latitude: 16.1, longitude: 108.1 },
         ],
+        source: {
+          provider: 'OSRM',
+          status: 'SUCCESS',
+          stale: true,
+          isMock: false,
+          fetchedAt: null,
+          warnings: [],
+          attribution: [{ text: 'OpenStreetMap', url: 'https://www.openstreetmap.org/copyright' }],
+        },
       });
       mount(route, props);
       expect(screen.getByText('Đang tính đường đi… (tạm nối thẳng)')).toBeInTheDocument();
@@ -148,6 +157,18 @@ describe('Plan day-map projection', () => {
         longitude: Number(locations!.longitude),
       });
       expect(route.mock.calls[0]![0]).toHaveLength(2);
+      expect(route.mock.calls[0]![2]).toBe('DRIVING');
+      expect(screen.getByRole('link', { name: 'OpenStreetMap' })).toHaveAttribute(
+        'href',
+        'https://www.openstreetmap.org/copyright',
+      );
+      expect(screen.getByText(/Dữ liệu tuyến cũ/)).toBeInTheDocument();
+      const user = userEvent.setup();
+      await user.selectOptions(screen.getByRole('combobox', { name: 'Cách di chuyển' }), 'WALKING');
+      expect(
+        await screen.findByText('12,3 km · 25 phút (đi bộ ước tính)', {}, { timeout: 2000 }),
+      ).toBeInTheDocument();
+      expect(route.mock.calls[1]![2]).toBe('WALKING');
     });
 
     it('falls back to a labelled straight line when routing is unavailable', async () => {

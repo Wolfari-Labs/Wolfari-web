@@ -60,11 +60,11 @@ export function InvitationManagement({
   activeTab.current = active;
   const canReadInvitations =
     trip.permissions.canRead &&
-    trip.currentMembership.role === 'OWNER' &&
+    (trip.permissions.canInvite === true || trip.currentMembership.role === 'OWNER') &&
     trip.currentMembership.leftAt === null;
   const allowed =
     canReadInvitations &&
-    trip.permissions.canUpdate &&
+    (trip.permissions.canInvite ?? trip.permissions.canUpdate) &&
     trip.archivedAt === null &&
     trip.lifecycle !== 'ARCHIVED';
   useEffect(() => {
@@ -163,11 +163,32 @@ export function InvitationManagement({
         ]
       : [];
 
+  function canManageInvitation(item: InvitationViewModel) {
+    return (
+      item.tripId.toLowerCase() === trip.id.toLowerCase() &&
+      (trip.currentMembership.role === 'OWNER' ||
+        item.invitedByUserId?.toLowerCase() === trip.currentMembership.userId.toLowerCase())
+    );
+  }
+  function canExecute(requested: InvitationManagementAttempt) {
+    if (requested.action === 'create') return Boolean(invitation.createInvitation);
+    const target = items.find((item) => item.id === requested.id);
+    return (
+      (trip.currentMembership.role === 'OWNER' || (target && canManageInvitation(target))) &&
+      Boolean(
+        requested.action === 'resend' ? invitation.resendInvitation : invitation.revokeInvitation,
+      )
+    );
+  }
   async function execute(requested: InvitationManagementAttempt) {
-    if (!allowed || activeController.current) return;
+    if (!allowed || activeController.current || !canExecute(requested)) return;
     const controller = new AbortController();
     activeController.current = controller;
     const next = invitationManagementAttempt.acquire(attemptScope, requested);
+    if (!canExecute(next)) {
+      activeController.current = null;
+      return;
+    }
     setAttempt(next);
     setPending(true);
     setError(null);
@@ -263,7 +284,14 @@ export function InvitationManagement({
     });
   }
   function version(action: 'revoke' | 'resend', item: InvitationViewModel) {
-    if (attempt) return;
+    if (
+      attempt ||
+      !allowed ||
+      !canManageInvitation(item) ||
+      item.status !== 'PENDING' ||
+      (action === 'resend' && item.invitationType !== 'EMAIL')
+    )
+      return;
     void execute({
       action,
       id: item.id,
@@ -347,7 +375,7 @@ export function InvitationManagement({
           </Alert>
         )}
         {attempt && !pending && (
-          <Button disabled={!allowed} onClick={() => void execute(attempt)}>
+          <Button disabled={!allowed || !canExecute(attempt)} onClick={() => void execute(attempt)}>
             Thử lại cùng yêu cầu
           </Button>
         )}
@@ -451,28 +479,32 @@ export function InvitationManagement({
                 Hết hạn{' '}
                 {new Date(item.expiresAt).toLocaleString('vi-VN', { timeZone: trip.timezone })}
               </span>
-              <div className={styles.actions}>
-                {item.invitationType === 'EMAIL' && (
+              {canManageInvitation(item) && (
+                <div className={styles.actions}>
+                  {item.invitationType === 'EMAIL' && (
+                    <Button
+                      variant="outline"
+                      size="compact"
+                      disabled={locked || item.status !== 'PENDING' || !invitation.resendInvitation}
+                      onClick={() => version('resend', item)}
+                    >
+                      Gửi lại
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="compact"
-                    disabled={locked || item.status !== 'PENDING' || !invitation.resendInvitation}
-                    onClick={() => version('resend', item)}
+                    className={styles.revoke}
+                    disabled={locked || item.status !== 'PENDING' || !invitation.revokeInvitation}
+                    onClick={() => {
+                      if (canManageInvitation(item)) setConfirm(item);
+                    }}
                   >
-                    Gửi lại
+                    Thu hồi
                   </Button>
-                )}
-                <Button
-                  variant="outline"
-                  size="compact"
-                  className={styles.revoke}
-                  disabled={locked || item.status !== 'PENDING' || !invitation.revokeInvitation}
-                  onClick={() => setConfirm(item)}
-                >
-                  Thu hồi
-                </Button>
-              </div>
-              {confirm?.id === item.id && (
+                </div>
+              )}
+              {confirm?.id === item.id && canManageInvitation(item) && (
                 <div className={styles.confirm} role="group" aria-label="Xác nhận thu hồi">
                   <p>Thu hồi lời mời này? Liên kết sẽ không thể sử dụng.</p>
                   <Button disabled={locked} onClick={() => version('revoke', item)}>

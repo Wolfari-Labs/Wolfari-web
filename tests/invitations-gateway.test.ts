@@ -57,6 +57,23 @@ describe('invitation Gateway contract', () => {
     expect(result).toMatchObject({ status: 'ready', data: { nextCursor } });
     expect(JSON.stringify(result)).not.toContain(token);
   });
+  it.each([undefined, null, '44444444-4444-4444-8444-444444444444'])(
+    'preserves the optional inviter projection %s',
+    async (invitedByUserId) => {
+      const { repo } = setup({
+        items: [{ ...row, invited_by_user_id: invitedByUserId }],
+        next_cursor: null,
+      });
+      const result = await repo.listInvitations({
+        tripId,
+        scenario: 'success',
+        signal: signal(),
+      });
+      expect(result).toMatchObject({ status: 'ready' });
+      if (result.status !== 'ready') throw Error('missing invitation');
+      expect(result.data.items[0]?.invitedByUserId).toBe(invitedByUserId);
+    },
+  );
   it.each([
     { ...row, id: undefined },
     { ...row, status: 'ALIEN' },
@@ -68,6 +85,9 @@ describe('invitation Gateway contract', () => {
     { ...row, resolved_at: undefined },
     { ...row, resolved_at: '2026-10-23T00:00:00Z' },
     { ...row, status: 'REVOKED', resolved_at: null },
+    { ...row, invited_by_user_id: '' },
+    { ...row, invited_by_user_id: 'not-a-user-id' },
+    { ...row, invited_by_user_id: 42 },
   ])('rejects malformed invitation projection %#', async (item) => {
     const { repo } = setup({ items: [item], next_cursor: null });
     expect(

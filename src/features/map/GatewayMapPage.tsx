@@ -15,6 +15,7 @@ import chevronIcon from '../../shared/assets/figma/ad884.svg';
 import { MapViewport } from './MapViewport';
 import { ExpandableMapPanel } from './ExpandableMapPanel';
 import { PlaceDetail } from './PlaceDetail';
+import { PlacePhoto } from './PlacePhoto';
 import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
@@ -31,9 +32,10 @@ import {
   type LocationScheduleFilter,
 } from './trip-map';
 import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
-import { TravelTools } from './TravelTools';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
-import type { RouteResult } from '../plan/model/travel';
+import { dayMapLocations, routeSummary } from '../plan/components/PlanDayMap';
+import { usePlaceRoute } from './use-place-route';
+import { RouteAttribution, routeModeLabels } from './RouteAttribution';
 import {
   activityTypeLabel,
   centerProvinceCode,
@@ -47,6 +49,7 @@ import {
   placeActivityType,
   placeSearchParams,
   placeSourceLabel,
+  placeImage,
   resultProvenance,
   savedPlaceActivityType,
   savedProvenance,
@@ -54,6 +57,8 @@ import {
   type DiscoveredPlace,
   type PlaceIntent,
   type PlacesFound,
+  type RouteMode,
+  type PlaceImage,
 } from './places';
 import { PlaceProvenanceLine, PlaceSourceBadges } from './PlaceSourceBadges';
 import type { MapLocationPresentation } from './trip-map';
@@ -142,8 +147,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     longitude: '108.2022',
   });
   const [day, setDay] = useState<string | null>(null);
-  // Route drawn from the TravelTools route request (develop: travel route on the map).
-  const [route, setRoute] = useState<RouteResult | null>(null);
+  const [routeMode, setRouteMode] = useState<RouteMode>('DRIVING');
+  const [savedImages, setSavedImages] = useState<Record<string, PlaceImage | null>>({});
   const [added, setAdded] = useState<{ day: string; label: string } | null>(null);
   const journalKey = `wolfari:map-command:${actor}:${tripId}`;
   const [journal] = useState(() => {
@@ -271,6 +276,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     const result = resultOf(item);
     return result ? resultProvenance(result) : savedProvenance(item.location);
   };
+  const imageOf = (item: MapLocationPresentation) =>
+    resultOf(item)?.heroImage ??
+    placeImage(item.location.metadata.hero_image) ??
+    savedImages[item.location.id] ??
+    null;
   const allItems = [
     ...all,
     ...candidates.map((p, index) => ({
@@ -332,6 +342,52 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       : (visibleItems[0]?.location.id ?? null);
   const selectedItem =
     visibleItems.find((item) => item.location.id === effectiveSelectedId) ?? null;
+  const imageLocation = selectedItem?.location;
+  const imageKnown = !!selectedItem && !!imageOf(selectedItem);
+  const imageChecked = !!imageLocation && Object.hasOwn(savedImages, imageLocation.id);
+  useEffect(() => {
+    if (
+      !repo ||
+      !detailOpen ||
+      !imageLocation ||
+      imageKnown ||
+      imageChecked ||
+      imageLocation.provider?.toUpperCase() !== 'WOLFARI' ||
+      !imageLocation.providerPlaceId
+    )
+      return;
+    const point = validCoordinates(imageLocation);
+    if (!point) return;
+    const controller = new AbortController();
+    const current = AbortSignal.any([scopeSignal.current(), controller.signal]);
+    // Saved locations retain the signed identity, while photos are refreshed from the catalogue.
+    repo
+      .search(
+        tripId,
+        placeSearchParams({
+          mode: 'query',
+          query: imageLocation.name,
+          center: point,
+          group: null,
+          geocode: false,
+        }),
+        current,
+      )
+      .then((found) => {
+        if (current.aborted) return;
+        const matching = found.items.find(
+          (place) => place.provider === 'WOLFARI' && place.id === imageLocation.providerPlaceId,
+        );
+        setSavedImages((images) => ({
+          ...images,
+          [imageLocation.id]: matching?.heroImage ?? null,
+        }));
+      })
+      .catch(() => {
+        if (!current.aborted) setSavedImages((images) => ({ ...images, [imageLocation.id]: null }));
+      });
+    return () => controller.abort();
+  }, [repo, detailOpen, imageLocation, imageKnown, imageChecked, tripId]);
   /** The saved Plan location behind the selected row (search results have none). */
   const savedLocation = selectedItem?.selected
     ? (currentPlan?.selectedLocations.find((v) => v.id === selectedItem.location.id) ?? null)
@@ -358,6 +414,20 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         ]
       : [];
   });
+  const routeStops =
+    data && day
+      ? dayMapLocations(data.plan, day, data.trip.timezone).flatMap((location) => {
+          const point = validCoordinates(location);
+          return point ? [point] : [];
+        })
+      : [];
+  const dayRoute = usePlaceRoute(routeStops, routeMode);
+  const mapRoute =
+    routeStops.length < 2
+      ? null
+      : dayRoute.data
+        ? { coordinates: dayRoute.data.geometry, estimated: false }
+        : { coordinates: routeStops, estimated: true };
   const dataCredit = placeDataCredit(results, dataRelease);
   const chooseLocation = (id: string, open = false) => {
     setSelected(id);
@@ -789,6 +859,13 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                                 ) : (
                                   <span className={styles.unselectedDot} aria-hidden="true" />
                                 )}
+                                {imageOf(item) && (
+                                  <PlacePhoto
+                                    image={imageOf(item)}
+                                    name={item.location.name}
+                                    compact
+                                  />
+                                )}
                                 <span className={styles.placeCopy}>
                                   <strong>{item.location.name}</strong>
                                   <span className={styles.placeMetaLine}>
@@ -871,7 +948,35 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         ))}
                       </Select>
                     </div>
+                    {routeStops.length >= 2 && (
+                      <div className={styles.routeModeSelector}>
+                        <Select
+                          label="Cách di chuyển"
+                          labelHidden
+                          value={routeMode}
+                          onChange={(event) => setRouteMode(event.target.value as RouteMode)}
+                        >
+                          {Object.entries(routeModeLabels).map(([value, label]) => (
+                            <option key={value} value={value}>
+                              {label}
+                            </option>
+                          ))}
+                        </Select>
+                      </div>
+                    )}
                   </div>
+                  {routeStops.length >= 2 && (
+                    <div className={styles.routeDetails}>
+                      <p>
+                        {dayRoute.data
+                          ? routeSummary(dayRoute.data, routeMode)
+                          : dayRoute.loading
+                            ? 'Đang tính đường đi… (tạm nối thẳng)'
+                            : 'Đường chim bay — chưa kiểm tra di chuyển'}
+                      </p>
+                      <RouteAttribution route={dayRoute.data} />
+                    </div>
+                  )}
                   <MapViewport
                     items={visibleItems}
                     selectedLocationId={effectiveSelectedId}
@@ -890,7 +995,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         initialView={initialView}
                         autoFit={resultMode === 'none' || resultMode === 'query'}
                         focus={focus}
-                        route={route ? { coordinates: route.geometry, estimated: false } : null}
+                        route={mapRoute}
                         onPin={
                           canEdit
                             ? (p) => {
@@ -924,6 +1029,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         <PlaceProvenanceLine provenance={provenanceOf(selectedItem)} />
                       )
                     }
+                    selectedImage={selectedItem ? imageOf(selectedItem) : null}
                     autoSelectFirst={!autoPickOff}
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
@@ -931,12 +1037,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                 </ExpandableMapPanel>
               </div>
             </div>
-            <TravelTools
-              trip={data.trip}
-              plan={data.plan}
-              refresh={snapshot.retry}
-              onRoute={setRoute}
-            />
             <RecommendationPanel
               type="ROUTE_ORDER"
               trip={data.trip}
@@ -973,6 +1073,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                 </>
               }
               provenance={selectedItem ? provenanceOf(selectedItem) : null}
+              image={selectedItem ? imageOf(selectedItem) : null}
             />
           </>
         )}

@@ -5,6 +5,7 @@ import type {
   PlanEditPolicy,
   UpdatePlanPolicyResult,
   UpdateTripResult,
+  UpdateTripField,
 } from '../../features/trips/repositories/trip.repository';
 import type { TripDetailViewModel } from '../../features/trips/model/trip-detail';
 import type { TripLifecycle, TripListViewModel } from '../../features/trips/model/trip-list';
@@ -33,10 +34,21 @@ function requiredUuid(value: unknown, correlationId: string | null): string {
     typeof value !== 'string' ||
     !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
   )
-    throw new ApiError('Invalid Trip response', 'invalid-response', 200, null, correlationId, false);
+    throw new ApiError(
+      'Invalid Trip response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
   return value;
 }
-function decodeReminder(value: unknown, tripId: string, correlationId: string | null): PersonalReminder {
+function decodeReminder(
+  value: unknown,
+  tripId: string,
+  correlationId: string | null,
+): PersonalReminder {
   const row = strictRecord(value, 'Invalid reminder response');
   const instant = (candidate: unknown) =>
     typeof candidate === 'string' &&
@@ -50,7 +62,14 @@ function decodeReminder(value: unknown, tripId: string, correlationId: string | 
     !instant(row.created_at) ||
     !(row.source_at === null || instant(row.source_at))
   )
-    throw new ApiError('Invalid reminder response', 'invalid-response', 200, null, correlationId, false);
+    throw new ApiError(
+      'Invalid reminder response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
   return {
     id: requiredUuid(row.id, correlationId),
     trip_id: tripId,
@@ -62,10 +81,23 @@ function decodeReminder(value: unknown, tripId: string, correlationId: string | 
     created_at: row.created_at as string,
   };
 }
-function privateBlob(result: { data: unknown; contentType?: string | null; status?: number }, type: string) {
-  if (!(result.data instanceof ArrayBuffer) || !result.data.byteLength ||
-      result.contentType?.split(';')[0]?.trim().toLowerCase() !== type)
-    throw new ApiError('Invalid private file response', 'invalid-response', result.status ?? 200, null, null, false);
+function privateBlob(
+  result: { data: unknown; contentType?: string | null; status?: number },
+  type: string,
+) {
+  if (
+    !(result.data instanceof ArrayBuffer) ||
+    !result.data.byteLength ||
+    result.contentType?.split(';')[0]?.trim().toLowerCase() !== type
+  )
+    throw new ApiError(
+      'Invalid private file response',
+      'invalid-response',
+      result.status ?? 200,
+      null,
+      null,
+      false,
+    );
   return new Blob([result.data], { type });
 }
 function lifecycle(value: unknown): TripLifecycle {
@@ -111,6 +143,10 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
     (membership.left_at !== null && !instant(membership.left_at)) ||
     typeof permissions.can_read !== 'boolean' ||
     typeof permissions.can_update !== 'boolean' ||
+    (permissions.can_invite !== undefined && typeof permissions.can_invite !== 'boolean') ||
+    (t.budget_amount !== undefined &&
+      t.budget_amount !== null &&
+      (typeof t.budget_amount !== 'string' || !/^[1-9][0-9]{0,11}$/.test(t.budget_amount))) ||
     typeof t.cover_image_available !== 'boolean' ||
     ![t.description, t.public_description].every(
       (value) => value === null || typeof value === 'string',
@@ -147,6 +183,7 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
     startAt: String(t.start_at),
     endAt: String(t.end_at),
     timezone: String(t.timezone),
+    budgetAmount: text(t.budget_amount),
     lifecycle: lifecycle(t.lifecycle),
     planVersion: Number(t.plan_version),
     membershipRevision: Number(t.membership_revision),
@@ -162,6 +199,7 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
     permissions: {
       canRead: Boolean(permissions.can_read),
       canUpdate: Boolean(permissions.can_update),
+      ...(typeof permissions.can_invite === 'boolean' ? { canInvite: permissions.can_invite } : {}),
     },
     presentation: {
       memberCount: null,
@@ -185,6 +223,9 @@ function createError(error: unknown): CreateTripResult {
       ...(typeof rawFields.start_at === 'string' ? { startAt: rawFields.start_at } : {}),
       ...(typeof rawFields.end_at === 'string' ? { endAt: rawFields.end_at } : {}),
       ...(typeof rawFields.timezone === 'string' ? { timezone: rawFields.timezone } : {}),
+      ...(typeof rawFields.budget_amount === 'string'
+        ? { budgetAmount: rawFields.budget_amount }
+        : {}),
     };
     return { status: 'validation-error', fieldErrors, correlationId: api?.correlationId ?? null };
   }
@@ -217,13 +258,18 @@ function updateError(error: unknown): UpdateTripResult {
   if (api?.status === 400) {
     const details = record(api.details);
     const rawFields = record(details.field_errors);
-    const fieldErrors: { name?: string; description?: string; publicDescription?: string } = {};
+    const fieldErrors: Partial<Record<UpdateTripField, string>> = {};
     if (typeof rawFields.name === 'string') fieldErrors.name = rawFields.name;
     if (typeof rawFields.description === 'string') fieldErrors.description = rawFields.description;
     if (typeof rawFields.public_description === 'string') {
       fieldErrors.publicDescription = rawFields.public_description;
     }
-    if (!fieldErrors.name && !fieldErrors.description && !fieldErrors.publicDescription) {
+    if (typeof rawFields.start_at === 'string') fieldErrors.startAt = rawFields.start_at;
+    if (typeof rawFields.end_at === 'string') fieldErrors.endAt = rawFields.end_at;
+    if (typeof rawFields.timezone === 'string') fieldErrors.timezone = rawFields.timezone;
+    if (typeof rawFields.budget_amount === 'string')
+      fieldErrors.budgetAmount = rawFields.budget_amount;
+    if (!Object.keys(fieldErrors).length) {
       fieldErrors.name = 'Thông tin chưa hợp lệ.';
     }
     return { status: 'validation-error', fieldErrors, correlationId: api.correlationId };
@@ -235,7 +281,14 @@ function updateError(error: unknown): UpdateTripResult {
     return { status: 'not-found', correlationId: api.correlationId, retryable: false };
   }
   if (api?.status === 409 || api?.code === 'VERSION_CONFLICT') {
-    return { status: 'conflict', correlationId: api.correlationId, retryable: false };
+    return {
+      status: 'conflict',
+      correlationId: api.correlationId,
+      retryable: false,
+      ...(record(api.details).reason === 'TRIP_RANGE_CONFLICT'
+        ? { reason: 'TRIP_RANGE_CONFLICT' as const }
+        : {}),
+    };
   }
   if (api?.code === 'STATE_CONFLICT' || api?.code === 'IDEMPOTENCY_CONFLICT') {
     return { status: 'conflict', correlationId: api.correlationId, retryable: false };
@@ -318,12 +371,25 @@ export function createGatewayTripRepository(
   client?: GatewayHttpClient,
 ): TripRepository {
   const repository: TripRepository = {
-    ...(client ? { getPlanPolicy: async ({ tripId, signal }: { tripId: string; signal: AbortSignal }) => {
-      try {
-        const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`, { signal, includeCredentials: true });
-        return { status: 'ready' as const, data: planPolicy(result.data, result.correlationId) };
-      } catch (error) { if (signal.aborted) throw signal.reason; return { status: 'error' as const, error: domainError(error) }; }
-    } } : {}),
+    ...(client
+      ? {
+          getPlanPolicy: async ({ tripId, signal }: { tripId: string; signal: AbortSignal }) => {
+            try {
+              const result = await client.read(
+                `/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`,
+                { signal, includeCredentials: true },
+              );
+              return {
+                status: 'ready' as const,
+                data: planPolicy(result.data, result.correlationId),
+              };
+            } catch (error) {
+              if (signal.aborted) throw signal.reason;
+              return { status: 'error' as const, error: domainError(error) };
+            }
+          },
+        }
+      : {}),
     createTrip: async ({ intent, signal }) => {
       signal.throwIfAborted();
       if (client) {
@@ -336,6 +402,7 @@ export function createGatewayTripRepository(
               start_at: intent.startAt,
               end_at: intent.endAt,
               timezone: intent.timezone,
+              ...(intent.budgetAmount === undefined ? {} : { budget_amount: intent.budgetAmount }),
               client_request_id: intent.clientRequestId,
             },
             idempotencyKey: intent.clientRequestId,
@@ -368,6 +435,10 @@ export function createGatewayTripRepository(
       if (intent.description !== undefined) body.description = intent.description;
       if (intent.publicDescription !== undefined)
         body.public_description = intent.publicDescription;
+      if (intent.startAt !== undefined) body.start_at = intent.startAt;
+      if (intent.endAt !== undefined) body.end_at = intent.endAt;
+      if (intent.timezone !== undefined) body.timezone = intent.timezone;
+      if (intent.budgetAmount !== undefined) body.budget_amount = intent.budgetAmount;
       try {
         const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}`, {
           method: 'PATCH',
@@ -519,7 +590,14 @@ export function createGatewayTripRepository(
       });
       const trip = mapTrip(result.data, result.correlationId);
       if (trip.id !== tripId || !trip.presentation.coverAvailable)
-        throw new ApiError('Invalid cover upload response', 'invalid-response', result.status ?? 200, null, result.correlationId, false);
+        throw new ApiError(
+          'Invalid cover upload response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
       return trip;
     };
     repository.removeCover = async ({ tripId, signal }) => {
@@ -530,7 +608,14 @@ export function createGatewayTripRepository(
       });
       const trip = mapTrip(result.data, result.correlationId);
       if (trip.id !== tripId || trip.presentation.coverAvailable)
-        throw new ApiError('Invalid cover removal response', 'invalid-response', result.status ?? 200, null, result.correlationId, false);
+        throw new ApiError(
+          'Invalid cover removal response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
       return trip;
     };
     repository.getCover = async ({ tripId, signal }) => {
@@ -542,10 +627,24 @@ export function createGatewayTripRepository(
       return privateBlob(result, 'image/jpeg');
     };
     repository.manageTrip = async ({
-      tripId, action, reason, newOwnerMemberId, expectedPlanVersion,
-      expectedMembershipRevision, expectedExportRevision, idempotencyKey, signal,
+      tripId,
+      action,
+      reason,
+      newOwnerMemberId,
+      expectedPlanVersion,
+      expectedMembershipRevision,
+      expectedExportRevision,
+      idempotencyKey,
+      signal,
     }) => {
-      const route = action === 'ARCHIVE' ? 'archive' : action === 'REOPEN' ? 'reopen' : action === 'TRANSFER' ? 'ownership' : '';
+      const route =
+        action === 'ARCHIVE'
+          ? 'archive'
+          : action === 'REOPEN'
+            ? 'reopen'
+            : action === 'TRANSFER'
+              ? 'ownership'
+              : '';
       const result = await client.write(
         action === 'DELETE'
           ? `/api/v1/trips/${encodeURIComponent(tripId)}`
@@ -575,8 +674,7 @@ export function createGatewayTripRepository(
         nextMembershipRevision !== expectedMembershipRevision + 1 ||
         nextExportRevision !== expectedExportRevision + 1 ||
         [nextPlanVersion, nextMembershipRevision, nextExportRevision].some(
-          (revision) =>
-            !Number.isSafeInteger(revision) || Number(revision) > 2147483647,
+          (revision) => !Number.isSafeInteger(revision) || Number(revision) > 2147483647,
         ) ||
         (action === 'TRANSFER' &&
           (typeof data.new_owner_user_id !== 'string' ||
@@ -585,7 +683,14 @@ export function createGatewayTripRepository(
             ))) ||
         (action === 'DELETE' && data.deleted !== true)
       )
-        throw new ApiError('Invalid lifecycle response', 'invalid-response', result.status ?? 200, null, result.correlationId, false);
+        throw new ApiError(
+          'Invalid lifecycle response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
       return { action, planVersion: Number(nextPlanVersion) };
     };
     repository.listReminders = async ({ tripId, signal }) => {
@@ -594,10 +699,24 @@ export function createGatewayTripRepository(
         includeCredentials: true,
       });
       if (!Array.isArray(result.data))
-        throw new ApiError('Invalid reminder list', 'invalid-response', result.status ?? 200, null, result.correlationId, false);
+        throw new ApiError(
+          'Invalid reminder list',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
       return result.data.map((item) => decodeReminder(item, tripId, result.correlationId));
     };
-    repository.createReminder = async ({ tripId, sourceType, sourceId, remindAt, idempotencyKey, signal }) => {
+    repository.createReminder = async ({
+      tripId,
+      sourceType,
+      sourceId,
+      remindAt,
+      idempotencyKey,
+      signal,
+    }) => {
       const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}/reminders`, {
         method: 'POST',
         body: { source_type: sourceType, source_id: sourceId, remind_at: remindAt },
@@ -623,7 +742,14 @@ export function createGatewayTripRepository(
       const blob = privateBlob(result, 'application/pdf');
       const prefix = new TextDecoder().decode(await blob.slice(0, 5).arrayBuffer());
       if (prefix !== '%PDF-')
-        throw new ApiError('Invalid PDF response', 'invalid-response', result.status ?? 200, null, result.correlationId, false);
+        throw new ApiError(
+          'Invalid PDF response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
       return blob;
     };
   }

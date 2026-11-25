@@ -2,12 +2,12 @@ import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { paths } from '../../app/route-paths';
 import destinationPhoto from '../../shared/assets/figma/16cac.png';
-import placeholderArtwork from '../../shared/assets/figma/a33fd.svg';
 import heartIcon from '../../shared/assets/figma/a50ed.svg';
 import clockIcon from '../../shared/assets/figma/1666f.svg';
 import type { MapLocationPresentation } from './trip-map';
 import { activityDurationLabel, activityScheduleLabel, validCoordinates } from './trip-map';
-import { OVERTURE_NOTE, type PlaceProvenance } from './places';
+import { OVERTURE_NOTE, type PlaceProvenance, type PlaceImage } from './places';
+import { PlacePhoto } from './PlacePhoto';
 import { PlaceSourceBadges } from './PlaceSourceBadges';
 import styles from './TripMapPage.module.css';
 
@@ -27,6 +27,7 @@ export function PlaceDetail({
   selectionDisabled = false,
   actions,
   provenance,
+  image,
 }: {
   item: MapLocationPresentation | null;
   tripId: string;
@@ -40,6 +41,7 @@ export function PlaceDetail({
   actions?: ReactNode;
   /** Runtime-only source/category record (POI-OVERTURE W10, FR-TI01). */
   provenance?: PlaceProvenance | null;
+  image?: PlaceImage | null;
 }) {
   const [favorite, setFavorite] = useState(false);
   if (!item) return null;
@@ -55,14 +57,17 @@ export function PlaceDetail({
         <strong>Chi tiết địa điểm</strong>
         <span aria-hidden="true" />
       </div>
-      <img
-        className={styles.detailCover}
-        src={runtime ? placeholderArtwork : detailPhoto(item)}
-        width="354"
-        height="228"
-        alt={runtime ? 'Ảnh minh họa giao diện; không phải ảnh địa điểm' : ''}
-        title={runtime ? 'Ảnh minh họa' : undefined}
-      />
+      {runtime ? (
+        <PlacePhoto image={image} name={item.location.name} linked />
+      ) : (
+        <img
+          className={styles.detailCover}
+          src={detailPhoto(item)}
+          width="354"
+          height="228"
+          alt=""
+        />
+      )}
       <div className={styles.detailTitle}>
         <h2>{item.location.name}</h2>
         <button

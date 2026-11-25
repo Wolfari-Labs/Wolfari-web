@@ -118,7 +118,7 @@ async function openPlan(page, tripId) {
 async function createActivity(page, fields, expectedCount) {
   const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
   if (!(await manual.isVisible().catch(() => false))) {
-    await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
   }
   await manual.click();
   const form = page.getByRole('form', { name: 'Thêm hoạt động', exact: true });

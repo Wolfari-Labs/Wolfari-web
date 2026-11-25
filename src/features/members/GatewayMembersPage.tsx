@@ -97,6 +97,7 @@ function Workspace({
     trip.currentMembership.userId === actorId &&
     !trip.currentMembership.leftAt;
   const owner = readable && trip.currentMembership.role === 'OWNER';
+  const canInvite = readable && (trip.permissions.canInvite ?? owner);
   const [tab, setTab] = useState<'members' | 'policy' | 'invitations'>('members');
   const [includeLeft, setIncludeLeft] = useState(false);
   const [target, setTarget] = useState<MembershipViewModel | 'self' | null>(null);
@@ -300,23 +301,23 @@ function Workspace({
             >
               Thành viên
             </Button>
+            {(owner || canInvite) && (
+              <Button
+                variant={tab === 'invitations' ? 'secondary' : 'outline'}
+                aria-pressed={tab === 'invitations'}
+                onClick={() => setTab('invitations')}
+              >
+                Lời mời
+              </Button>
+            )}
             {owner && (
-              <>
-                <Button
-                  variant={tab === 'invitations' ? 'secondary' : 'outline'}
-                  aria-pressed={tab === 'invitations'}
-                  onClick={() => setTab('invitations')}
-                >
-                  Lời mời
-                </Button>
-                <Button
-                  variant={tab === 'policy' ? 'secondary' : 'outline'}
-                  aria-pressed={tab === 'policy'}
-                  onClick={() => setTab('policy')}
-                >
-                  Quyền sửa lịch trình
-                </Button>
-              </>
+              <Button
+                variant={tab === 'policy' ? 'secondary' : 'outline'}
+                aria-pressed={tab === 'policy'}
+                onClick={() => setTab('policy')}
+              >
+                Quyền sửa lịch trình
+              </Button>
             )}
             <Button
               variant="plain"
@@ -327,7 +328,7 @@ function Workspace({
               Tải lại quyền và thành viên
             </Button>
           </div>
-          {tab === 'invitations' && owner ? (
+          {tab === 'invitations' && (owner || canInvite) ? (
             <div className={styles.invitationTab}>
               <InvitationManagement key={actorId + ':' + tripId} trip={trip} active />
             </div>
@@ -520,8 +521,8 @@ function Workspace({
                 <div className={styles.note} data-tone="policy">
                   <h3>Không suy rộng quyền</h3>
                   <p>
-                    Quyền sửa lịch trình không cấp quyền quản lý thành viên, lời mời hay trách nhiệm
-                    quỹ.
+                    Người được sửa lịch trình có thể mời thêm thành viên. Quyền quản lý thành viên
+                    và trách nhiệm quỹ được cấp riêng.
                   </p>
                 </div>
                 <div className={styles.note} data-tone="transfer">
@@ -541,7 +542,7 @@ function Workspace({
                     <h2>Thành viên chuyến đi</h2>
                     <MemberRoleHelp />
                   </div>
-                  {owner && (
+                  {canInvite && (
                     <Button
                       className={styles.inviteButton}
                       icon={<Icon name="userPlus" size={17} />}

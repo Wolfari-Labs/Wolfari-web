@@ -1,0 +1,95 @@
+.summary {
+  position: absolute;
+  inset: 16px 12px auto 74px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: var(--v2-sub);
+  font: 600 11px/15px var(--v2-font);
+}
+.temperature {
+  color: var(--v2-ink);
+  font-size: 20px;
+  line-height: 26px;
+  white-space: nowrap;
+}
+.detail {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.attribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  color: var(--v2-sub);
+  font: 600 10px/14px var(--v2-font);
+}
+.credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  color: var(--v2-sub);
+  font: 600 10px/14px var(--v2-font);
+}
+.attribution a {
+  color: var(--v2-blue-text);
+  text-underline-offset: 2px;
+}
+.summary > .attribution {
+  margin-left: -58px;
+}
+.retry {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--v2-blue-text);
+  font: inherit;
+  cursor: pointer;
+}
+@media (max-height: 700px) and (min-width: 769px) {
+  .summary {
+    top: 12px;
+    left: 62px;
+    gap: 0;
+  }
+  .temperature {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .summary > .attribution {
+    margin-left: -46px;
+  }
+}
+@media (max-width: 680px) {
+  .temperature {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .detail {
+    margin-left: -58px;
+    padding-top: 22px;
+    font-size: 10px;
+    line-height: 12px;
+  }
+  .attribution {
+    font-size: 9px;
+    line-height: 11px;
+  }
+}
+@media (max-width: 360px) {
+  .summary {
+    left: 62px;
+  }
+  .temperature {
+    font-size: 18px;
+  }
+  .detail,
+  .summary > .attribution {
+    margin-left: -46px;
+  }
+}

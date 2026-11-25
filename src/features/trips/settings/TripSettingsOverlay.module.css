@@ -2,9 +2,9 @@
   background: rgb(31 42 68 / 32%);
 }
 .modal {
-  width: min(1060px, calc(100vw - 40px));
+  width: min(680px, calc(100vw - 40px));
   max-width: calc(100vw - 40px);
-  height: min(760px, calc(100dvh - 40px));
+  height: fit-content;
   max-height: calc(100dvh - 40px);
   padding: 0;
   overflow: hidden;
@@ -14,6 +14,10 @@
   box-shadow: 0 24px 60px -12px rgb(31 42 68 / 30%);
   color: var(--v2-ink);
   font-family: var(--v2-font);
+}
+.wide {
+  width: min(920px, calc(100vw - 40px));
+  height: min(760px, calc(100dvh - 40px));
 }
 .modal > div:last-child {
   height: 100%;
@@ -63,51 +67,8 @@
 .header > button {
   flex: none;
 }
-.body {
-  display: grid;
-  flex: 1;
-  grid-template-columns: 220px minmax(0, 1fr);
-  min-height: 0;
-}
-.modal .navigation {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
-  min-width: 0;
-  padding: 18px 14px;
-  border-right: 1px solid var(--v2-track);
-  background: var(--v2-row);
-}
-.modal .navigation button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 0;
-  border-radius: var(--v2-radius-pill);
-  background: transparent;
-  color: var(--v2-nav-text);
-  font: 700 13px/18px var(--v2-font);
-  text-align: left;
-}
-.modal .navigation svg {
-  flex: none;
-}
-.modal .navigation button[aria-pressed='false']:hover:not(:disabled) {
-  background: var(--v2-track);
-}
-.modal .navigation button[aria-pressed='true'] {
-  background: var(--v2-gradient);
-  color: var(--v2-white);
-  box-shadow: var(--v2-shadow-active);
-}
-.modal .navigation button:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
 .content {
+  flex: 1;
   min-width: 0;
   min-height: 0;
   padding: 22px;
@@ -119,8 +80,11 @@
   .modal {
     width: calc(100vw - 24px);
     max-width: calc(100vw - 24px);
-    height: calc(100dvh - 24px);
+    height: fit-content;
     max-height: calc(100dvh - 24px);
+  }
+  .wide {
+    height: calc(100dvh - 24px);
   }
   .header {
     gap: 10px;
@@ -129,24 +93,6 @@
   .heading h2 {
     font-size: 18px;
     line-height: 25px;
-  }
-  .body {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-  }
-  .modal .navigation {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    padding: 10px;
-    border-right: 0;
-    border-bottom: 1px solid var(--v2-track);
-  }
-  .modal .navigation button {
-    gap: 6px;
-    padding: 8px 10px;
-    font-size: 12px;
-    line-height: 17px;
   }
   .content {
     padding: 16px 14px;

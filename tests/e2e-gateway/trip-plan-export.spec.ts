@@ -44,18 +44,52 @@ test('HTTP mock: preview the trip plan before downloading the same PDF', async (
     });
   });
   await page.setViewportSize({ width: 1440, height: 960 });
-  await page.goto(`/trips/${tripId}/settings`);
-  await page.getByRole('button', { name: 'Cài đặt chuyến đi', exact: true }).click();
-  const dialog = page.getByRole('dialog', { name: 'Cài đặt chuyến đi', exact: true });
-  const navigation = dialog.getByRole('navigation', { name: 'Mục cài đặt chuyến đi' });
-  await expect(navigation.getByRole('button')).toHaveText([
-    'Chỉnh sửa thông tin',
-    'Thông báo',
-    'Xuất plan',
-    'Lưu trữ chuyến đi',
-  ]);
-  await navigation.getByRole('button', { name: 'Xuất plan', exact: true }).click();
-  await expect(dialog.getByRole('heading', { name: 'Xuất plan', exact: true })).toBeVisible();
+  await page.goto(`/trips/${tripId}/share`);
+  await expect(page.getByText('Toàn bộ lịch trình', { exact: true })).toBeVisible();
+  await expect(page.getByText('Chọn ngày trong lịch trình', { exact: true })).toHaveCount(0);
+  const exportTabs = page.getByRole('tablist', { name: 'Xuất và chia sẻ' });
+  await expect(exportTabs.getByRole('tab', { name: 'Xuất tệp', exact: true })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  await expect(page.getByRole('heading', { name: 'Tùy chọn xuất tệp' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Xem trước tài liệu' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Public Share' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Lịch sử xuất tệp' })).toHaveCount(0);
+  await exportTabs.getByRole('tab', { name: 'Public Share', exact: true }).click();
+  await expect(page).toHaveURL(`/trips/${tripId}/share#public-share`);
+  await expect(page.getByRole('heading', { name: 'Public Share' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Tùy chọn xuất tệp' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Xem trước tài liệu' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Lịch sử xuất tệp' })).toHaveCount(0);
+  await exportTabs.getByRole('tab', { name: 'Lịch sử', exact: true }).click();
+  await expect(page).toHaveURL(`/trips/${tripId}/share#export-history`);
+  await expect(page.getByText('Lịch sử xuất tệp chưa khả dụng.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Public Share' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Tùy chọn xuất tệp' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Xem trước tài liệu' })).toHaveCount(0);
+  await page.goBack();
+  await expect(page.getByRole('tab', { name: 'Public Share', selected: true })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole('tab', { name: 'Xuất tệp', selected: true })).toBeVisible();
+  await expect(page.getByRole('tabpanel')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Xem trước PDF', exact: true }).click();
+  await expect(page).toHaveURL(`/trips/${tripId}/settings?mode=settings&section=export`);
+  const dialog = page.getByRole('dialog', { name: 'Xuất plan', exact: true });
+  await expect(dialog.getByRole('navigation', { name: 'Mục cài đặt chuyến đi' })).toHaveCount(0);
+  await expect(
+    dialog.getByRole('heading', { name: 'Xuất plan', exact: true }).first(),
+  ).toBeVisible();
+  await expect(
+    dialog.getByRole('heading', { name: 'Thông báo của bạn', exact: true, includeHidden: true }),
+  ).toHaveCount(0);
+  await expect(
+    dialog.getByRole('heading', {
+      name: 'Chỉnh sửa thông tin chuyến đi',
+      exact: true,
+      includeHidden: true,
+    }),
+  ).toHaveCount(0);
   expect(pdfReads).toBe(0);
   const downloadButton = dialog.getByRole('button', { name: 'Tải PDF', exact: true });
   await expect(downloadButton).toBeDisabled();

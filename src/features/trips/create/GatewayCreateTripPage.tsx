@@ -12,6 +12,7 @@ import { Icon } from '../../../shared/components/Icon';
 import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
 import { validCalendarDate, nextCalendarDate } from '../../../shared/lib/calendar';
 import { localTimeToIso } from '../../plan/model/plan-draft';
+import { validTripBudget, validTripTimezone } from '../model/trip-metadata';
 import { CreateTripSuccess } from './CreateTripSuccess';
 import banner from '../../../shared/assets/figma/32882.svg';
 import mapArtwork from '../../../shared/assets/figma/8222b.svg';
@@ -23,6 +24,7 @@ interface Draft {
   startDate: string;
   endDate: string;
   timezone: string;
+  budgetAmount: string;
 }
 type DraftErrors = Partial<Record<keyof Draft, string>>;
 
@@ -51,18 +53,18 @@ function validateDraft(draft: Draft): DraftErrors {
   if (!validCalendarDate(draft.endDate)) errors.endDate = 'Vui lòng chọn ngày về hợp lệ.';
   else if (validCalendarDate(draft.startDate) && draft.endDate < draft.startDate)
     errors.endDate = 'Ngày về không thể trước ngày đi.';
-  try {
-    new Intl.DateTimeFormat('en', { timeZone: draft.timezone });
-  } catch {
+  if (!validTripTimezone(draft.timezone)) {
     errors.timezone = 'Vui lòng nhập múi giờ IANA hợp lệ.';
   }
+  if (draft.budgetAmount.trim() && !validTripBudget(draft.budgetAmount.trim()))
+    errors.budgetAmount = 'Ngân sách phải là số nguyên từ 1 đến 999.999.999.999 ₫.';
   return errors;
 }
 
 function focusFirstError(errors: DraftErrors) {
-  const first = (['name', 'startDate', 'endDate', 'timezone', 'description'] as const).find(
-    (field) => errors[field],
-  );
+  const first = (
+    ['name', 'startDate', 'endDate', 'timezone', 'budgetAmount', 'description'] as const
+  ).find((field) => errors[field]);
   if (first) {
     const id =
       first === 'timezone' ? 'gateway-create-trip-timezone-custom' : `gateway-create-trip-${first}`;
@@ -78,6 +80,7 @@ const empty = (): Draft => ({
   startDate: '',
   endDate: '',
   timezone: 'Asia/Ho_Chi_Minh',
+  budgetAmount: '',
 });
 function restore(raw: string | null): { draft: Draft; intent: CreateTripIntent | null } {
   if (!raw) return { draft: empty(), intent: null };
@@ -85,7 +88,10 @@ function restore(raw: string | null): { draft: Draft; intent: CreateTripIntent |
   if (
     !data ||
     !data.draft ||
-    !Object.keys(empty()).every((key) => typeof data.draft[key as keyof Draft] === 'string')
+    !['name', 'description', 'startDate', 'endDate', 'timezone'].every(
+      (key) => typeof data.draft[key as keyof Draft] === 'string',
+    ) ||
+    (data.draft.budgetAmount !== undefined && typeof data.draft.budgetAmount !== 'string')
   )
     throw Error('Bản nháp không hợp lệ.');
   const i = data.intent;
@@ -98,10 +104,12 @@ function restore(raw: string | null): { draft: Draft; intent: CreateTripIntent |
       !Number.isFinite(Date.parse(i.startAt)) ||
       !(Date.parse(i.endAt) > Date.parse(i.startAt)) ||
       !/^[0-9a-f-]{36}$/i.test(i.clientRequestId) ||
-      (i.description !== undefined && typeof i.description !== 'string'))
+      (i.description !== undefined && typeof i.description !== 'string') ||
+      (i.budgetAmount !== undefined &&
+        (typeof i.budgetAmount !== 'string' || !validTripBudget(i.budgetAmount))))
   )
     throw Error('Yêu cầu phục hồi không hợp lệ.');
-  return data;
+  return { ...data, draft: { ...empty(), ...data.draft } };
 }
 export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
   const repository = useTripRepository();
@@ -207,6 +215,7 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
           startAt: localTimeToIso(draft.startDate, '00:00', draft.timezone),
           endAt: localTimeToIso(nextCalendarDate(draft.endDate), '00:00', draft.timezone),
           timezone: draft.timezone,
+          ...(draft.budgetAmount.trim() ? { budgetAmount: draft.budgetAmount.trim() } : {}),
           clientRequestId: crypto.randomUUID(),
         };
         if (!persist(draft, snapshot))
@@ -235,13 +244,15 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
           if (result.fieldErrors.startAt) nextErrors.startDate = result.fieldErrors.startAt;
           if (result.fieldErrors.endAt) nextErrors.endDate = result.fieldErrors.endAt;
           if (result.fieldErrors.timezone) nextErrors.timezone = result.fieldErrors.timezone;
+          if (result.fieldErrors.budgetAmount)
+            nextErrors.budgetAmount = result.fieldErrors.budgetAmount;
           setErrors(nextErrors);
           setFocusError(true);
         }
         setMessage(
           result.status === 'forbidden'
             ? 'Bạn không có quyền tạo chuyến đi.'
-            : 'Thông tin chưa hợp lệ. Kiểm tra tên, ngày và múi giờ.',
+            : 'Thông tin chưa hợp lệ. Kiểm tra tên, ngày, múi giờ và ngân sách.',
         );
       } else {
         setMessage(
@@ -366,6 +377,16 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
                 onChange={(e) => edit('timezone', e.target.value)}
               />
             )}
+            <Input
+              id="gateway-create-trip-budgetAmount"
+              label="Ngân sách chuyến đi"
+              hint="Đơn vị VND. Để trống nếu chưa đặt ngân sách."
+              value={draft.budgetAmount}
+              inputMode="numeric"
+              maxLength={12}
+              error={errors.budgetAmount}
+              onChange={(event) => edit('budgetAmount', event.target.value)}
+            />
             <Textarea
               id="gateway-create-trip-description"
               label="Mô tả ngắn"
@@ -375,7 +396,6 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
               onChange={(e) => edit('description', e.target.value)}
             />
           </fieldset>
-          <p>Bạn có thể thiết lập ngân sách trong Quỹ nhóm sau khi tạo chuyến đi.</p>
           <div className={styles.actions}>
             <Link to="/trips">Xem danh sách chuyến đi</Link>
             <Button
@@ -404,8 +424,8 @@ export function GatewayCreateTripPage({ actorId }: { actorId: string }) {
           <div className={styles.gatewayCapabilityBody}>
             <h3>Chưa hỗ trợ chọn điểm đến khi tạo chuyến đi</h3>
             <p>
-              Biểu mẫu hiện tại chỉ lưu tên, thời gian, múi giờ và mô tả. Bạn có thể tạo chuyến đi
-              với những thông tin này; bản đồ ở đây chỉ là hình minh họa.
+              Biểu mẫu lưu tên, thời gian, múi giờ, ngân sách và mô tả. Bạn có thể tạo chuyến đi với
+              những thông tin này; bản đồ ở đây chỉ là hình minh họa.
             </p>
           </div>
         </aside>

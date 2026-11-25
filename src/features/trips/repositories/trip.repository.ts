@@ -7,10 +7,12 @@ export interface CreateTripIntent {
   readonly startAt: string;
   readonly endAt: string;
   readonly timezone: string;
+  readonly budgetAmount?: string;
   readonly clientRequestId: string;
 }
 
-export type CreateTripField = 'name' | 'description' | 'startAt' | 'endAt' | 'timezone';
+export type CreateTripField =
+  'name' | 'description' | 'startAt' | 'endAt' | 'timezone' | 'budgetAmount';
 
 export type CreateTripResult =
   | { readonly status: 'created'; readonly tripId: string; readonly correlationId: string | null }
@@ -29,12 +31,17 @@ export interface UpdateTripIntent {
   readonly name?: string;
   readonly description?: string | null;
   readonly publicDescription?: string | null;
+  readonly startAt?: string;
+  readonly endAt?: string;
+  readonly timezone?: string;
+  readonly budgetAmount?: string | null;
   readonly expectedPlanVersion: number;
   readonly expectedExportRevision: number;
   readonly idempotencyKey: string;
 }
 
-export type UpdateTripField = 'name' | 'description' | 'publicDescription';
+export type UpdateTripField =
+  'name' | 'description' | 'publicDescription' | 'startAt' | 'endAt' | 'timezone' | 'budgetAmount';
 
 export type UpdateTripResult =
   | {
@@ -51,10 +58,15 @@ export type UpdateTripResult =
       readonly status: 'forbidden' | 'not-found' | 'conflict' | 'unavailable' | 'unknown';
       readonly correlationId: string | null;
       readonly retryable: boolean;
+      readonly reason?: 'TRIP_RANGE_CONFLICT';
     };
 
 export type PlanEditPolicy = 'ALL_MEMBERS' | 'OWNER_ONLY' | 'SELECTED_MEMBERS';
-export interface PlanPolicySnapshot { policy: PlanEditPolicy; editorMemberIds: readonly string[]; membershipRevision: number }
+export interface PlanPolicySnapshot {
+  policy: PlanEditPolicy;
+  editorMemberIds: readonly string[];
+  membershipRevision: number;
+}
 export type UpdatePlanPolicyResult =
   | {
       readonly status: 'updated';
@@ -66,7 +78,10 @@ export type UpdatePlanPolicyResult =
       readonly correlationId: string | null;
     }
   | { readonly status: 'error'; readonly error: import('../../../shared/types/result').DomainError }
-  | { readonly status: 'unknown'; readonly error: import('../../../shared/types/result').DomainError };
+  | {
+      readonly status: 'unknown';
+      readonly error: import('../../../shared/types/result').DomainError;
+    };
 
 export interface TripListRequest {
   readonly scenario: TripListScenario;
@@ -89,7 +104,10 @@ export interface PersonalReminder {
 
 // The adapter is session-scoped; the caller cannot select another viewer through a user ID.
 export interface TripRepository {
-  getPlanPolicy?(request: { tripId: string; signal: AbortSignal }): Promise<ReadResult<PlanPolicySnapshot>>;
+  getPlanPolicy?(request: {
+    tripId: string;
+    signal: AbortSignal;
+  }): Promise<ReadResult<PlanPolicySnapshot>>;
   createTrip(request: {
     readonly intent: CreateTripIntent;
     readonly signal: AbortSignal;

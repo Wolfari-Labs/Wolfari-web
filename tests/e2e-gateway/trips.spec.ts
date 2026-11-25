@@ -67,7 +67,8 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   const settingsUrl = `/trips/${createdTripId}/settings`;
   const beforeSettingsCalls = gateway.calls.length;
   await page.goto(settingsUrl);
-  const tripInformation = page.locator('[aria-labelledby="trip-information-heading"]');
+  await page.getByRole('button', { name: 'Chỉnh sửa thông tin', exact: true }).click();
+  const tripInformation = page.getByRole('dialog', { name: 'Chỉnh sửa thông tin', exact: true });
   await expect(tripInformation.getByText('2 / —', { exact: true })).toBeVisible();
   const memberCalls = gateway.calls
     .slice(beforeSettingsCalls)
@@ -80,7 +81,6 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   expect(
     memberCalls.every((call) => new URLSearchParams(call.query).get('include_left') === 'false'),
   ).toBe(true);
-  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
   const publicDescription = page.getByRole('textbox', { name: 'Mô tả công khai' });
   await expect(publicDescription).toHaveCount(0);
   await page.getByRole('button', { name: 'Chỉnh sửa mô tả công khai', exact: true }).click();
@@ -94,10 +94,9 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
   await expect(page).toHaveURL(settingsUrl);
   await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
+  await page.getByRole('button', { name: 'Chỉnh sửa thông tin', exact: true }).click();
   await expect(
-    page
-      .locator('[aria-labelledby="trip-information-heading"]')
-      .getByText('Giới thiệu công khai từ Gateway.', { exact: true }),
+    tripInformation.getByText('Giới thiệu công khai từ Gateway.', { exact: true }),
   ).toBeVisible();
 
   let patches = gateway.calls.filter(
@@ -111,7 +110,6 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   });
   expect(patches[0]!.idempotencyKey).toMatch(/.+/);
 
-  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
   await expect(publicDescription).toHaveCount(0);
   await page.getByRole('button', { name: 'Chỉnh sửa mô tả công khai', exact: true }).click();
   await expect(publicDescription).toBeEditable();
