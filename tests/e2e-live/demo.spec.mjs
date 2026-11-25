@@ -32,15 +32,16 @@ test('REAL: registration, Mailpit verification, recovery, profile, refresh and l
   await page.getByRole('button', { name: 'Xác minh email', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
   await login(page, account);
-  await page.getByLabel('Tên hiển thị').fill('Live Updated Profile');
-  await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
+  await page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }).click();
+  await page.getByLabel('Tên hiển thị', { exact: true }).fill('Live Updated Profile');
+  await page.getByRole('button', { name: 'Lưu tên hiển thị', exact: true }).click();
   await expect(page.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
   const require = createRequire(new URL('../../../Wolfari-backend/apps/identity-service/package.json', import.meta.url));
   const avatar = await require('sharp')({ create: { width: 16, height: 16, channels: 3, background: '#23614d' } }).png().toBuffer();
   await page.getByLabel('Chọn ảnh đại diện').setInputFiles({ name: 'live.png', mimeType: 'image/png', buffer: avatar });
   await expect(page.getByText('Đã cập nhật ảnh đại diện.')).toBeVisible();
   await page.reload();
-  await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Live Updated Profile');
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Live Updated Profile');
   await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto('/profile');
@@ -59,7 +60,7 @@ test('REAL: registration, Mailpit verification, recovery, profile, refresh and l
   await expect(page).toHaveURL(/\/login$/);
   await login(page, account);
   const otherSession = await apiLogin(account);
-  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await page.getByRole('navigation', { name: 'Điều hướng tài khoản' }).getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(2);
   const sessions = (await api('/api/v1/me/sessions', 'GET', undefined, otherSession)).data;
   expect(sessions.items[0].id).toBe(otherSession.sessionId);
@@ -138,7 +139,7 @@ test('REAL: Trip create/settings and Activity CRUD/order/completion persist on r
   const path = new URL(page.url()).pathname;
   await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
   await page.goto(path + '/settings');
-  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
   await page.getByRole('textbox', { name: 'Mô tả công khai' }).fill('Live backend description');
   await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
   await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();

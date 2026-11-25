@@ -610,8 +610,7 @@
 }
 
 .googleMapActive .markers,
-.googleMapActive .mapLabels,
-.googleMapActive .mapSuggestion {
+.googleMapActive .mapLabels {
   display: none;
 }
 
@@ -825,28 +824,6 @@
 
 .mobilePlaceCard {
   display: none;
-}
-
-.mapSuggestion {
-  position: absolute;
-  right: 20px;
-  bottom: 66px;
-  z-index: 3;
-  width: 268px;
-  min-height: 48px;
-  margin: 0;
-  padding: 12px;
-  border-radius: var(--radius-10);
-  background: var(--color-status-warning-surface);
-  color: var(--color-ink);
-  font-size: var(--font-size-small);
-  line-height: 17px;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .mapSuggestion {
-    font-size: 11px;
-  }
 }
 
 .unavailableViewport {
@@ -1119,8 +1096,7 @@
   .marker5,
   .marker6,
   .legend,
-  .desktopPlaceCard,
-  .mapSuggestion {
+  .desktopPlaceCard {
     display: none;
   }
 
@@ -1777,14 +1753,6 @@
   color: #463a8c;
   cursor: help;
 }
-.groupFilters {
-  margin-top: -2px;
-}
-.groupFilters button[aria-pressed='true'] {
-  border-color: var(--map-teal);
-  background: var(--color-action-primary);
-  color: var(--color-white);
-}
 .detailProvenance {
   display: grid;
   gap: 6px;
@@ -1816,11 +1784,6 @@
   .placeMeta .sourceBadge,
   .placeMeta .unverifiedBadge {
     font-size: 12px;
-  }
-  .groupFilters {
-    display: flex;
-    order: 2;
-    margin-top: 0;
   }
 }
 /* POI-OVERTURE W13: data credit under the place list. */
@@ -1944,7 +1907,7 @@
   /* Search panel (938:9536) */
   .placePanel {
     gap: 14px;
-    padding: 20px 18px;
+    padding: 20px 18px 18px;
     border-radius: var(--v2-radius-tile);
   }
 
@@ -2056,10 +2019,6 @@
     background: var(--v2-gradient) !important;
     color: var(--v2-ink) !important;
     box-shadow: var(--v2-shadow-active), var(--v2-inset-badge);
-  }
-
-  .groupFilters {
-    margin-top: -6px;
   }
 
   /* Place rows (938:9555 …, active = W07.1 938:9743) */
@@ -2270,6 +2229,9 @@
   }
 
   .empty {
+    order: 1;
+    flex: 1 1 auto;
+    align-content: center;
     border: 2px dashed var(--v2-dashed-line);
     border-radius: var(--v2-radius-row);
     background: var(--v2-dashed-surface);
@@ -2513,24 +2475,6 @@
   .desktopPlaceCard p {
     margin: 0;
     font-weight: 600;
-  }
-
-  .mapSuggestion {
-    top: 110px;
-    right: auto;
-    bottom: auto;
-    left: 16px;
-    width: auto;
-    max-width: calc(100% - 32px);
-    min-height: 0;
-    padding: 9px 16px;
-    border-radius: var(--v2-radius-pill);
-    background: linear-gradient(to right, var(--v2-butter), var(--v2-peach));
-    color: var(--v2-ink);
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 18px;
-    box-shadow: var(--v2-shadow-card);
   }
 
   /* Tile-failure notice (GeoapifyMap inline style) sits under the floating pills instead. */

@@ -22,7 +22,7 @@ test('Settings updates keep cached Trip, Plan and shell projections consistent a
   await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   const navigation = page.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
   await navigation.locator(`a[href="${trip}/settings"]`).click();
-  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
   await page.getByLabel('Tên chuyến đi', { exact: true }).fill('Updated shared trip');
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
   await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();

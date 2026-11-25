@@ -63,7 +63,12 @@ function mount(overrides: Partial<IdentityRepository> = {}) {
   const rendered = render(
     <QueryClientProvider client={client}>
       <SessionManagerProvider
-        manager={{ status: () => 'authenticated', subscribe: () => () => undefined, clear }}
+        manager={{
+          status: () => 'authenticated',
+          subscribe: () => () => undefined,
+          clear,
+          logout: vi.fn(async () => undefined),
+        }}
       >
         <IdentityRepositoryProvider repository={repository}>
           <RouterProvider router={router} />
@@ -72,6 +77,15 @@ function mount(overrides: Partial<IdentityRepository> = {}) {
     </QueryClientProvider>,
   );
   return { ...rendered, client, router, repository, clear };
+}
+async function openAccountSection(name: string) {
+  const navigation = await screen.findByRole('navigation', { name: 'Điều hướng tài khoản' });
+  await userEvent.click(within(navigation).getByRole('button', { name }));
+}
+async function editDisplayName() {
+  const name = await screen.findByLabelText('Tên hiển thị');
+  await userEvent.click(screen.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }));
+  return name;
 }
 beforeEach(() =>
   vi.stubGlobal(
@@ -88,6 +102,49 @@ afterEach(() => {
 });
 
 describe('Profile Gateway interactions', () => {
+  it('starts readonly, keeps drafts across account sections and cancels name editing without a write', async () => {
+    const updateProfile = vi.fn();
+    const { repository } = mount({ updateProfile });
+    const name = await screen.findByLabelText('Tên hiển thị');
+    expect(name).toHaveAttribute('readonly');
+    expect(screen.getByLabelText('Email')).toHaveAttribute('readonly');
+    expect(screen.getByRole('button', { name: 'Chỉnh sửa email' })).toBeDisabled();
+    expect(
+      within(screen.getByRole('navigation', { name: 'Điều hướng tài khoản' })).queryByRole(
+        'button',
+        { name: 'Thiết bị' },
+      ),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Lưu tên hiển thị' })).not.toBeInTheDocument();
+    expect(repository.listSessions).not.toHaveBeenCalled();
+
+    expect(await editDisplayName()).toBe(name);
+    await waitFor(() => expect(name).toHaveFocus());
+    await userEvent.clear(name);
+    await userEvent.type(name, 'Bản nháp qua các mục');
+    await openAccountSection('Bảo mật và đăng nhập');
+    const password = screen.getByLabelText('Mật khẩu hiện tại');
+    await userEvent.type(password, 'Keep password draft');
+    await waitFor(() => expect(repository.listSessions).toHaveBeenCalledOnce());
+    expect(screen.queryByRole('form', { name: 'Thông tin cá nhân' })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Phiên đăng nhập' })).toBeInTheDocument();
+    for (const section of ['Thông báo', 'Thông tin cá nhân']) {
+      await openAccountSection(section);
+      expect(screen.getByRole('button', { name: 'Đăng xuất' })).toBeInTheDocument();
+    }
+    expect(screen.getByLabelText('Tên hiển thị')).toBe(name);
+    expect(name).toHaveValue('Bản nháp qua các mục');
+    expect(name).not.toHaveAttribute('readonly');
+    await userEvent.click(screen.getByRole('button', { name: 'Hủy chỉnh sửa tên hiển thị' }));
+    expect(name).toHaveValue(profile.fullName);
+    expect(name).toHaveAttribute('readonly');
+    expect(screen.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' })).toBeEnabled();
+    await openAccountSection('Bảo mật và đăng nhập');
+    expect(screen.getByLabelText('Mật khẩu hiện tại')).toBe(password);
+    expect(password).toHaveValue('Keep password draft');
+    expect(updateProfile).not.toHaveBeenCalled();
+  });
+
   it.each(['network', 'unavailable'])(
     'locks uncertain password changes after %s and offers reauthentication',
     async (mode) => {
@@ -96,6 +153,7 @@ describe('Profile Gateway interactions', () => {
           ? vi.fn().mockRejectedValue(new Error('lost reply'))
           : vi.fn().mockResolvedValue(failure());
       const { clear, router } = mount({ changePassword });
+      await openAccountSection('Bảo mật và đăng nhập');
       const form = within(await screen.findByRole('form', { name: 'Đổi mật khẩu' }));
       await userEvent.type(form.getByLabelText('Mật khẩu hiện tại'), 'Current1');
       await userEvent.type(form.getByLabelText('Mật khẩu mới', { exact: true }), 'Change12');
@@ -119,13 +177,13 @@ describe('Profile Gateway interactions', () => {
     const updateProfile = vi.fn(() => pending.promise);
     const { client } = mount({ updateProfile, uploadAvatar: vi.fn() });
     client.setQueryData(['shell', null, 'success'], { old: true });
-    const name = await screen.findByLabelText('Tên hiển thị');
+    const name = await editDisplayName();
     await userEvent.clear(name);
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     expect(name).toHaveFocus();
     expect(updateProfile).not.toHaveBeenCalled();
     await userEvent.type(name, 'New name');
-    await userEvent.dblClick(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    await userEvent.dblClick(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     expect(updateProfile).toHaveBeenCalledTimes(1);
     expect(updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({ intent: { fullName: 'New name', expectedVersion: 4 } }),
@@ -140,6 +198,9 @@ describe('Profile Gateway interactions', () => {
       }),
     );
     await screen.findByText('Đã lưu thông tin cá nhân.');
+    expect(name).toHaveAttribute('readonly');
+    expect(screen.queryByRole('button', { name: 'Lưu tên hiển thị' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' })).toBeEnabled();
     expect(client.getQueryData(['identity', 'self', 'success'])).toMatchObject({
       data: { fullName: 'New name', version: 5 },
     });
@@ -149,10 +210,10 @@ describe('Profile Gateway interactions', () => {
   it('rejects a name over the Identity service UTF-16 limit before PATCH', async () => {
     const updateProfile = vi.fn();
     mount({ updateProfile });
-    const name = await screen.findByLabelText('Tên hiển thị');
+    const name = await editDisplayName();
     await userEvent.clear(name);
     await userEvent.type(name, '😀'.repeat(76));
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     expect(name).toHaveFocus();
     expect(screen.getByText('Tên hiển thị cần từ 1 đến 150 ký tự.')).toBeInTheDocument();
     expect(updateProfile).not.toHaveBeenCalled();
@@ -172,15 +233,16 @@ describe('Profile Gateway interactions', () => {
         correlationId: 'saved',
       });
     mount({ readSelf, updateProfile });
-    const name = await screen.findByLabelText('Tên hiển thị');
+    const name = await editDisplayName();
     await userEvent.clear(name);
     await userEvent.type(name, 'My edit');
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     await screen.findByText(/Hồ sơ đã thay đổi ở nơi khác/);
     await waitFor(() => expect(readSelf).toHaveBeenCalledTimes(2));
     expect(name).toHaveValue('My edit');
+    expect(name).not.toHaveAttribute('readonly');
     expect(updateProfile).toHaveBeenCalledTimes(1);
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     expect(updateProfile.mock.calls[1]?.[0].intent.expectedVersion).toBe(8);
   });
 
@@ -195,13 +257,14 @@ describe('Profile Gateway interactions', () => {
           ),
       );
     const { unmount } = mount({ updateProfile });
-    const name = await screen.findByLabelText('Tên hiển thị');
+    const name = await editDisplayName();
     await userEvent.clear(name);
     await userEvent.type(name, 'Keep draft');
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     await screen.findByText(/Chưa thể xác nhận lưu thay đổi/);
     expect(name).toHaveValue('Keep draft');
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
+    expect(name).not.toHaveAttribute('readonly');
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
     const signal = updateProfile.mock.calls[1]?.[0].signal;
     unmount();
     expect(signal?.aborted).toBe(true);
@@ -306,7 +369,7 @@ describe('Profile Gateway interactions', () => {
     const revokeSession = vi.fn(() => revokePending.promise);
     const { client } = mount({ listSessions, revokeSession });
     await screen.findByLabelText('Tên hiển thị');
-    await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
+    await openAccountSection('Bảo mật và đăng nhập');
     await screen.findByText('Phiên đăng nhập 1');
     await userEvent.click(screen.getByRole('button', { name: 'Tải thêm phiên' }));
     await screen.findByText('Phiên đăng nhập 2');
@@ -334,7 +397,7 @@ describe('Profile Gateway interactions', () => {
     });
     mount({ listSessions });
     await screen.findByLabelText('Tên hiển thị');
-    await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
+    await openAccountSection('Bảo mật và đăng nhập');
     await userEvent.click(await screen.findByRole('button', { name: 'Tải thêm phiên' }));
     await screen.findByText('Chưa thể tải nội dung');
     expect(screen.getByText('Phiên đăng nhập 1')).toBeInTheDocument();
@@ -346,7 +409,7 @@ describe('Profile Gateway interactions', () => {
     const revokeSession = vi.fn().mockRejectedValue(new Error('offline'));
     mount({ listSessions: vi.fn(async () => page(['s1'])), revokeSession });
     await screen.findByLabelText('Tên hiển thị');
-    await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
+    await openAccountSection('Bảo mật và đăng nhập');
     await userEvent.click(await screen.findByRole('button', { name: 'Thu hồi phiên' }));
     await screen.findByText(/Chưa thể xác nhận thu hồi phiên/);
     expect(revokeSession).toHaveBeenCalledTimes(1);
@@ -360,6 +423,7 @@ describe('Profile Gateway interactions', () => {
       .mockResolvedValue({ status: 'changed', correlationId: 'changed' });
     const { client, clear, router } = mount({ changePassword });
     await screen.findByLabelText('Tên hiển thị');
+    await openAccountSection('Bảo mật và đăng nhập');
     const form = within(screen.getByRole('form', { name: 'Đổi mật khẩu' }));
     await userEvent.click(form.getByRole('button', { name: 'Đổi mật khẩu' }));
     expect(form.getByLabelText('Mật khẩu hiện tại')).toHaveFocus();

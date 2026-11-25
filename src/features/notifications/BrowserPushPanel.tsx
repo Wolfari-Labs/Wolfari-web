@@ -2,7 +2,6 @@ import { useEffect, useSyncExternalStore } from 'react';
 import type { BrowserPush } from './browser-push';
 import { Alert } from '../../shared/components/Alert';
 import { Button } from '../../shared/components/Button';
-import { Globe } from 'lucide-react';
 import styles from './Notifications.module.css';
 const labels = {
   'missing-config': 'Thông báo trên trình duyệt chưa được thiết lập cho môi trường này.',
@@ -29,11 +28,7 @@ export function BrowserPushPanel({ service, actor }: { service: BrowserPush; act
   const unavailable = ['missing-config', 'unsupported', 'denied'].includes(state.state);
   return (
     <fieldset className={styles.device}>
-      <legend className={styles.deviceTitle}>Thông báo trên trình duyệt này</legend>
-      <span className={styles.deviceBadge} aria-hidden="true">
-        <Globe size={22} strokeWidth={2.2} />
-      </span>
-      <span className={styles.deviceTag}>Thiết bị này</span>
+      <legend>Thông báo trên trình duyệt này</legend>
       <Alert tone={state.state === 'error' ? 'warning' : 'info'} live>
         {state.busy ? 'Đang cập nhật đăng ký…' : state.message || labels[state.state]}
       </Alert>

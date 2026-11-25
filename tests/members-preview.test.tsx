@@ -201,6 +201,14 @@ it('renders nullable identity and keeps invitation draft through errors without 
   expect(
     within(region).queryByText(/Trang Nguyễn|Hà Nguyễn|Quyên Trần|Tân Lê/),
   ).not.toBeInTheDocument();
+  const self = within(region)
+    .getByText(/^User aaaaaaaa/)
+    .closest('li')!;
+  expect(self.querySelector('[data-role="OWNER"]')).toHaveTextContent('Owner');
+  expect(within(self).getByText('Được sửa Plan', { exact: true })).toBeInTheDocument();
+  expect(self.querySelector('[data-region="member-actions"]')).toHaveTextContent('Bạn');
+  expect(within(region).queryByText('Fund Holder', { exact: true })).not.toBeInTheDocument();
+  expect(within(region).queryByRole('button', { name: /^Chuyển Owner/ })).not.toBeInTheDocument();
   expect(listInvitations).not.toHaveBeenCalled();
   await userEvent.click(screen.getByRole('button', { name: 'Lời mời' }));
   await screen.findByText('linh@example.com');
@@ -299,14 +307,14 @@ it('loads opaque member pages, deduplicates IDs, and resets pagination when show
   expect(listMembers).toHaveBeenCalledWith(
     expect.objectContaining({ limit: 100, includeLeft: false }),
   );
-  await userEvent.click(within(region).getByRole('button', { name: 'Tải thêm thành viên' }));
+  await userEvent.click(await within(region).findByRole('button', { name: 'Tải thêm thành viên' }));
   await within(region).findByText('2 thành viên đã tải');
   expect(listMembers.mock.calls[1]?.[0]).toMatchObject({ cursor: 'next/+==', limit: 100 });
   expect(within(region).getAllByText(/^User aaaaaaaa/)).toHaveLength(1);
   await userEvent.click(within(region).getByLabelText('Hiển thị người đã rời'));
   await within(region).findByText('3 thành viên đã tải');
   expect(listMembers.mock.calls.at(-1)?.[0]).toMatchObject({ includeLeft: true, limit: 100 });
-  expect(within(region).getByText(/Đã rời/)).toBeInTheDocument();
+  expect(within(region).getByText('Đã rời', { exact: true })).toBeInTheDocument();
 });
 
 it('retains loaded members after a next-page error and retries the same opaque cursor', async () => {
@@ -334,7 +342,7 @@ it('retains loaded members after a next-page error and retries the same opaque c
   });
   mount({ membership: { listMembers } });
   const region = await screen.findByRole('region', { name: 'Danh sách thành viên' });
-  await userEvent.click(within(region).getByRole('button', { name: 'Tải thêm thành viên' }));
+  await userEvent.click(await within(region).findByRole('button', { name: 'Tải thêm thành viên' }));
   expect(await within(region).findByText(/Chưa tải được trang tiếp theo/)).toBeInTheDocument();
   expect(within(region).getByText(/^User aaaaaaaa/)).toBeInTheDocument();
   expect(within(region).queryByText(memberLabel, { exact: true })).not.toBeInTheDocument();

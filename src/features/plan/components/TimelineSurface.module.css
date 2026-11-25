@@ -1,6 +1,7 @@
 /* Web v2 W06 timeline card (Figma 933:7307 / 938:8431): white 28px card, 24px day title,
    numbered D/Activity rows without the old vertical rail. Shared by Preview and Gateway. */
 .panel {
+  --timeline-panel-inset: 24px;
   container: itinerary / inline-size;
   display: flex;
   flex-direction: column;
@@ -13,6 +14,9 @@
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
   color: var(--v2-ink);
   font-family: var(--v2-font);
+}
+.panel:has(> .list[data-empty='true']) {
+  padding-bottom: var(--timeline-panel-inset);
 }
 .toolbar {
   display: flex;
@@ -40,6 +44,17 @@
   list-style: none;
   scrollbar-width: thin;
   scrollbar-color: #c9d6f2 transparent;
+}
+.list[data-empty='true'] {
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0 0;
+}
+.list[data-empty='true'] > li {
+  display: grid;
+  flex: 1 1 auto;
+  align-content: center;
+  justify-items: center;
 }
 .row {
   --timeline-row-gap: 14px;
@@ -161,6 +176,7 @@
 }
 @media (max-width: 768px) {
   .panel {
+    --timeline-panel-inset: 14px;
     height: auto;
     min-height: 240px;
     padding: 16px 14px;

@@ -30,21 +30,59 @@ for (const size of [
           Math.abs(hero[key as keyof typeof hero] - expected),
           `Figma W/Trip header 937:7647 ${key}`,
         ).toBeLessThanOrEqual(4);
+      const heading = region.locator('[data-region="member-roster-heading"]');
+      await expect(heading.locator(':scope > span')).toHaveText([
+        'Thành viên',
+        'Vai trò / Trách nhiệm',
+        'Thao tác',
+      ]);
+      const self = region
+        .getByRole('list', { name: 'Danh sách thành viên', exact: true })
+        .locator(':scope > li')
+        .filter({ hasText: 'User aaaaaaaa…aaaa' });
+      await expect(self.locator('[data-region="member-actions"]')).toHaveText('Bạn');
+      await expect(self.locator('[data-role="OWNER"]')).toContainText('Owner');
+      await expect(self.getByText('Được sửa Plan', { exact: true })).toBeVisible();
+      await expect(region.getByText('Fund Holder', { exact: true })).toHaveCount(0);
     }
-    const identity = region.locator('details').first().locator('summary');
-    await identity.click();
     await expect(
       region.getByText('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { exact: true }),
-    ).toBeVisible();
-    await identity.click();
+    ).toHaveCount(0);
+    await expect(region.getByText('Chi tiết hỗ trợ', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('Vai trò và trách nhiệm', { exact: true })).toHaveCount(0);
+    const roleHelp = page.getByRole('button', { name: 'Gợi ý vai trò thành viên' });
+    await roleHelp.click();
+    const roleDialog = page.getByRole('dialog', { name: 'Vai trò trong chuyến đi' });
+    await expect(roleDialog).toBeVisible();
+    for (const name of ['Chủ chuyến', 'Thành viên', 'Người giữ quỹ'])
+      await expect(roleDialog.getByText(name, { exact: true })).toBeVisible();
+    await page.screenshot({ path: info.outputPath('member-roles.png'), fullPage: true });
+    await page.keyboard.press('Escape');
+    await expect(roleDialog).toHaveCount(0);
+    await expect(roleHelp).toBeFocused();
+    await roleHelp.click();
+    await page.getByRole('button', { name: 'Đóng gợi ý vai trò' }).click();
+    await expect(roleDialog).toHaveCount(0);
     await expect(page.getByText('Rời chuyến đi', { exact: true })).toHaveCount(0);
-    await page.getByText('Vai trò và trách nhiệm', { exact: true }).scrollIntoViewIfNeeded();
+    if (size.width > 768 && size.height <= 520) {
+      const list = region.locator('[data-region="member-roster-list"]');
+      await expect
+        .poll(() => list.evaluate((node) => node.clientHeight))
+        .toBeGreaterThanOrEqual(68);
+      await expect(list.locator(':scope > li').first()).toBeInViewport({ ratio: 1 });
+    }
+    const lastMember = region
+      .getByRole('list', { name: 'Danh sách thành viên', exact: true })
+      .locator(':scope > li')
+      .last();
+    await lastMember.scrollIntoViewIfNeeded();
+    await expect(lastMember).toBeInViewport();
     if (size.width > 768) {
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
         size.height,
       );
-    } else expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+    }
     await page.locator('main').evaluate((e) => (e.scrollTop = 0));
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: info.outputPath('members.png'), fullPage: true });

@@ -130,6 +130,12 @@
   font-size: 14px;
   font-weight: 800;
 }
+.preferences .groups > summary::after {
+  transform: rotate(225deg);
+}
+.preferences .groups[open] > summary::after {
+  transform: rotate(45deg);
+}
 .groups fieldset {
   border: 1.5px solid #e3e9f7;
   border-radius: var(--v2-radius-row);
@@ -153,68 +159,11 @@
 .savePreferences {
   justify-self: start;
 }
-.sectionLabel {
-  margin: 4px 0 0;
-  color: var(--v2-sub);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 18px;
-}
-/* This browser's push registration as a W18 device card (Figma 944:16227). */
+/* Browser registration uses the same compact fieldset as notification groups. */
 .device {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px 12px;
-  min-width: 0;
-  margin: 0;
-  padding: 12px 14px;
-  border: 1.5px solid #e3e9f7;
-  border-radius: var(--v2-radius-thumb);
-  background: var(--v2-white);
-}
-.device > * {
-  grid-column: 1 / -1;
-}
-.device > .deviceBadge {
-  grid-column: 1;
-  grid-row: 1;
-}
-.device > .deviceTitle {
-  float: left;
-  grid-column: 2;
-  grid-row: 1;
-  padding: 0;
-  color: var(--v2-ink);
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 20px;
-}
-.device > .deviceTag {
-  grid-column: 3;
-  grid-row: 1;
-}
-.deviceBadge {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  color: var(--v2-white);
-  background: var(--v2-gradient-green);
-  box-shadow:
-    0 6px 6px rgb(45 190 122 / 32%),
-    var(--v2-inset-badge);
-}
-.deviceTag {
-  padding: 5px 10px;
-  border-radius: var(--v2-radius-pill);
-  background: var(--v2-mint);
-  color: var(--v2-success-text);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 16px;
-  white-space: nowrap;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
 }
 .deviceNote {
   margin: 0;
@@ -453,13 +402,5 @@
 @media (max-width: 480px) {
   .channelBody small {
     padding-right: 0;
-  }
-  .device {
-    grid-template-columns: 44px minmax(0, 1fr);
-  }
-  .device > .deviceTag {
-    grid-column: 2;
-    grid-row: 2;
-    justify-self: start;
   }
 }

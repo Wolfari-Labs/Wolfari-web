@@ -503,7 +503,7 @@
 }
 .transactions {
   margin-top: 20px;
-  padding: 18px 22px 20px;
+  padding: 18px 22px 22px;
 }
 .transactions h2 {
   margin: 0 0 14px;
@@ -573,6 +573,7 @@
 .toolbar {
   gap: 12px;
   flex: 0 0 auto;
+  margin-bottom: 20px;
 }
 .toolbar > .selectLabel:first-of-type {
   margin-left: auto;
@@ -618,10 +619,20 @@
   height: 20px;
 }
 .empty {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 16px;
   border-radius: var(--v2-radius-row);
   background: var(--v2-row);
   color: #56637b;
   font-weight: 700;
+}
+.tableWrap:has(> .empty) {
+  display: flex;
+  flex-direction: column;
+}
+.tableWrap:has(> .empty) > .loadMore {
+  flex: none;
 }
 .in {
   color: var(--v2-success-text);
@@ -695,7 +706,7 @@
     height: 40px;
   }
   .transactions {
-    padding: 14px 12px;
+    padding: 14px 12px 12px;
   }
   .transactions tbody tr {
     margin-bottom: 6px;

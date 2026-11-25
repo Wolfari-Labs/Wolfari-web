@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Link, useParams, useOutletContext } from 'react-router';
+import { useParams, useOutletContext } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
@@ -26,10 +26,11 @@ import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
 import { Icon } from '../../shared/components/Icon';
-import userIcon from '../../shared/assets/figma/2e748.svg';
 import styles from './MembersPage.module.css';
 import { InvitationManagement } from './InvitationManagement';
 import { GatewayMembersPage } from './GatewayMembersPage';
+import { MemberRoleHelp } from './MemberRoleHelp';
+import { MemberRoster } from './MemberRoster';
 type Snapshot<T> = ReadResult<T> | { status: 'loading' };
 function ReadPanel<T>({
   result,
@@ -63,9 +64,6 @@ function date(value: string, timezone: string) {
   return new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium', timeZone: timezone }).format(
     new Date(value),
   );
-}
-function shortId(value: string) {
-  return value.length > 16 ? `${value.slice(0, 8)}…${value.slice(-4)}` : value;
 }
 type PolicyFeedback =
   | { readonly status: 'saved' }
@@ -290,7 +288,10 @@ export function MembersView({
         <div className={styles.workspace}>
           <section className={styles.memberPanel} aria-label="Danh sách thành viên">
             <div className={styles.panelHeading}>
-              <h2>Thành viên chuyến đi</h2>
+              <div className={styles.panelTitle}>
+                <h2>Thành viên chuyến đi</h2>
+                <MemberRoleHelp />
+              </div>
               {owner && (
                 <Button
                   className={styles.inviteButton}
@@ -317,63 +318,16 @@ export function MembersView({
                 return items.length || data.nextCursor ? (
                   <>
                     <p className={styles.count}>{items.length} thành viên đã tải</p>
-                    <div className={styles.rosterHead} aria-hidden="true">
-                      <span>Thành viên</span>
-                      <span>Vai trò</span>
-                    </div>
-                    <ul className={styles.members} tabIndex={0} aria-label="Danh sách thành viên">
-                      {items.map((member, index) => (
-                        <li key={member.id} data-departed={member.leftAt !== null || undefined}>
-                          <span className={styles.avatar} data-tone={index % 5}>
-                            {member.presentation.avatar ? (
-                              <img
-                                className={styles.avatarPhoto}
-                                src={member.presentation.avatar.src}
-                                alt={member.presentation.avatar.alt}
-                              />
-                            ) : member.presentation.displayName ? (
-                              <span aria-hidden="true">
-                                {member.presentation.displayName
-                                  .trim()
-                                  .charAt(0)
-                                  .toLocaleUpperCase('vi')}
-                              </span>
-                            ) : (
-                              <img src={userIcon} alt="" />
-                            )}
-                          </span>
-                          <div className={styles.identity}>
-                            <details>
-                              <summary>
-                                <strong>
-                                  {member.presentation.displayName ??
-                                    `User ${shortId(member.userId)}`}
-                                </strong>
-                                {member.id === trip.currentMembership.id && (
-                                  <span className={styles.self}>Bạn</span>
-                                )}
-                              </summary>
-                              <dl>
-                                <dt>User ID</dt>
-                                <dd>{member.userId}</dd>
-                                <dt>Membership ID</dt>
-                                <dd>{member.id}</dd>
-                              </dl>
-                            </details>
-                            <small>User ID {shortId(member.userId)}</small>
-                            <small>Tham gia {date(member.joinedAt, trip.timezone)}</small>
-                            {member.leftAt && (
-                              <small>Đã rời {date(member.leftAt, trip.timezone)}</small>
-                            )}
-                          </div>
-                          <span
-                            className={`${styles.role} ${member.role === 'OWNER' ? styles.owner : ''}`}
-                          >
-                            {member.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                    <MemberRoster
+                      members={items}
+                      currentUserId={trip.currentMembership.userId}
+                      timezone={trip.timezone}
+                      canEditPlan={(member) =>
+                        trip.archivedAt === null &&
+                        trip.lifecycle !== 'ARCHIVED' &&
+                        (member.role === 'OWNER' || trip.planEditPolicy === 'ALL_MEMBERS')
+                      }
+                    />
                     {nextMembersPageError && (
                       <Alert tone="warning" live>
                         Chưa tải được trang tiếp theo. Các thành viên đã tải vẫn được giữ.
@@ -398,30 +352,6 @@ export function MembersView({
                 );
               }}
             </ReadPanel>
-            <details className={styles.roleHelp}>
-              <summary>
-                <Icon name="crown" size={16} />
-                Vai trò và trách nhiệm
-              </summary>
-              <dl>
-                <dt>Chủ chuyến</dt>
-                <dd>Quản lý thành viên, lời mời và quyền sửa lịch trình.</dd>
-                <dt>Người giữ quỹ</dt>
-                <dd>
-                  Trách nhiệm riêng, không đi kèm vai trò trong chuyến đi.{' '}
-                  <Link to={paths.fund(trip.id)}>Xem tại Quỹ nhóm</Link>
-                </dd>
-                <dt>Quyền sửa lịch trình</dt>
-                <dd>
-                  {trip.planEditPolicy === 'OWNER_ONLY'
-                    ? 'Chỉ chủ chuyến được sửa lịch trình.'
-                    : trip.planEditPolicy === 'SELECTED_MEMBERS'
-                      ? 'Chủ chuyến và thành viên được phân công có thể sửa lịch trình.'
-                      : 'Mọi thành viên được sửa lịch trình.'}{' '}
-                  Quyền này không cấp quyền quản lý thành viên hay quỹ.
-                </dd>
-              </dl>
-            </details>
           </section>
         </div>
       ) : !owner ? (

@@ -255,10 +255,10 @@ test('HTTP mock (c): BBOX_TOO_LARGE and zoom < 11 ask to zoom in without loading
   await expect(notice).toHaveText('Phóng to để xem địa điểm');
 });
 
-test('HTTP mock (b): group chip sends category, keeps the keyword and survives reload', async ({
+test('HTTP mock (b): status filters remain and old group URLs do not filter places', async ({
   page,
   gateway,
-}, info) => {
+}) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   if (mapRun) await prepareMap(page);
   await mockPlan(page, gateway);
@@ -271,11 +271,16 @@ test('HTTP mock (b): group chip sends category, keeps the keyword and survives r
       return ok(route, frameResults(params.get('bbox')!));
     }
     keyword.push(params);
-    // No utility in this area: the group empty state is shown.
-    return ok(route, params.get('category') === 'services' ? [] : [golden]);
+    return ok(route, [golden]);
   });
   await login(page);
-  await page.goto(`/trips/${tripId}/map`);
+  await page.goto(`/trips/${tripId}/map?group=services`);
+  await expect(
+    page.locator('[data-region="place-panel"]').getByRole('button', {
+      name: 'Thêm địa điểm',
+      exact: true,
+    }),
+  ).toHaveCount(0);
   const search = page.getByRole('searchbox', { name: 'Tìm địa điểm' });
   await search.fill('cho');
   await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
@@ -285,44 +290,22 @@ test('HTTP mock (b): group chip sends category, keeps the keyword and survives r
   expect(keyword[0]!.has('category')).toBe(false);
   expect(keyword[0]!.get('geocode')).toBe('false');
 
-  const chips = page.getByRole('group', { name: 'Nhóm địa điểm' });
-  await expect(chips.getByRole('button')).toHaveText([
-    'Du lịch',
-    'Ăn uống',
-    'Cà phê',
-    'Lưu trú',
-    'Bar',
-    'Mua sắm',
-    'Giải trí',
-    'Spa',
-    'Giao thông',
-    'Tiện ích',
-    'Mọi nhóm',
+  await expect(page.getByRole('group', { name: 'Nhóm địa điểm' })).toHaveCount(0);
+  const status = page.getByRole('group', { name: 'Lọc địa điểm' });
+  await expect(status.getByRole('button')).toHaveText([
+    'Tất cả',
+    'Đã chọn (0)',
+    'Trong lịch (0)',
+    'Chưa xếp (0)',
   ]);
-  await chips.getByRole('button', { name: 'Tiện ích', exact: true }).click();
-  await expect.poll(() => keyword.at(-1)?.get('category')).toBe('services');
-  expect(keyword.at(-1)!.get('q')).toBe('cho');
-  await expect(search).toHaveValue('cho');
-  await expect(page).toHaveURL(/[?&]group=services(&|$)/);
-  await expect(chips.getByRole('button', { name: 'Tiện ích', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await expect(
-    page.getByText('Không có địa điểm thuộc nhóm này trong khu vực').first(),
-  ).toBeVisible();
-  await page.screenshot({ path: info.outputPath('overture-chips.png'), fullPage: true });
-  await page
-    .locator('[data-region="place-panel"]')
-    .screenshot({ path: info.outputPath('overture-chips-panel.png') });
-
+  await status.getByRole('button', { name: 'Đã chọn (0)' }).click();
+  await expect(page.getByText('Không có địa điểm phù hợp').first()).toBeVisible();
+  await status.getByRole('button', { name: 'Tất cả' }).click();
+  await expect(page.locator('[data-region="place-list"] li')).toContainText('Chợ Hàn');
   await page.reload();
-  await expect(
-    page
-      .getByRole('group', { name: 'Nhóm địa điểm' })
-      .getByRole('button', { name: 'Tiện ích', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true');
-  if (mapRun) await expect.poll(() => explore.at(-1)?.get('category')).toBe('services');
+  await expect(page.getByRole('group', { name: 'Nhóm địa điểm' })).toHaveCount(0);
+  if (mapRun) await expect.poll(() => explore.length).toBeGreaterThan(0);
+  expect(explore.every((params) => !params.has('category'))).toBe(true);
 });
 
 test('HTTP mock (d): an Overture POI shows its provenance and is added to Day 2', async ({

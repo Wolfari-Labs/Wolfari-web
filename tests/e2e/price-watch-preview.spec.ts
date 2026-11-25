@@ -5,6 +5,7 @@ const route = '/trips/11111111-1111-4111-8111-111111111111/price-watch';
 for (const size of [
   { width: 1440, height: 800 },
   { width: 1366, height: 600 },
+  { width: 1366, height: 480 },
   { width: 1024, height: 600 },
   { width: 820, height: 600 },
   { width: 768, height: 600 },
@@ -23,11 +24,56 @@ for (const size of [
     await expect(page.getByText(/Giá mô phỏng, không phải giá thị trường/)).toBeVisible();
     // The source is stated once in plain words; provider codes are not shown.
     await expect(page.getByText(/MOCK_FLIGHT/)).toHaveCount(0);
+    const listHeading = page.getByRole('heading', { name: 'Danh sách theo dõi giá vé' });
+    const list = page.locator('[data-region="price-watch-list-scroll"]');
+    const chart = page.getByRole('region', { name: 'Lịch sử giá vé', exact: true });
+    await expect(listHeading).toBeVisible();
+    await expect(list).toHaveAttribute('tabindex', '0');
+    await expect(chart).toBeVisible();
+    const hideChart = page.getByRole('button', { name: 'Ẩn biểu đồ', exact: true });
+    await expect(hideChart).toHaveAttribute('aria-expanded', 'true');
+    await hideChart.click();
+    await expect(chart).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Hiện biểu đồ', exact: true })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
-    await page.getByRole('button', { name: /Minh Anh/ }).click();
-    await expect(page.getByText('Hà Nội → Đà Nẵng', { exact: true }).last()).toBeVisible();
+    const second = page.getByRole('button', { name: /Minh Anh/ });
+    await second.click();
+    await expect(second).toHaveAttribute('aria-pressed', 'true');
+    await expect(chart).toBeVisible();
+    await expect(chart.getByText('Hà Nội → Đà Nẵng', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Ẩn biểu đồ', exact: true }).click();
+    await page.getByRole('button', { name: 'Hiện biểu đồ', exact: true }).click();
+    await expect(chart).toBeVisible();
+    await expect(second).toHaveAttribute('aria-pressed', 'true');
+    if (size.width >= 1024) {
+      const listBounds = (await page
+        .locator('[data-region="price-watch-list-heading"]')
+        .locator('..')
+        .boundingBox())!;
+      const chartBounds = (await chart.boundingBox())!;
+      expect(chartBounds.x).toBeGreaterThanOrEqual(listBounds.x + listBounds.width - 1);
+      expect(Math.abs(chartBounds.y - listBounds.y)).toBeLessThanOrEqual(1);
+      expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
+        size.height + 1,
+      );
+      await expect(list).toHaveCSS('overflow-y', 'auto');
+      if (size.height === 480) {
+        const headingY = (await listHeading.boundingBox())!.y;
+        await expect
+          .poll(() => list.evaluate((element) => element.scrollHeight > element.clientHeight))
+          .toBe(true);
+        await list.evaluate((element) => {
+          element.scrollTop = element.scrollHeight;
+        });
+        await expect.poll(() => list.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+        expect((await listHeading.boundingBox())!.y).toBeCloseTo(headingY, 1);
+      }
+    }
     // Another member's watch: only stopping is allowed, from the card's overflow menu.
     await expect(page.getByText('Chỉ người tạo mới chỉnh sửa hoặc tạm dừng được')).toBeVisible();
     await page.getByRole('button', { name: 'Thêm thao tác cho Hà Nội đến Đà Nẵng' }).click();

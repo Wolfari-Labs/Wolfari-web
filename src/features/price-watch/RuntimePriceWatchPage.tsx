@@ -66,20 +66,100 @@ const providerErrors = new Map([
   ['PROVIDER_UNAVAILABLE', 'Hiện không thể kết nối với nguồn giá.'],
   ['LEASE_EXHAUSTED', 'Lượt lấy giá đã hết số lần thử.'],
 ]);
-function Observations({
-  watch,
-  repository,
-}: {
-  watch: RuntimeWatch;
-  repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'];
-}) {
-  const query = useInfiniteQuery({
+function useWatchObservations(
+  watch: RuntimeWatch,
+  repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'],
+  enabled = true,
+) {
+  return useInfiniteQuery({
     queryKey: ['price-observations', watch.tripId, watch.id, watch.version],
     initialPageParam: null as string | null,
     queryFn: ({ signal, pageParam }) => repository.observations(watch.id, pageParam, signal),
     getNextPageParam: (page) => page.nextCursor ?? undefined,
+    refetchOnMount: false,
+    retryOnMount: false,
     retry: false,
+    enabled,
   });
+}
+
+function WatchSummary({
+  watch,
+  repository,
+  selected,
+  onSelect,
+}: {
+  watch: RuntimeWatch;
+  repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'];
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  // Share each row's first page with the selected chart and detailed history.
+  const query = useWatchObservations(watch, repository);
+  const rows = query.data?.pages.flatMap((page) => page.items) ?? [];
+  const latest = rows.reduce<(typeof rows)[number] | null>(
+    (best, row) => (!best || Date.parse(row.observedAt) > Date.parse(best.observedAt) ? row : best),
+    null,
+  );
+  const source = query.data?.pages.at(-1)?.source;
+  return (
+    <button
+      type="button"
+      className={priceStyles.watchSelect}
+      aria-label={`Xem biểu đồ ${watch.fields.origin} đến ${watch.fields.destination}`}
+      aria-pressed={selected}
+      onClick={onSelect}
+    >
+      <span className={priceStyles.flightIcon} aria-hidden="true">
+        <Icon name="price" size={22} />
+      </span>
+      <span className={priceStyles.identity}>
+        <strong>
+          {watch.fields.origin} <span aria-label="đến">→</span> {watch.fields.destination}
+        </strong>
+        <span>
+          {isoDate(watch.fields.departure_date)} ·{' '}
+          {watch.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'}
+        </span>
+      </span>
+      <span className={priceStyles.fare}>
+        <small>Giá quan sát đã tải</small>
+        <strong>{latest ? money(latest.price) : '—'}</strong>
+        {!latest && (
+          <span>
+            {query.isFetching
+              ? 'Đang tải giá'
+              : query.isSuccess
+                ? 'Chưa có giá'
+                : query.isError
+                  ? 'Chưa tải được giá'
+                  : 'Chưa tải giá'}
+          </span>
+        )}
+        {latest && source?.stale && <span>Giá cũ</span>}
+      </span>
+      <span className={priceStyles.fare}>
+        <small>Ngưỡng</small>
+        <strong>{money(watch.fields.threshold_price)}</strong>
+      </span>
+      <span className={priceStyles.status} data-status={watch.status}>
+        {watch.status === 'PAUSED' && <Icon name="pause" size={14} />}
+        {labels[watch.status]}
+      </span>
+    </button>
+  );
+}
+
+function Observations({
+  watch,
+  repository,
+  inline = false,
+}: {
+  watch: RuntimeWatch;
+  repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'];
+  inline?: boolean;
+}) {
+  const query = useWatchObservations(watch, repository);
   const rows = [
     ...new Map(query.data?.pages.flatMap((p) => p.items).map((i) => [i.id, i]) ?? []).values(),
   ];
@@ -101,14 +181,16 @@ function Observations({
   return (
     // Focusable so keyboard users can scroll the drawer when the chart makes it overflow.
     <div className={priceStyles.history} role="region" aria-label="Lịch sử giá" tabIndex={0}>
-      <div className={priceStyles.historyHead}>
-        <h3>Lịch sử giá quan sát</h3>
-        <p>
-          {watch.fields.origin} → {watch.fields.destination} ·{' '}
-          {watch.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'} ·{' '}
-          {isoDate(watch.fields.departure_date)}
-        </p>
-      </div>
+      {!inline && (
+        <div className={priceStyles.historyHead}>
+          <h3>Lịch sử giá quan sát</h3>
+          <p>
+            {watch.fields.origin} → {watch.fields.destination} ·{' '}
+            {watch.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'} ·{' '}
+            {isoDate(watch.fields.departure_date)}
+          </p>
+        </div>
+      )}
       {latest ? (
         <p className={priceStyles.latest}>
           <strong>{money(latest.price)}</strong>{' '}
@@ -137,7 +219,7 @@ function Observations({
           </p>
         )
       )}
-      {chartRows.length > 1 && (
+      {chartRows.length > 0 && (
         <PriceHistoryChart
           points={chartRows.map((row) => ({
             id: row.id,
@@ -150,21 +232,23 @@ function Observations({
           description="Giá quan sát đã tải theo thời gian. Đường nét đứt là ngưỡng cảnh báo."
         />
       )}
-      <p className={priceStyles.sourceNote}>
-        <Icon name="info" size={16} />
-        <span>
-          Nguồn: {providerLabel(watch.fields.provider)}. Kiểm tra gần nhất:{' '}
-          {source?.lastCheckedAt
-            ? new Date(source.lastCheckedAt).toLocaleString('vi-VN')
-            : 'Chưa kiểm tra'}
-          . Kiểm tra tiếp theo:{' '}
-          {source?.nextCheckAt
-            ? new Date(source.nextCheckAt).toLocaleString('vi-VN')
-            : 'Chưa lên lịch'}
-          .
-        </span>
-      </p>
-      {cached && (
+      {!inline && (
+        <p className={priceStyles.sourceNote}>
+          <Icon name="info" size={16} />
+          <span>
+            Nguồn: {providerLabel(watch.fields.provider)}. Kiểm tra gần nhất:{' '}
+            {source?.lastCheckedAt
+              ? new Date(source.lastCheckedAt).toLocaleString('vi-VN')
+              : 'Chưa kiểm tra'}
+            . Kiểm tra tiếp theo:{' '}
+            {source?.nextCheckAt
+              ? new Date(source.nextCheckAt).toLocaleString('vi-VN')
+              : 'Chưa lên lịch'}
+            .
+          </span>
+        </p>
+      )}
+      {!inline && cached && (
         <p className={priceStyles.sourceNote}>
           <Icon name="info" size={16} />
           <span>
@@ -207,35 +291,37 @@ function Observations({
           </Button>
         </Alert>
       )}
-      {!!rows.length && (
+      {!inline && !!rows.length && (
         <p className={priceStyles.caveat}>
           Lịch sử chỉ gồm các quan sát đã tải; thời điểm quan sát và nhận dữ liệu ở từng dòng. Thời
           gian hiển thị theo múi giờ thiết bị. Không xác nhận giá hiện tại hoặc giá thấp nhất của
           toàn bộ lịch sử.
         </p>
       )}
-      <ul className={priceStyles.observations}>
-        {rows.map((row) => (
-          <li key={row.id}>
-            <strong>{money(row.price)}</strong>
-            <p>
-              Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn:{' '}
-              {providerLabel(row.provider)}
-            </p>
-            <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
-            {row.provider === 'TRAVELPAYOUTS_CACHE' && (
-              <small>
-                {' '}
-                · Nguồn tìm thấy:{' '}
-                {row.providerFoundAt
-                  ? new Date(row.providerFoundAt).toLocaleString('vi-VN')
-                  : 'Không rõ'}{' '}
-                · Giá tham khảo
-              </small>
-            )}
-          </li>
-        ))}
-      </ul>
+      {!inline && (
+        <ul className={priceStyles.observations}>
+          {rows.map((row) => (
+            <li key={row.id}>
+              <strong>{money(row.price)}</strong>
+              <p>
+                Quan sát: {new Date(row.observedAt).toLocaleString('vi-VN')} · Nguồn:{' '}
+                {providerLabel(row.provider)}
+              </p>
+              <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
+              {row.provider === 'TRAVELPAYOUTS_CACHE' && (
+                <small>
+                  {' '}
+                  · Nguồn tìm thấy:{' '}
+                  {row.providerFoundAt
+                    ? new Date(row.providerFoundAt).toLocaleString('vi-VN')
+                    : 'Không rõ'}{' '}
+                  · Giá tham khảo
+                </small>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
       {query.hasNextPage && !query.isFetchNextPageError && (
         <Button
           variant="outline"
@@ -284,6 +370,8 @@ function WatchWorkspace({
   });
   const [editing, setEditing] = useState<{ item: RuntimeWatch | null } | null>(null),
     [selected, setSelected] = useState<string | null>(null),
+    [chartId, setChartId] = useState<string | null>(null),
+    [chartVisible, setChartVisible] = useState(true),
     [stop, setStop] = useState<RuntimeWatch | null>(null),
     [busy, setBusy] = useState(false),
     [notice, setNotice] = useState(''),
@@ -296,7 +384,8 @@ function WatchWorkspace({
     alive = useRef(true),
     formHeadingRef = useRef<HTMLHeadingElement>(null),
     formTriggerRef = useRef<HTMLElement | null>(null),
-    formContextRef = useRef<HTMLHeadingElement>(null);
+    formContextRef = useRef<HTMLHeadingElement>(null),
+    chartToggleRef = useRef<HTMLButtonElement>(null);
   const journalKey = `wolfari:price-watch:${trip.currentMembership.userId}:${trip.id}`;
   useEffect(() => {
     alive.current = true;
@@ -321,6 +410,7 @@ function WatchWorkspace({
     ...new Map(query.data?.pages.flatMap((p) => p.items).map((i) => [i.id, i]) ?? []).values(),
   ];
   const current = items.find((i) => i.id === selected) ?? null;
+  const chartWatch = items.find((item) => item.id === chartId) ?? items[0] ?? null;
   const writable =
     trip.archivedAt === null &&
     trip.lifecycle !== 'ARCHIVED' &&
@@ -472,8 +562,9 @@ function WatchWorkspace({
       )}
     </>
   );
+  const provider = chartWatch?.fields.provider ?? import.meta.env.VITE_PRICE_WATCH_PROVIDER;
   const providerNote =
-    import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+    provider === 'TRAVELPAYOUTS_CACHE'
       ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo'
       : 'Nguồn: giá mô phỏng';
   return (
@@ -483,24 +574,38 @@ function WatchWorkspace({
     >
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
       <TripHero trip={trip} compact variant="landscape" />
-      <div className={priceStyles.heading}>
-        <div className={priceStyles.headingText}>
-          <h1 ref={formContextRef} tabIndex={-1}>
-            Theo dõi giá vé
-          </h1>
-          <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
-        </div>
-        <Button
-          icon={<Icon name="plus" />}
-          disabled={!writable || busy || blocked}
-          onClick={() => openForm(null)}
-        >
-          Tạo theo dõi
-        </Button>
-      </div>
       {!editing && recovery}
-      <div className={priceStyles.workspace} data-region="price-watch-workspace">
+      <div
+        className={priceStyles.workspace}
+        data-region="price-watch-workspace"
+        data-chart-visible={chartVisible}
+      >
         <section className={priceStyles.workspaceMain} aria-label="Danh sách theo dõi giá">
+          <header className={priceStyles.listHeader} data-region="price-watch-list-heading">
+            <h2 id="price-watch-list-title" ref={formContextRef} tabIndex={-1}>
+              Danh sách theo dõi giá vé
+            </h2>
+            <div className={priceStyles.listTools}>
+              <Button
+                ref={chartToggleRef}
+                variant="outline"
+                size="compact"
+                aria-expanded={chartVisible}
+                aria-controls="price-watch-chart"
+                onClick={() => setChartVisible((visible) => !visible)}
+              >
+                {chartVisible ? 'Ẩn biểu đồ' : 'Hiện biểu đồ'}
+              </Button>
+              <Button
+                icon={<Icon name="plus" size={17} />}
+                size="compact"
+                disabled={!writable || busy || blocked}
+                onClick={() => openForm(null)}
+              >
+                Tạo theo dõi
+              </Button>
+            </div>
+          </header>
           <div className={priceStyles.toolbar}>
             <p className={priceStyles.sourceNote}>
               <Icon name="info" size={16} />
@@ -516,132 +621,197 @@ function WatchWorkspace({
               Làm mới
             </Button>
           </div>
-          {query.isPending && <ContentState state="loading" />}
-          {query.isError && (
-            <Alert tone="error">
-              Không tải được danh sách.{' '}
-              <Button
-                variant="plain"
-                onClick={() =>
-                  void (query.isFetchNextPageError ? query.fetchNextPage() : query.refetch())
-                }
-              >
-                Thử lại
-              </Button>
-            </Alert>
-          )}
-          {!query.isPending && !query.isError && !items.length && (
-            <div className={priceStyles.empty}>
-              <img className={priceStyles.emptyArt} src={mascot} alt="" />
-              <div>
-                <h2>Chưa có theo dõi giá nào</h2>
-                <p>Tạo theo dõi đầu tiên bằng mã sân bay, ngày đi và mức giá mong muốn của bạn.</p>
-              </div>
-            </div>
-          )}
-          <div className={priceStyles.grid}>
-            {items.map((item) => {
-              const own = item.ownerId === trip.currentMembership.userId,
-                active = item.status === 'ACTIVE' || item.status === 'PAUSED';
-              const canStop =
-                active && writable && (own || trip.currentMembership.role === 'OWNER');
-              const passengers = Object.values(item.fields.passengers).reduce((a, b) => a + b, 0);
-              return (
-                <article key={item.id} className={priceStyles.card} data-status={item.status}>
-                  <div className={priceStyles.cardTop}>
-                    <h2>
-                      {item.fields.origin} <span aria-label="đến">→</span> {item.fields.destination}
-                    </h2>
-                    <span className={priceStyles.status} data-status={item.status}>
-                      {item.status === 'PAUSED' && <Icon name="pause" size={14} />}
-                      {labels[item.status]}
-                    </span>
-                  </div>
-                  <p className={priceStyles.meta}>
-                    {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'} ·{' '}
-                    {isoDate(item.fields.departure_date)}
-                    {item.fields.return_date ? ` – ${isoDate(item.fields.return_date)}` : ''} ·{' '}
-                    {passengers} khách
-                    {item.fields.cabin_class
-                      ? ` · ${cabinLabels[item.fields.cabin_class]}`
-                      : ''} · {own ? 'Bạn tạo' : 'Thành viên khác tạo'}
+          <div
+            className={priceStyles.listScroll}
+            data-region="price-watch-list-scroll"
+            role="region"
+            aria-label="Danh sách theo dõi giá vé"
+            tabIndex={0}
+          >
+            {query.isPending && <ContentState state="loading" />}
+            {query.isError && (
+              <Alert tone="error">
+                Không tải được danh sách.{' '}
+                <Button
+                  variant="plain"
+                  onClick={() =>
+                    void (query.isFetchNextPageError ? query.fetchNextPage() : query.refetch())
+                  }
+                >
+                  Thử lại
+                </Button>
+              </Alert>
+            )}
+            {!query.isPending && !query.isError && !items.length && (
+              <div className={priceStyles.empty}>
+                <img className={priceStyles.emptyArt} src={mascot} alt="" />
+                <div>
+                  <h2>Chưa có theo dõi giá nào</h2>
+                  <p>
+                    Tạo theo dõi đầu tiên bằng mã sân bay, ngày đi và mức giá mong muốn của bạn.
                   </p>
-                  <div className={priceStyles.threshold}>
-                    <span>
-                      <small>Ngưỡng cảnh báo</small>
-                      <strong>{money(item.fields.threshold_price)}</strong>
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="compact"
-                      icon={<Icon name="history" size={16} />}
-                      onClick={() => setSelected(item.id)}
-                    >
-                      Lịch sử giá
-                    </Button>
-                  </div>
-                  {active && writable && (
-                    <div className={priceStyles.cardActions}>
-                      {own && (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="compact"
-                            icon={<Icon name="edit" size={16} />}
-                            disabled={busy || blocked}
-                            onClick={() => openForm(item)}
-                          >
-                            Chỉnh sửa
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="compact"
-                            icon={
-                              <Icon name={item.status === 'ACTIVE' ? 'pause' : 'play'} size={16} />
-                            }
-                            disabled={busy || blocked || !!editing}
-                            onClick={() =>
-                              void send({
-                                method: 'POST',
-                                path: `/api/v1/price-watches/${item.id}/${item.status === 'ACTIVE' ? 'pause' : 'resume'}`,
-                                body: { expected_version: item.version },
-                              })
-                            }
-                          >
-                            {item.status === 'ACTIVE' ? 'Tạm dừng' : 'Tiếp tục'}
-                          </Button>
-                        </>
-                      )}
-                      {!own && (
-                        <p className={priceStyles.reason}>Chỉ người tạo mới chỉnh sửa được.</p>
-                      )}
-                      {canStop && (
-                        <span className={priceStyles.more}>
-                          <ActionMenu
-                            label={`Thêm thao tác cho ${item.fields.origin} đến ${item.fields.destination}`}
-                            disabled={busy || blocked || !!editing}
-                            items={[
-                              { label: 'Dừng theo dõi', danger: true, action: () => setStop(item) },
-                            ]}
-                          />
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </article>
-              );
-            })}
+                </div>
+              </div>
+            )}
+            <div className={priceStyles.grid}>
+              {items.map((item) => {
+                const own = item.ownerId === trip.currentMembership.userId,
+                  active = item.status === 'ACTIVE' || item.status === 'PAUSED';
+                const canStop =
+                  active && writable && (own || trip.currentMembership.role === 'OWNER');
+                const passengers = Object.values(item.fields.passengers).reduce((a, b) => a + b, 0);
+                return (
+                  <article
+                    key={item.id}
+                    className={priceStyles.card}
+                    data-status={item.status}
+                    data-selected={chartWatch?.id === item.id}
+                  >
+                    <WatchSummary
+                      watch={item}
+                      repository={repository}
+                      selected={chartWatch?.id === item.id}
+                      onSelect={() => {
+                        setChartId(item.id);
+                        setChartVisible(true);
+                      }}
+                    />
+                    {chartWatch?.id === item.id && (
+                      <p className={priceStyles.meta}>
+                        {item.fields.journey_type === 'ROUND_TRIP' ? 'Khứ hồi' : 'Một chiều'} ·{' '}
+                        {isoDate(item.fields.departure_date)}
+                        {item.fields.return_date
+                          ? ` – ${isoDate(item.fields.return_date)}`
+                          : ''} · {passengers} khách
+                        {item.fields.cabin_class
+                          ? ` · ${cabinLabels[item.fields.cabin_class]}`
+                          : ''}{' '}
+                        · {own ? 'Bạn tạo' : 'Thành viên khác tạo'}
+                      </p>
+                    )}
+                    {chartWatch?.id === item.id && (
+                      <div className={priceStyles.cardActions}>
+                        <Button
+                          variant="outline"
+                          size="compact"
+                          icon={<Icon name="history" size={16} />}
+                          onClick={() => setSelected(item.id)}
+                        >
+                          Lịch sử giá
+                        </Button>
+                        {active && writable && own && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="compact"
+                              icon={<Icon name="edit" size={16} />}
+                              disabled={busy || blocked}
+                              onClick={() => openForm(item)}
+                            >
+                              Chỉnh sửa
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="compact"
+                              icon={
+                                <Icon
+                                  name={item.status === 'ACTIVE' ? 'pause' : 'play'}
+                                  size={16}
+                                />
+                              }
+                              disabled={busy || blocked || !!editing}
+                              onClick={() =>
+                                void send({
+                                  method: 'POST',
+                                  path: `/api/v1/price-watches/${item.id}/${item.status === 'ACTIVE' ? 'pause' : 'resume'}`,
+                                  body: { expected_version: item.version },
+                                })
+                              }
+                            >
+                              {item.status === 'ACTIVE' ? 'Tạm dừng' : 'Tiếp tục'}
+                            </Button>
+                          </>
+                        )}
+                        {active && writable && !own && (
+                          <p className={priceStyles.reason}>Chỉ người tạo mới chỉnh sửa được.</p>
+                        )}
+                        {canStop && (
+                          <span className={priceStyles.more}>
+                            <ActionMenu
+                              label={`Thêm thao tác cho ${item.fields.origin} đến ${item.fields.destination}`}
+                              disabled={busy || blocked || !!editing}
+                              items={[
+                                {
+                                  label: 'Dừng theo dõi',
+                                  danger: true,
+                                  action: () => setStop(item),
+                                },
+                              ]}
+                            />
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+            {query.hasNextPage && (
+              <Button
+                variant="outline"
+                loading={query.isFetchingNextPage}
+                onClick={() => void query.fetchNextPage()}
+              >
+                Tải thêm theo dõi
+              </Button>
+            )}
           </div>
-          {query.hasNextPage && (
-            <Button
-              variant="outline"
-              loading={query.isFetchingNextPage}
-              onClick={() => void query.fetchNextPage()}
-            >
-              Tải thêm theo dõi
-            </Button>
-          )}
         </section>
+        <aside
+          id="price-watch-chart"
+          className={priceStyles.chartPanel}
+          aria-label="Biểu đồ theo dõi giá vé"
+          data-region="price-watch-chart"
+          hidden={!chartVisible}
+        >
+          <header className={priceStyles.chartHeader}>
+            <div>
+              <h2>Lịch sử giá vé</h2>
+              {chartWatch && (
+                <p>
+                  {chartWatch.fields.origin} → {chartWatch.fields.destination}
+                </p>
+              )}
+            </div>
+            <Button
+              variant="plain"
+              size="icon"
+              aria-label="Đóng biểu đồ"
+              onClick={() => {
+                setChartVisible(false);
+                chartToggleRef.current?.focus();
+              }}
+            >
+              <Icon name="close" size={18} />
+            </Button>
+          </header>
+          <div className={priceStyles.chartScroll}>
+            {chartVisible &&
+              (chartWatch ? (
+                <Observations
+                  key={chartWatch.id}
+                  watch={chartWatch}
+                  repository={repository}
+                  inline
+                />
+              ) : (
+                <div className={priceStyles.chartEmpty}>
+                  <Icon name="price" size={30} />
+                  <p>Chọn một theo dõi để xem biểu đồ giá.</p>
+                </div>
+              ))}
+          </div>
+        </aside>
         <PriceWatchOverlay
           open={!!editing}
           title={editing?.item ? 'Sửa theo dõi giá' : 'Tạo theo dõi giá'}

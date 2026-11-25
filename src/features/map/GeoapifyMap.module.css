@@ -14,6 +14,17 @@
   min-height: 160px;
   background: var(--color-surface);
 }
+.embeddedNotice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+.embeddedNotice p {
+  margin: 8px 0 0;
+}
 /* V2 D/Map pin (Figma 875:7312/875:7314): white ring, gradient fill, amber when selected. */
 .pin {
   display: grid;

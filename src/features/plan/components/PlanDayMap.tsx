@@ -145,13 +145,6 @@ export function PlanDayMap({
           >
             <Icon name="close" size={18} />
           </Button>
-          <a
-            className={styles.mapLink}
-            href={`/trips/${encodeURIComponent(trip.id)}/map?day=${encodeURIComponent(day)}`}
-          >
-            <Icon name="mapFolded" size={14} />
-            Mở bản đồ lớn
-          </a>
         </header>
         <div className={styles.map}>
           <GeoapifyMap
@@ -161,6 +154,13 @@ export function PlanDayMap({
             onSelect={setSelected}
             route={dayRoute.route}
           />
+          <a
+            className={styles.mapLink}
+            href={`/trips/${encodeURIComponent(trip.id)}/map?day=${encodeURIComponent(day)}`}
+          >
+            <Icon name="mapFolded" size={14} />
+            Mở bản đồ lớn
+          </a>
         </div>
         {dayRoute.summary && (
           <p
@@ -171,22 +171,6 @@ export function PlanDayMap({
             {dayRoute.summary}
           </p>
         )}
-        <details className={styles.listRegion}>
-          <summary>Địa điểm trong lịch trình</summary>
-          {locations.length ? (
-            <ol className={styles.list}>
-              {locations.map((p) => (
-                <li key={p.id}>
-                  <strong>{p.name}</strong>
-                  <span>{p.address ?? 'Chưa có địa chỉ'}</span>
-                  {!validCoordinates(p) && <small>Chưa có tọa độ hợp lệ</small>}
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p className={styles.empty}>Chưa có địa điểm nào trong ngày đang xem.</p>
-          )}
-        </details>
       </section>
     </div>
   );

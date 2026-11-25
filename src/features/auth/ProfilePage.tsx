@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIdentityRepository } from './repositories/identity-context';
 import {
@@ -15,10 +15,10 @@ import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
 import { Select } from '../../shared/components/Select';
 import { ContentState } from '../../shared/components/ContentState';
-import { Bell, Camera, Check, KeyRound, LogOut, Mail, Pencil, UserRound } from 'lucide-react';
-import mascot from '../../shared/assets/v2/mascot-waving.png';
+import { Bell, Camera, Check, KeyRound, LogOut, Pencil, UserRound, X } from 'lucide-react';
 import styles from './ProfilePage.module.css';
 import { NotificationPreferences } from '../notifications/NotificationPreferences';
+import { AccountNavigation, type AccountSection } from './AccountNavigation';
 
 const unavailable: DomainError = {
   code: 'SERVICE_UNAVAILABLE',
@@ -63,11 +63,16 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const queryClient = useQueryClient();
   const sessionManager = useOptionalSessionManager();
   const navigate = useNavigate();
+  const location = useLocation();
   const [scenario, setScenario] = useState<IdentityScenario>('success');
   const [draft, setDraft] = useState<string | null>(null);
   const [validation, setValidation] = useState<string | undefined>();
   const [feedback, setFeedback] = useState<ReactNode>(null);
-  const [showSessions, setShowSessions] = useState(false);
+  const [active, setActive] = useState<AccountSection>(() =>
+    location.hash === '#notifications' ? 'notifications' : 'personal',
+  );
+  const [editingName, setEditingName] = useState(false);
+  const [logoutFeedback, setLogoutFeedback] = useState<ReactNode>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState(false);
   const [password, setPassword] = useState({ current: '', next: '', confirmation: '' });
@@ -76,8 +81,19 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   const [sessionFeedback, setSessionFeedback] = useState<ReactNode>(null);
   const [endingSession, setEndingSession] = useState(false);
   const avatarInput = useRef<HTMLInputElement>(null);
+  const nameInput = useRef<HTMLInputElement>(null);
+  const nameEditButton = useRef<HTMLButtonElement>(null);
+  const returnNameFocus = useRef(false);
   const { pending, run } = useIdentityTask();
   const busy = pending !== null;
+  useEffect(() => {
+    if (editingName || busy || !returnNameFocus.current) return;
+    returnNameFocus.current = false;
+    nameEditButton.current?.focus();
+  }, [editingName, busy]);
+  useEffect(() => {
+    if (location.hash === '#notifications') setActive('notifications');
+  }, [location.hash]);
   const profileKey = ['identity', 'self', scenario] as const;
   const sessionsKey = ['identity', 'sessions', scenario] as const;
   const query = useQuery({
@@ -102,7 +118,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     },
     getNextPageParam: (last, _pages, _param, params) =>
       last.nextCursor && !params.includes(last.nextCursor) ? last.nextCursor : undefined,
-    enabled: showSessions && !!profile && !endingSession,
+    enabled: active === 'security' && !!profile && !endingSession,
     retry: false,
   });
   const sessionItems = Array.from(
@@ -162,7 +178,7 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
 
   const submitProfile = (event: FormEvent) => {
     event.preventDefault();
-    if (busy) return;
+    if (busy || !editingName) return;
     const name = (draft ?? profile?.fullName ?? '').trim();
     if (!name || name.length > 150) {
       setValidation('Tên hiển thị cần từ 1 đến 150 ký tự.');
@@ -184,7 +200,9 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
         });
         signal.throwIfAborted();
         if (update.status === 'updated') {
+          returnNameFocus.current = true;
           setDraft(null);
+          setEditingName(false);
           setFeedback('Đã lưu thông tin cá nhân.');
           await applyProfile(update.profile);
         } else await mutationFailed(update.error);
@@ -331,10 +349,6 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
 
   return (
     <section className={styles.page} data-node-id="299:1847">
-      <h1>Tài khoản của tôi</h1>
-      <p className={styles.subtitle}>
-        Quản lý thông tin cá nhân, kênh nhận thông báo và thiết bị của riêng bạn.
-      </p>
       {query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : error ? (
@@ -347,305 +361,382 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
       ) : !profile ? (
         <ContentState state="empty" headingLevel={2} />
       ) : (
-        <div className={styles.grid}>
-          <form
-            id="profile-editor"
-            className={styles.panel + ' ' + styles.personal}
-            onSubmit={submitProfile}
-            noValidate
-            aria-label="Thông tin cá nhân"
-          >
-            <div className={styles.panelHead}>
-              <span className={styles.badge} data-tone="blue" aria-hidden="true">
-                <UserRound size={22} strokeWidth={2.2} />
-              </span>
-              <h2>Thông tin cá nhân</h2>
-            </div>
-            <div className={styles.avatarRow}>
-              <span className={styles.avatar}>
-                {profile.avatar && avatarUrl ? (
-                  <img className={styles.avatarPhoto} src={avatarUrl} alt={profile.avatar.alt} />
-                ) : (
-                  <strong>
-                    {profile.fullName
-                      .split(/\s+/)
-                      .map((s) => s[0])
-                      .slice(0, 2)
-                      .join('')}
-                  </strong>
+        <div className={styles.workspace}>
+          <AccountNavigation
+            active={active}
+            onChange={setActive}
+            disabled={busy}
+            footer={
+              <div className={styles.formFooter}>
+                {sessionManager?.logout && (
+                  <Button
+                    variant="outline"
+                    type="button"
+                    icon={<LogOut size={17} strokeWidth={2.2} />}
+                    disabled={busy}
+                    loading={pending === 'logout'}
+                    onClick={() => {
+                      setLogoutFeedback(null);
+                      void run(
+                        'logout',
+                        async (signal) => {
+                          await sessionManager?.logout?.(signal);
+                          navigate('/login', { replace: true });
+                        },
+                        () => setLogoutFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
+                      );
+                    }}
+                  >
+                    Đăng xuất
+                  </Button>
                 )}
-              </span>
-              <div className={styles.identity}>
-                <p className={styles.displayName}>{profile.fullName}</p>
-                <Button
-                  variant="secondary"
-                  size="compact"
-                  className={styles.changePhoto}
-                  loading={pending === 'avatar'}
-                  disabled={busy || !repository.uploadAvatar}
-                  title="Tải ảnh đại diện"
-                  icon={<Camera size={14} strokeWidth={2.2} />}
-                  onClick={() => avatarInput.current?.click()}
-                >
-                  Đổi ảnh
-                </Button>
+                {logoutFeedback && <Alert live>{logoutFeedback}</Alert>}
               </div>
-              <input
-                aria-label="Chọn ảnh đại diện"
-                ref={avatarInput}
-                hidden
-                type="file"
-                accept="image/png,image/jpeg"
-                disabled={busy}
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  event.target.value = '';
-                  if (file) uploadAvatar(file);
-                }}
-              />
-            </div>
-            {avatarError && (
-              <Alert tone="info">Chưa tải được ảnh đại diện. Thông tin hồ sơ vẫn được giữ.</Alert>
-            )}
-            <div className={styles.fields}>
-              <Input
-                id="profile-name"
-                label="Tên hiển thị"
-                name="name"
-                autoComplete="name"
-                leadingIcon={
-                  <span className={styles.fieldChip}>
-                    <Pencil size={18} strokeWidth={2} />
-                  </span>
-                }
-                required
-                value={draft ?? profile.fullName}
-                disabled={busy}
-                error={validation}
-                onChange={(event) => {
-                  setDraft(event.target.value);
-                  setValidation(undefined);
-                  setFeedback(null);
-                }}
-              />
-              <Input
-                label="Email"
-                value={profile.email}
-                readOnly
-                type="email"
-                autoComplete="email"
-                leadingIcon={
-                  <span className={styles.fieldChip}>
-                    <Mail size={18} strokeWidth={2} />
-                  </span>
-                }
-              />
-            </div>
-            <p className={styles.roleNote}>
-              Hồ sơ không thay đổi vai trò, trách nhiệm quỹ hay quyền của bạn trong các chuyến đi.
-            </p>
-            {!profile.emailVerifiedAt && (
-              <Alert tone="info">
-                <p>Email chưa được xác minh.</p>
-                <Button
-                  variant="outline"
-                  disabled={busy || !repository.resendEmailVerification}
-                  loading={pending === 'verify'}
-                  onClick={resendVerification}
-                >
-                  Gửi lại email xác minh
-                </Button>
-              </Alert>
-            )}
-            {feedback && (
-              <div className={styles.feedback}>
-                <Alert live>{feedback}</Alert>
-              </div>
-            )}
-            <div className={styles.formFooter}>
-              {sessionManager?.logout && (
-                <Button
-                  variant="outline"
-                  className={styles.logout}
-                  type="button"
-                  icon={<LogOut size={17} strokeWidth={2.2} />}
-                  disabled={busy}
-                  loading={pending === 'logout'}
-                  onClick={() =>
-                    void run(
-                      'logout',
-                      async (signal) => {
-                        await sessionManager?.logout?.(signal);
-                        navigate('/login', { replace: true });
-                      },
-                      () => setFeedback('Chưa thể đăng xuất. Kiểm tra kết nối và thử lại.'),
-                    )
-                  }
-                >
-                  Đăng xuất
-                </Button>
-              )}
-              <Button
-                className={styles.save}
-                type="submit"
-                loading={pending === 'profile'}
-                disabled={busy}
-                icon={<Check size={17} strokeWidth={2.6} />}
+            }
+          />
+          <div className={styles.content}>
+            <section className={styles.section} hidden={active !== 'personal'}>
+              <form
+                id="profile-editor"
+                className={styles.panel + ' ' + styles.personal}
+                onSubmit={submitProfile}
+                noValidate
+                aria-label="Thông tin cá nhân"
               >
-                Lưu thay đổi
-              </Button>
-            </div>
-          </form>
-          <section
-            className={styles.panel + ' ' + styles.notifications}
-            aria-labelledby="profile-notifications"
-          >
-            <div className={styles.panelHead}>
-              <span className={styles.badge} data-tone="violet" aria-hidden="true">
-                <Bell size={22} strokeWidth={2.2} />
-              </span>
-              <div>
-                <h2 id="profile-notifications">Thông báo & thiết bị</h2>
-                <p>Mỗi người tự quản lý kênh nhận thông báo của mình.</p>
-              </div>
-            </div>
-            <NotificationPreferences key={profile.id} actor={profile.id} />
-            <details
-              onToggle={(event) => setShowSessions(event.currentTarget.open)}
-              className={styles.sessions}
-            >
-              <summary>Phiên đăng nhập</summary>
-              {sessionsQuery.isPending ? (
-                <ContentState state="loading" headingLevel={2} />
-              ) : (
-                <>
-                  {sessionsQuery.isError && (
-                    <ContentState
-                      state="error"
-                      headingLevel={2}
-                      error={
-                        sessionsQuery.error instanceof SessionReadError
-                          ? sessionsQuery.error.domain
-                          : unavailable
-                      }
-                      onRetry={() =>
-                        void (sessionsQuery.isFetchNextPageError
-                          ? sessionsQuery.fetchNextPage()
-                          : sessionsQuery.refetch())
-                      }
-                    />
-                  )}
-                  {!sessionsQuery.isError && sessionItems.length === 0 && (
-                    <ContentState state="empty" headingLevel={2} />
-                  )}
-                  <ul>
-                    {sessionItems.map((session, index) => (
-                      <li key={session.id} data-session-id={session.id}>
-                        <strong>Phiên đăng nhập {index + 1}</strong>
-                        <span>Tạo: {formatDate(session.createdAt)}</span>
-                        <span>
-                          Lần dùng cuối:{' '}
-                          {session.lastUsedAt
-                            ? formatDate(session.lastUsedAt)
-                            : 'Chưa có thông tin'}
-                        </span>
-                        <Button
-                          variant="outline"
-                          disabled={busy || !repository.revokeSession}
-                          loading={pending === 'revoke:' + session.id}
-                          onClick={() => revokeSession(session.id)}
+                <div className={styles.panelHead}>
+                  <span className={styles.badge} data-tone="blue" aria-hidden="true">
+                    <UserRound size={22} strokeWidth={2.2} />
+                  </span>
+                  <h2>Thông tin cá nhân</h2>
+                </div>
+                <div className={styles.avatarRow}>
+                  <span className={styles.avatar}>
+                    {profile.avatar && avatarUrl ? (
+                      <img
+                        className={styles.avatarPhoto}
+                        src={avatarUrl}
+                        alt={profile.avatar.alt}
+                      />
+                    ) : (
+                      <strong>
+                        {profile.fullName
+                          .split(/\s+/)
+                          .map((s) => s[0])
+                          .slice(0, 2)
+                          .join('')}
+                      </strong>
+                    )}
+                  </span>
+                  <div className={styles.identity}>
+                    <p className={styles.displayName}>{profile.fullName}</p>
+                    <Button
+                      variant="secondary"
+                      size="compact"
+                      className={styles.changePhoto}
+                      loading={pending === 'avatar'}
+                      disabled={busy || !repository.uploadAvatar}
+                      title="Tải ảnh đại diện"
+                      icon={<Camera size={14} strokeWidth={2.2} />}
+                      onClick={() => avatarInput.current?.click()}
+                    >
+                      Đổi ảnh
+                    </Button>
+                  </div>
+                  <input
+                    aria-label="Chọn ảnh đại diện"
+                    ref={avatarInput}
+                    hidden
+                    type="file"
+                    accept="image/png,image/jpeg"
+                    disabled={busy}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      event.target.value = '';
+                      if (file) uploadAvatar(file);
+                    }}
+                  />
+                </div>
+                {avatarError && (
+                  <Alert tone="info">
+                    Chưa tải được ảnh đại diện. Thông tin hồ sơ vẫn được giữ.
+                  </Alert>
+                )}
+                <div className={styles.fields}>
+                  <Input
+                    id="profile-name"
+                    ref={nameInput}
+                    label="Tên hiển thị"
+                    name="name"
+                    autoComplete="name"
+                    trailingAction={
+                      <span className={styles.fieldActions}>
+                        {editingName ? (
+                          <>
+                            <button
+                              key="save-name"
+                              type="submit"
+                              className={styles.fieldAction}
+                              aria-label="Lưu tên hiển thị"
+                              aria-busy={pending === 'profile' || undefined}
+                              disabled={busy || !repository.updateProfile}
+                            >
+                              <Check size={18} aria-hidden="true" />
+                            </button>
+                            <button
+                              key="cancel-name"
+                              type="button"
+                              className={styles.fieldAction}
+                              aria-label="Hủy chỉnh sửa tên hiển thị"
+                              disabled={busy}
+                              onClick={() => {
+                                returnNameFocus.current = true;
+                                setEditingName(false);
+                                setDraft(null);
+                                setValidation(undefined);
+                                setFeedback(null);
+                              }}
+                            >
+                              <X size={18} aria-hidden="true" />
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            key="edit-name"
+                            ref={nameEditButton}
+                            type="button"
+                            className={styles.fieldAction}
+                            aria-label="Chỉnh sửa tên hiển thị"
+                            disabled={busy || !repository.updateProfile}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              setEditingName(true);
+                              window.requestAnimationFrame(() => nameInput.current?.focus());
+                            }}
+                          >
+                            <Pencil size={18} aria-hidden="true" />
+                          </button>
+                        )}
+                      </span>
+                    }
+                    required
+                    value={draft ?? profile.fullName}
+                    readOnly={!editingName}
+                    disabled={busy}
+                    error={validation}
+                    onChange={(event) => {
+                      setDraft(event.target.value);
+                      setValidation(undefined);
+                      setFeedback(null);
+                    }}
+                  />
+                  <Input
+                    label="Email"
+                    value={profile.email}
+                    readOnly
+                    type="email"
+                    autoComplete="email"
+                    trailingAction={
+                      <span className={styles.fieldActions}>
+                        <button
+                          type="button"
+                          className={styles.fieldAction}
+                          aria-label="Chỉnh sửa email"
+                          title="Email đăng nhập hiện chưa hỗ trợ thay đổi."
+                          disabled
                         >
-                          Thu hồi phiên
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                  {sessionsQuery.hasNextPage && (
+                          <Pencil size={18} aria-hidden="true" />
+                        </button>
+                      </span>
+                    }
+                    hint="Email đăng nhập hiện chưa hỗ trợ thay đổi."
+                  />
+                </div>
+                {!profile.emailVerifiedAt && (
+                  <Alert tone="info">
+                    <p>Email chưa được xác minh.</p>
                     <Button
                       variant="outline"
-                      disabled={busy || sessionsQuery.isFetching}
-                      loading={sessionsQuery.isFetchingNextPage}
-                      onClick={() => void sessionsQuery.fetchNextPage()}
+                      disabled={busy || !repository.resendEmailVerification}
+                      loading={pending === 'verify'}
+                      onClick={resendVerification}
                     >
-                      Tải thêm phiên
+                      Gửi lại email xác minh
+                    </Button>
+                  </Alert>
+                )}
+                {feedback && (
+                  <div className={styles.feedback}>
+                    <Alert live>{feedback}</Alert>
+                  </div>
+                )}
+              </form>
+            </section>
+            <section className={styles.section} hidden={active !== 'security'}>
+              <div className={styles.securityPanels}>
+                <form
+                  className={styles.panel + ' ' + styles.password}
+                  aria-label="Đổi mật khẩu"
+                  noValidate
+                  onSubmit={submitPassword}
+                >
+                  <div className={styles.panelHead}>
+                    <span className={styles.badge} data-tone="amber" aria-hidden="true">
+                      <KeyRound size={22} strokeWidth={2.2} />
+                    </span>
+                    <h2>Đổi mật khẩu</h2>
+                  </div>
+                  <div className={styles.fields}>
+                    <Input
+                      id="profile-current-password"
+                      label="Mật khẩu hiện tại"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      disabled={busy || passwordUncertain}
+                      value={password.current}
+                      onChange={(event) =>
+                        setPassword({ ...password, current: event.target.value })
+                      }
+                    />
+                    <Input
+                      id="profile-new-password"
+                      label="Mật khẩu mới"
+                      type="password"
+                      autoComplete="new-password"
+                      required
+                      disabled={busy || passwordUncertain}
+                      value={password.next}
+                      onChange={(event) => setPassword({ ...password, next: event.target.value })}
+                    />
+                    <Input
+                      id="profile-confirm-password"
+                      label="Nhập lại mật khẩu mới"
+                      type="password"
+                      autoComplete="new-password"
+                      required
+                      disabled={busy || passwordUncertain}
+                      value={password.confirmation}
+                      onChange={(event) =>
+                        setPassword({ ...password, confirmation: event.target.value })
+                      }
+                    />
+                  </div>
+                  {passwordError && (
+                    <Alert tone="error" live>
+                      {passwordError}
+                    </Alert>
+                  )}
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    disabled={busy || passwordUncertain}
+                    loading={pending === 'password'}
+                  >
+                    Đổi mật khẩu
+                  </Button>
+                  {passwordUncertain && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={busy}
+                      onClick={() => {
+                        void returnToPasswordLogin('password-uncertain');
+                      }}
+                    >
+                      Đến trang đăng nhập
                     </Button>
                   )}
-                  {sessionFeedback && <Alert live>{sessionFeedback}</Alert>}
-                </>
-              )}
-            </details>
-            <img className={styles.mascot} src={mascot} alt="" width={118} height={98} />
-          </section>
-          <form
-            className={styles.panel + ' ' + styles.password}
-            aria-label="Đổi mật khẩu"
-            noValidate
-            onSubmit={submitPassword}
-          >
-            <div className={styles.panelHead}>
-              <span className={styles.badge} data-tone="amber" aria-hidden="true">
-                <KeyRound size={22} strokeWidth={2.2} />
-              </span>
-              <h2>Đổi mật khẩu</h2>
-            </div>
-            <div className={styles.fields}>
-              <Input
-                id="profile-current-password"
-                label="Mật khẩu hiện tại"
-                type="password"
-                autoComplete="current-password"
-                required
-                disabled={busy || passwordUncertain}
-                value={password.current}
-                onChange={(event) => setPassword({ ...password, current: event.target.value })}
-              />
-              <Input
-                id="profile-new-password"
-                label="Mật khẩu mới"
-                type="password"
-                autoComplete="new-password"
-                required
-                disabled={busy || passwordUncertain}
-                value={password.next}
-                onChange={(event) => setPassword({ ...password, next: event.target.value })}
-              />
-              <Input
-                id="profile-confirm-password"
-                label="Nhập lại mật khẩu mới"
-                type="password"
-                autoComplete="new-password"
-                required
-                disabled={busy || passwordUncertain}
-                value={password.confirmation}
-                onChange={(event) => setPassword({ ...password, confirmation: event.target.value })}
-              />
-            </div>
-            {passwordError && (
-              <Alert tone="error" live>
-                {passwordError}
-              </Alert>
-            )}
-            <Button
-              type="submit"
-              variant="outline"
-              disabled={busy || passwordUncertain}
-              loading={pending === 'password'}
-            >
-              Đổi mật khẩu
-            </Button>
-            {passwordUncertain && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={busy}
-                onClick={() => {
-                  void returnToPasswordLogin('password-uncertain');
-                }}
+                </form>
+                <section
+                  className={styles.panel + ' ' + styles.sessions}
+                  aria-labelledby="profile-sessions"
+                >
+                  <div className={styles.panelHead}>
+                    <h2 id="profile-sessions">Phiên đăng nhập</h2>
+                  </div>
+                  {sessionsQuery.isPending ? (
+                    <ContentState state="loading" headingLevel={2} />
+                  ) : (
+                    <>
+                      {sessionsQuery.isError && (
+                        <ContentState
+                          state="error"
+                          headingLevel={2}
+                          error={
+                            sessionsQuery.error instanceof SessionReadError
+                              ? sessionsQuery.error.domain
+                              : unavailable
+                          }
+                          onRetry={() =>
+                            void (sessionsQuery.isFetchNextPageError
+                              ? sessionsQuery.fetchNextPage()
+                              : sessionsQuery.refetch())
+                          }
+                        />
+                      )}
+                      {!sessionsQuery.isError && sessionItems.length === 0 && (
+                        <ContentState state="empty" headingLevel={2} />
+                      )}
+                      <ul className={styles.sessionList}>
+                        {sessionItems.map((session, index) => (
+                          <li key={session.id} data-session-id={session.id}>
+                            <strong>Phiên đăng nhập {index + 1}</strong>
+                            <span>Tạo: {formatDate(session.createdAt)}</span>
+                            <span>
+                              Lần dùng cuối:{' '}
+                              {session.lastUsedAt
+                                ? formatDate(session.lastUsedAt)
+                                : 'Chưa có thông tin'}
+                            </span>
+                            <Button
+                              variant="outline"
+                              disabled={busy || !repository.revokeSession}
+                              loading={pending === 'revoke:' + session.id}
+                              onClick={() => revokeSession(session.id)}
+                            >
+                              Thu hồi phiên
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                      {sessionsQuery.hasNextPage && (
+                        <Button
+                          variant="outline"
+                          disabled={busy || sessionsQuery.isFetching}
+                          loading={sessionsQuery.isFetchingNextPage}
+                          onClick={() => void sessionsQuery.fetchNextPage()}
+                        >
+                          Tải thêm phiên
+                        </Button>
+                      )}
+                      {sessionFeedback && <Alert live>{sessionFeedback}</Alert>}
+                    </>
+                  )}
+                </section>
+              </div>
+            </section>
+            <section className={styles.section} hidden={active !== 'notifications'}>
+              <section
+                className={styles.panel + ' ' + styles.notifications}
+                aria-labelledby="profile-notifications"
               >
-                Đến trang đăng nhập
-              </Button>
-            )}
-          </form>
+                <div className={styles.panelHead}>
+                  <span className={styles.badge} data-tone="violet" aria-hidden="true">
+                    <Bell size={22} strokeWidth={2.2} />
+                  </span>
+                  <div>
+                    <h2 id="profile-notifications">Thông báo</h2>
+                    <p>Quản lý kênh nhận thông báo và quyền thông báo trên thiết bị hiện tại.</p>
+                  </div>
+                </div>
+                <NotificationPreferences
+                  key={profile.id}
+                  actor={profile.id}
+                  includeBrowserPush={true}
+                />
+              </section>
+            </section>
+          </div>
         </div>
       )}
       {previewEnabled && (

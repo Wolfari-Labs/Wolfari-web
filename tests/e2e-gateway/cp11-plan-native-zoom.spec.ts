@@ -72,7 +72,6 @@ test('CP11 HTTP mock: Plan navigation and centered editor fit native Chrome 200%
     JSON.stringify({ factor, before, after }, null, 2),
   );
   await page.goto(`/trips/${tripId}/plan`);
-  await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
   await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
   await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
   await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();

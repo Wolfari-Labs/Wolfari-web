@@ -41,7 +41,7 @@ test('HTTP mock: Members pagination preserves opaque cursors, deduplicates IDs, 
   expect(new URLSearchParams(afterToggle.query).get('include_left')).toBe('true');
   expect(new URLSearchParams(afterToggle.query).get('cursor')).toBeNull();
   await region.getByRole('button', { name: 'Tải thêm thành viên' }).click();
-  await expect(region.getByText(/· Đã rời/)).toBeVisible();
+  await expect(region.getByText('Đã rời', { exact: true })).toBeVisible();
   await expect(region.locator('ul > li')).toHaveCount(3);
 });
 

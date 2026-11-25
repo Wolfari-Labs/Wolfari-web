@@ -219,9 +219,7 @@ for (const size of [
         await expect(page.getByLabel('Trạng thái preview')).toHaveValue('guest');
         await expect(page.getByText('Phú Quốc – Hẹn với biển')).toHaveCount(0);
       } else if (route === '/profile')
-        await expect(
-          page.getByRole('heading', { level: 1, name: 'Tài khoản của tôi' }),
-        ).toBeVisible();
+        await expect(page.getByRole('heading', { level: 1, name: 'Hồ sơ cá nhân' })).toBeVisible();
       else
         await expect(
           page.getByRole('form', {
@@ -274,8 +272,12 @@ for (const size of [
         const bounds = await form.boundingBox();
         expect(bounds).not.toBeNull();
         if (route === '/profile') {
-          expect(Math.abs(bounds!.x - 48)).toBeLessThanOrEqual(4);
-          expect(Math.abs(bounds!.width - 560)).toBeLessThanOrEqual(4);
+          const navigation = await page
+            .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+            .boundingBox();
+          expect(navigation).not.toBeNull();
+          expect(navigation!.x + navigation!.width).toBeLessThan(bounds!.x);
+          expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(size.width);
         } else {
           expect(bounds!.x).toBeGreaterThanOrEqual(0);
           expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(size.width);
@@ -294,7 +296,14 @@ for (const size of [
         size.width,
       );
       if (route === '/profile' && size.width <= 768) {
-        await expect(page.getByLabel('Tên hiển thị')).toBeVisible();
+        await expect(page.getByLabel('Tên hiển thị', { exact: true })).toBeVisible();
+      }
+      if (route === '/profile') {
+        await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveAttribute('readonly');
+        await expect(page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' })).toBeDisabled();
+        await expect(
+          page.getByRole('navigation', { name: 'Điều hướng tài khoản' }).getByRole('button'),
+        ).toHaveCount(3);
       }
       const shellPreview = page.locator('main > details[data-preview="shell"] summary');
       await shellPreview.scrollIntoViewIfNeeded();
@@ -361,21 +370,28 @@ test('registration validates and remains unavailable without session or redirect
   await expect(page.getByText(/Chưa có tài khoản hoặc phiên nào được xác nhận/)).toBeVisible();
 });
 
-test('mobile profile keeps draft through error and never reports saved', async ({ page }) => {
+test('mobile fixture profile keeps unsupported writes readonly through error recovery', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto('/profile');
-  await page.getByLabel('Tên hiển thị').fill('Bản nháp local');
+  const name = await page.getByLabel('Tên hiển thị', { exact: true }).inputValue();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveAttribute('readonly');
+  await expect(page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' })).toBeDisabled();
   await page.locator('[data-preview="profile"] summary').click();
   for (const state of ['error', 'success'])
     await page.getByLabel('Trạng thái hồ sơ').selectOption(state);
-  await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Bản nháp local');
-  await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
-  await expect(page.getByText(/Chưa lưu được thay đổi/)).toBeVisible();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue(name);
+  await expect(page.getByRole('button', { name: 'Lưu tên hiển thị' })).toHaveCount(0);
+  await expect(page.getByText('Đã lưu thông tin cá nhân.')).toHaveCount(0);
   // A25: the version moved from visible text to data-profile-version; same behavioural check.
   await expect(page.locator('[data-preview="profile"]')).toHaveAttribute(
     'data-profile-version',
     '1',
   );
-  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+    .click();
   await expect(page.getByText('Phiên đăng nhập 1')).toBeVisible();
 });

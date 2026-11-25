@@ -50,13 +50,12 @@ for (const size of [
     ]) {
       await page.goto(path!);
       if (name === 'plan') {
-        await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
         await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
       }
       await expect(page.locator('main h1').first()).toBeVisible();
       await expect(page.locator('[data-preview]')).toHaveCount(0);
       if (name === 'profile')
-        await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Trang Gateway');
+        await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Trang Gateway');
       else if (name === 'trips')
         await expect(page.getByText('Đà Nẵng Gateway', { exact: true })).toBeVisible();
       else if (name === 'members')

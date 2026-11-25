@@ -31,6 +31,18 @@ const snapshot = {
   packing_items: [],
   permissions: { can_read: true, can_edit: false, can_complete: true },
 };
+const dressCode = {
+  id: '55555555-5555-4555-8555-555555555555',
+  trip_id: snapshot.trip_id,
+  scope_type: 'TRIP',
+  plan_date: null,
+  activity_id: null,
+  label: 'Warm layers',
+  description: null,
+  public_description: null,
+  source: 'MANUAL',
+  plan_version: snapshot.plan_version,
+};
 const request = () => ({
   tripId: '11111111-1111-4111-8111-111111111111',
   expectedPlanVersion: 2,
@@ -160,22 +172,15 @@ describe('Plan Gateway contract', () => {
       `/api/v1/trips/${request().tripId}/dress-codes/${activity.id}/reference-image`,
     );
   });
-  it('requires the Gateway dress-code image availability flag instead of guessing', async () => {
-    const dressCode = {
-      id: '55555555-5555-4555-8555-555555555555',
-      trip_id: snapshot.trip_id,
-      scope_type: 'TRIP',
-      plan_date: null,
-      activity_id: null,
-      label: 'Warm layers',
-      description: null,
-      public_description: null,
-      source: 'MANUAL',
-      plan_version: snapshot.plan_version,
-    };
-    const { repo } = setup({ ...snapshot, dress_codes: [dressCode] });
+  it.each([
+    [{}, false],
+    [{ reference_image_available: true }, true],
+    [{ reference_image_available: false }, false],
+  ] as const)('reads the Gateway dress-code image indicator %j as %s', async (flag, available) => {
+    const { repo } = setup({ ...snapshot, dress_codes: [{ ...dressCode, ...flag }] });
     expect(await repo.getPlan({ ...request(), scenario: 'success' })).toMatchObject({
-      status: 'error',
+      status: 'ready',
+      data: { dressCodes: [{ id: dressCode.id, referenceImageAvailable: available }] },
     });
   });
   it.each([
@@ -189,6 +194,8 @@ describe('Plan Gateway contract', () => {
     { activities: [{ ...activity, status: 'UNKNOWN' }] },
     { activities: [{ ...activity, plan_version: 2 }] },
     { activities: [activity, activity] },
+    { dress_codes: [{ ...dressCode, reference_image_available: null }] },
+    { dress_codes: [{ ...dressCode, reference_image_available: 'true' }] },
   ])('rejects malformed snapshots instead of fabricating defaults: %j', async (patch) => {
     const { repo } = setup({ ...snapshot, ...patch });
     expect(await repo.getPlan({ ...request(), scenario: 'success' })).toMatchObject({

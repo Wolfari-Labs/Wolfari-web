@@ -65,14 +65,40 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   await expect(page.getByRole('heading', { name: 'Huế Gateway mới', exact: true })).toBeVisible();
 
   const settingsUrl = `/trips/${createdTripId}/settings`;
+  const beforeSettingsCalls = gateway.calls.length;
   await page.goto(settingsUrl);
-  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+  const tripInformation = page.locator('[aria-labelledby="trip-information-heading"]');
+  await expect(tripInformation.getByText('2 / —', { exact: true })).toBeVisible();
+  const memberCalls = gateway.calls
+    .slice(beforeSettingsCalls)
+    .filter(
+      (call) => call.method === 'GET' && call.path === `/api/v1/trips/${createdTripId}/members`,
+    );
+  expect(
+    memberCalls.some((call) => new URLSearchParams(call.query).get('cursor') === 'member-page/+=='),
+  ).toBe(true);
+  expect(
+    memberCalls.every((call) => new URLSearchParams(call.query).get('include_left') === 'false'),
+  ).toBe(true);
+  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
   const publicDescription = page.getByRole('textbox', { name: 'Mô tả công khai' });
+  await expect(publicDescription).toHaveCount(0);
+  await page.getByRole('button', { name: 'Chỉnh sửa mô tả công khai', exact: true }).click();
+  await expect(publicDescription).toBeEditable();
+  expect(
+    gateway.calls.filter(
+      (call) => call.method === 'PATCH' && call.path === `/api/v1/trips/${createdTripId}`,
+    ),
+  ).toHaveLength(0);
   await publicDescription.fill('Giới thiệu công khai từ Gateway.');
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
   await expect(page).toHaveURL(settingsUrl);
   await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
-  await expect(page.getByText('Giới thiệu công khai từ Gateway.')).toBeVisible();
+  await expect(
+    page
+      .locator('[aria-labelledby="trip-information-heading"]')
+      .getByText('Giới thiệu công khai từ Gateway.', { exact: true }),
+  ).toBeVisible();
 
   let patches = gateway.calls.filter(
     (call) => call.method === 'PATCH' && call.path === `/api/v1/trips/${createdTripId}`,
@@ -85,7 +111,15 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
   });
   expect(patches[0]!.idempotencyKey).toMatch(/.+/);
 
-  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
+  await expect(publicDescription).toHaveCount(0);
+  await page.getByRole('button', { name: 'Chỉnh sửa mô tả công khai', exact: true }).click();
+  await expect(publicDescription).toBeEditable();
+  expect(
+    gateway.calls.filter(
+      (call) => call.method === 'PATCH' && call.path === `/api/v1/trips/${createdTripId}`,
+    ),
+  ).toHaveLength(1);
   await publicDescription.fill('Bản nháp phải được giữ sau xung đột.');
   gateway.tripConflictOnce = true;
   await page.getByRole('button', { name: 'Lưu thay đổi' }).click();

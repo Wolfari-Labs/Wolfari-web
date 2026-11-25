@@ -19,9 +19,16 @@ test('login, profile save, private avatar replacement and paginated session revo
     email: 'trang@example.com',
     password: ' password with spaces ',
   });
-  await page.getByLabel('Tên hiển thị').fill('Updated Gateway Name');
-  await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveAttribute('readonly');
+  await expect(page.getByRole('button', { name: 'Chỉnh sửa email' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }).click();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toBeEditable();
+  expect(gateway.calls.filter((call) => call.method === 'PATCH')).toHaveLength(0);
+  await page.getByLabel('Tên hiển thị', { exact: true }).fill('Updated Gateway Name');
+  await page.getByRole('button', { name: 'Lưu tên hiển thị' }).click();
   await expect(page.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveAttribute('readonly');
+  await expect(page.getByRole('button', { name: 'Lưu tên hiển thị' })).toHaveCount(0);
   await expect(page.locator('header[data-node-id]:visible')).toContainText('Updated Gateway Name');
   expect(gateway.profile.version).toBe(5);
   const avatar = page.getByLabel('Chọn ảnh đại diện');
@@ -37,7 +44,10 @@ test('login, profile save, private avatar replacement and paginated session revo
     expected_version: 6,
     avatar_object_key: 'users/test/avatars/avatar.png',
   });
-  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+    .click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(1);
   await page.getByRole('button', { name: 'Tải thêm phiên' }).click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(2);
@@ -52,13 +62,17 @@ test('profile conflict retains draft and uses refreshed version only on explicit
   gateway,
 }) => {
   await login(page);
+  await page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }).click();
+  await page.getByLabel('Tên hiển thị', { exact: true }).fill('My conflict draft');
   gateway.profile.version = 9;
-  await page.getByLabel('Tên hiển thị').fill('My conflict draft');
-  await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
+  await page.getByRole('button', { name: 'Lưu tên hiển thị' }).click();
   await expect(page.getByText(/Hồ sơ đã thay đổi ở nơi khác/)).toBeVisible();
-  await expect(page.getByLabel('Tên hiển thị')).toHaveValue('My conflict draft');
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('My conflict draft');
   expect(gateway.calls.filter((call) => call.method === 'PATCH')).toHaveLength(1);
-  await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
+  expect(gateway.calls.find((call) => call.method === 'PATCH')?.body).toMatchObject({
+    expected_version: 4,
+  });
+  await page.getByRole('button', { name: 'Lưu tên hiển thị' }).click();
   await expect(page.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
   expect(gateway.calls.filter((call) => call.method === 'PATCH')[1]?.body).toMatchObject({
     expected_version: 9,
@@ -87,6 +101,10 @@ test('uncertain password change clears inputs, prevents replay and offers sign-i
   gateway,
 }) => {
   await login(page);
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+    .click();
   const form = page.getByRole('form', { name: 'Đổi mật khẩu' });
   await form.getByLabel('Mật khẩu hiện tại', { exact: true }).fill('Current1');
   await form.getByLabel('Mật khẩu mới', { exact: true }).fill('Change12');
@@ -108,6 +126,10 @@ test('password change rejects bad credentials, then clears the session on succes
   gateway,
 }) => {
   await login(page);
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+    .click();
   const form = page.getByRole('form', { name: 'Đổi mật khẩu' });
   await form.getByRole('button', { name: 'Đổi mật khẩu' }).click();
   await expect(form.getByLabel('Mật khẩu hiện tại', { exact: true })).toBeFocused();
@@ -139,7 +161,7 @@ test('password change rejects bad credentials, then clears the session on succes
   await page.getByLabel('Mật khẩu', { exact: true }).fill(' second password long ');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
   await page.getByRole('link', { name: /Hồ sơ cá nhân/ }).click();
-  await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Second Account');
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Second Account');
   await expect(page.getByLabel('Email', { exact: true })).toHaveValue('second@example.com');
   await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
 });
@@ -149,7 +171,10 @@ test('later session page failure preserves loaded items and retry can recover', 
   gateway,
 }) => {
   await login(page);
-  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+    .click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(1);
   gateway.failures.set('GET /api/v1/me/sessions', 503);
   await page.getByRole('button', { name: 'Tải thêm phiên' }).click();
@@ -166,9 +191,12 @@ test('expiry during a private read clears profile and redirects without reloadin
 }) => {
   await login(page);
   gateway.authenticated = false;
-  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/login\?returnTo=%2Fprofile$/);
-  await expect(page.getByLabel('Tên hiển thị')).toHaveCount(0);
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveCount(0);
   await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
 });
 
@@ -203,7 +231,7 @@ test('private queries wait for bootstrap and anonymous redirect preserves return
   });
   await page.goto('/profile?tab=sessions');
   await expect(page.getByText('Đang tải…')).toBeVisible();
-  await expect(page.getByLabel('Tên hiển thị')).toHaveCount(0);
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveCount(0);
   expect(gateway.calls.filter((call) => call.path.startsWith('/api/v1/me'))).toHaveLength(0);
   release();
   await expect(page).toHaveURL(/\/login\?returnTo=%2Fprofile%3Ftab%3Dsessions$/);
@@ -218,7 +246,7 @@ test('expired session redirects without showing private profile data', async ({
   gateway.authenticated = false;
   await page.reload();
   await expect(page).toHaveURL(/\/login\?returnTo=%2Fprofile$/);
-  await expect(page.getByLabel('Tên hiển thị')).toHaveCount(0);
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveCount(0);
   await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
 });
 
@@ -313,12 +341,26 @@ for (const width of [1440, 768, 402, 320]) {
       gateway.authenticated = true;
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/profile');
-      await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Trang Gateway');
-      await page.getByLabel('Tên hiển thị').fill('');
-      await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
-      await expect(page.getByLabel('Tên hiển thị')).toBeFocused();
+      await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Trang Gateway');
+      await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveAttribute('readonly');
+      const navigation = page.getByRole('navigation', { name: 'Điều hướng tài khoản' });
+      await expect(navigation.getByRole('button', { name: 'Thiết bị', exact: true })).toHaveCount(
+        0,
+      );
+      await expect(navigation.getByRole('button', { name: 'Thông tin cá nhân' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+      await page.screenshot({ path: info.outputPath('profile-personal-' + width + '.png') });
+      await page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }).click();
+      await page.getByLabel('Tên hiển thị', { exact: true }).fill('');
+      await page.getByRole('button', { name: 'Lưu tên hiển thị' }).click();
+      await expect(page.getByLabel('Tên hiển thị', { exact: true })).toBeFocused();
       await expect(page.getByRole('alert')).toContainText('Tên hiển thị');
-      await page.getByLabel('Tên hiển thị').fill('Trang Gateway');
+      await page.getByLabel('Tên hiển thị', { exact: true }).fill('Trang Gateway');
+      await page.getByRole('button', { name: 'Hủy chỉnh sửa tên hiển thị' }).click();
+      await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveAttribute('readonly');
+      await navigation.getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true }).click();
       const field = page.getByLabel('Mật khẩu hiện tại', { exact: true });
       await field.fill('keep value ');
       await field.press('Tab');
@@ -344,6 +386,18 @@ for (const width of [1440, 768, 402, 320]) {
         fullPage: true,
       });
       await info.attach('profile-' + width, { body: image, contentType: 'image/png' });
+      await navigation.getByRole('button', { name: 'Thông báo', exact: true }).click();
+      await expect(
+        navigation.getByRole('button', { name: 'Thông báo', exact: true }),
+      ).toHaveAttribute('aria-current', 'page');
+      await expect(page.getByRole('button', { name: 'Đăng xuất', exact: true })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+        width,
+      );
+      await page.screenshot({
+        path: info.outputPath(`profile-notifications-${width}.png`),
+        fullPage: true,
+      });
     },
   );
 }

@@ -31,7 +31,6 @@ for (const width of [1440, 402]) {
         await page.screenshot({ path: info.outputPath(`rail-${count}.png`), fullPage: true });
 
         // Each ALL group owns its final rail, not the following group or end-drop row.
-        await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
         await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
         await expectTimelineRails(list.locator(':scope > [data-plan-activity]'), count);
         await expectTimelineRails(

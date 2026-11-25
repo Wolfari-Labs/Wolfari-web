@@ -54,6 +54,7 @@ import {
   Pause,
   Play,
   TriangleAlert,
+  Lightbulb,
 } from 'lucide-react';
 const icons = {
   home: House,
@@ -117,6 +118,7 @@ const icons = {
   pause: Pause,
   play: Play,
   alert: TriangleAlert,
+  lightbulb: Lightbulb,
 };
 export type IconName = keyof typeof icons;
 export function Icon({

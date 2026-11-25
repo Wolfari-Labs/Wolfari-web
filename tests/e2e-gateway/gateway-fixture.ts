@@ -672,5 +672,5 @@ export async function login(page: Page) {
   await page.getByLabel('Email', { exact: true }).fill('trang@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill(' password with spaces ');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
-  await expect(page.getByLabel('Tên hiển thị')).toBeVisible();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toBeVisible();
 }

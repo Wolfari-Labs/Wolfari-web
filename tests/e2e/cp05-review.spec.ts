@@ -122,7 +122,7 @@ for (const viewport of [
         await expect(name).toBeFocused();
       }
       if (route.key === 'settings') {
-        const edit = page.getByRole('button', { name: 'Chỉnh sửa thông tin' });
+        const edit = page.getByRole('button', { name: 'Cài đặt chuyến đi' });
         await edit.scrollIntoViewIfNeeded();
         await expect(edit).toBeInViewport();
       }

@@ -25,13 +25,15 @@ export function TripHero({
   trip,
   compact = false,
   variant = 'landscape',
+  showCover = true,
 }: {
   trip: TripDetailViewModel;
   compact?: boolean;
   variant?: 'photo' | 'schedule' | 'landscape';
+  showCover?: boolean;
 }) {
   const canEdit = trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED';
-  const cover = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
+  const cover = useTripCoverImage(trip.id, showCover && trip.presentation.coverAvailable);
   return (
     <section
       className={styles.hero}
@@ -44,7 +46,7 @@ export function TripHero({
         className={styles.thumb}
         aria-hidden="true"
         style={
-          cover.src
+          showCover && cover.src
             ? ({ '--trip-cover': `url("${cover.src}")` } as CSSProperties)
             : undefined
         }
@@ -65,11 +67,19 @@ export function TripHero({
               ? 'Thành viên'
               : `${trip.presentation.memberCount} thành viên`}
           </Link>
-          <span className={styles.presence} title="Chưa có dữ liệu hiện diện trực tuyến"> · Trạng thái online chưa khả dụng</span>
+          <span className={styles.presence} title="Chưa có dữ liệu hiện diện trực tuyến">
+            {' '}
+            · Trạng thái online chưa khả dụng
+          </span>
         </p>
       </div>
       <div className={styles.actions}>
-        <Link className={styles.memberStack} to={paths.members(trip.id)} aria-label="Xem thành viên chuyến đi" title="Ảnh thành viên chưa khả dụng">
+        <Link
+          className={styles.memberStack}
+          to={paths.members(trip.id)}
+          aria-label="Xem thành viên chuyến đi"
+          title="Ảnh thành viên chưa khả dụng"
+        >
           <Icon name="members" size={18} />
           <span>{trip.presentation.memberCount ?? '—'}</span>
         </Link>

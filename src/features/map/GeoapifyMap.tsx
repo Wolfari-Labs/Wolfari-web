@@ -288,15 +288,7 @@ export function GeoapifyMap({
   }
   if (!key)
     return (
-      <div
-        className={styles.notice}
-        role="status"
-        style={
-          embedded
-            ? { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }
-            : undefined
-        }
-      >
+      <div className={`${styles.notice} ${embedded ? styles.embeddedNotice : ''}`} role="status">
         <strong>Bản đồ nền chưa khả dụng</strong>
         <p>Chưa có browser key Geoapify. Danh sách địa điểm vẫn dùng được.</p>
       </div>

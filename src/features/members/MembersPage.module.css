@@ -172,6 +172,11 @@
 .panelHeading > div {
   min-width: 0;
 }
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .memberPanel h2 {
   margin: 0;
   color: var(--v2-ink);
@@ -203,193 +208,6 @@
   clip-path: inset(50%);
   overflow: hidden;
 }
-.rosterHead {
-  display: grid;
-  /* Role sits next to the name (not at the far edge) so the eye does not travel 800px. */
-  grid-template-columns: minmax(0, 420px) 160px;
-  column-gap: 12px;
-  padding-inline: 14px;
-  color: var(--v2-sub);
-  font: 700 11px/16px var(--v2-font);
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-}
-.members {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.members > li {
-  display: grid;
-  grid-template-columns: 38px minmax(0, 370px) 160px;
-  column-gap: 12px;
-  align-items: center;
-  min-width: 0;
-  min-height: 60px;
-  padding: 10px 14px;
-  border-radius: var(--v2-radius-thumb);
-  background: var(--v2-row);
-}
-.members > li[data-departed='true'] {
-  background: var(--v2-track);
-  opacity: 0.85;
-}
-.avatar {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border: 2px solid var(--v2-white);
-  border-radius: 50%;
-  background: var(--v2-sky);
-  color: var(--v2-white);
-  font: 800 16px/1 var(--v2-font);
-}
-.avatar:has(> span) {
-  background: var(--v2-grad-start);
-}
-.avatar[data-tone='1']:has(> span) {
-  background: var(--v2-grad-end);
-}
-.avatar[data-tone='2']:has(> span) {
-  background: #ffb547;
-}
-.avatar[data-tone='3']:has(> span) {
-  background: #ff8a7a;
-}
-.avatar[data-tone='4']:has(> span) {
-  background: #a58bff;
-}
-.avatar img {
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-.avatar .avatarPhoto {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.identity {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-.identity details:not(.preview) > summary {
-  flex-wrap: wrap;
-  gap: 2px 8px;
-  min-height: 22px;
-  color: var(--v2-muted);
-}
-.identity details:not(.preview) > summary::after {
-  width: 6px;
-  height: 6px;
-  margin-left: 2px;
-}
-.identity summary strong {
-  color: var(--v2-ink);
-  font: 800 15px/20px var(--v2-font);
-  overflow-wrap: anywhere;
-}
-.self {
-  padding: 1px 8px;
-  border-radius: var(--v2-radius-pill);
-  background: var(--v2-sky);
-  color: var(--v2-nav-text);
-  font: 800 11px/16px var(--v2-font);
-}
-.identity small {
-  display: block;
-  color: var(--v2-sub);
-  font: 700 12px/16px var(--v2-font);
-}
-/* The short User ID repeats the fallback name; it stays available to assistive tech. */
-.identity small:first-of-type {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-.identity dl {
-  margin: 4px 0;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: var(--v2-white);
-  color: var(--v2-nav-text);
-  font: 600 12px/18px var(--v2-font);
-}
-.identity details:not([open]) > :not(summary),
-.roleHelp:not([open]) > :not(summary) {
-  display: none;
-}
-.identity dt {
-  color: var(--v2-sub);
-  font-weight: 700;
-}
-.identity dd {
-  margin: 0 0 4px;
-}
-.role {
-  justify-self: start;
-  padding: 5px 10px;
-  border-radius: var(--v2-radius-pill);
-  background: #eef1f7;
-  color: var(--v2-nav-text);
-  font: 700 12px/normal var(--v2-font);
-  white-space: nowrap;
-}
-.role.owner {
-  background: var(--v2-lilac);
-  color: var(--v2-violet-text);
-}
-.role.owner::before {
-  content: '★ ' / '';
-}
-/* Role guidance: collapsed by default, directly under the roster. */
-.roleHelp {
-  margin-top: 4px;
-  padding: 0 14px;
-  border-radius: var(--v2-radius-row);
-  background: var(--v2-row);
-}
-.roleHelp > summary {
-  gap: 8px;
-  color: var(--v2-nav-text);
-  font: 700 13px/18px var(--v2-font);
-}
-.roleHelp > summary svg {
-  flex-shrink: 0;
-  color: var(--v2-violet-text);
-}
-.roleHelp dl {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 8px 16px;
-  margin: 0;
-  padding: 2px 0 14px;
-  font: 600 13px/18px var(--v2-font);
-}
-.roleHelp dt {
-  color: var(--v2-ink);
-  font-weight: 800;
-}
-.roleHelp dd {
-  margin: 0;
-  color: var(--v2-nav-text);
-  overflow-wrap: anywhere;
-}
-.roleHelp a {
-  color: var(--v2-blue-text);
-  font-weight: 700;
-}
-
 /* Policy tab (943:13185 left card). */
 .policyPanel {
   max-width: 640px;
@@ -559,27 +377,6 @@
   .includeLeft {
     min-height: 44px;
   }
-  .rosterHead {
-    display: none;
-  }
-  .members > li {
-    grid-template-columns: 38px minmax(0, 1fr);
-    padding: 12px;
-    gap: 8px 10px;
-  }
-  .members > li > .role {
-    grid-column: 2;
-  }
-  .roleHelp dl {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2px;
-  }
-  .roleHelp dd + dt {
-    margin-top: 8px;
-  }
-  .identity details:not(.preview) > summary {
-    min-height: 44px;
-  }
   .inviteRow {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -629,21 +426,6 @@
     overflow: hidden;
   }
 
-  .members {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-  }
-
-  .roleHelp {
-    flex: 0 0 auto;
-    max-height: 35%;
-    overflow-y: auto;
-  }
-
   .policyPanel,
   .invitationManagement,
   .invitationForm,
@@ -669,26 +451,46 @@
 }
 
 @media (min-width: 769px) and (max-height: 600px) {
+  .top {
+    margin-block: 6px;
+  }
+
+  .tabs > button {
+    min-height: 32px;
+    padding: 6px 14px;
+    line-height: 18px;
+  }
+
   .memberPanel {
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    gap: 8px;
+    padding: 12px 16px;
   }
 
   .panelHeading {
-    position: sticky;
-    z-index: 1;
-    top: -20px;
-    padding-block: 20px 8px;
-    margin-top: -20px;
-    background: var(--v2-white);
+    flex: none;
+    min-height: 32px;
   }
 
-  .members {
-    flex: 0 0 auto;
-    overflow: visible;
+  .memberPanel h2 {
+    font-size: 18px;
+    line-height: 24px;
   }
 
-  .roleHelp {
-    max-height: none;
+  .panelTitle > button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .inviteButton {
+    min-height: 32px;
+    height: 32px;
+    padding: 6px 12px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .includeLeft {
+    flex: none;
+    min-height: 24px;
   }
 }

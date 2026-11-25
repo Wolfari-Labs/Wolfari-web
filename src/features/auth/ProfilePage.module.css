@@ -1,34 +1,44 @@
 ﻿/* Web v2 W18 · Tài khoản & thông báo (Figma 944:16082, states 944:16255/16433/16602). */
 .page {
-  max-width: 1440px;
-  margin: auto;
-  padding: 8px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 0 0;
   color: var(--v2-ink);
   font-family: var(--v2-font);
 }
-.page h1 {
-  margin: 0;
-  color: var(--v2-ink);
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 49px;
-}
-.subtitle {
-  margin: 4px 0 26px;
-  color: var(--v2-sub);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 22px;
-}
-.grid {
+.workspace {
   display: grid;
-  grid-template-columns: minmax(0, 560fr) minmax(0, 760fr);
-  grid-template-areas:
-    'personal notifications'
-    'password notifications';
-  grid-template-rows: auto 1fr;
-  align-items: start;
+  flex: 1;
+  grid-template-columns: 264px minmax(0, 1fr);
+  align-items: stretch;
   gap: 24px;
+  min-width: 0;
+  min-height: 0;
+}
+.content {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.section[hidden] {
+  display: none;
+}
+.section {
+  min-width: 0;
+  min-height: 100%;
+}
+.securityPanels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+  min-width: 0;
 }
 .panel {
   position: relative;
@@ -44,15 +54,11 @@
   padding: 24px 28px;
 }
 .personal {
-  grid-area: personal;
+  min-height: 100%;
 }
 .notifications {
-  grid-area: notifications;
-  align-self: stretch;
+  min-height: 100%;
   gap: 12px;
-}
-.password {
-  grid-area: password;
 }
 .panel h2 {
   margin: 0;
@@ -181,6 +187,38 @@
   font-size: 15px;
   font-weight: 600;
 }
+.fieldActions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+.fieldAction {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  color: var(--v2-blue-text);
+  cursor: pointer;
+}
+.fieldAction[type='submit'] {
+  background: var(--v2-gradient);
+  color: var(--v2-ink);
+}
+.fieldAction:hover:not(:disabled) {
+  box-shadow: var(--v2-shadow-card);
+}
+.fieldAction:disabled {
+  background: transparent;
+  color: var(--v2-muted);
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .fieldChip {
   width: 32px;
   height: 32px;
@@ -229,19 +267,10 @@
   margin-top: 0;
 }
 .sessions {
-  border-top: 1px solid #e3e9f7;
-  padding-top: 4px;
+  min-width: 0;
 }
-.sessions summary {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: var(--v2-ink);
-  font-size: 15px;
-  font-weight: 800;
-}
-.sessions ul {
+.sessions ul,
+.sessionList {
   list-style: none;
   margin: 8px 0 0;
   padding: 0;
@@ -280,14 +309,22 @@
   pointer-events: none;
 }
 .page > :global(.preview) {
-  margin-top: 24px;
+  position: fixed;
+  z-index: 5;
+  right: 24px;
+  bottom: 4px;
+  max-width: calc(100vw - 48px);
+  max-height: 40dvh;
+  margin: 0;
+  overflow: auto;
 }
 @media (max-width: 1000px) {
-  .page {
-    padding-inline: 24px;
-  }
-  .grid {
+  .workspace {
+    grid-template-columns: 240px minmax(0, 1fr);
     gap: 20px;
+  }
+  .securityPanels {
+    grid-template-columns: minmax(0, 1fr);
   }
   .panel {
     padding-inline: 20px;
@@ -295,25 +332,14 @@
 }
 @media (max-width: 768px) {
   .page {
-    padding-top: 28px;
+    padding: 16px 16px 24px;
   }
-  .page h1 {
-    font-size: 28px;
-    line-height: 38px;
-  }
-  .subtitle {
-    margin: 8px 0 24px;
-    font-size: 13px;
-    line-height: 21px;
-  }
-  .grid {
+  .workspace {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'personal'
-      'notifications'
-      'password';
-    grid-template-rows: none;
-    gap: 20px;
+    gap: 16px;
+  }
+  .content {
+    overflow: visible;
   }
   .panel {
     padding: 20px;
@@ -334,14 +360,6 @@
   .fields input {
     font-size: 16px;
   }
-  .formFooter {
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-  .personal .save,
-  .personal .logout {
-    width: 100%;
-  }
   .mascot {
     display: none;
   }
@@ -355,5 +373,12 @@
   }
   .avatarRow {
     gap: 12px;
+  }
+}
+@media (min-width: 769px) {
+  .page {
+    height: calc(100dvh - 136px);
+    overflow: hidden;
+    box-sizing: border-box;
   }
 }

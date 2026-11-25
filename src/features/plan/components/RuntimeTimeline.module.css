@@ -6,13 +6,14 @@
 }
 .dayBar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 20px;
   min-width: 0;
   margin-top: 20px;
 }
 .dayBar > :last-child {
-  flex: 0 0 496px;
+  flex: 0 1 496px;
 }
 .defaultColumns {
   display: grid;
@@ -22,27 +23,27 @@
 }
 /* Web v2 W06 day cards (Figma 933:7436): 24px radius, gradient when selected. */
 .days {
-  flex: 1 1 auto;
+  flex: 1 1 560px;
   min-width: 0;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
   max-width: 100%;
   margin: -8px 0 -14px -10px;
   padding: 8px 0 14px 10px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
 }
 .days button {
-  flex-shrink: 0;
-  min-width: 124px;
+  min-width: 0;
   min-height: 71px;
-  padding: 12px 18px;
+  padding: 12px 10px;
   border: 0;
   border-radius: var(--v2-radius-tile);
   font: 800 18px/normal var(--v2-font);
   white-space: nowrap;
+}
+.days > button {
+  flex: 1 1 92px;
 }
 .days button[aria-pressed='false'] {
   background: var(--v2-white);
@@ -75,35 +76,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-width: 144px;
+  flex-basis: 124px;
   border: 2px dashed #9db8f5;
   border-radius: 24px;
   background: rgb(255 255 255 / 55%);
   color: var(--v2-blue-text);
   font: 800 15px/20px var(--v2-font);
   opacity: 1;
-}
-.dayUtilities {
-  flex: 0 0 auto;
-  align-self: center;
-}
-.dayUtilities summary {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 44px;
-  list-style: none;
-  cursor: pointer;
-}
-.dayUtilities summary::-webkit-details-marker {
-  display: none;
-}
-.dayUtilities > div {
-  display: flex;
-  gap: 8px;
-}
-.dayUtilities button {
-  min-width: 0;
 }
 .days [data-drop-target] {
   outline: 2px solid var(--v2-blue);
@@ -228,6 +207,42 @@
   color: var(--v2-violet-text);
   font: 700 13px/normal var(--v2-font);
 }
+.poolSearch {
+  display: flex;
+  align-items: center;
+  flex: none;
+  width: 100%;
+  height: 43px;
+  gap: 10px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  background: #f3f6ff;
+}
+.poolSearch > img {
+  display: block;
+  flex: none;
+}
+.poolSearch input {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 14px;
+  font-weight: 600;
+}
+.poolSearch input::placeholder {
+  color: var(--v2-muted);
+  opacity: 1;
+}
+.poolSearch:focus-within {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
 .poolList {
   display: flex;
   flex: 1 1 auto;
@@ -240,6 +255,17 @@
   overscroll-behavior: contain;
   list-style: none;
   scrollbar-width: thin;
+}
+.poolList[data-empty='true'] {
+  min-height: 110px;
+  margin: 0;
+  padding: 0;
+}
+.poolList[data-empty='true'] > .dropEnd {
+  flex: 1 1 auto;
+}
+.compactPlanner .poolList[data-empty='true'] {
+  max-height: none;
 }
 .poolCard {
   position: relative;
@@ -303,14 +329,6 @@
 }
 .poolCard:has(> .poolCover) > .poolIcon {
   display: none;
-}
-.poolHelp {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 20px;
-  background: var(--v2-lilac);
-  color: #4a3aa8;
-  font: 600 13px/19px var(--v2-font);
 }
 .poolCard[data-dragging] {
   opacity: 0.4;
@@ -442,9 +460,6 @@
   }
 }
 @media (max-width: 768px) {
-  .days button {
-    min-width: 108px;
-  }
   .timelineHeader > div:first-child {
     flex-wrap: wrap;
   }
@@ -516,9 +531,6 @@
   }
 }
 @media (max-width: 480px) {
-  .dayUtilities {
-    margin-left: 0;
-  }
   .poolIcon,
   .poolCover {
     display: none;

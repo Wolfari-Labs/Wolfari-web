@@ -214,7 +214,10 @@ function mapPlan(raw: unknown, expectedTripId: string): PlanViewModel {
         publicDescription: text(dressCode.public_description),
         source: source(dressCode.source),
         planVersion: number(dressCode.plan_version),
-        referenceImageAvailable: bool(dressCode.reference_image_available),
+        referenceImageAvailable:
+          dressCode.reference_image_available === undefined
+            ? false
+            : bool(dressCode.reference_image_available),
       };
     }),
     packingItems: packingItems.map((value) => {

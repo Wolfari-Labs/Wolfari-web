@@ -12,13 +12,10 @@ import { useMembersRepositoriesOptional } from '../../members/repositories/membe
 import type { MembershipViewModel } from '../../members/model/members';
 import { usePlanRepository } from '../../plan/repositories/plan-context';
 import type { TripDetailViewModel } from '../model/trip-detail';
-import type {
-  PersonalReminder,
-  TripManagementAction,
-} from '../repositories/trip.repository';
+import type { PersonalReminder, TripManagementAction } from '../repositories/trip.repository';
 import { useTripRepository } from '../repositories/repository-context';
-import { useTripCoverImage } from '../hooks/use-trip-cover-image';
 import { localTimeToIso } from '../../plan/model/plan-draft';
+import { TripPlanExport } from './TripPlanExport';
 import styles from './TripSettingsOperations.module.css';
 
 interface LifecycleAttempt {
@@ -57,9 +54,7 @@ function readReminderAttempt(key: string): { value: ReminderAttempt | null; inva
     const raw = browserStorage('sessionStorage')?.getItem(key) ?? null;
     if (!raw) return { value: null, invalid: false };
     const value: unknown = JSON.parse(raw);
-    return validReminderAttempt(value)
-      ? { value, invalid: false }
-      : { value: null, invalid: true };
+    return validReminderAttempt(value) ? { value, invalid: false } : { value: null, invalid: true };
   } catch {
     return { value: null, invalid: true };
   }
@@ -126,105 +121,13 @@ function reminderLabel(status: PersonalReminder['status']) {
   return labels[status];
 }
 
-function CoverEditor({ trip }: { trip: TripDetailViewModel }) {
-  const repository = useTripRepository();
-  const queryClient = useQueryClient();
-  const cover = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
-  const coverSrc = cover.src ?? trip.presentation.cover?.src;
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  async function upload(file?: File) {
-    if (!file || busy) return;
-    if (!['image/jpeg', 'image/png'].includes(file.type) || file.size > 5 * 1024 * 1024) {
-      setError('Chọn ảnh JPEG hoặc PNG có dung lượng tối đa 5 MB.');
-      return;
-    }
-    if (!repository.uploadCover) {
-      setError('Tải ảnh bìa chưa khả dụng trong chế độ dữ liệu hiện tại.');
-      return;
-    }
-    setBusy(true);
-    setError('');
-    try {
-      await repository.uploadCover({ tripId: trip.id, file, signal: new AbortController().signal });
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['trip', 'cover', trip.id] }),
-        queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
-        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
-        queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
-      ]);
-    } catch {
-      setError('Chưa tải được ảnh bìa. Kiểm tra kết nối rồi thử lại.');
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function remove() {
-    if (!repository.removeCover || busy) return;
-    setBusy(true);
-    setError('');
-    try {
-      await repository.removeCover({ tripId: trip.id, signal: new AbortController().signal });
-      await Promise.all([
-        queryClient.removeQueries({ queryKey: ['trip', 'cover', trip.id] }),
-        queryClient.invalidateQueries({ queryKey: ['trip', 'detail', trip.id] }),
-        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
-        queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
-      ]);
-    } catch {
-      setError('Chưa xóa được ảnh bìa. Trạng thái hiện tại chưa thay đổi trên giao diện.');
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <section className={styles.section} aria-labelledby="trip-cover-heading">
-      <h3 id="trip-cover-heading">Ảnh bìa chuyến đi</h3>
-      {coverSrc ? (
-        <img className={styles.cover} src={coverSrc} alt="" />
-      ) : cover.isError ? (
-        <div>
-          <Alert tone="error">Chưa tải được ảnh bìa.</Alert>
-          <Button variant="outline" disabled={cover.isFetching} onClick={() => void cover.refetch()}>
-            Tải lại ảnh
-          </Button>
-        </div>
-      ) : (
-        <p>
-          {cover.isPending && repository.getCover && trip.presentation.coverAvailable
-            ? 'Đang tải ảnh bìa…'
-            : trip.presentation.coverAvailable
-              ? 'Ảnh bìa chưa thể tải trong chế độ dữ liệu hiện tại.'
-              : 'Chưa có ảnh bìa.'}
-        </p>
-      )}
-      {trip.permissions.canUpdate && trip.lifecycle !== 'ARCHIVED' && (
-        <div className={styles.actions}>
-          <label className={styles.fileButton}>
-            Chọn ảnh
-            <input
-              type="file"
-              accept="image/jpeg,image/png"
-              disabled={busy || !repository.uploadCover}
-              onChange={(event) => {
-                void upload(event.target.files?.[0]);
-                event.currentTarget.value = '';
-              }}
-            />
-          </label>
-          {trip.presentation.coverAvailable && (
-            <Button variant="outline" loading={busy} disabled={busy} onClick={() => void remove()}>
-              Xóa ảnh
-            </Button>
-          )}
-        </div>
-      )}
-      {error && <Alert tone="error">{error}</Alert>}
-    </section>
-  );
-}
-
-function ReminderManager({ trip }: { trip: TripDetailViewModel }) {
+function ReminderManager({
+  trip,
+  onBusyChange,
+}: {
+  trip: TripDetailViewModel;
+  onBusyChange: (busy: boolean) => void;
+}) {
   const repository = useTripRepository();
   const planRepository = usePlanRepository();
   const actor = trip.currentMembership.userId;
@@ -238,12 +141,11 @@ function ReminderManager({ trip }: { trip: TripDetailViewModel }) {
       : '',
   );
   const [remindAt, setRemindAt] = useState(() =>
-    initial.current.value
-      ? sourceTimeToLocal(initial.current.value.remindAt, trip.timezone)
-      : '',
+    initial.current.value ? sourceTimeToLocal(initial.current.value.remindAt, trip.timezone) : '',
   );
   const [error, setError] = useState('');
   const [busyId, setBusyId] = useState('');
+  useEffect(() => onBusyChange(!!busyId), [busyId, onBusyChange]);
   const [attempt, setAttempt] = useState<ReminderAttempt | null>(initial.current.value);
   const [unknown, setUnknown] = useState(!!initial.current.value);
   const [invalidAttempt] = useState(initial.current.invalid);
@@ -388,9 +290,9 @@ function ReminderManager({ trip }: { trip: TripDetailViewModel }) {
 
   return (
     <section className={styles.section} aria-labelledby="trip-reminders-heading">
-      <h3 id="trip-reminders-heading">Nhắc nhở của bạn</h3>
+      <h3 id="trip-reminders-heading">Thông báo của bạn</h3>
       {!repository.listReminders || !repository.createReminder ? (
-        <p>Nhắc nhở theo Trip chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
+        <p>Thông báo theo chuyến đi chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
       ) : (
         <>
           <form
@@ -430,7 +332,8 @@ function ReminderManager({ trip }: { trip: TripDetailViewModel }) {
               disabled={
                 !!busyId ||
                 invalidAttempt ||
-                (!attempt && (!selected || pendingReminders.length >= 50 || list.isPending || list.isError))
+                (!attempt &&
+                  (!selected || pendingReminders.length >= 50 || list.isPending || list.isError))
               }
             >
               {unknown ? 'Thử lại đúng yêu cầu cũ' : 'Tạo lời nhắc'}
@@ -438,10 +341,13 @@ function ReminderManager({ trip }: { trip: TripDetailViewModel }) {
           </form>
           {invalidAttempt && (
             <Alert tone="warning">
-              Yêu cầu nhắc đã lưu không hợp lệ. Hãy tải lại Trip để đối chiếu trước khi tạo yêu cầu khác.
+              Yêu cầu nhắc đã lưu không hợp lệ. Hãy tải lại Trip để đối chiếu trước khi tạo yêu cầu
+              khác.
             </Alert>
           )}
-          {planQuery.isError && <Alert tone="warning">Chưa tải được các mục có thời hạn trong Plan.</Alert>}
+          {planQuery.isError && (
+            <Alert tone="warning">Chưa tải được các mục có thời hạn trong Plan.</Alert>
+          )}
           {error && <Alert tone="error">{error}</Alert>}
           {list.isPending ? (
             <p role="status">Đang tải lời nhắc…</p>
@@ -492,6 +398,8 @@ function TripLifecycleManager({
   rosterError,
   rosterUnavailable,
   onDeleted,
+  onBusyChange,
+  initialTransferMemberId,
 }: {
   trip: TripDetailViewModel;
   roster: readonly MembershipViewModel[];
@@ -501,6 +409,8 @@ function TripLifecycleManager({
   rosterError: boolean;
   rosterUnavailable: boolean;
   onDeleted: () => void;
+  onBusyChange: (busy: boolean) => void;
+  initialTransferMemberId?: string;
 }) {
   const repository = useTripRepository();
   const queryClient = useQueryClient();
@@ -510,12 +420,13 @@ function TripLifecycleManager({
   const [attempt, setAttempt] = useState(initial.current.value);
   const [invalidAttempt, setInvalidAttempt] = useState(initial.current.invalid);
   const [action, setAction] = useState<TripManagementAction>(
-    trip.lifecycle === 'ARCHIVED' ? 'REOPEN' : 'ARCHIVE',
+    trip.lifecycle === 'ARCHIVED' ? 'REOPEN' : initialTransferMemberId ? 'TRANSFER' : 'ARCHIVE',
   );
   const [reason, setReason] = useState('');
-  const [newOwner, setNewOwner] = useState('');
+  const [newOwner, setNewOwner] = useState(initialTransferMemberId ?? '');
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
+  useEffect(() => onBusyChange(busy), [busy, onBusyChange]);
   const [unknown, setUnknown] = useState(!!initial.current.value);
   const [error, setError] = useState('');
   const storage = useRef(createStorageFallback());
@@ -549,7 +460,9 @@ function TripLifecycleManager({
       queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
       queryClient.invalidateQueries({ queryKey: ['plan', trip.id] }),
       queryClient.invalidateQueries({ queryKey: ['members', trip.id] }),
-      queryClient.invalidateQueries({ queryKey: ['finance', trip.currentMembership.userId, trip.id] }),
+      queryClient.invalidateQueries({
+        queryKey: ['finance', trip.currentMembership.userId, trip.id],
+      }),
     ]);
   }
   async function submit() {
@@ -587,12 +500,14 @@ function TripLifecycleManager({
       await refresh();
       if (snapshot.action === 'DELETE') onDeleted();
     } catch (cause) {
-      const status = cause && typeof cause === 'object' && 'status' in cause
-        ? Number((cause as { status?: unknown }).status)
-        : null;
-      const kind = cause && typeof cause === 'object' && 'kind' in cause
-        ? String((cause as { kind?: unknown }).kind)
-        : '';
+      const status =
+        cause && typeof cause === 'object' && 'status' in cause
+          ? Number((cause as { status?: unknown }).status)
+          : null;
+      const kind =
+        cause && typeof cause === 'object' && 'kind' in cause
+          ? String((cause as { kind?: unknown }).kind)
+          : '';
       if (
         [400, 403, 404, 409].includes(status ?? 0) ||
         (kind === 'http' && status !== null && status < 500)
@@ -618,13 +533,17 @@ function TripLifecycleManager({
   );
   return (
     <section className={styles.section} aria-labelledby="trip-lifecycle-heading">
-      <h3 id="trip-lifecycle-heading">Quản lý chuyến đi</h3>
+      <h3 id="trip-lifecycle-heading">
+        {action === 'TRANSFER' ? 'Chuyển quyền Owner' : 'Lưu trữ chuyến đi'}
+      </h3>
       {!repository.manageTrip ? (
         <p>Lifecycle chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
       ) : (
         <>
           {invalidAttempt && (
-            <Alert tone="warning">Yêu cầu lifecycle đã lưu không hợp lệ. Tải lại Trip trước khi gửi thao tác mới.</Alert>
+            <Alert tone="warning">
+              Yêu cầu lifecycle đã lưu không hợp lệ. Tải lại Trip trước khi gửi thao tác mới.
+            </Alert>
           )}
           <form
             className={styles.form}
@@ -676,23 +595,25 @@ function TripLifecycleManager({
               Tôi xác nhận thao tác này và đã kiểm tra các ràng buộc Finance.
             </label>
             {error && <Alert tone={unknown ? 'warning' : 'error'}>{error}</Alert>}
-          {rosterError && (
-            <Alert tone="error">Chưa tải đủ danh sách thành viên để chuyển quyền Owner.</Alert>
-          )}
-          {rosterUnavailable && (
-            <Alert tone="warning">Danh sách thành viên chưa khả dụng để chuyển quyền Owner.</Alert>
-          )}
-          {canLoadMoreRoster && (
-            <Button
-              type="button"
-              variant="outline"
-              disabled={loadingRoster}
-              loading={loadingRoster}
-              onClick={loadMoreRoster}
-            >
-              Tải thêm thành viên
-            </Button>
-          )}
+            {rosterError && (
+              <Alert tone="error">Chưa tải đủ danh sách thành viên để chuyển quyền Owner.</Alert>
+            )}
+            {rosterUnavailable && (
+              <Alert tone="warning">
+                Danh sách thành viên chưa khả dụng để chuyển quyền Owner.
+              </Alert>
+            )}
+            {canLoadMoreRoster && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={loadingRoster}
+                loading={loadingRoster}
+                onClick={loadMoreRoster}
+              >
+                Tải thêm thành viên
+              </Button>
+            )}
             <Button
               type="submit"
               loading={busy}
@@ -700,15 +621,27 @@ function TripLifecycleManager({
                 busy ||
                 invalidAttempt ||
                 !confirmed ||
-                (!unknown && (!reason.trim() || (action === 'TRANSFER' && !candidates.some((m) => m.id === newOwner))))
+                (!unknown &&
+                  (!reason.trim() ||
+                    (action === 'TRANSFER' && !candidates.some((m) => m.id === newOwner))))
               }
               data-destructive={action === 'DELETE' || undefined}
             >
-              {unknown ? 'Thử lại đúng yêu cầu cũ' : action === 'REOPEN' ? 'Mở lại' : action === 'DELETE' ? 'Xóa chuyến đi' : action === 'TRANSFER' ? 'Chuyển Owner' : 'Lưu trữ'}
+              {unknown
+                ? 'Thử lại đúng yêu cầu cũ'
+                : action === 'REOPEN'
+                  ? 'Mở lại'
+                  : action === 'DELETE'
+                    ? 'Xóa chuyến đi'
+                    : action === 'TRANSFER'
+                      ? 'Chuyển Owner'
+                      : 'Lưu trữ'}
             </Button>
           </form>
           {action !== 'REOPEN' && (
-            <p className={styles.note}>Backend sẽ chặn thao tác nếu Finance còn nghĩa vụ chưa xử lý.</p>
+            <p className={styles.note}>
+              Backend sẽ chặn thao tác nếu Finance còn nghĩa vụ chưa xử lý.
+            </p>
           )}
         </>
       )}
@@ -718,10 +651,14 @@ function TripLifecycleManager({
 
 export function TripSettingsOperations({
   trip,
-  ownerName,
+  section,
+  onBusyChange,
+  initialTransferMemberId,
 }: {
   trip: TripDetailViewModel;
-  ownerName: string | null;
+  section: 'export' | 'notifications' | 'archive';
+  onBusyChange?: (busy: boolean) => void;
+  initialTransferMemberId?: string;
 }) {
   const repository = useTripRepository();
   const membersRepositories = useMembersRepositoriesOptional();
@@ -731,10 +668,7 @@ export function TripSettingsOperations({
   const actor = trip.currentMembership.userId;
   const roster = useInfiniteQuery({
     queryKey: ['members', trip.id, 'trip-settings', actor, trip.membershipRevision],
-    enabled:
-      !!repository.manageTrip &&
-      !!membership &&
-      trip.currentMembership.role === 'OWNER',
+    enabled: !!membership,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ signal, pageParam }) => {
       if (!membership) throw Error('Members repository unavailable');
@@ -751,75 +685,50 @@ export function TripSettingsOperations({
     },
     getNextPageParam: (page) => page.nextCursor ?? undefined,
   });
-  const members = roster.data?.pages.flatMap((page) => page.items) ?? [];
+  const members =
+    roster.data?.pages
+      .flatMap((page) => page.items)
+      .filter((member) => member.tripId === trip.id && member.leftAt === null) ?? [];
   const [pdfBusy, setPdfBusy] = useState(false);
-  const [pdfError, setPdfError] = useState('');
+  const [reminderBusy, setReminderBusy] = useState(false);
+  const [lifecycleBusy, setLifecycleBusy] = useState(false);
 
-  async function exportPlan() {
-    if (!repository.planPdf || pdfBusy) return;
-    setPdfBusy(true);
-    setPdfError('');
-    try {
-      const blob = await repository.planPdf({ tripId: trip.id, signal: new AbortController().signal });
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = `wolfari-plan-${trip.id}.pdf`;
-      anchor.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      setPdfError('Chưa tải được Plan PDF. Thử lại sau.');
-    } finally {
-      setPdfBusy(false);
-    }
-  }
+  useEffect(() => {
+    onBusyChange?.(pdfBusy || reminderBusy || lifecycleBusy);
+    return () => onBusyChange?.(false);
+  }, [pdfBusy, reminderBusy, lifecycleBusy, onBusyChange]);
 
   return (
     <div className={styles.column}>
-      <section className={styles.panel} aria-labelledby="trip-members-reminders-heading">
-        <h2 id="trip-members-reminders-heading">Thành viên & nhắc nhở</h2>
-        <p>{trip.currentMembership.role === 'OWNER' ? `Chủ chuyến: ${ownerName ?? 'Bạn'}` : 'Bạn là thành viên chuyến đi'}</p>
-        {repository.listReminders && repository.createReminder ? (
-          <ReminderManager trip={trip} />
-        ) : (
-          <section className={styles.section}>
-            <h3>Nhắc nhở của bạn</h3>
-            <p>Nhắc nhở theo Trip chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
-          </section>
-        )}
+      <section className={styles.panel} hidden={section !== 'export'}>
+        <TripPlanExport
+          key={`${trip.id}:${actor}:${trip.planVersion}:${trip.membershipRevision}:${trip.exportRevision}`}
+          trip={trip}
+          onBusyChange={setPdfBusy}
+        />
       </section>
-      <section className={styles.panel} aria-labelledby="trip-files-heading">
-        <h2 id="trip-files-heading">Ảnh & tài liệu</h2>
-        <CoverEditor trip={trip} />
-        <div className={styles.section}>
-          <h3>Plan PDF</h3>
-          {repository.planPdf ? (
-            <>
-              <Button variant="outline" loading={pdfBusy} disabled={pdfBusy} onClick={() => void exportPlan()}>
-                Tải Plan PDF
-              </Button>
-              {pdfError && <Alert tone="error">{pdfError}</Alert>}
-            </>
-          ) : (
-            <p>Tải Plan PDF chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
-          )}
-        </div>
+      <section className={styles.panel} hidden={section !== 'notifications'}>
+        <ReminderManager trip={trip} onBusyChange={setReminderBusy} />
       </section>
-      <TripLifecycleManager
-        trip={trip}
-        roster={members}
-        canLoadMoreRoster={!!roster.hasNextPage}
-        loadingRoster={roster.isFetchingNextPage}
-        rosterError={roster.isError}
-        rosterUnavailable={!!repository.manageTrip && !membership}
-        loadMoreRoster={() => {
-          if (roster.hasNextPage && !roster.isFetchingNextPage) void roster.fetchNextPage();
-        }}
-        onDeleted={() => {
-          void queryClient.invalidateQueries({ queryKey: ['trips', 'list'] });
-          navigate(paths.trips, { replace: true });
-        }}
-      />
+      <section className={styles.panel} hidden={section !== 'archive'}>
+        <TripLifecycleManager
+          trip={trip}
+          roster={members}
+          canLoadMoreRoster={!!roster.hasNextPage}
+          loadingRoster={roster.isFetchingNextPage}
+          rosterError={roster.isError}
+          rosterUnavailable={!!repository.manageTrip && !membership}
+          loadMoreRoster={() => {
+            if (roster.hasNextPage && !roster.isFetchingNextPage) void roster.fetchNextPage();
+          }}
+          onBusyChange={setLifecycleBusy}
+          {...(initialTransferMemberId ? { initialTransferMemberId } : {})}
+          onDeleted={() => {
+            void queryClient.invalidateQueries({ queryKey: ['trips', 'list'] });
+            navigate(paths.trips, { replace: true });
+          }}
+        />
+      </section>
     </div>
   );
 }

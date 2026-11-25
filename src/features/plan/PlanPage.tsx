@@ -59,6 +59,7 @@ import { PlanDayMap } from './components/PlanDayMap';
 import daySun from '../../shared/assets/figma/trips-plan/day-sun.svg';
 import dragIcon from '../../shared/assets/figma/56e25.svg';
 import moreIcon from '../../shared/assets/figma/ca9fb.svg';
+import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import styles from './PlanPage.module.css';
 import { mergePlaceSelections, usePlaceSelection } from '../map/place-selection-store';
 
@@ -300,6 +301,7 @@ function TimelineList({
       }}
       className={styles.timelineViewport}
       data-draft-list="DAY"
+      data-empty={!items.length || undefined}
       data-insertion-slot={dnd.intent?.container === 'DAY' ? dnd.intent.index : undefined}
       tabIndex={0}
       aria-label="Các hoạt động trong ngày"
@@ -455,7 +457,7 @@ function ActivityPool({
           onClick={onClose}
           aria-label="Đóng danh sách hoạt động"
         >
-          × Đóng
+          <Icon name="close" size={18} />
         </button>
       </header>
 
@@ -466,16 +468,15 @@ function ActivityPool({
         <Alert>Chế độ chỉ đọc · Bạn có thể xem nhưng không thể kéo thả hoặc chỉnh sửa.</Alert>
       )}
       <div className={styles.poolSearch}>
-        <Input
-          label="Tìm trong hoạt động đã chọn"
+        <img src={searchIcon} width="18" height="18" alt="" />
+        <input
+          aria-label="Tìm trong hoạt động đã chọn"
           type="search"
-          leadingIcon={<Icon name="search" size={18} />}
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Tìm trong địa điểm/hoạt động đã chọn…"
         />
       </div>
-      <p className={styles.poolHint}>Kéo hoạt động sang lịch trình để thêm vào ngày đang chọn.</p>
       <ul
         ref={(element) => {
           poolDrop.ref(element);
@@ -794,15 +795,42 @@ export function PlanView({
   onEdit: (edit: PlanDraftEdit, expected: PlanDraftActivity) => Promise<boolean>;
 }) {
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
-  const day = selectedDay && days.includes(selectedDay) ? selectedDay : days[0]!;
-  const items = draftActivitiesForDay(activities, day);
+  const day =
+    selectedDay === 'ALL'
+      ? 'ALL'
+      : selectedDay && days.includes(selectedDay)
+        ? selectedDay
+        : days[0]!;
+  const targetDay = day === 'ALL' ? days[0]! : day;
+  const items = draftActivitiesForDay(activities, targetDay);
+  const visibleItems = day === 'ALL' ? activities : items;
   const allPoolItems = unscheduledDraftActivities(activities);
+  const outsideDays = [
+    ...new Set(
+      activities
+        .map((activity) => activity.scheduledDate)
+        .filter((value): value is string => value !== null && !days.includes(value)),
+    ),
+  ].sort();
+  const overviewGroups = [
+    ...days.map((value, index) => ({
+      key: value,
+      label: `Ngày ${index + 1} · ${value.slice(8)}/${value.slice(5, 7)}`,
+      items: draftActivitiesForDay(activities, value),
+    })),
+    ...outsideDays.map((value) => ({
+      key: value,
+      label: `Ngoài chuyến đi · ${value.slice(8)}/${value.slice(5, 7)}/${value.slice(0, 4)}`,
+      items: draftActivitiesForDay(activities, value),
+    })),
+    { key: 'POOL', label: 'Chưa chọn ngày', items: allPoolItems },
+  ];
   const [query, setQuery] = useState('');
   const [mapExpanded, setMapExpanded] = useState(false);
   const [mapVisible, setMapVisible] = useState(true);
   const dnd = usePreviewDnd({
     activities,
-    day,
+    day: targetDay,
     canEdit: plan.permissions.canEdit,
     plannerOpen,
     openPlanner: onPlannerOpen,
@@ -847,6 +875,10 @@ export function PlanView({
     editReturnFocus.current = trigger;
     setEditing(activity);
   };
+  const openPlanner = () => {
+    if (day === 'ALL') onDayChange(targetDay);
+    onPlannerOpen();
+  };
   return (
     <>
       {storageStatus === 'memory' && (
@@ -881,7 +913,8 @@ export function PlanView({
           ))}
           {trip.currentMembership.role === 'OWNER' &&
             trip.permissions.canUpdate &&
-            trip.lifecycle !== 'ARCHIVED' && (
+            trip.lifecycle !== 'ARCHIVED' &&
+            days.length < 4 && (
               <button
                 type="button"
                 className={styles.addDay}
@@ -892,6 +925,17 @@ export function PlanView({
                 Thêm ngày
               </button>
             )}
+          <button
+            type="button"
+            className={styles.allDaysButton}
+            aria-pressed={day === 'ALL'}
+            onClick={() => {
+              if (plannerOpen) onPlannerClose();
+              onDayChange('ALL');
+            }}
+          >
+            Tất cả
+          </button>
         </div>
         <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       </div>
@@ -928,9 +972,10 @@ export function PlanView({
           >
             <section className={styles.timeline} aria-labelledby="plan-day-title">
               <div className={styles.toolbar}>
-                <h2 id="plan-day-title">{dayHeading(day)}</h2>
+                <h2 id="plan-day-title">{day === 'ALL' ? 'Lịch trình chung' : dayHeading(day)}</h2>
                 <span className={styles.progress}>
-                  {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
+                  {visibleItems.filter((a) => a.status === 'COMPLETED').length}/
+                  {visibleItems.length} hoàn thành
                 </span>
                 <Button
                   ref={mapButtonRef}
@@ -950,20 +995,47 @@ export function PlanView({
                 <Button
                   ref={addButtonRef}
                   icon={<Icon name="plus" size={18} />}
-                  onClick={onPlannerOpen}
+                  onClick={openPlanner}
                 >
                   Thêm hoạt động
                 </Button>
               </div>
-              <TimelineList
-                items={items}
-                day={day}
-                timezone={trip.timezone}
-                canEdit={plan.permissions.canEdit}
-                dragEnabled={plan.permissions.canEdit}
-                onEdit={beginEdit}
-                dnd={dnd}
-              />
+              {day === 'ALL' ? (
+                <div className={styles.allDays}>
+                  {overviewGroups.map((group) => (
+                    <section key={group.key}>
+                      <h3>{group.label}</h3>
+                      <ol className={styles.overviewList} aria-label={`Hoạt động ${group.label}`}>
+                        {group.items.length ? (
+                          group.items.map((activity, index) => (
+                            <TimelineActivityRow
+                              key={activity.id}
+                              activity={activity}
+                              index={index}
+                              timezone={trip.timezone}
+                              canEdit={plan.permissions.canEdit}
+                              onEdit={(trigger) => beginEdit(activity, trigger)}
+                              dnd={dnd}
+                            />
+                          ))
+                        ) : (
+                          <li className={styles.emptyDrop}>Chưa có hoạt động trong nhóm này.</li>
+                        )}
+                      </ol>
+                    </section>
+                  ))}
+                </div>
+              ) : (
+                <TimelineList
+                  items={items}
+                  day={day}
+                  timezone={trip.timezone}
+                  canEdit={plan.permissions.canEdit}
+                  dragEnabled={plan.permissions.canEdit}
+                  onEdit={beginEdit}
+                  dnd={dnd}
+                />
+              )}
             </section>
             {mapVisible && (
               <PlanDayMap
@@ -983,7 +1055,7 @@ export function PlanView({
           <PlannerWorkspace
             trip={trip}
             plan={plan}
-            day={day}
+            day={targetDay}
             items={items}
             poolItems={poolItems}
             query={query}

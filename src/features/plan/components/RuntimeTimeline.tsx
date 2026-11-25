@@ -13,7 +13,6 @@ import {
   type GatewayDndControls,
 } from '../hooks/use-gateway-dnd';
 import { Button } from '../../../shared/components/Button';
-import { Input } from '../../../shared/components/Input';
 import { Icon } from '../../../shared/components/Icon';
 import { Drawer } from '../../../shared/components/Drawer';
 import { ActionMenu } from '../../../shared/components/Ui';
@@ -30,6 +29,7 @@ import dragIcon from '../../../shared/assets/figma/56e25.svg';
 import moreIcon from '../../../shared/assets/figma/ca9fb.svg';
 import daySun from '../../../shared/assets/figma/trips-plan/day-sun.svg';
 import mapIcon from '../../../shared/assets/figma/trips-plan/plan-map-icon.svg';
+import searchIcon from '../../../shared/assets/figma/ce7fc.svg';
 
 const activityIcons: Record<string, string> = {
   SIGHTSEEING: mountain,
@@ -337,6 +337,7 @@ function DropList({
       className={pool ? styles.poolList : styles.list}
       data-gateway-list={day ?? 'POOL'}
       data-day-list={day ?? 'POOL'}
+      data-empty={empty || undefined}
       data-insertion-slot={active ? dnd.intent?.target.index : undefined}
       aria-label={label}
       tabIndex={0}
@@ -351,7 +352,9 @@ function DropList({
         {empty
           ? pool
             ? 'Chưa có hoạt động phù hợp trong giỏ. Thả vào đây để bỏ ngày và giờ.'
-            : 'Ngày chưa có hoạt động. Kéo hoạt động vào đây.'
+            : day === null
+              ? 'Chưa có hoạt động chưa chọn ngày.'
+              : 'Ngày chưa có hoạt động. Kéo hoạt động vào đây.'
           : 'Thả vào cuối danh sách'}
       </li>
     </ol>
@@ -406,7 +409,7 @@ export function RuntimeTimeline({
   const openPool = () => {
     setSidePanel('pool');
     setPoolQuery('');
-    if (day === 'POOL') setDay(days[0] ?? 'ALL');
+    if (day === 'POOL' || day === 'ALL') setDay(days[0] ?? 'ALL');
   };
   const closePool = () => {
     setSidePanel('none');
@@ -510,36 +513,28 @@ export function RuntimeTimeline({
           onClick={() => setDay(value)}
         />
       ))}
-      <button
-        type="button"
-        className={styles.addDay}
-        disabled
-        title="Chưa hỗ trợ thay đổi ngày của chuyến đi"
-      >
-        <Icon name="plus" size={18} />
-        Thêm ngày
-      </button>
-      <details className={styles.dayUtilities}>
-        <summary aria-label="Phạm vi lịch trình">
-          <img src={moreIcon} alt="" />
-        </summary>
-        <div>
-          {(['ALL', 'POOL'] as const).map((value) => (
-            <DayTarget
-              key={value}
-              day={value}
-              label={value === 'ALL' ? 'Tất cả' : 'Chưa chọn ngày'}
-              selected={day === value}
-              disabled={!canEdit || disabled}
-              dnd={dnd}
-              onClick={() => {
-                setDay(value);
-                if (value === 'POOL') setSidePanel('none');
-              }}
-            />
-          ))}
-        </div>
-      </details>
+      {days.length < 4 && (
+        <button
+          type="button"
+          className={styles.addDay}
+          disabled
+          title="Chưa hỗ trợ thay đổi ngày của chuyến đi"
+        >
+          <Icon name="plus" size={18} />
+          Thêm ngày
+        </button>
+      )}
+      <DayTarget
+        day="ALL"
+        label="Tất cả"
+        selected={day === 'ALL'}
+        disabled={!canEdit || disabled}
+        dnd={dnd}
+        onClick={() => {
+          setDay('ALL');
+          if (sidePanel === 'pool') setSidePanel('none');
+        }}
+      />
     </div>
   );
   const timeline = (
@@ -605,7 +600,7 @@ export function RuntimeTimeline({
       </p>
       {day === 'ALL' ? (
         <div className={styles.allDays}>
-          {[...days, ...(sidePanel === 'pool' ? [] : ['POOL'])].map((value) => {
+          {[...days, 'POOL'].map((value) => {
             const group = visible.filter(
               (activity) => (gatewayActivityDay(activity, trip.timezone) ?? 'POOL') === value,
             );
@@ -613,7 +608,7 @@ export function RuntimeTimeline({
               <section key={value}>
                 <h3>
                   {value === 'POOL'
-                    ? 'Chưa xếp lịch'
+                    ? 'Chưa chọn ngày'
                     : `Ngày ${days.indexOf(value) + 1} · ${value}`}
                 </h3>
                 <DropList
@@ -621,7 +616,7 @@ export function RuntimeTimeline({
                   dnd={dnd}
                   disabled={disabled || !canEdit}
                   empty={!group.length}
-                  label={value === 'POOL' ? 'Hoạt động chưa xếp lịch' : `Hoạt động ngày ${value}`}
+                  label={value === 'POOL' ? 'Hoạt động chưa chọn ngày' : `Hoạt động ngày ${value}`}
                 >
                   {group.map((activity, index) => row(activity, index, group))}
                 </DropList>
@@ -668,26 +663,24 @@ export function RuntimeTimeline({
         </div>
         <Button
           variant="outline"
-          size="compact"
+          size="icon"
           className={styles.poolClose}
-          icon={<Icon name="close" />}
           aria-label="Đóng danh sách hoạt động"
           onClick={closePool}
         >
-          Đóng
+          <Icon name="close" size={18} />
         </Button>
       </div>
-      <Input
-        label="Tìm trong địa điểm và hoạt động chưa xếp"
-        type="search"
-        value={poolQuery}
-        onChange={(event) => setPoolQuery(event.target.value)}
-      />
-      <p className={styles.poolHelp}>
-        {canEdit
-          ? 'Kéo hoạt động sang lịch trình để thêm vào ngày đang chọn. Có thể tiếp tục sắp xếp rồi chọn chỉnh sửa sau.'
-          : 'Các địa điểm đã chọn và hoạt động chưa được xếp vào ngày. Bạn đang xem lịch trình ở chế độ chỉ đọc.'}
-      </p>
+      <div className={styles.poolSearch}>
+        <img src={searchIcon} width="18" height="18" alt="" />
+        <input
+          aria-label="Tìm trong địa điểm và hoạt động chưa xếp"
+          type="search"
+          placeholder="Tìm địa điểm, hoạt động…"
+          value={poolQuery}
+          onChange={(event) => setPoolQuery(event.target.value)}
+        />
+      </div>
       <DropList
         day={null}
         dnd={dnd}

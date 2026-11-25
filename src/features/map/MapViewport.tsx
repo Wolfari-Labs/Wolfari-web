@@ -42,7 +42,6 @@ export function MapViewport({
   onSelect,
   onOpenDetail,
   runtimeMap,
-  onSearchArea,
   selectedActions,
   selectedMeta,
   autoSelectFirst = true,
@@ -56,7 +55,6 @@ export function MapViewport({
   onSelect: (locationId: string) => void;
   onOpenDetail: () => void;
   runtimeMap?: ReactNode;
-  onSearchArea?: () => void;
   /** Runtime commands for the selected place, inside the existing selected-place card. */
   selectedActions?: ReactNode;
   /** Runtime source line for the selected place (POI-OVERTURE W10, FR-TI01). */
@@ -343,19 +341,6 @@ export function MapViewport({
             </Button>
           </article>
         </>
-      )}
-
-      {/* Only a real search action earns the pill; the illustrative map has nothing to explore. */}
-      {onSearchArea && (
-        <p className={styles.mapSuggestion}>
-          <button
-            type="button"
-            onClick={onSearchArea}
-            style={{ border: 0, background: 'none', color: 'inherit', font: 'inherit', padding: 0 }}
-          >
-            ☀ Khám phá thêm địa điểm gần lộ trình
-          </button>
-        </p>
       )}
     </section>
   );

@@ -1,7 +1,7 @@
 /* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
 /* Web v2 · W11 Theo dõi giá vé (Figma 941:9891). Left: watch cards (actions inside the selected
    card); right: price history of the selected watch; collapsed help spans both columns.
-   One column below 1180px. Solid fills only, tile radius 16px. */
+   Narrow screens stack the two panels, each with its own scroll area. */
 .page {
   composes: fullWidth from '../trips/components/TripWorkspace.module.css';
   padding-block: 18px 24px;
@@ -33,11 +33,24 @@
   inset: -11px 0;
 }
 .workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
   margin-top: 20px;
-  align-items: start;
+}
+.splitPanels {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  gap: 20px;
+  align-items: stretch;
+}
+.splitPanels[data-chart-visible='false'] {
+  grid-template-columns: minmax(0, 1fr);
 }
 .listPanel,
 .chartPanel,
@@ -48,15 +61,32 @@
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
+.listPanel,
+.chartPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  overflow: hidden;
+}
+.listPanel {
+  container: price-watch-list / inline-size;
+}
+.chartPanel[hidden] {
+  display: none;
+}
 .panelHeading {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  flex: none;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
   min-width: 0;
 }
 .headingText {
   display: grid;
+  flex: 1 1 160px;
   gap: 2px;
   min-width: 0;
 }
@@ -64,9 +94,9 @@
   margin: 0;
   color: var(--v2-ink);
   font-family: var(--v2-font);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
-  line-height: 27px;
+  line-height: 25px;
 }
 .headingText p {
   margin: 0;
@@ -78,23 +108,48 @@
 .panelHeading > button {
   flex: 0 0 auto;
 }
+.panelActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.panelActions > button {
+  min-height: 38px;
+}
+.listScroll,
+.chartBody {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.listScroll:focus-visible,
+.chartBody:focus-visible {
+  outline: 2px solid var(--v2-blue);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
 
 /* Watch cards: the card is the list item; its select button holds the summary and the
    actions sit below a hairline, still inside the card. */
 .watchList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
-  align-items: start;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  margin: 16px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 .watchItem {
+  flex: none;
   min-width: 0;
   border-radius: var(--v2-radius-tile);
-  background: var(--v2-white);
-  box-shadow: inset 0 0 0 1px #e3e8f1;
+  background: var(--v2-row);
+  box-shadow: inset 0 0 0 1px transparent;
   transition:
     box-shadow 160ms ease,
     background-color 160ms ease;
@@ -110,10 +165,16 @@
 }
 .watchSelect {
   display: grid;
-  gap: 10px;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-areas:
+    'icon identity badge'
+    'icon prices prices'
+    'foot foot foot';
+  align-items: center;
+  gap: 8px 10px;
   width: 100%;
   min-width: 0;
-  padding: 16px 18px 14px;
+  padding: 12px;
   border: 0;
   border-radius: var(--v2-radius-tile);
   background: transparent;
@@ -129,31 +190,48 @@
 .watchItem[data-selected] .watchSelect {
   cursor: default;
 }
-.cardTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+.watchIcon {
+  grid-area: icon;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--v2-gradient-coral);
+  color: var(--v2-white);
+  box-shadow: var(--v2-inset-badge);
+}
+.watchIcon[data-tone='good'] {
+  background: var(--v2-gradient-green);
+}
+.watchIcon[data-tone='paused'] {
+  background: var(--v2-gradient-amber);
+}
+.watchIdentity {
+  grid-area: identity;
+  display: grid;
+  gap: 3px;
   min-width: 0;
 }
 .route {
   min-width: 0;
   color: var(--v2-ink);
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 800;
-  line-height: 24px;
+  line-height: 20px;
   overflow-wrap: anywhere;
 }
 .badge {
+  grid-area: badge;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 3px 8px;
   border-radius: var(--v2-radius-round);
   background: var(--v2-track);
   color: var(--v2-nav-text);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 18px;
   white-space: nowrap;
@@ -171,28 +249,16 @@
   color: #a63320;
 }
 .watchMeta {
-  margin-top: -6px;
   color: #56637b;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
-  line-height: 18px;
+  line-height: 16px;
 }
 .priceBlock {
+  grid-area: prices;
   display: grid;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--v2-row);
-}
-.watchItem[data-selected] .priceBlock {
-  background: var(--v2-white);
-  box-shadow: inset 0 0 0 1px #e3e8f1;
-}
-.priceFigures {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 6px 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
   min-width: 0;
 }
 .priceMain,
@@ -201,104 +267,38 @@
   gap: 1px;
   min-width: 0;
 }
-.priceFigures small {
+.priceBlock small {
   color: #5d6a82;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 16px;
 }
 .priceMain strong {
   color: var(--v2-ink);
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 800;
-  line-height: 28px;
+  line-height: 21px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .priceThreshold strong {
   color: var(--v2-nav-text);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 22px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.priceFigures > svg {
-  margin-left: auto;
-  align-self: center;
-}
-.meterRow {
-  display: grid;
-  gap: 6px;
-}
-.delta {
-  color: var(--v2-nav-text);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 18px;
-}
-.meterRow[data-tone='good'] .delta {
-  color: var(--v2-success-text);
-}
-.meterRow[data-tone='above'] .delta {
-  color: #a63320;
-}
-.meter {
-  position: relative;
-  display: block;
-  height: 6px;
-  border-radius: var(--v2-radius-round);
-  background: #e6eaf2;
-}
-.meterFill {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: var(--v2-radius-round);
-  background: #98a3b8;
-}
-.meterRow[data-tone='good'] .meterFill {
-  background: #2f9e6e;
-}
-.meterRow[data-tone='above'] .meterFill {
-  background: #e07a5f;
-}
-.meterMark {
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  left: 50%;
-  width: 2px;
-  margin-left: -1px;
-  border-radius: 1px;
-  background: var(--v2-ink);
-}
-.meterDot {
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin: -6px 0 0 -6px;
-  border: 2px solid var(--v2-white);
-  border-radius: var(--v2-radius-round);
-  background: var(--v2-nav-text);
-  box-shadow: 0 1px 2px rgb(15 23 42 / 20%);
-}
-.meterRow[data-tone='good'] .meterDot {
-  background: var(--v2-success-text);
-}
-.meterRow[data-tone='above'] .meterDot {
-  background: #c2412d;
-}
 .cardFoot {
+  grid-area: foot;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 4px 12px;
   color: #5d6a82;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 15px;
 }
 .cardFoot > span {
   display: inline-flex;
@@ -419,6 +419,15 @@
   margin-top: 1px;
   color: var(--v2-blue-text);
 }
+.listPanel > .sourceNote {
+  flex: none;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #eef4ff;
+  font-size: 11px;
+  line-height: 16px;
+}
 .historyDetails {
   margin-top: 10px;
   border-top: 1px solid #e8ecf4;
@@ -492,7 +501,9 @@ details.help > summary::after {
 
 /* Collapsed help: a slim row across both columns; opens to a four-step strip. */
 .help {
-  grid-column: 1 / -1;
+  flex: none;
+  max-height: 200px;
+  overflow-y: auto;
   padding: 0 22px;
   border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
@@ -551,7 +562,8 @@ details.help > summary::after {
 
 /* Empty state */
 .empty {
-  grid-column: 1 / -1;
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -586,9 +598,42 @@ details.help > summary::after {
 .emptyCopy button {
   margin-top: 4px;
 }
-@media (max-width: 1180px) {
-  .workspace {
+@container price-watch-list (min-width: 560px) {
+  .watchSelect {
+    grid-template-columns: 36px minmax(0, 1fr) minmax(180px, 0.9fr) auto;
+    grid-template-areas:
+      'icon identity prices badge'
+      'foot foot foot foot';
+    gap: 8px 12px;
+  }
+}
+@container price-watch-list (max-width: 340px) {
+  .watchSelect {
+    grid-template-columns: 36px minmax(0, 1fr);
+    grid-template-areas:
+      'icon identity'
+      'prices prices'
+      'badge badge'
+      'foot foot';
+  }
+  .badge {
+    justify-self: start;
+  }
+  .priceMain strong,
+  .priceThreshold strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 900px) {
+  .splitPanels {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .listScroll {
+    max-height: 52dvh;
+  }
+  .chartBody {
+    max-height: 65dvh;
   }
 }
 @media (max-width: 1100px) {
@@ -634,7 +679,7 @@ details.help > summary::after {
     flex-wrap: wrap;
   }
   .watchSelect {
-    padding: 14px 14px 12px;
+    padding: 12px;
   }
   .issue {
     margin-inline: 14px;
@@ -646,9 +691,6 @@ details.help > summary::after {
     flex: 0 1 auto;
     min-width: 0;
     padding-inline: 10px;
-  }
-  .priceFigures > svg {
-    display: none;
   }
   .steps {
     grid-template-columns: minmax(0, 1fr);
@@ -663,6 +705,43 @@ details.help > summary::after {
   }
   .emptyArt {
     width: 120px;
+  }
+}
+@media (min-width: 901px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .page > :global([data-region='trip-hero']) {
+    flex: none;
+  }
+  .page > :global(.preview) {
+    position: fixed;
+    z-index: 5;
+    right: 24px;
+    bottom: 60px;
+    max-width: calc(100vw - 48px);
+    max-height: 40dvh;
+    margin: 0;
+    overflow-y: auto;
+  }
+}
+@media (min-width: 901px) and (max-height: 700px) {
+  .workspace {
+    margin-top: 12px;
+    gap: 10px;
+  }
+  .listPanel,
+  .chartPanel {
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .help {
+    max-height: 150px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

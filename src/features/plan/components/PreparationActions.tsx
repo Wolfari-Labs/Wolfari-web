@@ -60,9 +60,10 @@ export function usePreparationCommands({ trip, plan, refresh }: PreparationProps
     },
   };
 }
-export function PreparationStatus(props: PreparationProps) {
+export function PreparationStatus(props: PreparationProps & { hideSuccess?: boolean }) {
   const commands = usePreparationCommands(props);
-  if (commands.status === 'idle') return null;
+  if (commands.status === 'idle' || (props.hideSuccess && commands.status === 'success'))
+    return null;
   return (
     <div role="status" className={styles.status}>
       {commands.status === 'pending'

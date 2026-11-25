@@ -116,6 +116,11 @@ test('Inbox reads from API, survives a later-page error and preferences preserve
   await page.screenshot({ path: testInfo.outputPath('inbox-web402.png') });
   await page.getByRole('link', { name: 'Mở tùy chọn thông báo' }).click();
   await expect(page).toHaveURL('/profile#notifications');
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+      .getByRole('button', { name: 'Thông báo', exact: true }),
+  ).toHaveAttribute('aria-current', 'page');
   await page.getByRole('switch', { name: 'Cho phép email' }).uncheck();
   await page.getByRole('button', { name: 'Lưu tùy chọn' }).click();
   await expect(page.getByText('Đã lưu tùy chọn thông báo.', { exact: true })).toBeVisible();
@@ -175,17 +180,21 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await login(page);
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto(`/trips/${tripId}/price-watch`);
-  const main = page.getByRole('region', { name: 'Danh sách theo dõi giá' });
+  const main = page.getByRole('region', { name: 'Danh sách theo dõi giá', exact: true });
   const form = page.getByRole('dialog', { name: /^(Tạo|Sửa) theo dõi giá$/ });
   await expect(form).toHaveCount(0);
-  const create = page.getByRole('button', { name: 'Tạo theo dõi', exact: true });
+  const listHeader = main.locator('[data-region="price-watch-list-heading"]');
+  const create = listHeader.getByRole('button', { name: 'Tạo theo dõi', exact: true });
   await expect(create).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Theo dõi giá vé', exact: true })).toBeVisible();
-  const titleBox = await page
-    .getByRole('heading', { name: 'Theo dõi giá vé', exact: true })
-    .boundingBox();
+  await expect(
+    listHeader.getByRole('heading', { name: 'Danh sách theo dõi giá vé', exact: true }),
+  ).toBeVisible();
+  const headerBox = (await listHeader.boundingBox())!;
   const createBox = await create.boundingBox();
-  expect(createBox!.x).toBeGreaterThan(titleBox!.x + titleBox!.width);
+  expect(createBox!.x).toBeGreaterThanOrEqual(headerBox.x);
+  expect(createBox!.x + createBox!.width).toBeLessThanOrEqual(headerBox.x + headerBox.width + 1);
+  expect(createBox!.y).toBeGreaterThanOrEqual(headerBox.y);
+  expect(createBox!.y + createBox!.height).toBeLessThanOrEqual(headerBox.y + headerBox.height + 1);
   await page.getByRole('button', { name: 'Tạo theo dõi', exact: true }).click();
   await expect(form.locator('h2[tabindex="-1"]')).toBeFocused();
   const desktopForm = await form.boundingBox();
@@ -224,7 +233,11 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await expect(page.getByRole('button', { name: 'Tạm dừng', exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'Tiếp tục', exact: true }).click();
   await page.getByRole('button', { name: 'Lịch sử giá' }).click();
-  await expect(page.getByText('Chưa có giá quan sát.', { exact: false })).toBeVisible();
+  await expect(
+    page
+      .getByRole('dialog', { name: 'Chi tiết theo dõi giá' })
+      .getByText('Chưa có giá quan sát.', { exact: false }),
+  ).toBeVisible();
   await page.keyboard.press('Escape');
   // Stopping is a destructive item in the card's overflow menu, still behind the confirm dialog.
   await main.getByRole('button', { name: 'Thêm thao tác cho DAD đến SGN' }).click();
@@ -240,7 +253,7 @@ test('Price Watch create retries the same idempotency key after unknown result, 
   await create.click();
   await form.scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath('price-web402.png') });
-  await form.getByRole('button', { name: '← Trở lại' }).click();
+  await form.getByRole('button', { name: 'Đóng theo dõi giá' }).click();
   await expect(create).toBeFocused();
   await page.setViewportSize({ width: 320, height: 600 });
   await create.click();

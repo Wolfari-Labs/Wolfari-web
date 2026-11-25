@@ -37,6 +37,26 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
       currency: 'VND',
     },
   };
+  const otherOrigins = [
+    'HAN',
+    'HUI',
+    'CXR',
+    'PQC',
+    'DLI',
+    'VCA',
+    'VCL',
+    'VII',
+    'HPH',
+    'THD',
+    'UIH',
+    'BMV',
+  ];
+  const otherWatches = otherOrigins.map((origin, index) => ({
+    ...watch,
+    id: `77777777-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+    threshold_price: '1800000',
+    normalized_query: { ...watch.normalized_query, origin, destination: 'DAD' },
+  }));
   const observation = (id: string, price: string, observed_at: string, fetched_at: string) => ({
     id,
     price,
@@ -58,8 +78,31 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
     '2026-10-29T03:15:00Z',
   );
   await page.route(`**/api/v1/trips/${tripId}/price-watches*`, (route) =>
-    route.fulfill({ json: { data: [watch], meta: { next_cursor: null } } }),
+    route.fulfill({ json: { data: [watch, ...otherWatches], meta: { next_cursor: null } } }),
   );
+  for (const other of otherWatches) {
+    await page.route(`**/api/v1/price-watches/${other.id}/observations*`, (route) =>
+      route.fulfill({
+        json: {
+          data: [
+            observation(
+              '66666666-1111-4111-8111-111111111111',
+              '1700000',
+              '2026-10-29T03:00:00Z',
+              '2026-10-29T03:15:00Z',
+            ),
+            observation(
+              '66666666-2222-4222-8222-222222222222',
+              '1500000',
+              '2026-10-30T03:00:00Z',
+              '2026-10-30T03:15:00Z',
+            ),
+          ],
+          meta: { next_cursor: null, stale: false, last_error: null },
+        },
+      }),
+    );
+  }
   await page.route(`**/api/v1/price-watches/${watchId}/observations*`, (route) => {
     const url = new URL(route.request().url());
     const next = url.searchParams.get('cursor');
@@ -110,7 +153,10 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
 
   await login(page);
   await page.goto(`/trips/${tripId}/price-watch`);
-  await expect(page.getByRole('heading', { name: 'DAD đến SGN' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Danh sách theo dõi giá vé' })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Xem biểu đồ DAD đến SGN', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
   const trigger = page.getByRole('button', { name: 'Lịch sử giá' });
   await trigger.click();
   const history = page.getByRole('dialog', { name: 'Chi tiết theo dõi giá' });
@@ -199,4 +245,47 @@ test('Gateway Price Watch keeps loaded observations through a cursor error witho
   await page.keyboard.press('Escape');
   await expect(history).toBeHidden();
   await expect(trigger).toBeFocused();
+
+  await page.setViewportSize({ width: 1440, height: 600 });
+  const list = page.locator('[data-region="price-watch-list-scroll"]');
+  const listHeader = page.locator('[data-region="price-watch-list-heading"]');
+  const chart = page.locator('[data-region="price-watch-chart"]');
+  await expect(list).toHaveAttribute('tabindex', '0');
+  await expect(list).toHaveCSS('overflow-y', 'auto');
+  await expect
+    .poll(() => list.evaluate((element) => element.scrollHeight > element.clientHeight))
+    .toBe(true);
+  const headingY = (await listHeader.boundingBox())!.y;
+  await list.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+  });
+  await expect.poll(() => list.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+  expect((await listHeader.boundingBox())!.y).toBeCloseTo(headingY, 1);
+  const listBounds = (await listHeader.locator('..').boundingBox())!;
+  const chartBounds = (await chart.boundingBox())!;
+  expect(chartBounds.x).toBeGreaterThanOrEqual(listBounds.x + listBounds.width - 1);
+  expect(Math.abs(chartBounds.y - listBounds.y)).toBeLessThanOrEqual(1);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(601);
+  const hideChart = page.getByRole('button', { name: 'Ẩn biểu đồ', exact: true });
+  await expect(hideChart).toHaveAttribute('aria-expanded', 'true');
+  await hideChart.click();
+  await expect(chart).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Hiện biểu đồ', exact: true })).toHaveAttribute(
+    'aria-expanded',
+    'false',
+  );
+  const otherWatch = page.getByRole('button', { name: 'Xem biểu đồ HAN đến DAD', exact: true });
+  await otherWatch.click();
+  await expect(otherWatch).toHaveAttribute('aria-pressed', 'true');
+  await expect(chart).toBeVisible();
+  await expect(
+    chart.getByRole('img', { name: 'Biểu đồ các giá đã tải HAN đến DAD', exact: true }),
+  ).toBeVisible();
+  await expect(chart).toContainText('1.500.000 ₫');
+  await expect(chart).not.toContainText('9.007.199.254.740.993 ₫');
+  await page.getByRole('button', { name: 'Ẩn biểu đồ', exact: true }).click();
+  await page.getByRole('button', { name: 'Hiện biểu đồ', exact: true }).click();
+  await expect(otherWatch).toHaveAttribute('aria-pressed', 'true');
+  await expect(chart).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('price-watch-split-desktop.png') });
 });

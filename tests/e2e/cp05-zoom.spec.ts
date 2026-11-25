@@ -95,7 +95,7 @@ test('CP05 native browser 200% zoom keeps Trip Web routes usable', async ({ base
         await expect(name).toBeFocused();
       }
       if (route.key === 'settings') {
-        const edit = page.getByRole('button', { name: 'Chỉnh sửa thông tin' });
+        const edit = page.getByRole('button', { name: 'Cài đặt chuyến đi' });
         await edit.scrollIntoViewIfNeeded();
         await expect(edit).toBeInViewport();
       }

@@ -18,3 +18,7 @@ export function useFundRepository(): FundRepository {
   if (!repository) throw Error('Fund repository provider missing');
   return repository;
 }
+
+export function useFundRepositoryOptional(): FundRepository | null {
+  return useContext(Context);
+}

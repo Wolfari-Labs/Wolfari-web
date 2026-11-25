@@ -265,13 +265,13 @@ test('CP07 empty Map/Dress/Packing remain readable and issue no writes', async (
 });
 
 const loadingRows: Partial<PlanRows> = {
+  activities: [{ ...activity(), scheduled_date: '2026-11-01' }],
   selected_locations: [selectedLocation(locationId, 'Bãi biển Mỹ Khê', false)],
   dress_codes: [
     {
       id: '88888888-1111-4111-8111-111111111111',
       trip_id: tripId,
       scope_type: 'TRIP',
-      reference_image_available: false,
       plan_date: null,
       activity_id: null,
       label: 'Trang phục thoáng mát',
@@ -302,6 +302,7 @@ const loadingRows: Partial<PlanRows> = {
 };
 
 for (const { path, flow, savedText } of [
+  { path: 'plan', flow: 'plan-server', savedText: 'Đi bộ sáng' },
   { path: 'map', flow: 'gateway-map-read', savedText: 'Bãi biển Mỹ Khê' },
   { path: 'dress-code', flow: 'gateway-dress-read', savedText: 'Trang phục thoáng mát' },
   { path: 'packing', flow: 'packing-read', savedText: 'Áo mưa' },

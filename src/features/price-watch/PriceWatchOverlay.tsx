@@ -44,8 +44,14 @@ export function PriceWatchOverlay({
         <h2 ref={focus} tabIndex={-1}>
           {title}
         </h2>
-        <Button variant="plain" size="compact" disabled={busy} onClick={onDismiss}>
-          ← Trở lại
+        <Button
+          variant="plain"
+          size="icon"
+          aria-label="Đóng theo dõi giá"
+          disabled={busy}
+          onClick={onDismiss}
+        >
+          <Icon name="close" size={20} />
         </Button>
       </header>
       <div className={styles.body}>{children}</div>

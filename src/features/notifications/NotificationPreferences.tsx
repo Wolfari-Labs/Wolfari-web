@@ -21,7 +21,13 @@ const labels = {
   CLOSURE: 'Chốt quỹ',
   PRICE: 'Theo dõi giá',
 };
-export function NotificationPreferences({ actor }: { actor: string }) {
+export function NotificationPreferences({
+  actor,
+  includeBrowserPush = true,
+}: {
+  actor: string;
+  includeBrowserPush?: boolean;
+}) {
   const browserPush = useRuntimeServices()?.browserPush;
   const repository = useRuntimeServices()?.notifications,
     cache = useQueryClient();
@@ -86,7 +92,8 @@ export function NotificationPreferences({ actor }: { actor: string }) {
   return (
     <div className={styles.preferences} id="notifications">
       <p className={styles.intro}>
-        Áp dụng cho email và thiết bị đã đăng ký. Đăng ký trình duyệt được quản lý riêng bên dưới.
+        Áp dụng cho email và thiết bị đã đăng ký.
+        {includeBrowserPush && ' Đăng ký trình duyệt được quản lý riêng bên dưới.'}
       </p>
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
       <div className={styles.channel}>
@@ -114,11 +121,15 @@ export function NotificationPreferences({ actor }: { actor: string }) {
             disabled={busy}
             onChange={(push_enabled) => setDraft({ ...value, push_enabled })}
           />
-          <small>
-            Nhận thông báo đẩy trên thiết bị đã đăng ký
-          </small>
+          <small>Nhận thông báo đẩy trên thiết bị đã đăng ký</small>
         </div>
       </div>
+      {includeBrowserPush && browserPush && (
+        <details className={styles.groups}>
+          <summary>Thiết bị nhận push</summary>
+          <BrowserPushPanel service={browserPush} actor={actor} />
+        </details>
+      )}
       <details className={styles.groups}>
         <summary>Tùy chọn từng nhóm</summary>
         {notificationGroups.map((group) => (
@@ -178,12 +189,6 @@ export function NotificationPreferences({ actor }: { actor: string }) {
       >
         Lưu tùy chọn
       </Button>
-      {browserPush && (
-        <>
-          <p className={styles.sectionLabel}>Thiết bị nhận push</p>
-          <BrowserPushPanel service={browserPush} actor={actor} />
-        </>
-      )}
     </div>
   );
 }

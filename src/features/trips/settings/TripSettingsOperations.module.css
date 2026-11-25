@@ -3,6 +3,8 @@
   align-content: start;
   gap: 16px;
   min-width: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 
 .panel,
@@ -16,9 +18,12 @@
 
 .panel {
   padding: 18px;
-  border-radius: 8px;
-  background: var(--v2-surface, #fff);
-  box-shadow: var(--v2-shadow-card, 0 2px 12px #1d35570d);
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+}
+
+.panel[hidden] {
+  display: none;
 }
 
 .panel h2,
@@ -28,49 +33,28 @@
 }
 
 .panel h2 {
-  font-size: 18px;
-  line-height: 24px;
+  color: var(--v2-ink);
+  font: 800 18px/24px var(--v2-font);
 }
 
 .section h3 {
-  font-size: 15px;
-  line-height: 20px;
+  color: var(--v2-ink);
+  font: 800 16px/22px var(--v2-font);
 }
-
-.cover {
-  width: 100%;
-  max-height: 190px;
-  aspect-ratio: 16 / 7;
-  border-radius: 6px;
-  object-fit: cover;
+.panel p {
+  color: var(--v2-sub);
+  font: 600 13px/20px var(--v2-font);
 }
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.panel > .section + .section {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-line);
 }
-
-.fileButton {
-  position: relative;
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  padding: 0 14px;
-  border: 1px solid var(--color-border, #cdebf7);
-  border-radius: 6px;
-  color: inherit;
-  cursor: pointer;
+.form > button,
+.section > button,
+.panel > button {
+  justify-self: start;
 }
-
-.fileButton input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
-
 .reminders {
   display: grid;
   gap: 8px;
@@ -85,11 +69,11 @@
   justify-content: space-between;
   gap: 12px;
   min-width: 0;
-  padding: 10px;
-  border-radius: 6px;
-  background: var(--v2-row, #f7f9ff);
+  padding: 12px 14px;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-white);
+  font: 600 13px/20px var(--v2-font);
 }
-
 .reminders li > span {
   display: grid;
   min-width: 0;
@@ -98,15 +82,29 @@
 
 .reminders small,
 .note {
-  color: var(--v2-sub, #56637b);
+  color: var(--v2-sub);
 }
 
 .confirm {
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  color: var(--v2-sub);
+  font: 600 13px/20px var(--v2-font);
 }
 
 .confirm input {
+  flex: none;
+  width: 18px;
+  height: 18px;
   margin-top: 4px;
+  accent-color: var(--v2-blue);
+}
+@media (max-width: 480px) {
+  .panel {
+    padding: 14px;
+  }
+  .reminders li {
+    flex-wrap: wrap;
+  }
 }

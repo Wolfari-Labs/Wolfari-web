@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { paths } from '../../app/route-paths';
 import { useRuntimeServices } from '../../app/gateway-context';
 import { Button } from '../../shared/components/Button';
@@ -42,19 +42,16 @@ import {
   EXPLORE_MIN_ZOOM,
   exploreCacheKey,
   LruCache,
-  parsePlaceGroup,
   placeDataCredit,
   placeDataset,
   placeActivityType,
   placeSearchParams,
   placeSourceLabel,
-  PLACE_GROUPS,
   resultProvenance,
   savedPlaceActivityType,
   savedProvenance,
   validPlaceIntent,
   type DiscoveredPlace,
-  type PlaceGroup,
   type PlaceIntent,
   type PlacesFound,
 } from './places';
@@ -62,8 +59,6 @@ import { PlaceProvenanceLine, PlaceSourceBadges } from './PlaceSourceBadges';
 import type { MapLocationPresentation } from './trip-map';
 import styles from './TripMapPage.module.css';
 
-const groupEmpty = 'Không có địa điểm thuộc nhóm này trong khu vực';
-const groupEmptyHint = 'Phóng nhỏ bản đồ hoặc chọn nhóm khác.';
 const zoomInNotice = 'Phóng to để xem địa điểm';
 
 function sourceSummary(found: PlacesFound) {
@@ -106,10 +101,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   const actor = data?.trip.currentMembership.userId ?? '';
   const signal = useWriteScope(`${tripId}:${actor}`);
   const [query, setQuery] = useState('');
-  // POI-OVERTURE W11: the group chip lives in the URL so a reload keeps it; no storage.
-  const [urlParams, setUrlParams] = useSearchParams();
-  const group = parsePlaceGroup(urlParams.get('group'));
-  const [searchedGroup, setSearchedGroup] = useState<PlaceGroup | null | undefined>(undefined);
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedMapPosition, setSelectedMapPosition] = useState<{ x: number; y: number } | null>(
     null,
@@ -170,8 +161,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
   const [storageBlocked, setStorageBlocked] = useState(journal.blocked);
   // POI-OVERTURE W12: explore the visible frame when there is no keyword.
   const [viewport, setViewport] = useState<MapViewportChange | null>(null);
-  /** Where `results` came from: `query` refits the map once, `chip`/`bbox` keep the frame. */
-  const [resultMode, setResultMode] = useState<'none' | 'query' | 'chip' | 'bbox'>('none');
+  /** Where `results` came from: `query` refits the map once, `bbox` keeps the frame. */
+  const [resultMode, setResultMode] = useState<'none' | 'query' | 'bbox'>('none');
   const [exploreStatus, setExploreStatus] = useState<ExploreStatus>('idle');
   const [dataRelease, setDataRelease] = useState<string | null>(null);
   const exploreCache = useRef(new LruCache<PlacesFound>(30));
@@ -192,7 +183,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       if (province) setCenterProvince(province);
       setResults(found.items);
       setResultMode('bbox');
-      setSearchedGroup(group);
       setDataRelease(found.source.dataRelease ?? null);
       setSource(sourceSummary(found));
       setExploreStatus(found.source.bboxTruncated ? 'truncated' : 'ready');
@@ -205,7 +195,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     const timer = window.setTimeout(() => {
       exploreController.current?.abort();
       if (viewport.zoom < EXPLORE_MIN_ZOOM) return clear('zoom');
-      const key = exploreCacheKey(viewport.bounds, group);
+      const key = exploreCacheKey(viewport.bounds, null);
       const cached = exploreCache.current.get(key);
       if (cached) return showFound(cached);
       const controller = new AbortController();
@@ -218,7 +208,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
           placeSearchParams({
             mode: 'bbox',
             bounds: viewport.bounds,
-            group,
+            group: null,
             limit: EXPLORE_LIMIT,
           }),
           current,
@@ -240,7 +230,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         });
     }, 300);
     return () => window.clearTimeout(timer);
-  }, [repo, viewport, exploring, group, tripId]);
+  }, [repo, viewport, exploring, tripId]);
   useEffect(() => () => exploreController.current?.abort(), []);
   const writing = useRef(false),
     searchSequence = useRef(0);
@@ -382,32 +372,26 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     !snapshot.refreshing &&
     !snapshot.refreshFailed;
   const days = planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone);
-  const search = async (
-    nearby = false,
-    options: { group?: PlaceGroup | null; keepView?: boolean } = {},
-  ) => {
+  const search = async () => {
     if (!repo) return;
-    const category = options.group === undefined ? group : options.group;
     exploreController.current?.abort();
     const current = signal(),
       seq = ++searchSequence.current;
     setSearching(true);
     setNotice('');
     try {
-      // No chip = no `category`: the backend serves its default groups (contract §2.1).
       const params = (geocode: boolean) =>
-        placeSearchParams({ mode: 'query', query, center, group: category, geocode });
+        placeSearchParams({ mode: 'query', query, center, group: null, geocode });
       // Place mode serves the Wolfari catalogue first (geocode mode bypasses it); fall back to
       // Geoapify geocoding only when nothing matched, so address lookups keep working.
       let found = await repo.search(tripId, params(false), current);
-      if (!nearby && query.trim() && !found.items.length && !current.aborted)
+      if (query.trim() && !found.items.length && !current.aborted)
         found = await repo.search(tripId, params(true), current);
       if (current.aborted || seq !== searchSequence.current) return;
       const province = centerProvinceCode(found.items, center);
       if (province) setCenterProvince(province);
       setResults(found.items);
-      setResultMode(options.keepView ? 'chip' : 'query');
-      setSearchedGroup(category);
+      setResultMode('query');
       setDataRelease(found.source.dataRelease ?? null);
       setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
       setSource(sourceSummary(found));
@@ -416,11 +400,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
           ? 'Nguồn địa điểm chưa khả dụng. Kiểm tra cấu hình/quota hoặc thử lại.'
           : found.items.length
             ? 'Đã tải kết quả tìm kiếm.'
-            : category
-              ? `${groupEmpty}. ${groupEmptyHint}`
-              : 'Không có địa điểm phù hợp. Thử từ khóa khác hoặc đặt pin bằng biểu tượng ghim.',
+            : 'Không có địa điểm phù hợp. Thử từ khóa khác hoặc đặt pin bằng biểu tượng ghim.',
       );
-      if (found.items[0] && !nearby && !options.keepView)
+      if (found.items[0])
         setFocus({ latitude: found.items[0].latitude, longitude: found.items[0].longitude });
     } catch {
       if (!current.aborted) setNotice('Không tải được địa điểm. Danh sách đã lưu vẫn được giữ.');
@@ -499,20 +481,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       body: { ...body, expected_plan_version: data.plan.planVersion },
       key: crypto.randomUUID(),
     });
-  const chooseGroup = (value: PlaceGroup) => {
-    const next = group === value ? null : value;
-    setUrlParams(
-      (previous) => {
-        const params = new URLSearchParams(previous);
-        if (next) params.set('group', next);
-        else params.delete('group');
-        return params;
-      },
-      { replace: true },
-    );
-    // Keep the keyword and the map frame; only the category changes.
-    if (query.trim()) void search(false, { group: next, keepView: true });
-  };
   const togglePlace = (item: (typeof allItems)[number]) => {
     if (!canEdit || item.activities.length) return;
     if (item.selected) command('DELETE', `selected-locations/${item.location.id}`, {});
@@ -605,6 +573,13 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         }))}
       />
     ) : null;
+  const localMessage = storageBlocked
+    ? 'Không thể xác minh nhật ký thao tác. Đã khóa ghi để tránh gửi trùng.'
+    : snapshot.refreshFailed
+      ? 'Chưa tải được bản mới.'
+      : busy
+        ? 'Đang lưu địa điểm…'
+        : notice;
   return (
     <section
       className={styles.page}
@@ -633,40 +608,34 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                   <header className={styles.panelHeader}>
                     <h2>Tìm kiếm &amp; chọn địa điểm</h2>
                   </header>
-                  <div className={styles.localNotice} role="status">
-                    {storageBlocked
-                      ? 'Không thể xác minh nhật ký thao tác. Đã khóa ghi để tránh gửi trùng.'
-                      : snapshot.refreshFailed
-                        ? 'Chưa tải được bản mới.'
-                        : busy
-                          ? 'Đang lưu địa điểm…'
-                          : notice ||
-                            'Địa điểm đã chọn được lưu vào chuyến đi và đồng bộ với thành viên.'}
-                    {source && <span> {source}</span>}
-                    {added && !busy && (
-                      <Link to={`${paths.plan(tripId)}?day=${added.day}`}>
-                        Xem lịch trình {added.label}
-                      </Link>
-                    )}
-                    {snapshot.refreshFailed && (
-                      <Button onClick={() => void snapshot.retry()}>Tải lại</Button>
-                    )}
-                    {pending && (
-                      <Button
-                        disabled={busy || storageBlocked}
-                        onClick={() => void execute(pending)}
-                      >
-                        Thử lại cùng thao tác
-                      </Button>
-                    )}
-                  </div>
-                  <PreparationActions
-                    module="location"
+                  {(localMessage || source || added || pending) && (
+                    <div className={styles.localNotice} role="status">
+                      {localMessage}
+                      {source && <span> {source}</span>}
+                      {added && !busy && (
+                        <Link to={`${paths.plan(tripId)}?day=${added.day}`}>
+                          Xem lịch trình {added.label}
+                        </Link>
+                      )}
+                      {snapshot.refreshFailed && (
+                        <Button onClick={() => void snapshot.retry()}>Tải lại</Button>
+                      )}
+                      {pending && (
+                        <Button
+                          disabled={busy || storageBlocked}
+                          onClick={() => void execute(pending)}
+                        >
+                          Thử lại cùng thao tác
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                  <PreparationStatus
                     trip={data.trip}
                     plan={data.plan}
                     refresh={snapshot.retry}
+                    hideSuccess
                   />
-                  <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
                   <form
                     className={styles.searchBox}
                     onSubmit={(event) => {
@@ -767,22 +736,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         <option value="UNSCHEDULED">Chưa xếp lịch</option>
                       </Select>
                     </div>
-                  </div>
-                  <div
-                    className={`${styles.desktopFilters} ${styles.groupFilters}`}
-                    role="group"
-                    aria-label="Nhóm địa điểm"
-                  >
-                    {PLACE_GROUPS.map((item) => (
-                      <button
-                        key={item.value}
-                        type="button"
-                        aria-pressed={group === item.value}
-                        onClick={() => chooseGroup(item.value)}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
                   </div>
                   {exploring &&
                     (exploreStatus === 'zoom' ||
@@ -890,17 +843,8 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                   ) : exploring && exploreStatus === 'zoom' ? null : (
                     // The "zoom in" status line already explains the empty list.
                     <div className={styles.empty} role="status">
-                      {searchedGroup && !results.length ? (
-                        <>
-                          <strong>{groupEmpty}</strong>
-                          <p>{groupEmptyHint}</p>
-                        </>
-                      ) : (
-                        <>
-                          <strong>Không có địa điểm phù hợp</strong>
-                          <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
-                        </>
-                      )}
+                      <strong>Không có địa điểm phù hợp</strong>
+                      <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
                     </div>
                   )}
                   {dataCredit && <p className={styles.dataCredit}>{dataCredit}</p>}
@@ -960,9 +904,6 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                             : undefined
                         }
                       />
-                    }
-                    onSearchArea={() =>
-                      exploring ? viewport && setViewport({ ...viewport }) : void search(true)
                     }
                     selectedActions={
                       <>

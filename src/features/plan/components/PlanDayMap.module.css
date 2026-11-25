@@ -27,7 +27,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 0 10px;
+  padding: 0 0 0 10px;
 }
 .header h3 {
   margin: 0;
@@ -44,6 +44,10 @@
   margin-left: auto;
 }
 .mapLink {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -55,8 +59,8 @@
   text-decoration: none;
   font: 700 12px/16px var(--v2-font);
 }
-.compact .mapLink {
-  display: none;
+.map:has(:global(.leaflet-container)) .mapLink {
+  bottom: 40px;
 }
 .map,
 .unavailable {
@@ -64,20 +68,10 @@
   border-radius: var(--v2-radius-tile);
 }
 .map {
+  position: relative;
   flex: 1 1 auto;
   overflow: hidden;
   background: var(--v2-track);
-}
-.listRegion {
-  flex: 0 0 auto;
-}
-.listRegion summary {
-  cursor: pointer;
-  color: var(--v2-sub);
-  font: 700 12px/18px var(--v2-font);
-}
-.listRegion[open] summary {
-  margin-bottom: 10px;
 }
 .srOnly {
   position: absolute;
@@ -100,43 +94,6 @@
   color: var(--v2-sub);
   font: 600 14px/1.5 var(--v2-font);
 }
-.listRegion {
-  min-height: 0;
-  padding: 0 4px;
-}
-.listRegion h4 {
-  margin: 0 0 10px;
-  color: var(--v2-ink);
-  font: 800 15px/normal var(--v2-font);
-}
-.list {
-  display: grid;
-  gap: 10px;
-  max-height: 190px;
-  overflow: auto;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.list li {
-  display: grid;
-  gap: 2px;
-  padding: 10px 14px;
-  overflow-wrap: anywhere;
-  border: 1.5px solid #e6ecfa;
-  border-radius: var(--v2-radius-row);
-  background: var(--v2-row);
-  font: 800 14px/20px var(--v2-font);
-}
-.list span,
-.list small,
-.empty {
-  color: var(--v2-sub);
-  font: 700 12px/18px var(--v2-font);
-}
-.empty {
-  margin: 0;
-}
 @media (max-width: 768px) {
   .panel {
     height: auto;
@@ -144,7 +101,10 @@
 }
 @media (max-width: 480px) {
   .header {
-    padding-inline: 4px;
+    padding-inline: 4px 0;
+  }
+  .map:has(:global(.leaflet-container)) .mapLink {
+    bottom: 60px;
   }
 }
 .routeSummary {

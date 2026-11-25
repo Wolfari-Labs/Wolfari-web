@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { Link, useOutletContext, useParams, useSearchParams } from 'react-router';
-import type { RouteContext } from '../../../app/route-context';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
@@ -17,12 +16,12 @@ import { updateTripInListPages } from '../model/trip-list-cache';
 import { tripQueryKeys } from '../model/trip-query-keys';
 import { useTripRepository } from '../repositories/repository-context';
 import type { UpdateTripIntent, UpdateTripResult } from '../repositories/trip.repository';
-import coverFallback from '../../../shared/assets/figma/bd989.svg';
 import styles from './TripSettingsPage.module.css';
 import { calendarDate } from '../../../shared/lib/calendar';
 import { browserStorage, createStorageFallback } from '../../../shared/lib/browser-storage';
-import { useTripCoverImage } from '../hooks/use-trip-cover-image';
+import { useMembersRepositoriesOptional } from '../../members/repositories/members-context';
 import { TripSettingsOperations } from './TripSettingsOperations';
+import { TripSettingsOverlay, type TripSettingsSection } from './TripSettingsOverlay';
 
 interface SavedSettingsAttempt {
   intent: UpdateTripIntent;
@@ -99,21 +98,38 @@ function mutationMessage(result: Exclude<UpdateTripResult, { status: 'updated' }
   }
 }
 
-function ReadOnlyTripSummary({ trip }: { trip: TripDetailViewModel }) {
+function memberCountLabel(count: number | null) {
+  return `${count ?? '—'} / —`;
+}
+
+function ReadOnlyTripField({ label, value }: { label: string; value: string }) {
   return (
-    <section className={styles.readOnlyPanel} aria-labelledby="read-only-trip-details-heading">
-      <h3 id="read-only-trip-details-heading">Thông tin chỉ xem</h3>
-      <dl className={styles.readOnlyGrid}>
-        <div>
-          <dt>Ngày bắt đầu</dt>
-          <dd>{displayDate(trip.startAt, trip.timezone)}</dd>
-        </div>
-        <div>
-          <dt>Ngày kết thúc</dt>
-          <dd>{displayDate(trip.endAt, trip.timezone, true)}</dd>
-        </div>
-      </dl>
-    </section>
+    <dl className={styles.fieldBox}>
+      <div className={styles.displayField}>
+        <dt className={styles.fieldName}>{label}</dt>
+        <dd className={styles.fieldValue}>{value}</dd>
+      </div>
+    </dl>
+  );
+}
+
+function ReadOnlyTripSummary({
+  trip,
+  memberCount,
+}: {
+  trip: TripDetailViewModel;
+  memberCount: number | null;
+}) {
+  return (
+    <>
+      <ReadOnlyTripField label="Địa điểm" value="Chưa cập nhật" />
+      <ReadOnlyTripField
+        label="Thành viên (hiện tại / tối đa)"
+        value={memberCountLabel(memberCount)}
+      />
+      <ReadOnlyTripField label="Ngày đi" value={displayDate(trip.startAt, trip.timezone)} />
+      <ReadOnlyTripField label="Ngày về" value={displayDate(trip.endAt, trip.timezone, true)} />
+    </>
   );
 }
 
@@ -125,23 +141,17 @@ function RowIcon({ name }: { name: IconName }) {
   );
 }
 
-function CoverPreview({ trip }: { trip: TripDetailViewModel }) {
-  const image = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
-  const cover = trip.presentation.cover;
-  return (
-    <div className={styles.coverField}>
-      <span className={styles.fieldLabel}>Ảnh bìa chuyến đi</span>
-      <div className={styles.coverRow}>
-        <picture>
-          {cover?.mobileSrc && <source media="(max-width: 768px)" srcSet={cover.mobileSrc} />}
-          <img src={image.src ?? cover?.src ?? coverFallback} alt="" />
-        </picture>
-      </div>
-    </div>
-  );
-}
-
-function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEdit: () => void }) {
+function TripInformationView({
+  trip,
+  memberCount,
+  onSettings,
+  settingsRef,
+}: {
+  trip: TripDetailViewModel;
+  memberCount: number | null;
+  onSettings: () => void;
+  settingsRef: RefObject<HTMLButtonElement | null>;
+}) {
   return (
     <section className={styles.card} aria-labelledby="trip-information-heading">
       <div className={styles.cardHeading}>
@@ -151,27 +161,22 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
           </span>
           <div>
             <h2 id="trip-information-heading">Thông tin chuyến đi</h2>
-            <p>Xem thông tin hiện tại trước khi thực hiện chỉnh sửa.</p>
+            <p>Tên, địa điểm, thành viên và thời gian chuyến đi.</p>
           </div>
         </div>
-        {trip.currentMembership.role === 'OWNER' &&
-          trip.permissions.canUpdate &&
-          trip.lifecycle !== 'ARCHIVED' && (
-            <Button
-              id="edit-trip-information"
-              variant="outline"
-              className={styles.editButton}
-              icon={<Icon name="edit" size={14} />}
-              onClick={onEdit}
-            >
-              Chỉnh sửa thông tin
-            </Button>
-          )}
+        <Button
+          ref={settingsRef}
+          id="edit-trip-information"
+          className={styles.settingsButton}
+          icon={<Icon name="settings" size={18} />}
+          onClick={onSettings}
+        >
+          Cài đặt chuyến đi
+        </Button>
       </div>
       <div className={styles.viewBody}>
-        <CoverPreview trip={trip} />
         <dl className={styles.informationGrid}>
-          <div>
+          <div className={styles.fullWidth}>
             <dt>
               <RowIcon name="edit" />
               Tên chuyến đi
@@ -180,29 +185,39 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
           </div>
           <div>
             <dt>
-              <RowIcon name="calendar" />
-              Thời gian
+              <RowIcon name="map" />
+              Địa điểm
             </dt>
-            <dd>
-              {displayDate(trip.startAt, trip.timezone)} →{' '}
-              {displayDate(trip.endAt, trip.timezone, true)}
-            </dd>
+            <dd>Chưa cập nhật</dd>
           </div>
-          {trip.presentation.memberCount !== null && (
-            <div>
-              <dt><RowIcon name="members" />Thành viên</dt>
-              <dd>{trip.presentation.memberCount} người</dd>
-            </div>
-          )}
-          {trip.description && (
-            <div className={styles.descriptionBox}>
-              <dt>
-                <RowIcon name="fileText" />
-                Mô tả chuyến đi
-              </dt>
-              <dd>{trip.description}</dd>
-            </div>
-          )}
+          <div>
+            <dt>
+              <RowIcon name="members" />
+              Thành viên (hiện tại / tối đa)
+            </dt>
+            <dd>{memberCountLabel(memberCount)}</dd>
+          </div>
+          <div>
+            <dt>
+              <RowIcon name="calendar" />
+              Ngày đi
+            </dt>
+            <dd>{displayDate(trip.startAt, trip.timezone)}</dd>
+          </div>
+          <div>
+            <dt>
+              <RowIcon name="calendar" />
+              Ngày về
+            </dt>
+            <dd>{displayDate(trip.endAt, trip.timezone, true)}</dd>
+          </div>
+          <div className={styles.descriptionBox}>
+            <dt>
+              <RowIcon name="fileText" />
+              Mô tả chuyến đi
+            </dt>
+            <dd>{trip.description || 'Chưa có mô tả'}</dd>
+          </div>
           {trip.publicDescription && (
             <div className={styles.descriptionBox}>
               <dt>
@@ -218,18 +233,86 @@ function TripInformationView({ trip, onEdit }: { trip: TripDetailViewModel; onEd
   );
 }
 
+function EditableTripField({
+  label,
+  value,
+  editing,
+  disabled,
+  multiline = false,
+  error,
+  onEdit,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  editing: boolean;
+  disabled: boolean;
+  multiline?: boolean;
+  error?: string | undefined;
+  onEdit: () => void;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className={styles.fieldBox} data-editing={editing}>
+      {editing ? (
+        multiline ? (
+          <Textarea
+            label={label}
+            value={value}
+            disabled={disabled}
+            error={error}
+            autoFocus
+            onChange={(event) => onChange(event.target.value)}
+          />
+        ) : (
+          <Input
+            label={label}
+            value={value}
+            disabled={disabled}
+            maxLength={201}
+            error={error}
+            autoFocus
+            onChange={(event) => onChange(event.target.value)}
+          />
+        )
+      ) : (
+        <div className={styles.displayField}>
+          <span className={styles.fieldName}>{label}</span>
+          <p className={styles.fieldValue}>{value || 'Chưa có mô tả'}</p>
+          <button
+            type="button"
+            className={styles.editFieldButton}
+            aria-label={`Chỉnh sửa ${label.toLocaleLowerCase('vi-VN')}`}
+            disabled={disabled}
+            onClick={(event) => {
+              event.preventDefault();
+              onEdit();
+            }}
+          >
+            <Icon name="edit" size={18} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TripInformationForm({
   trip,
+  memberCount,
   onCancel,
   onSaved,
   onRefresh,
   canSave,
+  onLockChange,
 }: {
   trip: TripDetailViewModel;
+  memberCount: number | null;
   onCancel: () => void;
   onSaved: (trip: TripDetailViewModel) => void;
   onRefresh: () => Promise<boolean>;
   canSave: boolean;
+  onLockChange: (locked: boolean) => void;
 }) {
   const repository = useTripRepository();
   const queryClient = useQueryClient();
@@ -262,7 +345,11 @@ function TripInformationForm({
   const [publicDescription, setPublicDescription] = useState(
     restored.current.saved?.draft.publicDescription ?? trip.publicDescription ?? '',
   );
-  const [focused, setFocused] = useState<'name' | 'description' | 'publicDescription' | null>(null);
+  const [editing, setEditing] = useState({
+    name: !!restored.current.saved,
+    description: !!restored.current.saved,
+    publicDescription: !!restored.current.saved,
+  });
   const [result, setResult] = useState<Exclude<UpdateTripResult, { status: 'updated' }> | null>(
     null,
   );
@@ -320,6 +407,11 @@ function TripInformationForm({
       return repository.updateTrip({ tripId: trip.id, intent, signal: controller.current.signal });
     },
   });
+
+  useEffect(() => {
+    onLockChange(mutation.isPending || refreshingConflict || unresolvedIntent);
+  }, [mutation.isPending, refreshingConflict, unresolvedIntent, onLockChange]);
+  useEffect(() => () => onLockChange(false), [onLockChange]);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -523,76 +615,57 @@ function TripInformationForm({
             </Button>
           </Alert>
         )}
-        <Input
+        <EditableTripField
           label="Tên chuyến đi"
           value={name}
+          editing={editing.name}
           disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
-          maxLength={201}
-          leadingIcon={
-            <span className={styles.fieldChip}>
-              <Icon name="edit" size={18} />
-            </span>
-          }
           error={nameError}
-          className={!nameDirty && focused !== 'name' ? styles.currentValue : ''}
-          onFocus={() => setFocused('name')}
-          onBlur={() => setFocused(null)}
-          onChange={(event) => {
-            setName(event.target.value);
+          onEdit={() => setEditing((current) => ({ ...current, name: true }))}
+          onChange={(value) => {
+            setName(value);
             setResult(null);
           }}
         />
-        <div className={styles.formPair}>
-          <Textarea
-            label="Mô tả chuyến đi"
-            value={description}
-            disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
-            error={
-              result?.status === 'validation-error' ? result.fieldErrors.description : undefined
-            }
-            className={!descriptionDirty && focused !== 'description' ? styles.currentValue : ''}
-            onFocus={() => setFocused('description')}
-            onBlur={() => setFocused(null)}
-            onChange={(event) => {
-              setDescription(event.target.value);
-              setResult(null);
-            }}
-          />
-          <Textarea
-            label="Mô tả công khai"
-            value={publicDescription}
-            disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
-            error={
-              result?.status === 'validation-error'
-                ? result.fieldErrors.publicDescription
-                : undefined
-            }
-            className={
-              !publicDescriptionDirty && focused !== 'publicDescription' ? styles.currentValue : ''
-            }
-            onFocus={() => setFocused('publicDescription')}
-            onBlur={() => setFocused(null)}
-            onChange={(event) => {
-              setPublicDescription(event.target.value);
-              setResult(null);
-            }}
-          />
-        </div>
-        <div className={styles.formPair}>
-          <ReadOnlyTripSummary trip={trip} />
-          <CoverPreview trip={trip} />
-        </div>
+        <ReadOnlyTripSummary trip={trip} memberCount={memberCount} />
+        <EditableTripField
+          label="Mô tả chuyến đi"
+          value={description}
+          editing={editing.description}
+          multiline
+          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+          error={result?.status === 'validation-error' ? result.fieldErrors.description : undefined}
+          onEdit={() => setEditing((current) => ({ ...current, description: true }))}
+          onChange={(value) => {
+            setDescription(value);
+            setResult(null);
+          }}
+        />
+        <EditableTripField
+          label="Mô tả công khai"
+          value={publicDescription}
+          editing={editing.publicDescription}
+          multiline
+          disabled={unresolvedIntent || mutation.isPending || refreshingConflict}
+          error={
+            result?.status === 'validation-error' ? result.fieldErrors.publicDescription : undefined
+          }
+          onEdit={() => setEditing((current) => ({ ...current, publicDescription: true }))}
+          onChange={(value) => {
+            setPublicDescription(value);
+            setResult(null);
+          }}
+        />
         <div className={styles.formActions}>
           <Button
             variant="outline"
             onClick={onCancel}
             disabled={mutation.isPending || refreshingConflict || unresolvedIntent}
           >
-            ← Hủy
+            Hủy
           </Button>
           <Button
             type="submit"
-            icon={<Icon name="check" size={16} />}
             loading={mutation.isPending}
             disabled={
               !!nameError ||
@@ -608,24 +681,23 @@ function TripInformationForm({
   );
 }
 
-function ManagementCard({
-  trip,
-  ownerName,
-}: {
-  trip: TripDetailViewModel;
-  ownerName: string | null;
-}) {
-  return <TripSettingsOperations key={`${trip.id}:${trip.currentMembership.userId}`} trip={trip} ownerName={ownerName} />;
-}
-
 export function TripSettingsPage() {
   const { tripId = '' } = useParams();
-  const { viewer } = useOutletContext<RouteContext>();
   const repository = useTripRepository();
+  const membersRepositories = useMembersRepositoriesOptional();
   const [searchParams, setSearchParams] = useSearchParams();
   const [notice, setNotice] = useState<string | null>(null);
   const focusEditOnView = useRef(false);
+  const settingsRef = useRef<HTMLButtonElement>(null);
+  const [informationLocked, setInformationLocked] = useState(false);
+  const [operationsBusy, setOperationsBusy] = useState(false);
   const editRequested = searchParams.get('mode') === 'edit';
+  const settingsRequested = editRequested || searchParams.get('mode') === 'settings';
+  const sectionParam = searchParams.get('section');
+  const activeSection: TripSettingsSection =
+    sectionParam === 'export' || sectionParam === 'notifications' || sectionParam === 'archive'
+      ? sectionParam
+      : 'information';
   const query = useQuery({
     queryKey: tripQueryKeys.detail(tripId, 'success'),
     queryFn: ({ signal }) => repository.getTrip({ tripId, scenario: 'success', signal }),
@@ -643,22 +715,71 @@ export function TripSettingsPage() {
   // A retryable post-conflict read keeps the draft mounted. Definitive access errors take priority.
   const trip =
     latestReadyTrip ??
-    (editRequested && recoverableReadFailure && lastReadyTrip.current?.tripId === tripId
+    (settingsRequested && recoverableReadFailure && lastReadyTrip.current?.tripId === tripId
       ? lastReadyTrip.current.trip
       : null);
+  const memberQuery = useQuery({
+    queryKey: [
+      'members',
+      tripId,
+      'settings-count',
+      trip?.currentMembership.userId,
+      trip?.membershipRevision,
+    ],
+    enabled:
+      !!membersRepositories &&
+      !!trip?.permissions.canRead &&
+      trip.currentMembership.leftAt === null,
+    queryFn: async ({ signal }) => {
+      if (!membersRepositories) return null;
+      const activeIds = new Set<string>();
+      const seenCursors = new Set<string>();
+      let cursor: string | undefined;
+      do {
+        const result = await membersRepositories.membership.listMembers({
+          tripId,
+          signal,
+          scenario: 'success',
+          includeLeft: false,
+          limit: 100,
+          ...(cursor ? { cursor } : {}),
+        });
+        if (result.status !== 'ready') return null;
+        for (const member of result.data.items) {
+          if (member.leftAt === null) activeIds.add(member.id);
+        }
+        const nextCursor = result.data.nextCursor;
+        if (!nextCursor) return activeIds.size;
+        if (seenCursors.has(nextCursor)) return null;
+        seenCursors.add(nextCursor);
+        cursor = nextCursor;
+      } while (!signal.aborted);
+      return null;
+    },
+  });
+  const memberCount = membersRepositories
+    ? (memberQuery.data ?? null)
+    : (trip?.presentation.memberCount ?? null);
   const canSave = latestReadyTrip !== null && !query.isError;
   const canEdit =
     trip?.currentMembership.role === 'OWNER' &&
     trip.permissions.canUpdate &&
     trip.lifecycle !== 'ARCHIVED';
-  const editMode = editRequested && canEdit;
   const deniedEdit = editRequested && !!trip && !canEdit;
+  const settingsLocked = informationLocked || operationsBusy;
 
   useEffect(() => {
-    if (editMode || !focusEditOnView.current) return;
+    if (settingsRequested || !focusEditOnView.current) return;
     focusEditOnView.current = false;
     requestAnimationFrame(() => document.getElementById('edit-trip-information')?.focus());
-  }, [editMode]);
+  }, [settingsRequested]);
+
+  useEffect(() => {
+    if (!settingsRequested) {
+      setInformationLocked(false);
+      setOperationsBusy(false);
+    }
+  }, [settingsRequested]);
 
   const error = useMemo(() => {
     if (tripId === '')
@@ -680,22 +801,15 @@ export function TripSettingsPage() {
         items={[
           { label: 'Chuyến đi của tôi', to: paths.trips },
           { label: trip?.name ?? 'Chuyến đi', to: paths.trip(tripId) },
-          ...(editMode ? [{ label: 'Cài đặt', to: paths.settings(tripId) }] : []),
         ]}
-        current={editMode ? 'Chỉnh sửa' : 'Cài đặt'}
+        current="Cài đặt"
         mobile={
           <div className={styles.breadcrumb}>
             <Link to={paths.trips}>Chuyến đi của tôi</Link>
             <span aria-hidden="true">›</span>
             {trip && <Link to={paths.trip(trip.id)}>{trip.name}</Link>}
             <span aria-hidden="true">›</span>
-            {editMode && trip && (
-              <>
-                <Link to={paths.settings(trip.id)}>Cài đặt</Link>
-                <span aria-hidden="true">›</span>
-              </>
-            )}
-            <h1>{editMode ? 'Chỉnh sửa' : 'Cài đặt'}</h1>
+            <h1>Cài đặt</h1>
           </div>
         }
       />
@@ -710,14 +824,12 @@ export function TripSettingsPage() {
         />
       ) : trip ? (
         <>
-          <TripHero trip={trip} compact variant="landscape" />
-          <div className={styles.mobileTitle}>
-            <h2>
-              Một chuyến đi,
-              <br />
-              cùng một nhịp
-            </h2>
-          </div>
+          <TripHero
+            trip={{ ...trip, presentation: { ...trip.presentation, memberCount } }}
+            compact
+            variant="landscape"
+            showCover={false}
+          />
           {notice && <Alert tone="success">{notice}</Alert>}
           {deniedEdit && (
             <Alert tone="warning">
@@ -725,32 +837,87 @@ export function TripSettingsPage() {
             </Alert>
           )}
           <div className={styles.columns}>
-            {editMode ? (
-              <TripInformationForm
+            <TripInformationView
+              trip={trip}
+              memberCount={memberCount}
+              settingsRef={settingsRef}
+              onSettings={() => {
+                setNotice(null);
+                setSearchParams({ mode: canEdit ? 'edit' : 'settings' });
+              }}
+            />
+          </div>
+          <TripSettingsOverlay
+            open={settingsRequested}
+            tripName={trip.name}
+            section={activeSection}
+            busy={settingsLocked}
+            owner={trip.currentMembership.role === 'OWNER'}
+            returnFocusRef={settingsRef}
+            onSectionChange={(section) => {
+              if (settingsLocked) return;
+              setSearchParams(
+                section === 'information'
+                  ? { mode: canEdit ? 'edit' : 'settings' }
+                  : { mode: 'settings', section },
+                { replace: true },
+              );
+            }}
+            onDismiss={() => {
+              if (!settingsLocked) returnToView();
+            }}
+          >
+            <div hidden={activeSection !== 'information'}>
+              {canEdit ? (
+                <TripInformationForm
+                  key={`${trip.id}:${trip.currentMembership.userId}`}
+                  trip={trip}
+                  memberCount={memberCount}
+                  onCancel={returnToView}
+                  onRefresh={async () => {
+                    const refreshed = await query.refetch();
+                    return refreshed.isSuccess && refreshed.data?.status === 'ready';
+                  }}
+                  canSave={canSave}
+                  onLockChange={setInformationLocked}
+                  onSaved={() => {
+                    setNotice('Đã lưu thông tin chuyến đi.');
+                    returnToView();
+                  }}
+                />
+              ) : (
+                <section
+                  className={`${styles.card} ${styles.editCard}`}
+                  aria-label="Thông tin chuyến đi chỉ xem"
+                >
+                  <h2>Thông tin chuyến đi</h2>
+                  <div className={styles.form}>
+                    <ReadOnlyTripField label="Tên chuyến đi" value={trip.name} />
+                    <ReadOnlyTripSummary trip={trip} memberCount={memberCount} />
+                    <ReadOnlyTripField
+                      label="Mô tả chuyến đi"
+                      value={trip.description || 'Chưa có mô tả'}
+                    />
+                    <ReadOnlyTripField
+                      label="Mô tả công khai"
+                      value={trip.publicDescription || 'Chưa có mô tả'}
+                    />
+                  </div>
+                </section>
+              )}
+            </div>
+            <div hidden={activeSection === 'information'}>
+              <TripSettingsOperations
                 key={`${trip.id}:${trip.currentMembership.userId}`}
                 trip={trip}
-                onCancel={returnToView}
-                onRefresh={async () => {
-                  const refreshed = await query.refetch();
-                  return refreshed.isSuccess && refreshed.data?.status === 'ready';
-                }}
-                canSave={canSave}
-                onSaved={() => {
-                  setNotice('Đã lưu thông tin chuyến đi.');
-                  returnToView();
-                }}
+                section={activeSection === 'information' ? 'export' : activeSection}
+                onBusyChange={setOperationsBusy}
+                {...(searchParams.get('transferTo')
+                  ? { initialTransferMemberId: searchParams.get('transferTo')! }
+                  : {})}
               />
-            ) : (
-              <TripInformationView
-                trip={trip}
-                onEdit={() => {
-                  setNotice(null);
-                  setSearchParams({ mode: 'edit' });
-                }}
-              />
-            )}
-            <ManagementCard trip={trip} ownerName={viewer?.fullName ?? null} />
-          </div>
+            </div>
+          </TripSettingsOverlay>
         </>
       ) : (
         <ContentState state="empty" headingLevel={2} />
