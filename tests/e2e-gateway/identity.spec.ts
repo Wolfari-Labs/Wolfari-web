@@ -125,7 +125,7 @@ test('password change rejects bad credentials, then clears the session on succes
   expect(
     gateway.calls.filter((call) => call.path.endsWith('/password-change')).at(-1)?.body,
   ).toEqual({ current_password: ' old password ', new_password: ' new password long ' });
-  await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
+  await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
   await expectOnlySessionBoundary(page);
   // Stay in the same SPA instance: a reload would hide leaked in-memory caches.
   gateway.profile = {
@@ -141,7 +141,7 @@ test('password change rejects bad credentials, then clears the session on succes
   await page.getByRole('link', { name: /Hồ sơ cá nhân/ }).click();
   await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Second Account');
   await expect(page.getByLabel('Email', { exact: true })).toHaveValue('second@example.com');
-  await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
+  await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
 });
 
 test('later session page failure preserves loaded items and retry can recover', async ({
@@ -169,7 +169,7 @@ test('expiry during a private read clears profile and redirects without reloadin
   await page.getByText('Phiên đăng nhập', { exact: true }).click();
   await expect(page).toHaveURL(/\/login\?returnTo=%2Fprofile$/);
   await expect(page.getByLabel('Tên hiển thị')).toHaveCount(0);
-  await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
+  await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
 });
 
 test('reset rejects a missing token locally and an expired token without clearing the active session', async ({
@@ -219,7 +219,7 @@ test('expired session redirects without showing private profile data', async ({
   await page.reload();
   await expect(page).toHaveURL(/\/login\?returnTo=%2Fprofile$/);
   await expect(page.getByLabel('Tên hiển thị')).toHaveCount(0);
-  await expect(page.locator('header[data-node-id]:visible')).not.toContainText('Trang Gateway');
+  await expect(page.getByText('Trang Gateway', { exact: true })).toHaveCount(0);
 });
 
 test('verification scrubs token, prevents repeat submission, then notifies login', async ({
@@ -283,10 +283,14 @@ test('registration accepted does not authenticate and runtime pending is truthfu
     release = resolve;
   });
   await page.goto('/register');
-  await page.getByLabel('Họ và tên').fill('New User');
   await page.getByLabel('Email', { exact: true }).fill('new@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill(' new password long ');
-  await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill(' new password long ');
+  await page.getByLabel('Xác nhận mật khẩu', { exact: true }).fill(' new password long ');
+  await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
+  await expect(page.locator('[data-registration-step="details"]')).toBeVisible();
+  await expect(page.getByLabel('Họ và tên')).toBeFocused();
+  expect(gateway.calls.filter((call) => call.path.endsWith('/register'))).toHaveLength(0);
+  await page.getByLabel('Họ và tên').fill('New User');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
   await expect(page.getByText('Đang xử lý…')).toBeVisible();
@@ -298,6 +302,7 @@ test('registration accepted does not authenticate and runtime pending is truthfu
   await expect(page.getByRole('button', { name: 'Tạo tài khoản' })).toHaveCount(0);
   await expect(page).toHaveURL(/\/register$/);
   expect(gateway.authenticated).toBe(false);
+  expect(gateway.calls.filter((call) => call.path.endsWith('/register'))).toHaveLength(1);
   expect(gateway.calls.filter((call) => call.path === '/api/v1/me')).toHaveLength(0);
 });
 

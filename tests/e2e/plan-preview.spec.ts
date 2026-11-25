@@ -17,7 +17,7 @@ for (const size of [
       if (new URL(r.url()).pathname.startsWith('/api/')) api.push(r.url());
     });
     await page.goto(route);
-    await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
@@ -108,7 +108,7 @@ for (const size of [
   });
 test('Plan states keep selection and pending/unknown do not claim saved', async ({ page }) => {
   await page.goto(route);
-  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   await page.getByRole('button', { name: /Ngày 2/ }).click();
   await page.locator('[data-preview=plan] summary').click();
   for (const [scenario, text] of [
@@ -141,7 +141,7 @@ test('keyboard drag moves an activity between the local pool and the selected da
 }) => {
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto(route);
-  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Thêm hoạt động' }).click();
   const pool = page.getByRole('region', { name: 'Đã chọn · Chưa xếp lịch' });
   const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });

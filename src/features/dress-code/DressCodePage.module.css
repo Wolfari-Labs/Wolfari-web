@@ -32,7 +32,7 @@
   }
 
   .breadcrumb a:hover {
-    color: var(--color-blue);
+    color: var(--color-action-text);
   }
 }
 
@@ -324,7 +324,7 @@
 }
 .suggestion strong {
   display: block;
-  color: var(--color-blue);
+  color: var(--color-action-text);
   font-size: var(--font-size-label);
   line-height: 22px;
   font-weight: 500;
@@ -768,7 +768,7 @@
   }
 
   .scopeTabs button:hover {
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
   }
 
   .scopeTabs button[aria-selected='true'] {

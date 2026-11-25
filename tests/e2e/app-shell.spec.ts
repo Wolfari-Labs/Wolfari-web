@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectMinimumHitTargets } from '../hit-target';
 const tripPath = '/trips/11111111-1111-4111-8111-111111111111';
 for (const width of [1440, 402])
   test(`workspace projection sections use real routes ${width}`, async ({ page }) => {
@@ -48,7 +49,7 @@ async function expectRouteContent(page: Page, route: string) {
   else if (/^\/trips\/[^/]+$/.test(route))
     await expect(page.locator('[data-flow="trip-overview"]')).toBeVisible();
   else if (route === '/admin')
-    await expect(page.getByText('Chức năng quản trị chưa khả dụng', { exact: true })).toBeVisible();
+    await expect(page.getByText('Dữ liệu quản trị chưa khả dụng', { exact: true })).toBeVisible();
   else await expect(page.getByText('Không gian làm việc', { exact: true })).toBeVisible();
 }
 async function choose(page: Page, scenario: string) {
@@ -149,25 +150,16 @@ for (const size of sizes)
     const desktop = size.width > 768;
     const header = page.getByRole('banner');
     await expect(header).toHaveCount(1);
-    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
-    const headerTargets = await header
-      .locator('button:visible, a:visible')
-      .evaluateAll((elements) =>
-        elements.map((element) => {
-          const box = element.getBoundingClientRect();
-          return { width: box.width, height: box.height };
-        }),
-      );
-    for (const target of headerTargets) {
-      expect(target.width).toBeGreaterThanOrEqual(44);
-      expect(target.height).toBeGreaterThanOrEqual(44);
-    }
+    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 64);
+    await expectMinimumHitTargets(header.locator('button:visible, a:visible'));
     await loadedAssets(page);
     if (desktop) {
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(
         true,
       );
-      const side = page.getByRole('complementary');
+      const side = page.locator('aside').filter({
+        has: page.getByRole('navigation', { name: 'Điều hướng chuyến đi' }),
+      });
       await expect(header.getByRole('link', { name: /Hồ sơ cá nhân/ })).toBeVisible();
       // Web v2: 264px sidebar; 769–1100px uses the 84px collapsed rail (V2-D11).
       expect(Math.round((await side.boundingBox())!.width)).toBe(size.width > 1100 ? 264 : 84);
@@ -216,7 +208,7 @@ for (const size of sizes)
       // Web v2 wordmark (Figma 865:6673) at 70% on the mobile header.
       const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
       expect(logo.width).toBeLessThanOrEqual(140);
-      expect(Math.round(logo.x)).toBe(16);
+      expect(Math.round(logo.x)).toBe(size.width <= 360 ? 20 : 24);
       const menu = page.getByRole('button', { name: /Mở điều hướng chuyến đi/ });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
@@ -236,7 +228,7 @@ for (const size of sizes)
       const drawer = page.getByRole('dialog', { name: 'Điều hướng chuyến đi' });
       await expect(drawer).toBeVisible();
       expect(Math.round((await drawer.boundingBox())!.width)).toBe(
-        Math.round(Math.min(300, size.width * 0.86)),
+        Math.round(Math.min(320, size.width * 0.86)),
       );
       await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chuyến đi' })).toBeVisible();
       await expect(drawer.getByRole('img', { name: 'Wolfari' })).toBeVisible();
@@ -477,18 +469,21 @@ for (const size of [
     await page.goto('/admin');
     await expect(page.getByText('Bạn không có quyền truy cập', { exact: true })).toBeVisible();
     await choose(page, 'admin');
-    await expect(page.getByText('Chức năng quản trị chưa khả dụng', { exact: true })).toBeVisible();
+    await expect(page.getByText('Dữ liệu quản trị chưa khả dụng', { exact: true })).toBeVisible();
     await loadedAssets(page);
     if (size.width > 768) {
       await page.screenshot({ path: info.outputPath('admin.png') });
       // Web v2 W/Admin sidebar 937:8030 (264px) and top bar 937:8031 (76px).
-      expect((await page.getByRole('complementary').boundingBox())!.width).toBe(264);
+      const sidebar = page.locator('aside').filter({
+        has: page.getByRole('navigation', { name: 'Điều hướng Admin' }),
+      });
+      expect((await sidebar.boundingBox())!.width).toBe(264);
       expect((await page.locator('header:visible').boundingBox())!.height).toBe(76);
       await page
         .getByRole('navigation', { name: 'Điều hướng Admin' })
         .getByRole('button', { name: 'Tài khoản', exact: true })
         .click();
-      await expect(page.getByRole('heading', { name: 'Tài khoản', exact: true })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Người dùng', exact: true })).toBeVisible();
       await fillMain(page);
       await page.getByRole('button', { name: 'Acceptance content end' }).click();
       expect(await page.locator('main').evaluate((element) => element.scrollTop)).toBeGreaterThan(
@@ -506,7 +501,7 @@ for (const size of [
         .getByRole('button', { name: 'Tài khoản', exact: true })
         .click();
       await expect(page.getByRole('dialog')).not.toBeVisible();
-      await expect(page.getByRole('heading', { name: 'Tài khoản', exact: true })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Người dùng', exact: true })).toBeVisible();
     }
     await expect(page).toHaveURL('/admin');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -544,7 +539,7 @@ test('CP04 Web Home guest menu and 404 recovery keep public routes distinct', as
 }, info) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto('/');
-  for (const section of ['hero', 'features', 'tour', 'steps', 'inspiration', 'footer'])
+  for (const section of ['hero', 'features', 'inspiration', 'footer'])
     await expect(page.locator(`[data-layout="home-${section}"]`)).toBeVisible();
   await expect(
     page.getByRole('heading', { level: 2, name: 'Điểm đến được yêu thích' }),
@@ -552,7 +547,7 @@ test('CP04 Web Home guest menu and 404 recovery keep public routes distinct', as
   const header = page.locator('header:visible').first();
   const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
   const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
-  expect(Math.round(logo.x)).toBe(16);
+  expect(Math.round(logo.x)).toBe(24);
   expect((await menu.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
   await expect(header.getByRole('link', { name: 'Đăng nhập' })).toHaveCount(0);
   await menu.click();
@@ -586,7 +581,10 @@ test('CP04 authenticated Web Home keeps account and inbox access beside Menu', a
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
   await expect(page).toHaveURL('/');
   const header = page.locator('header:visible').first();
-  await expect(header.getByRole('button', { name: 'Thông báo' })).toBeVisible();
+  await expect(header.getByRole('link', { name: 'Thông báo', exact: true })).toHaveAttribute(
+    'href',
+    '/notifications',
+  );
   await expect(header.getByRole('link', { name: /Hồ sơ cá nhân/ })).toBeVisible();
   const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
   await expect(menu).toHaveText('Menu');

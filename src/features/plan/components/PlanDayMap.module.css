@@ -1,5 +1,10 @@
 /* Web v2 W06.2 day map card (Figma 938:8712): white 28px card, 20px title, 22px-radius map. */
-.column { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
 .panel {
   display: flex;
   flex-direction: column;
@@ -15,7 +20,9 @@
   color: var(--v2-ink);
   font-family: var(--v2-font);
 }
-.compact .panel { height: 472px; }
+.compact .panel {
+  height: 472px;
+}
 .header {
   display: flex;
   align-items: flex-start;
@@ -41,9 +48,27 @@
   overflow: hidden;
   clip-path: inset(50%);
 }
-.header button:focus-visible { position: static; width: 36px; height: 36px; clip-path: none; }
-.mapLink { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; padding: 7px 12px; border-radius: 999px; background: #dce9ff; color: var(--v2-blue); text-decoration: none; font: 700 12px/16px var(--v2-font); }
-.compact .mapLink { display: none; }
+.header button:focus-visible {
+  position: static;
+  width: 36px;
+  height: 36px;
+  clip-path: none;
+}
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #dce9ff;
+  color: var(--v2-blue-text);
+  text-decoration: none;
+  font: 700 12px/16px var(--v2-font);
+}
+.compact .mapLink {
+  display: none;
+}
 .map,
 .unavailable {
   min-height: 240px;
@@ -54,14 +79,47 @@
   overflow: hidden;
   background: var(--v2-track);
 }
-.listRegion { flex: 0 0 auto; }
-.listRegion summary { cursor: pointer; color: var(--v2-sub); font: 700 12px/18px var(--v2-font); }
-.listRegion[open] summary { margin-bottom: 10px; }
-.tip { display: flex; align-items: center; gap: 14px; min-height: 134px; padding: 12px 18px; border-radius: 28px; background: var(--v2-gradient-mascot); color: var(--v2-ink); }
-.tip img { width: 94px; height: 110px; object-fit: contain; }
-.tip strong { font: 800 16px/22px var(--v2-font); }
-.tip p { margin: 4px 0 0; color: var(--v2-sub); font: 600 14px/20px var(--v2-font); }
-.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.listRegion {
+  flex: 0 0 auto;
+}
+.listRegion summary {
+  cursor: pointer;
+  color: var(--v2-sub);
+  font: 700 12px/18px var(--v2-font);
+}
+.listRegion[open] summary {
+  margin-bottom: 10px;
+}
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 134px;
+  padding: 12px 18px;
+  border-radius: 28px;
+  background: var(--v2-gradient-mascot);
+  color: var(--v2-ink);
+}
+.tip img {
+  width: 94px;
+  height: 110px;
+  object-fit: contain;
+}
+.tip strong {
+  font: 800 16px/22px var(--v2-font);
+}
+.tip p {
+  margin: 4px 0 0;
+  color: var(--v2-sub);
+  font: 600 14px/20px var(--v2-font);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
 .unavailable {
   display: flex;
   flex-direction: column;

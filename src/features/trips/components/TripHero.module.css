@@ -9,9 +9,7 @@
   padding: 12px 16px 12px 12px;
   border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
-  box-shadow:
-    var(--v2-shadow-drop),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-drop), var(--v2-inset);
   font-family: var(--v2-font);
 }
 .thumb {
@@ -90,7 +88,7 @@
   color: inherit;
 }
 .meta a:hover {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .actions {
   display: flex;
@@ -144,9 +142,7 @@
 .edit {
   background: var(--v2-white);
   color: var(--v2-ink);
-  box-shadow:
-    var(--v2-shadow-card),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .edit:not(:disabled):hover {
   background: var(--v2-track);
@@ -154,9 +150,7 @@
 .share {
   background: var(--v2-gradient);
   color: var(--v2-white);
-  box-shadow:
-    var(--v2-shadow-float),
-    var(--v2-inset);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .edit:disabled,
 .share:disabled {
@@ -178,6 +172,7 @@
   }
   .actions {
     width: 100%;
+    flex-wrap: wrap;
   }
   .hero[data-variant='schedule'] {
     height: auto;

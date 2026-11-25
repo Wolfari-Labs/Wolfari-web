@@ -218,7 +218,7 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
   await expect(overview.locator('[data-region="trip-overview-summaries"] > section')).toHaveCount(
     4,
   );
-  await expect(overview.locator('[data-region="trip-overview-workspace"] > *')).toHaveCount(2);
+  await expect(overview.locator('[data-region="trip-overview-workspace"] > *')).toHaveCount(3);
   const plan = overview.locator('[data-region="trip-overview-itinerary"]');
   const fund = overview.locator('[data-region="trip-overview-fund"]');
   const packing = overview.locator('[data-region="trip-overview-packing"]');
@@ -231,7 +231,7 @@ test('HTTP mock: overview retains source regions and isolates Plan, Fund and Mem
     'href',
     `${path}/fund`,
   );
-  await expect(map.getByRole('link', { name: 'Xem bản đồ địa điểm' })).toHaveAttribute(
+  await expect(map.getByRole('link', { name: 'Mở bản đồ địa điểm' })).toHaveAttribute(
     'href',
     `${path}/map`,
   );

@@ -14,6 +14,7 @@ for (const viewport of [
     const mock = await mockPlan(page, gateway);
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
+    await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
     await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
     await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
@@ -49,6 +50,7 @@ for (const viewport of [
     expect(mock.writes.map((write) => write.body.expected_plan_version)).toEqual([1, 2, 3, 4, 5]);
     expect(new Set(mock.writes.map((write) => write.key)).size).toBe(5);
     await page.reload();
+    await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
     await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
     await expect(page.getByRole('listitem', { name: 'Bảo tàng lịch sử', exact: true })).toHaveCount(
@@ -64,6 +66,7 @@ test('HTTP mock: Gateway exposes only the shared server Plan, never a competing 
   const mock = await mockPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
+  await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
   await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
   await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();

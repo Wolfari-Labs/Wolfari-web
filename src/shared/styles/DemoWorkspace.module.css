@@ -146,7 +146,7 @@
   align-items: center;
 }
 .panel h2 svg {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   flex-shrink: 0;
 }
 .memberIdentity {

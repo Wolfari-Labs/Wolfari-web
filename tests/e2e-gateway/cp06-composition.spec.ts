@@ -67,9 +67,10 @@ for (const viewport of [
       contentType: 'application/json',
     });
 
-    await page.getByRole('button', { name: 'Ngày 1 · 01/11', exact: true }).click();
+    await days.locator('[data-plan-day="2026-11-01"]').click();
     await page.getByRole('button', { name: 'Hiện bản đồ', exact: true }).click();
     const map = page.locator('[data-plan-day-map]');
+    await map.locator('summary').click();
     await expect(map.getByText('Địa điểm trong ngày', { exact: true })).toBeVisible();
     await expect(map.getByText('Địa điểm chưa xếp', { exact: true })).toHaveCount(0);
     // No browser key: the notice; with one (demo machine): the rendered Leaflet map.
@@ -82,8 +83,11 @@ for (const viewport of [
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);
     await page.screenshot({ path: testInfo.outputPath('map.png'), fullPage: true });
-    await map.getByRole('button', { name: 'Ẩn bản đồ', exact: true }).click();
-    await expect(map).toHaveCount(0);
+    const closeMap = map.getByRole('button', { name: 'Ẩn bản đồ', exact: true });
+    await closeMap.focus();
+    await page.keyboard.press('Enter');
+    await expect(map.getByRole('heading', { name: 'Bản đồ ngày 1', exact: true })).toBeVisible();
+    await expect(map.getByRole('button', { name: 'Ẩn bản đồ', exact: true })).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
 

@@ -4,7 +4,7 @@
   --color-white: #fff;
   /* Web v2 remaps the legacy text roles onto Figma 930:6658 values. */
   --color-ink: #1f2a44;
-  --color-muted: #6a7891;
+  --color-muted: #5d697f;
   --color-line: #e6ecfa;
   --color-selected: #eef1f6;
   --color-blue: #3c7be8;
@@ -15,9 +15,10 @@
   --color-active: #3c7be8;
   --color-field-line: #dfe6f7;
   --color-note: #f6f8ff;
-  --color-note-text: #6a7891;
-  --color-text-muted-on-light: #6a7891;
+  --color-note-text: #5d697f;
+  --color-text-muted-on-light: #5d697f;
   --color-action-primary: #3c7be8;
+  --color-action-text: #3266c1;
   --color-border-control: #6daac0;
   --color-status-warning: #8a6500;
   --color-status-warning-surface: #fff7df;
@@ -155,11 +156,12 @@
   --v2-font: 'Nunito', sans-serif;
   --v2-font-brand: 'Baloo 2', 'Nunito', sans-serif;
   --v2-ink: #1f2a44;
-  /* Original source colours are intentional. Contrast exceptions are reported, not recoloured. */
-  --v2-sub: #6a7891;
+  /* Text roles are darkened just enough to meet 4.5:1 on their light surfaces. */
+  --v2-sub: #5b677d;
   --v2-nav-text: #4a5770;
-  --v2-muted: #8a97b0;
+  --v2-muted: #656e81;
   --v2-blue: #3c7be8;
+  --v2-blue-text: #3266c1;
   --v2-white: #fff;
   --v2-track: #eef1f6;
   --v2-field: #f4f6fd;
@@ -171,9 +173,9 @@
   --v2-butter: #fff0c2;
   --v2-peach: #ffe0d4;
   --v2-lilac: #e9e1ff;
-  --v2-violet-text: #6b4ee6;
+  --v2-violet-text: #684ce0;
   --v2-success-text: #1f7a52;
-  --v2-warning-text: #9a6a12;
+  --v2-warning-text: #926511;
   --v2-danger-text: #c2412d;
   --v2-grad-start: #5b8cff;
   --v2-grad-end: #3cc9b0;

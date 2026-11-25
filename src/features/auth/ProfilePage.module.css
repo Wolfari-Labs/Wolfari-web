@@ -122,7 +122,7 @@
 }
 .avatar strong {
   position: relative;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font-size: 28px;
   font-weight: 800;
 }
@@ -188,7 +188,7 @@
   place-items: center;
   border-radius: 12px;
   background: var(--v2-sky);
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .roleNote {
   margin: 0;

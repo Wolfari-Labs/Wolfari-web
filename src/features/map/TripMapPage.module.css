@@ -291,7 +291,7 @@
 .filterSelected {
   border-color: #b9e7ef !important;
   background: #e9f8fb !important;
-  color: var(--color-action-primary) !important;
+  color: var(--color-action-text) !important;
 }
 
 .filterSelected[aria-pressed='true'] {
@@ -1012,7 +1012,7 @@
 
   .mobileFilters .filterSelected {
     background: #e9f8fb !important;
-    color: var(--color-action-primary) !important;
+    color: var(--color-action-text) !important;
   }
 
   .mobileFilters .filterScheduled {
@@ -1661,13 +1661,13 @@
 .filterSelect[data-filter='ALL'] select {
   border-color: var(--map-teal);
   background-color: #e9f8fb;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .filterSelect[data-filter='SELECTED'] select {
   border-color: #b9e7ef;
   background-color: #e9f8fb;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .filterSelect[data-filter='SCHEDULED'] select {
@@ -2058,7 +2058,7 @@
 
   .desktopFilters button[aria-pressed='true'] {
     background: var(--v2-gradient) !important;
-    color: var(--v2-white) !important;
+    color: var(--v2-ink) !important;
     box-shadow: var(--v2-shadow-active), var(--v2-inset-badge);
   }
 

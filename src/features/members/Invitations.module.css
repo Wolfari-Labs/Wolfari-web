@@ -157,7 +157,7 @@
   margin-left: -4px;
   border-radius: 12px;
   background: var(--v2-sky);
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .panel > button[type='submit'] {
   align-self: flex-start;

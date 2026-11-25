@@ -1,24 +1,27 @@
 import { expect, test } from '@playwright/test';
 
-test('guest header follows the Web v2 top nav from Home and login', async ({ page }) => {
+test('guest Home navigation and standalone login follow Web v2', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 800 });
-  for (const start of ['/', '/login'] as const) {
-    await page.goto(start);
-    // Figma 930:6661 (Active=Guest): Trang chủ, Chuyến đi của tôi, Lên lịch + two CTAs.
-    const nav = page.getByRole('navigation', { name: 'Điều hướng chính' });
-    await expect(nav.getByRole('link', { name: 'Trang chủ', exact: true })).toHaveAttribute(
-      'href',
-      '/',
-    );
-    await expect(
-      nav.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }),
-    ).toHaveAttribute('href', '/trips');
-    await expect(nav.getByRole('button', { name: 'Lên lịch', exact: true })).toBeDisabled();
-    await expect(page.getByRole('link', { name: 'Bắt đầu miễn phí', exact: true })).toHaveAttribute(
-      'href',
-      '/register',
-    );
-  }
+  await page.goto('/');
+  // Figma 930:6661 (Active=Guest): Trang chủ, Chuyến đi của tôi, Lên lịch + two CTAs.
+  const nav = page.getByRole('navigation', { name: 'Điều hướng chính' });
+  await expect(nav.getByRole('link', { name: 'Trang chủ', exact: true })).toHaveAttribute(
+    'href',
+    '/',
+  );
+  await expect(nav.getByRole('link', { name: 'Chuyến đi của tôi', exact: true })).toHaveAttribute(
+    'href',
+    '/trips',
+  );
+  await expect(nav.getByRole('button', { name: 'Lên lịch', exact: true })).toBeDisabled();
+  await expect(page.getByRole('link', { name: 'Bắt đầu miễn phí', exact: true })).toHaveAttribute(
+    'href',
+    '/register',
+  );
+  await page.goto('/login');
+  await expect(page.getByRole('form', { name: 'Biểu mẫu đăng nhập' })).toBeVisible();
+  await expect(page.locator('main[data-layout="auth"]')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Điều hướng chính' })).toHaveCount(0);
 });
 
 for (const width of [1440, 402])
@@ -39,20 +42,13 @@ for (const width of [1440, 402])
     await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
     await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
     await expect(page).toHaveURL('/');
-    await expect(page.locator('[data-node-id="298:1642"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="938:7830"]')).toBeVisible();
     await expect(page.getByText(/Phiên demo · Chỉ dữ liệu fixture/)).toBeVisible();
     await expect(
       page.getByRole('link', { name: 'Chuyến đi của tôi', exact: true }).last(),
     ).toBeVisible();
-    // Web v2 Home product tour: every section stays inside the shell gutter.
-    for (const layout of [
-      'home-hero',
-      'home-features',
-      'home-tour',
-      'home-steps',
-      'home-inspiration',
-      'home-footer',
-    ]) {
+    // Every Web v2 Home section stays inside the shell gutter.
+    for (const layout of ['home-hero', 'home-features', 'home-inspiration', 'home-footer']) {
       const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
       expect(bounds).not.toBeNull();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
@@ -60,15 +56,15 @@ for (const width of [1440, 402])
     }
     if (width === 1440) {
       for (const [layout, height] of [
-        ['home-hero', 680],
-        ['home-features', 702],
+        ['home-hero', 708],
+        ['home-features', 332],
       ] as const) {
         const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
         expect(bounds).not.toBeNull();
         expect(Math.abs(bounds!.height - height)).toBeLessThanOrEqual(4);
       }
     }
-    if (width <= 768) await page.getByRole('button', { name: 'Mở điều hướng chính' }).click();
+    if (width <= 768) await page.getByRole('button', { name: /Mở điều hướng chính/ }).click();
     await page
       .getByRole('navigation', { name: 'Điều hướng chính' })
       .getByRole('link', { name: 'Chuyến đi của tôi', exact: true })
@@ -78,13 +74,13 @@ for (const width of [1440, 402])
       page.getByRole('link', { name: 'Mở chuyến đi Đà Nẵng – Hội An', exact: true }),
     ).toBeVisible();
     await page.getByRole('button', { name: 'Thoát phiên demo' }).click();
-    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="933:7734"]')).toBeVisible();
     await page.goto('/login');
     await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
     await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
-    await expect(page.locator('[data-node-id="298:1642"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="938:7830"]')).toBeVisible();
     await page.reload();
-    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="933:7734"]')).toBeVisible();
     expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
     expect(api).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -98,14 +94,7 @@ for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 4
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
 
-    for (const layout of [
-      'home-hero',
-      'home-features',
-      'home-tour',
-      'home-steps',
-      'home-inspiration',
-      'home-footer',
-    ]) {
+    for (const layout of ['home-hero', 'home-features', 'home-inspiration', 'home-footer']) {
       const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
       expect(bounds).not.toBeNull();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
@@ -114,20 +103,23 @@ for (const width of [2560, 1920, 1440, 1366, 1200, 1101, 1100, 1024, 820, 768, 4
 
     const collage = await page.locator('[data-layout="home-collage"]').boundingBox();
     expect(collage).not.toBeNull();
-    if (width >= 1100) {
-      // Two-column hero: the headline keeps a clear gap from the product preview.
-      const title = await page.getByRole('heading', { level: 1 }).boundingBox();
-      expect(title).not.toBeNull();
-      expect(title!.x + title!.width).toBeLessThan(collage!.x - 24);
-    }
+    const hero = await page.locator('[data-layout="home-hero"]').boundingBox();
+    const copy = await page.locator('[data-layout="home-hero-frame"]').boundingBox();
+    const photo = await page.locator('[data-node-id="933:7799"]').boundingBox();
+    expect(hero).not.toBeNull();
+    expect(copy).not.toBeNull();
+    expect(photo).not.toBeNull();
+    if (width <= 1100) expect(copy!.y + copy!.height).toBeLessThanOrEqual(collage!.y - 35);
     if (width >= 1440) {
-      // 1240px content column centred in the shell main (x=100 at 1440); preview at x=770.
-      const frame = await page.locator('[data-layout="home-hero-frame"]').boundingBox();
-      expect(frame).not.toBeNull();
-      expect(Math.abs(frame!.x - ((width - 1440) / 2 + 100))).toBeLessThanOrEqual(1);
-      expect(Math.abs(frame!.width - 1240)).toBeLessThanOrEqual(1);
-      expect(Math.abs(collage!.x - ((width - 1440) / 2 + 770))).toBeLessThanOrEqual(4);
-      expect(Math.abs(collage!.width - 570)).toBeLessThanOrEqual(4);
+      // Figma W01 uses a centred 1296px hero with an inset photo on the right.
+      expect(Math.abs(hero!.x - (width - 1296) / 2)).toBeLessThanOrEqual(1);
+      expect(Math.abs(hero!.width - 1296)).toBeLessThanOrEqual(1);
+      expect(Math.abs(copy!.x - hero!.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(copy!.y - hero!.y - 78)).toBeLessThanOrEqual(1);
+      expect(Math.abs(photo!.x + photo!.width - hero!.x - hero!.width)).toBeLessThanOrEqual(1);
+      expect(Math.abs(photo!.y - hero!.y - 38)).toBeLessThanOrEqual(1);
+      expect(Math.abs(photo!.width - 640)).toBeLessThanOrEqual(1);
+      expect(Math.abs(photo!.height - 500)).toBeLessThanOrEqual(1);
     }
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -156,7 +148,7 @@ for (const size of [
       await page.goto(route);
       if (route === '/') {
         await expect(page.getByRole('heading', { level: 1, name: /Cho những/ })).toBeVisible();
-        await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+        await expect(page.locator('[data-node-id="933:7734"]')).toBeVisible();
         const guestCta = page.getByRole('link', { name: 'Bắt đầu ngay', exact: true });
         await expect(guestCta).toHaveAttribute('href', '/register');
         await expect(page.getByLabel('Trạng thái preview')).toHaveValue('guest');
@@ -174,12 +166,10 @@ for (const size of [
       await page.evaluate(() => document.fonts.ready);
       if (size.width === 1440 && route === '/') {
         const targets = [
-          ['home-hero', 120, 680],
-          ['home-features', 896, 702],
-          ['home-tour', 1694, 1622],
-          ['home-steps', 3411, 290],
-          ['home-inspiration', 3797, 401],
-          ['home-footer', 4294, 293],
+          ['home-hero', 112, 708],
+          ['home-features', 820, 332],
+          ['home-inspiration', 1255, 430],
+          ['home-footer', 1787, 382],
         ] as const;
         for (const [layout, y, height] of targets) {
           const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
@@ -188,7 +178,7 @@ for (const size of [
           expect(Math.abs(bounds!.height - height)).toBeLessThanOrEqual(4);
         }
         for (const [layout, target] of [
-          ['home-collage', { x: 770, y: 152, width: 570, height: 640 }],
+          ['home-collage', { x: 72, y: 112, width: 1296, height: 708 }],
         ] as const) {
           const bounds = await page.locator(`[data-layout="${layout}"]`).boundingBox();
           expect(bounds).not.toBeNull();
@@ -220,15 +210,16 @@ for (const size of [
         expect(bounds).not.toBeNull();
         const target =
           route === '/login'
-            ? { x: 834, y: 112, width: 520 }
+            ? { x: 834, width: 520 }
             : route === '/register'
-              ? { x: 834, y: 112, width: 520 }
+              ? { x: 834, width: 520 }
               : { x: 48, y: 221, width: 560 };
-        for (const dimension of ['x', 'y', 'width'] as const)
+        for (const dimension of ['x', 'width'] as const)
           expect(Math.abs(bounds![dimension] - target[dimension])).toBeLessThanOrEqual(4);
         if (route === '/login') {
           expect(bounds!.height).toBeGreaterThan(450);
-          expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(size.height);
+          expect(bounds!.y).toBeGreaterThanOrEqual(48);
+          expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(912);
         }
         if (route === '/profile') {
           expect(bounds!.height).toBeGreaterThan(400);
@@ -281,11 +272,16 @@ test('registration validates and remains unavailable without session or redirect
 }) => {
   await page.goto('/register');
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-  await expect(page.getByLabel('Họ và tên')).toBeFocused();
-  await page.getByLabel('Họ và tên').fill('Người xem trước');
+  await expect(page.getByLabel('Email', { exact: true })).toBeFocused();
   await page.getByLabel('Email', { exact: true }).fill('preview@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill('a long preview password');
-  await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill('a long preview password');
+  await page.getByLabel('Xác nhận mật khẩu', { exact: true }).fill('a long preview password');
+  await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
+  await expect(page.locator('[data-registration-step="details"]')).toBeVisible();
+  await expect(page.getByLabel('Họ và tên')).toBeFocused();
+  await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
+  await expect(page.getByLabel('Họ và tên')).toHaveAttribute('aria-invalid', 'true');
+  await page.getByLabel('Họ và tên').fill('Người xem trước');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
   await expect(

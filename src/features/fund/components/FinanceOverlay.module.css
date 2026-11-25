@@ -79,7 +79,7 @@
   height: 34px;
   border-radius: 6px;
   background: #e4f7fd;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .enableHeaderCopy {
@@ -196,7 +196,7 @@
   display: grid;
   place-items: center;
   flex: 0 0 32px;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .headerCopy {
@@ -257,7 +257,7 @@
   border: 1px solid var(--color-line);
   border-radius: 5px;
   background: var(--color-white);
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .tripSummary div {
@@ -305,7 +305,7 @@
 .nav button[data-active='true'] {
   border-left-color: var(--color-action-primary);
   background: #e4f7fd;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font-weight: 600;
 }
 
@@ -372,7 +372,7 @@
   padding: 6px 14px;
   border-radius: 999px;
   background: #e5f7fc;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font-size: 12px;
   text-align: center;
 }
@@ -630,7 +630,9 @@
   border-radius: 12px;
   background: var(--v2-gradient-green);
   color: var(--v2-white);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(45 190 122 / 32%);
 }
 .headerIcon svg {
   width: 22px;

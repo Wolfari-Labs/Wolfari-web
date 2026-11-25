@@ -19,10 +19,13 @@ test('HTTP mock: revoked Plan edit rights keep day and pool navigation read only
   await expect(page.getByRole('button', { name: 'Kéo hoạt động Đi dạo' })).toHaveCount(0);
 
   const all = page.getByRole('button', { name: 'Tất cả', exact: true });
-  const day = page.getByRole('button', { name: 'Ngày 1 · 01/11', exact: true });
+  const day = page
+    .getByRole('group', { name: 'Ngày trong lịch trình' })
+    .locator('[data-plan-day="2026-11-01"]');
   const pool = page.getByRole('button', { name: 'Chưa chọn ngày', exact: true });
   await expect(day).toHaveAttribute('aria-pressed', 'true');
   await expect(day).toBeEnabled();
+  await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
   await expect(pool).toBeEnabled();
 
   await day.click();

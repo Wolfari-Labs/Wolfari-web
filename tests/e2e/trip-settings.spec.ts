@@ -18,10 +18,11 @@ for (const viewport of viewports) {
     await page.setViewportSize(viewport);
     await page.goto(settings);
     await expect(page.getByRole('heading', { name: 'Thông tin chuyến đi' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Quản lý thành viên' })).toHaveAttribute(
-      'href',
-      `${trip}/members`,
-    );
+    await expect(
+      page
+        .locator('[data-region="trip-hero"]')
+        .getByRole('link', { name: 'Xem thành viên chuyến đi', exact: true }),
+    ).toHaveAttribute('href', `${trip}/members`);
     const overflow = await page.evaluate(() => ({
       viewport: innerWidth,
       document: document.documentElement.scrollWidth,

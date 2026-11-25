@@ -20,6 +20,7 @@ async function install(page: Page, gateway: GatewayModel) {
     routeMissing: false,
   };
   const writes: { path: string; body: Record<string, unknown>; key: string | null }[] = [];
+  const recommendationRequests: string[] = [];
   let counter = 0;
   const provider = {
     status: 'SUCCESS',
@@ -70,6 +71,7 @@ async function install(page: Page, gateway: GatewayModel) {
         unchecked_routes: ['unknown-leg'],
       });
     if (path.endsWith('/recommendations')) {
+      recommendationRequests.push(path);
       const body = request.postDataJSON();
       return respond({
         id: id(99),
@@ -103,7 +105,7 @@ async function install(page: Page, gateway: GatewayModel) {
       });
     }
     const match =
-      /\/(locations|dress-codes|packing-items|recommendations)(?:\/([^/]+))?(?:\/(completion|apply))?$/.exec(
+      /\/(selected-locations|dress-codes|packing-items|recommendations)(?:\/([^/]+))?(?:\/(completion|apply))?$/.exec(
         path,
       );
     if (!match || request.method() === 'GET') return route.fallback();
@@ -122,7 +124,7 @@ async function install(page: Page, gateway: GatewayModel) {
         created_entity_ids: [],
       });
     const key =
-      match[1] === 'locations'
+      match[1] === 'selected-locations'
         ? 'selected_locations'
         : match[1] === 'dress-codes'
           ? 'dress_codes'
@@ -161,7 +163,7 @@ async function install(page: Page, gateway: GatewayModel) {
               completed_at: null,
               completed_by_user_id: null,
             }
-          : {}),
+          : { reference_image_available: false }),
       ...body,
     };
     rows[key].push(item);
@@ -197,7 +199,7 @@ async function install(page: Page, gateway: GatewayModel) {
       },
     });
   });
-  return { rows, controls, writes, trip };
+  return { rows, controls, writes, trip, recommendationRequests };
 }
 test('SRS12: location and Dress writes survive reload with shared revisions', async ({
   page,
@@ -263,7 +265,7 @@ test('SRS12: packing assignment uses item PATCH and editing preserves completion
   expect(model.writes[1]!.path).not.toContain('/assignment');
   expect(model.writes[2]!.path).toContain('/completion');
 });
-test('SRS12: non-editor can search and preview DSS, but cannot save or apply', async ({
+test('SRS12: non-editor can search while unsupported DSS stays unavailable', async ({
   page,
   gateway,
 }) => {
@@ -275,12 +277,12 @@ test('SRS12: non-editor can search and preview DSS, but cannot save or apply', a
   await page.getByRole('button', { name: 'Tìm địa điểm', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Bảo tàng provider' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Lưu địa điểm' })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Yêu cầu gợi ý' }).click();
-  await expect(page.getByText('Lý do: Chuẩn bị khi cần')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toHaveCount(0);
+  expect(model.recommendationRequests).toEqual([]);
   expect(model.writes).toEqual([]);
 });
-test('SRS12: DSS only applies selected IDs, with explicit duplicate decision', async ({
+test('SRS12: unsupported DSS cannot duplicate saved Packing even when capability is announced', async ({
   page,
   gateway,
 }) => {
@@ -302,18 +304,12 @@ test('SRS12: DSS only applies selected IDs, with explicit duplicate decision', a
   });
   await login(page);
   await page.goto(`${root}/packing`);
-  await page.getByRole('button', { name: 'Yêu cầu gợi ý' }).click();
-  await page.getByRole('checkbox', { name: 'Áo mưa', exact: true }).check();
-  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
-  await page
-    .getByRole('checkbox', { name: 'Tôi chọn tạo vật dụng riêng dù tương tự mục đã có' })
-    .check();
-  await page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' }).click();
-  await expect(page.getByText('Lý do: Chuẩn bị khi cần')).toHaveCount(0);
-  expect(model.writes).toHaveLength(1);
-  expect(model.writes[0]!.body.selected_item_ids).toEqual(['p1']);
-  expect(model.writes[0]!.body.apply_request_id).toBeTruthy();
-  expect(model.writes[0]!.key).toBeNull();
+  await expect(page.getByText('Áo mưa', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toHaveCount(0);
+  expect(model.recommendationRequests).toEqual([]);
+  expect(model.writes).toEqual([]);
+  expect(model.rows.packing_items).toHaveLength(1);
 });
 test('SRS12: unknown Map write blocks Dress after route navigation; original journal is retained', async ({
   page,
@@ -432,7 +428,7 @@ test('SRS12: maximum saved locations and every linked Activity block unsafe dele
   ).toBeVisible();
   expect(model.writes).toEqual([]);
 });
-test('SRS12: expired proposals are visible but cannot be selected or applied', async ({
+test('SRS12: unsupported Dress DSS is never requested even when an expired proposal is available', async ({
   page,
   gateway,
 }) => {
@@ -440,11 +436,10 @@ test('SRS12: expired proposals are visible but cannot be selected or applied', a
   model.controls.expired = true;
   await login(page);
   await page.goto(`${root}/dress-code`);
-  await page.getByRole('button', { name: 'Yêu cầu gợi ý' }).click();
-  await expect(
-    page.getByText('Gợi ý đã cũ hoặc hết hạn. Yêu cầu gợi ý mới trước khi áp dụng.'),
-  ).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
+  await expect(page.getByRole('heading', { name: 'Chưa có hướng dẫn trang phục' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toHaveCount(0);
+  expect(model.recommendationRequests).toEqual([]);
   expect(model.writes).toEqual([]);
 });
 test('SRS12: non-editor undo respects assignment and completer, archive disables writes', async ({

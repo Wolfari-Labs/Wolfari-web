@@ -22,7 +22,12 @@ import styles from './TripDashboard.module.css';
 
 /** Web v2 `D/Icon badge`: a gradient square with a white glyph (decorative). */
 function IconBadge({ icon, tone }: { icon: IconName; tone: 'blue' | 'green' | 'amber' | 'coral' }) {
-  const asset = { calendar: calendarIcon, fund: walletIcon, luggage: luggageIcon, price: planeIcon }[icon as 'calendar' | 'fund' | 'luggage' | 'price'];
+  const asset = {
+    calendar: calendarIcon,
+    fund: walletIcon,
+    luggage: luggageIcon,
+    price: planeIcon,
+  }[icon as 'calendar' | 'fund' | 'luggage' | 'price'];
   return (
     <span className={styles.badge} data-tone={tone} aria-hidden="true">
       {asset ? <img src={asset} alt="" /> : <Icon name={icon} size={22} strokeWidth={2} />}
@@ -205,7 +210,7 @@ export function TripOverview({
               <Link
                 className={styles.mapLink}
                 to={paths.map(trip.id)}
-                aria-label="Xem bản đồ địa điểm"
+                aria-label="Mở bản đồ địa điểm"
               >
                 Mở
               </Link>
@@ -220,13 +225,22 @@ export function TripOverview({
           </section>
           <aside className={styles.aside} aria-label="Giá vé và thời tiết">
             <section className={`${styles.panel} ${styles.farePanel}`}>
-              <Link className={styles.cardLink} to={paths.priceWatch(trip.id)} aria-label="Chi tiết theo dõi giá vé" />
+              <Link
+                className={styles.cardLink}
+                to={paths.priceWatch(trip.id)}
+                aria-label="Chi tiết theo dõi giá vé"
+              />
               <IconBadge icon="price" tone="coral" />
               <h2>Theo dõi giá vé</h2>
               <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
             </section>
-            <section className={`${styles.panel} ${styles.weatherPanel}`} aria-label="Thời tiết chưa khả dụng">
-              <span className={styles.badge} data-tone="amber" aria-hidden="true"><img src={sunIcon} alt="" /></span>
+            <section
+              className={`${styles.panel} ${styles.weatherPanel}`}
+              aria-label="Thời tiết chưa khả dụng"
+            >
+              <span className={styles.badge} data-tone="amber" aria-hidden="true">
+                <img src={sunIcon} alt="" />
+              </span>
               <h2>Thời tiết hôm nay</h2>
               <p className={styles.weatherValue}>—</p>
               <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>

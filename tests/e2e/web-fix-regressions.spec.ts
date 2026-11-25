@@ -19,7 +19,7 @@ test('Settings updates keep cached Trip, Plan and shell projections consistent a
 }) => {
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto(`${trip}/plan`);
-  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   const navigation = page.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
   await navigation.locator(`a[href="${trip}/settings"]`).click();
   await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();

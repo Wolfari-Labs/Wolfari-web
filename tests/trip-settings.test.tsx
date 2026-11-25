@@ -112,10 +112,11 @@ describe('Trip Settings', () => {
     expect(screen.queryByRole('button', { name: 'Thay ảnh' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Lưu thay đổi' })).toBeDisabled();
     await user.clear(name);
-    await user.type(name, 'Đà Nẵng cuối tuần');
+    await user.paste('Đà Nẵng cuối tuần');
     expect(name.className).not.toContain('currentValue');
     await user.clear(description);
-    await user.type(publicDescription, 'Hành trình biển dành cho mọi người.');
+    await user.click(publicDescription);
+    await user.paste('Hành trình biển dành cho mọi người.');
     await user.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
     expect(await screen.findByText('Đã lưu thông tin chuyến đi.')).toBeInTheDocument();
     expect(router.state.location.search).toBe('');

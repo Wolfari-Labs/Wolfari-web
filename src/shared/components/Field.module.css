@@ -76,7 +76,7 @@
   height: 32px;
   border-radius: 12px;
   background: var(--v2-sky);
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .icon img {
   display: block;
@@ -98,7 +98,7 @@
 .passwordToggle::after {
   content: '';
   position: absolute;
-  inset: -6px -10px;
+  inset: -6px -13px;
 }
 .passwordToggle:focus-visible {
   outline: 2px solid var(--focus-color);

@@ -144,11 +144,11 @@ details[open]:not(.preview) > summary::after {
     color: var(--v2-muted);
   }
   #main-content nav[aria-label='Đường dẫn'] a:hover {
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
   }
   #main-content nav[aria-label='Đường dẫn'] h1 {
     margin: 0;
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
     font: 700 12px/normal var(--v2-font);
   }
   #main-content

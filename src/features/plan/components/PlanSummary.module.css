@@ -26,7 +26,7 @@
   min-height: 64px;
 }
 .summary time {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font-size: var(--font-size-small);
 }
 .summary li span {
@@ -161,7 +161,7 @@
 }
 .summary[data-overview] .days button[aria-pressed='true'] {
   background: var(--v2-gradient);
-  color: var(--v2-white);
+  color: var(--v2-ink);
 }
 .summary[data-overview] > p {
   margin: 0;
@@ -253,7 +253,7 @@
   top: 24px;
   right: 22px;
   margin: 0;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font: 700 14px/normal var(--v2-font);
 }
 .summary[data-overview] > a:hover {

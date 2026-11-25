@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectMinimumHitTargets } from '../hit-target';
 
 const trips = [
   { id: '11111111-1111-4111-8111-111111111111', name: 'Đà Nẵng – Hội An' },
@@ -114,30 +115,15 @@ for (const viewport of [
     await expect(
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
-    const header = page.locator(
-      'header[data-node-id="135:483"]:visible, header[data-node-id="779:6442"]:visible',
-    );
+    const header = page.getByRole('banner');
     await expect(header).toHaveCount(1);
     const desktop = viewport.width > 768;
-    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
-    const targets = await page
-      .locator(
+    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 64);
+    await expectMinimumHitTargets(
+      page.locator(
         'button:visible:not(:disabled), a:visible, input:visible, select:visible, summary:visible',
-      )
-      .evaluateAll((elements) =>
-        elements.map((element) => {
-          const box = element.getBoundingClientRect();
-          return {
-            name: element.getAttribute('aria-label') || element.textContent || element.tagName,
-            width: box.width,
-            height: box.height,
-          };
-        }),
-      );
-    for (const target of targets) {
-      expect(target.width, target.name).toBeGreaterThanOrEqual(44);
-      expect(target.height, target.name).toBeGreaterThanOrEqual(44);
-    }
+      ),
+    );
     const boxes = await articles(page).evaluateAll((elements) =>
       elements.map((item) => {
         const box = item.getBoundingClientRect();
@@ -178,7 +164,7 @@ for (const viewport of [
       expect(Math.round((await header.boundingBox())!.y)).toBe(20);
     } else {
       const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
-      expect(Math.round(logo.x)).toBe(16);
+      expect(Math.round(logo.x)).toBe(viewport.width <= 360 ? 20 : 24);
       const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
@@ -411,7 +397,7 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   await expect.poll(async () => (await drawer.boundingBox())?.x).toBe(0);
   const box = (await drawer.boundingBox())!;
   expect(box.x).toBe(0);
-  expect(Math.round(box.width)).toBe(Math.round(Math.min(300, 402 * 0.86)));
+  expect(Math.round(box.width)).toBe(Math.round(Math.min(320, 402 * 0.86)));
   await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chính' })).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   for (let index = 0; index < 8; index++) {
@@ -463,11 +449,7 @@ test('Trip List route aliases preserve layout and authenticated permission polic
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    expect(
-      Math.round(
-        (await page.locator('header[data-node-id="135:483"]:visible').boundingBox())!.height,
-      ),
-    ).toBe(76);
+    expect(Math.round((await page.getByRole('banner').boundingBox())!.height)).toBe(76);
     expect(
       await page.locator('main').evaluate((element) => getComputedStyle(element).overflowY),
     ).toBe('auto');

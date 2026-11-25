@@ -23,7 +23,7 @@
     color: var(--color-muted);
   }
   .breadcrumb a {
-    color: var(--color-action-primary);
+    color: var(--color-action-text);
   }
 }
 .visuallyHidden {
@@ -67,7 +67,7 @@
 }
 .actions > .refresh {
   margin-left: 8px;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 
 /* Card header: D/Icon badge (44px, radius 15) + title. */
@@ -257,7 +257,7 @@
   color: var(--v2-nav-text);
 }
 .roleHelp a {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font-weight: 700;
 }
 

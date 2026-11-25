@@ -92,7 +92,7 @@
   place-items: center;
   border-radius: 50%;
   background: var(--v2-sky);
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .responseMetadata {
   display: grid;
@@ -186,7 +186,7 @@
   gap: 8px;
 }
 .response a {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 4px;

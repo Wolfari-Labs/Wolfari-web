@@ -159,7 +159,10 @@ test('HTTP mock: drop into empty day preserves all other dates and does not open
   const mock = await seedPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
-  await page.getByRole('button', { name: 'Ngày 2 · 02/11', exact: true }).click();
+  await page
+    .getByRole('group', { name: 'Ngày trong lịch trình' })
+    .locator('[data-plan-day="2026-11-02"]')
+    .click();
   await openPool(page);
   await pointerDrop(
     page,

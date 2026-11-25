@@ -71,12 +71,22 @@ for (const viewport of [
     await page.goto('/register');
     const form = page.getByRole('form', { name: 'Biểu mẫu đăng ký' });
     const required = form.locator('input[required]');
-    await expect(required).toHaveCount(5);
+    await expect(required).toHaveCount(3);
     await form.getByRole('button', { name: 'Tạo tài khoản' }).click();
-    await expect(page.getByLabel('Họ và tên')).toBeFocused();
-    await expect(page.getByLabel('Họ và tên')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByLabel('Email', { exact: true })).toBeFocused();
+    await expect(page.getByLabel('Email', { exact: true })).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByLabel('Email', { exact: true })).toHaveAccessibleDescription(/.+/);
-    expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
+    expect.soft((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
+    await page.getByLabel('Email', { exact: true }).fill('preview@example.com');
+    await page.getByLabel('Mật khẩu', { exact: true }).fill('a long preview password');
+    await page.getByLabel('Xác nhận mật khẩu', { exact: true }).fill('a long preview password');
+    await form.getByRole('button', { name: 'Tạo tài khoản' }).click();
+    await expect(page.locator('[data-registration-step="details"]')).toBeVisible();
+    await expect(required).toHaveCount(2);
+    await expect(page.getByLabel('Họ và tên')).toBeFocused();
+    await form.getByRole('button', { name: 'Tạo tài khoản' }).click();
+    await expect(page.getByLabel('Họ và tên')).toHaveAttribute('aria-invalid', 'true');
+    expect.soft((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       viewport.width,
     );
@@ -92,7 +102,7 @@ test('reduced motion removes shared button displacement but keeps state feedback
   const button = page.getByRole('button', { name: 'Xem minh họa', exact: true });
   await button.hover();
   await expect(button).toHaveCSS('transform', 'none');
-  await expect(button).toHaveCSS('background-color', 'rgb(238, 241, 246)');
+  await expect(button).toHaveCSS('background-color', 'rgb(238, 243, 255)');
   await page.mouse.down();
   await expect(button).toHaveCSS('transform', 'none');
   await page.mouse.up();
@@ -140,12 +150,12 @@ test('computed shared text, field error, focus and primary gradient contrast', a
       error: contrast(rgb('--color-field-error'), white),
       danger: contrast(rgb('--color-status-danger'), white),
       errorAlertOnPeach: contrast(rgb('--color-status-danger'), rgb('--ios-peach')),
-      focus: contrast(rgb('--color-action-primary'), white),
+      actionText: contrast(rgb('--color-action-text'), white),
       gradientMinimum: Math.min(
         ...Array.from({ length: 101 }, (_, i) =>
           contrast(
             start.map((value, channel) => value + ((end[channel]! - value) * i) / 100),
-            white,
+            rgb('--color-ink'),
           ),
         ),
       ),
@@ -156,7 +166,7 @@ test('computed shared text, field error, focus and primary gradient contrast', a
     contentType: 'application/json',
   });
   await writeFile(info.outputPath('contrast-ratios.json'), JSON.stringify(ratios, null, 2));
-  // Refined V2 uses a flat brand blue for primary actions, so white text meets AA (V2-D15).
+  // Measure the text colours against their actual light and gradient surfaces.
   for (const [name, ratio] of Object.entries(ratios))
     expect(ratio, name).toBeGreaterThanOrEqual(4.5);
 });

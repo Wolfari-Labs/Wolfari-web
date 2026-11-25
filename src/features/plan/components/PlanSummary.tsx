@@ -146,7 +146,11 @@ export function PlanSummary({
           )}
         </>
       )}
-      {!compact && <Link to={paths.plan(trip.id)} aria-label="Xem chi tiết lịch trình">{overview ? 'Xem tất cả' : 'Xem chi tiết lịch trình →'}</Link>}
+      {!compact && (
+        <Link to={paths.plan(trip.id)} aria-label={overview ? 'Xem tất cả lịch trình' : undefined}>
+          {overview ? 'Xem tất cả' : 'Xem chi tiết lịch trình →'}
+        </Link>
+      )}
     </div>
   );
 }

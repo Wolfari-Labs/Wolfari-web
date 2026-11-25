@@ -62,7 +62,7 @@
 .sourceNote svg {
   flex: 0 0 auto;
   margin-top: 2px;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .grid {
   display: grid;
@@ -286,7 +286,7 @@
   font-weight: 700;
 }
 .noPrice svg {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .caveat {
   color: #5d6a82;

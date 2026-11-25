@@ -38,7 +38,7 @@ for (const size of [
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByRole('region', { name: 'Lịch sử giá vé' })).toHaveCSS(
       'border-radius',
-      '16px',
+      '28px',
     );
     const create = page.getByRole('button', { name: 'Tạo theo dõi', exact: true });
     await create.click();

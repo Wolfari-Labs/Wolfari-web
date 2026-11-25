@@ -29,11 +29,16 @@ test('HTTP mock: timed cross-day drag clears the moved time without an editor; e
   await pointerDrop(
     page,
     handle(page, originalIds[0]!),
-    page.getByRole('button', { name: 'Ngày 2 · 02/11', exact: true }),
+    page
+      .getByRole('group', { name: 'Ngày trong lịch trình' })
+      .locator('[data-plan-day="2026-11-02"]'),
     'middle',
     false,
   );
-  await page.getByRole('button', { name: 'Ngày 2 · 02/11', exact: true }).click();
+  await page
+    .getByRole('group', { name: 'Ngày trong lịch trình' })
+    .locator('[data-plan-day="2026-11-02"]')
+    .click();
   await expectDayOrder(page, mock, [originalIds[0]!], secondDay);
   expectClearedTimes(activitiesForDay(mock, secondDay), secondDay);
   activitiesForDay(mock, firstDay).forEach(expectOriginalTimes);
@@ -105,7 +110,7 @@ test('HTTP mock: keyboard commits only on Enter, returns focus and supports pool
   await page.keyboard.press('ArrowLeft');
   await expect(separator).not.toHaveAttribute('aria-valuenow', beforeResize!);
   await separator.press('Home');
-  await expect(separator).toHaveAttribute('aria-valuenow', '58.219');
+  await expect(separator).toHaveAttribute('aria-valuenow', beforeResize!);
 });
 
 test('HTTP mock: keyboard selected-location transfer creates at the chosen slot and restores activity focus', async ({

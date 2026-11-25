@@ -117,8 +117,8 @@ test('Map filters use semantic status colors and accessible targets', async ({ p
   const scheduled = filters.getByRole('button', { name: /Trong lịch/ });
   const unscheduled = filters.getByRole('button', { name: /Chưa xếp/ });
 
-  // Refined V2 (V2-D15): solid brand-blue active chip, white chips otherwise.
-  await expect(all).toHaveCSS('background-color', 'rgb(31, 95, 209)');
+  // Web v2 selected chips use the shared gradient while other chips stay white.
+  await expect(all).toHaveCSS('background-image', /linear-gradient/);
   await expect(selected).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(scheduled).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   await expect(scheduled).toHaveCSS('border-top-width', '0px');

@@ -363,7 +363,7 @@
   padding: 7px 14px 7px 12px;
   border-radius: var(--v2-radius-pill);
   background: var(--v2-sky);
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font-size: 12px;
   font-weight: 800;
 }

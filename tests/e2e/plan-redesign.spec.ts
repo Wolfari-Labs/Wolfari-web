@@ -8,7 +8,7 @@ test('Fixture: shared workspace geometry and Figma itinerary surfaces', async ({
   await page.goto(trip + '/plan');
   await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   await page.screenshot({ path: info.outputPath('timeline.png'), fullPage: true });
-  const hero = page.locator('[data-variant="landscape"][aria-label="Thông tin chuyến đi"]');
+  const hero = page.locator('[data-region="trip-hero"]');
   const reference = (await hero.boundingBox())!;
   const list = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
   const panel = list.locator('xpath=ancestor::section[1]');
@@ -38,8 +38,9 @@ test('Fixture: shared workspace geometry and Figma itinerary surfaces', async ({
     await page.goto(trip + route);
     await expect(hero).toBeVisible();
     const box = (await hero.boundingBox())!;
-    for (const key of ['x', 'y', 'width', 'height'] as const)
+    for (const key of ['x', 'y', 'width'] as const)
       expect(Math.abs(box[key] - reference[key]), route + key).toBeLessThanOrEqual(2);
+    expect(box.height).toBe(84);
   }
   expect(errors).toEqual([]);
 });

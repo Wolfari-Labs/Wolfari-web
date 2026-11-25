@@ -77,6 +77,16 @@
   white-space: nowrap;
   font: 700 15px/normal var(--v2-font);
 }
+.headerNav a::after,
+.headerNav button::after,
+.profile::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
 .headerNav img {
   display: block;
   flex-shrink: 0;
@@ -85,7 +95,7 @@
   background: rgb(255 255 255 / 70%);
 }
 .headerNav a[aria-current='page'] {
-  color: white;
+  color: var(--v2-ink);
   background: var(--v2-gradient);
   box-shadow: var(--v2-shadow-active);
 }
@@ -114,6 +124,7 @@
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .profile {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,7 +159,7 @@
 .profileChevron::after {
   content: '';
   position: absolute;
-  inset: -4px -10px;
+  inset: -4px -14px;
 }
 .profileChevron img {
   display: block;
@@ -191,7 +202,7 @@
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .primary {
-  color: white;
+  color: var(--v2-ink);
   background: var(--v2-gradient);
   box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
@@ -334,7 +345,7 @@
 }
 .sidebar nav .selectedSection,
 .collapsed nav .selectedSection {
-  color: white;
+  color: var(--v2-ink);
   background: var(--v2-gradient);
   box-shadow: var(--v2-shadow-active);
 }
@@ -377,7 +388,6 @@
 .tripMain {
   position: relative;
   min-height: 0;
-  padding-bottom: 2px;
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: 32px;
@@ -473,7 +483,7 @@
 }
 .navigationDrawer nav .selectedSection,
 .navigationDrawer nav a[aria-current='page'] {
-  color: white;
+  color: var(--v2-ink);
   background: var(--v2-gradient);
   box-shadow: var(--v2-shadow-active);
 }

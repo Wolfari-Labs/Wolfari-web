@@ -96,31 +96,26 @@ test('Inbox reads from API, survives a later-page error and preferences preserve
     return route.fulfill({ json: { data: preferences, meta: {} } });
   });
   await login(page);
-  await page
-    .getByRole('button', { name: 'Thông báo · Có tin chưa đọc' })
-    .filter({ visible: true })
-    .click();
-  const inbox = page.getByRole('dialog', { name: 'Thông báo', exact: true });
+  await page.getByRole('link', { name: 'Thông báo · Có tin chưa đọc' }).click();
+  await expect(page).toHaveURL('/notifications');
+  const inbox = page.getByRole('region', { name: 'Danh sách thông báo' });
   await expect(inbox.getByText('Lịch trình có cập nhật')).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('inbox-desktop.png') });
   await inbox.getByRole('button', { name: 'Tải thêm', exact: true }).click();
   await expect(inbox.getByText('Lịch trình có cập nhật')).toBeVisible();
   await inbox.getByRole('button', { name: 'Thử lại' }).click();
-  await inbox.getByRole('button', { name: 'Đánh dấu đã đọc' }).click();
-  await expect(inbox.getByRole('button', { name: 'Đánh dấu đã đọc' })).toHaveCount(0);
-  await page.keyboard.press('Escape');
+  await inbox.getByRole('button', { name: 'Đánh dấu đã đọc: Lịch trình có cập nhật' }).click();
+  await expect(
+    inbox.getByRole('button', { name: 'Đánh dấu đã đọc: Lịch trình có cập nhật' }),
+  ).toHaveCount(0);
   await page.setViewportSize({ width: 402, height: 874 });
-  await page
-    .getByRole('button', { name: /^Thông báo/ })
-    .filter({ visible: true })
-    .first()
-    .click();
   await expect(inbox.getByText('Lịch trình có cập nhật')).toBeVisible();
   await expect
     .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
     .toBe(true);
   await page.screenshot({ path: testInfo.outputPath('inbox-web402.png') });
-  await page.keyboard.press('Escape');
+  await page.getByRole('link', { name: 'Mở tùy chọn thông báo' }).click();
+  await expect(page).toHaveURL('/profile#notifications');
   await page.getByRole('switch', { name: 'Cho phép email' }).uncheck();
   await page.getByRole('button', { name: 'Lưu tùy chọn' }).click();
   await expect(page.getByText('Đã lưu tùy chọn thông báo.', { exact: true })).toBeVisible();

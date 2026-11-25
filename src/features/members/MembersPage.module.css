@@ -27,7 +27,7 @@
   }
 
   .breadcrumb a {
-    color: var(--color-active);
+    color: var(--color-action-text);
     position: relative;
     min-height: 22px;
     display: inline-flex;
@@ -376,7 +376,7 @@
   overflow-wrap: anywhere;
 }
 .roleHelp a {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font-weight: 700;
 }
 
@@ -420,7 +420,7 @@
   margin-left: -4px;
   border-radius: 12px;
   background: var(--v2-sky);
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .invitationList ul {
   display: flex;
@@ -521,6 +521,7 @@
   }
   .tabs {
     max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
   }
   .tabs > button {

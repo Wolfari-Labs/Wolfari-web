@@ -462,20 +462,26 @@
 }
 .tabs {
   gap: 2px;
-  padding: 4px;
+  padding: 5px 4px;
   border-radius: var(--v2-radius-pill);
   background: #f3f6ff;
 }
 .tabs button {
   /* Preserve the 34px source pill; focus and keyboard semantics remain on the button. */
+  position: relative;
   min-height: 34px;
   padding: 8px 14px;
   border-radius: var(--v2-radius-pill);
   color: var(--v2-sub);
   font: 700 13px/normal var(--v2-font);
 }
+.tabs button::after {
+  content: '';
+  position: absolute;
+  inset: -5px 0;
+}
 .tabs button[data-state='active'] {
   background: var(--v2-gradient);
-  color: var(--v2-white);
+  color: var(--v2-ink);
   box-shadow: 0 4px 10px -3px rgb(60 123 232 / 25%);
 }

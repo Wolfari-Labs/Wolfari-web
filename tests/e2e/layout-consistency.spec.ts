@@ -41,7 +41,6 @@ for (const viewport of viewports) {
       x: frameLeft,
       y: 20 + 76 + 16,
       width: viewport.width - frameLeft - 24,
-      height: 84,
     };
     for (const route of routes) {
       await page.goto(`/trips/${tripId}${route.path}`);
@@ -51,17 +50,21 @@ for (const viewport of viewports) {
       near(box.x, expected.x, `${label} hero x`);
       near(box.y, expected.y, `${label} hero y`);
       near(box.width, expected.width, `${label} hero width`);
-      near(box.height, expected.height, `${label} hero height`);
+      near(box.height, route.name === 'plan' ? 80 : 84, `${label} hero height`);
 
       // The page breadcrumb (with the h1) sits inside the trip header's text column.
-      const crumb = (await breadcrumb(page).boundingBox())!;
-      near(crumb.y, expected.y + 8, `${label} breadcrumb y`);
-      near(crumb.x, expected.x + 88, `${label} breadcrumb x`);
+      if (route.name === 'plan') {
+        await expect(breadcrumb(page)).toHaveCount(0);
+      } else {
+        const crumb = (await breadcrumb(page).boundingBox())!;
+        near(crumb.y, expected.y + 8, `${label} breadcrumb y`);
+        near(crumb.x, expected.x + 88, `${label} breadcrumb x`);
+      }
 
       const headings = page.getByRole('heading', { level: 1 });
       await expect(headings, `${label} exactly one visible h1`).toHaveCount(1);
       await expect(headings).toBeVisible();
-      await expect(headings).toHaveAttribute('aria-current', 'page');
+      if (route.name !== 'plan') await expect(headings).toHaveAttribute('aria-current', 'page');
     }
   });
 }
@@ -83,9 +86,9 @@ for (const viewport of [...viewports, { width: 1366, height: 768 }, { width: 120
     const kpi = await edges('[data-region="trip-overview-summaries"] > *');
     const lower = await edges('[data-region="trip-overview-workspace"] > *');
     expect(kpi).toHaveLength(4);
-    expect(lower).toHaveLength(2);
-    // Web v2 W04: four equal stat tiles over a 3:2 itinerary / map row; only outer edges align.
+    expect(lower).toHaveLength(3);
+    // Web v2 W04: four stat tiles over itinerary, map and the fare/weather column.
     near(lower[0]!.left, kpi[0]!.left, 'itinerary left = KPI 1 left');
-    near(lower[1]!.right, kpi[3]!.right, 'map right = KPI 4 right');
+    near(lower[2]!.right, kpi[3]!.right, 'fare/weather right = KPI 4 right');
   });
 }

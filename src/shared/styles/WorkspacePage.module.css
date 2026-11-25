@@ -29,7 +29,7 @@
     display: inline-flex;
     align-items: center;
     min-height: 22px;
-    color: var(--color-action-primary);
+    color: var(--color-action-text);
   }
 
   /* Enlarges the pointer target without changing the row height. */
@@ -88,12 +88,12 @@
   }
 
   .breadcrumb a:hover {
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
   }
 
   .breadcrumb h1 {
     font: 700 12px/normal var(--v2-font);
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
   }
 
   /* Over the trip header: zero-height row placed at the card's text column (12 + 60 + 14 + 2). */
@@ -118,8 +118,6 @@
     border: 0;
     border-radius: var(--v2-radius-tile);
     background: var(--v2-white);
-    box-shadow:
-      var(--v2-shadow-card),
-      var(--v2-inset);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
   }
 }

@@ -21,7 +21,7 @@ for (const width of [402, 320]) {
       .poll(() => skip.evaluate((link) => link.getBoundingClientRect().bottom))
       .toBeLessThanOrEqual(0);
     await form.getByRole('button', { name: 'Tạo tài khoản' }).click();
-    await expect(page.getByLabel('Họ và tên')).toBeFocused();
+    await expect(page.getByLabel('Email', { exact: true })).toBeFocused();
     await expect
       .poll(() => skip.evaluate((link) => link.getBoundingClientRect().bottom))
       .toBeLessThanOrEqual(0);

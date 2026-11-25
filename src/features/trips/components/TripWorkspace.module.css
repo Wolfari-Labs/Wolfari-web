@@ -27,7 +27,7 @@
   font: inherit;
 }
 .breadcrumb a {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 @media (max-width: 768px) {
   .page,
@@ -66,6 +66,6 @@
     color: var(--v2-muted);
   }
   .breadcrumb h1 {
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
   }
 }

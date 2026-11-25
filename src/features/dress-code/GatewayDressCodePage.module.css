@@ -17,7 +17,7 @@
 }
 
 .breadcrumb a {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .visuallyHidden {
@@ -50,15 +50,15 @@
   border: 1px solid var(--color-line);
   border-radius: 18px;
   background: var(--color-white);
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font: inherit;
   font-size: 13px;
 }
 
 .filters button[aria-pressed='true'] {
   border-color: var(--color-action-primary);
-  background: var(--color-action-primary);
-  color: var(--color-white);
+  background: var(--v2-gradient);
+  color: var(--v2-ink);
 }
 
 .content {
@@ -87,7 +87,7 @@
 
 .group > h2 {
   margin: 0 0 10px;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font-size: 16px;
 }
 
@@ -129,7 +129,7 @@
   border-radius: 999px;
   padding: 5px 10px;
   background: var(--color-surface);
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -233,7 +233,7 @@
 
   .filters button[aria-pressed='true'] {
     background: var(--v2-gradient);
-    color: var(--v2-white);
+    color: var(--v2-ink);
     box-shadow: var(--v2-shadow-active), var(--v2-inset-badge);
   }
 

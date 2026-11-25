@@ -398,7 +398,7 @@
 }
 .chartEmpty svg {
   margin-bottom: 4px;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .chartEmpty strong {
   color: var(--v2-ink);
@@ -417,7 +417,7 @@
 .sourceNote svg {
   flex: 0 0 auto;
   margin-top: 1px;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .historyDetails {
   margin-top: 10px;
@@ -500,7 +500,7 @@ details.help > summary::after {
   color: #56637b;
 }
 .help summary svg:first-child {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .steps {
   display: grid;

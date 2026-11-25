@@ -22,7 +22,7 @@
 }
 .marker {
   flex-shrink: 0;
-  color: var(--color-blue);
+  color: var(--color-action-text);
   font-weight: var(--weight-bold);
 }
 .info {
@@ -63,7 +63,7 @@
   color: #2b55a8;
 }
 .info .marker {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 .success {
   background: var(--v2-mint);

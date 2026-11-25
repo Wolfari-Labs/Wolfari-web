@@ -201,7 +201,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font: 700 14px/normal var(--v2-font);
 }
 .track {

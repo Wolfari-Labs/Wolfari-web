@@ -20,7 +20,7 @@
 .primary,
 .button[aria-busy='true'] {
   background: var(--v2-gradient);
-  color: white;
+  color: var(--v2-ink);
   box-shadow: var(--v2-shadow-float), var(--v2-inset);
 }
 .outline,

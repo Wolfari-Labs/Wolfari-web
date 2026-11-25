@@ -127,7 +127,13 @@ describe('Auth validation without Identity writes', () => {
         <AuthPage mode="register" previewEnabled={false} />
       </MemoryRouter>,
     );
-    await userEvent.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText('Email'), 'name@example.test');
+    await user.type(screen.getByLabelText('Mật khẩu'), 'Wolfari1');
+    await user.type(screen.getByLabelText('Xác nhận mật khẩu'), 'Wolfari1');
+    await user.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
+    await user.type(screen.getByLabelText('Họ và tên'), 'Demo');
+    await user.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
     expect(screen.getByText('Chọn đồng ý để tiếp tục đăng ký.')).toBeInTheDocument();
   });
   it('reveals and hides a password without changing its value', async () => {

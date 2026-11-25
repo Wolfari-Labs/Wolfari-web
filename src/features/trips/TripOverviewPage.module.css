@@ -29,7 +29,7 @@
 
   .breadcrumb a {
     position: relative;
-    color: var(--color-action-primary);
+    color: var(--color-action-text);
   }
 
   .breadcrumb a::after {
@@ -276,7 +276,7 @@
   align-items: flex-start;
 }
 .workspace a {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   min-height: 44px;
   display: inline-flex;
   align-items: center;

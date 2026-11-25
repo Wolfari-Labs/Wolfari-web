@@ -30,7 +30,7 @@
   color: var(--v2-sub);
 }
 .breadcrumb a:hover {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
 }
 
 /* Over the photo hero: the Figma breadcrumb pill at its top-left corner (5px frame + 17/19). */
@@ -63,7 +63,7 @@
     .page
     > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero'])
     a:hover {
-    color: var(--v2-blue);
+    color: var(--v2-blue-text);
   }
   :global(#main-content) .page > nav.breadcrumb.breadcrumb:has(+ [data-region='trip-hero']) h1 {
     color: var(--v2-ink);
@@ -266,8 +266,7 @@
   overflow: visible;
 }
 .stat .summaryDetail,
-.stat .summaryLink,
-.stat .progressTrack {
+.stat .summaryLink {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -295,7 +294,7 @@
   font: 700 13px/18px var(--v2-font);
 }
 .summaryLink {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font: 700 13px/18px var(--v2-font);
 }
 .progressSummary {
@@ -378,7 +377,7 @@
   padding-inline: 10px;
 }
 .mapLink {
-  color: var(--v2-blue);
+  color: var(--v2-blue-text);
   font: 700 14px/normal var(--v2-font);
 }
 /* The map link's ::after covers the whole card (the panel is its containing block). */

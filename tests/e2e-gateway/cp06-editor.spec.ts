@@ -15,6 +15,7 @@ for (const viewport of [
     const mock = await mockPlan(page, gateway);
     await login(page);
     await page.goto(`/trips/${tripId}/plan`);
+    await page.locator('summary[aria-label="Phạm vi lịch trình"]').click();
     await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
 
     await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();

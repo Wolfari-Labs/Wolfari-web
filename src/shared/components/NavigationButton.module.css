@@ -16,7 +16,7 @@
 }
 .item[aria-pressed='true'] {
   background: var(--v2-gradient);
-  color: white;
+  color: var(--v2-ink);
   box-shadow: var(--v2-shadow-active);
 }
 .item:disabled {

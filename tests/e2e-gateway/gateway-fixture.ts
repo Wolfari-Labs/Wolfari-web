@@ -367,6 +367,14 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path === '/api/v1/trips' || path.startsWith('/api/v1/trips/')) {
         if (!model.authenticated) return error(route, 401);
         expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        const remindersMatch = /^\/api\/v1\/trips\/([^/]+)\/reminders$/.exec(path);
+        if (remindersMatch && method === 'GET') {
+          const current = model.trips.find(
+            (item) => item.id === decodeURIComponent(remindersMatch[1]!),
+          );
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          return json(route, []);
+        }
         if (path === '/api/v1/trips' && method === 'GET') {
           expect(url.searchParams.get('limit')).toBe('20');
           const cursor = url.searchParams.get('cursor');

@@ -24,7 +24,7 @@
   color: var(--color-muted);
 }
 .breadcrumb a {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 .panel {
   padding: 24px;
@@ -116,7 +116,7 @@
   align-items: center;
 }
 .panel h2 svg {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   flex-shrink: 0;
 }
 
@@ -203,7 +203,7 @@
   color: #008a66;
 }
 .financeKpi[data-tone='reserved'] strong {
-  color: var(--color-blue);
+  color: var(--color-action-text);
 }
 .financeKpi[data-tone='available'] strong {
   color: #008cac;
@@ -269,7 +269,7 @@
 }
 
 .legacyFinanceHeading h2 {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
   font-size: 20px;
   line-height: 28px;
 }
@@ -358,15 +358,21 @@
   border-radius: 12px;
   background: var(--v2-gradient-green);
   color: var(--v2-white);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(45 190 122 / 32%);
 }
 .stateBar[data-status='CLOSING'] .bannerIcon {
   background: var(--v2-gradient-amber);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(245 166 35 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(245 166 35 / 32%);
 }
 .stateBar[data-status='CLOSED'] .bannerIcon {
   background: var(--v2-gradient-violet);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(107 78 230 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(107 78 230 / 32%);
 }
 .bannerCopy {
   min-width: 0;
@@ -462,11 +468,15 @@
   height: 36px;
   border-radius: 12px;
   background: var(--v2-gradient-amber);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(245 166 35 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(245 166 35 / 32%);
 }
 .closure[data-closed='true'] .closureIcon {
   background: var(--v2-gradient-violet);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(107 78 230 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(107 78 230 / 32%);
 }
 .closure > div {
   display: flex;
@@ -517,7 +527,9 @@
 }
 .metrics > div[data-tone='budget'] .metricIcon {
   background: var(--v2-gradient-blue);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(60 123 232 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(60 123 232 / 32%);
 }
 .metrics > div[data-tone='contributions'] {
   --metric-surface: var(--v2-mint);
@@ -528,14 +540,18 @@
 .metrics > div[data-tone='expenses'] .metricIcon,
 .formIcon {
   background: var(--v2-gradient-amber);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(245 166 35 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(245 166 35 / 32%);
 }
 .metrics > div[data-tone='available'] {
   --metric-surface: var(--v2-lilac);
 }
 .metrics > div[data-tone='available'] .metricIcon {
   background: var(--v2-gradient-violet);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(107 78 230 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(107 78 230 / 32%);
 }
 .metrics p {
   display: grid;
@@ -649,7 +665,10 @@
 .row {
   display: grid;
   /* Amount and date keep a floor so money and dates are never ellipsized. */
-  grid-template-columns: 28px minmax(0, 1.2fr) minmax(96px, 1.05fr) minmax(0, 1.55fr) minmax(84px, 0.95fr) 100px;
+  grid-template-columns: 28px minmax(0, 1.2fr) minmax(96px, 1.05fr) minmax(0, 1.55fr) minmax(
+      84px,
+      0.95fr
+    ) 100px;
   align-items: center;
   gap: 8px;
   min-width: 0;
@@ -892,7 +911,10 @@
   }
   .tableHead,
   .row {
-    grid-template-columns: 24px minmax(0, 1.2fr) minmax(96px, 1fr) minmax(0, 1.1fr) minmax(84px, 1fr) 100px;
+    grid-template-columns: 24px minmax(0, 1.2fr) minmax(96px, 1fr) minmax(0, 1.1fr) minmax(
+        84px,
+        1fr
+      ) 100px;
     padding-inline: 10px;
   }
   .tabs button {
@@ -1173,15 +1195,21 @@
   border-radius: 12px;
   background: var(--v2-gradient-green);
   color: var(--v2-white);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(45 190 122 / 32%);
 }
 .financeStateBar[data-status='CLOSING'] .financeStateIcon {
   background: var(--v2-gradient-amber);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(245 166 35 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(245 166 35 / 32%);
 }
 .financeStateBar[data-status='CLOSED'] .financeStateIcon {
   background: var(--v2-gradient-violet);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(107 78 230 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(107 78 230 / 32%);
 }
 .financeEyebrow {
   color: #5d6a82;
@@ -1220,7 +1248,9 @@
   align-self: center;
   font-style: normal;
   background: var(--v2-gradient-blue);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(60 123 232 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(60 123 232 / 32%);
 }
 .financeKpi span {
   color: #56637b;
@@ -1241,21 +1271,27 @@
 }
 .financeKpi[data-tone='balance'] .financeKpiIcon {
   background: var(--v2-gradient-green);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(45 190 122 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(45 190 122 / 32%);
 }
 .financeKpi[data-tone='reserved'] {
   --kpi-surface: var(--v2-butter);
 }
 .financeKpi[data-tone='reserved'] .financeKpiIcon {
   background: var(--v2-gradient-amber);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(245 166 35 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(245 166 35 / 32%);
 }
 .financeKpi[data-tone='available'] {
   --kpi-surface: var(--v2-lilac);
 }
 .financeKpi[data-tone='available'] .financeKpiIcon {
   background: var(--v2-gradient-violet);
-  box-shadow: var(--v2-inset-badge), 0 6px 12px -2px rgb(107 78 230 / 32%);
+  box-shadow:
+    var(--v2-inset-badge),
+    0 6px 12px -2px rgb(107 78 230 / 32%);
 }
 .financeTabs {
   display: inline-flex;
