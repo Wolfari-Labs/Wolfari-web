@@ -131,6 +131,9 @@ for (const module of ['packing', 'dress-code'] as const) {
     await drawer.getByRole('button', { name: 'Áp dụng mục đã chọn', exact: true }).click();
     if (packing) {
       await expect(drawer.getByText(/Chưa rõ kết quả lưu/)).toBeVisible();
+      const dateScope = drawer.getByRole('combobox', { name: 'Phạm vi ngày' });
+      await expect(dateScope).toBeDisabled();
+      await expect(dateScope).toHaveCSS('opacity', '1');
       await drawer.getByRole('button', { name: 'Đối soát dữ liệu', exact: true }).click();
       await drawer.getByRole('button', { name: 'Kiểm tra lại lệnh cũ', exact: true }).click();
       expect(writes).toHaveLength(2);
