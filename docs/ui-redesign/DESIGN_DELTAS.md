@@ -1,5 +1,19 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## PRICE-WATCH-CAPABILITIES — 26/11/2026 — DELTA_PENDING
+
+User-requested Web support for `GET /price-watch-capabilities` (Backend branch
+`feature/price-watch-capabilities`, contract 1.2.0, **not merged**; SRS FR-AU03). Reuses the
+existing form, `Select`/`Input`/`Alert`/`Badge`; no new CSS. When the endpoint answers 404 (older
+Gateway) or in Preview, the form keeps its build-time `VITE_PRICE_WATCH_PROVIDER` behaviour. Each
+item is pending review and approves nothing else. Evidence: unit/component tests with HTTP mocks
+only; no live provider.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| PWCAP-01 | Form "Tạo/Sửa theo dõi giá": dòng mô tả nguồn đổi sang một câu sinh từ capabilities (ví dụ "Google Flights (SearchApi) so sánh vé một chiều, hạng phổ thông, 1 người lớn." + câu về giờ UTC/giá tham khảo). Lựa chọn chỉ có một giá trị (Hành trình, Hạng ghế, Người lớn, Trẻ em, Em bé) bị **ẩn** thay vì hiện ở trạng thái khóa như bản TRAVELPAYOUTS cũ; Hạng ghế chỉ liệt kê hạng được hỗ trợ; ô hành khách có `max` theo giới hạn nguồn; lỗi riêng khi vượt giới hạn, không gửi request. | FR-AU03: không đưa lựa chọn nguồn không hỗ trợ. |
+| PWCAP-02 | Trang Theo dõi giá: huy hiệu nguồn lấy từ capabilities ("Google Flights (SearchApi) · Giá tham khảo", "… · Chưa sẵn sàng"); khi `available=false` nút "Tạo theo dõi" bị khóa kèm Alert "Nguồn giá chưa sẵn sàng…"; khi không đọc được capabilities (lỗi khác 404) nút tạo bị khóa kèm Alert + "Thử lại". Form hiện trạng thái tải trong lúc đọc capabilities. Thông báo lỗi có câu riêng cho `PROVIDER_QUERY_UNSUPPORTED` và `PRICE_PROVIDER_NOT_CONFIGURED`. | Trung thực về nguồn đang dùng; Backend vẫn là authority. |
+
 ## Finance demo completion — 16/11/2026
 
 User-requested Web/Backend parity for the Finance demo; no new checkpoint, no Figma writes.

@@ -5,8 +5,24 @@ import { Button } from '../../shared/components/Button';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import { localDate } from '../plan/model/plan-presentation';
 import { isValidDate } from './model/price-watch';
-import type { RuntimeWatch, WatchFields } from './model/runtime-price-watch';
+import {
+  capabilitiesLine,
+  capabilityErrors,
+  referenceProvider,
+  type PriceWatchCapabilities,
+  type RuntimeWatch,
+  type WatchFields,
+} from './model/runtime-price-watch';
+import { Alert } from '../../shared/components/Alert';
 import styles from '../../shared/styles/DemoWorkspace.module.css';
+
+const cabinLabels = {
+  ECONOMY: 'Phổ thông',
+  PREMIUM_ECONOMY: 'Phổ thông đặc biệt',
+  BUSINESS: 'Thương gia',
+  FIRST: 'Hạng nhất',
+} as const;
+const passengerLabels = { adults: 'Người lớn', children: 'Trẻ em', infants: 'Em bé' } as const;
 
 export function PriceWatchForm({
   initial,
@@ -14,6 +30,7 @@ export function PriceWatchForm({
   busy,
   preview = false,
   onSave,
+  capabilities = null,
 }: {
   initial: RuntimeWatch | null;
   timezone: string;
@@ -21,13 +38,24 @@ export function PriceWatchForm({
   busy: boolean;
   preview?: boolean;
   onSave: (fields: WatchFields) => void;
+  /**
+   * `GET /price-watch-capabilities` of the configured source. Null (older Gateway, Preview):
+   * the form keeps its build-time provider behaviour.
+   */
+  capabilities?: PriceWatchCapabilities | null;
 }) {
   const form = useRef<HTMLFormElement>(null),
     prefix = useId();
+  // Capabilities describe the configured source: they govern new watches and watches of it.
+  const caps =
+    !preview && capabilities && (!initial || initial.fields.provider === capabilities.provider)
+      ? capabilities
+      : null;
   const [fields, setFields] = useState<WatchFields>(
     initial?.fields ?? {
-      provider:
-        !preview && import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+      provider: caps
+        ? caps.provider
+        : !preview && import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
           ? 'TRAVELPAYOUTS_CACHE'
           : 'MOCK_FLIGHT',
       origin: '',
@@ -35,9 +63,13 @@ export function PriceWatchForm({
       departure_date: '',
       departure_at: '',
       return_date: null,
-      journey_type: 'ONE_WAY',
+      journey_type:
+        caps && !caps.journeyTypes.includes('ONE_WAY')
+          ? (caps.journeyTypes[0] ?? 'ONE_WAY')
+          : 'ONE_WAY',
       passengers: { adults: 1, children: 0, infants: 0 },
-      cabin_class: 'ECONOMY',
+      cabin_class:
+        caps && !caps.cabinClasses.includes('ECONOMY') ? (caps.cabinClasses[0] ?? null) : 'ECONOMY',
       currency: 'VND',
       threshold_price: '',
     },
@@ -53,11 +85,25 @@ export function PriceWatchForm({
       : '09:00',
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const cached = fields.provider === 'TRAVELPAYOUTS_CACHE';
+  // Without capabilities, a reference-fare source keeps its fixed options visible but locked.
+  const cached = !caps && referenceProvider(fields.provider);
+  const reference = referenceProvider(fields.provider);
+  // With capabilities, a choice with a single possible value is not offered at all.
+  const journeyChoices = caps?.journeyTypes ?? (['ONE_WAY', 'ROUND_TRIP'] as const);
+  const cabinChoices =
+    caps?.cabinClasses ?? (['ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'] as const);
+  const passengerMax = {
+    adults: caps ? Math.min(9, caps.maxAdults, caps.maxPassengers) : 9,
+    children: caps ? Math.min(9, caps.maxChildren, Math.max(0, caps.maxPassengers - 1)) : 9,
+    infants: caps ? Math.min(9, caps.maxInfants, Math.max(0, caps.maxPassengers - 1)) : 9,
+  };
+  const showPassenger = (key: keyof typeof passengerMax) =>
+    !caps || passengerMax[key] > (key === 'adults' ? 1 : 0);
+  const createBlocked = !!caps && !caps.available && !initial;
   const fieldProps = (name: string) => ({ id: `${prefix}-${name}`, name, error: errors[name] });
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (disabled || busy) return;
+    if (disabled || busy || createBlocked) return;
     const next: Record<string, string> = {};
     if (!/^[A-Z]{3}$/.test(fields.origin)) next.origin = 'Nhập mã sân bay gồm 3 chữ cái.';
     if (!/^[A-Z]{3}$/.test(fields.destination)) next.destination = 'Nhập mã sân bay gồm 3 chữ cái.';
@@ -97,6 +143,10 @@ export function PriceWatchForm({
     )
       next.threshold_price =
         'Nhập số tiền VND nguyên, lớn hơn 0 và không quá 9.223.372.036.854.775.807.';
+    // Never send a query the configured source cannot compare (the Gateway would answer 400).
+    if (caps)
+      for (const [key, message] of Object.entries(capabilityErrors(fields, caps)))
+        next[key] ??= message;
     setErrors(next);
     if (Object.keys(next).length) {
       form.current?.querySelector<HTMLElement>(`[name="${Object.keys(next)[0]}"]`)?.focus();
@@ -111,10 +161,21 @@ export function PriceWatchForm({
   return (
     <form ref={form} onSubmit={submit} noValidate className={styles.form}>
       <p className={styles.metadata}>
-        {cached
-          ? 'Nguồn TRAVELPAYOUTS_CACHE · Giá tham khảo cho 1 người lớn, một chiều, phổ thông; không bảo đảm còn mua được. Giờ UTC chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.'
-          : 'Ngày, giờ tra cứu theo UTC; không phải giờ địa phương tại sân bay. Nguồn MOCK_FLIGHT · Giá mô phỏng.'}
+        {caps
+          ? `${capabilitiesLine(caps)} ${
+              reference
+                ? 'Giá tham khảo, không bảo đảm còn mua được. Giờ UTC chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.'
+                : 'Ngày, giờ tra cứu theo UTC; không phải giờ địa phương tại sân bay.'
+            }`
+          : cached
+            ? `Nguồn ${fields.provider} · Giá tham khảo cho 1 người lớn, một chiều, phổ thông; không bảo đảm còn mua được. Giờ UTC chỉ dùng làm hạn dừng theo dõi, không phải giờ bay được xác nhận.`
+            : 'Ngày, giờ tra cứu theo UTC; không phải giờ địa phương tại sân bay. Nguồn MOCK_FLIGHT · Giá mô phỏng.'}
       </p>
+      {createBlocked && (
+        <Alert tone="warning">
+          Nguồn giá chưa sẵn sàng nên tạm thời chưa tạo được theo dõi mới. Thử lại sau.
+        </Alert>
+      )}
       <fieldset disabled={disabled || busy} className={styles.form}>
         <legend>Thông tin chuyến bay</legend>
         <Input
@@ -139,17 +200,20 @@ export function PriceWatchForm({
           placeholder="SGN"
           autoComplete="off"
         />
-        <Select
-          label="Hành trình"
-          disabled={cached}
-          value={fields.journey_type}
-          onChange={(e) =>
-            setFields({ ...fields, journey_type: e.target.value as WatchFields['journey_type'] })
-          }
-        >
-          <option value="ONE_WAY">Một chiều</option>
-          <option value="ROUND_TRIP">Khứ hồi</option>
-        </Select>
+        {journeyChoices.length > 1 && (
+          <Select
+            {...fieldProps('journey_type')}
+            label="Hành trình"
+            disabled={cached}
+            value={fields.journey_type}
+            onChange={(e) =>
+              setFields({ ...fields, journey_type: e.target.value as WatchFields['journey_type'] })
+            }
+          >
+            {journeyChoices.includes('ONE_WAY') && <option value="ONE_WAY">Một chiều</option>}
+            {journeyChoices.includes('ROUND_TRIP') && <option value="ROUND_TRIP">Khứ hồi</option>}
+          </Select>
+        )}
         <Input
           {...fieldProps('departure_date')}
           label="Ngày khởi hành"
@@ -159,7 +223,7 @@ export function PriceWatchForm({
           onChange={(e) => setFields({ ...fields, departure_date: e.target.value })}
         />
         <Input
-          label={cached ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
+          label={reference ? 'Hạn dừng theo dõi trong ngày (UTC)' : 'Giờ khởi hành (UTC)'}
           type="time"
           required
           value={clock}
@@ -176,15 +240,15 @@ export function PriceWatchForm({
             onChange={(e) => setFields({ ...fields, return_date: e.target.value })}
           />
         )}
-        {(['adults', 'children', 'infants'] as const).map((key) => (
+        {(['adults', 'children', 'infants'] as const).filter(showPassenger).map((key) => (
           <Input
             key={key}
             disabled={cached}
             {...fieldProps(key)}
-            label={{ adults: 'Người lớn', children: 'Trẻ em', infants: 'Em bé' }[key]}
+            label={passengerLabels[key]}
             type="number"
             min={key === 'adults' ? 1 : 0}
-            max={9}
+            max={passengerMax[key]}
             required
             value={fields.passengers[key]}
             onChange={(e) =>
@@ -195,23 +259,27 @@ export function PriceWatchForm({
             }
           />
         ))}
-        <Select
-          label="Hạng ghế"
-          disabled={cached}
-          value={fields.cabin_class ?? ''}
-          onChange={(e) =>
-            setFields({
-              ...fields,
-              cabin_class: (e.target.value as WatchFields['cabin_class']) || null,
-            })
-          }
-        >
-          <option value="">Không chỉ định</option>
-          <option value="ECONOMY">Phổ thông</option>
-          <option value="PREMIUM_ECONOMY">Phổ thông đặc biệt</option>
-          <option value="BUSINESS">Thương gia</option>
-          <option value="FIRST">Hạng nhất</option>
-        </Select>
+        {cabinChoices.length > 1 && (
+          <Select
+            {...fieldProps('cabin_class')}
+            label="Hạng ghế"
+            disabled={cached}
+            value={fields.cabin_class ?? ''}
+            onChange={(e) =>
+              setFields({
+                ...fields,
+                cabin_class: (e.target.value as WatchFields['cabin_class']) || null,
+              })
+            }
+          >
+            <option value="">Không chỉ định</option>
+            {cabinChoices.map((cabin) => (
+              <option key={cabin} value={cabin}>
+                {cabinLabels[cabin]}
+              </option>
+            ))}
+          </Select>
+        )}
         <Input
           {...fieldProps('threshold_price')}
           label="Ngưỡng cảnh báo (VND)"
@@ -225,7 +293,7 @@ export function PriceWatchForm({
       {preview && (
         <p className={styles.metadata}>Bản xem trước · Không tạo theo dõi hoặc gửi dữ liệu.</p>
       )}
-      <Button type="submit" loading={busy} disabled={disabled}>
+      <Button type="submit" loading={busy} disabled={disabled || createBlocked}>
         {preview ? 'Kiểm tra bản nháp' : 'Lưu theo dõi'}
       </Button>
     </form>

@@ -5,6 +5,8 @@ import { useRuntimeServices } from '../../app/gateway-context';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import { TripHero } from '../trips/components/TripHero';
 import {
+  providerLabels,
+  referenceProvider,
   restoreCreateIntent,
   type RuntimeWatch,
   type WatchIntent,
@@ -215,6 +217,19 @@ function WatchWorkspace({
   trip: import('../trips/model/trip-detail').TripDetailViewModel;
   repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'];
 }) {
+  // FR-AU03: offer only what the configured fare source supports. A Gateway without the endpoint
+  // answers 404 and the repository returns null: the form keeps its build-time behaviour.
+  const capabilities = useQuery({
+    queryKey: ['price-watch-capabilities', trip.currentMembership.userId],
+    queryFn: ({ signal }) =>
+      typeof repository.capabilities === 'function'
+        ? repository.capabilities(signal)
+        : Promise.resolve(null),
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+  const sourceCapabilities = capabilities.data ?? null;
+  const sourceUnavailable = sourceCapabilities?.available === false;
   const query = useInfiniteQuery({
     queryKey: ['price-watches', trip.currentMembership.userId, trip.id],
     initialPageParam: null as string | null,
@@ -414,9 +429,17 @@ function WatchWorkspace({
   );
   const providerBadge = (
     <Badge tone="warning">
-      {import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
-        ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
-        : 'MOCK_FLIGHT · Mô phỏng'}
+      {sourceCapabilities
+        ? `${providerLabels[sourceCapabilities.provider]} · ${
+            !sourceCapabilities.available
+              ? 'Chưa sẵn sàng'
+              : referenceProvider(sourceCapabilities.provider)
+                ? 'Giá tham khảo'
+                : 'Mô phỏng'
+          }`
+        : import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
+          ? 'TRAVELPAYOUTS_CACHE · Giá cache tham khảo'
+          : 'MOCK_FLIGHT · Mô phỏng'}
     </Badge>
   );
   return (
@@ -435,12 +458,26 @@ function WatchWorkspace({
         </div>
         <Button
           icon={<Icon name="plus" />}
-          disabled={!writable || busy || blocked}
+          disabled={!writable || busy || blocked || sourceUnavailable || capabilities.isError}
           onClick={() => openForm(null)}
         >
           Tạo theo dõi
         </Button>
       </div>
+      {sourceUnavailable && (
+        <Alert tone="warning">
+          Nguồn giá chưa sẵn sàng nên tạm thời chưa tạo được theo dõi mới. Các theo dõi hiện có vẫn
+          xem được.
+        </Alert>
+      )}
+      {capabilities.isError && (
+        <Alert tone="warning">
+          Chưa đọc được nguồn giá đang dùng nên tạm khóa tạo theo dõi mới.{' '}
+          <Button variant="plain" onClick={() => void capabilities.refetch()}>
+            Thử lại
+          </Button>
+        </Alert>
+      )}
       <p>Theo dõi ngưỡng giá và lịch sử quan sát. Không đặt vé, không thu tiền.</p>
       {!editing && recovery}
       <div className={priceStyles.workspace} data-region="price-watch-workspace">
@@ -553,13 +590,15 @@ function WatchWorkspace({
           headingRef={formHeadingRef}
           returnFocusRef={formTriggerRef}
         >
-          {editing && (
+          {editing && capabilities.isPending && <ContentState state="loading" />}
+          {editing && !capabilities.isPending && (
             <>
               {recovery}
               <PriceWatchForm
                 key={editing.item?.id ?? 'new'}
                 initial={editing.item}
                 timezone={trip.timezone}
+                capabilities={sourceCapabilities}
                 busy={busy}
                 disabled={busy || blocked || !writable}
                 onSave={(fields) => {

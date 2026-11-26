@@ -24,7 +24,7 @@ Prefix `/api/v1` áp dụng mọi path dưới đây. `{id}`/`{tripId}` là iden
 | Ledger/instruction | GET `/funds/{id}/transactions`; GET `/contributions/{id}/vietqr` | fund gateway/decoders | finance-fund / finance-contributions / finance-payments contracts |
 | Operation recovery | GET `/operations/{key}`; bounded poll and reconciliation | command-coordinator | Operation schemas in Finance/member lifecycle contracts |
 | Notifications | GET `/me/notifications`; PATCH `/me/notifications/{id}/read`; GET/PUT `/me/notification-preferences` | notification.gateway-repository, inbox/preferences | notification.openapi.yaml |
-| Price Watch | GET/POST `/trips/{tripId}/price-watches`; PATCH `/price-watches/{id}`; POST same + `/pause`, `/resume`, `/stop`; GET same + `/observations` | runtime-price-watch gateway, RuntimePriceWatchPage/model | price-watch.openapi.yaml |
+| Price Watch | GET/POST `/trips/{tripId}/price-watches`; PATCH `/price-watches/{id}`; POST same + `/pause`, `/resume`, `/stop`; GET same + `/observations`; GET `/price-watch-capabilities` (404 trên Gateway cũ → giữ hành vi `VITE_PRICE_WATCH_PROVIDER`) | runtime-price-watch gateway, RuntimePriceWatchPage/PriceWatchForm/model | price-watch.openapi.yaml 1.2.0 (Backend branch `feature/price-watch-capabilities`, chưa merge) |
 | Map/Dress/Packing | Plan read projections, no independent Gateway mutations wired | GatewayMapPage / GatewayDressCodePage / PackingPage | plan.openapi.json; không suy ra CRUD từ Figma |
 | Home | Gateway editorial landing local content, không remote recommendation API | HomeRoute/editorial-landing | Không có endpoint recommendation đang wired ở route này |
 | Admin/export/public share | Không có current workflow integration | guarded placeholder/deferred UI | Contract Backend khác tồn tại không tự cấp scope |
@@ -44,7 +44,7 @@ Backend còn có Finance expenses/refunds/closures/notes/receipts contracts; kh�
 9. Owner, Member, Plan Editor policy và FundHolder là trách nhiệm độc lập. Admin không tự có quyền Trip/Finance. Hide/disable controls chỉ là UX; server checks vẫn là authority.
 10. Invitation token được capture/scrub, safe returnTo nội bộ; expired/revoked/wrong recipient không được bypass bằng UI. Session revocation khác xóa push device.
 11. Notifications: unread marker/read receipt không chứng minh email/push delivery. Preferences update có expected_version; không giả bulk mark-read chưa wired.
-12. Price Watch hiện provider MOCK_FLIGHT, không có booking/payment. Preserve source/observedAt/fetchedAt và stale data; provider failure không tạo giá0/“rẻ nhất”.
+12. Price Watch không có booking/payment. Nguồn giá (MOCK_FLIGHT, TRAVELPAYOUTS_CACHE, SEARCHAPI_GOOGLE_FLIGHTS) do server cấu hình; form chỉ đưa ra lựa chọn trong `GET /price-watch-capabilities`, kiểm tra trước khi gửi và khóa tạo mới khi `available=false`. Preserve source/observedAt/fetchedAt và stale data; provider failure không tạo giá0/“rẻ nhất”.
 
 ## 3. Test protection và rủi ro redesign
 
