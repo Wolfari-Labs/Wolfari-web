@@ -19,6 +19,7 @@ test('AUTH-002 Guest bị chặn dữ liệu hồ sơ và Trips', detail('AUTH-0
 test('AUTH-003 Đăng xuất mất quyền truy cập phiên', detail('AUTH-003', ['FR-ID-03', 'AT-01'], 'DangNhap', true), async ({ page }, info) => {
   await login(page, info);
   await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
   await page.goto('/profile');
   await expect(page.getByLabel('Mật khẩu', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveCount(0);

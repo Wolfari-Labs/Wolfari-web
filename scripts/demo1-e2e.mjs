@@ -1,26 +1,24 @@
 import { fork, spawn, execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { createServer } from 'node:http';
-import {
+import { backendFile, backendRoot as backend, webRoot as web } from './demo-paths.mjs';
+import { snapshot } from './demo1-snapshot.mjs';
+import { redactArtifacts } from './demo1-redact-artifacts.mjs';
+import { verifyOwnedVolumes } from './demo1-ownership.mjs';
+const {
   initEnvironment,
   readEnv,
   apps,
   services,
   appEnvironment,
   databaseUrl,
-} from '../../Wolfari-backend/scripts/config.mjs';
-import { compose, infrastructureCheck } from '../../Wolfari-backend/scripts/infrastructure.mjs';
-import { migrate, migrationFiles } from '../../Wolfari-backend/scripts/migrations.mjs';
-import { createTestPortAllocator } from '../../Wolfari-backend/scripts/test-ports.mjs';
-import { snapshot } from './demo1-snapshot.mjs';
-import { redactArtifacts } from './demo1-redact-artifacts.mjs';
-import { verifyOwnedVolumes } from './demo1-ownership.mjs';
+} = await import(backendFile('scripts/config.mjs'));
+const { compose, infrastructureCheck } = await import(backendFile('scripts/infrastructure.mjs'));
+const { migrate, migrationFiles } = await import(backendFile('scripts/migrations.mjs'));
+const { createTestPortAllocator } = await import(backendFile('scripts/test-ports.mjs'));
 
-const web = resolve(dirname(fileURLToPath(import.meta.url)), '..'),
-  backend = resolve(web, '../Wolfari-backend');
 const runId =
   new Date().toISOString().replace(/\D/g, '').slice(0, 14) + '-' + randomBytes(4).toString('hex');
 const project = 'wolfari-web-demo1-' + runId;

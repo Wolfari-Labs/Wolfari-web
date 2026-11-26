@@ -306,7 +306,7 @@ export function MapViewport({
               <img src={locationPhoto(selected)} width="230" height="90" alt="" />
             )}
             <strong>{selected.location.name}</strong>
-            <span>⌖ {selected.location.address ?? 'Chưa có địa chỉ'}</span>
+            <span>⌖ {selected.location.address?.trim() || 'Chưa có địa chỉ'}</span>
             {selectedMeta}
             <p>
               {(runtimeMap && !validCoordinates(selected.location)

@@ -902,7 +902,7 @@ function MapWorkspace({
                                       {item.activities[0]
                                         ? activityTypeLabel(item.activities[0].activityType)
                                         : (provenance.categoryLabel ?? 'Tham quan')}{' '}
-                                      · {item.location.address ?? 'Chưa có địa chỉ'}
+                                      · {item.location.address?.trim() || 'Chưa có địa chỉ'}
                                       {otherProvince && (
                                         <span data-province="other"> · {otherProvince}</span>
                                       )}

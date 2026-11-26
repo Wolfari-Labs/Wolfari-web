@@ -1,6 +1,23 @@
 export const runtimeStatuses = ['ACTIVE', 'PAUSED', 'EXPIRED', 'STOPPED'] as const;
+export const flightProviders = [
+  'MOCK_FLIGHT',
+  'TRAVELPAYOUTS_CACHE',
+  'SEARCHAPI_GOOGLE_FLIGHTS',
+] as const;
+export type FlightProvider = (typeof flightProviders)[number];
+
+export const flightProviderLabels: Record<FlightProvider, string> = {
+  MOCK_FLIGHT: 'giá mô phỏng',
+  TRAVELPAYOUTS_CACHE: 'bộ nhớ đệm Travelpayouts',
+  SEARCHAPI_GOOGLE_FLIGHTS: 'Google Flights qua SearchApi',
+};
+
+export function isFlightProvider(value: unknown): value is FlightProvider {
+  return flightProviders.some((provider) => provider === value);
+}
+
 export interface WatchFields {
-  provider?: 'MOCK_FLIGHT' | 'TRAVELPAYOUTS_CACHE';
+  provider?: FlightProvider;
   origin: string;
   destination: string;
   departure_date: string;
@@ -20,7 +37,7 @@ export interface RuntimeWatch {
   statusReason: string | null;
   version: number;
   expiresAt: string;
-  fields: WatchFields & { provider: 'MOCK_FLIGHT' | 'TRAVELPAYOUTS_CACHE' };
+  fields: WatchFields & { provider: FlightProvider };
 }
 export interface RuntimeObservation {
   id: string;
@@ -48,7 +65,7 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
     Number.isFinite(Date.parse(v)) &&
     new Date(v).toISOString().slice(0, 10) === v;
   if (
-    (f.provider !== undefined && !['MOCK_FLIGHT', 'TRAVELPAYOUTS_CACHE'].includes(f.provider)) ||
+    (f.provider !== undefined && !isFlightProvider(f.provider)) ||
     f.currency !== 'VND' ||
     !/^[A-Z]{3}$/.test(f.origin) ||
     !/^[A-Z]{3}$/.test(f.destination) ||
@@ -74,14 +91,15 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
     throw Error('Invalid cabin');
   const p = f.passengers;
   if (
-    f.provider === 'TRAVELPAYOUTS_CACHE' &&
+    f.provider !== undefined &&
+    f.provider !== 'MOCK_FLIGHT' &&
     (f.journey_type !== 'ONE_WAY' ||
       f.cabin_class !== 'ECONOMY' ||
       p?.adults !== 1 ||
       p?.children !== 0 ||
       p?.infants !== 0)
   )
-    throw Error('Unsupported cache query');
+    throw Error('Unsupported provider query');
   if (
     !p ||
     ![p.adults, p.children, p.infants].every((n) => Number.isInteger(n) && n >= 0 && n <= 9) ||

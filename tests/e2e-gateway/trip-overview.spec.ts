@@ -198,7 +198,7 @@ test('HTTP mock: existing fare watches are not reported as empty or as live pric
   await signIn(page);
   const fare = page.locator('[data-region="trip-overview-fare"]');
   await expect(fare.getByText('1+ mục', { exact: true })).toBeVisible();
-  await expect(fare.getByText('Đang theo dõi · giá mô phỏng')).toBeVisible();
+  await expect(fare.getByText('Nguồn giá · giá mô phỏng')).toBeVisible();
   // Provider codes such as MOCK_FLIGHT stay out of the UI copy.
   await expect(fare.getByText(/MOCK_FLIGHT/)).toHaveCount(0);
   await expect(fare.getByText('Chưa có dữ liệu', { exact: true })).toHaveCount(0);

@@ -94,6 +94,7 @@ describe('Trip weather', () => {
     expect(await screen.findByText('-2° – 8°')).toBeInTheDocument();
     expect(screen.getByText(/Dữ liệu mô phỏng/)).toBeInTheDocument();
     expect(screen.getByText(/Dự báo cũ/)).toBeInTheDocument();
+    expect(screen.getByText(/^Cập nhật /)).toHaveAttribute('datetime', result.source.fetchedAt);
     expect(screen.getByRole('link', { name: 'Weather data by Open-Meteo.com' })).toHaveAttribute(
       'href',
       'https://open-meteo.com/',

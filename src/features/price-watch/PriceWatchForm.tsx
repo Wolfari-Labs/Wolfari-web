@@ -5,7 +5,12 @@ import { Button } from '../../shared/components/Button';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import { localDate } from '../plan/model/plan-presentation';
 import { isValidDate } from './model/price-watch';
-import type { RuntimeWatch, WatchFields } from './model/runtime-price-watch';
+import {
+  flightProviderLabels,
+  isFlightProvider,
+  type RuntimeWatch,
+  type WatchFields,
+} from './model/runtime-price-watch';
 import { Icon } from '../../shared/components/Icon';
 import formStyles from './PriceWatchForm.module.css';
 
@@ -25,13 +30,10 @@ export function PriceWatchForm({
 }) {
   const form = useRef<HTMLFormElement>(null),
     prefix = useId();
+  const provider: unknown = preview ? 'MOCK_FLIGHT' : import.meta.env.VITE_PRICE_WATCH_PROVIDER;
   const [fields, setFields] = useState<WatchFields>(
     initial?.fields ?? {
-      ...(preview || import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'MOCK_FLIGHT'
-        ? { provider: 'MOCK_FLIGHT' as const }
-        : import.meta.env.VITE_PRICE_WATCH_PROVIDER === 'TRAVELPAYOUTS_CACHE'
-          ? { provider: 'TRAVELPAYOUTS_CACHE' as const }
-          : {}),
+      ...(isFlightProvider(provider) ? { provider } : {}),
       origin: '',
       destination: '',
       departure_date: '',
@@ -55,7 +57,7 @@ export function PriceWatchForm({
       : '09:00',
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const cached = fields.provider === 'TRAVELPAYOUTS_CACHE';
+  const restricted = fields.provider !== undefined && fields.provider !== 'MOCK_FLIGHT';
   const usesDeadline = fields.provider !== 'MOCK_FLIGHT';
   const fieldProps = (name: string) => ({ id: `${prefix}-${name}`, name, error: errors[name] });
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -118,8 +120,8 @@ export function PriceWatchForm({
         <span>
           {fields.provider === undefined
             ? 'Nguồn giá theo cấu hình hệ thống.'
-            : cached
-              ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo cho 1 người lớn, một chiều, hạng phổ thông; không bảo đảm còn mua được.'
+            : restricted
+              ? `Nguồn: ${flightProviderLabels[fields.provider]} · giá tham khảo cho 1 người lớn, một chiều, hạng phổ thông.`
               : 'Nguồn: giá mô phỏng, không phải giá thị trường.'}
         </span>
       </p>
@@ -154,7 +156,7 @@ export function PriceWatchForm({
             />
             <Select
               label="Hành trình"
-              disabled={cached}
+              disabled={restricted}
               value={fields.journey_type}
               onChange={(e) =>
                 setFields({
@@ -205,7 +207,7 @@ export function PriceWatchForm({
             {(['adults', 'children', 'infants'] as const).map((key) => (
               <Input
                 key={key}
-                disabled={cached}
+                disabled={restricted}
                 {...fieldProps(key)}
                 label={{ adults: 'Người lớn', children: 'Trẻ em', infants: 'Em bé' }[key]}
                 type="number"
@@ -224,7 +226,7 @@ export function PriceWatchForm({
           </div>
           <Select
             label="Hạng ghế"
-            disabled={cached}
+            disabled={restricted}
             value={fields.cabin_class ?? ''}
             onChange={(e) =>
               setFields({

@@ -96,7 +96,7 @@ export function PlaceDetail({
             ? 'Đã lưu · Chưa xếp lịch'
             : 'Chưa chọn'}
       </p>
-      <p className={styles.detailAddress}>{item.location.address ?? 'Chưa có địa chỉ'}</p>
+      <p className={styles.detailAddress}>{item.location.address?.trim() || 'Chưa có địa chỉ'}</p>
       {provenance && (
         <dl className={styles.detailProvenance} aria-label="Nguồn dữ liệu địa điểm">
           {provenance.categoryLabel && (

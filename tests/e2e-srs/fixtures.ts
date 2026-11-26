@@ -22,10 +22,11 @@ export const test = base.extend<{ safety: void }>({
     try {
       const response = await request.get('/api/v1/auth/csrf', { timeout: 5000, maxRedirects: 0 });
       if (response.status() >= 500) block(info, `Gateway TEST chưa sẵn sàng (${response.status()}).`);
-      expect(response.ok(), 'Endpoint CSRF thật phải hoạt động, không nhận HTML fallback').toBeTruthy();
+      // The gateway issues a CSRF token only to an existing refresh session.
+      expect(response.status()).toBe(401);
       expect(response.headers()['content-type']).toContain('application/json');
       const data = await response.json();
-      expect(data.data).toBeTruthy();
+      expect(data.error?.code).toBe('UNAUTHENTICATED');
     } catch (error) {
       if (error instanceof Error && /ECONNREFUSED|ENOTFOUND|Timeout|ECONNRESET/.test(error.message)) block(info, 'Không kết nối được Web/Gateway TEST.');
       throw error;
@@ -68,9 +69,16 @@ export async function createTrip(page: Page, info: TestInfo) {
   return { id: data.id as string, name, path: `/trips/${data.id}` };
 }
 export async function activity(page: Page, name: string) {
-  await page.getByRole('button', { name: 'Tạo hoạt động trên server' }).click();
-  await page.getByLabel('Tên hoạt động', { exact: true }).fill(name);
-  await page.getByLabel('Loại hoạt động', { exact: true }).fill('OTHER');
-  await page.getByRole('button', { name: 'Lưu trên server' }).click();
+  const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
+  if (!(await manual.isVisible())) await page.getByRole('button',{name:'Thêm hoạt động', exact:true}).click();
+  await manual.click();
+  const editor = page.getByRole('dialog', {name:'Thêm hoạt động', exact:true});
+  await editor.getByLabel('Tên hoạt động', { exact: true }).fill(name);
+  const date = editor.getByLabel('Ngày bắt đầu hoặc ngày chưa có giờ');
+  const firstDay = await date.getAttribute('min');
+  expect(firstDay).toBeTruthy();
+  await date.fill(firstDay!);
+  await editor.getByRole('button', { name: 'Lưu', exact:true }).click();
+  await expect(editor).not.toBeVisible();
   await expect(page.getByRole('listitem', { name, exact: true })).toBeVisible();
 }

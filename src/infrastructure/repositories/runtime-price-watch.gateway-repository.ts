@@ -2,6 +2,7 @@ import type { GatewayHttpClient } from '../http/http-client';
 import * as d from '../http/decode';
 import { cursorPage } from '../http/cursor-page';
 import {
+  flightProviders,
   runtimeStatuses,
   validateWatchFields,
   type RuntimeWatch,
@@ -28,7 +29,7 @@ export function decodeWatch(value: unknown, tripId: string): RuntimeWatch {
     version: d.version(r.version),
     expiresAt: d.instant(r.expires_at),
     fields: {
-      provider: d.enumeration(q.provider, ['MOCK_FLIGHT', 'TRAVELPAYOUTS_CACHE']),
+      provider: d.enumeration(q.provider, flightProviders),
       origin: d.string(q.origin),
       destination: d.string(q.destination),
       departure_date: d.string(q.departure_date),

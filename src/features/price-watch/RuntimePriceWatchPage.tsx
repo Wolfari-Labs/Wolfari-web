@@ -5,6 +5,8 @@ import { useRuntimeServices } from '../../app/gateway-context';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import { TripHero } from '../trips/components/TripHero';
 import {
+  flightProviderLabels,
+  isFlightProvider,
   restoreCreateIntent,
   type RuntimeWatch,
   type WatchIntent,
@@ -41,11 +43,7 @@ const cabinLabels = {
 const money = (s: string) => new Intl.NumberFormat('vi-VN').format(BigInt(s)) + ' ₫';
 /** Provider codes stay in data; the UI names the source in plain Vietnamese. */
 const providerLabel = (provider: string) =>
-  provider === 'TRAVELPAYOUTS_CACHE'
-    ? 'bộ nhớ đệm Travelpayouts'
-    : provider === 'MOCK_FLIGHT'
-      ? 'giá mô phỏng'
-      : provider;
+  isFlightProvider(provider) ? flightProviderLabels[provider] : provider;
 /** Short dd/MM axis label in the device timezone, like the other history timestamps. */
 const dayMonth = (value: string) => {
   const at = new Date(value);
@@ -171,8 +169,9 @@ function Observations({
   const cached = watch.fields.provider === 'TRAVELPAYOUTS_CACHE';
   const found = latest?.providerFoundAt ? Date.parse(latest.providerFoundAt) : NaN;
   const freshReference =
-    !cached ||
-    (latest?.dataKind === 'CACHED_REFERENCE' &&
+    watch.fields.provider === 'MOCK_FLIGHT' ||
+    (latest?.provider === watch.fields.provider &&
+      latest.dataKind === (cached ? 'CACHED_REFERENCE' : 'FLIGHT_SEARCH') &&
       Number.isFinite(found) &&
       found <= Date.now() &&
       Date.now() - found <= 48 * 3600000 &&
@@ -308,7 +307,7 @@ function Observations({
                 {providerLabel(row.provider)}
               </p>
               <small>Nhận dữ liệu: {new Date(row.fetchedAt).toLocaleString('vi-VN')}</small>
-              {row.provider === 'TRAVELPAYOUTS_CACHE' && (
+              {isFlightProvider(row.provider) && row.provider !== 'MOCK_FLIGHT' && (
                 <small>
                   {' '}
                   · Nguồn tìm thấy:{' '}
@@ -563,12 +562,9 @@ function WatchWorkspace({
     </>
   );
   const provider = chartWatch?.fields.provider ?? import.meta.env.VITE_PRICE_WATCH_PROVIDER;
-  const providerNote =
-    provider === 'TRAVELPAYOUTS_CACHE'
-      ? 'Nguồn: bộ nhớ đệm Travelpayouts · giá tham khảo'
-      : provider === 'MOCK_FLIGHT'
-        ? 'Nguồn: giá mô phỏng'
-        : 'Nguồn giá theo cấu hình hệ thống';
+  const providerNote = isFlightProvider(provider)
+    ? `Nguồn: ${flightProviderLabels[provider]}${provider === 'MOCK_FLIGHT' ? '' : ' · giá tham khảo'}`
+    : 'Nguồn giá theo cấu hình hệ thống';
   return (
     <section
       className={`${styles.page} ${priceStyles.page} ${tripWorkspaceStyles.fullWidth}`}

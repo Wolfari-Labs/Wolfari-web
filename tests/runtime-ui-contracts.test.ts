@@ -81,6 +81,28 @@ describe('runtime UI contract adapters', () => {
       ),
     ).toThrow('UTC');
   });
+  it('accepts the SearchApi Gateway contract and rejects unsupported passenger/cabin mixes', () => {
+    const normalized = {
+      ...watch.normalized_query,
+      provider: 'SEARCHAPI_GOOGLE_FLIGHTS',
+      cabin_class: 'ECONOMY',
+    };
+    expect(decodeWatch({ ...watch, normalized_query: normalized }, id).fields.provider).toBe(
+      'SEARCHAPI_GOOGLE_FLIGHTS',
+    );
+    expect(() =>
+      decodeWatch({ ...watch, normalized_query: { ...normalized, cabin_class: 'FIRST' } }, id),
+    ).toThrow();
+    expect(() =>
+      decodeWatch(
+        {
+          ...watch,
+          normalized_query: { ...normalized, passengers: { adults: 2, children: 0, infants: 0 } },
+        },
+        id,
+      ),
+    ).toThrow();
+  });
   it('preserves masked notifications and does not invent deep links', () => {
     expect(
       decodeNotification({

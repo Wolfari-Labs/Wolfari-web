@@ -1,10 +1,9 @@
 import { readFile } from 'node:fs/promises';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { fork } from 'node:child_process';
+import { backendRoot as backend, webRoot as root } from './demo-paths.mjs';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const backend = resolve(root, '../Wolfari-backend');
 const config = JSON.parse(await readFile(resolve(backend, '.local/demo/public.json'), 'utf8'));
 if (config.project !== 'wolfari-demo' || config.backendRoot !== backend || config.webUrl !== 'http://localhost:5273' || config.gatewayUrl !== 'http://127.0.0.1:13000') throw new Error('Invalid demo manifest; run Backend demo:init.');
 const command = process.argv[2];
