@@ -26,6 +26,7 @@ Prefix `/api/v1` áp dụng mọi path dưới đây. `{id}`/`{tripId}` là iden
 | Notifications | GET `/me/notifications`; PATCH `/me/notifications/{id}/read`; GET/PUT `/me/notification-preferences` | notification.gateway-repository, inbox/preferences | notification.openapi.yaml |
 | Price Watch | GET/POST `/trips/{tripId}/price-watches`; PATCH `/price-watches/{id}`; POST same + `/pause`, `/resume`, `/stop`; GET same + `/observations` | runtime-price-watch gateway, RuntimePriceWatchPage/model | price-watch.openapi.yaml |
 | Map/Dress/Packing | Plan read projections, no independent Gateway mutations wired | GatewayMapPage / GatewayDressCodePage / PackingPage | plan.openapi.json; không suy ra CRUD từ Figma |
+| Place photos | GET `/trips/{tripId}/places/search` → `hero_image` (`PlaceImage`); `<img>` GET `/travel/poi-images/{sha256}/{320\|640\|1280}.webp` (public, same origin) | places.gateway-repository `decodePlaceImage`, PlacePhoto in PlaceDetail/MapViewport | places.openapi.json 1.2.0 (POI-IMAGES). Chỉ nhận đúng route ảnh của Gateway cùng origin; ảnh luôn kèm dòng ghi nguồn; thiếu/lỗi tải giữ artwork template |
 | Home | Gateway editorial landing local content, không remote recommendation API | HomeRoute/editorial-landing | Không có endpoint recommendation đang wired ở route này |
 | Admin/export/public share | Không có current workflow integration | guarded placeholder/deferred UI | Contract Backend khác tồn tại không tự cấp scope |
 

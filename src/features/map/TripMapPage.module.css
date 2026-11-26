@@ -1888,3 +1888,24 @@
     width: 280px;
   }
 }
+
+/* POI-IMAGES: licensed photo keeps the template box; its credit sits right below it. */
+.placePhoto {
+  object-fit: cover;
+  background: var(--color-line);
+}
+
+.photoCredit {
+  display: block;
+  margin: -4px 0 6px;
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+.photoCredit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

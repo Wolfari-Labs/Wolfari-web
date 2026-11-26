@@ -5,6 +5,8 @@ import desktopPlaceArtwork from '../../shared/assets/figma/a33fd.svg';
 import mobileMapArtwork from '../../shared/assets/figma/316c4.svg';
 import destinationPhoto from '../../shared/assets/figma/16cac.png';
 import type { MapLocationPresentation } from './trip-map';
+import type { PlaceImage } from './places';
+import { PlacePhoto } from './PlacePhoto';
 import { activityScheduleLabel, validCoordinates } from './trip-map';
 import { loadGoogleMapsSdk } from './google-places';
 import styles from './TripMapPage.module.css';
@@ -45,6 +47,7 @@ export function MapViewport({
   selectedActions,
   selectedMeta,
   autoSelectFirst = true,
+  selectedPhoto = null,
 }: {
   items: readonly MapLocationPresentation[];
   selectedLocationId: string | null;
@@ -61,6 +64,8 @@ export function MapViewport({
   selectedMeta?: ReactNode;
   /** `false`: no card until the user picks a place (POI-OVERTURE bbox explore). */
   autoSelectFirst?: boolean;
+  /** Runtime licensed photo of the selected place (POI-IMAGES), shown with its credit. */
+  selectedPhoto?: PlaceImage | null;
 }) {
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const [googleMapReady, setGoogleMapReady] = useState(false);
@@ -248,12 +253,21 @@ export function MapViewport({
             className={styles.desktopPlaceCard}
             aria-label={`Đang chọn ${selected.location.name}`}
           >
-            <img
-              src={locationPhoto(selected)}
-              width="230"
-              height="90"
-              alt={runtimeMap ? 'Ảnh minh họa giao diện; không phải ảnh địa điểm' : ''}
-              title={runtimeMap ? 'Ảnh minh họa' : undefined}
+            <PlacePhoto
+              photo={runtimeMap ? selectedPhoto : null}
+              alt={selected.location.name}
+              width={230}
+              height={90}
+              sizes="230px"
+              fallback={
+                <img
+                  src={locationPhoto(selected)}
+                  width="230"
+                  height="90"
+                  alt={runtimeMap ? 'Ảnh minh họa giao diện; không phải ảnh địa điểm' : ''}
+                  title={runtimeMap ? 'Ảnh minh họa' : undefined}
+                />
+              }
             />
             <strong>{selected.location.name}</strong>
             <span>⌖ {selected.location.address ?? 'Chưa có địa chỉ'}</span>
