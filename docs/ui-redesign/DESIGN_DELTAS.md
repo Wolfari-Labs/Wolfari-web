@@ -1,5 +1,20 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## INVITATIONS-V2 — 26/11/2026 — DELTA_PENDING
+
+User-requested Web support for invitations v2 (Backend branch `feature/trip-invitations-v2`,
+contract `trip-invitations.openapi.json` 1.1.0, **not merged**). Reuses the existing response card,
+`Input`/`Select`/`Button`/`Alert` and the `Invitations.module.css` list/item/actions classes; no new
+CSS. Each item is pending review and approves nothing else. Evidence: unit/component tests with
+HTTP mocks only; no live Backend.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| INV2-01 | Trang `/invitations` khi chưa có lời mời: thay thẻ "Không có lời mời hợp lệ / tải lại trang sẽ không giữ lời mời" bằng câu "Mở liên kết trong email hoặc nhập mã mời…" và ô "Mã mời" + nút "Xem lời mời" (chuẩn hóa như Backend: chữ hoa, bỏ khoảng trắng/gạch, O→0, I/L→1, 8 ký tự Crockford). | Share link/QR có `#code=`; người nhận có thể gõ mã. |
+| INV2-02 | Người đã đăng nhập thấy thêm mục "Lời mời đang chờ bạn" (từ `GET /me/invitations`): tên chuyến, người mời, thời gian chuyến đi, hạn, nút "Từ chối" (outline) / "Tham gia" (chính); kết quả chưa rõ giữ nguyên Idempotency-Key với "Thử lại …". | Người đăng ký sau thấy lời mời ngay khi xác minh email. |
+| INV2-03 | Thẻ lời mời thêm dòng "Thời gian chuyến đi" và "Mã mời XXXX-XXXX" (khi mở bằng mã), nút "Dùng lời mời khác"; thẻ khách thêm câu lời mời được giữ ~30 phút trong tab. Lỗi 404 có câu riêng: "Không tìm thấy lời mời cho tài khoản này — đăng nhập đúng email…" (mã: "Không tìm thấy lời mời với mã này…"); quá nhiều lần sai mã có câu riêng. | Giữ token/mã qua đăng nhập → đăng ký → xác minh → đăng nhập (sessionStorage, hạn ngắn, xóa sau khi dùng) thay cho quy tắc cũ "không lưu trữ". |
+| INV2-04 | Quản lý lời mời (Owner): với "Bằng liên kết" thêm Select "Số người dùng được" (Một người / Cả nhóm tối đa 20 người). Sau khi tạo, khối bí mật hiện "Mã mời: XXXX-XXXX", liên kết chia sẻ `/invitations#code=…`, nút "Sao chép mã mời" / "Sao chép liên kết" / "Đóng mã mời"; Backend cũ (không trả mã) giữ khối liên kết một lần như trước. Dòng lời mời LINK thêm "Mã nhóm · tối đa N người · đã dùng x/N · mã …XXXX". | `max_uses`, `join_code`, `share_link`, `use_count`, `code_hint` của contract 1.1.0. |
+
 ## Finance demo completion — 16/11/2026
 
 User-requested Web/Backend parity for the Finance demo; no new checkpoint, no Figma writes.
