@@ -60,7 +60,9 @@ export function usePreparationCommands({ trip, plan, refresh }: PreparationProps
     },
   };
 }
-export function PreparationStatus(props: PreparationProps & { hideSuccess?: boolean }) {
+export function PreparationStatus(
+  props: PreparationProps & { hideSuccess?: boolean; onRecovered?: () => void },
+) {
   const commands = usePreparationCommands(props);
   if (commands.status === 'idle' || (props.hideSuccess && commands.status === 'success'))
     return null;
@@ -89,7 +91,9 @@ export function PreparationStatus(props: PreparationProps & { hideSuccess?: bool
         <Button
           variant="outline"
           disabled={commands.pending}
-          onClick={() => void commands.retryUnknown()}
+          onClick={async () => {
+            if (await commands.retryUnknown()) props.onRecovered?.();
+          }}
         >
           Kiểm tra lại lệnh cũ
         </Button>

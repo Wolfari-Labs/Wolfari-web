@@ -341,11 +341,9 @@ test('HTTP mock: Wolfari result is added to Day 2 from the Map and shows in that
       json: {
         data: {
           location_id: locationId,
-          version: {
-            trip_id: tripId,
-            plan_version: trip.plan_version,
-            export_revision: trip.export_revision,
-          },
+          trip_id: tripId,
+          plan_version: trip.plan_version,
+          export_revision: trip.export_revision,
         },
         meta: {},
       },

@@ -31,7 +31,11 @@ import {
   placeStatus,
   type LocationScheduleFilter,
 } from './trip-map';
-import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
+import {
+  PreparationActions,
+  PreparationStatus,
+  usePreparationCommands,
+} from '../plan/components/PreparationActions';
 import { RecommendationPanel } from '../plan/components/RecommendationPanel';
 import { dayMapLocations, routeSummary } from '../plan/components/PlanDayMap';
 import { usePlaceRoute } from './use-place-route';
@@ -94,13 +98,20 @@ export function GatewayMapPage() {
         <MapWorkspace
           key={`${tripId}:${snapshot.state.trip.currentMembership.userId}`}
           snapshot={snapshot}
+          data={snapshot.state}
         />
       )}
     </TripPlanBoundary>
   );
 }
-function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSnapshot> }) {
-  const data = snapshot.state.status === 'ready' ? snapshot.state : null;
+function MapWorkspace({
+  snapshot,
+  data,
+}: {
+  snapshot: ReturnType<typeof useTripPlanSnapshot>;
+  data: Extract<ReturnType<typeof useTripPlanSnapshot>['state'], { status: 'ready' }>;
+}) {
+  const preparation = usePreparationCommands({ ...data, refresh: snapshot.retry });
   const repo = useRuntimeServices()?.places;
   const tripId = data?.trip.id ?? '';
   const actor = data?.trip.currentMembership.userId ?? '';
@@ -433,14 +444,19 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
     setSelected(id);
     if (open) setDetailOpen(true);
   };
-  if (!data) return null;
   const canEdit =
     data.plan.permissions.canEdit &&
+    !preparation.locked &&
     !busy &&
     !pending &&
     !storageBlocked &&
     !snapshot.refreshing &&
     !snapshot.refreshFailed;
+  const canAddLocation = canEdit && selectedCount < 50;
+  const closeSavedPin = () => {
+    setManualOpen(false);
+    setManual((fields) => ({ ...fields, name: '', address: '' }));
+  };
   const days = planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone);
   const search = async () => {
     if (!repo) return;
@@ -552,7 +568,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       key: crypto.randomUUID(),
     });
   const togglePlace = (item: (typeof allItems)[number]) => {
-    if (!canEdit || item.activities.length) return;
+    if (!canEdit || item.activities.length || (!item.selected && !canAddLocation)) return;
     if (item.selected) command('DELETE', `selected-locations/${item.location.id}`, {});
     else {
       const place = results.find((p) => p.id === item.location.providerPlaceId);
@@ -566,7 +582,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
    * activity at the end of that day. Each step is one journaled, idempotent command.
    */
   const addToDay = async (item: MapLocationPresentation, target: string) => {
-    if (!canEdit || !days.includes(target)) return;
+    if (!canEdit || (!item.selected && !canAddLocation) || !days.includes(target)) return;
     const label = `Ngày ${days.indexOf(target) + 1}`;
     const place = resultFor(item);
     let locationId = item.selected ? item.location.id : null;
@@ -584,10 +600,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       );
       if (!saved) return;
       const receipt = saved.version as { plan_version?: unknown } | undefined;
+      const savedVersion = saved.plan_version ?? receipt?.plan_version;
       if (
         typeof saved.location_id !== 'string' ||
-        !Number.isInteger(receipt?.plan_version) ||
-        Number(receipt?.plan_version) < 1
+        !Number.isInteger(savedVersion) ||
+        Number(savedVersion) < 1
       ) {
         setNotice(
           `Đã lưu “${place.name}” nhưng chưa xác nhận được phiên bản lịch trình. Chọn địa điểm đã lưu rồi thêm vào ngày lần nữa.`,
@@ -595,7 +612,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         return;
       }
       locationId = saved.location_id;
-      version = Number(receipt!.plan_version);
+      version = Number(savedVersion);
     }
     const ordered = [...data.plan.activities].sort(
       (a, b) => a.position - b.position || a.id.localeCompare(b.id),
@@ -635,11 +652,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
       <ActionMenu
         triggerText="Thêm vào ngày…"
         label="Thêm vào ngày…"
-        disabled={!canEdit}
+        disabled={!canEdit || (!item.selected && !canAddLocation)}
         items={days.map((value) => ({
           label: dayLabel(value),
           action: () => void addToDay(item, value),
-          disabled: !canEdit,
+          disabled: !canEdit || (!item.selected && !canAddLocation),
         }))}
       />
     ) : null;
@@ -733,7 +750,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                     <button
                       type="button"
                       aria-label="Đặt pin thủ công"
-                      disabled={!canEdit}
+                      disabled={!canAddLocation}
                       onClick={() => setManualOpen(true)}
                       style={{ border: 0, background: 'none', padding: 0, display: 'flex' }}
                     >
@@ -833,7 +850,10 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       {visibleItems.map((item) => {
                         const focused = item.location.id === effectiveSelectedId;
                         const status = placeStatus(item);
-                        const locked = item.activities.length > 0 || !canEdit;
+                        const locked =
+                          item.activities.length > 0 ||
+                          !canEdit ||
+                          (!item.selected && !canAddLocation);
                         const provenance = provenanceOf(item);
                         const rowResult = resultOf(item);
                         const otherProvince = rowResult
@@ -997,7 +1017,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                         focus={focus}
                         route={mapRoute}
                         onPin={
-                          canEdit
+                          canAddLocation
                             ? (p) => {
                                 setManual({
                                   ...manual,
@@ -1057,7 +1077,11 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
               onClose={() => setDetailOpen(false)}
               runtime
               onToggleSelection={() => selectedItem && togglePlace(selectedItem)}
-              selectionDisabled={!canEdit || !!selectedItem?.activities.length}
+              selectionDisabled={
+                !canEdit ||
+                !!selectedItem?.activities.length ||
+                (!selectedItem?.selected && !canAddLocation)
+              }
               actions={
                 <>
                   {addToDayMenu(selectedItem)}
@@ -1085,20 +1109,31 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
         side="right"
       >
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (canEdit)
-              command('POST', 'selected-locations', {
-                name: manual.name,
-                address: manual.address,
-                latitude: Number(manual.latitude),
-                longitude: Number(manual.longitude),
-              });
+            if (!canAddLocation) return;
+            const saved = await preparation.submit({
+              operation: 'location-create',
+              fields: {
+                name: manual.name.trim(),
+                address: manual.address.trim() || null,
+                latitude: Number(manual.latitude).toFixed(6),
+                longitude: Number(manual.longitude).toFixed(6),
+              },
+            });
+            if (saved) closeSavedPin();
           }}
         >
           <h3>Thêm pin thủ công</h3>
           <p>Bấm vào bản đồ hoặc nhập tọa độ. Đây không phải địa điểm được provider xác minh.</p>
           {notice && <p role="status">{notice}</p>}
+          <PreparationStatus
+            trip={data.trip}
+            plan={data.plan}
+            refresh={snapshot.retry}
+            hideSuccess
+            onRecovered={closeSavedPin}
+          />
           {storageBlocked && (
             <p role="alert">Không thể xác minh nhật ký thao tác. Đã khóa ghi để tránh gửi trùng.</p>
           )}
@@ -1110,7 +1145,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
           <Input
             label="Tên pin"
             required
-            maxLength={255}
+            pattern={'.*\\S.*'}
+            title="Nhập tên địa điểm."
+            maxLength={200}
             value={manual.name}
             onChange={(e) => setManual({ ...manual, name: e.target.value })}
           />
@@ -1140,7 +1177,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
             value={manual.longitude}
             onChange={(e) => setManual({ ...manual, longitude: e.target.value })}
           />
-          <Button type="submit" disabled={!repo || !canEdit}>
+          <Button type="submit" disabled={!repo || !canAddLocation}>
             Lưu pin thủ công
           </Button>
         </form>
