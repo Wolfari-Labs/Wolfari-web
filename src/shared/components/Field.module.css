@@ -172,6 +172,11 @@
   color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
+.select:disabled {
+  /* Native select dimming compounds the muted text and surface colours. */
+  opacity: 1;
+  color: var(--v2-sub);
+}
 .input:disabled {
   color: var(--color-control-disabled-text);
   cursor: not-allowed;
