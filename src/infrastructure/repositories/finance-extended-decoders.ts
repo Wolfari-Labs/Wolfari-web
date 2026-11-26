@@ -74,7 +74,13 @@ export function decodeHistory(value: unknown, fundId: string): FinanceHistory {
     fund_id: fundId,
     actor_user_id: d.nullable(r.actor_user_id, d.uuid),
     system_actor: d.nullable(r.system_actor, (v) =>
-      d.enumeration(v, ['MOMO_IPN', 'MOMO_RECONCILIATION', 'BANK_WEBHOOK:SEPAY']),
+      d.enumeration(v, [
+        'MOMO_IPN',
+        'MOMO_RECONCILIATION',
+        'BANK_WEBHOOK:SEPAY',
+        'PAYOS_WEBHOOK',
+        'PAYOS_RECONCILIATION',
+      ]),
     ),
     action,
     entity_type: entity,

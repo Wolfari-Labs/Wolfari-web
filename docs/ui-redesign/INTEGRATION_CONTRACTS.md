@@ -21,7 +21,8 @@ Prefix `/api/v1` áp dụng mọi path dưới đây. `{id}`/`{tripId}` là iden
 | Invitations | GET/POST `/trips/{tripId}/invitations`; POST `/trips/{tripId}/invitations/{id}/resend` or `/revoke`; POST `/invitations/preview`, `/accept`, `/decline` | invitation.gateway-repository | trip-invitations.openapi.json |
 | Fund setup/read | GET/POST `/trips/{tripId}/fund`; PATCH `/funds/{id}/budget`; GET/POST `/funds/{id}/destinations`; PATCH `/funds/{id}/destinations/{destinationId}`; POST same + `/confirm` | fund gateway + finance-decoders + coordinator | finance-fund.openapi.json |
 | Contributions | GET/POST `/funds/{id}/contribution-requests`; PATCH same + `/{requestId}`; GET `/funds/{id}/contributions`; PATCH `/contributions/{id}`; POST same + `/waive`, `/cancel`, `/report-transfer`, `/reject-transfer`, `/confirm-received` | GatewayFundPage, runtime-fund, coordinator | finance-contributions.openapi.json |
-| Ledger/instruction | GET `/funds/{id}/transactions`; GET `/contributions/{id}/vietqr` | fund gateway/decoders | finance-fund / finance-contributions / finance-payments contracts |
+| Ledger/instruction | GET `/funds/{id}/transactions`; GET `/contributions/{id}/vietqr` (`online_payment_providers`; absent on older servers = none) | fund gateway/decoders | finance-fund / finance-contributions 1.4.0 / finance-payments contracts |
+| Online payment | POST `/contributions/{id}/payment-attempts` (`MOMO_SANDBOX`, or `PAYOS` + `return_url` = `/payments/payos/return/{base64url of a same-origin page}`); GET `/payment-attempts/{id}`; POST same + `/reconcile`; GET `/funds/{id}/payment-exceptions`; POST `/payment-exceptions/{id}/resolve` | PaymentPanel, PayosCheckout, payment-decoders, `shared/lib/payos-return.ts` | finance-payments 1.1.0; Backend `docs/architecture/finance-payos.md` |
 | Operation recovery | GET `/operations/{key}`; bounded poll and reconciliation | command-coordinator | Operation schemas in Finance/member lifecycle contracts |
 | Notifications | GET `/me/notifications`; PATCH `/me/notifications/{id}/read`; GET/PUT `/me/notification-preferences` | notification.gateway-repository, inbox/preferences | notification.openapi.yaml |
 | Price Watch | GET/POST `/trips/{tripId}/price-watches`; PATCH `/price-watches/{id}`; POST same + `/pause`, `/resume`, `/stop`; GET same + `/observations` | runtime-price-watch gateway, RuntimePriceWatchPage/model | price-watch.openapi.yaml |
@@ -45,6 +46,7 @@ Backend còn có Finance expenses/refunds/closures/notes/receipts contracts; kh�
 10. Invitation token được capture/scrub, safe returnTo nội bộ; expired/revoked/wrong recipient không được bypass bằng UI. Session revocation khác xóa push device.
 11. Notifications: unread marker/read receipt không chứng minh email/push delivery. Preferences update có expected_version; không giả bulk mark-read chưa wired.
 12. Price Watch hiện provider MOCK_FLIGHT, không có booking/payment. Preserve source/observedAt/fetchedAt và stale data; provider failure không tạo giá0/“rẻ nhất”.
+13. Online payment: provider ↔ environment ↔ hosted page là cặp cố định (`MOMO_SANDBOX`/`SANDBOX`/`test-payment.momo.vn`, `PAYOS`/`LIVE`/`pay.payos.vn`). `?provider=PAYOS&status=…` khi payOS trả trình duyệt về chỉ là gợi ý: Web đọc lại attempt/Fund rồi xóa query; chỉ projection Backend (webhook/đối soát) xác nhận khoản góp.
 
 ## 3. Test protection và rủi ro redesign
 
