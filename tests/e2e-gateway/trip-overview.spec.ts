@@ -28,7 +28,7 @@ for (const [width, height] of [
       page.locator('[data-region="trip-overview-fund"]').getByText('Chưa bật quỹ nhóm.'),
     ).toBeVisible();
     await expect(page.locator('[data-region="trip-overview-itinerary"]')).toBeVisible();
-    await assertOverviewCardLayout(page);
+    await assertOverviewCardLayout(page, 'Chưa có địa điểm có tọa độ');
     const metrics = await page.evaluate(() => {
       const main = document.querySelector('main')!;
       return {

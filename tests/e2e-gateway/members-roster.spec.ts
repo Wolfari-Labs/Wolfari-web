@@ -102,8 +102,8 @@ test('HTTP mock: roster roles match current data and transfer opens the existing
   await expect(page).toHaveURL(
     `/trips/${tripId}/settings?mode=settings&section=archive&transferTo=${memberId}`,
   );
-  const dialog = page.getByRole('dialog', { name: 'Cài đặt chuyến đi', exact: true });
-  await expect(dialog.getByLabel('Thao tác', { exact: true })).toHaveValue('TRANSFER');
+  const dialog = page.getByRole('dialog', { name: 'Chuyển quyền Owner', exact: true });
+  await expect(dialog.getByRole('combobox', { name: 'Thao tác', exact: true })).toHaveCount(0);
   await expect(dialog.getByLabel('Owner mới', { exact: true })).toHaveValue(memberId);
   await expect(dialog.getByRole('button', { name: 'Chuyển Owner', exact: true })).toBeDisabled();
   expect(

@@ -145,6 +145,7 @@ for (const module of ['packing', 'dress-code'] as const) {
     await expect(
       drawer.getByRole('button', { name: 'Áp dụng mục đã chọn', exact: true }),
     ).toHaveCount(0);
+    await expect(drawer.getByRole('combobox', { name: 'Phạm vi ngày' })).toBeEnabled();
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);

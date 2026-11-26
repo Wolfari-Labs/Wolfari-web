@@ -436,6 +436,25 @@
     min-width: 0;
   }
 }
+@media (min-width: 1201px) and (max-height: 720px) {
+  .surface {
+    gap: 6px;
+    padding: 12px;
+    overflow-y: auto;
+  }
+  .poolActions > button,
+  .surface .recoveryUtilities > button {
+    min-height: 32px;
+    padding-block: 4px;
+  }
+  .poolSearch {
+    height: 34px;
+  }
+  .surface .poolList,
+  .poolList > .dropEnd[data-empty] {
+    min-height: 54px;
+  }
+}
 @media (max-width: 768px) {
   .timelineHeader > div:first-child {
     flex-wrap: wrap;

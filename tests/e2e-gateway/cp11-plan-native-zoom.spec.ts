@@ -78,7 +78,7 @@ test('CP11 HTTP mock: Plan navigation and centered editor fit native Chrome 200%
   const create = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
   await create.focus();
   await create.press('Enter');
-  const dialog = page.getByRole('dialog');
+  const dialog = page.getByRole('dialog', { name: 'Thêm hoạt động', exact: true });
   await expect(dialog).toBeVisible();
   const save = dialog.getByRole('button', { name: 'Lưu', exact: true });
   await save.scrollIntoViewIfNeeded();

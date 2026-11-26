@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-export async function assertOverviewCardLayout(page: Page) {
+export async function assertOverviewCardLayout(page: Page, weatherStatus = 'Chưa có dữ liệu') {
   const summaries = page.locator('[data-region="trip-overview-summaries"] > section');
   const panels = page.locator(
     '[data-region="trip-overview-itinerary"], [data-region="trip-overview-map"]',
@@ -14,7 +14,7 @@ export async function assertOverviewCardLayout(page: Page) {
     await expect(row).toHaveCSS('border-radius', '26px');
   }
   const weather = page.locator('[data-region="trip-overview-weather"]');
-  const unavailable = (await weather.getByText('Chưa có dữ liệu').boundingBox())!;
+  const unavailable = (await weather.getByText(weatherStatus, { exact: true }).boundingBox())!;
   const weatherHeading = (await weather.getByRole('heading').boundingBox())!;
   expect(unavailable.y + unavailable.height).toBeLessThanOrEqual(weatherHeading.y);
   if (page.viewportSize()!.width <= 1100) return;

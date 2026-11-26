@@ -139,6 +139,7 @@ test('Price Watch create retries the same idempotency key after unknown result, 
     const body = route.request().postDataJSON();
     keys.push(route.request().headers()['idempotency-key']!);
     expect(body.passengers).toEqual({ adults: 1, children: 0, infants: 0 });
+    expect(body.provider).toBeUndefined();
     saved = {
       id: '99999999-2222-4222-8222-222222222222',
       trip_id: tripId,
@@ -148,7 +149,7 @@ test('Price Watch create retries the same idempotency key after unknown result, 
       version: 1,
       expires_at: '2030-01-01T00:00:00Z',
       threshold_price: body.threshold_price,
-      normalized_query: { ...body, transport_type: 'FLIGHT' },
+      normalized_query: { ...body, transport_type: 'FLIGHT', provider: 'MOCK_FLIGHT' },
     };
     if (first) {
       first = false;

@@ -660,6 +660,7 @@ export function RuntimeTimeline({
         </Button>
       </div>
       {actions && <div className={styles.poolActions}>{actions}</div>}
+      {!recovery && utilities && <div className={styles.recoveryUtilities}>{utilities}</div>}
       <div className={styles.poolSearch}>
         <img src={searchIcon} width="18" height="18" alt="" />
         <input
@@ -689,7 +690,6 @@ export function RuntimeTimeline({
           />
         ))}
       </DropList>
-      {!recovery && utilities && <div className={styles.recoveryUtilities}>{utilities}</div>}
     </section>
   );
   const draggedTitle = dnd.draggingKey?.startsWith('activity:')

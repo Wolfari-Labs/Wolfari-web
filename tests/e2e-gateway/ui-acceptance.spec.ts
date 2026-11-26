@@ -72,7 +72,7 @@ for (const size of [
         await expect(page.getByRole('heading', { name: 'Chưa có hành lý đã lưu' })).toBeVisible();
       else if (name === 'settings')
         await expect(
-          page.getByRole('heading', { name: 'Thông tin chuyến đi', exact: true }),
+          page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
         ).toBeVisible();
       else if (name === 'create') {
         await expect(page.getByLabel('Tên chuyến đi', { exact: true })).toBeVisible();
@@ -113,7 +113,7 @@ for (const size of [
     if (size.width > 1100) {
       await page.goto(`/trips/${tripId}/settings`);
       await expect(
-        page.getByRole('heading', { name: 'Thông tin chuyến đi', exact: true }),
+        page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
       ).toBeVisible();
       await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
       await page.screenshot({ path: info.outputPath('collapsed.png'), fullPage: true });

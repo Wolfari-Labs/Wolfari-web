@@ -71,7 +71,9 @@ for (const height of [520, 600, 900, 950, 951, 960, 985, 986, 990]) {
     await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
     await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
     await page.goto('/trips/11111111-1111-4111-8111-111111111111/settings');
-    await expect(page.getByRole('heading', { name: 'Thông tin chuyến đi' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
+    ).toBeVisible();
     const nav = page.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
     const settings = nav.getByRole('link', { name: 'Cài đặt' });
     await expect(settings).toBeVisible();

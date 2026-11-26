@@ -307,11 +307,11 @@ for (const size of [
       }
       const shellPreview = page.locator('main > details[data-preview="shell"] summary');
       await shellPreview.scrollIntoViewIfNeeded();
-      // Desktop floats the fixture-only shell preview in the gutter; mobile keeps it in flow.
-      if (size.width > 768) await expect(shellPreview).toBeInViewport();
-      else if (route === '/login' || route === '/register')
+      await expect(shellPreview).toBeInViewport();
+      if (size.width <= 768 && (route === '/login' || route === '/register'))
         expect(await page.evaluate(() => scrollY)).toBe(0);
-      else expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+      if (size.width <= 768 && route === '/')
+        expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
       for (const img of await page.locator('img:visible').all()) {
         await img.scrollIntoViewIfNeeded();
         await expect

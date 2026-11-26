@@ -20,24 +20,6 @@ import {
   tripId,
 } from './plan-dnd-fixture';
 
-test.beforeEach(async ({ page, gateway }) => {
-  // Register after the Gateway catch-all; these cases exercise Plan recovery with no weather.
-  void gateway;
-  await page.route('**/api/v1/travel/weather?**', (route) =>
-    route.fulfill({
-      status: 503,
-      json: {
-        error: {
-          code: 'SERVICE_UNAVAILABLE',
-          message: 'Weather unavailable in DnD test',
-          retryable: false,
-        },
-        meta: { correlation_id: 'plan-dnd-weather-unavailable' },
-      },
-    }),
-  );
-});
-
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1200 });
 });

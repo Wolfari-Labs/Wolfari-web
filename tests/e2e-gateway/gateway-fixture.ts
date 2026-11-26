@@ -350,6 +350,10 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           },
         });
       }
+      if (path === '/api/v1/travel/weather' && method === 'GET') {
+        if (!model.authenticated) return error(route, 401);
+        return error(route, 503, 'SERVICE_UNAVAILABLE');
+      }
       if (path === '/api/v1/finance/banks' && method === 'GET') {
         if (!model.authenticated) return error(route, 401);
         return json(route, {

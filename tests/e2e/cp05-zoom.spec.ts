@@ -84,7 +84,7 @@ test('CP05 native browser 200% zoom keeps Trip Web routes usable', async ({ base
         await expect(page.getByRole('region', { name: 'Thông tin chuyến đi' })).toBeVisible();
       if (route.key === 'settings')
         await expect(
-          page.getByRole('heading', { name: 'Thông tin chuyến đi', exact: true }),
+          page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
         ).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
@@ -95,7 +95,7 @@ test('CP05 native browser 200% zoom keeps Trip Web routes usable', async ({ base
         await expect(name).toBeFocused();
       }
       if (route.key === 'settings') {
-        const edit = page.getByRole('button', { name: 'Cài đặt chuyến đi' });
+        const edit = page.getByRole('button', { name: 'Chỉnh sửa thông tin', exact: true });
         await edit.scrollIntoViewIfNeeded();
         await expect(edit).toBeInViewport();
       }
