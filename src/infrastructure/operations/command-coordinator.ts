@@ -440,8 +440,9 @@ export function createCommandCoordinator(
         } else if (
           r.status === 202 &&
           i.kind === 'payment-create' &&
-          d.object(r.data).provider === 'MOMO_SANDBOX'
+          ['MOMO_SANDBOX', 'PAYOS'].includes(String(d.object(r.data).provider))
         ) {
+          // A persisted attempt (any provider); an operation envelope has no provider field.
           const receipt = decodeReceipt(r.data, i);
           update({ state: 'SUCCEEDED', busy: false, error: null, receipt });
         } else if (r.status === 202 || i.kind === 'leave' || i.kind === 'remove') {
