@@ -85,6 +85,7 @@ export function FinanceAction({
   description,
   children,
   payment = false,
+  variant = 'outline',
 }: {
   label: string;
   session: CommandSession;
@@ -93,7 +94,9 @@ export function FinanceAction({
   disabled?: boolean;
   description?: string;
   children?: ReactNode;
-  payment?: boolean;
+  /** true: MoMo Sandbox (test money); 'PAYOS': real money paid straight to the Holder. */
+  payment?: boolean | 'PAYOS';
+  variant?: 'outline' | 'primary';
 }) {
   const [draft, setDraft] = useState<{
     definition: CommandDefinition;
@@ -120,7 +123,7 @@ export function FinanceAction({
   return (
     <>
       <Button
-        variant="outline"
+        variant={variant}
         disabled={disabled || blocked}
         onClick={() => {
           setError('');
@@ -168,9 +171,11 @@ export function FinanceAction({
             }}
           >
             <p>
-              {payment
-                ? 'MoMo Sandbox — không chuyển tiền thật. Thành công của yêu cầu không đồng nghĩa khoản đóng đã được ghi nhận.'
-                : 'Ứng dụng chỉ ghi nhận, không tự chuyển tiền.'}{' '}
+              {payment === 'PAYOS'
+                ? 'payOS — chuyển tiền thật, vào thẳng tài khoản của người giữ quỹ. Trang payOS có thể hiện số tài khoản ảo của payOS (ví dụ LOCC…); tiền vẫn về tài khoản đó. Tạo link chưa phải đã thanh toán: khoản đóng chỉ được xác nhận khi hệ thống nhận được tiền.'
+                : payment
+                  ? 'MoMo Sandbox — không chuyển tiền thật. Thành công của yêu cầu không đồng nghĩa khoản đóng đã được ghi nhận.'
+                  : 'Ứng dụng chỉ ghi nhận, không tự chuyển tiền.'}{' '}
               {description}
             </p>
             <OperationStatus session={session} />

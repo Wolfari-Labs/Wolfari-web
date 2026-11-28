@@ -21,6 +21,19 @@ export function invitationErrorMessage(error: DomainError): string {
       return 'Chưa xác định được kết quả. Thử lại sẽ giữ nguyên yêu cầu trước; không tạo lời mời mới.';
   }
 }
+/**
+ * Recipient wording. A 404 means "no invitation for this account" (EMAIL is bound to the verified
+ * address) or, for a typed code, a wrong/expired code; the Gateway limits wrong codes.
+ */
+export function recipientInvitationErrorMessage(error: DomainError, byCode: boolean): string {
+  if (error.code === 'RESOURCE_NOT_FOUND')
+    return byCode
+      ? 'Không tìm thấy lời mời với mã này. Kiểm tra lại mã hoặc xin Owner một mã mới.'
+      : 'Không tìm thấy lời mời cho tài khoản này — đăng nhập đúng email đã nhận lời mời và xác minh email.';
+  if (error.code === 'RESOURCE_EXHAUSTED' && byCode)
+    return 'Nhập sai mã mời quá nhiều lần. Chờ khoảng 15 phút rồi thử lại.';
+  return invitationErrorMessage(error);
+}
 export async function refreshInvitationProjections(client: QueryClient, tripId?: string) {
   const scoped = (prefix: string) => (tripId ? [prefix, tripId] : [prefix]);
   await Promise.all([

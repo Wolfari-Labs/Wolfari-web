@@ -49,6 +49,8 @@ const reasonMessages: Record<string, string> = {
     'Nguồn giá hiện tại không so sánh được lựa chọn này (hành trình, hạng ghế hoặc số hành khách). Tải lại trang để xem các lựa chọn được hỗ trợ.',
   PRICE_PROVIDER_NOT_CONFIGURED:
     'Nguồn giá chưa sẵn sàng nên tạm thời chưa tạo được theo dõi mới. Thử lại sau.',
+  PAYMENT_PROVIDER_ACCOUNT_MISMATCH:
+    'payOS không còn trả tiền vào tài khoản nhận của khoản đóng này. Hãy chuyển khoản bằng mã QR rồi báo đã chuyển.',
   MEMBER_ACTIVE_WATCH_LIMIT:
     'Bạn đã có tối đa 20 theo dõi giá đang chạy trong chuyến này. Tạm dừng hoặc dừng bớt một theo dõi.',
   TRIP_ACTIVE_WATCH_LIMIT:

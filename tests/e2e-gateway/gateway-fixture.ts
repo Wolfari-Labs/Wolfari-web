@@ -321,6 +321,12 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           currencies: ['VND'],
         });
       }
+      // Pending EMAIL invitations for the signed-in user (invitations v2); none in these scenarios.
+      if (path === '/api/v1/me/invitations' && method === 'GET') {
+        if (!model.authenticated) return error(route, 401);
+        expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        return json(route, { items: [] });
+      }
       const tokenAction = /^\/api\/v1\/invitations\/(preview|accept|decline)$/.exec(path);
       if (tokenAction && method === 'POST') {
         if (!model.authenticated) return error(route, 401);

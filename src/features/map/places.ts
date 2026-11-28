@@ -1,4 +1,25 @@
 export type PlaceProvider = 'WOLFARI' | 'GEOAPIFY';
+/**
+ * POI-IMAGES: a licensed photo served by the Gateway (`/api/v1/travel/poi-images/{sha256}/{w}.webp`,
+ * same origin, public). Shown only with its attribution; otherwise the template artwork stays.
+ */
+export interface PlaceImage {
+  /** 1280 px WebP. */
+  url: string;
+  /** 640 px WebP (cards). */
+  thumbnailUrl: string;
+  /** 320 px WebP (small thumbnails). */
+  smallUrl: string;
+  width: number | null;
+  height: number | null;
+  author: string | null;
+  license: string;
+  licenseUrl: string | null;
+  /** https file page (Wikimedia Commons) the credit links to. */
+  sourceUrl: string;
+  /** Credit line shown next to the photo, e.g. "Ảnh: An · CC BY-SA 4.0 · Wikimedia Commons". */
+  attribution: string;
+}
 /** POI-OVERTURE §2.1: which dataset a result came from (Overture rows use provider WOLFARI). */
 export type PlaceDataset = 'golden' | 'overture' | 'geoapify';
 export interface DiscoveredPlace {
@@ -31,6 +52,8 @@ export interface DiscoveredPlace {
   confidence: number | null;
   dataRelease: string | null;
   fetchedAt: string | null;
+  /** POI-IMAGES additive field; null when there is no usable photo (or an older backend). */
+  heroImage?: PlaceImage | null;
 }
 export interface PlaceRoute {
   distanceM: number;
