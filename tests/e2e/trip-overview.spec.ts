@@ -246,9 +246,8 @@ test('Trip feature pages share the exact schedule banner and real trip identity'
     await page.goto(trip + (route ? '/' + route : ''));
     const hero = page.locator('[data-region="trip-hero"]');
     await expect(hero).toBeVisible();
-    await expect(
-      hero.getByRole('heading', { name: 'Đà Nẵng – Hội An', exact: true }),
-    ).toBeVisible();
+    const title = hero.getByRole('heading', { name: 'Đà Nẵng – Hội An', exact: true });
+    await expect(title).toBeVisible();
     await expect(hero.getByRole('link', { name: 'Chia sẻ' })).toHaveAttribute(
       'href',
       trip + '/share',
@@ -257,16 +256,16 @@ test('Trip feature pages share the exact schedule banner and real trip identity'
       'href',
       trip + '/settings',
     );
-    const signature = await hero.evaluate((el) => {
-      const s = getComputedStyle(el),
-        h = getComputedStyle(el.querySelector('h2')!);
+    const titleSize = await title.evaluate((el) => getComputedStyle(el).fontSize);
+    const signature = await hero.evaluate((el, titleSize) => {
+      const s = getComputedStyle(el);
       return {
         background: s.backgroundImage,
         height: el.getBoundingClientRect().height,
         radius: s.borderRadius,
-        titleSize: h.fontSize,
+        titleSize,
       };
-    });
+    }, titleSize);
     if (route === '') {
       await expect(hero).toHaveAttribute('data-variant', 'photo');
       expect(signature.height).toBe(170);
