@@ -153,9 +153,31 @@ function mount(
   );
   return getPlan;
 }
+it('shows all day groups and unassigned activities while hiding add-day at four days', async () => {
+  mount();
+  await screen.findByRole('heading', { name: 'Bán đảo Sơn Trà' });
+  const days = within(screen.getByRole('group', { name: 'Ngày trong lịch trình' }));
+  expect(days.getAllByRole('button', { name: /^Ngày \d/ })).toHaveLength(4);
+  expect(days.queryByRole('button', { name: 'Thêm ngày' })).not.toBeInTheDocument();
+  const all = days.getByRole('button', { name: 'Tất cả' });
+  const savedBefore = localStorage.getItem(draftKey);
+
+  await userEvent.click(all);
+  expect(all).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('heading', { name: /^Lịch trình chung$/ })).toBeInTheDocument();
+  const unassigned = screen.getByRole('heading', { name: /^Chưa chọn ngày$/ }).closest('section')!;
+  expect(within(unassigned).getByText('Chùa Linh Ứng', { exact: true })).toBeInTheDocument();
+  expect(within(unassigned).queryByText('Bán đảo Sơn Trà')).not.toBeInTheDocument();
+  expect(screen.getAllByText('Chùa Linh Ứng', { exact: true })).toHaveLength(1);
+
+  await userEvent.click(days.getByRole('button', { name: /Ngày 1/ }));
+  expect(all).toHaveAttribute('aria-pressed', 'false');
+  expect(screen.queryByRole('heading', { name: 'Chưa chọn ngày' })).not.toBeInTheDocument();
+  expect(localStorage.getItem(draftKey)).toBe(savedBefore);
+});
 it('keeps selected day on error/recovery and no writes/version change in pending/unknown preview', async () => {
   mount();
-  await screen.findByText('Bán đảo Sơn Trà');
+  await screen.findByRole('heading', { name: 'Bán đảo Sơn Trà' });
   await userEvent.click(screen.getByRole('button', { name: /Ngày 2/ }));
   await screen.findByText('Chưa có nội dung');
   await userEvent.click(screen.getByText('Plan preview · Dữ liệu minh họa'));
@@ -187,7 +209,7 @@ it('keeps selected day on error/recovery and no writes/version change in pending
 });
 it('opens the local planner in read-only mode without drag or edit controls', async () => {
   mount();
-  await screen.findByText('Bán đảo Sơn Trà');
+  await screen.findByRole('heading', { name: 'Bán đảo Sơn Trà' });
   await userEvent.click(screen.getByText('Plan preview · Dữ liệu minh họa'));
   await userEvent.selectOptions(screen.getByLabelText('Trạng thái lịch trình'), 'read-only');
   await screen.findByText(/Không có quyền sửa lịch trình/);
@@ -198,7 +220,7 @@ it('opens the local planner in read-only mode without drag or edit controls', as
 });
 it('validates, saves and cancels the local activity editor while returning focus', async () => {
   mount();
-  await screen.findByText('Bán đảo Sơn Trà');
+  await screen.findByRole('heading', { name: 'Bán đảo Sơn Trà' });
   await userEvent.click(screen.getByLabelText('Xem hoạt động Bán đảo Sơn Trà'));
   const trigger = screen.getAllByRole('button', { name: 'Chỉnh sửa hoạt động' })[0]!;
   await userEvent.click(trigger);
@@ -289,7 +311,7 @@ it.each([
       },
     },
   );
-  await screen.findByText('Bán đảo Sơn Trà');
+  await screen.findByRole('heading', { name: 'Bán đảo Sơn Trà' });
   await userEvent.click(screen.getByLabelText('Xem hoạt động Bán đảo Sơn Trà'));
   await userEvent.click(screen.getAllByRole('button', { name: 'Chỉnh sửa hoạt động' })[0]!);
   const dialog = screen.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' });

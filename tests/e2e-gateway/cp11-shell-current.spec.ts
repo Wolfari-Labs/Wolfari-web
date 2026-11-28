@@ -15,7 +15,7 @@ test('CP11 HTTP mock: Trip Drawer has one current page and preserves account nav
   const nav = drawer.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
   await menu.click();
   await expect(nav.locator('a[aria-current="page"]')).toHaveCount(1);
-  await expect(nav.getByRole('link', { name: 'Tổng quan chuyến đi' })).toHaveAttribute(
+  await expect(nav.getByRole('link', { name: 'Tổng quan', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );
@@ -33,9 +33,7 @@ test('CP11 HTTP mock: Trip Drawer has one current page and preserves account nav
   await nav.getByRole('link', { name: 'Cài đặt', exact: true }).click();
   await expect(page).toHaveURL(tripPath + '/settings');
   await expect(drawer).not.toBeVisible();
-  await expect(
-    page.getByRole('heading', { name: 'Thông tin chuyến đi', exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true })).toBeVisible();
   await expect(page.locator('main')).toBeFocused();
   await menu.click();
   await expect(nav.locator('a[aria-current="page"]')).toHaveCount(1);

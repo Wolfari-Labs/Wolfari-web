@@ -57,11 +57,14 @@ async function register(page, label, email = `d1-${randomUUID()}@wolfari.test`) 
 }
 async function fund(page, tripId) {
   await page.goto(`/trips/${tripId}/fund`);
-  await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
 }
 async function manualCreate(page) {
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
-  await page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true }).click();
+  const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
+  if (!(await manual.isVisible()))
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+  await manual.click();
 }
 async function editActivity(page, title) {
   const trigger = page
@@ -237,8 +240,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
     });
     const { owner, holder, editor, member, outsider } = pages;
     await test.step('profile/avatar, MinIO loss/recovery, revoke another session, change/reset password through UI', async () => {
-      await outsider.getByLabel('Tên hiển thị').fill('Outsider X updated');
-      await outsider.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
+      await outsider.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }).click();
+      await outsider.getByLabel('Tên hiển thị', { exact: true }).fill('Outsider X updated');
+      await outsider.getByRole('button', { name: 'Lưu tên hiển thị', exact: true }).click();
       await expect(outsider.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
       await outsider.getByLabel('Chọn ảnh đại diện').setInputFiles({
         name: 'demo-avatar.png',
@@ -247,7 +251,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       });
       await expect(outsider.getByText('Đã cập nhật ảnh đại diện.')).toBeVisible();
       await outsider.reload();
-      await expect(outsider.getByLabel('Tên hiển thị')).toHaveValue('Outsider X updated');
+      await expect(outsider.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Outsider X updated');
       await expect(outsider.locator('img[alt="Outsider X updated"]')).toHaveAttribute(
         'src',
         /^blob:/,
@@ -256,7 +260,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       try {
         await outsider.reload();
         await expect(outsider.getByText(/Chưa tải được ảnh đại diện/)).toBeVisible();
-        await expect(outsider.getByLabel('Tên hiển thị')).toHaveValue('Outsider X updated');
+        await expect(outsider.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Outsider X updated');
       } finally {
         await control('start', 'minio');
       }
@@ -273,7 +277,7 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       );
       await login(other, accounts.outsider);
       const otherSessionId = (await (await loginResponse).json()).data.session_id;
-      await outsider.getByText('Phiên đăng nhập', { exact: true }).click();
+      await outsider.getByRole('navigation', { name: 'Điều hướng tài khoản' }).getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true }).click();
       await outsider
         .locator(`[data-session-id="${otherSessionId}"]`)
         .getByRole('button', { name: 'Thu hồi phiên' })
@@ -360,9 +364,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       );
       for (const page of [holder, member]) {
         await page.goto(`/trips/${tripId}/plan`);
-        await expect(
-          page.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-        ).toBeVisible();
+        await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+        await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
         await page.screenshot({
           path: test
             .info()
@@ -380,11 +383,11 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       contexts.push(context);
       const other = await context.newPage();
       await login(other, accounts.owner, `/trips/${tripId}/settings`);
-      await other.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+      await other.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
       const draft = other.getByRole('textbox', { name: 'Mô tả công khai' });
       await draft.fill('Reviewed settings draft');
       await owner.goto(`/trips/${tripId}/settings`);
-      await owner.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+      await owner.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
       await owner
         .getByRole('textbox', { name: 'Mô tả công khai' })
         .fill('Owner first settings write');
@@ -634,7 +637,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       let stopStatus = 409;
       for (let attempt = 0; attempt < 3 && stopStatus === 409; attempt++) {
         await owner.reload();
-        await owner.getByRole('button', { name: 'Dừng', exact: true }).click();
+        // Stop lives in the watch card's overflow menu, still behind the confirm dialog.
+        await owner.getByRole('button', { name: /^Thêm thao tác cho / }).first().click();
+        await owner.getByRole('menuitem', { name: 'Dừng theo dõi', exact: true }).click();
         const stopped = owner.waitForResponse((r) =>
           /\/price-watches\/[^/]+\/stop$/.test(new URL(r.url()).pathname),
         );
@@ -772,9 +777,9 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
     await test.step('same-cookie tabs; sign out prevents stale restoration', async () => {
       const tab = await owner.context().newPage();
       await tab.goto('/profile');
-      await expect(tab.getByLabel('Tên hiển thị')).toHaveValue('Owner A');
+      await expect(tab.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Owner A');
       await Promise.all([owner.reload(), tab.reload()]);
-      await expect(tab.getByLabel('Tên hiển thị')).toHaveValue('Owner A');
+      await expect(tab.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Owner A');
       await tab.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
       await expect(tab).toHaveURL(/\/login$/);
       await owner.goto('/profile');
@@ -805,9 +810,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       ).toHaveCount(0);
       await accept(editor, await linkInvite(owner, tripId), tripId);
       await editor.goto(`/trips/${tripId}/plan`);
-      await expect(
-        editor.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-      ).toBeVisible();
+      await expect(editor.locator('[data-region="trip-hero"]')).toHaveCount(1);
+      await expect(editor.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       await expect(editor.getByRole('button', { name: 'Thêm hoạt động' })).toHaveCount(0);
     });
     await test.step('restart without reset preserves IDs/Plan/ledger; Finance loss does not empty Fund', async () => {
@@ -834,9 +838,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         await expect(owner.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' })).toHaveCount(0);
         await expect(owner.getByRole('region', { name: 'Trạng thái quỹ' })).toHaveCount(0);
         await editor.reload();
-        await expect(
-          editor.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-        ).toBeVisible();
+        await expect(editor.locator('[data-region="trip-hero"]')).toHaveCount(1);
+        await expect(editor.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       } finally {
         await control('start', 'finance-service');
       }
@@ -924,9 +927,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       }
       await owner.setViewportSize({ width: 1440, height: 1000 });
       await owner.locator(`a[href="/trips/${tripId}/plan"]:visible`).first().click();
-      await expect(
-        owner.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-      ).toBeVisible();
+      await expect(owner.locator('[data-region="trip-hero"]')).toHaveCount(1);
+      await expect(owner.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       await owner.evaluate(() => {
         document.documentElement.style.zoom = '2';
       });

@@ -21,7 +21,6 @@ import {
 } from '@dnd-kit/react';
 import { useSortable } from '@dnd-kit/react/sortable';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
 import { useTripPlanSnapshot } from './hooks/use-trip-plan-snapshot';
@@ -38,9 +37,8 @@ import {
   type PlanDraftEdit,
   type PlanDraftMove,
 } from './model/plan-draft';
-import { activityTime, planDays } from './model/plan-presentation';
+import { activityTime, dayHeading, planDays } from './model/plan-presentation';
 import { Drawer } from '../../shared/components/Drawer';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { TimelineCard } from './components/TimelineCard';
 import { MotionProvider } from '../../shared/components/MotionProvider';
 import { Button } from '../../shared/components/Button';
@@ -48,13 +46,18 @@ import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
+import { Icon } from '../../shared/components/Icon';
+import mascotReading from '../../shared/assets/v2/mascot-reading-map.png';
 import mountain from '../../shared/assets/figma/eb8f3.svg';
 import meal from '../../shared/assets/figma/41563.svg';
 import beach from '../../shared/assets/figma/e9568.svg';
 import walk from '../../shared/assets/figma/9c64a.svg';
 import { PlanMetrics } from './components/PlanMetrics';
+import { PlanDayMap } from './components/PlanDayMap';
+import daySun from '../../shared/assets/figma/trips-plan/day-sun.svg';
 import dragIcon from '../../shared/assets/figma/56e25.svg';
 import moreIcon from '../../shared/assets/figma/ca9fb.svg';
+import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import styles from './PlanPage.module.css';
 import { mergePlaceSelections, usePlaceSelection } from '../map/place-selection-store';
 
@@ -296,6 +299,7 @@ function TimelineList({
       }}
       className={styles.timelineViewport}
       data-draft-list="DAY"
+      data-empty={!items.length || undefined}
       data-insertion-slot={dnd.intent?.container === 'DAY' ? dnd.intent.index : undefined}
       tabIndex={0}
       aria-label="Các hoạt động trong ngày"
@@ -451,7 +455,7 @@ function ActivityPool({
           onClick={onClose}
           aria-label="Đóng danh sách hoạt động"
         >
-          × Đóng
+          <Icon name="close" size={18} />
         </button>
       </header>
 
@@ -462,15 +466,15 @@ function ActivityPool({
         <Alert>Chế độ chỉ đọc · Bạn có thể xem nhưng không thể kéo thả hoặc chỉnh sửa.</Alert>
       )}
       <div className={styles.poolSearch}>
-        <Input
-          label="Tìm trong hoạt động đã chọn"
+        <img src={searchIcon} width="18" height="18" alt="" />
+        <input
+          aria-label="Tìm trong hoạt động đã chọn"
           type="search"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Tìm trong địa điểm/hoạt động đã chọn…"
         />
       </div>
-      <p className={styles.poolHint}>Kéo hoạt động sang lịch trình để thêm vào ngày đang chọn.</p>
       <ul
         ref={(element) => {
           poolDrop.ref(element);
@@ -502,6 +506,7 @@ function ActivityPool({
           </li>
         )}
       </ul>
+      <img className={styles.poolMascot} src={mascotReading} alt="" />
       <div className={styles.localNotice} role="status">
         <strong>Chỉ lưu trên thiết bị này</strong>
         <span>Chưa đồng bộ với thành viên khác · Nháp hết hạn sau 30 ngày.</span>
@@ -689,16 +694,23 @@ function PlannerWorkspace({
       aria-labelledby={compact ? 'planner-day-title' : 'plan-day-title'}
     >
       <div className={styles.toolbar}>
-        <h2 id={compact ? 'planner-day-title' : 'plan-day-title'}>
-          Lịch trình ngày {planDays(trip.startAt, trip.endAt, trip.timezone).indexOf(day) + 1}
-        </h2>
+        <h2 id={compact ? 'planner-day-title' : 'plan-day-title'}>{dayHeading(day)}</h2>
         <span className={styles.progress}>
           {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
         </span>
-        <Button variant="outline" disabled title="Bản đồ chưa khả dụng trong Preview">
+        <Button
+          variant="outline"
+          disabled
+          title="Bản đồ chưa khả dụng trong Preview"
+          icon={<Icon name="mapFolded" size={18} />}
+        >
           Hiện bản đồ
         </Button>
-        <Button aria-pressed onClick={() => closeRef.current?.focus()}>
+        <Button
+          aria-pressed
+          icon={<Icon name="plus" size={18} />}
+          onClick={() => closeRef.current?.focus()}
+        >
           Thêm hoạt động
         </Button>
       </div>
@@ -781,13 +793,42 @@ export function PlanView({
   onEdit: (edit: PlanDraftEdit, expected: PlanDraftActivity) => Promise<boolean>;
 }) {
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
-  const day = selectedDay && days.includes(selectedDay) ? selectedDay : days[0]!;
-  const items = draftActivitiesForDay(activities, day);
+  const day =
+    selectedDay === 'ALL'
+      ? 'ALL'
+      : selectedDay && days.includes(selectedDay)
+        ? selectedDay
+        : days[0]!;
+  const targetDay = day === 'ALL' ? days[0]! : day;
+  const items = draftActivitiesForDay(activities, targetDay);
+  const visibleItems = day === 'ALL' ? activities : items;
   const allPoolItems = unscheduledDraftActivities(activities);
+  const outsideDays = [
+    ...new Set(
+      activities
+        .map((activity) => activity.scheduledDate)
+        .filter((value): value is string => value !== null && !days.includes(value)),
+    ),
+  ].sort();
+  const overviewGroups = [
+    ...days.map((value, index) => ({
+      key: value,
+      label: `Ngày ${index + 1} · ${value.slice(8)}/${value.slice(5, 7)}`,
+      items: draftActivitiesForDay(activities, value),
+    })),
+    ...outsideDays.map((value) => ({
+      key: value,
+      label: `Ngoài chuyến đi · ${value.slice(8)}/${value.slice(5, 7)}/${value.slice(0, 4)}`,
+      items: draftActivitiesForDay(activities, value),
+    })),
+    { key: 'POOL', label: 'Chưa chọn ngày', items: allPoolItems },
+  ];
   const [query, setQuery] = useState('');
+  const [mapExpanded, setMapExpanded] = useState(false);
+  const [mapVisible, setMapVisible] = useState(true);
   const dnd = usePreviewDnd({
     activities,
-    day,
+    day: targetDay,
     canEdit: plan.permissions.canEdit,
     plannerOpen,
     openPlanner: onPlannerOpen,
@@ -797,6 +838,7 @@ export function PlanView({
   const [editing, setEditing] = useState<PlanDraftActivity | null>(null);
   const editReturnFocus = useRef<HTMLButtonElement | null>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
+  const mapButtonRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const compact = useCompactPlanner();
   useEffect(() => {
@@ -821,6 +863,7 @@ export function PlanView({
   );
   const closePlanner = () => {
     onPlannerClose();
+    setMapVisible(false);
     window.requestAnimationFrame(() => addButtonRef.current?.focus());
   };
   const closeEditor = () => {
@@ -830,36 +873,70 @@ export function PlanView({
     editReturnFocus.current = trigger;
     setEditing(activity);
   };
+  const openPlanner = () => {
+    if (day === 'ALL') onDayChange(targetDay);
+    onPlannerOpen();
+  };
   return (
     <>
-      <div className={styles.hero}>
-        <TripHero trip={trip} compact variant="landscape" />
-      </div>
       {storageStatus === 'memory' && (
         <Alert tone="warning" live>
           Không thể lưu vào trình duyệt. Bản nháp chỉ được giữ trong bộ nhớ của tab này và sẽ mất
           khi tải lại hoặc đóng tab.
         </Alert>
       )}
-      <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
-        {days.map((date, index) => (
+      <div className={styles.dayBar}>
+        <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
+          {days.map((date, index) => (
+            <button
+              key={date}
+              type="button"
+              aria-pressed={date === day}
+              onClick={() => onDayChange(date)}
+            >
+              Ngày {index + 1}
+              <small>
+                <span>
+                  {date.slice(8, 10)}/{date.slice(5, 7)}
+                </span>
+                <span
+                  className={styles.dayWeather}
+                  title="Chưa có dữ liệu thời tiết"
+                  aria-label="Thời tiết chưa có dữ liệu"
+                >
+                  <img src={daySun} alt="" />—
+                </span>
+              </small>
+            </button>
+          ))}
+          {trip.currentMembership.role === 'OWNER' &&
+            trip.permissions.canUpdate &&
+            trip.lifecycle !== 'ARCHIVED' &&
+            days.length < 4 && (
+              <button
+                type="button"
+                className={styles.addDay}
+                disabled
+                title="Chưa hỗ trợ thay đổi ngày của chuyến đi"
+              >
+                <Icon name="plus" size={18} />
+                Thêm ngày
+              </button>
+            )}
           <button
-            key={date}
             type="button"
-            aria-pressed={date === day}
-            onClick={() => onDayChange(date)}
+            className={styles.allDaysButton}
+            aria-pressed={day === 'ALL'}
+            onClick={() => {
+              if (plannerOpen) onPlannerClose();
+              onDayChange('ALL');
+            }}
           >
-            Ngày {index + 1}
-            <small>
-              {date.slice(8, 10)}/{date.slice(5, 7)}
-            </small>
+            Tất cả
           </button>
-        ))}
-        <Button variant="outline" disabled>
-          + Thêm ngày
-        </Button>
+        </div>
+        <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       </div>
-      <PlanMetrics trip={trip} plan={{ ...plan, activities }} day={day} />
       <DragDropProvider
         sensors={[PointerSensor]}
         plugins={(defaults) => [
@@ -888,37 +965,95 @@ export function PlanView({
         onDragEnd={dnd.onDragEnd}
       >
         {!plannerOpen && (
-          <div className={styles.columns}>
+          <div
+            className={`${styles.columns} ${mapVisible ? (mapExpanded ? styles.mapExpanded : '') : styles.timelineOnly}`}
+          >
             <section className={styles.timeline} aria-labelledby="plan-day-title">
               <div className={styles.toolbar}>
-                <h2 id="plan-day-title">Lịch trình ngày {days.indexOf(day) + 1}</h2>
+                <h2 id="plan-day-title">{day === 'ALL' ? 'Lịch trình chung' : dayHeading(day)}</h2>
                 <span className={styles.progress}>
-                  {items.filter((a) => a.status === 'COMPLETED').length}/{items.length} hoàn thành
+                  {visibleItems.filter((a) => a.status === 'COMPLETED').length}/
+                  {visibleItems.length} hoàn thành
                 </span>
-                <Button variant="outline" disabled>
-                  Hiện bản đồ
+                <Button
+                  ref={mapButtonRef}
+                  variant="outline"
+                  aria-pressed={mapVisible}
+                  onClick={() => {
+                    if (mapVisible) setMapVisible(false);
+                    else {
+                      setMapExpanded(true);
+                      setMapVisible(true);
+                    }
+                  }}
+                  icon={<Icon name="mapFolded" size={18} />}
+                >
+                  {mapVisible ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
                 </Button>
-                <Button ref={addButtonRef} onClick={onPlannerOpen}>
+                <Button
+                  ref={addButtonRef}
+                  icon={<Icon name="plus" size={18} />}
+                  onClick={openPlanner}
+                >
                   Thêm hoạt động
                 </Button>
               </div>
-              <TimelineList
-                items={items}
-                day={day}
-                timezone={trip.timezone}
-                canEdit={plan.permissions.canEdit}
-                dragEnabled={plan.permissions.canEdit}
-                onEdit={beginEdit}
-                dnd={dnd}
-              />
+              {day === 'ALL' ? (
+                <div className={styles.allDays}>
+                  {overviewGroups.map((group) => (
+                    <section key={group.key}>
+                      <h3>{group.label}</h3>
+                      <ol className={styles.overviewList} aria-label={`Hoạt động ${group.label}`}>
+                        {group.items.length ? (
+                          group.items.map((activity, index) => (
+                            <TimelineActivityRow
+                              key={activity.id}
+                              activity={activity}
+                              index={index}
+                              timezone={trip.timezone}
+                              canEdit={plan.permissions.canEdit}
+                              onEdit={(trigger) => beginEdit(activity, trigger)}
+                              dnd={dnd}
+                            />
+                          ))
+                        ) : (
+                          <li className={styles.emptyDrop}>Chưa có hoạt động trong nhóm này.</li>
+                        )}
+                      </ol>
+                    </section>
+                  ))}
+                </div>
+              ) : (
+                <TimelineList
+                  items={items}
+                  day={day}
+                  timezone={trip.timezone}
+                  canEdit={plan.permissions.canEdit}
+                  dragEnabled={plan.permissions.canEdit}
+                  onEdit={beginEdit}
+                  dnd={dnd}
+                />
+              )}
             </section>
+            {mapVisible && (
+              <PlanDayMap
+                trip={trip}
+                plan={{ ...plan, activities }}
+                day={day}
+                compact={!mapExpanded}
+                onClose={() => {
+                  setMapVisible(false);
+                  mapButtonRef.current?.focus();
+                }}
+              />
+            )}
           </div>
         )}
         {plannerOpen && (
           <PlannerWorkspace
             trip={trip}
             plan={plan}
-            day={day}
+            day={targetDay}
             items={items}
             poolItems={poolItems}
             query={query}
@@ -973,19 +1108,22 @@ export function PlanPage() {
     </MotionProvider>
   );
 }
+function PlanHeader({ trip }: { trip: TripDetailViewModel }) {
+  return (
+    <div className={styles.hero}>
+      <TripHero trip={trip} compact variant="landscape" />
+    </div>
+  );
+}
 function GatewayPlanPage() {
   const { tripId = '' } = useParams();
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   return (
     <section className={styles.page} data-flow="plan-server">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Lịch trình"
-      />
+      {snapshot.state.status !== 'ready' && <h1 className={styles.srOnly}>Lịch trình</h1>}
       {snapshot.state.status === 'ready' ? (
         <>
-          <TripHero trip={snapshot.state.trip} compact variant="landscape" />
+          <PlanHeader trip={snapshot.state.trip} />
           <GatewayPlanPanel
             key={`${tripId}:${snapshot.state.trip.currentMembership.id}`}
             trip={snapshot.state.trip}
@@ -1048,11 +1186,7 @@ function PreviewPlanPage() {
       data-local-draft="true"
       data-node-id="20:236"
     >
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Lịch trình"
-      />
+      {!(trip && effectivePlan) && <h1 className={styles.srOnly}>Lịch trình</h1>}
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}
@@ -1064,6 +1198,7 @@ function PreviewPlanPage() {
         <ContentState state="loading" headingLevel={2} />
       ) : trip && effectivePlan ? (
         <>
+          <PlanHeader trip={trip} />
           {gateway && (
             <div>
               <Button

@@ -100,8 +100,13 @@ export function GatewayPackingEditor({
           ]}
         />
       ) : (
-        <Button ref={addButtonRef ?? trigger} disabled={!enabled || commands.locked} onClick={open}>
-          <Icon name="plus" size={18} /> Thêm vật dụng
+        <Button
+          ref={addButtonRef ?? trigger}
+          disabled={!enabled || commands.locked}
+          onClick={open}
+          icon={<Icon name="plus" size={18} />}
+        >
+          Thêm vật dụng
         </Button>
       )}
       <PackingItemDrawer

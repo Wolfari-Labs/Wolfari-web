@@ -1,16 +1,10 @@
+/* Figma D/Input: 13/18 label, 56px field, 32px icon chip. State semantics stay native. */
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: 8px;
   min-width: 0;
-  font-size: var(--font-size-label);
-  line-height: var(--line-label);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .field {
-    font-size: var(--font-size-label);
-  }
+  font: 600 15px/22px var(--v2-font);
 }
 .hiddenLabel {
   position: absolute;
@@ -24,44 +18,48 @@
   border: 0;
 }
 .field label {
-  font-weight: var(--weight-medium);
-  color: var(--color-ink);
+  color: var(--v2-ink);
+  font: 700 13px/18px var(--v2-font);
   overflow-wrap: anywhere;
 }
 .inputRow,
-.select {
-  background: var(--field-surface);
-  border: 1px solid var(--field-border-default);
-  border-radius: var(--radius-control);
-  min-height: var(--control-height);
+.select,
+.textarea {
   width: 100%;
   min-width: 0;
+  border: 0;
+  border-radius: 20px;
+  background: var(--v2-field);
+  color: var(--v2-ink);
+  font: 600 15px/22px var(--v2-font);
 }
 .inputRow {
-  border: 0;
-  --field-border: var(--field-border-default);
-  box-shadow: inset 0 0 0 1px var(--field-border);
+  --field-border: transparent;
   display: flex;
   align-items: center;
-  gap: var(--space-8);
-  padding-inline: var(--space-14);
-  transition:
-    box-shadow var(--motion-control) ease,
-    background-color var(--motion-control) ease;
+  gap: 10px;
+  min-height: 56px;
+  padding-inline: 16px;
+  box-shadow: inset 0 0 0 1px var(--field-border);
+  transition: box-shadow var(--motion-control) ease;
+}
+.inputRow:has(> .icon) {
+  padding-left: 12px;
 }
 .input {
-  border: 0;
-  background: transparent;
-  outline: 0;
   width: 100%;
   min-width: 0;
-  min-height: var(--control-height);
+  min-height: 56px;
   padding: 0;
-  color: var(--field-text);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--v2-ink);
   font: inherit;
 }
-.input::placeholder {
-  color: var(--color-note-text);
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--v2-muted);
   opacity: 1;
 }
 .input:focus,
@@ -69,72 +67,57 @@
   outline: none;
   box-shadow: none;
 }
-.textarea {
-  width: 100%;
-  min-height: 112px;
-  resize: vertical;
-  padding: var(--space-12) var(--space-14);
-  border: 1px solid var(--field-border-default);
-  border-radius: var(--radius-control);
-  background: var(--field-surface);
-  color: var(--field-text);
-  font: inherit;
-}
-.textarea:focus {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
-}
-.textarea.invalid {
-  border-color: var(--color-field-error);
-}
 .icon {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  background: var(--v2-sky);
+  color: var(--v2-blue-text);
+}
+.icon img {
+  display: block;
 }
 .passwordToggle {
-  flex-shrink: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-muted);
-  cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
+  position: relative;
   display: inline-grid;
   place-items: center;
-  border-radius: var(--radius-8);
-  padding: 0 var(--space-4);
-  font: inherit;
-  font-weight: var(--weight-medium);
+  flex-shrink: 0;
+  width: 18px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--v2-nav-text);
+  cursor: pointer;
 }
-.passwordToggle:hover:not(:disabled) {
-  background: var(--color-selected);
-  color: var(--color-ink);
+.passwordToggle::after {
+  content: '';
+  position: absolute;
+  inset: -6px -13px;
 }
 .passwordToggle:focus-visible {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
-  border-radius: var(--radius-6);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .passwordToggle:focus-visible {
-    border-radius: var(--radius-6);
-  }
+  outline: 2px solid var(--focus-color);
+  outline-offset: 4px;
 }
 .passwordToggle:disabled {
   color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
+.textarea {
+  min-height: 112px;
+  resize: vertical;
+  padding: 12px 16px;
+}
 .select {
-  font: inherit;
-  color: var(--color-ink);
-  padding: 10px 40px 10px var(--space-14);
+  min-height: 56px;
+  padding: 10px 40px 10px 16px;
   appearance: none;
   cursor: pointer;
-  transition:
-    border-color var(--motion-control) ease,
-    box-shadow var(--motion-control) ease;
 }
 .selectWrap {
   position: relative;
@@ -143,47 +126,41 @@
 }
 .selectChevron {
   position: absolute;
-  right: 14px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--color-muted);
+  color: var(--v2-sub);
   pointer-events: none;
-}
-.select:focus-visible {
-  outline: 2px solid var(--focus-color);
-  outline-offset: 2px;
 }
 .select[multiple],
 .select[size]:not([size='1']) {
   appearance: auto;
-  background-image: none;
-  padding-right: var(--space-14);
+  padding-right: 16px;
 }
-.inputRow:focus-within {
-  --field-border: var(--color-action-primary);
-  outline: 2px solid var(--color-action-primary);
+.inputRow:focus-within,
+.select:focus-visible,
+.textarea:focus-visible {
+  --field-border: var(--v2-blue);
+  outline: 2px solid var(--v2-blue);
   outline-offset: -2px;
-  box-shadow: none;
+  background: white;
+  box-shadow: 0 0 0 4px rgb(92 140 255 / 18%);
 }
 .invalid {
-  border-color: var(--color-field-error);
   --field-border: var(--color-field-error);
+}
+.inputRow.invalid,
+.textarea.invalid,
+.select.invalid {
+  box-shadow: inset 0 0 0 2px var(--color-field-error);
 }
 .hint,
 .error {
-  font-size: var(--font-size-small);
-  line-height: var(--line-small);
   overflow-wrap: anywhere;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .hint,
-  .error {
-    font-size: var(--font-size-small);
-  }
+  font: 700 12px/18px var(--v2-font);
 }
 .hint {
-  color: var(--color-note-text);
+  color: var(--v2-muted);
 }
 .error {
   color: var(--color-field-error);
@@ -191,33 +168,23 @@
 .inputRow:has(input:disabled),
 .select:disabled,
 .textarea:disabled {
-  background-color: var(--color-control-disabled-surface);
+  background: var(--color-control-disabled-surface);
   color: var(--color-control-disabled-text);
   cursor: not-allowed;
+}
+.select:disabled {
+  /* Native select dimming compounds the muted text and surface colours. */
+  opacity: 1;
+  color: var(--v2-sub);
 }
 .input:disabled {
   color: var(--color-control-disabled-text);
   cursor: not-allowed;
 }
-@media (hover: hover) {
-  .inputRow:hover:not(.invalid):not(:has(input:disabled)):not(:focus-within) {
-    --field-border: var(--color-blue);
-  }
-  .select:hover:not(:disabled):not(.invalid) {
-    border-color: var(--color-blue);
-  }
-}
 @media (max-width: 768px) {
-  .inputRow,
-  .select {
-    min-height: var(--control-height-mobile);
-  }
-  .input {
-    min-height: var(--control-height-mobile);
+  .input,
+  .select,
+  .textarea {
     font-size: 16px;
-  }
-  .inputRow:focus-within {
-    border-color: var(--color-blue);
-    --field-border: var(--color-blue);
   }
 }

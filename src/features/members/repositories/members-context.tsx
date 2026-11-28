@@ -20,3 +20,7 @@ export function useMembersRepositories() {
   if (!value) throw Error('Members repository provider missing');
   return value;
 }
+
+export function useMembersRepositoriesOptional() {
+  return useContext(Context);
+}

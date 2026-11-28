@@ -50,11 +50,14 @@ async function register(page, label, email = `w03-${randomUUID()}@wolfari.test`)
 }
 async function fund(page, tripId) {
   await page.goto(`/trips/${tripId}/fund`);
-  await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
 }
 async function manualCreate(page) {
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
-  await page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true }).click();
+  const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
+  if (!(await manual.isVisible()))
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
+  await manual.click();
 }
 async function editActivity(page, title) {
   const trigger = page

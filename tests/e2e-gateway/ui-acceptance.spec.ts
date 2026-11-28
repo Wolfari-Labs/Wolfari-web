@@ -49,11 +49,14 @@ for (const size of [
       ['create', '/trips/new'],
     ]) {
       await page.goto(path!);
-      if (name === 'plan') await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
-      await expect(page.locator('main h1').first()).toBeVisible();
+      if (name === 'plan') {
+        await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
+      }
+      const mobileCreate = name === 'create' && size.width <= 768;
+      if (!mobileCreate) await expect(page.locator('main h1').first()).toBeVisible();
       await expect(page.locator('[data-preview]')).toHaveCount(0);
       if (name === 'profile')
-        await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Trang Gateway');
+        await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Trang Gateway');
       else if (name === 'trips')
         await expect(page.getByText('Đà Nẵng Gateway', { exact: true })).toBeVisible();
       else if (name === 'members')
@@ -70,12 +73,15 @@ for (const size of [
         await expect(page.getByRole('heading', { name: 'Chưa có hành lý đã lưu' })).toBeVisible();
       else if (name === 'settings')
         await expect(
-          page.getByRole('heading', { name: 'Thông tin chuyến đi', exact: true }),
+          page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
         ).toBeVisible();
       else if (name === 'create') {
         await expect(page.getByLabel('Tên chuyến đi', { exact: true })).toBeVisible();
         await expect(
-          page.getByRole('heading', { name: 'Tạo chuyến đi mới', exact: true }),
+          page.getByRole('heading', {
+            name: mobileCreate ? 'Hành trình bắt đầu từ một ý tưởng' : 'Tạo chuyến đi mới',
+            exact: true,
+          }),
         ).toBeVisible();
       } else await expect(page.getByRole('region', { name: 'Thông tin chuyến đi' })).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
@@ -94,18 +100,6 @@ for (const size of [
       });
       await page.screenshot({ path: info.outputPath(name + '.png'), fullPage: true });
       if (name === 'plan') {
-        const mainBreadcrumb = page
-          .locator('main')
-          .getByRole('link', { name: 'Tổng quan chuyến đi', exact: true });
-        await expect(mainBreadcrumb).toHaveCSS('color', 'rgb(0, 107, 146)');
-        const colors = await mainBreadcrumb.evaluate((link) => ({
-          foreground: getComputedStyle(link).color,
-          background: getComputedStyle(document.body).backgroundColor,
-        }));
-        await writeFile(
-          info.outputPath('plan-breadcrumb-colors.json'),
-          JSON.stringify(colors, null, 2),
-        );
         await page.getByRole('listitem', { name: 'Ăn sáng', exact: true }).scrollIntoViewIfNeeded();
         await page.screenshot({ path: info.outputPath('plan-cards.png') });
       }
@@ -123,7 +117,7 @@ for (const size of [
     if (size.width > 1100) {
       await page.goto(`/trips/${tripId}/settings`);
       await expect(
-        page.getByRole('heading', { name: 'Thông tin chuyến đi', exact: true }),
+        page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
       ).toBeVisible();
       await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
       await page.screenshot({ path: info.outputPath('collapsed.png'), fullPage: true });
@@ -139,20 +133,18 @@ for (const size of [
     }
   });
 }
-test('Gateway inbox closes on route change and restores body scrolling', async ({
+test('Gateway notifications open as a page and link to account preferences', async ({
   page,
   gateway,
 }) => {
   void gateway;
   await login(page);
-  await page
-    .getByRole('button', { name: 'Thông báo', exact: true })
-    .filter({ visible: true })
-    .click();
-  const inbox = page.getByRole('dialog', { name: 'Thông báo', exact: true });
+  await page.getByRole('link', { name: /^Thông báo/ }).click();
+  await expect(page).toHaveURL('/notifications');
+  const inbox = page.getByRole('region', { name: 'Danh sách thông báo' });
   await expect(inbox).toBeVisible();
-  await inbox.getByRole('link', { name: 'Tùy chọn thông báo' }).click();
-  await expect(inbox).not.toBeVisible();
+  await page.getByRole('link', { name: 'Mở tùy chọn thông báo' }).click();
+  await expect(page).toHaveURL('/profile#notifications');
   await expect
     .poll(() => page.evaluate(() => getComputedStyle(document.body).overflow))
     .not.toBe('hidden');

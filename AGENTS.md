@@ -1,5 +1,14 @@
 # Wolfari frontend redesign
 
+## Current branch authority — 22/11/2026
+
+- User approved the Figma-exact Web v2 implementation plan for `feat/web-ui-rework`. Page `930:6658` in the official file is the only visual authority. Historical CP stops and V2-D15/D16 visual/content preferences below do not constrain this approved redesign; retain their records as history.
+- Build all Web v2 screens/states with exact source typography, colours, gradients, radii, shadows and exported assets. Keep React/TypeScript/CSS Modules and existing business/session/guard semantics. No additional Backend/API integrations; unsupported UI must truthfully report unavailable. Reference data is Preview/test-only and must not enter production.
+- User explicitly chose original Figma colours over contrast adjustments. Run and report accessibility checks honestly; do not silently recolour the design, disable checks or claim full accessibility conformance.
+- Preserve pre-existing QA worktree changes. No automatic commit/push, dependency changes, Backend edits, deployment or official Figma writes.
+
+## Historical redesign instructions
+
 - Official design reference: https://www.figma.com/design/hdy2sOZk6rfjKXKDJ9HW9y/Wolfari-Travel-Workspace
 - Start with `docs/ui-redesign/MASTER_PLAN.md`, `STATE.md`, and the active checkpoint record. Stop after each checkpoint; require explicit user approval before advancing.
 - Product scope is Web only. No native/mobile app, SwiftUI, React Native, or iOS/Android UI deliverables. Small viewports mean responsive browser layouts, not a separate mobile product.

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
-import { TripHero } from './components/TripHero';
+import { OverviewHero } from './components/OverviewHero';
 import { OverviewProgress } from './components/OverviewProgress';
 import { OverviewFundSummary } from './components/OverviewFundSummary';
 import { OverviewEmptyFare } from './components/OverviewEmptyFare';
@@ -10,14 +10,28 @@ import type { ReadResult } from '../../shared/types/result';
 import type { TripDetailViewModel } from './model/trip-detail';
 import { ContentState } from '../../shared/components/ContentState';
 import { paths } from '../../app/route-paths';
-import { localDate } from '../plan/model/plan-presentation';
+import { localDate, planDays } from '../plan/model/plan-presentation';
+import { Icon, type IconName } from '../../shared/components/Icon';
+import mapArt from '../../shared/assets/figma/trips-plan/overview-map.svg';
+import calendarIcon from '../../shared/assets/figma/trips-plan/calendar.svg';
+import walletIcon from '../../shared/assets/figma/trips-plan/wallet.svg';
+import luggageIcon from '../../shared/assets/figma/trips-plan/luggage.svg';
+import planeIcon from '../../shared/assets/figma/trips-plan/plane.svg';
+import sunIcon from '../../shared/assets/figma/trips-plan/sun.svg';
 import styles from './TripDashboard.module.css';
 
-const asset = (name: string) => `/assets/overview-v2/${name}`;
-
-function Artwork({ name, slot }: { name: string; slot: string }) {
+/** Web v2 `D/Icon badge`: a gradient square with a white glyph (decorative). */
+function IconBadge({ icon, tone }: { icon: IconName; tone: 'blue' | 'green' | 'amber' | 'coral' }) {
+  const asset = {
+    calendar: calendarIcon,
+    fund: walletIcon,
+    luggage: luggageIcon,
+    price: planeIcon,
+  }[icon as 'calendar' | 'fund' | 'luggage' | 'price'];
   return (
-    <img className={styles.artwork} data-art={slot} src={asset(name)} alt="" aria-hidden="true" />
+    <span className={styles.badge} data-tone={tone} aria-hidden="true">
+      {asset ? <img src={asset} alt="" /> : <Icon name={icon} size={22} strokeWidth={2} />}
+    </span>
   );
 }
 
@@ -63,7 +77,7 @@ function PackingSummary({
   const completed = plan.data.packingItems.filter((item) => item.status === 'COMPLETED').length;
   return (
     <OverviewProgress
-      percent={total ? Math.round((completed / total) * 100) : 0}
+      percent={total ? Math.round((completed / total) * 100) : null}
       label={`${completed}/${total} món đã chuẩn bị`}
     >
       <p className={styles.summaryValue}>
@@ -83,6 +97,7 @@ export function TripOverview({
   fundContent,
   memberFeedback,
   fareContent,
+  weatherContent,
 }: {
   trip: TripDetailViewModel;
   plan: ReadResult<PlanViewModel> | { status: 'loading' };
@@ -90,11 +105,17 @@ export function TripOverview({
   fundContent?: ReactNode;
   memberFeedback?: ReactNode;
   fareContent?: ReactNode;
+  weatherContent?: (date: string) => ReactNode;
 }) {
   const [selectedDay, setSelectedDay] = useState(() => localDate(trip.startAt, trip.timezone));
+  const days = planDays(trip.startAt, trip.endAt, trip.timezone);
+  const dayIndex = days.indexOf(selectedDay);
   return (
     <>
-      <TripHero trip={trip} compact />
+      <OverviewHero
+        trip={trip}
+        dayLabel={dayIndex >= 0 ? `Ngày ${dayIndex + 1}/${days.length}` : undefined}
+      />
       {trip.description && (
         <details className={styles.description}>
           <summary>Giới thiệu chuyến đi</summary>
@@ -104,19 +125,16 @@ export function TripOverview({
       {memberFeedback && <div className={styles.memberFeedback}>{memberFeedback}</div>}
       <div className={styles.dashboard}>
         <div className={styles.summaries} data-region="trip-overview-summaries">
-          <section className={`${styles.panel} ${styles.dayCard}`} data-region="trip-overview-day">
+          <section className={`${styles.stat} ${styles.dayCard}`} data-region="trip-overview-day">
             <Link
               className={styles.cardLink}
               to={paths.plan(trip.id)}
               aria-label="Lịch trình trong ngày"
             />
-            <Artwork name="939b0.png" slot="day-cloud" />
-            <Artwork name="df307.png" slot="day-hill" />
-            <Artwork name="e0863.png" slot="signpost" />
-            <h2>
-              <img src={asset('b342a.png')} alt="" />
-              Lịch trình trong ngày
-            </h2>
+            <div className={styles.statHead}>
+              <IconBadge icon="calendar" tone="blue" />
+              <h2>Lịch trình hôm nay</h2>
+            </div>
             <div className={styles.cardContent}>
               <PlanSummary
                 trip={trip}
@@ -128,54 +146,60 @@ export function TripOverview({
               />
             </div>
           </section>
-          <section className={`${styles.panel} ${styles.weatherCard}`}>
-            <Artwork name="0dad6.png" slot="beach" />
-            <Artwork name="939b0.png" slot="weather-cloud" />
-            <Artwork name="9380c.png" slot="palms" />
-            <h2>
-              <img src={asset('ed7aa.png')} alt="" />
-              Thời tiết
-            </h2>
-            <div className={styles.cardContent}>
-              <p className={styles.summaryValue}>—</p>
-              <p className={styles.summaryDetail}>Chưa có dữ liệu thời tiết</p>
-            </div>
-          </section>
-          <section
-            className={`${styles.panel} ${styles.fundCard}`}
-            data-region="trip-overview-fund"
-          >
+          <section className={`${styles.stat} ${styles.fundCard}`} data-region="trip-overview-fund">
             <Link
               className={styles.cardLink}
               to={paths.fund(trip.id)}
               aria-label="Ngân sách / Quỹ nhóm"
             />
-            <Artwork name="f7c5a.png" slot="coins" />
-            <h2>
-              <img src={asset('adaad.png')} alt="" />
-              Ngân sách / Quỹ nhóm
-            </h2>
+            <div className={styles.statHead}>
+              <IconBadge icon="fund" tone="green" />
+              <h2>Quỹ nhóm</h2>
+            </div>
             <div className={styles.cardContent}>
               {fundContent ?? <OverviewFundSummary fund={undefined} />}
             </div>
           </section>
           <section
-            className={`${styles.panel} ${styles.packingCard}`}
+            className={`${styles.stat} ${styles.packingCard}`}
             data-region="trip-overview-packing"
           >
             <Link
               className={styles.cardLink}
               to={paths.packing(trip.id)}
-              aria-label="Tiến độ Packing list"
+              aria-label="Tiến độ hành lý"
             />
-            <Artwork name="d257b.png" slot="backpack" />
-            <h2>
-              <img src={asset('bd68f.png')} alt="" />
-              Tiến độ Packing list
-            </h2>
+            <div className={styles.statHead}>
+              <IconBadge icon="luggage" tone="amber" />
+              <h2>Hành lý đã sẵn</h2>
+            </div>
             <div className={styles.cardContent}>
               <PackingSummary trip={trip} plan={plan} onRetry={onRetry} />
             </div>
+          </section>
+          <section
+            className={`${styles.stat} ${styles.weatherCard}`}
+            data-region="trip-overview-weather"
+            aria-label={weatherContent ? 'Thời tiết chuyến đi' : 'Thời tiết chưa khả dụng'}
+          >
+            <div className={styles.statHead}>
+              <span className={styles.badge} data-tone="amber" aria-hidden="true">
+                <img src={sunIcon} alt="" />
+              </span>
+              <h2>
+                {weatherContent
+                  ? `Thời tiết ${selectedDay.slice(8)}/${selectedDay.slice(5, 7)}`
+                  : 'Thời tiết hôm nay'}
+              </h2>
+            </div>
+            {weatherContent ? (
+              weatherContent(selectedDay)
+            ) : (
+              <>
+                <p className={styles.weatherValue}>—</p>
+                <span className={styles.weatherUnavailable}>Chưa có dữ liệu</span>
+              </>
+            )}
           </section>
         </div>
         <div className={styles.workspace} data-region="trip-overview-workspace">
@@ -184,10 +208,7 @@ export function TripOverview({
             data-region="trip-overview-itinerary"
           >
             <Link className={styles.cardLink} to={paths.plan(trip.id)} aria-label="Lịch trình" />
-            <h2>
-              <img src={asset('da7c7.svg')} alt="" />
-              Lịch trình
-            </h2>
+            <h2>Lịch trình hôm nay</h2>
             <PlanSummary
               trip={trip}
               result={plan}
@@ -199,25 +220,24 @@ export function TripOverview({
           </section>
           <section className={`${styles.panel} ${styles.mapPanel}`} data-region="trip-overview-map">
             <header className={styles.panelHeading}>
-              <h2>
-                <img src={asset('17a21.svg')} alt="" />
-                Bản đồ hành trình
-              </h2>
+              <h2>Bản đồ hành trình</h2>
+              <Link
+                className={styles.mapLink}
+                to={paths.map(trip.id)}
+                aria-label="Mở bản đồ địa điểm"
+              >
+                Mở
+              </Link>
             </header>
             <div className={styles.mapArtwork}>
               <img
-                src={asset('5c5fb.png')}
+                src={mapArt}
                 alt="Bản đồ minh họa, không thể hiện lộ trình thực tế của chuyến đi"
               />
               <span>Minh họa</span>
             </div>
-            <div className={styles.mapCaption}>
-              <Link className={styles.mapLink} to={paths.map(trip.id)}>
-                Xem bản đồ địa điểm
-              </Link>
-            </div>
           </section>
-          <div className={styles.aside}>
+          <aside className={styles.aside} aria-label="Theo dõi giá vé">
             <section
               className={`${styles.panel} ${styles.farePanel}`}
               data-region="trip-overview-fare"
@@ -227,25 +247,13 @@ export function TripOverview({
                 to={paths.priceWatch(trip.id)}
                 aria-label="Theo dõi giá vé"
               />
-              <h2>
-                <img src={asset('25517.svg')} alt="" />
-                Theo dõi giá vé
-              </h2>
-              <Artwork name="df9de.png" slot="airplane" />
-              <div className={styles.fareContent}>{fareContent ?? <OverviewEmptyFare />}</div>
+              <div className={styles.fareTop}>
+                <IconBadge icon="price" tone="coral" />
+                <div className={styles.cardContent}>{fareContent ?? <OverviewEmptyFare />}</div>
+              </div>
+              <h2>Theo dõi giá vé</h2>
             </section>
-            <div className={styles.postcard} data-region="trip-overview-postcard">
-              <Artwork name="29ce6.png" slot="mountains" />
-              <Artwork name="22b66.png" slot="route" />
-              <Artwork name="749b4.png" slot="paper-plane" />
-              <Artwork name="5a78f.png" slot="wordmark" />
-              <p>
-                Mỗi chuyến đi
-                <br />
-                là một câu chuyện
-              </p>
-            </div>
-          </div>
+          </aside>
         </div>
       </div>
     </>

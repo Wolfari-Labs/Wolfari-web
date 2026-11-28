@@ -1,0 +1,106 @@
+.column {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-width: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+}
+
+.panel,
+.section,
+.form {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.panel {
+  padding: 18px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+}
+
+.panel h2,
+.section h3,
+.panel p {
+  margin: 0;
+}
+
+.panel h2 {
+  color: var(--v2-ink);
+  font: 800 18px/24px var(--v2-font);
+}
+
+.section h3 {
+  color: var(--v2-ink);
+  font: 800 16px/22px var(--v2-font);
+}
+.panel p {
+  color: var(--v2-sub);
+  font: 600 13px/20px var(--v2-font);
+}
+.panel > .section + .section {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-line);
+}
+.form > button,
+.section > button,
+.panel > button {
+  justify-self: start;
+}
+.reminders {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reminders li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-white);
+  font: 600 13px/20px var(--v2-font);
+}
+.reminders li > span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.reminders small,
+.note {
+  color: var(--v2-sub);
+}
+
+.confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--v2-sub);
+  font: 600 13px/20px var(--v2-font);
+}
+
+.confirm input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  accent-color: var(--v2-blue);
+}
+@media (max-width: 480px) {
+  .panel {
+    padding: 14px;
+  }
+  .reminders li {
+    flex-wrap: wrap;
+  }
+}

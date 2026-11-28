@@ -1,0 +1,168 @@
+[
+  {
+    "id": "AUTH-001",
+    "srs": [
+      "FR-ID-02",
+      "FR-ID-04",
+      "AT-01"
+    ],
+    "module": "DangNhap",
+    "file": "tests/e2e-srs/auth/auth.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "AUTH-002",
+    "srs": [
+      "FR-ID-05",
+      "NFR-SEC-01",
+      "AT-01"
+    ],
+    "module": "DangNhap",
+    "file": "tests/e2e-srs/auth/auth.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "AUTH-003",
+    "srs": [
+      "FR-ID-03",
+      "AT-01"
+    ],
+    "module": "DangNhap",
+    "file": "tests/e2e-srs/auth/auth.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "AUTH-004",
+    "srs": [
+      "FR-ID-02",
+      "IR-UI-01"
+    ],
+    "module": "DangNhap",
+    "file": "tests/e2e-srs/auth/auth.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "PROFILE-001",
+    "srs": [
+      "FR-ID-04"
+    ],
+    "module": "HoSo",
+    "file": "tests/e2e-srs/auth/auth.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "PLAN-001",
+    "srs": [
+      "FR-PL-05",
+      "FR-PL-08"
+    ],
+    "module": "LichTrinh",
+    "file": "tests/e2e-srs/plan/plan.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "PLAN-002",
+    "srs": [
+      "FR-PL-07",
+      "DR-03"
+    ],
+    "module": "LichTrinh",
+    "file": "tests/e2e-srs/plan/plan.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "UX-KEYBOARD",
+    "srs": [
+      "IR-UI-01",
+      "NFR-USA-01"
+    ],
+    "module": "ChatLuongWeb",
+    "file": "tests/e2e-srs/quality/quality.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "SEC-STORAGE",
+    "srs": [
+      "NFR-SEC-03"
+    ],
+    "module": "ChatLuongWeb",
+    "file": "tests/e2e-srs/quality/quality.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "TRIP-001",
+    "srs": [
+      "FR-TR-01",
+      "BR-01",
+      "BR-07",
+      "DR-02",
+      "AT-02"
+    ],
+    "module": "QuanLyChuyenDi",
+    "file": "tests/e2e-srs/trips/trips.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "DASH-001",
+    "srs": [
+      "FR-TR-01",
+      "IR-UI-02"
+    ],
+    "module": "TongQuan",
+    "file": "tests/e2e-srs/trips/trips.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "TRIP-002",
+    "srs": [
+      "FR-TR-01",
+      "DR-03"
+    ],
+    "module": "QuanLyChuyenDi",
+    "file": "tests/e2e-srs/trips/trips.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "SEC-001",
+    "srs": [
+      "NFR-SEC-02",
+      "AT-17"
+    ],
+    "module": "ChatLuongWeb",
+    "file": "tests/e2e-srs/trips/trips.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "UX-login",
+    "srs": [
+      "IR-UI-01",
+      "NFR-USA-01",
+      "IR-HW-01"
+    ],
+    "module": "ChatLuongWeb",
+    "file": "tests/e2e-srs/quality/quality.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "UX-register",
+    "srs": [
+      "IR-UI-01",
+      "NFR-USA-01",
+      "IR-HW-01"
+    ],
+    "module": "ChatLuongWeb",
+    "file": "tests/e2e-srs/quality/quality.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  },
+  {
+    "id": "UX-forgot-password",
+    "srs": [
+      "IR-UI-01",
+      "NFR-USA-01",
+      "IR-HW-01"
+    ],
+    "module": "ChatLuongWeb",
+    "file": "tests/e2e-srs/quality/quality.spec.ts",
+    "automation": "IMPLEMENTED_UNVERIFIED_LIVE"
+  }
+]

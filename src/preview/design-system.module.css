@@ -129,7 +129,7 @@
   font-family: var(--font-handwritten);
   font-weight: var(--weight-bold);
   font-size: var(--font-size-heading);
-  color: var(--color-blue);
+  color: var(--color-action-text);
 }
 @media (max-width: 768px) {
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */

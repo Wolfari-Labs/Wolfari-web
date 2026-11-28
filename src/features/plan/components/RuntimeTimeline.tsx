@@ -5,7 +5,7 @@ import { useReducedMotion } from 'motion/react';
 import type { ActivityViewModel, PlanViewModel, SelectedLocationViewModel } from '../model/plan';
 import type { GatewayPlanMove } from '../model/plan-arrangement';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
-import { localDate, planDays } from '../model/plan-presentation';
+import { dayHeading, localDate, planDays } from '../model/plan-presentation';
 import {
   gatewayActivityDay,
   gatewayDragKey,
@@ -13,7 +13,6 @@ import {
   type GatewayDndControls,
 } from '../hooks/use-gateway-dnd';
 import { Button } from '../../../shared/components/Button';
-import { Input } from '../../../shared/components/Input';
 import { Icon } from '../../../shared/components/Icon';
 import { Drawer } from '../../../shared/components/Drawer';
 import { ActionMenu } from '../../../shared/components/Ui';
@@ -28,6 +27,11 @@ import walk from '../../../shared/assets/figma/9c64a.svg';
 import styles from './RuntimeTimeline.module.css';
 import dragIcon from '../../../shared/assets/figma/56e25.svg';
 import moreIcon from '../../../shared/assets/figma/ca9fb.svg';
+import daySun from '../../../shared/assets/figma/trips-plan/day-sun.svg';
+import mapIcon from '../../../shared/assets/figma/trips-plan/plan-map-icon.svg';
+import searchIcon from '../../../shared/assets/figma/ce7fc.svg';
+import { TripWeatherChip, TripWeatherCredit } from '../../weather/TripWeather';
+import { useRuntimeServices } from '../../../app/gateway-context';
 
 const activityIcons: Record<string, string> = {
   SIGHTSEEING: mountain,
@@ -49,6 +53,8 @@ function DayTarget({
   disabled,
   dnd,
   onClick,
+  trip,
+  plan,
 }: {
   day: string;
   label: string;
@@ -56,8 +62,11 @@ function DayTarget({
   disabled: boolean;
   dnd: GatewayDndControls;
   onClick: () => void;
+  trip: TripDetailViewModel;
+  plan: PlanViewModel;
 }) {
   const targetDay = day === 'POOL' ? null : day;
+  const weatherAvailable = !!useRuntimeServices()?.weather;
   const drop = useDroppable({ id: `day:${day}`, disabled: disabled || day === 'ALL' });
   return (
     <Button
@@ -72,8 +81,16 @@ function DayTarget({
       onClick={onClick}
     >
       {day !== 'ALL' && day !== 'POOL' ? (
+        // "Ngày 1" sits over the date; a hidden separator keeps the name "Ngày 1 · 22/09".
         <span>
-          {label.split(' · ')[0]} ·<small>{label.split(' · ')[1]}</small>
+          {label.split(' · ')[0]} <span className={styles.srOnly}>·</span>{' '}
+          <small>
+            <span>{label.split(' · ')[1]}</span>
+            <span className={styles.dayWeather}>
+              <img src={daySun} alt="" />
+              {weatherAvailable ? <TripWeatherChip trip={trip} plan={plan} date={day} /> : '—'}
+            </span>
+          </small>
         </span>
       ) : (
         label
@@ -324,6 +341,7 @@ function DropList({
       className={pool ? styles.poolList : styles.list}
       data-gateway-list={day ?? 'POOL'}
       data-day-list={day ?? 'POOL'}
+      data-empty={empty || undefined}
       data-insertion-slot={active ? dnd.intent?.target.index : undefined}
       aria-label={label}
       tabIndex={0}
@@ -338,7 +356,9 @@ function DropList({
         {empty
           ? pool
             ? 'Chưa có hoạt động phù hợp trong giỏ. Thả vào đây để bỏ ngày và giờ.'
-            : 'Ngày chưa có hoạt động. Kéo hoạt động vào đây.'
+            : day === null
+              ? 'Chưa có hoạt động chưa chọn ngày.'
+              : 'Ngày chưa có hoạt động. Kéo hoạt động vào đây.'
           : 'Thả vào cuối danh sách'}
       </li>
     </ol>
@@ -358,6 +378,7 @@ export function RuntimeTimeline({
   actions,
   feedback,
   utilities,
+  recovery,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
@@ -371,14 +392,16 @@ export function RuntimeTimeline({
   actions?: ReactNode;
   feedback?: ReactNode;
   utilities?: ReactNode;
+  recovery?: ReactNode;
 }) {
+  const weatherAvailable = !!useRuntimeServices()?.weather;
   const days = planDays(trip.startAt, trip.endAt, trip.timezone);
   // `?day=YYYY-MM-DD` (e.g. from "Xem lịch trình Ngày N" on the Map) opens that day.
   const [day, setDay] = useState(() => {
     const requested = new URLSearchParams(window.location.search).get('day');
     return requested && days.includes(requested) ? requested : (days[0] ?? 'ALL');
   });
-  const [sidePanel, setSidePanel] = useState<'none' | 'pool' | 'map'>('none');
+  const [sidePanel, setSidePanel] = useState<'default' | 'none' | 'pool' | 'map'>('default');
   const [poolQuery, setPoolQuery] = useState('');
   const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1201px)').matches);
   const mapTrigger = useRef<HTMLButtonElement>(null);
@@ -393,11 +416,15 @@ export function RuntimeTimeline({
   const openPool = () => {
     setSidePanel('pool');
     setPoolQuery('');
-    if (day === 'POOL') setDay(days[0] ?? 'ALL');
+    if (day === 'POOL' || day === 'ALL') setDay(days[0] ?? 'ALL');
   };
   const closePool = () => {
     setSidePanel('none');
     window.requestAnimationFrame(() => poolTrigger.current?.focus());
+  };
+  const closeMap = () => {
+    setSidePanel('none');
+    window.requestAnimationFrame(() => mapTrigger.current?.focus());
   };
   const dnd = useGatewayDnd({
     plan,
@@ -478,7 +505,7 @@ export function RuntimeTimeline({
       ? 'Lịch trình chung'
       : day === 'POOL'
         ? 'Hoạt động chưa xếp ngày'
-        : `Lịch trình ngày ${days.indexOf(day) + 1}`;
+        : dayHeading(day);
   const compactPool = sidePanel === 'pool' && !wide;
   const dayBar = (
     <div className={styles.days} role="group" aria-label="Ngày trong lịch trình">
@@ -491,24 +518,34 @@ export function RuntimeTimeline({
           disabled={!canEdit || disabled}
           dnd={dnd}
           onClick={() => setDay(value)}
+          trip={trip}
+          plan={plan}
         />
       ))}
-      <span className={styles.dayUtilities}>
-        {(['ALL', 'POOL'] as const).map((value) => (
-          <DayTarget
-            key={value}
-            day={value}
-            label={value === 'ALL' ? 'Tất cả' : 'Chưa chọn ngày'}
-            selected={day === value}
-            disabled={!canEdit || disabled}
-            dnd={dnd}
-            onClick={() => {
-              setDay(value);
-              if (value === 'POOL') setSidePanel('none');
-            }}
-          />
-        ))}
-      </span>
+      {days.length < 4 && (
+        <button
+          type="button"
+          className={styles.addDay}
+          disabled
+          title="Chưa hỗ trợ thay đổi ngày của chuyến đi"
+        >
+          <Icon name="plus" size={18} />
+          Thêm ngày
+        </button>
+      )}
+      <DayTarget
+        day="ALL"
+        label="Tất cả"
+        selected={day === 'ALL'}
+        disabled={!canEdit || disabled}
+        dnd={dnd}
+        onClick={() => {
+          setDay('ALL');
+          if (sidePanel === 'pool') setSidePanel('none');
+        }}
+        trip={trip}
+        plan={plan}
+      />
     </div>
   );
   const timeline = (
@@ -524,10 +561,14 @@ export function RuntimeTimeline({
           <Button
             ref={mapTrigger}
             variant="outline"
-            aria-pressed={sidePanel === 'map'}
-            onClick={() => setSidePanel(sidePanel === 'map' ? 'none' : 'map')}
+            icon={<img src={mapIcon} alt="" />}
+            aria-pressed={sidePanel === 'map' || sidePanel === 'default'}
+            onClick={() => {
+              if (sidePanel === 'map' || sidePanel === 'default') closeMap();
+              else setSidePanel('map');
+            }}
           >
-            {sidePanel === 'map' ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
+            {sidePanel === 'map' || sidePanel === 'default' ? 'Ẩn bản đồ' : 'Hiện bản đồ'}
           </Button>
           {canEdit && (
             <Button
@@ -540,29 +581,6 @@ export function RuntimeTimeline({
               Thêm hoạt động
             </Button>
           )}
-          <details className={styles.tools}>
-            <summary aria-label="Tùy chọn lịch trình">
-              <img src={moreIcon} alt="" />
-            </summary>
-            <div>
-              {actions}
-              {!compactPool && utilities}
-              {!canEdit && sidePanel !== 'pool' && (
-                <Button variant="outline" onClick={openPool}>
-                  Xem hoạt động chưa xếp lịch
-                </Button>
-              )}
-              {sidePanel === 'pool' && (
-                <Button variant="outline" onClick={() => setSidePanel('none')}>
-                  Ẩn danh sách
-                </Button>
-              )}
-              <p>
-                Kéo để sắp xếp. Hoạt động vừa thả và phần phía sau trong ngày sẽ chưa xếp giờ. Chọn
-                menu hoạt động để chỉnh sửa sau.
-              </p>
-            </div>
-          </details>
         </div>
       </div>
       <p role="status" aria-live="polite" className={styles.srOnly}>
@@ -570,7 +588,7 @@ export function RuntimeTimeline({
       </p>
       {day === 'ALL' ? (
         <div className={styles.allDays}>
-          {[...days, ...(sidePanel === 'pool' ? [] : ['POOL'])].map((value) => {
+          {[...days, 'POOL'].map((value) => {
             const group = visible.filter(
               (activity) => (gatewayActivityDay(activity, trip.timezone) ?? 'POOL') === value,
             );
@@ -578,7 +596,7 @@ export function RuntimeTimeline({
               <section key={value}>
                 <h3>
                   {value === 'POOL'
-                    ? 'Chưa xếp lịch'
+                    ? 'Chưa chọn ngày'
                     : `Ngày ${days.indexOf(value) + 1} · ${value}`}
                 </h3>
                 <DropList
@@ -586,7 +604,7 @@ export function RuntimeTimeline({
                   dnd={dnd}
                   disabled={disabled || !canEdit}
                   empty={!group.length}
-                  label={value === 'POOL' ? 'Hoạt động chưa xếp lịch' : `Hoạt động ngày ${value}`}
+                  label={value === 'POOL' ? 'Hoạt động chưa chọn ngày' : `Hoạt động ngày ${value}`}
                 >
                   {group.map((activity, index) => row(activity, index, group))}
                 </DropList>
@@ -633,26 +651,26 @@ export function RuntimeTimeline({
         </div>
         <Button
           variant="outline"
-          size="compact"
+          size="icon"
           className={styles.poolClose}
-          icon={<Icon name="close" />}
           aria-label="Đóng danh sách hoạt động"
           onClick={closePool}
         >
-          Đóng
+          <Icon name="close" size={18} />
         </Button>
       </div>
-      <Input
-        label="Tìm trong địa điểm và hoạt động chưa xếp"
-        type="search"
-        value={poolQuery}
-        onChange={(event) => setPoolQuery(event.target.value)}
-      />
-      <p className={styles.poolHelp}>
-        {canEdit
-          ? 'Kéo hoạt động sang lịch trình để thêm vào ngày đang chọn. Có thể tiếp tục sắp xếp rồi chọn chỉnh sửa sau.'
-          : 'Các địa điểm đã chọn và hoạt động chưa được xếp vào ngày. Bạn đang xem lịch trình ở chế độ chỉ đọc.'}
-      </p>
+      {actions && <div className={styles.poolActions}>{actions}</div>}
+      {!recovery && utilities && <div className={styles.recoveryUtilities}>{utilities}</div>}
+      <div className={styles.poolSearch}>
+        <img src={searchIcon} width="18" height="18" alt="" />
+        <input
+          aria-label="Tìm trong địa điểm và hoạt động chưa xếp"
+          type="search"
+          placeholder="Tìm địa điểm, hoạt động…"
+          value={poolQuery}
+          onChange={(event) => setPoolQuery(event.target.value)}
+        />
+      </div>
       <DropList
         day={null}
         dnd={dnd}
@@ -704,9 +722,21 @@ export function RuntimeTimeline({
         className={styles.workspace}
         onTouchStartCapture={dnd.onTouchStartCapture}
       >
-        {!compactPool && dayBar}
-        <PlanMetrics trip={trip} plan={plan} day={day} />
+        <div className={styles.weatherDayBar}>
+          <div className={styles.dayBar}>
+            {!compactPool && dayBar}
+            <PlanMetrics trip={trip} plan={plan} day={day} />
+          </div>
+          {!compactPool && weatherAvailable && (
+            <TripWeatherCredit
+              trip={trip}
+              plan={plan}
+              date={days.includes(day) ? day : (days[0] ?? '')}
+            />
+          )}
+        </div>
         {!compactPool && feedback}
+        {!compactPool && recovery && <div className={styles.recoveryUtilities}>{recovery}</div>}
         {compactPool ? (
           <>
             <Button ref={poolTrigger} variant="outline" onClick={openPool}>
@@ -726,18 +756,26 @@ export function RuntimeTimeline({
                 onTouchStartCapture={dnd.onTouchStartCapture}
               >
                 {dayBar}
+                {weatherAvailable && (
+                  <TripWeatherCredit
+                    trip={trip}
+                    plan={plan}
+                    date={days.includes(day) ? day : (days[0] ?? '')}
+                  />
+                )}
                 {feedback}
+                {recovery && <div className={styles.recoveryUtilities}>{recovery}</div>}
                 <div className={styles.compactPlanner}>
                   {timeline}
                   {pool}
                 </div>
-                <div className={styles.recoveryUtilities}>{utilities}</div>
               </div>
             </Drawer>
           </>
-        ) : sidePanel !== 'none' ? (
+        ) : sidePanel === 'pool' || sidePanel === 'map' ? (
           <SplitPanel
             variant="itinerary"
+            initialRatio={sidePanel === 'pool' ? (700 / 1084) * 100 : (540 / 1084) * 100}
             key={sidePanel}
             storageKey={`wolfari:ui:plan-${sidePanel}-split`}
             primary={timeline}
@@ -745,27 +783,21 @@ export function RuntimeTimeline({
               sidePanel === 'pool' ? (
                 pool
               ) : (
-                <PlanDayMap
-                  trip={trip}
-                  plan={plan}
-                  day={day}
-                  onClose={() => {
-                    setSidePanel('none');
-                    mapTrigger.current?.focus();
-                  }}
-                />
+                <PlanDayMap trip={trip} plan={plan} day={day} onClose={closeMap} />
               )
             }
             secondaryLabel={sidePanel === 'map' ? 'Bản đồ lịch trình' : 'Hoạt động chưa xếp ngày'}
             initialSecondaryOpen
             onSecondaryDismiss={() => {
               if (sidePanel === 'pool') closePool();
-              else {
-                setSidePanel('none');
-                mapTrigger.current?.focus();
-              }
+              else closeMap();
             }}
           />
+        ) : sidePanel === 'default' ? (
+          <div className={styles.defaultColumns}>
+            {timeline}
+            <PlanDayMap trip={trip} plan={plan} day={day} compact onClose={closeMap} />
+          </div>
         ) : (
           timeline
         )}

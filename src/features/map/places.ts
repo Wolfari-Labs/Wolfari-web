@@ -1,8 +1,6 @@
 export type PlaceProvider = 'WOLFARI' | 'GEOAPIFY';
-/**
- * POI-IMAGES: a licensed photo served by the Gateway (`/api/v1/travel/poi-images/{sha256}/{w}.webp`,
- * same origin, public). Shown only with its attribution; otherwise the template artwork stays.
- */
+/** POI-OVERTURE §2.1: which dataset a result came from (Overture rows use provider WOLFARI). */
+export type PlaceDataset = 'golden' | 'overture' | 'geoapify';
 export interface PlaceImage {
   /** 1280 px WebP. */
   url: string;
@@ -20,12 +18,97 @@ export interface PlaceImage {
   /** Credit line shown next to the photo, e.g. "Ảnh: An · CC BY-SA 4.0 · Wikimedia Commons". */
   attribution: string;
 }
-/** POI-OVERTURE §2.1: which dataset a result came from (Overture rows use provider WOLFARI). */
-export type PlaceDataset = 'golden' | 'overture' | 'geoapify';
+
+const POI_IMAGE = /^\/api\/v1\/travel\/poi-images\/([0-9a-f]{64})\/(320|640|1280)\.webp$/;
+/** A Gateway POI image path of the given width (relative, or absolute on this origin), else null. */
+function poiImagePath(
+  value: unknown,
+  width: 320 | 640 | 1280,
+): { path: string; sha: string } | null {
+  if (typeof value !== 'string' || !value || value.length > 300) return null;
+  let url: URL;
+  try {
+    url = new URL(value, window.location.origin);
+  } catch {
+    return null;
+  }
+  const match = POI_IMAGE.exec(url.pathname);
+  if (
+    url.origin !== window.location.origin ||
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash ||
+    !match ||
+    match[2] !== String(width)
+  )
+    return null;
+  return { path: url.pathname, sha: match[1]! };
+}
+const size = (value: unknown) =>
+  typeof value === 'number' && Number.isInteger(value) && value > 0 && value <= 20000
+    ? value
+    : null;
+const httpsLink = (value: unknown, http = false) => {
+  if (typeof value !== 'string' || value.length > 2000) return null;
+  try {
+    const url = new URL(value);
+    return (url.protocol === 'https:' || (http && url.protocol === 'http:')) &&
+      !url.username &&
+      !url.password
+      ? url.href
+      : null;
+  } catch {
+    return null;
+  }
+};
+/**
+ * POI-IMAGES `hero_image`. All three variants must be this Gateway's image route for one and the
+ * same file, with a credit and a source page; anything else (or a placeholder) means no photo.
+ */
+export function placeImage(value: unknown): PlaceImage | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const r = value as Record<string, unknown>;
+  const large = poiImagePath(r.url, 1280),
+    medium = poiImagePath(r.thumbnail_url, 640),
+    small = poiImagePath(r.small_url, 320);
+  const sourceUrl = httpsLink(r.source_url);
+  const attribution = typeof r.attribution === 'string' ? r.attribution.trim() : '';
+  const license = r.license;
+  if (
+    !large ||
+    !medium ||
+    !small ||
+    large.sha !== medium.sha ||
+    large.sha !== small.sha ||
+    !sourceUrl ||
+    !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^\s]+$/.test(sourceUrl) ||
+    !attribution ||
+    attribution.length > 300 ||
+    typeof license !== 'string' ||
+    !/^(?:CC0-1\.0|PD|CC-BY(?:-SA)?-\d+\.\d+)$/.test(license) ||
+    r.is_placeholder !== false
+  )
+    return null;
+  return {
+    url: large.path,
+    thumbnailUrl: medium.path,
+    smallUrl: small.path,
+    width: size(r.width),
+    height: size(r.height),
+    author: typeof r.author === 'string' && r.author.length <= 200 ? r.author.trim() || null : null,
+    license,
+    licenseUrl: httpsLink(r.license_url, true),
+    sourceUrl,
+    attribution,
+  };
+}
+
 export interface DiscoveredPlace {
   id: string;
   name: string;
   address: string;
+  description?: string | null;
   latitude: number;
   longitude: number;
   token: string;
@@ -52,13 +135,14 @@ export interface DiscoveredPlace {
   confidence: number | null;
   dataRelease: string | null;
   fetchedAt: string | null;
-  /** POI-IMAGES additive field; null when there is no usable photo (or an older backend). */
   heroImage?: PlaceImage | null;
 }
+export type RouteMode = 'DRIVING' | 'WALKING' | 'CYCLING';
 export interface PlaceRoute {
   distanceM: number;
   durationSeconds: number;
   geometry: readonly { latitude: number; longitude: number }[];
+  source?: import('../../infrastructure/http/envelope').GatewayMetadata['travelSource'];
 }
 export interface PlaceIntent {
   path: string;
@@ -482,23 +566,6 @@ export interface PlacesFound {
 /** Explore (bbox) outcome; transport errors still throw. */
 export type PlacesExplore =
   ({ kind: 'found' } & PlacesFound) | { kind: 'too-large' } | { kind: 'unsupported' };
-
-/** FR-TI01 update date for a record: fetch time first, then the dataset release. */
-export function provenanceDate(provenance: Pick<PlaceProvenance, 'fetchedAt' | 'dataRelease'>) {
-  return provenance.fetchedAt ?? provenance.dataRelease;
-}
-/** Tooltip of the selected-place source badge: review note, record attribution. */
-export function provenanceTooltip(provenance: PlaceProvenance) {
-  return [
-    provenance.dataset === 'overture' && `${OVERTURE_NOTE}.`,
-    provenance.dataset === 'golden' &&
-      provenance.coordVerified === false &&
-      'Chưa xác minh vị trí.',
-    provenance.attribution,
-  ]
-    .filter((part): part is string => !!part)
-    .join(' ');
-}
 
 const EARTH_KM = 6371;
 export function distanceKm(

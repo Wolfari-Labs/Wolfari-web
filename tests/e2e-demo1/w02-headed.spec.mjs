@@ -107,7 +107,8 @@ async function setEditors(owner, tripId, name) {
 
 async function openPlan(page, tripId) {
   await page.goto(`/trips/${tripId}/plan`);
-  await expect(page.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 })).toBeVisible();
+  await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
   const sharedPlan = page.getByRole('button', { name: /chung/i });
   if (await sharedPlan.count()) {
     await sharedPlan.click();
@@ -118,7 +119,7 @@ async function openPlan(page, tripId) {
 async function createActivity(page, fields, expectedCount) {
   const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
   if (!(await manual.isVisible().catch(() => false))) {
-    await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
   }
   await manual.click();
   const form = page.getByRole('form', { name: 'Thêm hoạt động', exact: true });

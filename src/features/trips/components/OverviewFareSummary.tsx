@@ -4,6 +4,7 @@ import { ContentState } from '../../../shared/components/ContentState';
 import { toDomainError } from '../../../shared/lib/runtime-validation';
 import styles from '../TripDashboard.module.css';
 import { OverviewEmptyFare } from './OverviewEmptyFare';
+import { flightProviderLabels } from '../../price-watch/model/runtime-price-watch';
 
 export function OverviewFareSummary({ tripId, actor }: { tripId: string; actor: string }) {
   const repository = useRuntimeServices()?.priceWatch;
@@ -26,15 +27,16 @@ export function OverviewFareSummary({ tripId, actor }: { tripId: string; actor: 
         headingLevel={2}
       />
     );
-  const count = new Set(query.data.pages.flatMap((page) => page.items.map((watch) => watch.id)))
-    .size;
+  const loaded = query.data.pages.flatMap((page) => page.items);
+  const count = new Set(loaded.map((watch) => watch.id)).size;
+  const sources = [...new Set(loaded.map((watch) => flightProviderLabels[watch.fields.provider]))];
   return count ? (
     <>
-      <p>
+      <p className={styles.summaryValue}>
         {count}
-        {query.hasNextPage ? '+' : ''} mục theo dõi
+        {query.hasNextPage ? '+' : ''} mục
       </p>
-      <p className={styles.summaryDetail}>Nguồn mô phỏng · MOCK_FLIGHT</p>
+      <p className={styles.summaryDetail}>Nguồn giá · {sources.join(', ')}</p>
     </>
   ) : (
     <OverviewEmptyFare />

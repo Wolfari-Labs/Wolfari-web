@@ -3,7 +3,7 @@ import { mockPlan } from './plan-fixture';
 
 const tripId = '11111111-1111-4111-8111-111111111111';
 
-test('HTTP mock: revoked Plan edit rights keep day and pool navigation read only', async ({
+test('HTTP mock: revoked Plan edit rights keep day navigation and the all-day unassigned group read only', async ({
   page,
   gateway,
 }) => {
@@ -19,26 +19,30 @@ test('HTTP mock: revoked Plan edit rights keep day and pool navigation read only
   await expect(page.getByRole('button', { name: 'Kéo hoạt động Đi dạo' })).toHaveCount(0);
 
   const all = page.getByRole('button', { name: 'Tất cả', exact: true });
-  const day = page.getByRole('button', { name: 'Ngày 1 · 01/11', exact: true });
-  const pool = page.getByRole('button', { name: 'Chưa chọn ngày', exact: true });
+  const day = page
+    .getByRole('group', { name: 'Ngày trong lịch trình' })
+    .locator('[data-plan-day="2026-11-01"]');
   await expect(day).toHaveAttribute('aria-pressed', 'true');
   await expect(day).toBeEnabled();
-  await expect(pool).toBeEnabled();
+  await expect(all).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Thêm ngày', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Chưa chọn ngày', exact: true })).toHaveCount(0);
+  await expect(page.locator('summary[aria-label="Phạm vi lịch trình"]')).toHaveCount(0);
 
   await day.click();
   await expect(day).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
   await expect(page.getByRole('listitem', { name: 'Ăn sáng', exact: true })).toHaveCount(0);
 
-  await pool.focus();
+  await all.focus();
   await page.keyboard.press('Enter');
-  await expect(pool).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('listitem', { name: 'Ăn sáng', exact: true })).toBeVisible();
-  await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toHaveCount(0);
-
-  await all.click();
   await expect(all).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
   await expect(page.getByRole('listitem', { name: 'Ăn sáng', exact: true })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Đi dạo', exact: true })).toBeVisible();
+  const unassigned = page
+    .getByRole('heading', { name: 'Chưa chọn ngày', exact: true })
+    .locator('..');
+  await expect(unassigned.getByRole('listitem', { name: 'Ăn sáng', exact: true })).toBeVisible();
+  await expect(unassigned.getByRole('listitem', { name: 'Đi dạo', exact: true })).toHaveCount(0);
   expect(mock.writes).toEqual([]);
 });

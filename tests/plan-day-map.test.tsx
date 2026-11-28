@@ -69,34 +69,29 @@ describe('Plan day-map projection', () => {
     expect(dayMapLocations(plan, 'POOL', trip.timezone)).toEqual([]);
   });
 
-  it('shows a truthful provider fallback and accessible linked-place list; close is operable', async () => {
+  it('shows a truthful provider fallback and linked-place count; close is operable', async () => {
     const { trip, plan } = await data();
     const onClose = vi.fn();
     const user = userEvent.setup();
     render(<PlanDayMap trip={trip} plan={plan} day="2026-09-22" onClose={onClose} />);
     const panel = screen.getByRole('region', { name: 'Bản đồ lịch trình ngày 1' });
     expect(within(panel).getByRole('status')).toHaveTextContent('Bản đồ nền chưa khả dụng');
-    expect(within(panel).getByText(plan.selectedLocations[0]!.name)).toBeInTheDocument();
-    expect(within(panel).queryByText(plan.selectedLocations[1]!.name)).not.toBeInTheDocument();
+    expect(within(panel).getByText('1 địa điểm gắn với hoạt động đã xếp lịch')).toBeInTheDocument();
+    expect(within(panel).queryByText('Địa điểm trong lịch trình')).not.toBeInTheDocument();
+    expect(within(panel).queryByRole('list')).not.toBeInTheDocument();
     expect(within(panel).queryByText(/phút di chuyển|km/)).not.toBeInTheDocument();
     await user.click(within(panel).getByRole('button', { name: 'Ẩn bản đồ' }));
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  it('keeps a linked place with invalid coordinates in the list without claiming a marker', async () => {
+  it('keeps a linked place with invalid coordinates in the projection and place count', async () => {
     const { trip, plan } = await data();
     const last = plan.selectedLocations[5]!;
     const activity = { ...plan.activities[0]!, selectedLocationId: last.id };
-    render(
-      <PlanDayMap
-        trip={trip}
-        plan={{ ...plan, activities: [activity] }}
-        day="ALL"
-        onClose={() => undefined}
-      />,
-    );
-    expect(screen.getByText(last.name)).toBeInTheDocument();
-    expect(screen.getByText('Chưa có tọa độ hợp lệ')).toBeInTheDocument();
+    const projectedPlan = { ...plan, activities: [activity] };
+    expect(dayMapLocations(projectedPlan, 'ALL', trip.timezone)).toEqual([last]);
+    render(<PlanDayMap trip={trip} plan={projectedPlan} day="ALL" onClose={() => undefined} />);
+    expect(screen.getByText('1 địa điểm gắn với hoạt động đã xếp lịch')).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('Bản đồ nền chưa khả dụng');
   });
 
@@ -140,6 +135,15 @@ describe('Plan day-map projection', () => {
           { latitude: 16, longitude: 108 },
           { latitude: 16.1, longitude: 108.1 },
         ],
+        source: {
+          provider: 'OSRM',
+          status: 'SUCCESS',
+          stale: true,
+          isMock: false,
+          fetchedAt: null,
+          warnings: [],
+          attribution: [{ text: 'OpenStreetMap', url: 'https://www.openstreetmap.org/copyright' }],
+        },
       });
       mount(route, props);
       expect(screen.getByText('Đang tính đường đi… (tạm nối thẳng)')).toBeInTheDocument();
@@ -153,6 +157,13 @@ describe('Plan day-map projection', () => {
         longitude: Number(locations!.longitude),
       });
       expect(route.mock.calls[0]![0]).toHaveLength(2);
+      expect(route.mock.calls[0]![2]).toBe('DRIVING');
+      expect(screen.getByRole('link', { name: 'OpenStreetMap' })).toHaveAttribute(
+        'href',
+        'https://www.openstreetmap.org/copyright',
+      );
+      expect(screen.getByText(/Dữ liệu tuyến cũ/)).toBeInTheDocument();
+      expect(screen.queryByRole('combobox', { name: 'Cách di chuyển' })).not.toBeInTheDocument();
     });
 
     it('falls back to a labelled straight line when routing is unavailable', async () => {

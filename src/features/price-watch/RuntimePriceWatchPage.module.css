@@ -1,125 +1,629 @@
+/* Text colours: V2 sub/muted/status hues are darkened (#56637b, #5d6a82, #7a520b, #a63320, #5a3dd4, #2f63c4) to keep WCAG AA contrast on V2 surfaces. */
+/* Web v2 (Figma W11 · 941:9891), Gateway page: title row, a quiet source line, watch cards with
+   their actions inside, and the history drawer. Solid fills, tile radius 16px. */
+.page {
+  min-width: 0;
+  font-family: var(--v2-font);
+}
 .heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
-}
-.heading h1 {
-  margin: 0;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 12px;
-  margin-block: 12px;
-}
-.card {
-  padding: 16px;
-  border: 1px solid var(--color-line);
-  background: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow-selection);
-  min-width: 0;
-}
-.card .heading {
-  margin-top: 0;
-}
-.card h2 {
-  font-size: var(--font-size-title);
-}
-.card p {
-  font-size: var(--font-size-label);
-}
-.empty {
-  border: 1px dashed var(--color-border-control);
-  border-radius: var(--radius-20);
-  text-align: center;
-  padding: 48px 24px;
-  background: white;
-}
-.empty svg {
-  color: var(--color-action-primary);
-}
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-  margin-block: 12px;
-}
-
-.page > p {
-  margin: 8px 0 12px;
-}
-.heading p {
-  margin: 0 0 4px;
-}
-.card h2 {
-  margin: 8px 0;
-}
-.card p {
-  margin: 6px 0;
-}
-.grid:empty {
-  display: none;
-}
-.workspaceMain {
-  min-width: 0;
-}
-.context {
-  min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-20);
-  background: white;
-  box-shadow: var(--shadow-selection);
-}
-.contextHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 12px 20px;
+  margin-top: 16px;
 }
-.contextHeader h2 {
-  margin: 0;
-}
-.contextEmpty {
-  min-height: 220px;
+.headingText {
   display: grid;
-  align-content: center;
+  flex: 1 1 320px;
+  gap: 4px;
+  min-width: 0;
+}
+.heading h1 {
+  margin: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-weight: 800;
+}
+.headingText p {
+  margin: 0;
+  color: #56637b;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+  min-width: 0;
+  margin-top: 12px;
+}
+.workspace[data-chart-visible='false'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.workspaceMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  container: price-list / inline-size;
+}
+.listHeader,
+.chartHeader {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  min-width: 0;
+}
+.listHeader h2,
+.chartHeader h2 {
+  margin: 0;
+  color: var(--v2-ink);
+  font: 800 18px/25px var(--v2-font);
+}
+.listHeader h2 {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.listTools {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
-@media (max-width: 1024px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-  .context {
-    order: 2;
-  }
-  .workspaceMain {
-    order: 1;
-  }
+.listTools > button {
+  min-height: 36px;
+  font-size: 12px;
+  padding-inline: 12px;
 }
-@media (max-width: 520px) {
-  .context {
-    padding: 12px;
+.listScroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+.listScroll:focus-visible {
+  outline: 2px solid var(--v2-blue);
+  outline-offset: 2px;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  flex: none;
+  margin-block: 10px;
+}
+.sourceNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  color: #56637b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 19px;
+}
+.sourceNote svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--v2-blue-text);
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  align-content: start;
+  margin-bottom: 12px;
+}
+.grid:empty {
+  display: none;
+}
+
+/* Watch card */
+.card {
+  display: grid;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+}
+.card[data-selected='true'] {
+  border-color: var(--v2-grad-start);
+  background: #f0f5ff;
+}
+.watchSelect {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: var(--v2-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.watchSelect:focus-visible {
+  outline: 2px solid var(--v2-blue);
+  outline-offset: -2px;
+}
+.flightIcon {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--v2-gradient-green);
+  color: var(--v2-white);
+  box-shadow: var(--v2-inset-badge);
+}
+.card[data-status='PAUSED'] .flightIcon {
+  background: var(--v2-gradient-amber);
+}
+.card[data-status='STOPPED'] .flightIcon,
+.card[data-status='EXPIRED'] .flightIcon {
+  background: var(--v2-gradient-coral);
+}
+.identity,
+.fare {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.identity {
+  grid-column: 2;
+  grid-row: 1;
+}
+.identity strong {
+  color: var(--v2-ink);
+  font: 800 14px/20px var(--v2-font);
+  overflow-wrap: anywhere;
+}
+.identity > span,
+.fare > span,
+.fare small {
+  color: #56637b;
+  font: 600 11px/16px var(--v2-font);
+}
+.fare:nth-of-type(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+.fare:nth-of-type(4) {
+  grid-column: 3;
+  grid-row: 2;
+}
+.fare strong {
+  color: var(--v2-ink);
+  font: 800 13px/19px var(--v2-font);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.status {
+  display: inline-flex;
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--v2-radius-round);
+  background: var(--v2-track);
+  color: var(--v2-nav-text);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.status[data-status='ACTIVE'] {
+  background: var(--v2-mint);
+  color: var(--v2-success-text);
+}
+.status[data-status='PAUSED'] {
+  background: var(--v2-butter);
+  color: #7a520b;
+}
+.meta {
+  margin: 0 12px 10px;
+  color: #56637b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-inline: 12px;
+  padding-block: 10px;
+  border-top: 1px solid #e3e8f1;
+}
+.cardActions > button {
+  min-height: 36px;
+  padding: 8px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.more {
+  margin-left: auto;
+}
+.more > button {
+  width: 44px;
+  min-height: 44px;
+  color: var(--v2-nav-text);
+}
+.reason {
+  flex: 1 1 160px;
+  margin: 0;
+  color: #56637b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.chartPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  min-height: 0;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.chartPanel[hidden] {
+  display: none;
+}
+.chartHeader {
+  flex-wrap: nowrap;
+}
+.chartHeader > div {
+  min-width: 0;
+}
+.chartHeader p {
+  margin: 2px 0 0;
+  color: #56637b;
+  font: 600 12px/18px var(--v2-font);
+  overflow-wrap: anywhere;
+}
+.chartScroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.chartEmpty {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  min-height: 220px;
+  height: 100%;
+  color: #56637b;
+  text-align: center;
+}
+.chartEmpty p {
+  margin: 0;
+}
+.chartEmpty svg {
+  color: var(--v2-blue-text);
+}
+@container price-list (min-width: 560px) {
+  .watchSelect {
+    grid-template-columns: 38px minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 0.9fr) auto;
+  }
+  .flightIcon,
+  .identity,
+  .fare:nth-of-type(3),
+  .fare:nth-of-type(4),
+  .status {
+    grid-column: auto;
+    grid-row: auto;
   }
 }
 
-/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
-@media (min-width: 769px) {
-  .grid {
-    gap: var(--grid-gap);
-  }
-  .card,
-  .context {
-    padding: var(--card-padding-narrow);
-    border-radius: var(--radius-panel);
+/* Empty state */
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 28px 24px;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.emptyArt {
+  flex: 0 0 auto;
+  width: 132px;
+  height: auto;
+}
+.empty > div {
+  max-width: 420px;
+}
+.empty h2 {
+  margin: 0 0 6px;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 27px;
+}
+.empty p {
+  margin: 0;
+  color: #56637b;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+}
+
+/* Shared history content for the chart column and detail dialog. */
+.history {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  color: #56637b;
+  font-family: var(--v2-font);
+  font-size: 13px;
+  line-height: 19px;
+}
+.history p {
+  margin: 0;
+}
+.historyHead {
+  display: grid;
+  gap: 2px;
+}
+.historyHead h3 {
+  margin: 0;
+  color: var(--v2-ink);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 25px;
+}
+.historyHead p {
+  font-weight: 600;
+}
+.latest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--v2-row);
+}
+.latest strong {
+  color: var(--v2-ink);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 30px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.noPrice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--v2-row);
+  color: var(--v2-ink);
+  font-weight: 700;
+}
+.noPrice svg {
+  color: var(--v2-blue-text);
+}
+.caveat {
+  color: #5d6a82;
+  font-size: 12px;
+  line-height: 17px;
+}
+.observations {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.observations > li {
+  padding: 10px 12px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+  overflow-wrap: anywhere;
+}
+.observations strong {
+  color: var(--v2-ink);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.observations p {
+  margin: 2px 0;
+  font-weight: 600;
+}
+.observations small {
+  color: #5d6a82;
+  font-size: 12px;
+}
+@media (max-width: 680px) {
+  .cardActions > button {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding-inline: 10px;
   }
   .empty {
-    border-radius: var(--radius-panel);
+    flex-direction: column;
+    text-align: center;
+  }
+  .emptyArt {
+    width: 112px;
+  }
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 901px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .page > :global([data-region='trip-hero']),
+  .heading {
+    flex: none;
+  }
+  .workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .workspaceMain,
+  .chartPanel {
+    padding: 16px;
+  }
+  .listScroll {
+    flex: none;
+    max-height: 52dvh;
+  }
+  .chartScroll {
+    flex: none;
+    max-height: 62dvh;
+  }
+  .listHeader h2,
+  .chartHeader h2 {
+    font-size: 17px;
+    line-height: 23px;
+  }
+  .headingText {
+    flex-basis: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .watchSelect {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 8px;
+  }
+  .flightIcon {
+    width: 34px;
+    height: 34px;
+  }
+  .identity {
+    grid-column: 2;
+  }
+  .status {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+  .fare:nth-of-type(3) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .fare:nth-of-type(4) {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 700px) {
+  .heading {
+    margin-top: 8px;
+  }
+  .heading h1 {
+    font-size: 22px;
+    line-height: 30px;
+  }
+  .headingText p {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .workspaceMain,
+  .chartPanel {
+    padding: 12px;
+  }
+  .workspace {
+    margin-top: 8px;
+  }
+  .listHeader {
+    gap: 8px 10px;
+  }
+  .listHeader h2 {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .listTools {
+    gap: 6px;
+  }
+  .listTools > button {
+    min-height: 32px;
+    padding-inline: 10px;
+    font-size: 11px;
+  }
+  .toolbar {
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-block: 6px;
+  }
+  .toolbar .sourceNote {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 16px;
+  }
+  .toolbar > button {
+    flex: none;
+    width: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+  }
+  .toolbar > button > span > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }

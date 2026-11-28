@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { decodePlace } from '../src/infrastructure/repositories/places.gateway-repository';
+import {
+  createPlacesRepository,
+  decodePlace,
+} from '../src/infrastructure/repositories/places.gateway-repository';
 import { parseEnvelope } from '../src/infrastructure/http/envelope';
 import { activityTypeLabel, placeActivityType, placeSourceLabel } from '../src/features/map/places';
 
@@ -11,6 +14,16 @@ const geoapify = {
   selection_token: 'signed',
   attribution: 'Geoapify / OpenStreetMap',
 };
+const hash = 'a'.repeat(64);
+const photo = {
+  url: `/api/v1/travel/poi-images/${hash}/1280.webp`,
+  thumbnail_url: `/api/v1/travel/poi-images/${hash}/640.webp`,
+  small_url: `/api/v1/travel/poi-images/${hash}/320.webp`,
+  attribution: 'Ảnh An · CC BY-SA 4.0 · Wikimedia Commons',
+  source_url: 'https://commons.wikimedia.org/wiki/File:Hoi_An.jpg',
+  license: 'CC-BY-SA-4.0',
+  is_placeholder: false,
+};
 
 describe('MAP-POI place decoding', () => {
   it('reads the additive curated-store fields', () => {
@@ -18,6 +31,7 @@ describe('MAP-POI place decoding', () => {
       ...geoapify,
       id: 'dn-cho-han',
       name: 'Chợ Hàn',
+      description: '  Khu chợ truyền thống gần sông Hàn.  ',
       categories: ['market'],
       attribution: '© OpenStreetMap contributors',
       provider: 'WOLFARI',
@@ -32,6 +46,7 @@ describe('MAP-POI place decoding', () => {
     expect(place).toMatchObject({
       id: 'dn-cho-han',
       provider: 'WOLFARI',
+      description: 'Khu chợ truyền thống gần sông Hàn.',
       categories: ['market'],
       category: 'market',
       categoryLabel: 'Chợ',
@@ -47,6 +62,7 @@ describe('MAP-POI place decoding', () => {
   it('keeps working with the previous Geoapify-only response', () => {
     expect(decodePlace(geoapify)).toMatchObject({
       provider: 'GEOAPIFY',
+      description: null,
       categories: [],
       category: null,
       categoryLabel: null,
@@ -65,6 +81,7 @@ describe('MAP-POI place decoding', () => {
       coord_verified: 'yes',
       typical_duration_min: -5,
       category_label: 42,
+      description: 42,
       categories: ['a', 3],
     });
     expect(place).toMatchObject({
@@ -73,11 +90,75 @@ describe('MAP-POI place decoding', () => {
       coordVerified: null,
       typicalDurationMin: null,
       categoryLabel: null,
+      description: null,
       categories: ['a'],
     });
+    expect(decodePlace({ ...geoapify, description: '   ' }).description).toBeNull();
     expect(() =>
       decodePlace({ ...geoapify, coordinates: { latitude: 99, longitude: 1 } }),
     ).toThrow();
+  });
+  it('accepts licensed same-origin photos and ignores unsafe or uncredited optional images', () => {
+    expect(decodePlace({ ...geoapify, hero_image: photo }).heroImage).toMatchObject({
+      url: photo.url,
+      thumbnailUrl: photo.thumbnail_url,
+      smallUrl: photo.small_url,
+      attribution: photo.attribution,
+      sourceUrl: photo.source_url,
+    });
+    for (const extra of [
+      { url: 'https://untrusted.test/photo.webp' },
+      { thumbnail_url: photo.small_url },
+      { attribution: '' },
+      { license: 'ALL_RIGHTS_RESERVED' },
+      { source_url: 'javascript:alert(1)' },
+    ]) {
+      expect(decodePlace({ ...geoapify, hero_image: { ...photo, ...extra } }).heroImage).toBeNull();
+    }
+  });
+
+  it('preserves route attribution, transport mode and stale source metadata', async () => {
+    const coordinates = [
+      { latitude: 16, longitude: 108 },
+      { latitude: 16.1, longitude: 108.1 },
+    ];
+    let sent: unknown;
+    const envelope = parseEnvelope({
+      data: { distance_m: 1000, duration_seconds: 600, geometry: coordinates },
+      meta: {
+        provider: 'OSRM',
+        status: 'SUCCESS',
+        stale: true,
+        is_mock: false,
+        fetched_at: '2026-11-25T00:00:00Z',
+        warnings: ['PROVIDER_UNAVAILABLE'],
+        attribution: [
+          { text: '© OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright' },
+          { text: 'unsafe', url: 'javascript:alert(1)' },
+        ],
+      },
+    });
+    if (envelope.kind !== 'success') throw Error('Expected route');
+    const repository = createPlacesRepository({
+      read: async () => {
+        throw Error('Unexpected read');
+      },
+      write: async (_path, options) => {
+        sent = options.body;
+        return { data: envelope.data, metadata: envelope.metadata, correlationId: null };
+      },
+    });
+    const result = await repository.route(coordinates, new AbortController().signal, 'CYCLING');
+    expect(sent).toEqual({ coordinates, mode: 'CYCLING' });
+    expect(result.source).toMatchObject({
+      provider: 'OSRM',
+      stale: true,
+      isMock: false,
+      attribution: [
+        { text: '© OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright' },
+        { text: 'unsafe', url: null },
+      ],
+    });
   });
 
   it.each(['GEOAPIFY', 'WOLFARI', 'WOLFARI+GEOAPIFY'])(

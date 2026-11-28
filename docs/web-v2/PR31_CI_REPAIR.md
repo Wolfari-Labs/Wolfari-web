@@ -1,0 +1,99 @@
+# PR #31 CI repair — 22 November 2026
+
+PR: https://github.com/Wolfari-Labs/Wolfari-web/pull/31
+
+Base: `76c3725535dcc2893bdcf6ddedc1c18c7d60f122` on
+`feat/web-v2-figma-redesign`. Work is isolated in `Wolfari-web-pr31`;
+the original worktree's uncommitted QA/configuration files are not included.
+
+## Failure and correction
+
+Run https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/44980866415
+failed `checks` and `built-browser (fixture)` at the same Home screenshot.
+Each fixture suite passed 251 tests and failed one. The built Gateway job passed.
+
+The Linux baseline still described the old 1440×2144 Home page. The committed
+feature-showcase redesign (`09d27a9`) updated the Windows baseline and layout
+assertions, but not Linux. CI rendered 1440×4627, with 798,119 differing pixels.
+`V2_TEST_REPORT.md` already recorded the missing Linux baseline as open work.
+
+Reviewed the actual CI screenshot against the committed Windows baseline,
+Home source and unchanged section geometry assertions. Both show the hero,
+nine feature cards, three showcases, onboarding steps, destinations and footer.
+Replaced only the stale Linux PNG with the reviewed Linux actual screenshot
+from artifact `browser-built-fixture-1` (ID `14737328669`). SHA-256:
+`c5f6dd1d6733635f895f1d5528da433481f581e4b06e8724a7924642961c7221`.
+
+No UI/runtime source, screenshot thresholds, assertions, dependencies or
+workflow gates are changed. The screenshot comes from the failed CI run;
+copying it is not a claim that a fresh Linux verification has passed.
+
+## Verification
+
+Local Windows verification: lint PASS, typecheck PASS, fixture Preview build
+PASS, and the complete focused Auth/Home browser file 25/25 PASS. Includes
+the unchanged Windows snapshot, responsive layouts and existing behavior
+assertions. Scoped Markdown formatting and `git diff --check`: PASS.
+A fresh Linux CI run is required after push.
+The local-only Playwright configuration uses port 5187 because port 5173 is
+owned by an existing user process. Full local suites and live Backend: NOT_RUN.
+The initial local test launch failed because the temporary configuration's
+web-server working directory defaulted to `.local`; set the explicit worktree
+directory and reran successfully. No application/test assertion was changed.
+
+The user explicitly authorized this CI repair and push. No PR merge,
+deployment, secret changes or new redesign checkpoint are authorized here.
+
+## Follow-up: POI test sampled an incomplete arrangement
+
+Commit `ac51b03` passed the built fixture job in
+https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/45013323857,
+verifying the refreshed Linux baseline. The built Gateway job exposed an
+intermittent failure in `places-provider.spec.ts` at 390px: 207 passed,
+5 existing skips, one failure (expected one write, observed two).
+
+Artifact `browser-built-gateway-1` (`14750888051`) contains the failure trace.
+It shows exactly one POST to `/activities`, followed by one PUT to
+`/activities/order`, both successful. The create uses plan version 2; the
+order uses version 3 and contains the original two IDs plus the new ID.
+This matches `buildPlanArrangement` / `planArrangementCommand`: creation
+and the full-order write are separate, sequential commands, not duplicate
+activity creation.
+
+The original test polled for a transient total of one request, then navigated
+away without waiting for arrangement completion. It passed 10/10 local
+repetitions, but adding a wait for the refreshed activity handle to become
+enabled reproduced the exact expected-1/received-2 failure deterministically.
+
+The correction retains that completion wait, asserts exactly two requests
+(one POST, one PUT), and verifies their paths, linked location/date, chained
+versions, different idempotency keys, full order and exactly one new activity.
+It also checks that reload introduces no further writes. Existing save,
+reload, API, map and responsive assertions remain. No application code or
+timeout is changed.
+
+Post-fix built HTTP-mock repetitions: 10/10 PASS across 1440px and 390px.
+Scoped lint, typecheck, scoped formatting and `git diff --check`: PASS.
+Full dev HTTP-mock provider test file: 5/5 PASS. Full Linux CI must run again
+for the new head.
+
+## Verified follow-up and base-branch conflict resolution
+
+Follow-up commit `8e219d1` passed all three jobs in
+https://github.com/Wolfari-Labs/Wolfari-web/actions/runs/45014561827.
+The dev fixture suite passed 252 tests; dev and built Gateway suites each
+passed 208 with five existing skips, including both POI viewport cases.
+
+PR #31 targets `feat/web-poi-integration`. Merging its `79495cc` head into
+the redesign branch produced one binary conflict: the base branch's older
+Home baseline versus the Web V2 baseline verified above. Retained the exact
+Web V2 PNG from `8e219d1` (SHA-256 recorded above), not the pre-redesign image.
+Imported the base branch's Drawer keyboard accessibility and post-refresh
+drag-focus fixes with their regression tests. No other conflict occurred.
+
+Merge verification: focused Drawer/drag-lifecycle/commands/arrangement unit
+tests 64/64 PASS; lint/typecheck and both production/Preview builds PASS.
+Built Gateway HTTP-mock drag-and-drop plus Price Watch keyboard-scroll/axe
+checks 10/10 PASS. Built fixture Home snapshot/layout and Drawer focus-trap
+checks 2/2 PASS. Diff/format checks PASS; no unresolved index entries.
+The prior green run does not substitute for CI on the new merge commit.

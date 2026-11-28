@@ -22,7 +22,7 @@
 }
 .marker {
   flex-shrink: 0;
-  color: var(--color-blue);
+  color: var(--color-action-text);
   font-weight: var(--weight-bold);
 }
 .info {
@@ -46,4 +46,35 @@
 .warning .marker,
 .error .marker {
   color: inherit;
+}
+
+/* Web v2 note boxes (Figma W15 946:18612 B/D notes): borderless pastel rows, 18px radius. */
+.alert {
+  padding: 12px 14px;
+  border: 0;
+  border-radius: var(--v2-radius-row);
+  font-family: var(--v2-font);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 19px;
+}
+.info {
+  background: var(--v2-sky);
+  color: #2b55a8;
+}
+.info .marker {
+  color: var(--v2-blue-text);
+}
+.success {
+  background: var(--v2-mint);
+  color: #1a6b47;
+}
+.warning {
+  background: var(--v2-butter);
+  color: var(--v2-warning-text);
+}
+.error {
+  background: var(--v2-peach);
+  /* V2 danger text (#c2412d) is 4.1:1 on peach; darkened for AA (CP03-A01 / D22 intent). */
+  color: #a83a26;
 }

@@ -18,7 +18,7 @@
 .separator:hover,
 .separator:focus-visible {
   background: var(--color-selected);
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 .reset {
   display: flex;
@@ -28,7 +28,7 @@
   display: none;
 }
 .itinerary .separator {
-  width: 12px;
+  width: 20px;
 }
 .itinerary .separator svg {
   opacity: 0;

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { expectMinimumHitTargets } from '../hit-target';
 
 for (const viewport of [
   { width: 1440, height: 800 },
@@ -22,24 +23,11 @@ for (const viewport of [
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    const controls = await page
-      .locator('button:visible, input:visible, select:visible, a:visible')
-      .evaluateAll((elements) =>
-        elements.map((element) => {
-          const box = element.getBoundingClientRect();
-          return {
-            name: element.textContent ?? element.getAttribute('aria-label'),
-            width: box.width,
-            height: box.height,
-          };
-        }),
-      );
-    for (const control of controls) {
-      expect(control.width, control.name ?? 'control').toBeGreaterThanOrEqual(44);
-      expect(control.height, control.name ?? 'control').toBeGreaterThanOrEqual(44);
-    }
+    await expectMinimumHitTargets(
+      page.locator('button:visible, input:visible, select:visible, a:visible'),
+    );
     const button = page.getByRole('button', { name: 'Thao tác minh họa', exact: true });
-    expect(Math.round((await button.boundingBox())!.height)).toBe(viewport.width <= 768 ? 48 : 44);
+    expect(Math.round((await button.boundingBox())!.height)).toBe(44);
     await button.focus();
     await expect(button).toBeFocused();
     expect(await button.evaluate((element) => getComputedStyle(element).outlineStyle)).toBe(
@@ -159,18 +147,22 @@ test('hover and pressed variants preserve focus, disabled controls and field err
   await page.goto('/design-system.html');
   const outline = page.getByRole('button', { name: 'Xem minh họa', exact: true });
   await outline.hover();
-  await expect(outline).toHaveCSS('background-color', 'rgb(243, 251, 255)');
+  await expect(outline).toHaveCSS('background-color', 'rgb(238, 243, 255)');
   const bounds = (await outline.boundingBox())!;
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
   await page.mouse.down();
-  await expect(outline).toHaveCSS('transform', 'matrix(0.97, 0, 0, 0.97, 0, 0)');
+  await expect(outline).toHaveCSS('transform', 'none');
+  await expect(outline).not.toHaveCSS('box-shadow', 'none');
   await page.mouse.up();
   const field = page.getByRole('textbox', { name: 'Nội dung minh họa' });
   await field.hover();
-  await expect(field.locator('..')).toHaveCSS('--field-border', '#0089c7');
+  await field.focus();
+  await expect(field.locator('..')).toHaveCSS('outline-style', 'solid');
+  await expect(field.locator('..')).toHaveCSS('outline-color', 'rgb(60, 123, 232)');
   await page.getByRole('button', { name: 'Hiện lỗi minh họa' }).click();
   await field.hover();
-  await expect(field.locator('..')).toHaveCSS('--field-border', '#955c49');
+  await expect(field).toHaveAttribute('aria-invalid', 'true');
+  await expect(field.locator('..')).not.toHaveCSS('box-shadow', 'none');
   await expect(page.getByRole('button', { name: 'Disabled', exact: true })).toBeDisabled();
   await expect(page.getByLabel('Select disabled')).toBeDisabled();
 });

@@ -35,6 +35,7 @@ export interface GatewayTrip {
   plan_version: number;
   membership_revision: number;
   export_revision: number;
+  cover_image_available: boolean;
   current_membership: {
     id: string;
     trip_id: string;
@@ -43,7 +44,7 @@ export interface GatewayTrip {
     joined_at: string;
     left_at: null;
   };
-  permissions: { can_read: boolean; can_update: boolean };
+  permissions: { can_read: boolean; can_update: boolean; can_invite?: boolean };
 }
 
 function trip(id: string, name: string, role: 'OWNER' | 'MEMBER'): GatewayTrip {
@@ -61,6 +62,7 @@ function trip(id: string, name: string, role: 'OWNER' | 'MEMBER'): GatewayTrip {
     plan_version: 1,
     membership_revision: 1,
     export_revision: 1,
+    cover_image_available: false,
     current_membership: {
       id: `a${id.slice(1)}`,
       trip_id: id,
@@ -369,6 +371,10 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           },
         });
       }
+      if (path === '/api/v1/travel/weather' && method === 'GET') {
+        if (!model.authenticated) return error(route, 401);
+        return error(route, 503, 'SERVICE_UNAVAILABLE');
+      }
       if (path === '/api/v1/finance/banks' && method === 'GET') {
         if (!model.authenticated) return error(route, 401);
         return json(route, {
@@ -386,6 +392,14 @@ export const test = base.extend<{ gateway: GatewayModel }>({
       if (path === '/api/v1/trips' || path.startsWith('/api/v1/trips/')) {
         if (!model.authenticated) return error(route, 401);
         expect(request.headers().authorization).toBe('Bearer e2e-memory-token');
+        const remindersMatch = /^\/api\/v1\/trips\/([^/]+)\/reminders$/.exec(path);
+        if (remindersMatch && method === 'GET') {
+          const current = model.trips.find(
+            (item) => item.id === decodeURIComponent(remindersMatch[1]!),
+          );
+          if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
+          return json(route, []);
+        }
         if (path === '/api/v1/trips' && method === 'GET') {
           expect(url.searchParams.get('limit')).toBe('20');
           const cursor = url.searchParams.get('cursor');
@@ -432,7 +446,7 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           const tripId = decodeURIComponent(invitationsMatch[1]!);
           const current = model.trips.find((item) => item.id === tripId);
           if (!current) return error(route, 404, 'RESOURCE_NOT_FOUND');
-          if (current.current_membership.role !== 'OWNER')
+          if (current.current_membership.role !== 'OWNER' && !current.permissions.can_invite)
             return error(route, 403, 'PERMISSION_DENIED');
           if (method === 'GET' && !invitationsMatch[2]) {
             expect(url.searchParams.get('limit')).toBe('20');
@@ -683,5 +697,5 @@ export async function login(page: Page) {
   await page.getByLabel('Email', { exact: true }).fill('trang@example.com');
   await page.getByLabel('Mật khẩu', { exact: true }).fill(' password with spaces ');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
-  await expect(page.getByLabel('Tên hiển thị')).toBeVisible();
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toBeVisible();
 }

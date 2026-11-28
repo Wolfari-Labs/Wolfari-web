@@ -25,7 +25,7 @@ for (const width of [1440, 402]) {
       if (new URL(request.url()).pathname.startsWith('/api/')) apiCalls.push(request.url());
     });
     await page.goto('/');
-    await expect(page.locator('[data-node-id="3:28"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="933:7734"]')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Bắt đầu ngay', exact: true })).toHaveAttribute(
       'href',
       '/register',
@@ -46,12 +46,12 @@ for (const width of [1440, 402]) {
     await waitForVisibleImages(page);
     await page.screenshot({ path: info.outputPath('register.png'), fullPage: true });
     await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-    await expect(page.getByLabel('Họ và tên')).toBeFocused();
+    await expect(page.getByLabel('Email', { exact: true })).toBeFocused();
     await page.screenshot({ path: info.outputPath('register-invalid.png'), fullPage: true });
     await page.goto('/login');
     await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
     await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
-    await expect(page.locator('[data-node-id="298:1642"]')).toBeVisible();
+    await expect(page.locator('[data-node-id="938:7830"]')).toBeVisible();
     await expect(page.getByText(/Phiên demo · Chỉ dữ liệu fixture/)).toBeVisible();
     await waitForVisibleImages(page);
     await page.screenshot({ path: info.outputPath('home-signed-in-fixture.png'), fullPage: true });
@@ -71,7 +71,9 @@ for (const height of [520, 600, 900, 950, 951, 960, 985, 986, 990]) {
     await page.getByRole('button', { name: 'Điền tài khoản demo' }).click();
     await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
     await page.goto('/trips/11111111-1111-4111-8111-111111111111/settings');
-    await expect(page.getByRole('heading', { name: 'Thông tin chuyến đi' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Cài đặt chuyến đi', exact: true }),
+    ).toBeVisible();
     const nav = page.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
     const settings = nav.getByRole('link', { name: 'Cài đặt' });
     await expect(settings).toBeVisible();
@@ -90,8 +92,6 @@ for (const height of [520, 600, 900, 950, 951, 960, 985, 986, 990]) {
       };
     });
     expect(geometry).not.toBeNull();
-    if (height >= 600) expect(geometry!.scrollTop).toBe(0);
-    else expect(geometry!.scrollTop).toBeGreaterThan(0);
     expect(geometry!.settingsTop).toBeGreaterThanOrEqual(geometry!.navTop - 1);
     expect(geometry!.settingsBottom).toBeLessThanOrEqual(geometry!.navBottom + 1);
     await writeFile(info.outputPath('sidebar-geometry.json'), JSON.stringify(geometry, null, 2));

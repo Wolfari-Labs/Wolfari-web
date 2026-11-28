@@ -1,302 +1,71 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { paths } from '../../app/route-paths';
-import homeArt0 from '../../shared/assets/figma/1efdb.svg';
-import homeArt1 from '../../shared/assets/figma/7badc.svg';
-import homeArt2 from '../../shared/assets/figma/2f8ae.svg';
-import homeArt3 from '../../shared/assets/figma/a507a.svg';
-import homeArt4 from '../../shared/assets/figma/9fb2d.svg';
-import homeArt5 from '../../shared/assets/figma/5673e.svg';
-import homeArt6 from '../../shared/assets/figma/69d2e.svg';
-import homeArt7 from '../../shared/assets/figma/a8d46.svg';
-import homeArt8 from '../../shared/assets/figma/ff817.svg';
-import homeArt9 from '../../shared/assets/figma/28dbf.svg';
-import homeArt10 from '../../shared/assets/figma/fcd4a.svg';
-import homeArt11 from '../../shared/assets/figma/4bccc.png';
-import homeArt12 from '../../shared/assets/figma/ac8db.svg';
-import homeArt13 from '../../shared/assets/figma/ddfc7.png';
-import homeArt14 from '../../shared/assets/figma/4ff86.png';
-import homeArt15 from '../../shared/assets/figma/513e7.svg';
-import homeArt16 from '../../shared/assets/figma/2dc85.png';
-import homeArt17 from '../../shared/assets/figma/8b8b5.png';
-import homeArt18 from '../../shared/assets/figma/1dc61.png';
-import homeArt19 from '../../shared/assets/figma/a84f7.png';
-import { Icon } from '../../shared/components/Icon';
 import { ButtonLink } from '../../shared/components/ButtonLink';
+import { BrandWordmark } from '../../shared/components/BrandWordmark';
 import { ContentState } from '../../shared/components/ContentState';
-import { TravelCollage } from '../../shared/components/TravelCollage';
+import { Drawer } from '../../shared/components/Drawer';
+import { Alert } from '../../shared/components/Alert';
 import type { HomeViewModel } from './model/home';
+import heroPhoto from '../../shared/assets/figma/home-auth/1dc61.png';
+import wavingMascot from '../../shared/assets/figma/home-auth/ddfc7.png';
+import cameraMascot from '../../shared/assets/figma/home-auth/8b8b5.png';
+import sparkles from '../../shared/assets/figma/home-auth/c4388.svg';
+import pin from '../../shared/assets/figma/home-auth/8c4d0.svg';
+import nextWhite from '../../shared/assets/figma/home-auth/0c64b.svg';
+import nextBlue from '../../shared/assets/figma/home-auth/26153.svg';
+import nextInk from '../../shared/assets/figma/home-auth/2ab11.svg';
+import heart from '../../shared/assets/figma/home-auth/754d5.svg';
+import calendar from '../../shared/assets/figma/home-auth/fc6d7.svg';
+import map from '../../shared/assets/figma/home-auth/84cdf.svg';
+import luggage from '../../shared/assets/figma/home-auth/8b292.svg';
+import wallet from '../../shared/assets/figma/home-auth/7f207.svg';
+import walletSmall from '../../shared/assets/figma/home-auth/251cf.svg';
+import dot from '../../shared/assets/figma/home-auth/065e7.svg';
 import styles from './HomePage.module.css';
 
-const art = {
-  '1efdb.svg': homeArt0,
-  '7badc.svg': homeArt1,
-  '2f8ae.svg': homeArt2,
-  'a507a.svg': homeArt3,
-  '9fb2d.svg': homeArt4,
-  '5673e.svg': homeArt5,
-  '69d2e.svg': homeArt6,
-  'a8d46.svg': homeArt7,
-  'ff817.svg': homeArt8,
-  '28dbf.svg': homeArt9,
-  'fcd4a.svg': homeArt10,
-  '4bccc.png': homeArt11,
-  'ac8db.svg': homeArt12,
-  'ddfc7.png': homeArt13,
-  '4ff86.png': homeArt14,
-  '513e7.svg': homeArt15,
-  '2dc85.png': homeArt16,
-  '8b8b5.png': homeArt17,
-  '1dc61.png': homeArt18,
-  'a84f7.png': homeArt19,
-};
-
 const features = [
-  {
-    title: ['Lên lịch trình', 'thông minh'],
-    description: 'Sắp xếp từng ngày, cùng hoàn thiện kế hoạch',
-    frame: '1efdb.svg',
-    icon: '7badc.svg',
-  },
-  {
-    title: ['Bản đồ &', 'địa điểm'],
-    description: 'Xem những địa điểm đã lưu trong chuyến đi',
-    frame: '1efdb.svg',
-    icon: '2f8ae.svg',
-  },
-  {
-    title: ['Dress code &', 'packing list'],
-    description: 'Xem hướng dẫn và đồ dùng cho chuyến đi',
-    frame: 'a507a.svg',
-    icon: '9fb2d.svg',
-  },
-  {
-    title: ['Quản lý chi phí'],
-    description: 'Theo dõi đợt thu và khoản đóng góp của nhóm',
-    frame: '5673e.svg',
-    icon: '69d2e.svg',
-  },
-  {
-    title: ['Nhắc việc &', 'thông báo'],
-    description: 'Theo dõi cập nhật và lời mời trong hộp thư',
-    frame: 'a8d46.svg',
-    icon: 'ff817.svg',
-  },
-  {
-    title: ['Theo dõi giá vé'],
-    description: 'Thử nghiệm ngưỡng giá với dữ liệu mô phỏng',
-    frame: '28dbf.svg',
-    icon: 'fcd4a.svg',
-  },
+  { node: '933:7830', title: 'Lịch trình thông minh', text: 'Kéo thả hoạt động theo ngày, tự tính thời gian di chuyển.', icon: calendar, tone: 'sky' },
+  { node: '933:7837', title: 'Bản đồ & địa điểm', text: 'Xem lộ trình mỗi ngày và khám phá địa điểm gần bạn.', icon: map, tone: 'lilac' },
+  { node: '933:7844', title: 'Hành lý & dress code', text: 'Danh sách chuẩn bị theo thời tiết và hoạt động.', icon: luggage, tone: 'butter' },
+  { node: '933:7854', title: 'Quỹ nhóm minh bạch', text: 'Ghi khoản chi, chia đều và đối soát chỉ trong vài chạm.', icon: wallet, tone: 'mint' },
 ] as const;
+const destinationTones = ['mint', 'sky', 'butter', 'peach'] as const;
 
-function Clouds({ top = false }: { top?: boolean }) {
-  return (
-    <div
-      aria-hidden="true"
-      data-cloud-layer={top ? 'top' : 'lower'}
-      className={top ? styles.topClouds : styles.clouds}
-    >
-      <img src={art['4bccc.png']} alt="" />
-    </div>
-  );
-}
-
+/** W01/W01.1: Figma's editorial landing page, not a live trip dashboard. */
 export function HomePage({ model, onRetry }: { model: HomeViewModel; onRetry: () => void }) {
-  useEffect(() => {
-    const target = window.location.hash.slice(1);
-    if (target === 'home-features' || target === 'home-about')
-      document.getElementById(target)?.scrollIntoView();
-  }, []);
   const user = model.viewerName !== null;
+  const [notice, setNotice] = useState<string | null>(null);
+  const unavailable = (feature: string) => setNotice(`${feature} chưa được kết nối trong phiên bản hiện tại. Không có dữ liệu hay thay đổi nào được gửi.`);
   return (
-    <div className={styles.page} data-node-id={user ? '298:1642' : '3:28'} data-flow="home">
-      <section className={styles.hero} data-layout="home-hero">
-        <Clouds top />
-        <Clouds />
-        <div className={styles.heroInner} data-layout="home-hero-frame">
-          <div className={styles.heroDecor} aria-hidden="true" />
-          <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>Lên kế hoạch thông minh</p>
-            <h1>
-              <span>Cho những</span>
-              <span>chuyến đi thật đẹp</span>
-            </h1>
-            <p className={styles.heroDescription}>
-              <span>Wolfari là nền tảng lập kế hoạch và đồng hành du lịch thông minh </span>
-              <span>cho nhóm nhỏ. Giúp bạn dễ dàng lên lịch trình, quản lý chi phí, </span>
-              <span>khám phá địa điểm và tận hưởng chuyến đi theo cách của riêng mình.</span>
-            </p>
-            <div className={styles.actions}>
-              <ButtonLink
-                to={user ? paths.trips : paths.register}
-                icon={<img src={art['ac8db.svg']} width="18" height="18" alt="" />}
-              >
-                {user ? 'Chuyến đi của tôi' : 'Bắt đầu ngay'}
-              </ButtonLink>
-              <a href="#home-features" className={styles.exploreLink}>
-                Khám phá tính năng <Icon name="down" size={18} />
-              </a>
-            </div>
+    <div className={styles.page} data-node-id={user ? '938:7830' : '933:7734'} data-flow="home">
+      <section className={styles.hero} data-layout="home-hero" aria-labelledby="home-title">
+        <div className={styles.heroCopy} data-layout="home-hero-frame">
+          <p className={styles.eyebrow}><img src={sparkles} alt="" />{user ? `Chào ${model.viewerName?.split(/\s+/).at(-1)}, đi đâu tiếp nhỉ?` : 'Lập kế hoạch du lịch nhóm, nhẹ tênh'}</p>
+          <h1 id="home-title"><span>Cho những chuyến đi</span><span><span className={styles.accent}>thật đẹp</span>, cùng nhau</span></h1>
+          <p className={styles.heroDescription}>Lên lịch, chuẩn bị hành lý, theo dõi giá vé và chia quỹ nhóm — tất cả trong một không gian chung cho cả hội.</p>
+          <div className={styles.actions}>
+            <ButtonLink to={user ? paths.newTrip : paths.register} className={styles.heroButton}>{user ? 'Tạo chuyến đi' : 'Bắt đầu hành trình'}<img src={nextWhite} alt="" /></ButtonLink>
+            <ButtonLink to={user ? paths.trips : paths.login} variant="secondary" className={styles.heroButton}>{user ? 'Chuyến đi của tôi' : 'Đăng nhập'}</ButtonLink>
           </div>
-          <img className={styles.heroMascot} src={art['ddfc7.png']} alt="" />
-          <div className={styles.heroCollage} data-layout="home-collage">
-            <TravelCollage />
-          </div>
+          <button className={styles.socialProof} type="button" title="Số liệu minh họa của thiết kế, không phải thống kê trực tiếp" onClick={() => setNotice('Avatar, số nhóm, chuyến đi và số tiền trong phần giới thiệu là nội dung minh họa của thiết kế; không phải thống kê hoặc dữ liệu tài khoản của bạn.')}>
+            <span className={styles.avatarStack} aria-hidden="true">{['T', 'H', 'Q', 'M'].map((initial) => <span key={initial}>{initial}</span>)}</span>
+            <span>{user ? 'Bạn có 1 chuyến đang diễn ra · 3 chuyến sắp tới' : '2.400+ nhóm bạn đã lên đường cùng Wolfari'}</span>
+          </button>
         </div>
+        <figure className={styles.collage} data-layout="home-collage" aria-label="Minh họa giao diện chuyến đi và quỹ nhóm, không phải dữ liệu tài khoản">
+          <div className={styles.heroPhoto} data-node-id="933:7799"><img className={styles.photo} src={heroPhoto} alt="Biển Đà Nẵng" fetchPriority="high" width="640" height="500" /><span className={styles.locationPill}><img src={pin} alt="" />Hơn 120 điểm đến Việt Nam</span></div>
+          <img className={styles.heroMascot} src={wavingMascot} alt="" width="170" height="140" />
+          <div className={styles.featuredTrip} data-node-id="933:7806" aria-hidden="true"><div className={styles.featuredPhoto}><img src={heroPhoto} alt="" width="271" height="144" /><span className={styles.tripStatus}><img src={dot} alt="" />Đang diễn ra</span></div><div className={styles.featuredBody}><strong>Đà Nẵng 3N2Đ</strong><span>12 – 14/10 · 4 người</span><div className={styles.tripProgress}><span><i /></span><small>Ngày 1/3</small></div></div></div>
+          <div className={styles.fundTile} aria-hidden="true"><span><img src={walletSmall} alt="" /></span><strong>6,25tr</strong><p>Quỹ nhóm · 69%</p></div>
+        </figure>
       </section>
-      <section id="home-features" className={styles.features} data-layout="home-features">
-        <Clouds />
-        <div className={styles.featuresInner} data-layout="home-features-frame">
-          <div className={styles.featureDecor} aria-hidden="true" />
-          <div className={styles.featureIntro}>
-            <p>Tất cả những gì bạn cần</p>
-            <h2>Trong một nơi</h2>
-            <p>
-              Cùng nhóm chuẩn bị chuyến đi của bạn
-              <br className={styles.desktopBreak} /> trở nên đơn giản, thú vị và hiệu quả hơn bao
-              giờ hết.
-            </p>
-            <img loading="lazy" src={art['4ff86.png']} alt="" width="126" height="126" />
-          </div>
-          <div className={styles.featureGrid}>
-            {features.map((feature) => (
-              <article key={feature.icon}>
-                <div className={styles.featureArt} aria-hidden="true">
-                  <img loading="lazy" className={styles.rim} src={art['513e7.svg']} alt="" />
-                  <img loading="lazy" src={art[feature.frame]} alt="" />
-                  <img
-                    loading="lazy"
-                    className={styles.featureGlyph}
-                    src={art[feature.icon]}
-                    alt=""
-                  />
-                </div>
-                <h3>
-                  {feature.title.map((line) => (
-                    <span key={line}>{line}</span>
-                  ))}
-                </h3>
-                <p>{feature.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
+      <section id="home-features" className={styles.features} data-layout="home-features" aria-labelledby="home-features-title"><header className={styles.sectionIntro}><h2 id="home-features-title">Tất cả những gì nhóm bạn cần</h2><p>Từ ý tưởng đến lúc về nhà — Wolfari giữ mọi thứ gọn gàng.</p></header><div className={styles.featureGrid}>{features.map((feature) => <article key={feature.node} className={styles.featureCard} data-tone={feature.tone} data-node-id={feature.node}><span className={styles.featureIcon}><img src={feature.icon} alt="" /></span><h3>{feature.title}</h3><p>{feature.text}</p></article>)}</div></section>
+      <section className={styles.destinations} data-layout="home-inspiration" aria-labelledby="home-inspiration-title">
+        <header className={styles.destinationsHeader}><div><h2 id="home-inspiration-title">Điểm đến được yêu thích</h2><p>Cảm hứng cho chuyến đi tiếp theo của cả nhóm.</p></div><button type="button" onClick={() => unavailable('Danh mục điểm đến')}>Xem tất cả →</button></header>
+        <div className={styles.destinationGrid}>{model.landing.status === 'ready' ? model.landing.data.stories.map((story, index) => <figure key={story.name} className={styles.destinationCard} data-tone={destinationTones[index % destinationTones.length]}><div className={styles.destinationPhoto}>{story.cover && <img className={styles.photo} loading="lazy" width="286" height="240" src={story.cover.src} alt={story.cover.alt} />}<button type="button" className={styles.favorite} aria-label={`Yêu thích ${story.name}`} onClick={() => unavailable('Lưu điểm đến yêu thích')}><img src={heart} alt="" /></button></div><figcaption><div><strong>{story.name}</strong><span>{story.duration}</span></div><button type="button" className={styles.destinationLink} aria-label={`Khám phá ${story.name}`} onClick={() => unavailable(`Thông tin điểm đến ${story.name}`)}><img src={nextInk} alt="" /></button></figcaption></figure>) : model.landing.status === 'error' ? <ContentState state={model.landing.error.code === 'SERVICE_UNAVAILABLE' && !model.landing.error.retryable ? 'unavailable' : 'error'} error={model.landing.error} onRetry={onRetry} headingLevel={2} /> : <ContentState state={model.landing.status === 'loading' ? 'loading' : 'empty'} headingLevel={2} />}</div>
       </section>
-      <section id="home-about" className={styles.appPreview} data-layout="home-about">
-        <Clouds />
-        <div className={styles.appPreviewInner} data-layout="home-about-frame">
-          <div className={styles.appDecor} aria-hidden="true" />
-          <div className={styles.appCopy}>
-            <h2>
-              <span>Xem trước</span>
-              <span>trải nghiệm của bạn</span>
-            </h2>
-            <p>
-              Trên trình duyệt máy tính hoặc điện thoại, bạn có thể cùng nhóm xem và chuẩn bị chuyến
-              đi.
-            </p>
-            <ul>
-              {[
-                'Giao diện thân thiện, dễ sử dụng',
-                'Đồng bộ dữ liệu giữa các thiết bị',
-                'Xem cập nhật trong hộp thư thông báo',
-              ].map((text) => (
-                <li key={text}>{text}</li>
-              ))}
-            </ul>
-            <ButtonLink
-              to={user ? paths.trips : paths.register}
-              icon={<img src={art['ac8db.svg']} width="18" height="18" alt="" />}
-            >
-              Khám phá ứng dụng
-            </ButtonLink>
-          </div>
-          <img
-            loading="lazy"
-            className={styles.devices}
-            data-layout="home-devices"
-            src={art['2dc85.png']}
-            alt="Minh họa giao diện Wolfari trên điện thoại và máy tính"
-          />
-        </div>
-      </section>
-      <section className={styles.inspiration} data-layout="home-inspiration">
-        <Clouds />
-        <div className={styles.inspirationInner} data-layout="home-inspiration-frame">
-          <div className={styles.inspirationDecor} aria-hidden="true" />
-          <header>
-            <h2>
-              <span>Những hành trình</span>
-              <span>đang được lưu lại</span>
-            </h2>
-            <img loading="lazy" decoding="async" src={art['8b8b5.png']} alt="" />
-            <p>Minh họa từ thiết kế</p>
-          </header>
-          <div className={styles.stories}>
-            {model.landing.status === 'ready' ? (
-              model.landing.data.stories.map((story, index) => (
-                <figure key={story.name} className={index % 2 ? styles.tiltRight : styles.tiltLeft}>
-                  {story.cover && (
-                    <img
-                      loading="lazy"
-                      width="380"
-                      height="260"
-                      src={story.cover.src}
-                      alt={story.cover.alt}
-                    />
-                  )}
-                  <figcaption>
-                    <strong>{story.name}</strong>
-                    <p>{story.duration}</p>
-                  </figcaption>
-                </figure>
-              ))
-            ) : model.landing.status === 'error' ? (
-              <ContentState
-                state={
-                  model.landing.error.code === 'SERVICE_UNAVAILABLE' &&
-                  !model.landing.error.retryable
-                    ? 'unavailable'
-                    : 'error'
-                }
-                error={model.landing.error}
-                onRetry={onRetry}
-                headingLevel={2}
-              />
-            ) : (
-              <ContentState
-                state={model.landing.status === 'loading' ? 'loading' : 'empty'}
-                headingLevel={2}
-              />
-            )}
-          </div>
-          <aside>
-            <h3>Truyền cảm hứng</h3>
-            <blockquote>“Mỗi chuyến đi là một câu chuyện và bạn là người viết nên nó!”</blockquote>
-          </aside>
-        </div>
-      </section>
-      <section className={styles.footer} data-layout="home-footer">
-        <div className={styles.footerInner} data-layout="home-footer-frame">
-          <h2>Ready to explore?</h2>
-          <p>Cùng Wolfari, mọi hành trình đều trở nên đặc biệt!</p>
-          <ButtonLink
-            to={user ? paths.trips : paths.register}
-            icon={<img src={art['ac8db.svg']} width="18" height="18" alt="" />}
-          >
-            {user ? 'Xem chuyến đi của tôi' : 'Bắt đầu hành trình'}
-          </ButtonLink>
-          <div className={styles.footerCollage} aria-hidden="true">
-            <img loading="lazy" decoding="async" src={art['1dc61.png']} alt="" />
-            <img loading="lazy" decoding="async" src={art['a84f7.png']} alt="" />
-            <span className={styles.signpost}>
-              <span>Plan</span>
-              <span>Explore</span>
-              <span>Go!</span>
-            </span>
-          </div>
-        </div>
-      </section>
+      <section className={styles.closing} data-layout="home-footer" aria-label="Bắt đầu với Wolfari"><div className={styles.cta}><div className={styles.ctaContent}><img className={styles.ctaMascot} src={cameraMascot} alt="" width="130" height="148" /><div className={styles.ctaCopy}><h2>{user ? 'Chuyến tiếp theo của cả nhóm?' : 'Sẵn sàng khám phá chưa?'}</h2><p>Tạo chuyến đi đầu tiên chỉ trong 2 phút — miễn phí cho cả nhóm.</p></div></div><ButtonLink to={user ? paths.newTrip : paths.register} variant="secondary" className={styles.ctaButton}>{user ? 'Tạo chuyến đi ngay' : 'Bắt đầu ngay'}<img src={nextBlue} alt="" /></ButtonLink></div><footer className={styles.footer}><BrandWordmark /><nav className={styles.footerNav} aria-label="Thông tin Wolfari"><a href="#home-features">Giới thiệu</a><button type="button" onClick={() => unavailable('Hướng dẫn')}>Hướng dẫn</button><button type="button" onClick={() => unavailable('Điều khoản')}>Điều khoản</button><button type="button" onClick={() => unavailable('Liên hệ')}>Liên hệ</button></nav><p>© 2026 Wolfari · PBL6</p></footer></section>
+      <Drawer open={notice !== null} label="Thông tin tính năng" side="center" onDismiss={() => setNotice(null)}><Alert live={false}>{notice}</Alert></Drawer>
     </div>
   );
 }

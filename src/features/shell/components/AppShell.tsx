@@ -10,17 +10,18 @@ import {
 import { Link, NavLink } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import type { AdminSection, ShellSection, ShellSnapshot } from '../model/shell';
-import type { assets } from '../../../shared/assets/asset-map';
-import logo from '../../../shared/assets/figma/44363.png';
-import routeDecoration from '../../../shared/assets/figma/0d2a5.svg';
-import mascot from '../../../shared/assets/figma/4ff86.png';
+import mascot from '../../../shared/assets/v2/mascot-waving.png';
+import { BrandWordmark } from '../../../shared/components/BrandWordmark';
 import styles from './AppShell.module.css';
-import { Icon as UiIcon, type IconName } from '../../../shared/components/Icon';
+import { Icon as UiIcon } from '../../../shared/components/Icon';
+import { FigmaTopIcon, FigmaTripIcon } from '../../../shared/components/FigmaNavigationIcon';
+import expandIcon from '../../../shared/assets/figma/shell/26153.svg';
 import { Avatar } from '../../../shared/components/Avatar';
 import { useAnimate } from 'motion/react-mini';
 import { NavigationButton } from '../../../shared/components/NavigationButton';
 import { desktopMediaQuery } from '../../../shared/styles/breakpoints';
 import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
+import { useAvatarImage } from '../../auth/use-avatar-image';
 
 const Notifications = lazy(() =>
   import('../../notifications/Notifications').then((module) => ({ default: module.Notifications })),
@@ -32,41 +33,27 @@ const NavigationDrawer = lazy(() =>
   import('../../../shared/components/Drawer').then((module) => ({ default: module.Drawer })),
 );
 
-const sections: { id: ShellSection; label: string; icon: keyof typeof assets }[] = [
-  { id: 'overview', label: 'Tổng quan chuyến đi', icon: '4151c.svg' },
-  { id: 'map', label: 'Bản đồ địa điểm', icon: 'f892f.svg' },
-  { id: 'plan', label: 'Lịch trình', icon: 'ea811.svg' },
-  { id: 'dress', label: 'Trang phục', icon: '87597.svg' },
-  { id: 'packing', label: 'Đồ đạc', icon: '462bc.svg' },
-  { id: 'members', label: 'Thành viên', icon: '46522.svg' },
-  { id: 'fund', label: 'Quỹ nhóm', icon: '431b0.svg' },
-  { id: 'fare', label: 'Theo dõi giá vé', icon: 'b7793.svg' },
-  { id: 'settings', label: 'Cài đặt', icon: 'd379f.svg' },
+// Web v2 trip sidebar (Figma 930:7331): labels and glyphs follow the V2 components.
+const sections: { id: Exclude<ShellSection, 'tools'>; label: string }[] = [
+  { id: 'overview', label: 'Tổng quan' },
+  { id: 'map', label: 'Bản đồ & địa điểm' },
+  { id: 'plan', label: 'Lịch trình' },
+  { id: 'dress', label: 'Dress code' },
+  { id: 'packing', label: 'Hành lý' },
+  { id: 'members', label: 'Thành viên' },
+  { id: 'fund', label: 'Quỹ nhóm' },
+  { id: 'fare', label: 'Theo dõi giá vé' },
+  { id: 'settings', label: 'Cài đặt' },
 ];
-function Icon({ file, className }: { file: keyof typeof assets; className?: string | undefined }) {
-  const names: Partial<Record<keyof typeof assets, IconName>> = {
-    '4151c.svg': 'home',
-    'f892f.svg': 'map',
-    'ea811.svg': 'plan',
-    '87597.svg': 'dress',
-    '462bc.svg': 'packing',
-    '46522.svg': 'members',
-    '431b0.svg': 'fund',
-    'b7793.svg': 'price',
-    'd379f.svg': 'settings',
-    'd4edd.svg': 'home',
-    '92234.svg': 'home',
-    '5290c.svg': 'plan',
-    'ff747.svg': 'plan',
-    '28f71.svg': 'plan',
-    '89e09.svg': 'plan',
-    'ac8db.svg': 'price',
-    '2e748.svg': 'user',
-    'cea87.svg': 'expand',
-    '0e16c.svg': 'bell',
-  };
-  const name = names[file];
-  return <UiIcon name={name ?? 'info'} {...(className ? { className } : {})} />;
+
+function MascotCard({ className }: { className?: string | undefined }) {
+  return (
+    <div className={className} aria-hidden="true">
+      <img src={mascot} alt="" width="96" height="80" />
+      <p>Cùng bạn đi xa hơn!</p>
+      <span>Mỗi chuyến đi là một câu chuyện.</span>
+    </div>
+  );
 }
 
 function accountInitials(name: string) {
@@ -135,6 +122,13 @@ export function AppShell({
   }, [currentPath, animateContent, contentScope]);
   const focusContentAfterClose = useRef(false);
   const viewer = snapshot?.viewer;
+  const { src: viewerAvatarSrc } = useAvatarImage({
+    userId: viewer?.id,
+    version: viewer?.version,
+    enabled: viewer?.hasAvatar === true,
+  });
+  const viewerAvatarImage =
+    viewerAvatarSrc && viewer ? { src: viewerAvatarSrc, alt: viewer.fullName } : null;
   // Public flows should never render a disabled placeholder while the session
   // check is still settling. Treat the shell as guest until a real viewer is
   // available; private routes are guarded by App before their content mounts.
@@ -142,12 +136,12 @@ export function AppShell({
   const canReadTrip = snapshot?.trip?.permissions.canRead === true;
   const canReadAdmin = viewer?.systemRole === 'ADMIN';
   const home = currentPath === paths.home;
-  const schedule = currentPath.endsWith('/plan');
+  const creatingTrip = currentPath === paths.newTrip;
   const dressRoute = currentPath.endsWith('/dress-code');
   const selectedHeader = home
     ? 'home'
-    : schedule
-      ? 'schedule'
+    : creatingTrip
+      ? 'create'
       : currentPath.startsWith('/trips')
         ? 'trips'
         : 'none';
@@ -220,7 +214,7 @@ export function AppShell({
       {includeAccountLinks && viewer && (
         <>
           <NavLink end to={paths.trips} onClick={selectDestination}>
-            <UiIcon name="plan" />
+            <UiIcon name="luggage" />
             <span>Chuyến đi của tôi</span>
           </NavLink>
           <NavLink to={paths.profile} onClick={selectDestination}>
@@ -240,8 +234,12 @@ export function AppShell({
             title={item.label}
             onClick={selectDestination}
           >
-            <Icon file={item.icon} />
-            <span>{item.label}</span>
+            {({ isActive }) => (
+              <>
+                <FigmaTripIcon section={item.id} active={isActive} />
+                <span>{item.label}</span>
+              </>
+            )}
           </NavLink>
         ) : (
           <NavigationButton
@@ -252,7 +250,7 @@ export function AppShell({
             title={`${item.label} · Chưa khả dụng`}
             onClick={() => selectTrip(item.id)}
           >
-            <Icon file={item.icon} />
+            <FigmaTripIcon section={item.id} />
             <span>{item.label}</span>
           </NavigationButton>
         ),
@@ -312,6 +310,132 @@ export function AppShell({
       {adminLayout ? <UiIcon name="menu" /> : 'Menu'}
     </button>
   );
+  const desktopHeader = (
+    <header
+      className={styles.desktopHeader}
+      data-node-id={
+        guest
+          ? '930:6661'
+          : selectedHeader === 'create'
+            ? '930:6790'
+            : selectedHeader === 'trips'
+              ? '930:6745'
+              : '930:6700'
+      }
+    >
+      <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
+        <BrandWordmark />
+      </Link>
+      <nav aria-label="Điều hướng chính" className={styles.headerNav}>
+        <Link to={paths.home} aria-current={!guest && home ? 'page' : undefined}>
+          <FigmaTopIcon section="home" active={!guest && home} />
+          <span className={styles.navLabel}>Trang chủ</span>
+        </Link>
+        <Link to={paths.trips} aria-current={selectedHeader === 'trips' ? 'page' : undefined}>
+          <FigmaTopIcon section="trips" active={selectedHeader === 'trips'} />
+          <span className={styles.navLabel}>Chuyến đi của tôi</span>
+        </Link>
+        {viewer ? (
+          <Link aria-current={creatingTrip ? 'page' : undefined} to={paths.newTrip}>
+            <FigmaTopIcon section="schedule" active={creatingTrip} />
+            <span className={styles.navLabel}>Tạo chuyến đi</span>
+          </Link>
+        ) : (
+          <Link to={`${paths.login}?returnTo=${encodeURIComponent(paths.newTrip)}`}>
+            <FigmaTopIcon section="schedule" />
+            <span className={styles.navLabel}>Tạo chuyến đi</span>
+          </Link>
+        )}
+      </nav>
+      <div className={styles.account}>
+        {viewer ? (
+          <>
+            <Suspense fallback={<span className={styles.bellPlaceholder} aria-hidden="true" />}>
+              <Notifications key={viewer.id ?? 'preview'} actor={viewer.id ?? 'preview'} />
+            </Suspense>
+            <Suspense
+              fallback={
+                <Link to={paths.profile} className={styles.profile}>
+                  <Avatar name={viewer.fullName} image={viewerAvatarImage} />
+                  <span className={styles.accountName}>{viewer.fullName}</span>
+                  <span className={styles.profileCompactName}>
+                    {`${accountInitials(viewer.fullName)} ${viewer.fullName}`}
+                  </span>
+                  <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
+                </Link>
+              }
+            >
+              <AccountMenu name={viewer.fullName} image={viewerAvatarImage} />
+            </Suspense>
+          </>
+        ) : guest ? (
+          <>
+            <Link className={styles.outline} to={paths.login}>
+              Đăng nhập
+            </Link>
+            <Link className={styles.primary} to={paths.register}>
+              Bắt đầu miễn phí
+            </Link>
+          </>
+        ) : (
+          <span aria-label="Thông tin tài khoản chưa khả dụng">—</span>
+        )}
+      </div>
+    </header>
+  );
+  // Login and registration share the site header; recovery and admin auth retain their own frame.
+  if (currentPath === paths.login || currentPath === paths.register) {
+    return (
+      <div className={`${styles.authShell} ${styles.authWithHeader}`}>
+        <a className={styles.skip} href="#main-content">
+          Đến nội dung chính
+        </a>
+        {desktopHeader}
+        <header className={styles.mobileHeader}>
+          <Link to={paths.home} className={styles.mobileLogo} aria-label="Wolfari · Trang chủ">
+            <BrandWordmark />
+          </Link>
+          <nav aria-label="Điều hướng tài khoản" className={styles.authMobileNav}>
+            <Link to={paths.login} aria-current={currentPath === paths.login ? 'page' : undefined}>
+              Đăng nhập
+            </Link>
+            <Link
+              to={paths.register}
+              aria-current={currentPath === paths.register ? 'page' : undefined}
+            >
+              Đăng ký
+            </Link>
+          </nav>
+        </header>
+        <main
+          ref={contentScope}
+          id="main-content"
+          tabIndex={-1}
+          data-layout="auth"
+          data-auth-header
+        >
+          {children}
+        </main>
+      </div>
+    );
+  }
+  // Recovery and admin auth retain their standalone frame and route/session guards.
+  if (
+    [paths.forgotPassword, paths.verifyEmail, paths.resetPassword, '/admin/login'].includes(
+      currentPath,
+    )
+  ) {
+    return (
+      <div className={styles.authShell}>
+        <a className={styles.skip} href="#main-content">
+          Đến nội dung chính
+        </a>
+        <main ref={contentScope} id="main-content" tabIndex={-1} data-layout="auth">
+          {children}
+        </main>
+      </div>
+    );
+  }
   return (
     <div
       className={`${styles.shell} ${dressRoute ? styles.dressRoute : ''} ${adminLayout ? styles.adminShell : tripLayout || listLayout ? styles.tripShell : styles.flowShell}`}
@@ -324,89 +448,7 @@ export function AppShell({
           <AdminTopbar snapshot={snapshot} section={adminSection} />
         </div>
       ) : (
-        <>
-          <header className={styles.desktopHeader} data-node-id="135:483">
-            <Link to={paths.home} aria-label="Wolfari · Trang chủ" className={styles.logo}>
-              <img src={logo} alt="Wolfari" />
-            </Link>
-            <nav aria-label="Điều hướng chính" className={styles.headerNav}>
-              <NavLink end to={paths.home}>
-                <Icon file={selectedHeader === 'home' ? 'd4edd.svg' : '92234.svg'} />
-                Trang chủ
-              </NavLink>
-              {guest ? (
-                <a href={`${paths.home}#home-features`}>
-                  <Icon file="5290c.svg" />
-                  Tính năng
-                </a>
-              ) : (
-                <Link
-                  to={paths.trips}
-                  aria-current={selectedHeader === 'trips' ? 'page' : undefined}
-                >
-                  <Icon file={selectedHeader === 'trips' ? 'ff747.svg' : '5290c.svg'} />
-                  Chuyến đi của tôi
-                </Link>
-              )}
-              {canReadTrip && snapshot?.trip ? (
-                <Link
-                  aria-current={schedule ? 'page' : undefined}
-                  to={paths.plan(snapshot.trip.id)}
-                >
-                  <Icon file={schedule ? '28f71.svg' : '89e09.svg'} />
-                  Lên lịch
-                </Link>
-              ) : guest ? (
-                <a href={`${paths.home}#home-about`}>
-                  <UiIcon name="info" />
-                  Về Wolfari
-                </a>
-              ) : (
-                <button disabled title="Chọn chuyến đi để mở lịch trình">
-                  <Icon file="89e09.svg" />
-                  Lên lịch
-                </button>
-              )}
-            </nav>
-            <div className={styles.account}>
-              {viewer ? (
-                <>
-                  <Suspense
-                    fallback={<span className={styles.bellPlaceholder} aria-hidden="true" />}
-                  >
-                    <Notifications key={viewer.id ?? 'preview'} actor={viewer.id ?? 'preview'} />
-                  </Suspense>
-                  <Suspense
-                    fallback={
-                      <Link to={paths.profile} className={styles.profile}>
-                        <Avatar name={viewer.fullName} />
-                        <span className={styles.accountName}>{viewer.fullName}</span>
-                        <span className={styles.profileCompactName}>
-                          {`${accountInitials(viewer.fullName)} ${viewer.fullName}`}
-                        </span>
-                        <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
-                      </Link>
-                    }
-                  >
-                    <AccountMenu name={viewer.fullName} />
-                  </Suspense>
-                </>
-              ) : guest ? (
-                <>
-                  <Link className={styles.outline} to={paths.login}>
-                    Đăng nhập
-                  </Link>
-                  <Link className={styles.primary} to={paths.register}>
-                    <Icon file="ac8db.svg" />
-                    Đăng ký
-                  </Link>
-                </>
-              ) : (
-                <span aria-label="Thông tin tài khoản chưa khả dụng">—</span>
-              )}
-            </div>
-          </header>
-        </>
+        desktopHeader
       )}
       <header
         className={`${styles.mobileHeader} ${adminLayout ? styles.adminMobileHeader : ''}`}
@@ -414,7 +456,7 @@ export function AppShell({
       >
         {adminLayout && mobileMenu}
         <Link to={paths.home} className={styles.mobileLogo} aria-label="Wolfari · Trang chủ">
-          <img src={logo} alt="Wolfari" />
+          <BrandWordmark />
         </Link>
         {viewer ? (
           <div className={styles.mobileAccountActions}>
@@ -426,7 +468,7 @@ export function AppShell({
               to={paths.profile}
               aria-label={profileLabel(viewer.fullName)}
             >
-              <Avatar name={viewer.fullName} />
+              <Avatar name={viewer.fullName} image={viewerAvatarImage} />
             </Link>
           </div>
         ) : guest ? null : (
@@ -449,41 +491,37 @@ export function AppShell({
           <aside
             ref={desktopSidebar}
             className={collapsed ? styles.collapsed : styles.sidebar}
-            data-node-id={collapsed ? '135:1042' : '135:484'}
+            data-node-id={collapsed ? '937:7692' : '930:6836'}
           >
+            <div className={styles.sidebarHead}>
+              {!collapsed && <p className={styles.sidebarSection}>Chuyến đi</p>}
+              <button
+                className={styles.collapseButton}
+                aria-label={collapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
+                aria-expanded={!collapsed}
+                onClick={() => setCollapsed((value) => !value)}
+              >
+                {collapsed ? (
+                  <>
+                    <img src={expandIcon} alt="" />
+                    <span className={styles.expandFallbackIcon}>
+                      <UiIcon name="chevronRight" size={18} />
+                    </span>
+                  </>
+                ) : (
+                  <UiIcon name="chevronLeft" size={20} />
+                )}
+              </button>
+            </div>
             {tripNavigation()}
-            {!collapsed && (
-              <div className={styles.sidebarDecoration} aria-hidden="true">
-                <p>
-                  Cùng bạn
-                  <br />
-                  đi xa hơn!
-                </p>
-                <img className={styles.routeDecoration} src={routeDecoration} alt="" />
-                <img className={styles.readingMascot} src={mascot} alt="" />
-              </div>
-            )}
-            <button
-              className={styles.collapseButton}
-              aria-label={collapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
-              aria-expanded={!collapsed}
-              onClick={() => setCollapsed((value) => !value)}
-            >
-              {collapsed ? (
-                <Icon file="cea87.svg" className={styles.collapseIconReversed} />
-              ) : (
-                <>
-                  <UiIcon name="collapse" />
-                  <span>Thu gọn</span>
-                </>
-              )}
-            </button>
+            {!collapsed && <MascotCard className={styles.mascotCard} />}
           </aside>
         ) : null}
         <main
           ref={contentScope}
           id="main-content"
           tabIndex={-1}
+          data-layout={adminLayout ? 'admin' : tripLayout ? 'trip' : listLayout ? 'list' : 'flow'}
           className={`${styles.main} ${tripLayout || adminLayout || listLayout ? styles.tripMain : styles.flowMain} ${listLayout || fullBleed ? styles.listMain : ''}`}
         >
           {children}
@@ -507,7 +545,7 @@ export function AppShell({
             {!adminLayout && (
               <div className={styles.drawerHeader}>
                 <Link to={paths.home} aria-label="Wolfari · Trang chủ" onClick={selectDestination}>
-                  <img src={logo} alt="Wolfari" />
+                  <BrandWordmark />
                 </Link>
                 <button
                   ref={drawerClose}
@@ -520,17 +558,7 @@ export function AppShell({
               </div>
             )}
             {adminLayout ? adminNavigation : tripLayout ? tripNavigation(true) : publicNavigation}
-            {tripLayout && (
-              <div className={styles.drawerDecoration} aria-hidden="true">
-                <p>
-                  Cùng bạn
-                  <br />
-                  đi xa hơn!
-                </p>
-                <img src={routeDecoration} alt="" className={styles.drawerRoute} />
-                <img src={mascot} alt="" className={styles.drawerMascot} />
-              </div>
-            )}
+            {tripLayout && <MascotCard className={`${styles.mascotCard} ${styles.drawerMascot}`} />}
           </NavigationDrawer>
         </Suspense>
       )}

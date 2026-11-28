@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="540" height="250" viewBox="0 0 540 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="map art" clip-path="url(#clip0_0_253)">
+<path id="Vector" d="M540 0H0V250H540V0Z" fill="#EEF3FF"/>
+<path id="Vector_2" d="M380 0C340 70 410 130 370 250H540V0H380Z" fill="#CFE6FF"/>
+<path id="Vector_3" d="M130 40H60C48.9543 40 40 48.9543 40 60V80C40 91.0457 48.9543 100 60 100H130C141.046 100 150 91.0457 150 80V60C150 48.9543 141.046 40 130 40Z" fill="#D6F5E8"/>
+<path id="Vector_4" d="M252 150H198C188.059 150 180 158.059 180 168V188C180 197.941 188.059 206 198 206H252C261.941 206 270 197.941 270 188V168C270 158.059 261.941 150 252 150Z" fill="#FFF0C2"/>
+<g id="Vector_5">
+<path d="M0 120L540 90ZM120 0L170 250ZM260 0L310 250Z" fill="black"/>
+<path d="M0 120L540 90M120 0L170 250M260 0L310 250" stroke-width="10" stroke-linecap="round" stroke="white"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_253">
+<rect width="540" height="250" fill="white"/>
+</clipPath>
+</defs>
+</svg>

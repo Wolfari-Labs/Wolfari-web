@@ -5,12 +5,14 @@ import { Eye, EyeOff } from 'lucide-react';
 
 export interface InputProps extends ComponentProps<'input'>, FieldProps {
   leadingIcon?: ReactNode;
+  trailingAction?: ReactNode;
 }
 export function Input({
   label,
   hint,
   error,
   leadingIcon,
+  trailingAction,
   id,
   type,
   className = '',
@@ -36,6 +38,7 @@ export function Input({
           aria-invalid={error ? true : props['aria-invalid']}
           className={`${styles.input} ${className}`}
         />
+        {trailingAction}
         {revealable && (
           <button
             type="button"

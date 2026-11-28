@@ -75,3 +75,30 @@
   color: var(--color-muted);
   font-size: 12px;
 }
+
+/* Wolfari Web V2 (Figma W08 941:8933): soft rows and pill-round radii, presentation only. */
+.box {
+  border: 0;
+  border-radius: var(--v2-radius-thumb, 20px);
+  background: var(--v2-row, #f7f9ff);
+}
+
+.pick {
+  border: 1.5px solid var(--v2-unselected-line, #e3e9f7);
+  border-radius: var(--v2-radius-row, 18px);
+  font-family: var(--v2-font, inherit);
+}
+
+.pick:hover,
+.pick:focus-visible {
+  border-color: var(--v2-blue, #3c7be8);
+}
+
+.swatches span {
+  border: 2px solid var(--v2-white, #fff);
+}
+
+.text strong {
+  color: var(--v2-ink, inherit);
+  font-weight: 800;
+}

@@ -17,16 +17,16 @@ for (const size of [
       if (new URL(r.url()).pathname.startsWith('/api/')) api.push(r.url());
     });
     await page.goto(route);
-    await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       size.width,
     );
     if (size.width === 1440) {
       const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
-      for (const [key, expected] of Object.entries({ x: 238, y: 120, width: 1180, height: 150 }))
+      for (const [key, expected] of Object.entries({ x: 312, y: 112, width: 1104, height: 84 }))
         expect(
           Math.abs(hero[key as keyof typeof hero] - expected),
-          `Figma hero ${key}`,
+          `Figma W/Trip header 937:7647 ${key}`,
         ).toBeLessThanOrEqual(4);
     }
     const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });
@@ -108,9 +108,10 @@ for (const size of [
   });
 test('Plan states keep selection and pending/unknown do not claim saved', async ({ page }) => {
   await page.goto(route);
-  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   await page.getByRole('button', { name: /Ngày 2/ }).click();
-  await page.locator('[data-preview=plan] summary').click();
+  await page.locator('[data-preview=plan] summary').focus();
+  await page.keyboard.press('Enter');
   for (const [scenario, text] of [
     ['error', 'Chưa thể tải nội dung'],
     ['forbidden', 'Bạn không có quyền truy cập'],
@@ -141,7 +142,7 @@ test('keyboard drag moves an activity between the local pool and the selected da
 }) => {
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto(route);
-  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Thêm hoạt động' }).click();
   const pool = page.getByRole('region', { name: 'Đã chọn · Chưa xếp lịch' });
   const timeline = page.getByRole('list', { name: 'Các hoạt động trong ngày' });

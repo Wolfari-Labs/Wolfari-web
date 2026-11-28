@@ -1,4 +1,13 @@
 export interface GatewayMetadata {
+  travelSource?: {
+    provider: string;
+    status: 'SUCCESS' | 'NO_RESULT';
+    fetchedAt: string | null;
+    stale: boolean;
+    isMock: boolean;
+    warnings: string[];
+    attribution: { text: string; url: string | null }[];
+  };
   exportRevision?: number;
   nextCursor?: string | null;
   priceSource?: {
@@ -61,6 +70,43 @@ export function parseEnvelope(value: unknown): GatewayEnvelope {
       data: value.data,
       correlationId,
       metadata: {
+        ...(typeof value.meta.provider === 'string' &&
+        value.meta.provider.trim() &&
+        (value.meta.status === 'SUCCESS' || value.meta.status === 'NO_RESULT') &&
+        typeof value.meta.stale === 'boolean' &&
+        typeof value.meta.is_mock === 'boolean'
+          ? {
+              travelSource: {
+                provider: value.meta.provider,
+                status: value.meta.status,
+                fetchedAt:
+                  typeof value.meta.fetched_at === 'string' &&
+                  Number.isFinite(Date.parse(value.meta.fetched_at))
+                    ? value.meta.fetched_at
+                    : null,
+                stale: value.meta.stale,
+                isMock: value.meta.is_mock,
+                warnings: Array.isArray(value.meta.warnings)
+                  ? value.meta.warnings.filter((item): item is string => typeof item === 'string')
+                  : [],
+                attribution: Array.isArray(value.meta.attribution)
+                  ? value.meta.attribution.flatMap((item) =>
+                      record(item) && typeof item.text === 'string' && item.text.trim()
+                        ? [
+                            {
+                              text: item.text,
+                              url:
+                                typeof item.url === 'string' && /^https:\/\/[^\s]+$/.test(item.url)
+                                  ? item.url
+                                  : null,
+                            },
+                          ]
+                        : [],
+                    )
+                  : [],
+              },
+            }
+          : {}),
         ...(typeof value.meta.provider === 'string' &&
         PLACES_PROVIDERS.has(value.meta.provider) &&
         typeof value.meta.status === 'string'

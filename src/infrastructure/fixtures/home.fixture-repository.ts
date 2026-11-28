@@ -1,8 +1,8 @@
 import type { HomeLandingViewModel, HomeRepository } from '../../features/home/model/home';
-import daNang from '../../shared/assets/figma/3a3f8.png';
+import daNang from '../../shared/assets/figma/home-auth/1dc61.png';
 import phuQuoc from '../../shared/assets/figma/a84f7.png';
 import daLat from '../../shared/assets/figma/6059f.png';
-import saiGon from '../../shared/assets/figma/42524.png';
+import hoiAn from '../../shared/assets/figma/home-auth/06bd1.png';
 import coast from '../../shared/assets/figma/e73d3.svg';
 const landing: HomeLandingViewModel = {
   inspiration: {
@@ -12,24 +12,24 @@ const landing: HomeLandingViewModel = {
   },
   stories: [
     {
-      name: 'Đà Nẵng – Hội An – Bà Nà',
-      duration: '4 ngày 3 đêm · 2–6 người',
+      name: 'Đà Nẵng',
+      duration: 'Biển · 3N2Đ',
       cover: { src: daNang, alt: '' },
     },
     {
-      name: 'Phú Quốc – Thiên đường biển đảo',
-      duration: '4 ngày 2 đêm · 2–6 người',
+      name: 'Phú Quốc',
+      duration: 'Đảo · 4N3Đ',
       cover: { src: phuQuoc, alt: '' },
     },
     {
-      name: 'Đà Lạt mộng mơ',
-      duration: '3 ngày 2 đêm · 2–5 người',
+      name: 'Đà Lạt',
+      duration: 'Núi · 3N2Đ',
       cover: { src: daLat, alt: '' },
     },
     {
-      name: 'Sài Gòn – Vũng Tàu',
-      duration: '3 ngày 2 đêm · 2–6 người',
-      cover: { src: saiGon, alt: '' },
+      name: 'Hội An',
+      duration: 'Phố cổ · 2N1Đ',
+      cover: { src: hoiAn, alt: '' },
     },
   ],
 };

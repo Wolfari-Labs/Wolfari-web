@@ -1,10 +1,9 @@
 import type { PlanViewModel, ActivityViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { localDate, planDays } from '../model/plan-presentation';
-import activityIcon from '../../../shared/assets/figma/b75a6.svg';
-import locationIcon from '../../../shared/assets/figma/12507.svg';
-import experienceIcon from '../../../shared/assets/figma/13a40.svg';
-import travelIcon from '../../../shared/assets/figma/a6d01.svg';
+import calendarIcon from '../../../shared/assets/figma/trips-plan/metric-calendar.svg';
+import pinIcon from '../../../shared/assets/figma/trips-plan/metric-pin.svg';
+import clockIcon from '../../../shared/assets/figma/trips-plan/metric-clock.svg';
 import styles from './PlanMetrics.module.css';
 
 function activityDay(activity: ActivityViewModel, timezone: string) {
@@ -64,44 +63,36 @@ export function PlanMetrics({
   const knownMinutes = durations.reduce<number>((sum, value) => sum + (value ?? 0), 0);
   const withoutTime = durations.filter((value) => value === null).length;
 
+  // Retain all four Web v2 slots. A missing travel-time feed is an unknown value, not zero.
   return (
     <section className={styles.strip} aria-label={`Tóm tắt lịch trình · ${scope}`}>
       <div className={styles.metrics}>
         <div className={styles.metric}>
           <span className={styles.icon} aria-hidden="true">
-            <img src={activityIcon} width="24" height="24" alt="" />
+            <img src={calendarIcon} alt="" />
           </span>
           <div className={styles.copy}>
             <strong>{activities.length}</strong>
-            <span>Hoạt động · {scope}</span>
+            <span>hoạt động</span>
           </div>
         </div>
         <div className={styles.metric}>
           <span className={styles.icon} aria-hidden="true">
-            <img src={locationIcon} width="24" height="24" alt="" />
+            <img src={pinIcon} alt="" />
           </span>
           <div className={styles.copy}>
             <strong>{locations}</strong>
-            <span>Địa điểm · {scope}</span>
+            <span>địa điểm</span>
           </div>
         </div>
         <div className={styles.metric}>
           <span className={styles.icon} aria-hidden="true">
-            <img src={experienceIcon} width="24" height="24" alt="" />
+            <img src={clockIcon} alt="" />
           </span>
           <div className={styles.copy}>
             <strong>{durationLabel(knownMinutes)}</strong>
-            <span>Trải nghiệm · {scope}</span>
+            <span>trải nghiệm</span>
             {withoutTime > 0 && <small>{withoutTime} hoạt động chưa tính giờ</small>}
-          </div>
-        </div>
-        <div className={styles.metric}>
-          <span className={styles.icon} aria-hidden="true">
-            <img src={travelIcon} width="24" height="24" alt="" />
-          </span>
-          <div className={styles.copy}>
-            <strong>—</strong>
-            <span>Di chuyển · {scope}</span>
           </div>
         </div>
       </div>

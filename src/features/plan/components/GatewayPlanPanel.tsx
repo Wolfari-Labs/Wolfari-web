@@ -552,6 +552,9 @@ export function GatewayPlanPanel({
         canEdit={canEdit}
         actions={actions}
         utilities={utilities}
+        recovery={
+          commands.blocked || commands.error || commands.partialFailure ? utilities : undefined
+        }
         feedback={feedback}
         onEdit={(activity) => {
           trigger.current = document.activeElement as HTMLElement;

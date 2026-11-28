@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, type FormEvent } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import type { PlanPolicySnapshot } from '../trips/repositories/trip.repository';
 import { useMembersRepositories } from './repositories/members-context';
@@ -15,10 +15,12 @@ import { browserStorage } from '../../shared/lib/browser-storage';
 import { unresolved } from '../../shared/types/operations';
 import { useCommandSession, OperationStatus } from '../../shared/components/OperationStatus';
 import { InvitationManagement } from './InvitationManagement';
+import { MemberRoleHelp } from './MemberRoleHelp';
+import { MemberRoster } from './MemberRoster';
+import { useFundRepositoryOptional } from '../fund/repositories/fund-context';
 import { TripHero } from '../trips/components/TripHero';
-import { Avatar } from '../../shared/components/Avatar';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
-import { Badge } from '../../shared/components/Ui';
+import { ActionMenu } from '../../shared/components/Ui';
+import { Icon } from '../../shared/components/Icon';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
 import { Drawer } from '../../shared/components/Drawer';
@@ -28,6 +30,32 @@ import type { MembershipViewModel } from './model/members';
 import type { DomainError } from '../../shared/types/result';
 import { paths } from '../../app/route-paths';
 import styles from './GatewayMembersPage.module.css';
+
+function MemberActions({
+  member,
+  disabled,
+  onRemove,
+}: {
+  member: MembershipViewModel;
+  disabled: boolean;
+  onRemove: (trigger: HTMLElement | null) => void;
+}) {
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  return (
+    <ActionMenu
+      label={`Thao tác thành viên · ${member.presentation.displayName ?? member.userId.slice(0, 8)}`}
+      triggerRef={triggerRef}
+      disabled={disabled}
+      items={[
+        {
+          label: 'Xóa thành viên',
+          danger: true,
+          action: () => onRemove(triggerRef.current),
+        },
+      ]}
+    />
+  );
+}
 
 function Workspace({
   actorId,
@@ -42,6 +70,8 @@ function Workspace({
     { membership } = useMembersRepositories(),
     qc = useQueryClient();
   const session = commands.forScope(actorId, tripId);
+  const navigate = useNavigate();
+  const fundRuntime = useFundRepositoryOptional()?.runtime;
   const refresh = useCallback(() => {
     for (const queryKey of [
       ['trip', 'detail', tripId],
@@ -66,6 +96,7 @@ function Workspace({
     trip.currentMembership.userId === actorId &&
     !trip.currentMembership.leftAt;
   const owner = readable && trip.currentMembership.role === 'OWNER';
+  const canInvite = readable && (trip.permissions.canInvite ?? owner);
   const [tab, setTab] = useState<'members' | 'policy' | 'invitations'>('members');
   const [includeLeft, setIncludeLeft] = useState(false);
   const [target, setTarget] = useState<MembershipViewModel | 'self' | null>(null);
@@ -111,6 +142,11 @@ function Workspace({
     queryFn: ({ signal }) => repo.getPlanPolicy!({ tripId, signal }),
   });
   const policy = policyQuery.data?.status === 'ready' ? policyQuery.data.data : null;
+  const fundQuery = useQuery({
+    queryKey: ['finance', actorId, tripId, 'fund'],
+    enabled: readable && !!fundRuntime,
+    queryFn: ({ signal }) => fundRuntime!.fund(tripId, signal),
+  });
   const selected = draft ?? policy;
   const members = useInfiniteQuery({
     queryKey: ['members', tripId, 'runtime', actorId, includeLeft],
@@ -133,7 +169,8 @@ function Workspace({
   const items = [
     ...new Map((members.data?.pages.flatMap((p) => p.items) ?? []).map((m) => [m.id, m])).values(),
   ];
-  const blocked = operation.busy || unresolved(operation) || !!trip?.archivedAt;
+  const blocked =
+    operation.busy || unresolved(operation) || !!trip?.archivedAt || trip?.lifecycle === 'ARCHIVED';
   const savePolicy = async (e: FormEvent) => {
     e.preventDefault();
     if (
@@ -226,7 +263,7 @@ function Workspace({
     setReason('');
   };
   return (
-    <div ref={workspaceRef} tabIndex={-1}>
+    <div ref={workspaceRef} tabIndex={-1} className={styles.workspaceRoot}>
       <OperationStatus session={session} />
       {!readable ? (
         tripQuery.isPending ? (
@@ -263,30 +300,37 @@ function Workspace({
             >
               Thành viên
             </Button>
-            {owner && (
-              <>
-                <Button
-                  variant={tab === 'invitations' ? 'secondary' : 'outline'}
-                  aria-pressed={tab === 'invitations'}
-                  onClick={() => setTab('invitations')}
-                >
-                  Lời mời
-                </Button>
-                <Button
-                  variant={tab === 'policy' ? 'secondary' : 'outline'}
-                  aria-pressed={tab === 'policy'}
-                  onClick={() => setTab('policy')}
-                >
-                  Quyền sửa lịch trình
-                </Button>
-              </>
+            {(owner || canInvite) && (
+              <Button
+                variant={tab === 'invitations' ? 'secondary' : 'outline'}
+                aria-pressed={tab === 'invitations'}
+                onClick={() => setTab('invitations')}
+              >
+                Lời mời
+              </Button>
             )}
-            <Button variant="plain" onClick={refresh}>
+            {owner && (
+              <Button
+                variant={tab === 'policy' ? 'secondary' : 'outline'}
+                aria-pressed={tab === 'policy'}
+                onClick={() => setTab('policy')}
+              >
+                Quyền sửa lịch trình
+              </Button>
+            )}
+            <Button
+              variant="plain"
+              className={styles.refresh}
+              icon={<Icon name="refresh" size={16} />}
+              onClick={refresh}
+            >
               Tải lại quyền và thành viên
             </Button>
           </div>
-          {tab === 'invitations' && owner ? (
-            <InvitationManagement key={actorId + ':' + tripId} trip={trip} active />
+          {tab === 'invitations' && (owner || canInvite) ? (
+            <div className={styles.invitationTab}>
+              <InvitationManagement key={actorId + ':' + tripId} trip={trip} active />
+            </div>
           ) : tab === 'policy' && owner ? (
             <div className={styles.policyWorkspace}>
               <section
@@ -294,11 +338,18 @@ function Workspace({
                 data-cp08-primary
                 aria-label="Chỉnh sửa quyền lịch trình"
               >
-                <h2>Quyền sửa lịch trình</h2>
-                <p>
-                  Chọn người được sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp quyền
-                  lại.
-                </p>
+                <div className={styles.cardHeader}>
+                  <span className={styles.iconBadge} aria-hidden="true">
+                    <Icon name="edit" size={22} />
+                  </span>
+                  <div>
+                    <h2>Quyền sửa lịch trình</h2>
+                    <p>
+                      Chọn người được sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp
+                      quyền lại.
+                    </p>
+                  </div>
+                </div>
                 {policyQuery.data?.status === 'error' ? (
                   <ContentState
                     state="error"
@@ -333,16 +384,20 @@ function Workspace({
                       <legend>Ai có thể sửa lịch trình</legend>
                       {(
                         [
-                          ['OWNER_ONLY', 'Chỉ chủ chuyến', 'Chỉ Owner được chỉnh sửa lịch trình.'],
+                          [
+                            'OWNER_ONLY',
+                            'Chỉ chủ chuyến',
+                            'Chỉ chủ chuyến được chỉnh sửa lịch trình.',
+                          ],
                           [
                             'ALL_MEMBERS',
                             'Mọi thành viên đang hoạt động',
-                            'Owner và mọi Member đang tham gia được chỉnh sửa lịch trình.',
+                            'Chủ chuyến và mọi thành viên đang tham gia được chỉnh sửa lịch trình.',
                           ],
                           [
                             'SELECTED_MEMBERS',
                             'Thành viên được chọn',
-                            'Owner và các Member được chọn bên dưới được chỉnh sửa lịch trình.',
+                            'Chủ chuyến và các thành viên được chọn bên dưới được chỉnh sửa lịch trình.',
                           ],
                         ] as const
                       ).map(([value, label, description]) => (
@@ -357,9 +412,7 @@ function Workspace({
                           />
                           <span>
                             <strong>{label}</strong>
-                            <small>
-                              {value} · {description}
-                            </small>
+                            <small>{description}</small>
                           </span>
                         </label>
                       ))}
@@ -386,7 +439,7 @@ function Workspace({
                         {!members.isPending &&
                           !members.isError &&
                           !items.some((m) => !m.leftAt && m.role !== 'OWNER') && (
-                            <p>Chưa có Member đang hoạt động trong các trang đã tải.</p>
+                            <p>Chưa có thành viên đang hoạt động trong các trang đã tải.</p>
                           )}
                         {items
                           .filter((m) => !m.leftAt && m.role !== 'OWNER')
@@ -432,6 +485,8 @@ function Workspace({
                     )}
                     <Button
                       type="submit"
+                      className={styles.submit}
+                      icon={<Icon name="check" size={16} />}
                       disabled={policyBusy || policyStorageBlocked || !!trip.archivedAt}
                       loading={policyBusy}
                     >
@@ -455,21 +510,21 @@ function Workspace({
                 aria-label="Hướng dẫn quyền sửa lịch trình"
                 data-cp08-secondary
               >
-                <div className={styles.note} data-tone="fund">
+                <div className={styles.note} data-tone="owner">
                   <h3>Điểm cần nhớ</h3>
                   <p>
-                    Owner luôn có quyền sửa lịch trình. Thành viên rời rồi tham gia lại cần được cấp
-                    quyền lại.
+                    Chủ chuyến luôn có quyền sửa lịch trình. Thành viên rời rồi tham gia lại cần
+                    được cấp quyền lại.
                   </p>
                 </div>
                 <div className={styles.note} data-tone="policy">
                   <h3>Không suy rộng quyền</h3>
                   <p>
-                    Quyền sửa lịch trình không cấp quyền quản lý thành viên, lời mời hay trách nhiệm
-                    quỹ.
+                    Người được sửa lịch trình có thể mời thêm thành viên. Quyền quản lý thành viên
+                    và trách nhiệm quỹ được cấp riêng.
                   </p>
                 </div>
-                <div className={styles.note}>
+                <div className={styles.note} data-tone="transfer">
                   <h3>Kiểm tra tại thời điểm lưu</h3>
                   <p>
                     Hệ thống kiểm tra quyền hiện hành trước mỗi thay đổi. Khi kết quả chưa rõ, thử
@@ -481,18 +536,37 @@ function Workspace({
           ) : (
             <div className={styles.workspace}>
               <section className={styles.panel} aria-label="Danh sách thành viên" data-cp08-primary>
-                <h2>Thành viên chuyến đi</h2>
-                <p className={styles.intro}>
-                  Vai trò trong chuyến đi và trách nhiệm quỹ được quản lý riêng.
-                </p>
-                <label className={styles.check}>
-                  <input
-                    type="checkbox"
-                    checked={includeLeft}
-                    onChange={(e) => setIncludeLeft(e.target.checked)}
-                  />{' '}
-                  Hiển thị người đã rời
-                </label>
+                <div className={styles.panelHeading}>
+                  <div className={styles.panelTitle}>
+                    <h2>Thành viên chuyến đi</h2>
+                    <MemberRoleHelp />
+                  </div>
+                  {canInvite && (
+                    <Button
+                      className={styles.inviteButton}
+                      icon={<Icon name="userPlus" size={17} />}
+                      onClick={() => setTab('invitations')}
+                    >
+                      Mời thành viên
+                    </Button>
+                  )}
+                  <div className={styles.rosterControls}>
+                    <label className={styles.check}>
+                      <input
+                        type="checkbox"
+                        checked={includeLeft}
+                        onChange={(e) => setIncludeLeft(e.target.checked)}
+                      />{' '}
+                      Hiển thị người đã rời
+                    </label>
+                    {members.data && (
+                      <p className={styles.metadata}>
+                        {items.length} thành viên đã tải
+                        {members.hasNextPage ? ' · Còn trang tiếp theo' : ''}
+                      </p>
+                    )}
+                  </div>
+                </div>
                 {members.isFetchNextPageError ? (
                   <Alert live tone="warning">
                     Chưa tải được trang tiếp theo. Các thành viên đã tải vẫn được giữ.{' '}
@@ -513,75 +587,69 @@ function Workspace({
                 {!members.isPending && !members.isError && items.length === 0 && (
                   <ContentState state="empty" headingLevel={2} />
                 )}
-                {members.data && (
-                  <p className={styles.metadata}>
-                    {items.length} thành viên đã tải
-                    {members.hasNextPage ? ' · Còn trang tiếp theo' : ''}
-                  </p>
-                )}
-                <ul className={styles.list}>
-                  {items.map((m) => (
-                    <li key={m.id}>
-                      <div className={styles.memberRow}>
-                        <div className={styles.memberIdentity}>
-                          <Avatar
-                            name={m.presentation.displayName ?? m.userId.slice(0, 8)}
-                            image={m.presentation.avatar}
-                          />
-                          <div>
-                            <strong>
-                              {m.presentation.displayName ?? `User ${m.userId.slice(0, 8)}`}
-                            </strong>
-                            <span className={styles.metadata}>
-                              Tham gia{' '}
-                              {new Date(m.joinedAt).toLocaleDateString('vi-VN', {
-                                timeZone: trip.timezone,
-                              })}
-                            </span>
-                            {m.leftAt && (
-                              <span className={styles.metadata}>
-                                Đã rời{' '}
-                                {new Date(m.leftAt).toLocaleDateString('vi-VN', {
-                                  timeZone: trip.timezone,
-                                })}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className={styles.roles}>
-                          <Badge tone={m.role === 'OWNER' ? 'success' : 'neutral'}>
-                            {m.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
-                          </Badge>
-                          {m.userId === actorId && <Badge>Bạn</Badge>}
-                          {m.leftAt && <Badge tone="warning">· Đã rời</Badge>}
-                        </div>
-                        {owner && m.role !== 'OWNER' && !m.leftAt && (
-                          <Button
-                            variant="outline"
+                {items.length > 0 && (
+                  <MemberRoster
+                    members={items}
+                    currentUserId={actorId}
+                    timezone={trip.timezone}
+                    canEditPlan={(member) => {
+                      if (member.leftAt || trip.archivedAt || trip.lifecycle === 'ARCHIVED')
+                        return false;
+                      if (member.role === 'OWNER') return true;
+                      const currentPolicySnapshot =
+                        policy?.membershipRevision === trip.membershipRevision ? policy : null;
+                      const currentPolicy = currentPolicySnapshot?.policy ?? trip.planEditPolicy;
+                      return (
+                        currentPolicy === 'ALL_MEMBERS' ||
+                        (currentPolicy === 'SELECTED_MEMBERS' &&
+                          !!currentPolicySnapshot?.editorMemberIds.includes(member.id))
+                      );
+                    }}
+                    isFundHolder={(member) =>
+                      !member.leftAt &&
+                      fundQuery.isSuccess &&
+                      fundQuery.data?.holder_user_id === member.userId
+                    }
+                    renderActions={(member) => {
+                      if (!owner || member.role === 'OWNER' || member.leftAt) return null;
+                      const name = member.presentation.displayName ?? member.userId.slice(0, 8);
+                      return (
+                        <>
+                          {repo.manageTrip && (
+                            <Button
+                              variant="plain"
+                              className={styles.transferButton}
+                              icon={<Icon name="handover" size={15} />}
+                              disabled={blocked}
+                              aria-label={`Chuyển Owner · ${name}`}
+                              onClick={() => {
+                                const query = new URLSearchParams({
+                                  mode: 'settings',
+                                  section: 'archive',
+                                  transferTo: member.id,
+                                });
+                                navigate(`${paths.settings(trip.id)}?${query}`);
+                              }}
+                            >
+                              Chuyển Owner
+                            </Button>
+                          )}
+                          <MemberActions
+                            member={member}
                             disabled={blocked}
-                            aria-label={`Xóa thành viên · ${m.presentation.displayName ?? m.userId.slice(0, 8)}`}
-                            onClick={(event) => {
-                              lifecycleOrigin.current = event.currentTarget;
-                              setTarget(m);
+                            onRemove={(trigger) => {
+                              lifecycleOrigin.current = trigger;
+                              setTarget(member);
                             }}
-                          >
-                            Xóa thành viên
-                          </Button>
-                        )}
-                      </div>
-                      <details>
-                        <summary>Chi tiết hỗ trợ</summary>
-                        <p>
-                          Membership: {m.id}
-                          <br />
-                          User: {m.userId}
-                        </p>
-                      </details>
-                    </li>
-                  ))}
-                </ul>
+                          />
+                        </>
+                      );
+                    }}
+                  />
+                )}
                 {members.hasNextPage && (
                   <Button
+                    className={styles.loadMore}
                     disabled={members.isFetchingNextPage}
                     onClick={() => void members.fetchNextPage()}
                   >
@@ -601,46 +669,7 @@ function Workspace({
                     Rời chuyến đi
                   </Button>
                 )}
-                <div className={styles.note} data-tone="owner">
-                  <h3>Rời hoặc xóa thành viên</h3>
-                  <p>
-                    Hệ thống kiểm tra trách nhiệm quỹ và khoản đóng góp còn chờ. Thành viên chỉ thay
-                    đổi sau khi có kết quả xác nhận; đóng hộp thoại không hủy yêu cầu đã gửi.
-                  </p>
-                </div>
               </section>
-              <aside
-                className={styles.guidance}
-                aria-label="Quyền và trách nhiệm"
-                data-cp08-secondary
-              >
-                <h2>Quyền &amp; trách nhiệm</h2>
-                <div className={styles.note} data-tone="owner">
-                  <h3>Owner</h3>
-                  <p>
-                    Mỗi chuyến đi có một chủ chuyến quản lý thành viên, lời mời và quyền sửa lịch
-                    trình.
-                  </p>
-                </div>
-                <div className={styles.note} data-tone="fund">
-                  <h3>Fund Holder</h3>
-                  <p>
-                    Trách nhiệm quỹ độc lập với vai trò Owner. Xem thông tin người giữ quỹ tại Quỹ
-                    nhóm.
-                  </p>
-                </div>
-                <div className={styles.note} data-tone="policy">
-                  <h3>Quyền sửa lịch trình</h3>
-                  <p>
-                    Chính sách này không cấp quyền quản lý thành viên hay xác nhận giao dịch quỹ.
-                  </p>
-                </div>
-                <div className={styles.note}>
-                  <h3>Chuyển Owner</h3>
-                  <p>Thao tác chuyển chủ chuyến chưa được hỗ trợ trên giao diện hiện tại.</p>
-                </div>
-                <Link to={paths.fund(tripId)}>Xem trách nhiệm tại Quỹ nhóm →</Link>
-              </aside>
             </div>
           )}
         </>
@@ -681,21 +710,6 @@ export function GatewayMembersPage({ commands }: { commands: CommandCoordinator 
   });
   return (
     <section className={styles.page} data-flow="gateway-members">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Thành viên"
-        mobile={
-          <>
-            <nav className={styles.breadcrumb} aria-label="Đường dẫn">
-              <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-              <span aria-hidden="true">›</span>
-              <span>Thành viên</span>
-            </nav>
-            <h1 className={styles.visuallyHidden}>Thành viên</h1>
-          </>
-        }
-      />
       {actor.data?.status === 'ready' ? (
         <Workspace
           key={actor.data.data.id + ':' + tripId}

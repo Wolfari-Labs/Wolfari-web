@@ -17,7 +17,7 @@ for (const viewport of [
     await page.goto(`/trips/${tripId}/plan`);
     await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
 
-    await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
     const trigger = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
     await trigger.click();
     const dialog = page.getByRole('dialog', { name: 'Thêm hoạt động' });

@@ -136,7 +136,7 @@ async function setup(options: { member?: boolean; archived?: boolean } = {}) {
 const item = (title: string) => within(screen.getByRole('listitem', { name: title }));
 const add = () => screen.getByRole('button', { name: 'Thêm hoạt động' });
 async function openManualCreate(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(document.querySelector('summary[aria-label="Tùy chọn lịch trình"]')!);
+  await user.click(add());
   const trigger = screen.getByRole('button', { name: 'Tạo hoạt động thủ công' });
   await user.click(trigger);
   return trigger;
@@ -146,6 +146,7 @@ const save = () => screen.getByRole('button', { name: 'Lưu' });
 describe('Gateway Plan controls', () => {
   it('opens and closes the selected-place pool without writing, then returns focus', async () => {
     const { user, create, update, reorder } = await setup();
+    expect(screen.queryByLabelText('Tùy chọn lịch trình')).not.toBeInTheDocument();
     await user.click(add());
     expect(screen.getByRole('heading', { name: 'Đã chọn · Chưa xếp lịch' })).toBeInTheDocument();
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
@@ -216,6 +217,7 @@ describe('Gateway Plan controls', () => {
     });
     expect(refresh).toHaveBeenCalledTimes(2);
     expect(screen.queryByRole('form')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Đóng danh sách hoạt động' }));
     expect(add()).toBeEnabled();
     expect(screen.queryByText('Đã lưu thay đổi.')).not.toBeInTheDocument();
     expect(screen.queryByText('Đang lưu thay đổi…')).not.toBeInTheDocument();

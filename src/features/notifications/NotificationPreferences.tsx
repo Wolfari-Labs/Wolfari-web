@@ -10,6 +10,7 @@ import { Switch } from '../../shared/components/Ui';
 import { useWriteScope } from '../../shared/lib/use-write-scope';
 import { commandFailure } from '../../shared/lib/command-failure';
 import { notificationGroups, type Preferences } from './notification.repository';
+import { Bell, Mail } from 'lucide-react';
 import styles from './Notifications.module.css';
 import { BrowserPushPanel } from './BrowserPushPanel';
 const labels = {
@@ -20,7 +21,13 @@ const labels = {
   CLOSURE: 'Chốt quỹ',
   PRICE: 'Theo dõi giá',
 };
-export function NotificationPreferences({ actor }: { actor: string }) {
+export function NotificationPreferences({
+  actor,
+  includeBrowserPush = true,
+}: {
+  actor: string;
+  includeBrowserPush?: boolean;
+}) {
   const browserPush = useRuntimeServices()?.browserPush;
   const repository = useRuntimeServices()?.notifications,
     cache = useQueryClient();
@@ -38,8 +45,9 @@ export function NotificationPreferences({ actor }: { actor: string }) {
     [conflict, setConflict] = useState(false);
   const [success, setSuccess] = useState('');
   const value = draft ?? query.data;
-  if (!repository)
-    return <Alert>Tùy chọn nhận thông báo khả dụng khi sử dụng tài khoản thật.</Alert>;
+  // Without an account-backed repository (fixture preview) there is nothing to configure; the
+  // app-wide preview indicator already explains that.
+  if (!repository) return null;
   if (!value)
     return query.isPending ? (
       <ContentState state="loading" />
@@ -83,27 +91,46 @@ export function NotificationPreferences({ actor }: { actor: string }) {
   };
   return (
     <div className={styles.preferences} id="notifications">
-      <p>
-        Áp dụng cho email và thiết bị đã đăng ký. Đăng ký trình duyệt được quản lý riêng bên dưới.
+      <p className={styles.intro}>
+        Áp dụng cho email và thiết bị đã đăng ký.
+        {includeBrowserPush && ' Đăng ký trình duyệt được quản lý riêng bên dưới.'}
       </p>
       <SuccessToast message={success} onDismiss={() => setSuccess('')} />
-      {browserPush && <BrowserPushPanel service={browserPush} actor={actor} />}
-      <Switch
-        label="Cho phép email"
-        checked={value.email_enabled}
-        disabled={busy}
-        onChange={(email_enabled) => setDraft({ ...value, email_enabled })}
-      />
-      <div className={styles.switchRow}>
-        <Switch
-          label="Cho phép push trên thiết bị đã đăng ký"
-          checked={value.push_enabled}
-          disabled={busy}
-          onChange={(push_enabled) => setDraft({ ...value, push_enabled })}
-        />
-        <span className={styles.soon}>Sắp có</span>
+      <div className={styles.channel}>
+        <span className={styles.channelIcon} aria-hidden="true">
+          <Mail size={18} strokeWidth={2} />
+        </span>
+        <div className={styles.channelBody}>
+          <Switch
+            label="Cho phép email"
+            checked={value.email_enabled}
+            disabled={busy}
+            onChange={(email_enabled) => setDraft({ ...value, email_enabled })}
+          />
+          <small>Nhận nhắc việc và cập nhật qua email</small>
+        </div>
       </div>
-      <details>
+      <div className={styles.channel}>
+        <span className={styles.channelIcon} aria-hidden="true">
+          <Bell size={18} strokeWidth={2} />
+        </span>
+        <div className={`${styles.channelBody} ${styles.switchRow}`}>
+          <Switch
+            label="Cho phép push trên thiết bị đã đăng ký"
+            checked={value.push_enabled}
+            disabled={busy}
+            onChange={(push_enabled) => setDraft({ ...value, push_enabled })}
+          />
+          <small>Nhận thông báo đẩy trên thiết bị đã đăng ký</small>
+        </div>
+      </div>
+      {includeBrowserPush && browserPush && (
+        <details className={styles.groups}>
+          <summary>Thiết bị nhận push</summary>
+          <BrowserPushPanel service={browserPush} actor={actor} />
+        </details>
+      )}
+      <details className={styles.groups}>
         <summary>Tùy chọn từng nhóm</summary>
         {notificationGroups.map((group) => (
           <fieldset key={group}>
@@ -154,7 +181,12 @@ export function NotificationPreferences({ actor }: { actor: string }) {
           Tải lại và dùng tùy chọn hiện tại
         </Button>
       )}
-      <Button loading={busy} disabled={!draft || conflict} onClick={() => void save()}>
+      <Button
+        className={styles.savePreferences}
+        loading={busy}
+        disabled={!draft || conflict}
+        onClick={() => void save()}
+      >
         Lưu tùy chọn
       </Button>
     </div>

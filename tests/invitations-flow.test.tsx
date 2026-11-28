@@ -1,5 +1,5 @@
 import { StrictMode, useState } from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, useLocation } from 'react-router';
@@ -666,6 +666,129 @@ describe('Owner invitation management', () => {
     expect(revoke).toHaveLength(2);
     expect(revoke[0]).toBeEnabled();
     expect(revoke[1]).toBeDisabled();
+  });
+  it('an invitation editor can manage only their own invitations', async () => {
+    const original = await ownerTrip();
+    const trip = {
+      ...original,
+      currentMembership: { ...original.currentMembership, role: 'MEMBER' as const },
+      permissions: { ...original.permissions, canInvite: true },
+    };
+    const repo = repository();
+    vi.mocked(repo.listInvitations).mockResolvedValue({
+      status: 'ready',
+      data: {
+        items: [
+          { ...item, invitedByUserId: trip.currentMembership.userId },
+          { ...item, id: 'other', email: 'other@example.com', invitedByUserId: 'other-user' },
+          { ...item, id: 'legacy', email: 'legacy@example.com' },
+          { ...item, id: 'null', email: 'null@example.com', invitedByUserId: null },
+        ],
+        nextCursor: null,
+      },
+    });
+    mount(repo, <InvitationManagement trip={trip} />);
+    const ownRow = (await screen.findByText('guest@example.com')).closest('li')!;
+    for (const email of ['other@example.com', 'legacy@example.com', 'null@example.com']) {
+      const row = screen.getByText(email).closest('li')!;
+      expect(within(row).queryByRole('button', { name: 'Gửi lại' })).not.toBeInTheDocument();
+      expect(within(row).queryByRole('button', { name: 'Thu hồi' })).not.toBeInTheDocument();
+    }
+    await userEvent.click(within(ownRow).getByRole('button', { name: 'Gửi lại' }));
+    await screen.findByText(/Yêu cầu gửi lại đã được tiếp nhận/);
+    await userEvent.click(within(ownRow).getByRole('button', { name: 'Thu hồi' }));
+    await userEvent.click(within(ownRow).getByRole('button', { name: 'Xác nhận thu hồi' }));
+    expect(repo.resendInvitation).toHaveBeenCalledTimes(1);
+    expect(repo.revokeInvitation).toHaveBeenCalledTimes(1);
+    expect(repo.revokeInvitation).toHaveBeenCalledWith(
+      expect.objectContaining({ invitationId: item.id }),
+    );
+  });
+  it('Owner can manage an invitation created by another user', async () => {
+    const trip = await ownerTrip();
+    const repo = repository();
+    vi.mocked(repo.listInvitations).mockResolvedValue({
+      status: 'ready',
+      data: {
+        items: [{ ...item, invitedByUserId: 'other-user' }],
+        nextCursor: null,
+      },
+    });
+    mount(repo, <InvitationManagement trip={trip} />);
+    await userEvent.click(await screen.findByRole('button', { name: 'Gửi lại' }));
+    expect(repo.resendInvitation).toHaveBeenCalledWith(
+      expect.objectContaining({ invitationId: item.id }),
+    );
+  });
+  it.each([undefined, null, 'other-user'])(
+    'does not replay an editor attempt without matching target inviter %s',
+    async (invitedByUserId) => {
+      const original = await ownerTrip();
+      const trip = {
+        ...original,
+        currentMembership: { ...original.currentMembership, role: 'MEMBER' as const },
+        permissions: { ...original.permissions, canInvite: true },
+      };
+      const repo = repository();
+      vi.mocked(repo.listInvitations).mockResolvedValue({
+        status: 'ready',
+        data: {
+          items: [{ ...item, ...(invitedByUserId === undefined ? {} : { invitedByUserId }) }],
+          nextCursor: null,
+        },
+      });
+      invitationManagementAttempt.acquire(`${trip.id}:${trip.currentMembership.id}`, {
+        action: 'resend',
+        id: item.id,
+        intent: { expectedVersion: item.version, idempotencyKey: 'retained-resend' },
+      });
+      mount(repo, <InvitationManagement trip={trip} />);
+      await screen.findByText('guest@example.com');
+      const retry = screen.getByRole('button', { name: 'Thử lại cùng yêu cầu' });
+      expect(retry).toBeDisabled();
+      await userEvent.click(retry);
+      expect(repo.resendInvitation).not.toHaveBeenCalled();
+      expect(repo.revokeInvitation).not.toHaveBeenCalled();
+    },
+  );
+  it('waits for the editor target before replaying its exact retained intent', async () => {
+    const original = await ownerTrip();
+    const trip = {
+      ...original,
+      currentMembership: { ...original.currentMembership, role: 'MEMBER' as const },
+      permissions: { ...original.permissions, canInvite: true },
+    };
+    const repo = repository();
+    let load!: (value: Awaited<ReturnType<InvitationRepository['listInvitations']>>) => void;
+    vi.mocked(repo.listInvitations).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          load = resolve;
+        }),
+    );
+    const intent = { expectedVersion: item.version, idempotencyKey: 'retained-own-resend' };
+    invitationManagementAttempt.acquire(`${trip.id}:${trip.currentMembership.id}`, {
+      action: 'resend',
+      id: item.id,
+      intent,
+    });
+    mount(repo, <InvitationManagement trip={trip} />);
+    expect(screen.getByRole('button', { name: 'Thử lại cùng yêu cầu' })).toBeDisabled();
+    await act(async () =>
+      load({
+        status: 'ready',
+        data: {
+          items: [{ ...item, invitedByUserId: trip.currentMembership.userId }],
+          nextCursor: null,
+        },
+      }),
+    );
+    const retry = screen.getByRole('button', { name: 'Thử lại cùng yêu cầu' });
+    await waitFor(() => expect(retry).toBeEnabled());
+    await userEvent.click(retry);
+    expect(repo.resendInvitation).toHaveBeenCalledWith(
+      expect.objectContaining({ invitationId: item.id, intent }),
+    );
   });
   it('paginates, deduplicates, and resets cursor when filtering', async () => {
     const trip = await ownerTrip();

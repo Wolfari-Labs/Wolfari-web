@@ -1,386 +1,200 @@
 .page {
   composes: page from '../../../shared/styles/WorkspacePage.module.css';
   width: 100%;
-  color: var(--color-ink);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 
 .breadcrumb {
   composes: breadcrumb from '../../../shared/styles/WorkspacePage.module.css';
 }
 
-@media (max-width: 768px) {
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-height: 32px;
-    font-size: var(--font-size-small);
-    line-height: 20px;
-    color: var(--color-muted);
-  }
-
-  .breadcrumb h1 {
-    margin: 0;
-    font: inherit;
-    color: var(--color-muted);
-  }
-
-  .breadcrumb a {
-    color: var(--color-muted);
-  }
-}
-
-.columns {
-  display: grid;
-  /* The information card is the primary surface; management stays compact. */
-  grid-template-columns: minmax(0, 1.6fr) minmax(360px, 1fr);
-  gap: 18px;
-  margin-top: 16px;
-  align-items: start;
-}
-
 .card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   min-width: 0;
-  padding: 24px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-card);
-  background: var(--color-white);
+  padding: 20px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--v2-radius-tile);
+  background:
+    linear-gradient(var(--v2-white), var(--v2-white)) padding-box,
+    var(--v2-gradient-diagonal) border-box;
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 
 .card h2,
 .card h3,
 .card p {
-  margin-top: 0;
+  margin: 0;
 }
 
 .card h2 {
-  margin-bottom: 4px;
-  font-size: var(--font-size-title);
-  line-height: 34px;
+  color: var(--v2-ink);
+  font: 800 19px/normal var(--v2-font);
 }
 
-.card h3 {
-  margin-bottom: 10px;
-  font-size: var(--font-size-title);
-  line-height: 34px;
+.fieldBox {
+  border: 1px solid transparent;
+  border-radius: var(--v2-radius-row);
+  background:
+    linear-gradient(var(--v2-row), var(--v2-row)) padding-box,
+    linear-gradient(125deg, var(--v2-grad-start), var(--v2-grad-end) 65%, var(--v2-grad-start))
+      border-box;
 }
 
-.cardHeading,
-.memberHeading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+.editCard {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--v2-white);
+  box-shadow: none;
 }
 
-.cardHeading > div,
-.memberHeading > div {
-  min-width: 0;
-}
-
-.cardHeading p,
-.memberHeading p {
-  margin-bottom: 0;
-  font-size: var(--font-size-small);
-  line-height: 20px;
-  color: var(--color-muted);
-}
-
-.cardHeading > button,
-.memberHeading > a {
-  flex: 0 0 auto;
-}
-
-.informationGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 18px;
-  margin: 20px 0;
-}
-
-.informationGrid > div {
-  min-width: 0;
-  min-height: 66px;
-  padding: 10px 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-8);
-  background: var(--color-pale);
-}
-
-.informationGrid .fullRow {
-  grid-column: 1 / -1;
-}
-
-.informationGrid dt,
-.fieldLabel {
-  display: block;
-  margin-bottom: 3px;
-  font-size: var(--font-size-label);
-  line-height: 22px;
-  color: var(--color-muted);
-}
-
-.informationGrid dd {
-  margin: 0;
-  font-size: var(--font-size-body);
-  line-height: 24px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-.informationGrid .descriptionBox {
-  min-height: 96px;
-}
-
-.descriptionBox dd {
-  font-weight: 400;
-}
-
-.coverField {
-  margin-top: 8px;
-}
-
-.coverRow {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.coverRow picture,
-.coverRow img {
-  display: block;
-  width: 250px;
-  height: 78px;
-  max-width: 100%;
-  object-fit: cover;
+.editCard > h2 {
+  font-size: 19px;
 }
 
 .form {
   display: grid;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
+}
+
+.fieldBox {
+  min-width: 0;
+  margin: 0;
+  padding: 12px 16px;
+}
+
+.displayField {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr) 36px;
+  align-items: center;
+  gap: 8px 18px;
+  min-height: 44px;
+}
+
+.fieldName {
+  color: var(--v2-ink);
+  font: 700 13px/18px var(--v2-font);
+  overflow-wrap: anywhere;
+}
+
+.fieldValue {
+  min-width: 0;
+  margin: 0;
+  color: var(--v2-nav-text);
+  font: 600 14px/21px var(--v2-font);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.editFieldButton {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--v2-blue-text);
+  cursor: pointer;
+}
+.editFieldButton:hover:not(:disabled) {
+  background: var(--v2-sky);
+}
+.editFieldButton:focus-visible {
+  outline: 2px solid var(--v2-blue);
+  outline-offset: 2px;
+}
+.editFieldButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .refreshButton {
   margin-top: 10px;
 }
 
-.readOnlyPanel {
-  margin-top: 8px;
-  padding: 14px 16px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-10);
-  background: var(--color-pale);
-}
-
-.readOnlyPanel h3 {
-  margin: 0;
-  font-size: var(--font-size-subtitle);
-  line-height: 26px;
-}
-
-.readOnlyGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 18px;
-  margin: 12px 0 0;
-}
-
-.readOnlyGrid > div {
-  min-width: 0;
-}
-
-.readOnlyGrid dt {
-  font-size: var(--font-size-small);
-  line-height: 20px;
-  color: var(--color-muted);
-}
-
-.readOnlyGrid dd {
-  margin: 0;
-  font-size: var(--font-size-label);
-  line-height: 22px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .readOnlyGrid dd {
-    font-size: 15px;
-  }
-}
-
-.currentValue {
-  color: var(--color-muted) !important;
-}
-
 .formActions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 2px;
-}
-
-.separator {
-  height: 1px;
-  margin: 16px 0;
-  background: var(--color-line);
-}
-
-.memberHeading p {
-  font-size: var(--font-size-label);
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--color-ink);
-}
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .memberHeading p {
-    font-size: 15px;
-  }
-}
-
-.settingSection h3 {
-  margin-top: 0;
-}
-
-.mobileTitle {
-  display: none;
+  margin-top: 4px;
 }
 
 .page > :global([role='status']),
 .page > :global([role='alert']) {
-  margin-top: 14px;
+  margin-bottom: 14px;
 }
 
-@media (max-width: 1100px) {
-  .columns {
-    grid-template-columns: minmax(0, 1fr);
+@media (min-width: 769px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .breadcrumb {
+    flex: none;
+  }
+  .page > :global([data-region='trip-hero']) {
+    flex: none;
   }
 }
 
 @media (max-width: 768px) {
   .page {
+    min-width: 0;
     padding: 12px 16px 28px;
+    overflow-x: clip;
   }
-
   .breadcrumb {
-    min-height: 44px;
-    font-size: 14px;
-  }
-
-  .breadcrumb a:not(:last-of-type),
-  .breadcrumb span {
-    display: none;
-  }
-
-  .breadcrumb h1 {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--color-ink);
-  }
-
-  .breadcrumb a {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    min-height: 44px;
+    gap: 6px;
+    min-height: 32px;
+    margin-bottom: 16px;
+    color: var(--v2-muted);
+    font: 700 12px/18px var(--v2-font);
   }
-
-  .mobileTitle {
-    display: block;
-    margin: 24px 0;
-  }
-
-  .mobileTitle h2 {
+  .breadcrumb h1 {
     margin: 0;
-    font-size: 30px;
-    line-height: 36px;
+    color: var(--v2-blue-text);
+    font: inherit;
   }
-
-  .columns {
-    margin-top: 16px;
-    gap: 16px;
+  .breadcrumb a {
+    color: inherit;
   }
-
-  .card {
-    padding: 18px 16px;
-    border-radius: 16px;
-  }
-
-  .card h2,
-  .card h3 {
-    font-size: 20px;
-    line-height: 28px;
-  }
-
-  .cardHeading,
-  .memberHeading {
-    flex-direction: column;
-  }
-
-  .cardHeading > button,
-  .memberHeading > a {
-    width: 100%;
-  }
-
-  .informationGrid,
-  .readOnlyGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .coverRow {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .coverRow picture,
-  .coverRow img {
-    width: 100%;
-    height: 166px;
-    border-radius: 14px;
-  }
-
-  .coverRow > div,
-  .coverRow button {
-    width: 100%;
-  }
-
   .formActions {
     flex-direction: column-reverse;
   }
-
   .formActions button {
     width: 100%;
   }
+}
 
-  .fundNote {
-    grid-template-columns: 1fr;
+@media (max-width: 600px) {
+  .displayField {
+    grid-template-columns: minmax(0, 1fr) 36px;
+    gap: 4px 10px;
   }
-
-  .fundNote a,
-  .fundNote span {
+  .fieldName,
+  .fieldValue {
     grid-column: 1;
-    grid-row: auto;
+  }
+  .editFieldButton {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }
 
 @media (max-width: 360px) {
   .page {
     padding-inline: 10px;
-  }
-
-  .card {
-    padding-inline: 12px;
-  }
-}
-
-/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
-@media (min-width: 769px) {
-  .columns {
-    gap: var(--grid-gap);
-  }
-  .card {
-    padding: var(--card-padding-narrow);
-    border-radius: var(--radius-panel);
   }
 }

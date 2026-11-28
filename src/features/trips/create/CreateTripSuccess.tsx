@@ -3,6 +3,8 @@ import { paths } from '../../../app/route-paths';
 import { Button } from '../../../shared/components/Button';
 import { ButtonLink } from '../../../shared/components/ButtonLink';
 import { Drawer } from '../../../shared/components/Drawer';
+import { Link } from 'react-router';
+import { Alert } from '../../../shared/components/Alert';
 import mascot from '../../../shared/assets/figma/ddfc7.png';
 import styles from './CreateTripPage.module.css';
 
@@ -10,10 +12,12 @@ export function CreateTripSuccess({
   tripId,
   onDismiss,
   returnFocusRef,
+  coverFailed = false,
 }: {
   tripId: string;
   onDismiss: () => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
+  coverFailed?: boolean;
 }) {
   const primaryFocusRef = useRef<HTMLAnchorElement>(null);
   return (
@@ -34,6 +38,12 @@ export function CreateTripSuccess({
         <span>
           Một hành trình mới đang chờ bạn. Bắt đầu lên lịch và lưu lại những điều tuyệt vời nhé!
         </span>
+        {coverFailed && (
+          <Alert tone="warning">
+            Chưa xác nhận được ảnh bìa. Bạn có thể kiểm tra hoặc tải lại ảnh trong{' '}
+            <Link to={paths.settings(tripId)}>Cài đặt chuyến đi</Link>.
+          </Alert>
+        )}
         <div className={styles.successActions}>
           <ButtonLink ref={primaryFocusRef} to={paths.trip(tripId)}>
             Mở chuyến đi <span aria-hidden="true">→</span>

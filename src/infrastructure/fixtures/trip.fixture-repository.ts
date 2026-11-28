@@ -9,6 +9,7 @@ import { fixtureViewerId, readableFixtureTrips, previewTripId } from './trip-cat
 import overviewMobile from '../../shared/assets/figma/8efc6.svg';
 import overviewCover from '../../shared/assets/figma/1dc61.png';
 import { createFixtureTripStore, type FixtureTripStore } from './trip-store';
+import { validTripBudget, validTripTimezone } from '../../features/trips/model/trip-metadata';
 
 export function createFixtureTripRepository(
   options: { viewerId?: string; records?: readonly TripListItem[]; store?: FixtureTripStore } = {},
@@ -79,8 +80,11 @@ export function createFixtureTripRepository(
       const hasName = intent.name !== undefined;
       const hasDescription = intent.description !== undefined;
       const hasPublicDescription = intent.publicDescription !== undefined;
+      const hasSchedule =
+        intent.startAt !== undefined || intent.endAt !== undefined || intent.timezone !== undefined;
+      const hasBudget = intent.budgetAmount !== undefined;
       const name = intent.name?.trim();
-      if (!hasName && !hasDescription && !hasPublicDescription) {
+      if (!hasName && !hasDescription && !hasPublicDescription && !hasSchedule && !hasBudget) {
         return {
           status: 'validation-error',
           fieldErrors: { name: 'Không có thay đổi để lưu.' },
@@ -94,6 +98,31 @@ export function createFixtureTripRepository(
           correlationId: 'fixture-trip-update',
         };
       }
+      const startAt = intent.startAt ?? item.startAt;
+      const endAt = intent.endAt ?? item.endAt;
+      const timezone = intent.timezone ?? item.timezone;
+      if (
+        !Number.isFinite(Date.parse(startAt)) ||
+        !Number.isFinite(Date.parse(endAt)) ||
+        Date.parse(endAt) <= Date.parse(startAt)
+      )
+        return {
+          status: 'validation-error',
+          fieldErrors: { endAt: 'Khoảng ngày chuyến đi chưa hợp lệ.' },
+          correlationId: 'fixture-trip-update',
+        };
+      if (!validTripTimezone(timezone))
+        return {
+          status: 'validation-error',
+          fieldErrors: { timezone: 'Múi giờ chưa hợp lệ.' },
+          correlationId: 'fixture-trip-update',
+        };
+      if (intent.budgetAmount != null && !validTripBudget(intent.budgetAmount))
+        return {
+          status: 'validation-error',
+          fieldErrors: { budgetAmount: 'Ngân sách chưa hợp lệ.' },
+          correlationId: 'fixture-trip-update',
+        };
       const nextDescription = hasDescription
         ? (intent.description ?? null)
         : store.readDescription(tripId);
@@ -103,11 +132,21 @@ export function createFixtureTripRepository(
       const changed =
         (hasName && name !== item.name) ||
         (hasDescription && nextDescription !== store.readDescription(tripId)) ||
-        (hasPublicDescription && nextPublicDescription !== store.readPublicDescription(tripId));
+        (hasPublicDescription && nextPublicDescription !== store.readPublicDescription(tripId)) ||
+        (hasBudget && intent.budgetAmount !== (item.budgetAmount ?? null));
+      const scheduleChanged =
+        Date.parse(startAt) !== Date.parse(item.startAt) ||
+        Date.parse(endAt) !== Date.parse(item.endAt) ||
+        timezone !== item.timezone;
       const next: TripListItem = {
         ...item,
         ...(hasName ? { name: name! } : {}),
-        exportRevision: item.exportRevision + (changed ? 1 : 0),
+        startAt,
+        endAt,
+        timezone,
+        ...(hasBudget ? { budgetAmount: intent.budgetAmount } : {}),
+        planVersion: item.planVersion + (scheduleChanged ? 1 : 0),
+        exportRevision: item.exportRevision + (changed || scheduleChanged ? 1 : 0),
       };
       store.saveTrip(next, nextDescription, nextPublicDescription);
       const result = {

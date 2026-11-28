@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useState, type Ref } from 'react';
+import { useMemo, useState, type Ref } from 'react';
 import type { PlanViewModel } from '../model/plan';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { localDate, planDays } from '../model/plan-presentation';
 import { validCoordinates } from '../../map/trip-map';
 import { GeoapifyMap, type MapCenter, type MapRoute } from '../../map/GeoapifyMap';
-import type { PlaceRoute } from '../../map/places';
-import { useRuntimeServices } from '../../../app/gateway-context';
+import type { PlaceRoute, RouteMode } from '../../map/places';
+import { usePlaceRoute } from '../../map/use-place-route';
+import { RouteAttribution } from '../../map/RouteAttribution';
 import { Button } from '../../../shared/components/Button';
 import { Icon } from '../../../shared/components/Icon';
 import styles from './PlanDayMap.module.css';
@@ -31,49 +32,32 @@ export function dayMapLocations(
     return location ? [location] : [];
   });
 }
-/** Contract 4.4 accepts 2–25 stops. */
-const MAX_ROUTE_STOPS = 25;
-const ROUTE_DEBOUNCE_MS = 400;
 const kmFormat = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1 });
-export function routeSummary(route: PlaceRoute) {
+export function routeSummary(route: PlaceRoute, mode: RouteMode = 'DRIVING') {
   const minutes = Math.max(1, Math.round(route.durationSeconds / 60));
   const time =
     minutes >= 60 ? `${Math.floor(minutes / 60)} giờ ${minutes % 60} phút` : `${minutes} phút`;
-  return `${kmFormat.format(route.distanceM / 1000)} km · ${time} (ước lượng ô tô)`;
+  const kind =
+    mode === 'DRIVING'
+      ? 'ước lượng ô tô'
+      : mode === 'WALKING'
+        ? 'đi bộ ước tính'
+        : 'xe đạp ước tính';
+  return `${kmFormat.format(route.distanceM / 1000)} km · ${time} (${kind})`;
 }
 /**
  * Ordered stops of one day → OSRM route when available, otherwise a dashed straight line.
  * Only the stop sequence triggers a request, so marker selection never refetches.
  */
 function useDayRoute(stops: readonly MapCenter[]) {
-  const service = useRuntimeServices()?.places;
-  const key = JSON.stringify(stops);
-  const routable = !!service && stops.length >= 2 && stops.length <= MAX_ROUTE_STOPS;
-  const [result, setResult] = useState<{ key: string; route: PlaceRoute | null } | null>(null);
-  useEffect(() => {
-    if (!routable || !service) return;
-    const controller = new AbortController();
-    const timer = window.setTimeout(() => {
-      service
-        .route(JSON.parse(key) as MapCenter[], controller.signal)
-        .then((route) => setResult({ key, route }))
-        .catch(() => {
-          if (!controller.signal.aborted) setResult({ key, route: null });
-        });
-    }, ROUTE_DEBOUNCE_MS);
-    return () => {
-      window.clearTimeout(timer);
-      controller.abort();
-    };
-  }, [key, routable, service]);
-  if (stops.length < 2) return { route: null, summary: null, estimated: false };
-  const current = result?.key === key ? result.route : null;
-  const loading = routable && result?.key !== key;
+  const { data: current, loading } = usePlaceRoute(stops, 'DRIVING');
+  if (stops.length < 2) return { route: null, data: null, summary: null, estimated: false };
   const route: MapRoute = current
     ? { coordinates: current.geometry, estimated: false }
     : { coordinates: stops, estimated: true };
   return {
     route,
+    data: current,
     estimated: !current,
     summary: current
       ? routeSummary(current)
@@ -88,12 +72,14 @@ export function PlanDayMap({
   day,
   onClose,
   closeRef,
+  compact = false,
 }: {
   trip: TripDetailViewModel;
   plan: PlanViewModel;
   day: string;
   onClose: () => void;
   closeRef?: Ref<HTMLButtonElement>;
+  compact?: boolean;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const locations = useMemo(
@@ -125,56 +111,53 @@ export function PlanDayMap({
         ? 'Bản đồ nhóm chưa chọn ngày'
         : `Bản đồ lịch trình ngày ${number || day}`;
   return (
-    <section className={styles.panel} aria-label={title} data-plan-day-map={day}>
-      <header className={styles.header}>
-        <div>
-          <h3>{title}</h3>
-          <p>{locations.length} địa điểm gắn với hoạt động đã xếp lịch</p>
+    <div className={`${styles.column} ${compact ? styles.compact : ''}`}>
+      <section className={styles.panel} aria-label={title} data-plan-day-map={day}>
+        <header className={styles.header}>
+          <div>
+            <h3>{compact && number > 0 ? `Bản đồ ngày ${number}` : title}</h3>
+            <p className={styles.srOnly}>
+              {locations.length} địa điểm gắn với hoạt động đã xếp lịch
+            </p>
+          </div>
+          <Button
+            ref={closeRef}
+            variant="outline"
+            size="icon"
+            aria-label="Ẩn bản đồ"
+            onClick={onClose}
+          >
+            <Icon name="close" size={18} />
+          </Button>
+        </header>
+        <div className={styles.map}>
+          <GeoapifyMap
+            embedded
+            scrollWheelZoom
+            points={points}
+            selectedId={selected}
+            onSelect={setSelected}
+            route={dayRoute.route}
+          />
+          <a
+            className={styles.mapLink}
+            href={`/trips/${encodeURIComponent(trip.id)}/map?day=${encodeURIComponent(day)}`}
+          >
+            <Icon name="mapFolded" size={14} />
+            Mở bản đồ lớn
+          </a>
         </div>
-        <Button
-          ref={closeRef}
-          variant="outline"
-          size="icon"
-          aria-label="Ẩn bản đồ"
-          onClick={onClose}
-        >
-          <Icon name="close" size={18} />
-        </Button>
-      </header>
-      <div className={styles.map} style={{ height: 240 }}>
-        <GeoapifyMap
-          embedded
-          points={points}
-          selectedId={selected}
-          onSelect={setSelected}
-          route={dayRoute.route}
-        />
-      </div>
-      {dayRoute.summary && (
-        <p
-          className={styles.routeSummary}
-          data-route-summary
-          data-estimated={dayRoute.estimated || undefined}
-        >
-          {dayRoute.summary}
-        </p>
-      )}
-      <div className={styles.listRegion}>
-        <h4>Địa điểm trong lịch trình</h4>
-        {locations.length ? (
-          <ol className={styles.list}>
-            {locations.map((p) => (
-              <li key={p.id}>
-                <strong>{p.name}</strong>
-                <span>{p.address ?? 'Chưa có địa chỉ'}</span>
-                {!validCoordinates(p) && <small>Chưa có tọa độ hợp lệ</small>}
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className={styles.empty}>Chưa có địa điểm nào trong ngày đang xem.</p>
+        {dayRoute.summary && (
+          <p
+            className={styles.routeSummary}
+            data-route-summary
+            data-estimated={dayRoute.estimated || undefined}
+          >
+            {dayRoute.summary}
+          </p>
         )}
-      </div>
-    </section>
+        <RouteAttribution route={dayRoute.data} />
+      </section>
+    </div>
   );
 }

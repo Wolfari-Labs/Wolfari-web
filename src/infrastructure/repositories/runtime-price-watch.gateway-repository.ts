@@ -1,14 +1,14 @@
 import type { GatewayHttpClient } from '../http/http-client';
 import * as d from '../http/decode';
-import { cursorPage } from '../http/cursor-page';
 import { ApiError } from '../http/api-error';
+import { cursorPage } from '../http/cursor-page';
 import {
+  flightProviders,
   cabinClasses,
   journeyTypes,
-  priceProviders,
+  type PriceWatchCapabilities,
   runtimeStatuses,
   validateWatchFields,
-  type PriceWatchCapabilities,
   type RuntimeWatch,
   type RuntimeObservation,
   type WatchIntent,
@@ -33,7 +33,7 @@ export function decodeWatch(value: unknown, tripId: string): RuntimeWatch {
     version: d.version(r.version),
     expiresAt: d.instant(r.expires_at),
     fields: {
-      provider: d.enumeration(q.provider, priceProviders),
+      provider: d.enumeration(q.provider, flightProviders),
       origin: d.string(q.origin),
       destination: d.string(q.destination),
       departure_date: d.string(q.departure_date),
@@ -69,7 +69,7 @@ export function decodeCapabilities(value: unknown): PriceWatchCapabilities {
     return raw;
   };
   const result: PriceWatchCapabilities = {
-    provider: d.enumeration(r.provider, priceProviders),
+    provider: d.enumeration(r.provider, flightProviders),
     available: d.boolean(r.available),
     journeyTypes: list(r.journey_types, journeyTypes),
     cabinClasses: list(r.cabin_classes, cabinClasses),

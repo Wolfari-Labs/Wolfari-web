@@ -26,7 +26,15 @@ export type ShellSection =
   | 'tools';
 
 export interface ShellSnapshot {
-  viewer: { id?: string; fullName: string; version: number; systemRole: 'USER' | 'ADMIN' } | null;
+  viewer:
+    | {
+        id?: string;
+        fullName: string;
+        version: number;
+        systemRole: 'USER' | 'ADMIN';
+        hasAvatar: boolean;
+      }
+    | null;
   trip: {
     id: string;
     planVersion: number;

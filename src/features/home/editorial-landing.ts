@@ -1,25 +1,34 @@
-import beach from '../../shared/assets/figma/3a3f8.png';
-import explore from '../../shared/assets/figma/42524.png';
-import friends from '../../shared/assets/figma/6059f.png';
+import daNang from '../../shared/assets/figma/1dc61.png';
+import phuQuoc from '../../shared/assets/figma/a84f7.png';
+import daLat from '../../shared/assets/figma/6059f.png';
+import hoiAn from '../../shared/assets/figma/home-auth/06bd1.png';
 import type { HomeLandingViewModel } from './model/home';
-/** Public editorial content, not user trips, reviews, or simulated API data. */
+/**
+ * Public editorial content (Figma 933:7861 "Điểm đến được yêu thích"), not user trips, reviews,
+ * popularity data, or simulated API data.
+ */
 export const editorialLanding: HomeLandingViewModel = {
   inspiration: null,
   stories: [
     {
-      name: 'Một ngày bên biển',
-      duration: 'Cảm hứng nghỉ ngơi',
-      cover: { src: beach, alt: 'Ảnh minh họa cảm hứng du lịch biển' },
+      name: 'Đà Nẵng',
+      duration: 'Biển · 3N2Đ',
+      cover: { src: daNang, alt: 'Ảnh minh họa biển Đà Nẵng' },
     },
     {
-      name: 'Những góc phố mới',
-      duration: 'Cảm hứng khám phá',
-      cover: { src: explore, alt: 'Ảnh minh họa hành trình khám phá' },
+      name: 'Phú Quốc',
+      duration: 'Đảo · 4N3Đ',
+      cover: { src: phuQuoc, alt: 'Ảnh minh họa đảo Phú Quốc' },
     },
     {
-      name: 'Đi cùng những người bạn',
-      duration: 'Cảm hứng kết nối',
-      cover: { src: friends, alt: 'Ảnh minh họa chuyến đi cùng bạn bè' },
+      name: 'Đà Lạt',
+      duration: 'Núi · 3N2Đ',
+      cover: { src: daLat, alt: 'Ảnh minh họa đồi núi Đà Lạt' },
+    },
+    {
+      name: 'Hội An',
+      duration: 'Phố cổ · 2N1Đ',
+      cover: { src: hoiAn, alt: 'Ảnh minh họa Hội An' },
     },
   ],
 };

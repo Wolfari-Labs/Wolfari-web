@@ -1,0 +1,2118 @@
+[
+  {
+    "id": "DES-DangNhap-001",
+    "module": "DangNhap",
+    "srs": [
+      "FR-ID-01"
+    ],
+    "priority": "P0",
+    "title": "Đăng ký hợp lệ; xác minh qua mail TEST; đăng nhập ở context mới",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Guest; email TEST mới"
+    ],
+    "steps": [
+      "Đăng ký hợp lệ; xác minh qua mail TEST; đăng nhập ở context mới",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ một tài khoản; phiên hợp lệ; email xác minh đúng người"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-DangNhap-002",
+    "module": "DangNhap",
+    "srs": [
+      "FR-ID-01",
+      "BR-27"
+    ],
+    "priority": "P0",
+    "title": "Gửi lại cùng đăng ký; đối chiếu tài khoản và mail",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Email TEST mới; cùng intent đăng ký"
+    ],
+    "steps": [
+      "Gửi lại cùng đăng ký; đối chiếu tài khoản và mail",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không tạo tài khoản trùng; không lộ thông tin bí mật"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-DangNhap-003",
+    "module": "DangNhap",
+    "srs": [
+      "FR-ID-02"
+    ],
+    "priority": "P0",
+    "title": "Nhập mật khẩu sai; thử truy cập profile và API me",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Tài khoản TEST active"
+    ],
+    "steps": [
+      "Nhập mật khẩu sai; thử truy cập profile và API me",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không cấp phiên; dữ liệu riêng tư không trả về"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-DangNhap-004",
+    "module": "DangNhap",
+    "srs": [
+      "FR-ID-05"
+    ],
+    "priority": "P0",
+    "title": "Đăng nhập; dùng phiên cũ gọi màn hình bảo vệ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Tài khoản đã bị khóa bằng cơ chế quản trị được phép"
+    ],
+    "steps": [
+      "Đăng nhập; dùng phiên cũ gọi màn hình bảo vệ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Từ chối tài khoản bị khóa; không thay đổi dữ liệu"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-DangNhap-005",
+    "module": "DangNhap",
+    "srs": [
+      "FR-ID-03"
+    ],
+    "priority": "P0",
+    "title": "Đăng xuất; dùng lại phiên cũ; đăng nhập lại",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Phiên hợp lệ và Trip có dữ liệu"
+    ],
+    "steps": [
+      "Đăng xuất; dùng lại phiên cũ; đăng nhập lại",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Phiên cũ bị từ chối; dữ liệu Trip được bảo toàn"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HoSo-001",
+    "module": "HoSo",
+    "srs": [
+      "FR-ID-04",
+      "DR-01"
+    ],
+    "priority": "P1",
+    "title": "Sửa tên tiếng Việt; reload context mới",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "User TEST riêng"
+    ],
+    "steps": [
+      "Sửa tên tiếng Việt; reload context mới",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Tên lưu đúng Unicode; vai trò Trip không đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HoSo-002",
+    "module": "HoSo",
+    "srs": [
+      "FR-ID-04"
+    ],
+    "priority": "P1",
+    "title": "Gửi tên rỗng và trường không hợp lệ qua UI",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "User TEST riêng"
+    ],
+    "steps": [
+      "Gửi tên rỗng và trường không hợp lệ qua UI",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Validation rõ trường lỗi; dữ liệu đã lưu không đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HoSo-003",
+    "module": "HoSo",
+    "srs": [
+      "FR-ID-04",
+      "NFR-SEC-01"
+    ],
+    "priority": "P0",
+    "title": "Đổi ID hồ sơ trong request cập nhật",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai user khác nhau"
+    ],
+    "steps": [
+      "Đổi ID hồ sơ trong request cập nhật",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không sửa được hồ sơ người khác hay system_role"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HoSo-004",
+    "module": "HoSo",
+    "srs": [
+      "DR-03"
+    ],
+    "priority": "P1",
+    "title": "A lưu tên; B lưu tên khác từ bản cũ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai context cùng user đọc cùng version"
+    ],
+    "steps": [
+      "A lưu tên; B lưu tên khác từ bản cũ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "B không ghi đè A; draft và hướng xử lý conflict rõ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TongQuan-001",
+    "module": "TongQuan",
+    "srs": [
+      "IR-UI-02",
+      "NFR-USA-01"
+    ],
+    "priority": "P1",
+    "title": "Mở danh sách Trips",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "User chưa có Trip"
+    ],
+    "steps": [
+      "Mở danh sách Trips",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Empty state có hành động tạo; không dữ liệu demo"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TongQuan-002",
+    "module": "TongQuan",
+    "srs": [
+      "FR-TR-01",
+      "NFR-SEC-02"
+    ],
+    "priority": "P0",
+    "title": "Tải danh sách, phân trang, mở Trip",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "User có nhiều Trip; outsider có Trip khác"
+    ],
+    "steps": [
+      "Tải danh sách, phân trang, mở Trip",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ dữ liệu được phép; cursor không lặp hoặc bỏ mất bản ghi trong dataset ổn định"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TongQuan-003",
+    "module": "TongQuan",
+    "srs": [
+      "NFR-REL-01",
+      "NFR-USA-01"
+    ],
+    "priority": "P1",
+    "title": "Làm một nguồn đọc lỗi; reload overview",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip có Plan/Fund; fault injection hạ tầng TEST được cho phép"
+    ],
+    "steps": [
+      "Làm một nguồn đọc lỗi; reload overview",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Lỗi từng phần rõ; phần còn lại không bị thay dữ liệu giả"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanLyChuyenDi-001",
+    "module": "QuanLyChuyenDi",
+    "srs": [
+      "FR-TR-01",
+      "BR-06",
+      "BR-07"
+    ],
+    "priority": "P0",
+    "title": "Tạo Trip 1 ngày, 4 ngày; thử 0 ngày, 5 ngày và ngày kết thúc trước bắt đầu",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner TEST; dataset trống"
+    ],
+    "steps": [
+      "Tạo Trip 1 ngày, 4 ngày; thử 0 ngày, 5 ngày và ngày kết thúc trước bắt đầu",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Biên 1/4 được chấp nhận; ngoài giới hạn bị từ chối; không Trip/Owner dở dang"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanLyChuyenDi-002",
+    "module": "QuanLyChuyenDi",
+    "srs": [
+      "FR-TR-01"
+    ],
+    "priority": "P0",
+    "title": "Rút ngắn ngày Trip làm Activity nằm ngoài",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip có Activity tại ngày cuối"
+    ],
+    "steps": [
+      "Rút ngắn ngày Trip làm Activity nằm ngoài",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Yêu cầu giải quyết Activity; không tự xóa hoạt động"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanLyChuyenDi-003",
+    "module": "QuanLyChuyenDi",
+    "srs": [
+      "FR-TR-03",
+      "BR-01"
+    ],
+    "priority": "P0",
+    "title": "Chuyển Owner cho Member; reload hai context",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner, Member và Finance OPEN"
+    ],
+    "steps": [
+      "Chuyển Owner cho Member; reload hai context",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Đúng một Owner; Owner cũ thành Member; policy/Holder không tự đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanLyChuyenDi-004",
+    "module": "QuanLyChuyenDi",
+    "srs": [
+      "FR-TR-05",
+      "BR-08"
+    ],
+    "priority": "P0",
+    "title": "Thử Archive mỗi trạng thái; mở lại Trip",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip có Finance OPEN rồi CLOSED trên dữ liệu TEST"
+    ],
+    "steps": [
+      "Thử Archive mỗi trạng thái; mở lại Trip",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "OPEN bị chặn; CLOSED cho Archive; mở lại không mở Finance hay tự resume watch"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanLyChuyenDi-005",
+    "module": "QuanLyChuyenDi",
+    "srs": [
+      "FR-TR-06"
+    ],
+    "priority": "P1",
+    "title": "Nhân bản chỉ Plan; đọc Trip mới",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip có Activity hoàn thành và Finance"
+    ],
+    "steps": [
+      "Nhân bản chỉ Plan; đọc Trip mới",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Owner mới là người copy; reset completion; không copy tiền/member/share/history"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanLyChuyenDi-006",
+    "module": "QuanLyChuyenDi",
+    "srs": [
+      "FR-TR-07"
+    ],
+    "priority": "P0",
+    "title": "Xóa qua UI xác nhận; mở link và export cũ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip chỉ của ca kiểm thử; Finance chưa bật"
+    ],
+    "steps": [
+      "Xóa qua UI xác nhận; mở link và export cũ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chặn truy cập; tác vụ hủy; lịch sử cần thiết không mất"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThanhVienLoiMoi-001",
+    "module": "ThanhVienLoiMoi",
+    "srs": [
+      "FR-TR-02",
+      "AT-03"
+    ],
+    "priority": "P0",
+    "title": "Tạo lời mời; recipient chấp nhận; Owner reload roster",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner và recipient TEST ở hai context"
+    ],
+    "steps": [
+      "Tạo lời mời; recipient chấp nhận; Owner reload roster",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Một membership MEMBER đúng recipient; lời mời ACCEPTED"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThanhVienLoiMoi-002",
+    "module": "ThanhVienLoiMoi",
+    "srs": [
+      "FR-TR-02",
+      "BR-27"
+    ],
+    "priority": "P0",
+    "title": "Tạo trùng và accept đồng thời bằng hai context",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Lời mời PENDING cùng recipient"
+    ],
+    "steps": [
+      "Tạo trùng và accept đồng thời bằng hai context",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không hai PENDING hiệu lực; không membership trùng"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThanhVienLoiMoi-003",
+    "module": "ThanhVienLoiMoi",
+    "srs": [
+      "FR-TR-02",
+      "BR-06"
+    ],
+    "priority": "P0",
+    "title": "Hai recipient chấp nhận đồng thời",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip có 5 thành viên và hai lời mời hợp lệ"
+    ],
+    "steps": [
+      "Hai recipient chấp nhận đồng thời",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Tổng thành viên không vượt 6; người bị chặn không có membership"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThanhVienLoiMoi-004",
+    "module": "ThanhVienLoiMoi",
+    "srs": [
+      "FR-TR-02"
+    ],
+    "priority": "P0",
+    "title": "Mở lại và gửi accept từng trạng thái",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Lời mời revoked/declined/expired/accepted"
+    ],
+    "steps": [
+      "Mở lại và gửi accept từng trạng thái",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không tạo lại membership; UI giải thích trạng thái kết thúc"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThanhVienLoiMoi-005",
+    "module": "ThanhVienLoiMoi",
+    "srs": [
+      "FR-TR-04",
+      "BR-10"
+    ],
+    "priority": "P0",
+    "title": "Yêu cầu rời/xóa trước và sau xử lý",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Member có nghĩa vụ chưa hoàn tất rồi đã xử lý"
+    ],
+    "steps": [
+      "Yêu cầu rời/xóa trước và sau xử lý",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chặn trách nhiệm chưa xong; không xóa lịch sử hay tự hoàn tiền"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyenSuaKeHoach-001",
+    "module": "QuyenSuaKeHoach",
+    "srs": [
+      "FR-PL-01",
+      "BR-11"
+    ],
+    "priority": "P0",
+    "title": "Chọn OWNER_ONLY, ALL_MEMBERS, SELECTED_MEMBERS; reload",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner và hai Member"
+    ],
+    "steps": [
+      "Chọn OWNER_ONLY, ALL_MEMBERS, SELECTED_MEMBERS; reload",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Quyền đúng từng mode; chỉ Member được chọn được sửa ở SELECTED"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyenSuaKeHoach-002",
+    "module": "QuyenSuaKeHoach",
+    "srs": [
+      "FR-PL-02"
+    ],
+    "priority": "P0",
+    "title": "Member rời rồi nhận lời mời mới",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Selected Member có quyền"
+    ],
+    "steps": [
+      "Member rời rồi nhận lời mời mới",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Quyền riêng cũ không tự khôi phục; lịch sử còn"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyenSuaKeHoach-003",
+    "module": "QuyenSuaKeHoach",
+    "srs": [
+      "FR-PL-03"
+    ],
+    "priority": "P0",
+    "title": "Owner thu hồi quyền; Member bấm lưu draft cũ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Member đang mở editor; Owner ở context riêng"
+    ],
+    "steps": [
+      "Owner thu hồi quyền; Member bấm lưu draft cũ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Backend chặn; Plan không thay đổi; vẫn xem khi còn membership"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyenSuaKeHoach-004",
+    "module": "QuyenSuaKeHoach",
+    "srs": [
+      "FR-PL-04",
+      "BR-12"
+    ],
+    "priority": "P0",
+    "title": "Đánh dấu Activity; thử sửa policy và Finance của người khác",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Member không có Plan edit"
+    ],
+    "steps": [
+      "Đánh dấu Activity; thử sửa policy và Finance của người khác",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Completion được phép; policy/Finance không được suy quyền"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-LichTrinh-001",
+    "module": "LichTrinh",
+    "srs": [
+      "FR-PL-05",
+      "BR-06"
+    ],
+    "priority": "P0",
+    "title": "Tạo thứ 50 rồi thứ 51; reload",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip có 49 Activity; editor hợp lệ"
+    ],
+    "steps": [
+      "Tạo thứ 50 rồi thứ 51; reload",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "50 hợp lệ; 51 bị từ chối; danh sách không mất Activity"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-LichTrinh-002",
+    "module": "LichTrinh",
+    "srs": [
+      "FR-PL-06",
+      "AT-06"
+    ],
+    "priority": "P0",
+    "title": "Lưu end=start, end<start, ngoài Trip, qua đêm trong Trip và trùng giờ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Trip 4 ngày"
+    ],
+    "steps": [
+      "Lưu end=start, end<start, ngoài Trip, qua đêm trong Trip và trùng giờ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Ba nhánh sai bị chặn; qua đêm hợp lệ; trùng giờ cảnh báo không cấm mặc định"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-LichTrinh-003",
+    "module": "LichTrinh",
+    "srs": [
+      "FR-PL-07"
+    ],
+    "priority": "P0",
+    "title": "Kéo thả hoặc keyboard đổi thứ tự; đọc bằng context khác",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai Activity có ID và thời gian đã lưu"
+    ],
+    "steps": [
+      "Kéo thả hoặc keyboard đổi thứ tự; đọc bằng context khác",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Đổi order; giữ nguyên tập ID, nội dung, giờ và số lượng"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-LichTrinh-004",
+    "module": "LichTrinh",
+    "srs": [
+      "FR-PL-10",
+      "BR-26",
+      "AT-05"
+    ],
+    "priority": "P0",
+    "title": "A sửa; B lưu từ version cũ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai editor đọc cùng plan_version"
+    ],
+    "steps": [
+      "A sửa; B lưu từ version cũ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "B bị conflict; không mất cập nhật A; reload đúng version mới"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-LichTrinh-005",
+    "module": "LichTrinh",
+    "srs": [
+      "FR-PL-05",
+      "FR-TR-12"
+    ],
+    "priority": "P0",
+    "title": "Xóa Activity trên dữ liệu TEST",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Activity có liên kết lịch sử tài chính"
+    ],
+    "steps": [
+      "Xóa Activity trên dữ liệu TEST",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Activity mất khỏi Plan; lịch sử Finance còn; reminder chưa gửi bị hủy"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-BanDoDiaDiem-001",
+    "module": "BanDoDiaDiem",
+    "srs": [
+      "FR-LOC-01",
+      "IR-INT-02"
+    ],
+    "priority": "P1",
+    "title": "Tìm kiếm và mở địa điểm; không bấm thêm",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Provider TEST được chọn; Member có quyền xem"
+    ],
+    "steps": [
+      "Tìm kiếm và mở địa điểm; không bấm thêm",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Kết quả có nguồn; Plan không thay đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-BanDoDiaDiem-002",
+    "module": "BanDoDiaDiem",
+    "srs": [
+      "FR-LOC-02",
+      "BR-06"
+    ],
+    "priority": "P1",
+    "title": "Thêm địa điểm 50 rồi 51",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "49 địa điểm đã lưu; editor"
+    ],
+    "steps": [
+      "Thêm địa điểm 50 rồi 51",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không vượt 50; Member không edit không thêm được"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-BanDoDiaDiem-003",
+    "module": "BanDoDiaDiem",
+    "srs": [
+      "FR-LOC-03"
+    ],
+    "priority": "P1",
+    "title": "Xóa địa điểm; xử lý liên kết theo UI",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Địa điểm gắn hai Activity"
+    ],
+    "steps": [
+      "Xóa địa điểm; xử lý liên kết theo UI",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Thông báo hai Activity; không tham chiếu treo sau xóa"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-BanDoDiaDiem-004",
+    "module": "BanDoDiaDiem",
+    "srs": [
+      "FR-LOC-04",
+      "FR-LOC-05"
+    ],
+    "priority": "P0",
+    "title": "Xem tuyến; gây lỗi provider có kiểm soát",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Provider có dữ liệu rồi lỗi trong TEST"
+    ],
+    "steps": [
+      "Xem tuyến; gây lỗi provider có kiểm soát",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không tự sửa Plan; thiếu route không hiển thị thời gian 0 giả"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TrangPhuc-001",
+    "module": "TrangPhuc",
+    "srs": [
+      "FR-PK-01"
+    ],
+    "priority": "P1",
+    "title": "Tạo Dress theo DAY và ACTIVITY; sửa, reload, xóa",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner/editor; Trip có ngày và Activity"
+    ],
+    "steps": [
+      "Tạo Dress theo DAY và ACTIVITY; sửa, reload, xóa",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Nội dung gắn đúng scope; persistence và quyền đúng"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TrangPhuc-002",
+    "module": "TrangPhuc",
+    "srs": [
+      "FR-PK-01",
+      "NFR-SAF-02"
+    ],
+    "priority": "P1",
+    "title": "Refresh Weather rồi reload Dress",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Dress đã lưu; Weather TEST đổi"
+    ],
+    "steps": [
+      "Refresh Weather rồi reload Dress",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không tự ghi đè trang phục đã lưu"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TrangPhuc-003",
+    "module": "TrangPhuc",
+    "srs": [
+      "FR-PK-01",
+      "FR-PL-03"
+    ],
+    "priority": "P0",
+    "title": "Thử tạo/sửa/xóa bằng request lấy từ Web",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Member read-only đang xem Dress"
+    ],
+    "steps": [
+      "Thử tạo/sửa/xóa bằng request lấy từ Web",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Backend từ chối; nội dung không đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HanhLy-001",
+    "module": "HanhLy",
+    "srs": [
+      "FR-PK-02",
+      "DR-01"
+    ],
+    "priority": "P1",
+    "title": "Tạo item quantity 1; thử 0 và âm; để không phân công",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Editor TEST"
+    ],
+    "steps": [
+      "Tạo item quantity 1; thử 0 và âm; để không phân công",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Số lượng dương; item mới TODO; không phân công vẫn hợp lệ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HanhLy-002",
+    "module": "HanhLy",
+    "srs": [
+      "FR-PK-03"
+    ],
+    "priority": "P1",
+    "title": "Đổi sang B rồi cho B rời Trip",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Item completed giao Member A"
+    ],
+    "steps": [
+      "Đổi sang B rồi cho B rời Trip",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Reset TODO; sau rời chưa phân công; lịch sử giữ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HanhLy-003",
+    "module": "HanhLy",
+    "srs": [
+      "FR-PK-04"
+    ],
+    "priority": "P0",
+    "title": "A cập nhật cả ba item",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Member A không edit; item của A/B/unassigned"
+    ],
+    "steps": [
+      "A cập nhật cả ba item",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ item của A được cập nhật; không đổi nội dung/assignee"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-HanhLy-004",
+    "module": "HanhLy",
+    "srs": [
+      "FR-PK-05"
+    ],
+    "priority": "P1",
+    "title": "Đổi tên/số lượng; riêng ca khác đổi note/category",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Item completed"
+    ],
+    "steps": [
+      "Đổi tên/số lượng; riêng ca khác đổi note/category",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Tên/quantity reset; note/category không reset completion"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-GoiYThongMinh-001",
+    "module": "GoiYThongMinh",
+    "srs": [
+      "FR-DSS-01",
+      "FR-DSS-02"
+    ],
+    "priority": "P0",
+    "title": "Yêu cầu DSS; xem lý do; thử apply",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Plan đã lưu; Member read-only"
+    ],
+    "steps": [
+      "Yêu cầu DSS; xem lý do; thử apply",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Xem được nhưng không apply; chưa apply Plan không đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-GoiYThongMinh-002",
+    "module": "GoiYThongMinh",
+    "srs": [
+      "FR-DSS-02",
+      "FR-PL-10"
+    ],
+    "priority": "P0",
+    "title": "Apply gợi ý cũ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Gợi ý dựa version N; editor khác sửa N+1"
+    ],
+    "steps": [
+      "Apply gợi ý cũ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không ghi đè Plan mới; cần tạo/kiểm tra lại"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-GoiYThongMinh-003",
+    "module": "GoiYThongMinh",
+    "srs": [
+      "FR-DSS-03",
+      "FR-PK-06"
+    ],
+    "priority": "P1",
+    "title": "Chọn một phần gợi ý và apply",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Packing đã có item tương tự"
+    ],
+    "steps": [
+      "Chọn một phần gợi ý và apply",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ item chọn được tạo; cảnh báo trùng; không tự cộng quantity"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-GoiYThongMinh-004",
+    "module": "GoiYThongMinh",
+    "srs": [
+      "FR-DSS-04",
+      "FR-DSS-05",
+      "FR-DSS-06"
+    ],
+    "priority": "P0",
+    "title": "Yêu cầu gợi ý và kiểm tra lịch",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Thiếu Weather/Route/opening hours từng phần"
+    ],
+    "steps": [
+      "Yêu cầu gợi ý và kiểm tra lịch",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Có lý do và giới hạn; không giả thời tiết/route; không khẳng định tối ưu tuyệt đối"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-001",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-01",
+      "BR-03"
+    ],
+    "priority": "P0",
+    "title": "Owner bật quỹ; Holder xác nhận đích TEST; reload",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner khác Holder; Finance chưa bật"
+    ],
+    "steps": [
+      "Owner bật quỹ; Holder xác nhận đích TEST; reload",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Một Holder; đích lưu đúng; chưa có thu hoặc tăng số dư"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-002",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-02",
+      "BR-15"
+    ],
+    "priority": "P0",
+    "title": "Member báo chuyển; Holder từ chối có lý do; reload; Member báo lại",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Nghĩa vụ 200000 VND PENDING; Member khác Holder"
+    ],
+    "steps": [
+      "Member báo chuyển; Holder từ chối có lý do; reload; Member báo lại",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "TRANSFER_REPORTED rồi PENDING rồi TRANSFER_REPORTED; lý do còn; ledger/số dư không đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-003",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-02",
+      "FR-FIN-04",
+      "BR-16"
+    ],
+    "priority": "P0",
+    "title": "Holder xác nhận hai khoản; reload context khác",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Số dư 0; hai khoản 200000 và 300000 được báo"
+    ],
+    "steps": [
+      "Holder xác nhận hai khoản; reload context khác",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Số dư 500000; đúng hai bút toán thu; lưu actor xác nhận"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-004",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-02",
+      "FR-TR-11",
+      "AT-18"
+    ],
+    "priority": "P0",
+    "title": "Xác nhận đồng thời khác key; replay cùng key/body",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Một khoản báo chuyển; hai context Holder"
+    ],
+    "steps": [
+      "Xác nhận đồng thời khác key; replay cùng key/body",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Đúng một tác động thu; một khoản đóng; ledger và balance nhất quán"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-005",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-02",
+      "NFR-SEC-01"
+    ],
+    "priority": "P0",
+    "title": "Owner thử xác nhận; Member báo hộ nghĩa vụ người khác",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner không là Holder; khoản Member báo"
+    ],
+    "steps": [
+      "Owner thử xác nhận; Member báo hộ nghĩa vụ người khác",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Sai quyền bị từ chối; không ảnh hưởng sổ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-006",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-02"
+    ],
+    "priority": "P0",
+    "title": "Holder tự xác nhận rồi Owner xác minh",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Khoản báo chuyển thuộc Holder; Owner khác Holder"
+    ],
+    "steps": [
+      "Holder tự xác nhận rồi Owner xác minh",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ verifier độc lập hợp lệ xác nhận; Trip một người ghi thiếu xác minh độc lập"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-007",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-03",
+      "BR-18"
+    ],
+    "priority": "P1",
+    "title": "Holder lưu draft chi rồi ghi sổ; Member ghi note chi ngoài quỹ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Quỹ có số dư; Holder và Member"
+    ],
+    "steps": [
+      "Holder lưu draft chi rồi ghi sổ; Member ghi note chi ngoài quỹ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Draft/note không trừ quỹ; chỉ ghi sổ chi hợp lệ trừ đúng một lần"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-008",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-04",
+      "DR-02"
+    ],
+    "priority": "P0",
+    "title": "Gửi đồng thời hai reserve từ workflow Web",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Available 500000; hai khoản reserve 300000"
+    ],
+    "steps": [
+      "Gửi đồng thời hai reserve từ workflow Web",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không reserve tổng 600000; không số dư giả; sổ nhất quán"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-009",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-05"
+    ],
+    "priority": "P0",
+    "title": "Holder báo đã chuyển; recipient chưa nhận rồi xác nhận",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Refund đã reserve; recipient khác Holder"
+    ],
+    "steps": [
+      "Holder báo đã chuyển; recipient chưa nhận rồi xác nhận",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chưa nhận giữ tiền reserve; hoàn tất trừ số dư và giải phóng một lần"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-010",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-06",
+      "AT-11"
+    ],
+    "priority": "P0",
+    "title": "Hai bên xác nhận; xen giao dịch làm đổi snapshot; thử hủy",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Holder cũ/mới; snapshot bàn giao"
+    ],
+    "steps": [
+      "Hai bên xác nhận; xen giao dịch làm đổi snapshot; thử hủy",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Xác nhận cũ mất hiệu lực; không hai Holder; hủy giữ Holder cũ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-011",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-07",
+      "BR-21",
+      "AT-12"
+    ],
+    "priority": "P0",
+    "title": "Owner bắt đầu đóng; từng người xác nhận cùng snapshot",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Quỹ số dư 0 không nghĩa vụ; nhiều thành viên"
+    ],
+    "steps": [
+      "Owner bắt đầu đóng; từng người xác nhận cùng snapshot",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ CLOSED khi đủ xác nhận; không mở lại"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuyNhom-012",
+    "module": "QuyNhom",
+    "srs": [
+      "FR-FIN-08"
+    ],
+    "priority": "P0",
+    "title": "Ghi nhận giao dịch đến muộn qua cơ chế TEST hiện có",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Quỹ CLOSING rồi CLOSED"
+    ],
+    "steps": [
+      "Ghi nhận giao dịch đến muộn qua cơ chế TEST hiện có",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "CLOSING cần hủy đối chiếu; CLOSED không tự sửa sổ; không ghi trùng"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-001",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-01",
+      "BR-22"
+    ],
+    "priority": "P0",
+    "title": "Tạo cùng điều kiện khác threshold",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai Member; Finance chưa bật"
+    ],
+    "steps": [
+      "Tạo cùng điều kiện khác threshold",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Hai watch độc lập; Finance không đổi; quyền không gộp"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-002",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-01",
+      "AT-24"
+    ],
+    "priority": "P0",
+    "title": "Nhập origin=destination; infants>adults; thiếu ngày/ngưỡng",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Member có quyền"
+    ],
+    "steps": [
+      "Nhập origin=destination; infants>adults; thiếu ngày/ngưỡng",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Validation chặn; không watch được lưu"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-003",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-02",
+      "AT-23"
+    ],
+    "priority": "P0",
+    "title": "Phát 1499999,1500000,1500001 trong dataset độc lập",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Nguồn giá mô phỏng Backend có điều khiển đã duyệt; threshold 1500000"
+    ],
+    "steps": [
+      "Phát 1499999,1500000,1500001 trong dataset độc lập",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ giá nhỏ hơn ngưỡng phát cảnh báo đầu"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-004",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-02",
+      "AT-23"
+    ],
+    "priority": "P0",
+    "title": "Giá 1330000/1330001 tại 23:59:59 và 24:00:00 từ lần trước",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Lần cảnh báo gần nhất 1400000; điều kiện/ngưỡng không đổi"
+    ],
+    "steps": [
+      "Giá 1330000/1330001 tại 23:59:59 và 24:00:00 từ lần trước",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ đủ cả giảm ít nhất 5% và ít nhất 24h mới cảnh báo lặp"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-005",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-02",
+      "FR-PW-06",
+      "AT-22"
+    ],
+    "priority": "P0",
+    "title": "Worker lấy giá 1400000; đọc watch, alerts và log xử lý được cấp",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai ngưỡng 1500000/1300000; cùng query; kiểm soát worker không retry"
+    ],
+    "steps": [
+      "Worker lấy giá 1400000; đọc watch, alerts và log xử lý được cấp",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Một fetch/query/result; chỉ watch thứ nhất alert; cùng giá không đủ chứng minh dedup"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-006",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-04"
+    ],
+    "priority": "P1",
+    "title": "Pause/resume/stop một watch; thử resume stopped",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai watch cùng nhóm đang ACTIVE"
+    ],
+    "steps": [
+      "Pause/resume/stop một watch; thử resume stopped",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Watch khác giữ trạng thái; STOPPED cuối; lịch sử còn"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-007",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-07",
+      "DR-03"
+    ],
+    "priority": "P0",
+    "title": "A sửa threshold; B sửa bản cũ",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai context đọc cùng watch version"
+    ],
+    "steps": [
+      "A sửa threshold; B sửa bản cũ",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "B conflict; threshold A còn; reload version mới"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-008",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-03",
+      "FR-PW-05"
+    ],
+    "priority": "P0",
+    "title": "Ghi nhận kết quả chưa rõ và replay thao tác",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "TEST booking chưa rõ kết quả; quỹ đã reserve"
+    ],
+    "steps": [
+      "Ghi nhận kết quả chưa rõ và replay thao tác",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không retry mua vé thật; không release tiền/Expense trùng"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-TheoDoiGiaVe-009",
+    "module": "TheoDoiGiaVe",
+    "srs": [
+      "FR-PW-02"
+    ],
+    "priority": "P1",
+    "title": "Đánh giá quy tắc tái kích hoạt",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Mốc alert tồn tại; thay threshold hoặc resume"
+    ],
+    "steps": [
+      "Đánh giá quy tắc tái kích hoạt",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "SPEC_BLOCKED OQ-02; không tự đặt kỳ vọng reset mốc"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "SPEC_BLOCKED"
+  },
+  {
+    "id": "DES-ThongBao-001",
+    "module": "ThongBao",
+    "srs": [
+      "FR-NT-01"
+    ],
+    "priority": "P1",
+    "title": "User tắt email/push; reload; Owner thử sửa preference Member",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "User và Member có preferences khác"
+    ],
+    "steps": [
+      "User tắt email/push; reload; Owner thử sửa preference Member",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Tùy chọn riêng giữ; nghĩa vụ/in-app data không mất; Owner không sửa hộ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThongBao-002",
+    "module": "ThongBao",
+    "srs": [
+      "FR-NT-02",
+      "AT-14"
+    ],
+    "priority": "P1",
+    "title": "Đổi giờ, complete, delete, rời và Archive ở các dataset riêng",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Reminder TEST gắn Activity/Packing"
+    ],
+    "steps": [
+      "Đổi giờ, complete, delete, rời và Archive ở các dataset riêng",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Cập nhật/hủy đúng; timezone Trip; không gửi bù hàng loạt khi reopen"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThongBao-003",
+    "module": "ThongBao",
+    "srs": [
+      "FR-NT-03"
+    ],
+    "priority": "P0",
+    "title": "Mở link notification",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Notification cũ; recipient đã mất membership"
+    ],
+    "steps": [
+      "Mở link notification",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Backend chặn dữ liệu Trip; notification không cấp thêm quyền"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ThongBao-004",
+    "module": "ThongBao",
+    "srs": [
+      "FR-NT-03",
+      "NFR-REL-01"
+    ],
+    "priority": "P1",
+    "title": "Lưu nghiệp vụ phát notification; reload",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Mail sink TEST ngừng nhận theo kế hoạch fault được duyệt"
+    ],
+    "steps": [
+      "Lưu nghiệp vụ phát notification; reload",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Nghiệp vụ còn; không suy accepted event thành email delivered"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-XuatDuLieu-001",
+    "module": "XuatDuLieu",
+    "srs": [
+      "FR-EX-01",
+      "NFR-L10N-03"
+    ],
+    "priority": "P1",
+    "title": "Export từng PDF/Excel/infographic; kiểm tra nội dung file",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner/Member read-only; có tiếng Việt và Finance TEST"
+    ],
+    "steps": [
+      "Export từng PDF/Excel/infographic; kiểm tra nội dung file",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Đúng định dạng/phạm vi/Unicode; không credential; không cần Plan edit"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-XuatDuLieu-002",
+    "module": "XuatDuLieu",
+    "srs": [
+      "FR-EX-02",
+      "DR-04",
+      "AT-15"
+    ],
+    "priority": "P0",
+    "title": "Sửa Plan thành N+1 khi export xử lý; tải file",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Dataset N; job export được nhận"
+    ],
+    "steps": [
+      "Sửa Plan thành N+1 khi export xử lý; tải file",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "File cùng snapshot N và thời điểm; không trộn phiên bản"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-XuatDuLieu-003",
+    "module": "XuatDuLieu",
+    "srs": [
+      "FR-EX-03"
+    ],
+    "priority": "P0",
+    "title": "Owner thử tải file người khác; Member tải sau rời",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Export riêng Member; Owner và Member sau rời"
+    ],
+    "steps": [
+      "Owner thử tải file người khác; Member tải sau rời",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Từ chối cả hai; link cũ không vượt quyền"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChiaSeCongKhai-001",
+    "module": "ChiaSeCongKhai",
+    "srs": [
+      "FR-TR-08",
+      "FR-TR-09",
+      "NFR-SEC-04"
+    ],
+    "priority": "P0",
+    "title": "Guest mở và kiểm tra response JSON cùng UI",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Owner tạo share TEST; guest context"
+    ],
+    "steps": [
+      "Guest mở và kiểm tra response JSON cùng UI",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ allowlist; không Finance/contact/assignee/passenger/token; không membership mới"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChiaSeCongKhai-002",
+    "module": "ChiaSeCongKhai",
+    "srs": [
+      "FR-TR-10",
+      "AT-16"
+    ],
+    "priority": "P0",
+    "title": "Sai password; đúng; hết hạn; revoke; xóa Trip ở ca riêng",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Link có password/expiry"
+    ],
+    "steps": [
+      "Sai password; đúng; hết hạn; revoke; xóa Trip ở ca riêng",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ hợp lệ được xem; các nhánh còn lại chặn cả API"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChiaSeCongKhai-003",
+    "module": "ChiaSeCongKhai",
+    "srs": [
+      "FR-TR-10",
+      "DR-04"
+    ],
+    "priority": "P1",
+    "title": "Sửa Plan; Archive; chuyển Owner",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Link hợp lệ; Trip chưa xóa"
+    ],
+    "steps": [
+      "Sửa Plan; Archive; chuyển Owner",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Share dữ liệu hiện tại; Archive không revoke; quyền quản lý sang Owner mới"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanTriWeb-001",
+    "module": "QuanTriWeb",
+    "srs": [
+      "FR-AD-01",
+      "IR-UI-04"
+    ],
+    "priority": "P0",
+    "title": "Mở admin và gọi chức năng quản trị được cấp",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Guest/User/Admin riêng"
+    ],
+    "steps": [
+      "Mở admin và gọi chức năng quản trị được cấp",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Guest/User bị chặn; Admin chỉ quyền được cấp; placeholder không được tính chức năng Passed"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanTriWeb-002",
+    "module": "QuanTriWeb",
+    "srs": [
+      "FR-AD-01",
+      "BR-02"
+    ],
+    "priority": "P0",
+    "title": "Admin truy cập/sửa Trip và xác nhận thu/chi/closure",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Admin không tham gia Trip; Holder khác"
+    ],
+    "steps": [
+      "Admin truy cập/sửa Trip và xác nhận thu/chi/closure",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không có quyền Owner hay Finance mặc định"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-QuanTriWeb-003",
+    "module": "QuanTriWeb",
+    "srs": [
+      "FR-AD-01"
+    ],
+    "priority": "P1",
+    "title": "Thử thao tác Owner và thao tác Member",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Admin tham gia Trip với vai trò Member"
+    ],
+    "steps": [
+      "Thử thao tác Owner và thao tác Member",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Chỉ theo vai trò Trip; quyền hệ thống không vượt quyền nghiệp vụ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChatLuongWeb-001",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "IR-UI-01",
+      "NFR-USA-01"
+    ],
+    "priority": "P1",
+    "title": "Kiểm tra 1440,768,390 và keyboard Tab/Escape; mở đóng dialog/menu",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Mỗi màn hình đã có dữ liệu TEST"
+    ],
+    "steps": [
+      "Kiểm tra 1440,768,390 và keyboard Tab/Escape; mở đóng dialog/menu",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không tràn ngang; control sử dụng được; focus vào modal và trả trigger; không chỉ dùng màu"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChatLuongWeb-002",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-USA-01"
+    ],
+    "priority": "P1",
+    "title": "Chạy axe; kiểm tra label, thông báo và screen reader thủ công",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Form và màn hình loading/empty/error/success thật"
+    ],
+    "steps": [
+      "Chạy axe; kiểm tra label, thông báo và screen reader thủ công",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Lưu từng violation; axe không thay thế manual; không tự sửa sản phẩm"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChatLuongWeb-003",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-SEC-02",
+      "AT-17"
+    ],
+    "priority": "P0",
+    "title": "Đổi Trip/resource IDs ở URL/request từ các module",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Hai Trip độc lập và hai actor"
+    ],
+    "steps": [
+      "Đổi Trip/resource IDs ở URL/request từ các module",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Backend chặn cross-Trip; không leak JSON/file; dữ liệu đích không đổi"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChatLuongWeb-004",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-SEC-03",
+      "IR-COMM-01"
+    ],
+    "priority": "P0",
+    "title": "Kiểm tra storage, HTTPS, log đã cho phép và artifact",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Phiên TEST riêng"
+    ],
+    "steps": [
+      "Kiểm tra storage, HTTPS, log đã cho phép và artifact",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không credential usable trong log sản phẩm/client storage; report TEST phải được bảo vệ"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChatLuongWeb-005",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-REL-03",
+      "BR-27"
+    ],
+    "priority": "P0",
+    "title": "Mất phản hồi sau commit bằng fault TEST được duyệt; gửi lại cùng intent",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "Mutation có idempotency thật và dataset riêng"
+    ],
+    "steps": [
+      "Mất phản hồi sau commit bằng fault TEST được duyệt; gửi lại cùng intent",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "Không tác động trùng; reload phản ánh commit; không mock để kết luận E2E"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "NOT RUN"
+  },
+  {
+    "id": "DES-ChatLuongWeb-006",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-PER-01",
+      "AT-20"
+    ],
+    "priority": "P1",
+    "title": "Chuẩn bị kế hoạch 50 users 10 phút 100 Trips 4000 Activity; chưa chạy tải",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "OQ-05 chưa phê duyệt máy/tải/dataset"
+    ],
+    "steps": [
+      "Chuẩn bị kế hoạch 50 users 10 phút 100 Trips 4000 Activity; chưa chạy tải",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "SPEC_BLOCKED đến khi chốt; không nhận latency một trang là p95 SLA"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "SPEC_BLOCKED"
+  },
+  {
+    "id": "DES-ChatLuongWeb-007",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-REL-04",
+      "DR-06"
+    ],
+    "priority": "P1",
+    "title": "Yêu cầu kế hoạch restore có kiểm soát và retention",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "OQ-06 chưa chốt; backup thuộc TEST riêng"
+    ],
+    "steps": [
+      "Yêu cầu kế hoạch restore có kiểm soát và retention",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "SPEC_BLOCKED phần định lượng; không tự restore/xóa database"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "SPEC_BLOCKED"
+  },
+  {
+    "id": "DES-ChatLuongWeb-008",
+    "module": "ChatLuongWeb",
+    "srs": [
+      "NFR-USA-02"
+    ],
+    "priority": "P1",
+    "title": "Chuẩn bị usability tasks và ngưỡng nghiệm thu",
+    "preconditions": [
+      "TEST-only; Backend thật; dataset độc lập theo Run ID; actor ở context riêng.",
+      "OQ-08 chưa chốt người dùng đại diện"
+    ],
+    "steps": [
+      "Chuẩn bị usability tasks và ngưỡng nghiệm thu",
+      "Đọc lại dữ liệu đã lưu từ Web/context độc lập và API hiện có; đối chiếu trước/sau, quyền và lịch sử liên quan.",
+      "Đính kèm evidence và ghi rõ từng bộ dữ liệu biên; không kết luận từ HTTP 200 đơn lẻ."
+    ],
+    "expected": [
+      "SPEC_BLOCKED; axe không chứng minh task completion"
+    ],
+    "automation": "DESIGNED_NOT_AUTOMATED",
+    "status": "SPEC_BLOCKED"
+  }
+]

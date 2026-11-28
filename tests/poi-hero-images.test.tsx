@@ -1,14 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import {
-  decodePlace,
-  decodePlaceImage,
-} from '../src/infrastructure/repositories/places.gateway-repository';
+import { decodePlace } from '../src/infrastructure/repositories/places.gateway-repository';
 import { PlaceDetail } from '../src/features/map/PlaceDetail';
 import { MapViewport } from '../src/features/map/MapViewport';
 import { mapLocationPresentations } from '../src/features/map/trip-map';
-import type { PlaceImage } from '../src/features/map/places';
+import { placeImage, type PlaceImage } from '../src/features/map/places';
 
 const sha = 'a'.repeat(64);
 const route = (width: number, hash = sha) => `/api/v1/travel/poi-images/${hash}/${width}.webp`;
@@ -72,7 +69,7 @@ const [item] = mapLocationPresentations(
 describe('POI hero image decoding', () => {
   it('keeps the Gateway image route and the credit', () => {
     expect(decodePlace({ ...place, hero_image: wire }).heroImage).toEqual(photo);
-    expect(decodePlaceImage({ ...wire, url: `${window.location.origin}${route(1280)}` })?.url).toBe(
+    expect(placeImage({ ...wire, url: `${window.location.origin}${route(1280)}` })?.url).toBe(
       route(1280),
     );
     expect(decodePlace(place).heroImage).toBeNull();
@@ -93,7 +90,7 @@ describe('POI hero image decoding', () => {
     { license: undefined },
     { is_placeholder: true },
   ])('shows no photo for an image outside the contract %#', (change) => {
-    expect(decodePlaceImage({ ...wire, ...change })).toBeNull();
+    expect(placeImage({ ...wire, ...change })).toBeNull();
     // A bad photo never drops the place itself.
     expect(decodePlace({ ...place, hero_image: { ...wire, ...change } })).toMatchObject({
       name: 'Chùa Cầu',
@@ -113,13 +110,13 @@ describe('POI hero image presentation', () => {
           open
           onClose={() => {}}
           runtime
-          photo={image}
+          image={image}
         />
       </MemoryRouter>,
     );
   it('shows the photo lazily with the place name and a credit linking to the source', () => {
     detail(photo);
-    const image = screen.getByRole('img', { name: 'Chùa Cầu' });
+    const image = screen.getByRole('img', { name: 'Ảnh Chùa Cầu' });
     expect(image).toHaveAttribute('src', route(640));
     expect(image).toHaveAttribute('loading', 'lazy');
     expect(image.getAttribute('srcset')).toContain(`${route(1280)} 1280w`);
@@ -127,16 +124,16 @@ describe('POI hero image presentation', () => {
     expect(credit).toHaveAttribute('href', photo.sourceUrl);
     expect(credit).toHaveAttribute('rel', 'noopener noreferrer');
     expect(credit).toHaveAttribute('target', '_blank');
-    expect(screen.queryByAltText(/Ảnh minh họa giao diện/)).not.toBeInTheDocument();
+    expect(screen.queryByAltText(/Ảnh minh họa cho Chùa Cầu/)).not.toBeInTheDocument();
   });
   it('falls back to the template artwork when the photo is absent or fails to load', () => {
     const { unmount } = detail(null);
-    expect(screen.getByAltText(/Ảnh minh họa giao diện/)).toBeInTheDocument();
+    expect(screen.getByAltText(/Ảnh minh họa cho Chùa Cầu/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: photo.attribution })).not.toBeInTheDocument();
     unmount();
     detail(photo);
-    fireEvent.error(screen.getByRole('img', { name: 'Chùa Cầu' }));
-    expect(screen.getByAltText(/Ảnh minh họa giao diện/)).toBeInTheDocument();
+    fireEvent.error(screen.getByRole('img', { name: 'Ảnh Chùa Cầu' }));
+    expect(screen.getByAltText(/Ảnh minh họa cho Chùa Cầu/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: photo.attribution })).not.toBeInTheDocument();
   });
   it('shows the photo and credit in the selected-place card on the map', () => {
@@ -149,12 +146,12 @@ describe('POI hero image presentation', () => {
         onSelect={() => {}}
         onOpenDetail={() => {}}
         runtimeMap={<div />}
-        selectedPhoto={photo}
+        selectedImage={photo}
       />,
     );
     const card = screen.getAllByRole('article', { name: 'Đang chọn Chùa Cầu' })[0]!;
     const image = card.querySelector('img')!;
-    expect(image).toHaveAttribute('alt', 'Chùa Cầu');
+    expect(image).toHaveAttribute('alt', 'Ảnh Chùa Cầu');
     expect(image).toHaveAttribute('loading', 'lazy');
     expect(card.querySelector('a')).toHaveAttribute('href', photo.sourceUrl);
     expect(card.querySelector('a')).toHaveAttribute('rel', 'noopener noreferrer');

@@ -1,20 +1,29 @@
 export const runtimeStatuses = ['ACTIVE', 'PAUSED', 'EXPIRED', 'STOPPED'] as const;
-export const priceProviders = [
+export const flightProviders = [
   'MOCK_FLIGHT',
   'TRAVELPAYOUTS_CACHE',
   'SEARCHAPI_GOOGLE_FLIGHTS',
 ] as const;
-export type PriceProvider = (typeof priceProviders)[number];
+export type FlightProvider = (typeof flightProviders)[number];
+
+export const flightProviderLabels: Record<FlightProvider, string> = {
+  MOCK_FLIGHT: 'giá mô phỏng',
+  TRAVELPAYOUTS_CACHE: 'bộ nhớ đệm Travelpayouts',
+  SEARCHAPI_GOOGLE_FLIGHTS: 'Google Flights qua SearchApi',
+};
+
+export function isFlightProvider(value: unknown): value is FlightProvider {
+  return flightProviders.some((provider) => provider === value);
+}
+
 export const journeyTypes = ['ONE_WAY', 'ROUND_TRIP'] as const;
 export const cabinClasses = ['ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'] as const;
-/** Real fare sources publish one-way economy fares for one adult (Backend capabilities table). */
-export const referenceProvider = (provider: PriceProvider) => provider !== 'MOCK_FLIGHT';
 /**
  * `GET /price-watch-capabilities`: the source new watches use and what it can compare (FR-AU03).
  * `available: false` means creating a watch now fails (provider not configured).
  */
 export interface PriceWatchCapabilities {
-  provider: PriceProvider;
+  provider: FlightProvider;
   available: boolean;
   journeyTypes: readonly (typeof journeyTypes)[number][];
   cabinClasses: readonly (typeof cabinClasses)[number][];
@@ -24,7 +33,7 @@ export interface PriceWatchCapabilities {
   maxPassengers: number;
   currencies: readonly 'VND'[];
 }
-export const providerLabels: Record<PriceProvider, string> = {
+export const providerLabels: Record<FlightProvider, string> = {
   MOCK_FLIGHT: 'Giá mô phỏng (MOCK_FLIGHT)',
   TRAVELPAYOUTS_CACHE: 'Travelpayouts (giá cache)',
   SEARCHAPI_GOOGLE_FLIGHTS: 'Google Flights (SearchApi)',
@@ -76,7 +85,7 @@ export function capabilityErrors(
   return errors;
 }
 export interface WatchFields {
-  provider: PriceProvider;
+  provider?: FlightProvider;
   origin: string;
   destination: string;
   departure_date: string;
@@ -96,7 +105,7 @@ export interface RuntimeWatch {
   statusReason: string | null;
   version: number;
   expiresAt: string;
-  fields: WatchFields;
+  fields: WatchFields & { provider: FlightProvider };
 }
 export interface RuntimeObservation {
   id: string;
@@ -124,7 +133,7 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
     Number.isFinite(Date.parse(v)) &&
     new Date(v).toISOString().slice(0, 10) === v;
   if (
-    !(priceProviders as readonly string[]).includes(f.provider) ||
+    (f.provider !== undefined && !isFlightProvider(f.provider)) ||
     f.currency !== 'VND' ||
     !/^[A-Z]{3}$/.test(f.origin) ||
     !/^[A-Z]{3}$/.test(f.destination) ||
@@ -150,14 +159,15 @@ export function validateWatchFields(value: unknown): asserts value is WatchField
     throw Error('Invalid cabin');
   const p = f.passengers;
   if (
-    referenceProvider(f.provider) &&
+    f.provider !== undefined &&
+    f.provider !== 'MOCK_FLIGHT' &&
     (f.journey_type !== 'ONE_WAY' ||
       f.cabin_class !== 'ECONOMY' ||
       p?.adults !== 1 ||
       p?.children !== 0 ||
       p?.infants !== 0)
   )
-    throw Error('Unsupported cache query');
+    throw Error('Unsupported provider query');
   if (
     !p ||
     ![p.adults, p.children, p.infants].every((n) => Number.isInteger(n) && n >= 0 && n <= 9) ||

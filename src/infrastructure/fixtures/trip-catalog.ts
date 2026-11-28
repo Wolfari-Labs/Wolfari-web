@@ -59,6 +59,7 @@ function trip({
     permissions: Object.freeze({ canRead, canUpdate }),
     presentation: Object.freeze({
       memberCount,
+      coverAvailable: !!src,
       cover: Object.freeze({ src, mobileSrc, alt: '' }),
     }),
   });

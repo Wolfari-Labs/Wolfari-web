@@ -4,8 +4,6 @@ import { Trash2 } from 'lucide-react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
-import { CapabilityNote } from '../../shared/components/CapabilityNote';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Select } from '../../shared/components/Select';
 import headingPinIcon from '../../shared/assets/figma/trip-map-heading-pin.svg';
 import headingCloudArtwork from '../../shared/assets/figma/trip-map-heading-cloud.svg';
@@ -24,6 +22,7 @@ import { planDays } from '../plan/model/plan-presentation';
 import { usePlanDraft } from '../plan/hooks/use-plan-draft';
 import { TripHero } from '../trips/components/TripHero';
 import { MapViewport } from './MapViewport';
+import { ExpandableMapPanel } from './ExpandableMapPanel';
 import { PlaceDetail } from './PlaceDetail';
 import {
   mapLocationPresentations,
@@ -67,6 +66,9 @@ function PreviewMapPage() {
   const [providerLoadingMore, setProviderLoadingMore] = useState(false);
   const [providerHasMore, setProviderHasMore] = useState(false);
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
+  const googleMapsConfigured = Boolean(
+    (import.meta.env.VITE_GOOGLE_MAPS_BROWSER_KEY as string | undefined)?.trim(),
+  );
   const [mutationId, setMutationId] = useState<string | null>(null);
   const [writeError, setWriteError] = useState('');
   const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
@@ -411,11 +413,6 @@ function PreviewMapPage() {
         {data && (
           <>
             <div className={styles.mapContent}>
-              <PageBreadcrumb
-                className={styles.breadcrumb}
-                items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-                current="Bản đồ địa điểm"
-              />
               <div className={styles.hero}>
                 <TripHero trip={data.trip} compact variant="landscape" />
               </div>
@@ -472,7 +469,7 @@ function PreviewMapPage() {
                         type="search"
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
-                        placeholder="Tìm địa điểm, quán ăn, điểm tham quan..."
+                        placeholder="Tìm địa điểm, quán ăn…"
                       />
                     </label>
                     <span className={styles.searchFilterIcon} aria-hidden="true">
@@ -623,12 +620,23 @@ function PreviewMapPage() {
                                   )}
                                   <span className={styles.placeCopy}>
                                     <strong>{item.location.name}</strong>
-                                    <small>
-                                      {item.activities[0]?.activityType === 'MEAL'
-                                        ? 'Ẩm thực'
-                                        : 'Tham quan'}{' '}
-                                      · {item.location.address ?? 'Chưa có địa chỉ'}
-                                    </small>
+                                    <span className={styles.placeMetaLine}>
+                                      <span
+                                        className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
+                                      >
+                                        {status === 'IN_SCHEDULE'
+                                          ? 'Trong lịch'
+                                          : status === 'SELECTED_UNSCHEDULED'
+                                            ? 'Đã chọn · Chưa xếp'
+                                            : 'Chưa chọn'}
+                                      </span>
+                                      <small>
+                                        {item.activities[0]?.activityType === 'MEAL'
+                                          ? 'Ẩm thực'
+                                          : 'Tham quan'}{' '}
+                                        · {item.location.address ?? 'Chưa có địa chỉ'}
+                                      </small>
+                                    </span>
                                   </span>
                                   <img
                                     className={styles.rowChevron}
@@ -638,15 +646,6 @@ function PreviewMapPage() {
                                     alt=""
                                   />
                                 </button>
-                                <span
-                                  className={`${styles.statusChip} ${status === 'IN_SCHEDULE' ? styles.statusScheduled : status === 'SELECTED_UNSCHEDULED' ? styles.statusUnscheduled : styles.statusUnselected}`}
-                                >
-                                  {status === 'IN_SCHEDULE'
-                                    ? 'Trong lịch'
-                                    : status === 'SELECTED_UNSCHEDULED'
-                                      ? 'Đã chọn · Chưa xếp'
-                                      : 'Chưa chọn'}
-                                </span>
                                 {item.selected ? (
                                   <span
                                     className={`${styles.placeState} ${status === 'IN_SCHEDULE' ? styles.placeStateScheduled : styles.placeStateSelected}`}
@@ -713,35 +712,8 @@ function PreviewMapPage() {
                       <p>Thử từ khóa, ngày hoặc bộ lọc khác.</p>
                     </div>
                   )}
-                  <div className={styles.listLegend} aria-label="Chú thích trạng thái địa điểm">
-                    <span>
-                      <span className={styles.legendIcon} aria-hidden="true">
-                        <img src={controlInIcon} width="28" height="28" alt="" />
-                        <img src={checkIcon} width="20" height="20" alt="" />
-                      </span>
-                      Đã thêm vào lịch trình
-                    </span>
-                    <span>
-                      <span className={styles.legendIcon} aria-hidden="true">
-                        <img src={controlSelectedIcon} width="28" height="28" alt="" />
-                        <img src={checkIcon} width="20" height="20" alt="" />
-                      </span>
-                      Đã chọn (chưa xếp lịch)
-                    </span>
-                    <span>
-                      <span className={styles.legendIcon} aria-hidden="true">
-                        <img src={controlNoneIcon} width="28" height="28" alt="" />
-                        <img src={addIcon} width="20" height="20" alt="" />
-                      </span>
-                      Chưa chọn
-                    </span>
-                  </div>
                 </section>
-                <section
-                  className={styles.mapPanel}
-                  aria-labelledby="map-panel-title"
-                  data-region="map-panel"
-                >
+                <ExpandableMapPanel>
                   <div className={styles.mapToolbar}>
                     <div className={styles.routeSelector}>
                       <span id="map-panel-title" className={styles.visuallyHidden}>
@@ -763,22 +735,25 @@ function PreviewMapPage() {
                         ))}
                       </Select>
                     </div>
-                    <div className={styles.mapType} role="group" aria-label="Kiểu bản đồ">
-                      <button
-                        type="button"
-                        aria-pressed={mapType === 'roadmap'}
-                        onClick={() => setMapType('roadmap')}
-                      >
-                        Bản đồ
-                      </button>
-                      <button
-                        type="button"
-                        aria-pressed={mapType === 'satellite'}
-                        onClick={() => setMapType('satellite')}
-                      >
-                        Vệ tinh
-                      </button>
-                    </div>
+                    {/* Map type only changes a real Google map; the illustrative art has no layers. */}
+                    {googleMapsConfigured && (
+                      <div className={styles.mapType} role="group" aria-label="Kiểu bản đồ">
+                        <button
+                          type="button"
+                          aria-pressed={mapType === 'roadmap'}
+                          onClick={() => setMapType('roadmap')}
+                        >
+                          Bản đồ
+                        </button>
+                        <button
+                          type="button"
+                          aria-pressed={mapType === 'satellite'}
+                          onClick={() => setMapType('satellite')}
+                        >
+                          Vệ tinh
+                        </button>
+                      </div>
+                    )}
                   </div>
                   <MapViewport
                     items={mapItems}
@@ -789,11 +764,8 @@ function PreviewMapPage() {
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />
-                </section>
+                </ExpandableMapPanel>
               </div>
-              <CapabilityNote id="map-provider-note">
-                <strong>Bản đồ nền chưa được cấu hình</strong>.
-              </CapabilityNote>
             </div>
             <PlaceDetail
               item={selectedItem}

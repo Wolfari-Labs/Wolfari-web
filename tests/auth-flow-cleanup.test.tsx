@@ -69,10 +69,12 @@ describe('auth flow cleanup', () => {
     const login = vi.fn();
     mount('/register', { register, login });
     const user = userEvent.setup();
-    await user.type(screen.getByLabelText('Họ và tên'), 'Demo');
     await user.type(screen.getByLabelText('Email'), 'demo@example.test');
     await user.type(screen.getByLabelText('Mật khẩu'), 'Wolfari1');
-    await user.type(screen.getByLabelText('Nhập lại mật khẩu'), 'Wolfari1');
+    await user.type(screen.getByLabelText('Xác nhận mật khẩu'), 'Wolfari1');
+    await user.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
+    expect(register).not.toHaveBeenCalled();
+    await user.type(screen.getByLabelText('Họ và tên'), 'Demo');
     await user.click(screen.getByRole('checkbox'));
     await user.dblClick(screen.getByRole('button', { name: 'Tạo tài khoản' }));
     expect(

@@ -1,16 +1,15 @@
 import { useMemo, useState, type ReactNode, type RefObject } from 'react';
+import { Icon } from '../../../shared/components/Icon';
 import styles from './FinanceDesktop.module.css';
 
 export type FinanceTransactionType = 'CONTRIBUTION' | 'EXPENSE' | 'REFUND' | 'REVERSAL';
 export type FinanceTransactionFilter = 'ALL' | FinanceTransactionType;
 
 const financeAssets = {
-  goal: '/assets/finance-v12/e761e.svg',
   all: '/assets/finance-v12/6170f.svg',
   contribution: '/assets/finance-v12/514da.svg',
   expense: '/assets/finance-v12/f8a51.svg',
   refund: '/assets/finance-v12/0ff3f.svg',
-  download: '/assets/finance-v12/23b0f.svg',
 } as const;
 
 export interface FinanceTransactionRow {
@@ -60,7 +59,7 @@ export function FinanceGoal({
   return (
     <section className={styles.goal} aria-label="Mục tiêu quỹ" data-finance-goal>
       <div className={styles.goalIcon} aria-hidden="true">
-        <img src={financeAssets.goal} alt="" />
+        <Icon name="target" size={22} />
       </div>
       <div className={styles.goalLabel}>
         <span>Mục tiêu quỹ</span>
@@ -116,25 +115,31 @@ function transactionLabel(type: FinanceTransactionType) {
 export function FinanceTransactionPanel({
   rows,
   format,
+  statusSummary,
+  onSettings,
+  settingsRef,
   loading = false,
   feedback,
   hasMore = false,
   loadingMore = false,
   onLoadMore,
-  footer,
+  memberAction,
 }: {
   rows: readonly FinanceTransactionRow[];
   format: (value: string | null) => string;
+  statusSummary?: ReactNode;
+  onSettings?: () => void;
+  settingsRef?: RefObject<HTMLButtonElement | null>;
   loading?: boolean;
   feedback?: ReactNode;
   hasMore?: boolean;
   loadingMore?: boolean;
   onLoadMore?: () => void;
-  footer?: ReactNode;
+  /** Optional control placed beside the member filter (e.g. loading more member names). */
+  memberAction?: ReactNode;
 }) {
   const [filter, setFilter] = useState<FinanceTransactionFilter>('ALL');
   const [member, setMember] = useState('ALL');
-  const [kind, setKind] = useState('ALL');
   const [expanded, setExpanded] = useState<string | null>(null);
   const members = useMemo(
     () =>
@@ -148,16 +153,28 @@ export function FinanceTransactionPanel({
   const visible = rows.filter((row) => {
     if (filter !== 'ALL' && row.type !== filter) return false;
     if (member !== 'ALL' && row.memberId !== member) return false;
-    if (kind === 'IN' && row.direction !== 'IN') return false;
-    if (kind === 'OUT' && row.direction !== 'OUT') return false;
-    if (kind === 'REVERSAL' && row.type !== 'REVERSAL') return false;
     return true;
   });
 
   return (
     <section className={styles.transactions} aria-label="Lịch sử quỹ" data-finance-transactions>
-      <h2>Sổ giao dịch</h2>
-      <div className={styles.toolbar}>
+      <div className={styles.transactionsHeader}>
+        <div>
+          <h2>Sổ giao dịch</h2>
+          {statusSummary && (
+            <p className={styles.statusSummary} role="status" data-finance-status-summary>
+              {statusSummary}
+            </p>
+          )}
+        </div>
+        {onSettings && (
+          <button ref={settingsRef} type="button" className={styles.settings} onClick={onSettings}>
+            <Icon name="settings" size={18} />
+            Cài đặt quỹ
+          </button>
+        )}
+      </div>
+      <div className={styles.toolbar} data-finance-toolbar>
         <div className={styles.filterGroup} role="tablist" aria-label="Bộ lọc giao dịch">
           {(['ALL', 'CONTRIBUTION', 'EXPENSE', 'REFUND'] as const).map((value) => (
             <button
@@ -212,41 +229,23 @@ export function FinanceTransactionPanel({
             ))}
           </select>
         </label>
-        <label className={styles.selectLabel}>
-          Loại giao dịch
-          <select
-            aria-label="Loại giao dịch"
-            value={kind}
-            onChange={(event) => setKind(event.target.value)}
-          >
-            <option value="ALL">Tất cả giao dịch</option>
-            <option value="IN">Tiền vào</option>
-            <option value="OUT">Tiền ra</option>
-            <option value="REVERSAL">Đảo bút toán</option>
-          </select>
-        </label>
-        <button
-          type="button"
-          className={styles.export}
-          disabled
-          title="Xuất dữ liệu chưa có trong contract Finance"
-        >
-          <img src={financeAssets.download} alt="" aria-hidden="true" />
-          <span className={styles.srOnly}>Xuất dữ liệu chưa khả dụng</span>
-        </button>
-      </div>
-      <div className={styles.loadedOnly} data-finance-filter-note="true">
-        {footer ?? <p>Bộ lọc áp dụng trên các giao dịch đã tải.</p>}
+        {memberAction}
       </div>
       {feedback}
-      {loading ? (
-        <div className={styles.empty} role="status">
-          Đang tải lịch sử quỹ…
-        </div>
-      ) : visible.length === 0 ? (
-        <div className={styles.empty}>Chưa có giao dịch phù hợp.</div>
-      ) : (
-        <div className={styles.tableWrap}>
+      <div
+        className={styles.tableWrap}
+        data-finance-ledger-scroll
+        role="region"
+        tabIndex={0}
+        aria-label="Danh sách giao dịch"
+      >
+        {loading ? (
+          <div className={styles.empty} role="status">
+            Đang tải lịch sử quỹ…
+          </div>
+        ) : visible.length === 0 ? (
+          <div className={styles.empty}>Chưa có giao dịch phù hợp.</div>
+        ) : (
           <table>
             <caption className={styles.srOnly}>Các giao dịch quỹ nhóm</caption>
             <thead>
@@ -285,7 +284,7 @@ export function FinanceTransactionPanel({
                       {isExpanded && (
                         <dl className={styles.details}>
                           <div>
-                            <dt>Sequence</dt>
+                            <dt>Số thứ tự</dt>
                             <dd>{row.sequence}</dd>
                           </div>
                           <div>
@@ -293,7 +292,7 @@ export function FinanceTransactionPanel({
                             <dd>{format(row.balanceAfter)}</dd>
                           </div>
                           <div>
-                            <dt>Actor</dt>
+                            <dt>Người thực hiện</dt>
                             <dd>{row.actorName}</dd>
                           </div>
                           {row.reason && (
@@ -318,18 +317,18 @@ export function FinanceTransactionPanel({
               })}
             </tbody>
           </table>
-        </div>
-      )}
-      {hasMore && (
-        <button
-          type="button"
-          className={styles.loadMore}
-          disabled={loadingMore}
-          onClick={onLoadMore}
-        >
-          {loadingMore ? 'Đang tải…' : 'Tải thêm giao dịch'}
-        </button>
-      )}
+        )}
+        {hasMore && (
+          <button
+            type="button"
+            className={styles.loadMore}
+            disabled={loadingMore}
+            onClick={onLoadMore}
+          >
+            {loadingMore ? 'Đang tải…' : 'Tải thêm giao dịch'}
+          </button>
+        )}
+      </div>
     </section>
   );
 }

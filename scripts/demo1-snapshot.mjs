@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { backendRoot, webRoot as web } from './demo-paths.mjs';
 
-const web = fileURLToPath(new URL('..', import.meta.url));
 export function snapshot(root) {
   const git = (...args) =>
     execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', windowsHide: true });
@@ -46,7 +46,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       {
         at: new Date().toISOString(),
         web: snapshot(web),
-        backend: snapshot(resolve(web, '../Wolfari-backend')),
+        backend: snapshot(backendRoot),
       },
       null,
       2,

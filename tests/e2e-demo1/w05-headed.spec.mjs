@@ -52,7 +52,8 @@ async function register(page, label, email = `w05-${randomUUID()}@wolfari.test`)
 }
 async function fund(page, tripId) {
   await page.goto(`/trips/${tripId}/fund`);
-  await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
 }
 async function confirmForm(page, label) {
   const dialog = page.getByRole('form', { name: label, exact: true });

@@ -29,6 +29,38 @@ corepack pnpm demo:preview
 
 Web demo: <http://localhost:5273/>; Mailpit: <http://127.0.0.1:18025/>. `demo:dev` là lựa chọn development cùng cổng 5273. Credentials nằm trong journal ignored của Backend; dùng `demo:accounts` để kiểm tra trạng thái, không suy tài khoản còn tồn tại từ báo cáo cũ. Seed chỉ dùng khi tạo bộ mẫu có chủ đích. `demo:stop` tại Backend giữ volume.
 
+## Trình diễn Demo 2 trên localhost
+
+Hai worktree của bản demo này là `Wolfari-web-demo-2` và `Wolfari-backend-demo-2`. Web đọc `WOLFARI_DEMO_BACKEND_ROOT=../Wolfari-backend-demo-2` từ `.env.demo.local`. Cấu hình này áp dụng cho cả trình chạy demo và các lệnh E2E dùng Backend.
+
+Trên máy đã chuẩn bị dữ liệu, đăng nhập bằng `demo-owner@wolfari.test`. [Web demo](http://localhost:5273/)
+
+Chạy lệnh sau từ thư mục Web để xem mật khẩu trên máy.
+
+```powershell
+(Get-Content ..\Wolfari-backend-demo-2\.local\demo\seed.json -Raw | ConvertFrom-Json).accounts.owner.password
+```
+
+Mở **Wolfari Demo — Đà Nẵng → Bản đồ & địa điểm**. Chọn **Trong lịch** để xem Cầu Rồng và Cầu Sông Hàn. Bấm từng địa điểm để xem ảnh và nguồn. Chọn **Ngày 1 → Ô tô** để xem tuyến đường. Lớp nền Geoapify cần kết nối Internet. Catalog POI và ảnh đã nạp được phục vụ từ PostgreSQL và MinIO của demo.
+
+Để mở lại sau khi dừng, bật Docker Desktop rồi chạy hai terminal từ thư mục `PBL6`.
+
+```powershell
+# Terminal Backend
+Set-Location .\Wolfari-backend-demo-2
+docker start wolfari-osrm
+corepack pnpm demo:start
+```
+
+```powershell
+# Terminal Web
+Set-Location .\Wolfari-web-demo-2
+corepack pnpm demo:build
+corepack pnpm demo:preview
+```
+
+Dừng Web, Gateway và hạ tầng demo bằng `corepack pnpm demo:stop` trong worktree Backend. Dữ liệu demo nằm trong các Docker volume. OSRM chạy ở container riêng.
+
 ## Runtime và contract
 
 Các module Gateway gồm Identity/Profile/Sessions, Trip/Plan/Members/Invitations, quỹ đóng góp TEST, Notification và Price Watch. Map/Places và provider giá có adapter riêng; khả năng chạy phụ thuộc cấu hình Backend/provider, không suy từ fixture hoặc việc đã build thành công.

@@ -94,7 +94,7 @@ export function createGatewayHttpClient({
       const write = 'method' in options;
       const requestedResponse = options.responseType ?? 'json';
       const headers = new Headers({
-        Accept: requestedResponse === 'bytes' ? 'image/png' : 'application/json',
+        Accept: requestedResponse === 'bytes' ? '*/*' : 'application/json',
         'X-Client-Type': 'web',
         'X-Correlation-Id': options.correlationId ?? newCorrelationId(),
       });

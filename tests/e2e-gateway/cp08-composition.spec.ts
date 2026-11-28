@@ -60,7 +60,48 @@ for (const view of ['members', 'invitations', 'policy', 'recipient'] as const) {
             : '[data-flow="gateway-members"]',
         );
         await expect(root).toBeVisible();
-        if (view === 'members' || view === 'policy' || view === 'invitations') {
+        if (view === 'members') {
+          const primary = root.locator('[data-cp08-primary]');
+          await expect(root.locator('[data-cp08-secondary]')).toHaveCount(0);
+          await expect(primary.getByText('Vai trò và trách nhiệm', { exact: true })).toHaveCount(0);
+          await expect(primary.getByText('Chi tiết hỗ trợ', { exact: true })).toHaveCount(0);
+          if (viewport.height <= 520) {
+            const list = primary.locator('[data-region="member-roster-list"]');
+            const firstMember = list.locator(':scope > li').first();
+            await expect
+              .poll(() => list.evaluate((node) => node.clientHeight))
+              .toBeGreaterThanOrEqual(68);
+            await expect(firstMember).toBeInViewport({ ratio: 1 });
+            const footer = primary.getByRole('button', {
+              name: 'Tải thêm thành viên',
+              exact: true,
+            });
+            await expect(footer).toBeInViewport({ ratio: 1 });
+            const rowBounds = (await firstMember.boundingBox())!;
+            const footerBounds = (await footer.boundingBox())!;
+            expect(rowBounds.y + rowBounds.height).toBeLessThanOrEqual(footerBounds.y + 1);
+            expect(
+              await page.evaluate(() => document.documentElement.scrollHeight),
+            ).toBeLessThanOrEqual(viewport.height);
+          }
+          const roleHelp = primary.getByRole('button', { name: 'Gợi ý vai trò thành viên' });
+          await roleHelp.click();
+          const roleDialog = page.getByRole('dialog', { name: 'Vai trò trong chuyến đi' });
+          await expect(roleDialog).toBeVisible();
+          for (const name of ['Chủ chuyến', 'Thành viên', 'Người giữ quỹ'])
+            await expect(roleDialog.getByText(name, { exact: true })).toBeVisible();
+          await expect(roleDialog.getByText(gateway.profile.id, { exact: true })).toHaveCount(0);
+          await page.screenshot({ path: info.outputPath('member-roles.png'), fullPage: true });
+          await page.keyboard.press('Escape');
+          await expect(roleDialog).toHaveCount(0);
+          await expect(roleHelp).toBeFocused();
+          await roleHelp.click();
+          await expect(page.getByRole('button', { name: 'Đóng gợi ý vai trò' })).toBeVisible();
+          await page.getByRole('button', { name: 'Đóng gợi ý vai trò' }).click();
+          await expect(roleDialog).toHaveCount(0);
+          await expect(primary.getByText(gateway.profile.id, { exact: true })).toHaveCount(0);
+        }
+        if (view === 'policy' || view === 'invitations') {
           const primary = root.locator('[data-cp08-primary]');
           const secondary = root.locator('[data-cp08-secondary]');
           const a = (await primary.boundingBox())!;

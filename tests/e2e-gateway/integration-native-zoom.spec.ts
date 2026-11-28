@@ -81,6 +81,14 @@ test('HTTP mock: push and payment panels fit native 200% zoom with keyboard navi
   await expect
     .poll(() => page.evaluate(() => innerWidth))
     .toBeLessThanOrEqual(Math.ceil(before.width / 2));
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Thông báo', exact: true })
+    .click();
+  await page
+    .locator('summary')
+    .filter({ hasText: /^Thiết bị nhận push$/ })
+    .click();
   const panel = page.getByRole('group', { name: 'Thông báo trên trình duyệt này' });
   await panel.scrollIntoViewIfNeeded();
   expect(

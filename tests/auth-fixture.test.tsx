@@ -17,6 +17,7 @@ import { createGatewayHomeRepository } from '../src/infrastructure/repositories/
 import { selectIdentityRepository } from '../src/infrastructure/repositories/select-identity-repository';
 import { selectHomeRepository } from '../src/infrastructure/repositories/select-home-repository';
 import { createFixtureDemoAccess } from '../src/infrastructure/fixtures/demo-access';
+import type { IdentityRepository } from '../src/features/auth/model/identity';
 
 const valid: AuthFormValues = {
   fullName: 'Trang Nguyễn',
@@ -127,7 +128,13 @@ describe('Auth validation without Identity writes', () => {
         <AuthPage mode="register" previewEnabled={false} />
       </MemoryRouter>,
     );
-    await userEvent.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText('Email'), 'name@example.test');
+    await user.type(screen.getByLabelText('Mật khẩu'), 'Wolfari1');
+    await user.type(screen.getByLabelText('Xác nhận mật khẩu'), 'Wolfari1');
+    await user.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
+    await user.type(screen.getByLabelText('Họ và tên'), 'Demo');
+    await user.click(screen.getByRole('button', { name: 'Tạo tài khoản' }));
     expect(screen.getByText('Chọn đồng ý để tiếp tục đăng ký.')).toBeInTheDocument();
   });
   it('reveals and hides a password without changing its value', async () => {
@@ -240,9 +247,14 @@ describe('Identity/Home read-only adapter contract', () => {
   });
 });
 
-function mount(path = '/profile', guest = false, demo = false) {
+function mount(
+  path = '/profile',
+  guest = false,
+  demo = false,
+  identityOverrides: Partial<IdentityRepository> = {},
+) {
   const shell = createFixtureShellRepository(),
-    identity = createFixtureIdentityRepository(),
+    identity = { ...createFixtureIdentityRepository(), ...identityOverrides },
     trip = createFixtureTripRepository();
   const readSelf = vi.fn(identity.readSelf),
     listTrips = vi.fn(trip.listTrips);
@@ -325,23 +337,35 @@ describe('Self/profile and Home composition', () => {
     );
     expect(demo.accepts({ ...demo.account, password: demo.account.password + ' ' })).toBe(false);
   });
-  it('keeps the profile draft across read error/recovery and never increments version on preview save', async () => {
-    mount();
+  it('keeps the profile draft across read error/recovery and leaves the version unchanged when saving fails', async () => {
+    const updateProfile = vi.fn<NonNullable<IdentityRepository['updateProfile']>>(async () => ({
+      status: 'error',
+      error: { code: 'SERVICE_UNAVAILABLE', correlationId: null, retryable: true },
+    }));
+    mount('/profile', false, false, { updateProfile });
     const name = await screen.findByLabelText('Tên hiển thị');
+    expect(name).toHaveAttribute('readonly');
+    await userEvent.click(screen.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }));
     await userEvent.clear(name);
     await userEvent.type(name, 'Tên sửa local');
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái hồ sơ'), 'error');
     await screen.findByText('Chưa thể tải nội dung');
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái hồ sơ'), 'success');
     expect(await screen.findByLabelText('Tên hiển thị')).toHaveValue('Tên sửa local');
-    await userEvent.click(screen.getByRole('button', { name: 'Lưu thay đổi' }));
-    await screen.findByText(/Chưa lưu được thay đổi/);
+    await userEvent.click(screen.getByRole('button', { name: 'Lưu tên hiển thị' }));
+    await screen.findByText(/Chưa thể hoàn tất lúc này/);
+    expect(updateProfile).toHaveBeenCalledOnce();
+    expect(updateProfile.mock.calls[0]?.[0].intent).toEqual({
+      fullName: 'Tên sửa local',
+      expectedVersion: 1,
+    });
+    expect(screen.getByLabelText('Tên hiển thị')).toHaveValue('Tên sửa local');
     // A25: the version moved from visible text to data-profile-version; same behavioural check.
     expect(document.querySelector('[data-preview="profile"]')).toHaveAttribute(
       'data-profile-version',
       '1',
     );
-    await userEvent.click(screen.getByText('Phiên đăng nhập', { selector: 'summary' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Bảo mật và đăng nhập' }));
     await screen.findByText('Phiên đăng nhập 1');
   });
   it.each(['/profile', '/PROFILE/'])(
@@ -355,7 +379,7 @@ describe('Self/profile and Home composition', () => {
   );
   it('Home defaults to Guest and reads public inspiration without reading private Trip data', async () => {
     const { listTrips } = mount('/');
-    await screen.findByText('Minh họa từ thiết kế');
+    await screen.findByText('Điểm đến được yêu thích');
     expect(screen.getByRole('link', { name: 'Bắt đầu ngay' })).toHaveAttribute('href', '/register');
     expect(screen.getByRole('link', { name: 'Bắt đầu hành trình' })).toHaveAttribute(
       'href',
@@ -371,10 +395,9 @@ describe('Self/profile and Home composition', () => {
     const { listTrips } = mount('/');
     await userEvent.click(await screen.findByText('UI preview · Dữ liệu minh họa'));
     await userEvent.selectOptions(screen.getByLabelText('Trạng thái preview'), 'success');
-    expect(await screen.findByRole('link', { name: 'Khám phá ứng dụng' })).toHaveAttribute(
-      'href',
-      '/trips',
-    );
+    for (const link of await screen.findAllByRole('link', { name: 'Tạo chuyến đi' })) {
+      expect(link).toHaveAttribute('href', '/trips/new');
+    }
     expect(screen.getAllByRole('link', { name: 'Chuyến đi của tôi' })).toEqual(
       expect.arrayContaining([expect.objectContaining({ pathname: '/trips' })]),
     );

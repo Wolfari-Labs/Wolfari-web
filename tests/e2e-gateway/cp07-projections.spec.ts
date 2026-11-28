@@ -138,6 +138,7 @@ test('CP07 Dress projects real scope/description and local scope filter without 
         id: '88888888-1111-4111-8111-111111111111',
         trip_id: tripId,
         scope_type: 'TRIP',
+        reference_image_available: false,
         plan_date: null,
         activity_id: null,
         label: 'Trang phục thoáng mát',
@@ -150,6 +151,7 @@ test('CP07 Dress projects real scope/description and local scope filter without 
         id: '88888888-2222-4222-8222-222222222222',
         trip_id: tripId,
         scope_type: 'DAY',
+        reference_image_available: false,
         plan_date: '2026-11-02',
         activity_id: null,
         label: 'Áo chống nắng',
@@ -162,6 +164,7 @@ test('CP07 Dress projects real scope/description and local scope filter without 
         id: '88888888-3333-4333-8333-333333333333',
         trip_id: tripId,
         scope_type: 'ACTIVITY',
+        reference_image_available: false,
         plan_date: null,
         activity_id: activityId,
         label: 'Giày đi bộ',
@@ -262,6 +265,7 @@ test('CP07 empty Map/Dress/Packing remain readable and issue no writes', async (
 });
 
 const loadingRows: Partial<PlanRows> = {
+  activities: [{ ...activity(), scheduled_date: '2026-11-01' }],
   selected_locations: [selectedLocation(locationId, 'Bãi biển Mỹ Khê', false)],
   dress_codes: [
     {
@@ -298,6 +302,7 @@ const loadingRows: Partial<PlanRows> = {
 };
 
 for (const { path, flow, savedText } of [
+  { path: 'plan', flow: 'plan-server', savedText: 'Đi bộ sáng' },
   { path: 'map', flow: 'gateway-map-read', savedText: 'Bãi biển Mỹ Khê' },
   { path: 'dress-code', flow: 'gateway-dress-read', savedText: 'Trang phục thoáng mát' },
   { path: 'packing', flow: 'packing-read', savedText: 'Áo mưa' },

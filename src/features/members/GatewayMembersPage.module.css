@@ -1,9 +1,11 @@
+/* Web v2 W12 Thành viên (Figma 943:12696) and W12.2 Quyền sửa Plan (943:13185) for the Gateway
+   runtime: pill tabs, white 28px cards, #f7f9ff member rows, pastel tags and radio cards. */
 .page {
   composes: page from '../../shared/styles/WorkspacePage.module.css';
   min-width: 0;
   min-height: 100%;
-  color: var(--color-ink);
-  background: var(--color-background);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 .breadcrumb {
   composes: breadcrumb from '../../shared/styles/WorkspacePage.module.css';
@@ -21,11 +23,8 @@
     color: var(--color-muted);
   }
   .breadcrumb a {
-    color: var(--color-action-primary);
+    color: var(--color-action-text);
   }
-}
-.guidance a {
-  color: var(--color-action-primary);
 }
 .visuallyHidden {
   position: absolute;
@@ -35,142 +34,228 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
 }
+
+/* Tabs row (943:12838): white pill segmented control; the refresh action sits at the end. */
 .actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-block: 16px 12px;
-  padding: 6px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-8);
-  background: var(--color-white);
+  gap: 2px;
+  width: fit-content;
+  max-width: 100%;
+  margin-block: 20px 16px;
+  padding: 4px;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .actions > button {
-  white-space: normal;
   max-width: 100%;
+  padding: 9px 18px;
+  background: transparent;
+  color: var(--v2-sub);
+  font-weight: 700;
+  line-height: 19px;
+  white-space: normal;
+  box-shadow: none;
 }
-.actions > button:last-child {
-  margin-left: auto;
+.actions > button[aria-pressed='true'],
+.actions > button[aria-pressed='true']:is(:hover, :focus-visible, :active) {
+  background: var(--v2-gradient);
+  color: var(--v2-white);
+  box-shadow: var(--v2-shadow-active);
 }
+.actions > .refresh {
+  margin-left: 8px;
+  color: var(--v2-blue-text);
+}
+
+/* Card header: D/Icon badge (44px, radius 15) + title. */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.cardHeader > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.iconBadge {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--v2-gradient-blue);
+  color: var(--v2-white);
+  box-shadow:
+    0 6px 12px -2px rgb(60 123 232 / 32%),
+    var(--v2-inset-badge);
+}
+.iconBadge[data-tone='violet'] {
+  background: var(--v2-gradient-violet);
+  box-shadow:
+    0 6px 12px -2px rgb(107 78 230 / 32%),
+    var(--v2-inset-badge);
+}
+
+/* The roster takes the full width; the policy tab keeps its form + guidance pair. */
 .workspace,
 .policyWorkspace {
   display: grid;
-  grid-template-columns: minmax(0, 790fr) minmax(0, 372fr);
-  gap: 18px;
-  padding: 16px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-8);
-  background: var(--color-white);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
 }
 .policyWorkspace {
-  grid-template-columns: minmax(0, 700fr) minmax(0, 444fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 638fr) minmax(0, 444fr);
 }
 .panel,
 .guidance {
   min-width: 0;
   overflow-wrap: anywhere;
-  display: grid;
-  align-content: start;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+}
+.guidance {
+  gap: 10px;
+  padding: 20px;
+}
+@media (min-width: 769px) {
+  .workspace,
+  .policyWorkspace {
+    min-height: max(480px, calc(100dvh - 301px));
+  }
+}
+
+@media (min-width: 769px) and (max-height: 700px) {
+  .actions {
+    margin-block: 8px;
+  }
 }
 .panel h2,
 .guidance h2 {
   margin: 0;
-  font-size: var(--font-size-card-title);
-  line-height: 1.4;
+  color: var(--v2-ink);
+  font: 800 20px/normal var(--v2-font);
+}
+.guidance h2 {
+  font-size: 18px;
 }
 .panel p,
 .guidance p {
   margin: 0;
-  line-height: 1.65;
+  line-height: 1.5;
 }
-.intro,
+.panelHeading {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.inviteButton {
+  flex-shrink: 0;
+}
+.rosterControls {
+  display: flex;
+  flex: none;
+  flex-basis: 100%;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.loadMore {
+  flex: none;
+}
+.metadata,
+.cardHeader p {
+  color: var(--v2-sub);
+  font: 600 13px/18px var(--v2-font);
+}
 .metadata {
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 1.6;
+  font-size: 12px;
+  font-weight: 700;
 }
+
+/* Responsibility notes (943:12943…12955): #f7f9ff rows with pastel tag headings. */
 .note {
-  padding: 14px;
-  border: 1px solid var(--color-line);
-  border-left: 3px solid var(--color-active);
-  border-radius: var(--radius-6);
-  background: var(--color-note);
-  font-size: var(--font-size-small);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-row);
+  color: var(--v2-nav-text);
+  font: 600 13px/18px var(--v2-font);
 }
 .note h3 {
-  font-size: var(--font-size-label);
-  margin: 0 0 8px;
+  margin: 0 0 2px;
+  padding: 5px 10px;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-sky);
+  color: #2f63c4;
+  font: 700 12px/normal var(--v2-font);
 }
-.note[data-tone='owner'] {
-  background: var(--color-status-warning-surface);
-  border-left-color: var(--color-status-warning);
+.note[data-tone='owner'] h3 {
+  background: var(--v2-lilac);
+  color: var(--v2-violet-text);
 }
-.note[data-tone='fund'] {
-  background: #e7faf1;
-  border-left-color: var(--color-green);
+.note[data-tone='transfer'] h3 {
+  background: var(--v2-butter);
+  color: var(--v2-warning-text);
 }
-.note[data-tone='policy'] {
-  background: #f1edff;
-  border-left-color: #8b5cf6;
+/* Policy guidance (943:13185 right card): filled pastel notes. */
+.policyWorkspace .note {
+  padding: 12px 14px;
 }
-.guidance a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-6);
-  font-size: var(--font-size-small);
-  text-align: center;
-}
-.list {
-  display: grid;
-  gap: 12px;
+.policyWorkspace .note h3 {
   padding: 0;
-  margin: 0;
-  list-style: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 800;
 }
-.list > li {
-  min-width: 0;
-  padding: 14px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-6);
+.policyWorkspace .note[data-tone='owner'] {
+  background: var(--v2-lilac);
+  color: var(--v2-violet-text);
 }
-.memberRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
+.policyWorkspace .note[data-tone='policy'] {
+  background: var(--v2-sky);
+  color: #2f63c4;
 }
-.memberRow > button {
-  max-width: 160px;
-  white-space: normal;
+.policyWorkspace .note[data-tone='transfer'] {
+  background: var(--v2-butter);
+  color: var(--v2-warning-text);
 }
-.memberIdentity {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
+.transferButton {
+  min-height: 32px;
+  padding: 6px 13px;
+  background: var(--v2-sky);
+  color: var(--v2-blue-text);
+  font: 800 12px/18px var(--v2-font);
+  white-space: nowrap;
+  box-shadow: none;
 }
-.memberIdentity > div:last-child {
-  min-width: 0;
-  display: grid;
-  gap: 4px;
-}
-.roles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.list details {
-  margin-top: 8px;
-  font-size: var(--font-size-caption);
-  color: var(--color-muted);
+.transferButton:hover:not(:disabled) {
+  background: var(--v2-sky);
+  color: var(--v2-blue);
 }
 .page summary {
   cursor: pointer;
@@ -180,7 +265,10 @@
 .form {
   min-width: 0;
   display: grid;
-  gap: 16px;
+  gap: 14px;
+}
+.form .submit {
+  justify-self: start;
 }
 .check,
 .checks label {
@@ -189,21 +277,37 @@
   gap: 10px;
   min-height: 44px;
 }
+.check {
+  width: fit-content;
+  min-height: 32px;
+  color: var(--v2-nav-text);
+  font: 700 13px/normal var(--v2-font);
+}
 .check input,
 .checks input,
 .radioCard input {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  accent-color: var(--color-action-primary);
+  margin: 0;
+  accent-color: var(--v2-blue);
 }
 .checks {
   display: grid;
-  gap: 8px;
+  gap: 4px;
   min-width: 0;
-  padding: 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-6);
+  margin: 0;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-row);
+}
+.checks legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 4px;
+  color: var(--v2-sub);
+  font: 700 12px/normal var(--v2-font);
 }
 .radioGroup {
   min-width: 0;
@@ -215,69 +319,155 @@
 }
 .radioGroup legend {
   margin-bottom: 12px;
-  font-weight: 600;
+  color: var(--v2-ink);
+  font: 700 13px/18px var(--v2-font);
 }
+/* Radio cards (943:13185 OWNER_ONLY / ALL_MEMBERS / SELECTED_MEMBERS). */
 .radioCard {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-height: 68px;
-  padding: 14px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-6);
+  padding: 12px 18px;
+  border: 2px solid #e3e9f6;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-white);
   cursor: pointer;
 }
 .radioCard:has(:checked) {
-  background: var(--color-selected);
-  border-color: var(--color-border-control);
+  border-color: var(--v2-grad-start);
+  background: #eef4ff;
+  box-shadow: 0 0 0 4px rgb(92 140 255 / 18%);
 }
 .radioCard:has(:disabled) {
   cursor: default;
 }
 .radioCard > span {
   display: grid;
-  gap: 4px;
+  gap: 2px;
+}
+.radioCard strong {
+  color: var(--v2-ink);
+  font: 800 15px/20px var(--v2-font);
 }
 .radioCard small {
-  color: var(--color-muted);
+  color: var(--v2-sub);
+  font: 600 13px/18px var(--v2-font);
 }
 @media (max-width: 1100px) {
   .workspace,
   .policyWorkspace {
     grid-template-columns: 1fr;
+    min-height: 0;
   }
 }
 @media (max-width: 600px) {
   .page {
     padding: 8px 10px 20px;
   }
-  .workspace,
-  .policyWorkspace {
-    padding: 12px;
+  .panel,
+  .guidance {
+    padding: 16px 14px;
   }
-  .memberRow {
-    grid-template-columns: 1fr;
+  .panelHeading {
+    flex-wrap: wrap;
   }
-  .memberRow > button {
-    max-width: 100%;
-    justify-self: start;
+  .actions {
+    border-radius: var(--v2-radius-tile);
   }
-  .actions > button:last-child {
+  .actions > .refresh {
     margin-left: 0;
   }
 }
 
-/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
 @media (min-width: 769px) {
-  .workspace,
-  .policyWorkspace {
-    gap: var(--grid-gap);
+  .page,
+  .workspaceRoot {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .page {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .workspaceRoot {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .workspace > .panel {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .policyWorkspace,
+  .invitationTab {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
   }
 }
 
-/* Side column only where the page is not collapsing to fewer columns. */
-@media (min-width: 1101px) {
-  .workspace {
-    grid-template-columns: minmax(0, 1fr) var(--side-panel-width);
+@media (min-width: 769px) and (max-height: 600px) {
+  .actions > button {
+    min-height: 32px;
+    padding: 6px 14px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .workspace > .panel {
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  .panelHeading {
+    flex: none;
+    min-height: 32px;
+  }
+
+  .panelHeading h2 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .inviteButton,
+  .loadMore {
+    min-height: 32px;
+    padding-block: 6px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .check {
+    min-height: 24px;
+    font-size: 12px;
+  }
+
+  .rosterControls {
+    flex-basis: auto;
+  }
+
+  .rosterControls > .metadata {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }

@@ -87,6 +87,7 @@ async function mockPlan(page: Page, gateway: GatewayModel) {
               id: '88888888-1111-4111-8111-111111111111',
               trip_id: tripId,
               scope_type: 'TRIP',
+              reference_image_available: false,
               plan_date: null,
               activity_id: null,
               label: 'Trang phục thoáng mát',

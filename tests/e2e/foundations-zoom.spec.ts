@@ -106,8 +106,8 @@ test('CP03 native browser 200% zoom keeps fields, modal footer and focus reachab
       .not.toBe('hidden');
     await page.goto(`${baseURL}/register`);
     await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-    await expect(page.getByLabel('Họ và tên')).toBeFocused();
-    await expect(page.getByLabel('Họ và tên')).toBeInViewport();
+    await expect(page.getByLabel('Email', { exact: true })).toBeFocused();
+    await expect(page.getByLabel('Email', { exact: true })).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );

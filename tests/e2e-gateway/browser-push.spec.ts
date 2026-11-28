@@ -19,9 +19,24 @@ test('HTTP mock: unconfigured browser push is truthful, accessible and never req
   });
   await login(page);
   await page.goto('/profile');
+  await page
+    .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+    .getByRole('button', { name: 'Thông báo', exact: true })
+    .click();
+  const pushToggle = page.locator('summary').filter({ hasText: /^Thiết bị nhận push$/ });
+  const groupToggle = page.locator('summary').filter({ hasText: /^Tùy chọn từng nhóm$/ });
+  await expect(pushToggle).toBeVisible();
+  await expect(groupToggle).toBeVisible();
+  await expect(pushToggle.locator('..')).not.toHaveAttribute('open');
+  const pushBounds = await pushToggle.boundingBox();
+  const groupBounds = await groupToggle.boundingBox();
+  expect(pushBounds!.y).toBeLessThan(groupBounds!.y);
   const panel = page.getByRole('group', { name: 'Thông báo trên trình duyệt này' });
+  await expect(panel).toBeHidden();
+  await page.screenshot({ path: info.outputPath('notification-sections.png'), fullPage: true });
+  await pushToggle.click();
   await expect(panel).toBeVisible();
-  await expect(panel.getByText(/Chưa cấu hình Firebase/)).toBeVisible();
+  await expect(panel.getByText(/chưa được thiết lập cho môi trường này/)).toBeVisible();
   await expect(panel.getByRole('button', { name: 'Bật thông báo trình duyệt' })).toBeDisabled();
   for (const width of [1440, 768, 402, 320]) {
     await page.setViewportSize({ width, height: 900 });
@@ -35,5 +50,7 @@ test('HTTP mock: unconfigured browser push is truthful, accessible and never req
     ).toEqual([]);
     await page.screenshot({ path: info.outputPath(`push-${width}.png`) });
   }
+  await pushToggle.click();
+  await expect(panel).toBeHidden();
   expect(writes).toBe(0);
 });

@@ -26,6 +26,7 @@ import {
   usePayosReturn,
 } from './components/PayosCheckout';
 import { ClosurePanel } from './components/ClosurePanel';
+import { BankTransferPanel } from './components/BankTransferPanel';
 import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
 import { HandoverPanel } from './components/HandoverPanel';
 import { isFinanceCommand } from '../../shared/types/operations';
@@ -46,12 +47,8 @@ import { OperationStatus, useCommandSession } from '../../shared/components/Oper
 import { toDomainError, money } from '../../shared/lib/runtime-validation';
 import { localTimeToIso } from '../plan/model/plan-draft';
 import type { MembershipViewModel } from '../members/model/members';
-import { FinanceKpis, FinanceStateBar, FinanceUnavailable } from './components/FinancePresentation';
-import {
-  FinanceGoal,
-  FinanceTransactionPanel,
-  type FinanceTransactionRow,
-} from './components/FinanceDesktop';
+import { FinanceKpis, FinanceUnavailable } from './components/FinancePresentation';
+import { FinanceTransactionPanel, type FinanceTransactionRow } from './components/FinanceDesktop';
 import { FinanceOverlay, type FinanceSection } from './components/FinanceOverlay';
 import financeOverlayStyles from './components/FinanceOverlay.module.css';
 import workspaceStyles from './components/FinanceWorkspace.module.css';
@@ -473,6 +470,14 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     queryFn: ({ signal }) => runtime.fund(trip.id, signal),
   });
   const fund = fundQuery.data ?? null;
+  const fundShown = fundQuery.isSuccess && !!fund;
+  const fundShownRef = useRef(fundShown);
+  useEffect(() => {
+    const wasShown = fundShownRef.current;
+    fundShownRef.current = fundShown;
+    if (wasShown && !fundShown && document.activeElement === document.body)
+      refreshButtonRef.current?.focus();
+  }, [fundShown]);
   const membersQuery = useInfiniteQuery({
     queryKey: ['members', trip.id, 'fund', actor],
     initialPageParam: undefined as string | undefined,
@@ -879,6 +884,16 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       )}
     </section>
   );
+  const reloadButton = (
+    <Button ref={refreshButtonRef} variant="outline" onClick={refresh}>
+      Tải lại quỹ
+    </Button>
+  );
+  const loadMoreMembers = membersQuery.hasNextPage ? (
+    <Button variant="outline" onClick={() => void membersQuery.fetchNextPage()}>
+      Tải thêm thành viên
+    </Button>
+  ) : null;
   const reenterCommand = () => {
     const i = op.intent;
     if (!i || isFinanceCommand(i.kind)) return;
@@ -927,39 +942,12 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             : undefined
         }
       />
-      <div className={styles.actions}>
-        <Button ref={refreshButtonRef} variant="outline" onClick={refresh}>
-          Tải lại quỹ
-        </Button>
-        {membersQuery.hasNextPage && (
-          <Button variant="outline" onClick={() => void membersQuery.fetchNextPage()}>
-            Tải thêm thành viên
-          </Button>
-        )}
-      </div>
+      {!fundShown && <div className={styles.actions}>{reloadButton}</div>}
       {membersQuery.isError && (
         <QueryError error={membersQuery.error} retry={() => void membersQuery.refetch()} />
       )}
-      {fundQuery.isSuccess && fund && (
+      {fundShown && fund && (
         <>
-          <FinanceGoal
-            budget={fund.budget_amount}
-            amount={fund.current_balance}
-            format={formatVnd}
-            onSettings={() => setFinanceOverlayOpen(true)}
-            settingsRef={financeSettingsRef}
-          />
-          <FinanceStateBar
-            status={fund.status}
-            holderName={name(fund.holder_user_id)}
-            owner={owner}
-            holder={holder}
-            balance={fund.current_balance}
-            format={formatVnd}
-            disabled={blocked}
-            onBudget={() => open('budget')}
-            onDestination={() => open('destination-create')}
-          />
           {fund.status !== 'OPEN' && (
             <Alert>Quỹ đã ngừng nhận thay đổi. Bạn vẫn có thể xem lịch sử.</Alert>
           )}
@@ -973,6 +961,9 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
           <FinanceTransactionPanel
             rows={transactionRows}
             format={formatVnd}
+            statusSummary={`Quỹ ${fund.status === 'OPEN' ? 'đang mở' : fund.status === 'CLOSING' ? 'đang chốt' : 'đã đóng'} · Người giữ quỹ: ${holder ? 'bạn' : name(fund.holder_user_id)}`}
+            onSettings={() => setFinanceOverlayOpen(true)}
+            settingsRef={financeSettingsRef}
             loading={ledger.isPending}
             feedback={
               ledger.isError ? (
@@ -987,11 +978,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             hasMore={ledger.hasNextPage}
             loadingMore={ledger.isFetchingNextPage}
             onLoadMore={() => void ledger.fetchNextPage()}
-            footer={
-              <p>
-                Chỉ các giao dịch đã tải được lọc. Số dư và tổng tiền lấy từ projection Finance.
-              </p>
-            }
+            memberAction={loadMoreMembers}
           />
         </>
       )}
@@ -1005,15 +992,18 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
             <section className={styles.panel}>
               <h2>Chuyến đi chưa bật quỹ</h2>
               <p>Chủ chuyến có thể chọn người giữ quỹ và thêm thông tin nhận tiền thử nghiệm.</p>
-              {owner && (
-                <Button
-                  ref={enableTriggerRef}
-                  disabled={blocked || !members.length}
-                  onClick={() => open('enable')}
-                >
-                  Bật quỹ
-                </Button>
-              )}
+              <div className={styles.actions}>
+                {owner && (
+                  <Button
+                    ref={enableTriggerRef}
+                    disabled={blocked || !members.length}
+                    onClick={() => open('enable')}
+                  >
+                    Bật quỹ
+                  </Button>
+                )}
+                {loadMoreMembers}
+              </div>
             </section>
           ) : (
             <>{/* Operational lists live in the Finance overlay. */}</>
@@ -1098,7 +1088,7 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
         }}
         tripName={trip.name}
         status={fund?.status ?? 'NOT_ENABLED'}
-        role={holder ? 'Fund Holder' : owner ? 'Owner' : 'Member'}
+        role={holder ? 'Người giữ quỹ' : owner ? 'Chủ chuyến' : 'Thành viên'}
         returnFocusRef={financeSettingsRef}
         unframed={
           !!form ||
@@ -1117,10 +1107,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
               <h3>Tình trạng &amp; mục tiêu</h3>
               <dl className={workspaceStyles.rules}>
                 {[
-                  ['Fund Holder', fund ? name(fund.holder_user_id) : 'Chưa chỉ định'],
+                  ['Người giữ quỹ', fund ? name(fund.holder_user_id) : 'Chưa chỉ định'],
                   ['Số dư ghi sổ', fund ? formatVnd(fund.current_balance) : 'Chưa có dữ liệu'],
-                  ['Trạng thái quỹ', `Finance ${fund?.status ?? 'NOT_ENABLED'} · VND`],
-                  ['Bật Finance', 'Chỉ Owner · Không tạo bút toán thu'],
+                  [
+                    'Trạng thái quỹ',
+                    `${fund?.status === 'OPEN' ? 'Đang mở' : fund?.status === 'CLOSING' ? 'Đang đóng' : fund?.status === 'CLOSED' ? 'Đã đóng' : 'Chưa bật'} · VND`,
+                  ],
+                  ['Bật quỹ', 'Chỉ chủ chuyến · Không tạo bút toán thu'],
                 ].map(([label, value]) => (
                   <div key={label}>
                     <dt>
@@ -1483,6 +1476,13 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                   )}
                 </section>
               </>
+            ) : financeSection === 'bank-transfers' && fund && runtime.bankTransfers ? (
+              <BankTransferPanel
+                runtime={runtime}
+                fund={fund}
+                trip={trip}
+                blocked={baseBlocked || fundQuery.isError}
+              />
             ) : financeSection === 'audit' && fund && runtime.history ? (
               <FinanceHistoryPanel
                 runtime={runtime}
@@ -1605,12 +1605,16 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
                       ? 'Hoàn tiền'
                       : financeSection === 'handover'
                         ? 'Bàn giao Fund Holder'
-                        : 'Đóng Finance'
+                        : financeSection === 'bank-transfers'
+                          ? 'Chuyển khoản ngân hàng'
+                          : 'Đóng Finance'
                 }
               >
                 {financeSection === 'handover'
                   ? 'Bàn giao người giữ quỹ chưa được hỗ trợ.'
-                  : 'Chức năng này đang được tích hợp trên Web, hiện chỉ có thể xem tổng quan giao dịch.'}
+                  : financeSection === 'bank-transfers'
+                    ? 'Danh sách chuyển khoản ngân hàng chưa khả dụng trong chế độ dữ liệu hiện tại.'
+                    : 'Chức năng này đang được tích hợp trên Web, hiện chỉ có thể xem tổng quan giao dịch.'}
               </FinanceUnavailable>
             )}
           </div>
@@ -1639,14 +1643,10 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
   });
   const trip = query.data?.status === 'ready' ? query.data.data : null;
   return (
-    <section className={`${styles.page} ${tripWorkspaceStyles.fullWidth}`} data-flow="fund-server">
-      <div className={fundStyles.breadcrumb}>
-        <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
-        <span aria-hidden="true">›</span>
-        <span>{trip?.name ?? 'Chuyến đi'}</span>
-        <span aria-hidden="true">›</span>
-        <h1>Quỹ nhóm</h1>
-      </div>
+    <section
+      className={`${styles.page} ${tripWorkspaceStyles.fullWidth} ${fundStyles.gatewayPage}`}
+      data-flow="fund-server"
+    >
       {trip && trip.permissions.canRead && !trip.currentMembership.leftAt ? (
         <>
           <TripHero trip={trip} compact variant="landscape" />

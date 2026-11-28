@@ -41,7 +41,8 @@ test('HTTP mock: Owner removal stays pending until operation confirmation and ke
   await page.goto(`/trips/${ownerTripId}/members`);
   const region = page.getByRole('region', { name: 'Danh sách thành viên' });
   await expect(region.getByText('Member Gateway', { exact: true })).toBeVisible();
-  await region.getByRole('button', { name: 'Xóa thành viên · Member Gateway' }).click();
+  await region.getByRole('button', { name: 'Thao tác thành viên · Member Gateway' }).click();
+  await page.getByRole('menuitem', { name: 'Xóa thành viên', exact: true }).click();
   await page.getByRole('textbox', { name: 'Lý do rời/xóa' }).fill('Không còn tham gia chuyến đi');
   await page.getByRole('button', { name: 'Xác nhận rời/xóa' }).click();
 
@@ -49,7 +50,7 @@ test('HTTP mock: Owner removal stays pending until operation confirmation and ke
   await expect(status.getByText('Đang xử lý. Vui lòng chờ xác nhận.')).toBeVisible();
   await expect(region.getByText('Member Gateway', { exact: true })).toBeVisible();
   await expect(
-    region.getByRole('button', { name: 'Xóa thành viên · Member Gateway' }),
+    region.getByRole('button', { name: 'Thao tác thành viên · Member Gateway' }),
   ).toBeDisabled();
   await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
   await expect(status).toBeVisible();

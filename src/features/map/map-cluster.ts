@@ -2,7 +2,7 @@
  * Grid clustering for Leaflet markers (POI-OVERTURE W12, AC-PL02). Written in-house: the task
  * forbids adding `leaflet.markercluster`. Points are projected to Web Mercator pixels at the
  * current zoom and grouped per `cellPx` square cell; cells with ≥ 2 clusterable points become
- * one numbered cluster. Non-clusterable points (curated Wolfari pins, saved places, the
+ * one unnumbered marker. Non-clusterable points (curated Wolfari pins, saved places, the
  * selected place) always stay individual.
  */
 export interface ClusterInput {

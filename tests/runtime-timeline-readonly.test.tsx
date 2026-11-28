@@ -25,7 +25,7 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('read-only Gateway timeline navigation', () => {
-  it('keeps day and unassigned filters available without enabling Plan writes', async () => {
+  it('keeps day and all-day navigation available with an unassigned group and no Plan writes', async () => {
     const user = userEvent.setup();
     const request = {
       tripId: previewTripId,
@@ -39,7 +39,10 @@ describe('read-only Gateway timeline navigation', () => {
     if (tripRead.status !== 'ready' || planRead.status !== 'ready')
       throw Error('Fixture Trip and Plan are required');
 
-    const trip = tripRead.data;
+    const trip = {
+      ...tripRead.data,
+      endAt: new Date(Date.parse(tripRead.data.startAt) + 4 * 86_400_000).toISOString(),
+    };
     const firstDay = planDays(trip.startAt, trip.endAt, trip.timezone)[0]!;
     const base = planRead.data.activities[0]!;
     const plan = {
@@ -88,13 +91,21 @@ describe('read-only Gateway timeline navigation', () => {
 
     const days = within(screen.getByRole('group', { name: 'Ngày trong lịch trình' }));
     const dayButton = days.getByRole('button', { name: /Ngày 1 ·/ });
-    const poolButton = days.getByRole('button', { name: 'Chưa chọn ngày' });
+    const allButton = days.getByRole('button', { name: 'Tất cả' });
     expect(dayButton).toBeEnabled();
-    expect(poolButton).toBeEnabled();
+    expect(allButton).toBeEnabled();
+    expect(days.queryByRole('button', { name: 'Thêm ngày' })).not.toBeInTheDocument();
+    expect(days.queryByRole('button', { name: 'Chưa chọn ngày' })).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Phạm vi lịch trình')).not.toBeInTheDocument();
     expect(dayButton).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('listitem', { name: 'Trong ngày' })).toBeInTheDocument();
     expect(screen.queryByRole('listitem', { name: 'Chưa xếp ngày' })).not.toBeInTheDocument();
-    await user.click(days.getByRole('button', { name: 'Tất cả' }));
+    await user.click(allButton);
+    expect(screen.getByRole('heading', { name: 'Lịch trình chung' })).toBeInTheDocument();
+    const unassigned = screen
+      .getByRole('heading', { name: /^Chưa chọn ngày$/ })
+      .closest('section')!;
+    expect(within(unassigned).getByRole('listitem', { name: 'Chưa xếp ngày' })).toBeInTheDocument();
     expect(screen.getByRole('listitem', { name: 'Trong ngày' })).toBeInTheDocument();
     expect(screen.getByRole('listitem', { name: 'Chưa xếp ngày' })).toBeInTheDocument();
 
@@ -103,11 +114,11 @@ describe('read-only Gateway timeline navigation', () => {
     expect(screen.getByRole('listitem', { name: 'Trong ngày' })).toBeInTheDocument();
     expect(screen.queryByRole('listitem', { name: 'Chưa xếp ngày' })).not.toBeInTheDocument();
 
-    poolButton.focus();
+    allButton.focus();
     await user.keyboard('{Enter}');
-    expect(poolButton).toHaveAttribute('aria-pressed', 'true');
+    expect(allButton).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('listitem', { name: 'Chưa xếp ngày' })).toBeInTheDocument();
-    expect(screen.queryByRole('listitem', { name: 'Trong ngày' })).not.toBeInTheDocument();
+    expect(screen.getByRole('listitem', { name: 'Trong ngày' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Kéo hoạt động/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('menuitem', { name: 'Chỉnh sửa hoạt động' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Sửa' })).not.toBeInTheDocument();

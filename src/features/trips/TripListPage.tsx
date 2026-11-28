@@ -16,7 +16,9 @@ import { ContentState } from '../../shared/components/ContentState';
 import { Alert } from '../../shared/components/Alert';
 import { uiAssets } from '../../shared/assets/asset-map';
 import styles from './TripListPage.module.css';
-import { Link } from 'react-router';
+import { Link, useOutletContext } from 'react-router';
+import type { RouteContext } from '../../app/route-context';
+import { Icon } from '../../shared/components/Icon';
 import { paths } from '../../app/route-paths';
 import type { DomainError } from '../../shared/types/result';
 
@@ -45,6 +47,7 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
   const [scenario, setScenario] = useState<TripListScenario>('success');
   const [filter, setFilter] = useState<TripListFilter>(initialTripFilter);
   const [controlsOpen, setControlsOpen] = useState(false);
+  const viewerName = useOutletContext<RouteContext | undefined>()?.viewer?.fullName ?? null;
   const query = useTripList(scenario);
   const pages = query.data?.pages ?? [];
   const items = Array.from(
@@ -61,42 +64,38 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
   const morePages = !!query.hasNextPage;
   return (
     <section className={styles.page} aria-label="Danh sách chuyến đi">
-      <div className={styles.pageArt} aria-hidden="true">
-        <span className={styles.sideClouds} />
-        <span className={styles.watercolorClouds} />
-        <span className={styles.cloudPuffs} />
-        <span className={styles.foliage}>
-          <span />
-          <span />
-        </span>
-        <span className={styles.lowerClouds} />
-      </div>
-      <TripListHero />
+      <TripListHero
+        viewerName={viewerName}
+        search={
+          <>
+            <button
+              className={styles.mobileControlsToggle}
+              aria-expanded={controlsOpen}
+              aria-controls="trip-list-search trip-list-sort"
+              onClick={() => setControlsOpen((open) => !open)}
+            >
+              <img src={uiAssets.search} alt="" />
+              Tìm kiếm và sắp xếp <span aria-hidden="true">{controlsOpen ? '−' : '+'}</span>
+            </button>
+            <div
+              id="trip-list-search"
+              className={`${styles.searchControls} ${controlsOpen ? styles.controlsOpen : ''}`}
+            >
+              <div className={styles.search}>
+                <Input
+                  label="Tìm chuyến đi theo tên"
+                  type="search"
+                  placeholder="Tìm theo tên chuyến đi"
+                  value={filter.name}
+                  onChange={(event) => setFilter({ ...filter, name: event.target.value })}
+                  leadingIcon={<img src={uiAssets.search} alt="" />}
+                />
+              </div>
+            </div>
+          </>
+        }
+      />
       <div className={styles.content}>
-        <button
-          className={styles.mobileControlsToggle}
-          aria-expanded={controlsOpen}
-          aria-controls="trip-list-search trip-list-sort"
-          onClick={() => setControlsOpen((open) => !open)}
-        >
-          <img src={uiAssets.search} alt="" />
-          Tìm kiếm và sắp xếp <span aria-hidden="true">{controlsOpen ? '−' : '+'}</span>
-        </button>
-        <div
-          id="trip-list-search"
-          className={`${styles.searchControls} ${controlsOpen ? styles.controlsOpen : ''}`}
-        >
-          <div className={styles.search}>
-            <Input
-              label="Tìm chuyến đi theo tên"
-              type="search"
-              placeholder="Tìm theo tên chuyến đi"
-              value={filter.name}
-              onChange={(event) => setFilter({ ...filter, name: event.target.value })}
-              leadingIcon={<img src={uiAssets.search} alt="" />}
-            />
-          </div>
-        </div>
         <div className={styles.toolbar}>
           <div className={styles.statuses} role="group" aria-label="Trạng thái chuyến đi">
             {statuses.map((status) => (
@@ -196,6 +195,13 @@ export function TripListPage({ previewEnabled = false }: { previewEnabled?: bool
               {visible.map((trip, index) => (
                 <TripCard key={trip.id} trip={trip} featured={index === 0} />
               ))}
+              <Link className={styles.createTile} to={paths.newTrip}>
+                <span className={styles.createIcon} aria-hidden="true">
+                  <Icon name="plus" size={26} strokeWidth={2.4} />
+                </span>
+                <strong>Tạo chuyến đi mới</strong>
+                <span>Wolfari gợi ý lịch trình, hành lý và chia quỹ giúp bạn.</span>
+              </Link>
             </div>
           </>
         )}

@@ -1,9 +1,11 @@
 import type {
   CreateTripResult,
   TripRepository,
+  PersonalReminder,
   PlanEditPolicy,
   UpdatePlanPolicyResult,
   UpdateTripResult,
+  UpdateTripField,
 } from '../../features/trips/repositories/trip.repository';
 import type { TripDetailViewModel } from '../../features/trips/model/trip-detail';
 import type { TripLifecycle, TripListViewModel } from '../../features/trips/model/trip-list';
@@ -20,6 +22,83 @@ function text(value: unknown): string | null {
 }
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+}
+function strictRecord(value: unknown, message: string): Record<string, unknown> {
+  const result = record(value);
+  if (!value || typeof value !== 'object' || Array.isArray(value))
+    throw new ApiError(message, 'invalid-response', 200, null, null, false);
+  return result;
+}
+function requiredUuid(value: unknown, correlationId: string | null): string {
+  if (
+    typeof value !== 'string' ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+  )
+    throw new ApiError(
+      'Invalid Trip response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
+  return value;
+}
+function decodeReminder(
+  value: unknown,
+  tripId: string,
+  correlationId: string | null,
+): PersonalReminder {
+  const row = strictRecord(value, 'Invalid reminder response');
+  const instant = (candidate: unknown) =>
+    typeof candidate === 'string' &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(candidate) &&
+    Number.isFinite(Date.parse(candidate));
+  if (
+    row.trip_id !== tripId ||
+    (row.source_type !== 'ACTIVITY' && row.source_type !== 'PACKING') ||
+    !['PENDING', 'PROCESSING', 'SENT', 'CANCELLED', 'FAILED'].includes(String(row.status)) ||
+    !instant(row.remind_at) ||
+    !instant(row.created_at) ||
+    !(row.source_at === null || instant(row.source_at))
+  )
+    throw new ApiError(
+      'Invalid reminder response',
+      'invalid-response',
+      200,
+      null,
+      correlationId,
+      false,
+    );
+  return {
+    id: requiredUuid(row.id, correlationId),
+    trip_id: tripId,
+    source_type: row.source_type,
+    source_id: requiredUuid(row.source_id, correlationId),
+    remind_at: row.remind_at as string,
+    source_at: row.source_at as string | null,
+    status: row.status as PersonalReminder['status'],
+    created_at: row.created_at as string,
+  };
+}
+function privateBlob(
+  result: { data: unknown; contentType?: string | null; status?: number },
+  type: string,
+) {
+  if (
+    !(result.data instanceof ArrayBuffer) ||
+    !result.data.byteLength ||
+    result.contentType?.split(';')[0]?.trim().toLowerCase() !== type
+  )
+    throw new ApiError(
+      'Invalid private file response',
+      'invalid-response',
+      result.status ?? 200,
+      null,
+      null,
+      false,
+    );
+  return new Blob([result.data], { type });
 }
 function lifecycle(value: unknown): TripLifecycle {
   return value === 'ONGOING' || value === 'COMPLETED' || value === 'ARCHIVED' ? value : 'UPCOMING';
@@ -64,6 +143,11 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
     (membership.left_at !== null && !instant(membership.left_at)) ||
     typeof permissions.can_read !== 'boolean' ||
     typeof permissions.can_update !== 'boolean' ||
+    (permissions.can_invite !== undefined && typeof permissions.can_invite !== 'boolean') ||
+    (t.budget_amount !== undefined &&
+      t.budget_amount !== null &&
+      (typeof t.budget_amount !== 'string' || !/^[1-9][0-9]{0,11}$/.test(t.budget_amount))) ||
+    typeof t.cover_image_available !== 'boolean' ||
     ![t.description, t.public_description].every(
       (value) => value === null || typeof value === 'string',
     ) ||
@@ -99,6 +183,7 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
     startAt: String(t.start_at),
     endAt: String(t.end_at),
     timezone: String(t.timezone),
+    budgetAmount: text(t.budget_amount),
     lifecycle: lifecycle(t.lifecycle),
     planVersion: Number(t.plan_version),
     membershipRevision: Number(t.membership_revision),
@@ -114,8 +199,13 @@ function mapTrip(raw: unknown, correlationId: string | null = null): TripDetailV
     permissions: {
       canRead: Boolean(permissions.can_read),
       canUpdate: Boolean(permissions.can_update),
+      ...(typeof permissions.can_invite === 'boolean' ? { canInvite: permissions.can_invite } : {}),
     },
-    presentation: { memberCount: null, cover: null },
+    presentation: {
+      memberCount: null,
+      coverAvailable: t.cover_image_available,
+      cover: null,
+    },
     description: text(t.description),
     publicDescription: text(t.public_description),
     archivedAt: text(t.archived_at),
@@ -133,6 +223,9 @@ function createError(error: unknown): CreateTripResult {
       ...(typeof rawFields.start_at === 'string' ? { startAt: rawFields.start_at } : {}),
       ...(typeof rawFields.end_at === 'string' ? { endAt: rawFields.end_at } : {}),
       ...(typeof rawFields.timezone === 'string' ? { timezone: rawFields.timezone } : {}),
+      ...(typeof rawFields.budget_amount === 'string'
+        ? { budgetAmount: rawFields.budget_amount }
+        : {}),
     };
     return { status: 'validation-error', fieldErrors, correlationId: api?.correlationId ?? null };
   }
@@ -165,13 +258,18 @@ function updateError(error: unknown): UpdateTripResult {
   if (api?.status === 400) {
     const details = record(api.details);
     const rawFields = record(details.field_errors);
-    const fieldErrors: { name?: string; description?: string; publicDescription?: string } = {};
+    const fieldErrors: Partial<Record<UpdateTripField, string>> = {};
     if (typeof rawFields.name === 'string') fieldErrors.name = rawFields.name;
     if (typeof rawFields.description === 'string') fieldErrors.description = rawFields.description;
     if (typeof rawFields.public_description === 'string') {
       fieldErrors.publicDescription = rawFields.public_description;
     }
-    if (!fieldErrors.name && !fieldErrors.description && !fieldErrors.publicDescription) {
+    if (typeof rawFields.start_at === 'string') fieldErrors.startAt = rawFields.start_at;
+    if (typeof rawFields.end_at === 'string') fieldErrors.endAt = rawFields.end_at;
+    if (typeof rawFields.timezone === 'string') fieldErrors.timezone = rawFields.timezone;
+    if (typeof rawFields.budget_amount === 'string')
+      fieldErrors.budgetAmount = rawFields.budget_amount;
+    if (!Object.keys(fieldErrors).length) {
       fieldErrors.name = 'Thông tin chưa hợp lệ.';
     }
     return { status: 'validation-error', fieldErrors, correlationId: api.correlationId };
@@ -183,7 +281,14 @@ function updateError(error: unknown): UpdateTripResult {
     return { status: 'not-found', correlationId: api.correlationId, retryable: false };
   }
   if (api?.status === 409 || api?.code === 'VERSION_CONFLICT') {
-    return { status: 'conflict', correlationId: api.correlationId, retryable: false };
+    return {
+      status: 'conflict',
+      correlationId: api.correlationId,
+      retryable: false,
+      ...(record(api.details).reason === 'TRIP_RANGE_CONFLICT'
+        ? { reason: 'TRIP_RANGE_CONFLICT' as const }
+        : {}),
+    };
   }
   if (api?.code === 'STATE_CONFLICT' || api?.code === 'IDEMPOTENCY_CONFLICT') {
     return { status: 'conflict', correlationId: api.correlationId, retryable: false };
@@ -266,12 +371,25 @@ export function createGatewayTripRepository(
   client?: GatewayHttpClient,
 ): TripRepository {
   const repository: TripRepository = {
-    ...(client ? { getPlanPolicy: async ({ tripId, signal }: { tripId: string; signal: AbortSignal }) => {
-      try {
-        const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`, { signal, includeCredentials: true });
-        return { status: 'ready' as const, data: planPolicy(result.data, result.correlationId) };
-      } catch (error) { if (signal.aborted) throw signal.reason; return { status: 'error' as const, error: domainError(error) }; }
-    } } : {}),
+    ...(client
+      ? {
+          getPlanPolicy: async ({ tripId, signal }: { tripId: string; signal: AbortSignal }) => {
+            try {
+              const result = await client.read(
+                `/api/v1/trips/${encodeURIComponent(tripId)}/plan-policy`,
+                { signal, includeCredentials: true },
+              );
+              return {
+                status: 'ready' as const,
+                data: planPolicy(result.data, result.correlationId),
+              };
+            } catch (error) {
+              if (signal.aborted) throw signal.reason;
+              return { status: 'error' as const, error: domainError(error) };
+            }
+          },
+        }
+      : {}),
     createTrip: async ({ intent, signal }) => {
       signal.throwIfAborted();
       if (client) {
@@ -284,6 +402,7 @@ export function createGatewayTripRepository(
               start_at: intent.startAt,
               end_at: intent.endAt,
               timezone: intent.timezone,
+              ...(intent.budgetAmount === undefined ? {} : { budget_amount: intent.budgetAmount }),
               client_request_id: intent.clientRequestId,
             },
             idempotencyKey: intent.clientRequestId,
@@ -316,6 +435,10 @@ export function createGatewayTripRepository(
       if (intent.description !== undefined) body.description = intent.description;
       if (intent.publicDescription !== undefined)
         body.public_description = intent.publicDescription;
+      if (intent.startAt !== undefined) body.start_at = intent.startAt;
+      if (intent.endAt !== undefined) body.end_at = intent.endAt;
+      if (intent.timezone !== undefined) body.timezone = intent.timezone;
+      if (intent.budgetAmount !== undefined) body.budget_amount = intent.budgetAmount;
       try {
         const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}`, {
           method: 'PATCH',
@@ -455,6 +578,181 @@ export function createGatewayTripRepository(
         };
       }),
   };
+  if (client) {
+    repository.uploadCover = async ({ tripId, file, signal }) => {
+      const form = new FormData();
+      form.append('file', file, file.name);
+      const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}/cover`, {
+        method: 'POST',
+        body: form,
+        signal,
+        includeCredentials: true,
+      });
+      const trip = mapTrip(result.data, result.correlationId);
+      if (trip.id !== tripId || !trip.presentation.coverAvailable)
+        throw new ApiError(
+          'Invalid cover upload response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
+      return trip;
+    };
+    repository.removeCover = async ({ tripId, signal }) => {
+      const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}/cover`, {
+        method: 'DELETE',
+        signal,
+        includeCredentials: true,
+      });
+      const trip = mapTrip(result.data, result.correlationId);
+      if (trip.id !== tripId || trip.presentation.coverAvailable)
+        throw new ApiError(
+          'Invalid cover removal response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
+      return trip;
+    };
+    repository.getCover = async ({ tripId, signal }) => {
+      const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/cover`, {
+        responseType: 'bytes',
+        signal,
+        includeCredentials: true,
+      });
+      return privateBlob(result, 'image/jpeg');
+    };
+    repository.manageTrip = async ({
+      tripId,
+      action,
+      reason,
+      newOwnerMemberId,
+      expectedPlanVersion,
+      expectedMembershipRevision,
+      expectedExportRevision,
+      idempotencyKey,
+      signal,
+    }) => {
+      const route =
+        action === 'ARCHIVE'
+          ? 'archive'
+          : action === 'REOPEN'
+            ? 'reopen'
+            : action === 'TRANSFER'
+              ? 'ownership'
+              : '';
+      const result = await client.write(
+        action === 'DELETE'
+          ? `/api/v1/trips/${encodeURIComponent(tripId)}`
+          : `/api/v1/trips/${encodeURIComponent(tripId)}/${route}`,
+        {
+          method: action === 'DELETE' ? 'DELETE' : 'POST',
+          body: {
+            reason,
+            expected_plan_version: expectedPlanVersion,
+            expected_membership_revision: expectedMembershipRevision,
+            expected_export_revision: expectedExportRevision,
+            ...(action === 'TRANSFER' ? { new_owner_member_id: newOwnerMemberId } : {}),
+          },
+          idempotencyKey,
+          signal,
+          includeCredentials: true,
+        },
+      );
+      const data = strictRecord(result.data, 'Invalid lifecycle response');
+      const nextPlanVersion = data.plan_version;
+      const nextMembershipRevision = data.membership_revision;
+      const nextExportRevision = data.export_revision;
+      if (
+        data.id !== tripId ||
+        data.action !== action ||
+        nextPlanVersion !== expectedPlanVersion + 1 ||
+        nextMembershipRevision !== expectedMembershipRevision + 1 ||
+        nextExportRevision !== expectedExportRevision + 1 ||
+        [nextPlanVersion, nextMembershipRevision, nextExportRevision].some(
+          (revision) => !Number.isSafeInteger(revision) || Number(revision) > 2147483647,
+        ) ||
+        (action === 'TRANSFER' &&
+          (typeof data.new_owner_user_id !== 'string' ||
+            !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+              data.new_owner_user_id,
+            ))) ||
+        (action === 'DELETE' && data.deleted !== true)
+      )
+        throw new ApiError(
+          'Invalid lifecycle response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
+      return { action, planVersion: Number(nextPlanVersion) };
+    };
+    repository.listReminders = async ({ tripId, signal }) => {
+      const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/reminders`, {
+        signal,
+        includeCredentials: true,
+      });
+      if (!Array.isArray(result.data))
+        throw new ApiError(
+          'Invalid reminder list',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
+      return result.data.map((item) => decodeReminder(item, tripId, result.correlationId));
+    };
+    repository.createReminder = async ({
+      tripId,
+      sourceType,
+      sourceId,
+      remindAt,
+      idempotencyKey,
+      signal,
+    }) => {
+      const result = await client.write(`/api/v1/trips/${encodeURIComponent(tripId)}/reminders`, {
+        method: 'POST',
+        body: { source_type: sourceType, source_id: sourceId, remind_at: remindAt },
+        idempotencyKey,
+        signal,
+        includeCredentials: true,
+      });
+      return decodeReminder(result.data, tripId, result.correlationId);
+    };
+    repository.cancelReminder = async ({ tripId, reminderId, signal }) => {
+      const result = await client.write(
+        `/api/v1/trips/${encodeURIComponent(tripId)}/reminders/${encodeURIComponent(reminderId)}`,
+        { method: 'DELETE', signal, includeCredentials: true },
+      );
+      return decodeReminder(result.data, tripId, result.correlationId);
+    };
+    repository.planPdf = async ({ tripId, signal }) => {
+      const result = await client.read(`/api/v1/trips/${encodeURIComponent(tripId)}/plan.pdf`, {
+        responseType: 'bytes',
+        signal,
+        includeCredentials: true,
+      });
+      const blob = privateBlob(result, 'application/pdf');
+      const prefix = new TextDecoder().decode(await blob.slice(0, 5).arrayBuffer());
+      if (prefix !== '%PDF-')
+        throw new ApiError(
+          'Invalid PDF response',
+          'invalid-response',
+          result.status ?? 200,
+          null,
+          result.correlationId,
+          false,
+        );
+      return blob;
+    };
+  }
   if (!client) delete repository.updatePlanPolicy;
   return repository;
 }

@@ -43,6 +43,7 @@ function gatewayTrip(overrides: Record<string, unknown> = {}) {
     plan_version: source.planVersion,
     membership_revision: source.membershipRevision,
     export_revision: source.exportRevision,
+    cover_image_available: false,
     current_membership: {
       id: source.currentMembership.id,
       trip_id: source.id,
@@ -61,7 +62,12 @@ describe('Trip repository boundary', () => {
     { id: undefined },
     { timezone: 'invalid/timezone' },
     { plan_version: '1' },
+    { cover_image_available: undefined },
     { permissions: { can_read: 'false', can_update: true } },
+    { permissions: { can_read: true, can_update: true, can_invite: 'true' } },
+    { budget_amount: 100 },
+    { budget_amount: '0' },
+    { budget_amount: '1000000000000' },
     { current_membership: { ...gatewayTrip().current_membership, trip_id: 'another' } },
   ])('rejects malformed Trip without coercing permission or scope %#', async (override) => {
     const client = createGatewayHttpClient({
@@ -94,6 +100,7 @@ describe('Trip repository boundary', () => {
             plan_version: 1,
             membership_revision: 1,
             export_revision: 2,
+            cover_image_available: false,
             current_membership: {
               id: source.currentMembership.id,
               trip_id: source.id,
@@ -123,7 +130,10 @@ describe('Trip repository boundary', () => {
       idempotencyKey: '22222222-2222-4222-8222-222222222222',
       destination: 'must-not-leak',
       budget: 123,
-      startAt: 'must-not-leak',
+      startAt: '2026-11-01T04:00:00.000Z',
+      endAt: '2026-11-04T05:00:00.000Z',
+      timezone: 'America/New_York',
+      budgetAmount: '999999999999',
     } as UpdateTripIntent & Record<string, unknown>;
     const result = await repository.updateTrip({
       tripId: source.id,
@@ -143,8 +153,65 @@ describe('Trip repository boundary', () => {
       name: 'Tên mới',
       description: null,
       public_description: 'Mô tả công khai mới',
+      start_at: intent.startAt,
+      end_at: intent.endAt,
+      timezone: intent.timezone,
+      budget_amount: intent.budgetAmount,
       expected_plan_version: 1,
       expected_export_revision: 1,
+    });
+  });
+
+  it.each([true, false])(
+    'projects the server invite permission %s and optional budget',
+    async (canInvite) => {
+      const read = vi.fn<GatewayHttpClient['read']>().mockResolvedValue({
+        status: 200,
+        data: gatewayTrip({
+          budget_amount: '999999999999',
+          permissions: { can_read: true, can_update: true, can_invite: canInvite },
+        }),
+        correlationId: null,
+      });
+      const result = await createGatewayTripRepository(undefined, undefined, {
+        read,
+        write: vi.fn<GatewayHttpClient['write']>(),
+      }).getTrip({ tripId: previewTripId, ...request() });
+      expect(result).toMatchObject({
+        status: 'ready',
+        data: { budgetAmount: '999999999999', permissions: { canInvite } },
+      });
+    },
+  );
+
+  it('keeps the trip range conflict reason and sends null to clear the budget', async () => {
+    const write = vi.fn<GatewayHttpClient['write']>().mockRejectedValue(
+      new ApiError('Range conflict', 'http', 409, 'STATE_CONFLICT', 'range-conflict', false, {
+        reason: 'TRIP_RANGE_CONFLICT',
+        activity_count: 2,
+      }),
+    );
+    const intent: UpdateTripIntent = {
+      endAt: '2026-11-02T17:00:00.000Z',
+      budgetAmount: null,
+      expectedPlanVersion: 1,
+      expectedExportRevision: 1,
+      idempotencyKey: '22222222-2222-4222-8222-222222222222',
+    };
+    expect(
+      await createGatewayTripRepository(undefined, undefined, {
+        read: vi.fn<GatewayHttpClient['read']>(),
+        write,
+      }).updateTrip({ tripId: previewTripId, intent, signal: request().signal }),
+    ).toEqual({
+      status: 'conflict',
+      reason: 'TRIP_RANGE_CONFLICT',
+      correlationId: 'range-conflict',
+      retryable: false,
+    });
+    expect(write.mock.calls[0]?.[1].body).toMatchObject({
+      budget_amount: null,
+      end_at: intent.endAt,
     });
   });
 
@@ -285,7 +352,7 @@ describe('Trip repository boundary', () => {
         id: previewTripId,
         description: 'Mô tả nội bộ',
         publicDescription: 'Mô tả công khai',
-        presentation: { memberCount: null, cover: null },
+        presentation: { memberCount: null, coverAvailable: false, cover: null },
       },
     });
     expect(read).toHaveBeenCalledExactlyOnceWith(`/api/v1/trips/${previewTripId}`, {
@@ -341,6 +408,7 @@ describe('Trip repository boundary', () => {
       startAt: '2026-11-01T00:00:00+07:00',
       endAt: '2026-11-03T00:00:00+07:00',
       timezone: 'Asia/Ho_Chi_Minh',
+      budgetAmount: '5000000',
       clientRequestId: '33333333-3333-4333-8333-333333333333',
       destination: 'must-not-leak',
       budget: 'must-not-leak',
@@ -364,6 +432,7 @@ describe('Trip repository boundary', () => {
       start_at: intent.startAt,
       end_at: intent.endAt,
       timezone: intent.timezone,
+      budget_amount: intent.budgetAmount,
       client_request_id: intent.clientRequestId,
     });
     expect(transport).toHaveBeenCalledTimes(1);
@@ -655,9 +724,16 @@ describe('Trip List fixture projection', () => {
   });
 
   it('preserves unknown enrichment instead of fabricating a cover or member count', async () => {
-    const record = { ...firstRecord(), presentation: { memberCount: null, cover: null } };
+    const record = {
+      ...firstRecord(),
+      presentation: { memberCount: null, coverAvailable: false, cover: null },
+    };
     const result = await items(createFixtureTripRepository({ records: [record] }));
-    expect(result[0]?.presentation).toEqual({ memberCount: null, cover: null });
+    expect(result[0]?.presentation).toEqual({
+      memberCount: null,
+      coverAvailable: false,
+      cover: null,
+    });
   });
 
   it.each([

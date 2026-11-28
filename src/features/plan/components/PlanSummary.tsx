@@ -7,6 +7,7 @@ import { ContentState } from '../../../shared/components/ContentState';
 import { activityTime, activitiesForDay, localDate, planDays } from '../model/plan-presentation';
 import { paths } from '../../../app/route-paths';
 import styles from './PlanSummary.module.css';
+import moreAsset from '../../../shared/assets/figma/trips-plan/more.svg';
 export function PlanSummary({
   trip,
   result,
@@ -117,15 +118,12 @@ export function PlanSummary({
                     <time dateTime={a.startsAt ?? undefined}>
                       {activityTime(a.startsAt, trip.timezone)}
                     </time>
-                    {overview && (
-                      <img className={styles.stop} src="/assets/overview-v2/504bf.svg" alt="" />
-                    )}
-                    {overview && overviewTypeIcon(a.activityType) && (
-                      <img
-                        className={styles.typeIcon}
-                        src={overviewTypeIcon(a.activityType)}
-                        alt=""
-                      />
+                    {overview && !a.presentation.cover && (
+                      <span className={styles.typeIcon} aria-hidden="true">
+                        {overviewTypeIcon(a.activityType) && (
+                          <img src={overviewTypeIcon(a.activityType)} alt="" />
+                        )}
+                      </span>
                     )}
                     <span className={styles.activityCopy}>
                       <span>{a.title}</span>
@@ -140,6 +138,7 @@ export function PlanSummary({
                         alt={a.presentation.cover.alt}
                       />
                     )}
+                    {overview && <img className={styles.more} src={moreAsset} alt="" />}
                   </li>
                 ))}
               </ol>
@@ -147,7 +146,11 @@ export function PlanSummary({
           )}
         </>
       )}
-      {!compact && <Link to={paths.plan(trip.id)}>Xem chi tiết lịch trình →</Link>}
+      {!compact && (
+        <Link to={paths.plan(trip.id)} aria-label={overview ? 'Xem tất cả lịch trình' : undefined}>
+          {overview ? 'Xem tất cả' : 'Xem chi tiết lịch trình →'}
+        </Link>
+      )}
     </div>
   );
 }

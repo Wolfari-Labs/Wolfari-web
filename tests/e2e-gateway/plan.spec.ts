@@ -16,7 +16,8 @@ for (const viewport of [
     await page.goto(`/trips/${tripId}/plan`);
     await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Lịch trình chung' })).toBeVisible();
-    await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+    await expect(page.locator('summary[aria-label="Tùy chọn lịch trình"]')).toHaveCount(0);
+    await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
     await page.getByRole('button', { name: 'Tạo hoạt động thủ công' }).click();
     await page.getByLabel('Tên hoạt động', { exact: true }).fill('Tham quan bảo tàng');
     await page.getByLabel('Loại hoạt động', { exact: true }).fill('SIGHTSEEING');
@@ -79,7 +80,7 @@ test('HTTP mock: Plan editor dialog remains scrollable at 2x CSS zoom and return
   await mockPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
+  await page.getByRole('button', { name: 'Thêm hoạt động', exact: true }).click();
   const trigger = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
   await expect(trigger).toBeVisible();
   await page.evaluate(() => {

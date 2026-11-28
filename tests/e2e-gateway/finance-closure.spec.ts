@@ -33,6 +33,14 @@ test('HTTP mock: closure snapshot detail, reminder accepted, cancel and final co
     if (path === `/api/v1/trips/${tripId}/fund`) return respond(fund);
     if (path.endsWith('/destinations')) return respond([]);
     if (request.method() === 'GET' && path === `/api/v1/closures/${closureId}`) return respond(row);
+    if (request.method() === 'GET' && path === `/api/v1/funds/${fundId}/closure-readiness`)
+      return respond({
+        ready: fund.status === 'OPEN',
+        fund_status: fund.status,
+        current_balance: fund.current_balance,
+        blockers: [],
+        bank_transfers_needing_review: 0,
+      });
     if (request.method() === 'GET' && path.startsWith(`/api/v1/funds/${fundId}/`))
       return respond({ items: path.endsWith('/closures') && row ? [row] : [], next_cursor: null });
     if (request.method() === 'POST' && path.endsWith('/closures')) {

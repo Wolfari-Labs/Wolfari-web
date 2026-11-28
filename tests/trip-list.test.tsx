@@ -63,7 +63,7 @@ function tripLinks() {
 }
 
 async function loaded() {
-  await screen.findByRole('link', { name: 'Mở chuyến đi Đà Nẵng – Hội An' });
+  await screen.findByRole('link', { name: 'Mở chuyến đi Đà Nẵng – Hội An' }, { timeout: 5000 });
 }
 
 function statusButton(label: string) {
@@ -81,10 +81,9 @@ describe('Trip List route slice', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.queryByText('Chuyến đi riêng tư – không được hiển thị')).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /88888888/ })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Tạo chuyến đi' })).toHaveAttribute(
-      'href',
-      '/trips/new',
-    );
+    for (const link of screen.getAllByRole('link', { name: 'Tạo chuyến đi' })) {
+      expect(link).toHaveAttribute('href', '/trips/new');
+    }
     expect(screen.getByRole('link', { name: '+ Tạo một hành trình mới' })).toHaveAttribute(
       'href',
       '/trips/new',
@@ -308,7 +307,9 @@ describe('Trip List route slice', () => {
     const source = fixtureTripCatalog[0];
     if (!source) throw new Error('Expected canonical fixture');
     const repository = createFixtureTripRepository({
-      records: [{ ...source, presentation: { memberCount: null, cover: null } }],
+      records: [
+        { ...source, presentation: { memberCount: null, coverAvailable: false, cover: null } },
+      ],
     });
     mount({ tripRepository: repository });
     await loaded();

@@ -1,28 +1,31 @@
-/* Sources and Web adaptations: docs/archive/implementation/design-system-phase2.md. */
+/* Visual authority: Figma Wolfari Web v2, page 930:6658. Historical aliases resolve to this
+   source system; do not reintroduce the superseded Refined V2/D15 visual overrides. */
 :root {
   --color-white: #fff;
-  --color-ink: #06458b;
-  --color-muted: #4f7093;
-  --color-line: #cdebf7;
-  --color-selected: #e8f7fa;
-  --color-blue: #0089c7;
-  --color-green: #15b784;
-  --color-pale: #f3fbff;
-  --color-background: #f4fbfe;
-  --color-nav: #0a55a1;
-  --color-active: #079fc5;
-  --color-field-line: #bae4f4;
-  --color-note: #ecf9fd;
-  --color-note-text: #4f7093;
-  --color-text-muted-on-light: #4f7093;
-  --color-action-primary: #006b92;
+  /* Web v2 remaps the legacy text roles onto Figma 930:6658 values. */
+  --color-ink: #1f2a44;
+  --color-muted: #5d697f;
+  --color-line: #e6ecfa;
+  --color-selected: #eef1f6;
+  --color-blue: #3c7be8;
+  --color-green: #2dbe7a;
+  --color-pale: #f7f9ff;
+  --color-background: #eaf0ff;
+  --color-nav: #4a5770;
+  --color-active: #3c7be8;
+  --color-field-line: #dfe6f7;
+  --color-note: #f6f8ff;
+  --color-note-text: #5d697f;
+  --color-text-muted-on-light: #5d697f;
+  --color-action-primary: #3c7be8;
+  --color-action-text: #3266c1;
   --color-border-control: #6daac0;
   --color-status-warning: #8a6500;
   --color-status-warning-surface: #fff7df;
   --color-status-danger: #a34b4b;
   --color-status-danger-surface: #fff0f0;
-  --color-gradient-start: #007caa;
-  --color-gradient-end: #007a8d;
+  --color-gradient-start: #5b8cff;
+  --color-gradient-end: #3cc9b0;
   --action-gradient: linear-gradient(
     to right,
     var(--color-gradient-start),
@@ -39,13 +42,13 @@
   --ios-mint: #e8f2ef;
   --ios-amber: #f8f3e8;
   --ios-peach: #f8e4d8;
-  --font-body: 'Be Vietnam Pro', sans-serif;
+  --font-body: 'Nunito', sans-serif;
   --font-ios: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
   --font-handwritten: 'Patrick Hand', 'Be Vietnam Pro', cursive;
   --font-size-caption: 12px;
   --font-size-small: 13px;
   --font-size-label: 14px;
-  --font-size-body: 16px;
+  --font-size-body: 15px;
   --font-size-subtitle: 18px;
   --font-size-card-title: 20px;
   --font-size-title: 24px;
@@ -53,7 +56,7 @@
   --font-size-mobile-label: 17px;
   --line-small: 20px;
   --line-label: 22px;
-  --line-body: 24px;
+  --line-body: 22px;
   --line-card-title: 28px;
   --line-title: 32px;
   --line-heading: 40px;
@@ -71,16 +74,16 @@
   --space-28: 28px;
   --space-32: 32px;
   --space-48: 48px;
-  --radius-nav: 7px;
+  --radius-nav: 999px;
   --radius-8: 8px;
   --radius-10: 10px;
   --radius-12: 12px;
   --radius-16: 16px;
-  --radius-button: 12px;
+  --radius-button: 999px;
   --radius-6: 6px;
-  --radius-control: 12px;
-  --radius-card: 16px;
-  --radius-dialog: 24px;
+  --radius-control: 20px;
+  --radius-card: 28px;
+  --radius-dialog: 32px;
   --color-border: var(--color-line);
   --color-primary: var(--color-action-primary);
   --color-surface: var(--color-white);
@@ -88,12 +91,12 @@
   --radius-20: 20px;
   --radius-24: 24px;
   --radius-pill: 999px;
-  --shadow-soft: 0 8px 24px rgb(5 69 140 / 10%);
-  --shadow-raised: 0 12px 32px rgb(5 69 140 / 13%), 0 2px 6px rgb(5 69 140 / 5%);
+  --shadow-soft: 0 8px 20px -4px rgb(92 122 199 / 12%);
+  --shadow-raised: 0 12px 28px -4px rgb(92 122 199 / 18%);
   --shadow-overlay: 0 24px 80px rgb(5 34 61 / 22%);
   --shadow-mobile-surface: 0 4px 16px rgb(23 59 77 / 4.3%);
-  --shadow-selection: 0 1px 5px rgb(31 51 61 / 8%);
-  --shadow-header: 0 2px 10px rgb(10 87 138 / 5%);
+  --shadow-selection: 0 8px 20px -4px rgb(92 122 199 / 12%);
+  --shadow-header: 0 12px 14px rgb(92 122 199 / 18%);
   --shadow-drawer: 8px 0 24px rgb(10 85 161 / 16%);
   --drawer-backdrop: rgb(5 34 61 / 32%);
   --target-min: 44px;
@@ -102,16 +105,16 @@
   --control-height-mobile: 48px;
   --header-height: 76px;
   --header-height-mobile: 54px;
-  --sidebar-width: 220px;
-  --sidebar-width-collapsed: 72px;
-  --admin-sidebar-width: 248px;
-  --admin-header-height: 72px;
+  --sidebar-width: 264px;
+  --sidebar-width-collapsed: 84px;
+  --admin-sidebar-width: 264px;
+  --admin-header-height: 76px;
   --drawer-width: 280px;
-  --focus-color: var(--color-ink);
+  --focus-color: #3c7be8;
   --focus-width: 3px;
   --focus-offset: 4px;
   --motion-duration: 150ms;
-  /* Web semantic roles; preserve legacy aliases and their existing values. */
+  /* Semantic state roles retain their meaning, while visual roles use Web v2. */
   --color-field-error: #955c49;
   --color-control-disabled-text: #64747c;
   --color-control-disabled-surface: #edf2f3;
@@ -119,17 +122,16 @@
   --field-text: var(--color-text);
   --field-border-default: var(--color-field-line);
   --card-padding: var(--space-24);
-  /* Shared workspace layout (UI declutter plan C0). Margins stay 18/22: tests lock 220 + 18 and width - 22. */
-  /* Full width, matching develop's TripWorkspace frame; the 1220px cap (D1) is a pending delta. */
+  /* Figma content origin is x312/y112 at 1440px; the shell owns outer gutters. */
   --workspace-max-width: none;
-  --page-padding-top: 8px;
-  --page-padding-right: 22px;
+  --page-padding-top: 0px;
+  --page-padding-right: 0px;
   --page-padding-bottom: 24px;
-  --page-padding-left: 18px;
+  --page-padding-left: 0px;
   --page-header-gap: 14px;
   --grid-gap: 16px;
   --side-panel-width: minmax(300px, 372px);
-  --radius-panel: var(--radius-8);
+  --radius-panel: 32px;
   --radius-hero: var(--radius-card);
   --card-padding-narrow: var(--space-16);
   --card-surface: var(--color-surface);
@@ -148,4 +150,64 @@
   --breakpoint-narrow: 360px;
   --breakpoint-compact-header: 1100px;
   --breakpoint-short-workspace: 950px;
+
+  /* Web v2 · Pastel mềm 3D (Figma 930:6658, components 930:6659). Values copied from the
+     Figma nodes; see docs/web-v2/FIGMA_V2_INVENTORY.md. */
+  --v2-font: 'Nunito', sans-serif;
+  --v2-font-brand: 'Baloo 2', 'Nunito', sans-serif;
+  --v2-ink: #1f2a44;
+  /* Text roles are darkened just enough to meet 4.5:1 on their light surfaces. */
+  --v2-sub: #5b677d;
+  --v2-nav-text: #4a5770;
+  --v2-muted: #656e81;
+  --v2-blue: #3c7be8;
+  --v2-blue-text: #3266c1;
+  --v2-white: #fff;
+  --v2-track: #eef1f6;
+  --v2-field: #f4f6fd;
+  --v2-row: #f7f9ff;
+  --v2-dashed-surface: #f6f8ff;
+  --v2-dashed-line: #9db8f5;
+  --v2-sky: #dce9ff;
+  --v2-mint: #d6f5e8;
+  --v2-butter: #fff0c2;
+  --v2-peach: #ffe0d4;
+  --v2-lilac: #e9e1ff;
+  --v2-violet-text: #684ce0;
+  --v2-success-text: #1f7a52;
+  --v2-warning-text: #926511;
+  --v2-danger-text: #c2412d;
+  --v2-grad-start: #5b8cff;
+  --v2-grad-end: #3cc9b0;
+  --v2-gradient: linear-gradient(to right, #5b8cff, #3cc9b0);
+  --v2-gradient-diagonal: linear-gradient(135deg, #5b8cff, #3cc9b0 71.429%);
+  --v2-gradient-blue: linear-gradient(135deg, #7ba7ff, #3c7be8 71.429%);
+  --v2-gradient-green: linear-gradient(135deg, #5ee0b0, #2dbe7a 71.429%);
+  --v2-gradient-amber: linear-gradient(135deg, #ffd66b, #f5a623 71.429%);
+  --v2-gradient-coral: linear-gradient(135deg, #ff9a86, #ff6f59 71.429%);
+  --v2-gradient-violet: linear-gradient(135deg, #a68bff, #6b4ee6 71.429%);
+  --v2-gradient-mascot: linear-gradient(to bottom, #fff0c2, #ffe0d4);
+  --v2-page-background: linear-gradient(146.309932474deg, #eaf0ff, #f3f0ff 50%, #e9fbf3);
+  --v2-radius-pill: 999px;
+  --v2-radius-round: 999px;
+  --v2-radius-tile: 28px;
+  --v2-radius-nav: 30px;
+  --v2-radius-panel: 32px;
+  --v2-radius-thumb: 20px;
+  --v2-radius-field: 20px;
+  --v2-radius-row: 18px;
+  --v2-field-height: 56px;
+  --v2-shadow-drop: 0 8px 10px rgb(92 122 199 / 12%);
+  --v2-shadow-card: 0 8px 20px -4px rgb(92 122 199 / 12%);
+  --v2-shadow-float: 0 12px 28px -4px rgb(92 122 199 / 18%);
+  --v2-shadow-nav: 0 12px 14px rgb(92 122 199 / 18%);
+  --v2-shadow-active: 0 6px 14px -4px rgb(60 123 232 / 28%);
+  --v2-inset: inset 0 -4px 10px rgb(51 64 115 / 6%), inset 0 2px 3px rgb(255 255 255 / 90%);
+  --v2-inset-badge: inset 0 2px 3px rgb(255 255 255 / 55%);
+  --v2-shell-gutter: 24px;
+  --v2-shell-top: 20px;
+  --v2-topnav-height: 76px;
+  --v2-sidebar-width: 264px;
+  --v2-sidebar-collapsed-width: 84px;
+  --v2-stack-gap: 16px;
 }

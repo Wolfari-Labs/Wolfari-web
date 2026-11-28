@@ -22,6 +22,7 @@ export interface TripListItem {
   readonly startAt: string;
   readonly endAt: string;
   readonly timezone: string;
+  readonly budgetAmount?: string | null;
   readonly lifecycle: TripLifecycle;
   readonly planVersion: number;
   readonly membershipRevision: number;
@@ -37,9 +38,11 @@ export interface TripListItem {
   readonly permissions: {
     readonly canRead: boolean;
     readonly canUpdate: boolean;
+    readonly canInvite?: boolean;
   };
   readonly presentation: {
     readonly memberCount: number | null;
+    readonly coverAvailable: boolean;
     readonly cover: {
       readonly src: string;
       readonly mobileSrc: string | null;

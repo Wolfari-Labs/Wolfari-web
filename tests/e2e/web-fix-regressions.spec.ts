@@ -19,12 +19,14 @@ test('Settings updates keep cached Trip, Plan and shell projections consistent a
 }) => {
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto(`${trip}/plan`);
-  await expect(page.getByText('Bán đảo Sơn Trà', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bán đảo Sơn Trà', exact: true })).toBeVisible();
   const navigation = page.getByRole('navigation', { name: 'Điều hướng chuyến đi' });
   await navigation.locator(`a[href="${trip}/settings"]`).click();
-  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
-  await page.getByLabel('Tên chuyến đi', { exact: true }).fill('Updated shared trip');
-  await page.getByRole('button', { name: 'Lưu thay đổi' }).click();
+  await page.getByRole('button', { name: 'Chỉnh sửa thông tin', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Chỉnh sửa thông tin', exact: true });
+  await dialog.getByRole('button', { name: 'Chỉnh sửa tên chuyến đi', exact: true }).click();
+  await dialog.getByLabel('Tên chuyến đi', { exact: true }).fill('Updated shared trip');
+  await dialog.getByRole('button', { name: 'Lưu thay đổi' }).click();
   await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();
   for (const [suffix, content] of [
     ['/plan', 'Bán đảo Sơn Trà'],
@@ -132,26 +134,22 @@ for (const failure of ['getter', 'quota'] as const) {
   });
 }
 
-test('Fund tabs support arrows, wraparound, Home, End and Tab with synchronized panels', async ({
-  page,
-}) => {
+test('Fund transaction filters support arrows, wraparound, Home and End', async ({ page }) => {
   await page.goto(`${trip}/fund`);
-  const tabs = page.getByRole('tablist', { name: 'Các vùng quỹ' });
-  await tabs.getByRole('tab', { name: 'Chi quỹ', exact: true }).focus();
+  const tabs = page.getByRole('tablist', { name: 'Bộ lọc giao dịch' });
+  await tabs.getByRole('tab', { name: 'Tất cả', exact: true }).focus();
   for (const [key, title] of [
     ['ArrowRight', 'Đóng góp'],
-    ['End', 'Lịch sử'],
-    ['ArrowRight', 'Chi quỹ'],
-    ['ArrowLeft', 'Lịch sử'],
-    ['Home', 'Chi quỹ'],
+    ['End', 'Hoàn tiền'],
+    ['ArrowRight', 'Tất cả'],
+    ['ArrowLeft', 'Hoàn tiền'],
+    ['Home', 'Tất cả'],
   ]) {
     await page.keyboard.press(key!);
     const active = tabs.getByRole('tab', { name: title!, exact: true });
     await expect(active).toBeFocused();
     await expect(active).toHaveAttribute('aria-selected', 'true');
     await expect(active).toHaveAttribute('tabindex', '0');
-    await expect(page.getByRole('tabpanel', { name: title!, exact: true })).toBeVisible();
   }
-  await page.keyboard.press('Tab');
-  await expect(page.getByRole('tabpanel', { name: 'Chi quỹ', exact: true })).toBeFocused();
+  await expect(page.locator('[data-finance-transactions] tbody tr')).toHaveCount(5);
 });

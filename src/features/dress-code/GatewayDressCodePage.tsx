@@ -1,9 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router';
-import { paths } from '../../app/route-paths';
+import { useParams } from 'react-router';
 import { Button } from '../../shared/components/Button';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
-import { useDesktopLayout } from '../../shared/lib/use-desktop-layout';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
@@ -12,7 +9,9 @@ import { TripHero } from '../trips/components/TripHero';
 import { groupDressCodes } from './dress-code';
 import styles from './GatewayDressCodePage.module.css';
 import { PreparationActions, PreparationStatus } from '../plan/components/PreparationActions';
-import { RecommendationPanel } from '../plan/components/RecommendationPanel';
+import { PreparationSuggestions } from '../plan/components/PreparationSuggestions';
+import { DressCodeReferenceImage } from './DressCodeReferenceImage';
+import { activePlan } from '../plan/model/preparation';
 
 type DressFilter = 'ALL' | DressCodeViewModel['scopeType'];
 const filters: readonly { value: DressFilter; label: string }[] = [
@@ -32,7 +31,6 @@ function scopeLabel(item: DressCodeViewModel) {
 
 export function GatewayDressCodePage() {
   const { tripId = '' } = useParams();
-  const desktop = useDesktopLayout();
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
   const [filter, setFilter] = useState<DressFilter>('ALL');
@@ -46,23 +44,10 @@ export function GatewayDressCodePage() {
 
   return (
     <section className={styles.page} data-flow="gateway-dress-read">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Trang phục"
-        mobile={
-          <nav className={styles.breadcrumb} aria-label="Đường dẫn">
-            <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-            <span aria-hidden="true">›</span>
-            <span>Trang phục</span>
-          </nav>
-        }
-      />
       {data && <TripHero trip={data.trip} variant="landscape" />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         {data && (
           <>
-            {!desktop && <h1 className={styles.visuallyHidden}>Trang phục</h1>}
             <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
             {snapshot.refreshFailed && (
               <CapabilityNote tone="warning">
@@ -85,7 +70,24 @@ export function GatewayDressCodePage() {
                   </button>
                 ))}
               </div>
-              {!data.plan.capabilities?.dress_codes_write && (
+              <PreparationSuggestions
+                key={`${tripId}:${data.trip.currentMembership.userId}`}
+                type="DRESS_CODE"
+                trip={data.trip}
+                plan={data.plan}
+                refresh={snapshot.retry}
+              />
+              {data.plan.capabilities?.dress_codes_write &&
+              data.plan.permissions.canEdit &&
+              activePlan(data.trip) ? (
+                <PreparationActions
+                  module="dress"
+                  dressControls
+                  trip={data.trip}
+                  plan={data.plan}
+                  refresh={snapshot.retry}
+                />
+              ) : (
                 <span className={styles.badge}>Chỉ xem</span>
               )}
             </div>
@@ -101,12 +103,25 @@ export function GatewayDressCodePage() {
                             <header className={styles.cardHeader}>
                               <h3>{item.label}</h3>
                               <span>{scopeLabel(item)}</span>
+                              <PreparationActions
+                                module="dress"
+                                dressControls
+                                item={item}
+                                trip={data.trip}
+                                plan={data.plan}
+                                refresh={snapshot.retry}
+                              />
                             </header>
                             <p>
                               {item.description ??
                                 item.publicDescription ??
                                 'Chưa có mô tả trang phục.'}
                             </p>
+                            <DressCodeReferenceImage
+                              tripId={item.tripId}
+                              dressCodeId={item.id}
+                              available={item.referenceImageAvailable}
+                            />
                             <dl>
                               <div>
                                 <dt>Phạm vi</dt>
@@ -123,13 +138,6 @@ export function GatewayDressCodePage() {
                                 </dd>
                               </div>
                             </dl>
-                            <PreparationActions
-                              module="dress"
-                              item={item}
-                              trip={data.trip}
-                              plan={data.plan}
-                              refresh={snapshot.retry}
-                            />
                           </article>
                         ))}
                       </div>
@@ -150,39 +158,7 @@ export function GatewayDressCodePage() {
                   </div>
                 )}
               </section>
-              <aside className={styles.readOnlyPanel} aria-label="Khả năng Dress code">
-                <h2>Tạo / Chỉnh sửa bộ phối</h2>
-                <PreparationActions
-                  module="dress"
-                  trip={data.trip}
-                  plan={data.plan}
-                  refresh={snapshot.retry}
-                />
-                {data.plan.capabilities?.dress_codes_write ? (
-                  <p>
-                    Thêm hướng dẫn cho cả chuyến, một ngày hoặc một hoạt động. Mọi thành viên đều
-                    xem được; người có quyền sửa kế hoạch mới thêm, sửa, xóa.
-                  </p>
-                ) : (
-                  <>
-                    <p>
-                      Trang này hiển thị hướng dẫn đã lưu trong kế hoạch. Thêm, sửa, tải ảnh và áp
-                      dụng gợi ý chưa khả dụng trong chế độ này.
-                    </p>
-                    <p>
-                      Ảnh phối đồ và bảng màu trong bản thiết kế là hình minh họa, chưa gắn với từng
-                      hướng dẫn đã lưu.
-                    </p>
-                  </>
-                )}
-              </aside>
             </div>
-            <RecommendationPanel
-              type="PACKING_DRESS"
-              trip={data.trip}
-              plan={data.plan}
-              refresh={snapshot.retry}
-            />
           </>
         )}
       </TripPlanBoundary>

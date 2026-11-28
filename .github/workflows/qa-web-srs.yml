@@ -1,0 +1,73 @@
+name: Web SRS real TEST
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Smoke hoặc full Web
+        type: choice
+        options: [smoke, full]
+        default: full
+permissions:
+  contents: read
+concurrency:
+  group: qa-web-test-environment
+  cancel-in-progress: false
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc -p tsconfig.qa.json
+      - run: node --test scripts/qa-report.check.mjs
+  real-web:
+    # Never execute untrusted fork code with TEST credentials. Protected environment approval required.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    needs: foundation
+    environment: wolfari-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      WOLFARI_QA_ENV: TEST
+      WOLFARI_QA_TEST_DATA_ONLY: ${{ vars.QA_TEST_DATA_ONLY }}
+      WOLFARI_QA_WEB_URL: ${{ vars.QA_WEB_URL }}
+      WOLFARI_QA_ALLOW_ORIGIN: ${{ vars.QA_ALLOW_ORIGIN }}
+      WOLFARI_QA_BACKEND_COMMIT: ${{ vars.QA_BACKEND_COMMIT }}
+      WOLFARI_QA_PRICE_SOURCE: ${{ vars.QA_PRICE_SOURCE }}
+      WOLFARI_QA_OWNER_EMAIL: ${{ secrets.QA_OWNER_EMAIL }}
+      WOLFARI_QA_OWNER_PASSWORD: ${{ secrets.QA_OWNER_PASSWORD }}
+      WOLFARI_QA_OUTSIDER_EMAIL: ${{ secrets.QA_OUTSIDER_EMAIL }}
+      WOLFARI_QA_OUTSIDER_PASSWORD: ${{ secrets.QA_OUTSIDER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: PR smoke on Chromium, full manually on all projects
+        env:
+          SUITE: ${{ inputs.suite || 'smoke' }}
+        run: |
+          if [ "$SUITE" = "smoke" ]; then
+            node scripts/qa-run.mjs smoke --project=chromium-desktop
+          else
+            node scripts/qa-run.mjs full
+          fi
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: BaoCaoKiemThu-${{ github.run_id }}-${{ github.run_attempt }}
+          path: BaoCaoKiemThu/
+          retention-days: 7
+          if-no-files-found: error

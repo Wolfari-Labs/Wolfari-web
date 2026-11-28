@@ -63,7 +63,7 @@ function DesignSystemPreview() {
             </div>
           ))}
         </div>
-        <p className={styles.bodySample}>Be Vietnam Pro · Lên kế hoạch cùng nhau.</p>
+        <p className={styles.bodySample}>Nunito · Lên kế hoạch cùng nhau.</p>
         <p className={styles.handwritten}>Cùng bạn đi xa hơn!</p>
       </section>
       <section className={styles.panel} aria-labelledby="buttons-title">
@@ -238,7 +238,7 @@ function DesignSystemPreview() {
         <h2>Card, lựa chọn và menu</h2>
         <Card aria-label="Card minh họa">
           <Badge tone="success">Sẵn sàng</Badge>
-          <p>Bo góc 16px · Be Vietnam Pro · Phản hồi chuyển động nhẹ.</p>
+          <p>Bo góc 28px · Nunito · Màu sắc và hình học từ Figma Web v2.</p>
           <Switch label="Bật tùy chọn minh họa" checked={checked} onChange={setChecked} />
           <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>
             Lựa chọn minh họa bằng checkbox

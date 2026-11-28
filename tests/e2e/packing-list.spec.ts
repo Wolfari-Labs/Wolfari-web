@@ -22,9 +22,8 @@ test.describe('Packing List preview suggestions', () => {
   test('desktop opens the right drawer and accepts a suggested item', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(route);
-    await expect(
-      page.getByRole('heading', { name: 'Đồ đạc', level: 1, exact: true }),
-    ).toBeVisible();
+    await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+    await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
     await page.getByRole('button', { name: /Thêm vật dụng/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Thêm vật dụng' });
     await expect(drawer).toBeVisible();

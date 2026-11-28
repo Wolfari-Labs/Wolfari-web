@@ -1,51 +1,49 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
+import fallbackPhoto from '../../shared/assets/figma/16cac.png';
 import type { PlaceImage } from './places';
-import styles from './TripMapPage.module.css';
+import styles from './PlacePhoto.module.css';
 
-/**
- * POI-IMAGES: the licensed photo of a place with its visible credit. When the place has no photo,
- * or the file fails to load, the template artwork (`fallback`) is shown instead.
- */
 export function PlacePhoto({
-  photo,
-  alt,
-  className,
-  width,
-  height,
-  sizes,
-  fallback,
+  image,
+  name,
+  compact = false,
+  linked = false,
 }: {
-  photo: PlaceImage | null | undefined;
-  /** The place name. */
-  alt: string;
-  className?: string | undefined;
-  width: number;
-  height: number;
-  /** Rendered width for `srcSet` selection, e.g. "230px". */
-  sizes: string;
-  fallback: ReactNode;
+  image: PlaceImage | null | undefined;
+  name: string;
+  compact?: boolean;
+  linked?: boolean;
 }) {
-  const [failed, setFailed] = useState<string | null>(null);
-  if (!photo || failed === photo.url) return <>{fallback}</>;
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const available = image && failedUrl !== image.url;
   return (
-    <>
+    <span className={styles.photo} data-place-photo data-compact={compact || undefined}>
       <img
-        className={[className, styles.placePhoto].filter(Boolean).join(' ')}
-        src={photo.thumbnailUrl}
-        srcSet={`${photo.smallUrl} 320w, ${photo.thumbnailUrl} 640w, ${photo.url} 1280w`}
-        sizes={sizes}
-        width={width}
-        height={height}
-        alt={alt}
+        src={available ? (compact ? image.smallUrl : image.thumbnailUrl) : fallbackPhoto}
+        alt={available ? `Ảnh ${name}` : `Ảnh minh họa cho ${name}`}
+        srcSet={
+          available
+            ? `${image.smallUrl} 320w, ${image.thumbnailUrl} 640w, ${image.url} 1280w`
+            : undefined
+        }
+        sizes={available ? (compact ? '78px' : 'auto, (max-width: 768px) 100vw, 354px') : undefined}
         loading="lazy"
         decoding="async"
-        onError={() => setFailed(photo.url)}
+        onError={() => {
+          if (available) setFailedUrl(image.url);
+        }}
       />
-      <small className={styles.photoCredit}>
-        <a href={photo.sourceUrl} target="_blank" rel="noopener noreferrer">
-          {photo.attribution}
-        </a>
-      </small>
-    </>
+      {available && (
+        <span className={styles.credit} data-photo-credit>
+          {linked ? (
+            <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer">
+              {image.attribution}
+            </a>
+          ) : (
+            image.attribution
+          )}
+        </span>
+      )}
+    </span>
   );
 }

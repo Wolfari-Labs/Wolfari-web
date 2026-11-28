@@ -92,7 +92,7 @@
 }
 .scene:not(.auth) .note,
 .scene:not(.auth) figcaption {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 .daLat {
   left: 68.98%;

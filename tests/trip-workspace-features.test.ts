@@ -64,7 +64,7 @@ const location = (id: string, latitude: string | null, longitude: string | null)
 
 describe('read-only Plan projection selectors', () => {
   it('groups dress code by trip, day and activity with a truthful missing-activity fallback', () => {
-    const base = { tripId: 'trip', planDate: null, activityId: null, description: null, publicDescription: null, source: 'MANUAL' as const, planVersion: 1 };
+    const base = { tripId: 'trip', planDate: null, activityId: null, description: null, publicDescription: null, source: 'MANUAL' as const, planVersion: 1, referenceImageAvailable: false };
     const items: DressCodeViewModel[] = [
       { ...base, id: '3', scopeType: 'ACTIVITY', activityId: 'missing', label: 'Missing' },
       { ...base, id: '2', scopeType: 'DAY', planDate: '2026-09-22', label: 'Day' },

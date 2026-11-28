@@ -27,7 +27,7 @@
   font: inherit;
 }
 .breadcrumb a {
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 @media (max-width: 768px) {
   .page,
@@ -41,5 +41,31 @@
     min-height: 36px;
     margin-bottom: 8px;
     gap: 8px;
+  }
+}
+
+/* Web v2: content starts at the Figma origin (x=312, y=112); breadcrumb matches WorkspacePage. */
+@media (min-width: 769px) {
+  .page,
+  .fullWidth.fullWidth {
+    padding-inline: 0;
+  }
+  .page,
+  .fullWidth.fullWidth {
+    padding-top: 0;
+    padding-bottom: var(--v2-shell-gutter);
+  }
+  .breadcrumb {
+    gap: 4px;
+    min-height: 16px;
+    margin-bottom: 12px;
+    color: var(--v2-muted);
+    font: 700 12px/normal var(--v2-font);
+  }
+  .breadcrumb a {
+    color: var(--v2-muted);
+  }
+  .breadcrumb h1 {
+    color: var(--v2-blue-text);
   }
 }

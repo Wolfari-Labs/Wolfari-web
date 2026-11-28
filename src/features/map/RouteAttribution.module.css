@@ -1,0 +1,10 @@
+.credit {
+  flex: none;
+  margin: 0 10px;
+  color: var(--v2-sub);
+  font: 600 11px/16px var(--v2-font);
+  overflow-wrap: anywhere;
+}
+.credit a {
+  color: inherit;
+}

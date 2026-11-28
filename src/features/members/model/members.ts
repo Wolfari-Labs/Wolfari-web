@@ -43,6 +43,7 @@ export type InvitationScenario = (typeof invitationScenarios)[number];
 export interface InvitationViewModel {
   readonly id: string;
   readonly tripId: string;
+  readonly invitedByUserId?: string | null;
   readonly invitationType: 'EMAIL' | 'LINK';
   readonly email: string | null;
   readonly status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'REVOKED' | 'EXPIRED';

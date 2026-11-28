@@ -159,7 +159,10 @@ test('HTTP mock: drop into empty day preserves all other dates and does not open
   const mock = await seedPlan(page, gateway);
   await login(page);
   await page.goto(`/trips/${tripId}/plan`);
-  await page.getByRole('button', { name: 'Ngày 2 · 02/11', exact: true }).click();
+  await page
+    .getByRole('group', { name: 'Ngày trong lịch trình' })
+    .locator('[data-plan-day="2026-11-02"]')
+    .click();
   await openPool(page);
   await pointerDrop(
     page,
@@ -224,7 +227,6 @@ test('HTTP mock: a mid-arrangement conflict stops later commands, reports partia
   expect(mock.writes.some((write) => write.method === 'PUT')).toBe(false);
   await expect(page.getByRole('button', { name: 'Thêm hoạt động', exact: true })).toBeDisabled();
   await expect(page.getByRole('dialog', { name: 'Chỉnh sửa hoạt động' })).toHaveCount(0);
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
   await page.getByRole('button', { name: 'Tải lại để đối chiếu', exact: true }).click();
   expect(mock.writes).toHaveLength(2);
   await expectDayOrder(page, mock, originalIds);
@@ -248,7 +250,6 @@ test('HTTP mock: an uncertain committed step retries exact idempotency payload a
   expect(mock.writes).toHaveLength(1);
   const originalWrite = structuredClone(mock.writes[0]!);
   await page.reload();
-  await page.locator('summary[aria-label="Tùy chọn lịch trình"]').click();
   const retry = page.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ', exact: true });
   await expect(retry).toBeDisabled();
   await page.getByRole('button', { name: 'Tải lại để đối chiếu', exact: true }).click();

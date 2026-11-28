@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectMinimumHitTargets } from '../hit-target';
 
 const trips = [
   { id: '11111111-1111-4111-8111-111111111111', name: 'Đà Nẵng – Hội An' },
@@ -114,30 +115,15 @@ for (const viewport of [
     await expect(
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
-    const header = page.locator(
-      'header[data-node-id="135:483"]:visible, header[data-node-id="779:6442"]:visible',
-    );
+    const header = page.getByRole('banner');
     await expect(header).toHaveCount(1);
     const desktop = viewport.width > 768;
-    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 72);
-    const targets = await page
-      .locator(
+    expect(Math.round((await header.boundingBox())!.height)).toBe(desktop ? 76 : 64);
+    await expectMinimumHitTargets(
+      page.locator(
         'button:visible:not(:disabled), a:visible, input:visible, select:visible, summary:visible',
-      )
-      .evaluateAll((elements) =>
-        elements.map((element) => {
-          const box = element.getBoundingClientRect();
-          return {
-            name: element.getAttribute('aria-label') || element.textContent || element.tagName,
-            width: box.width,
-            height: box.height,
-          };
-        }),
-      );
-    for (const target of targets) {
-      expect(target.width, target.name).toBeGreaterThanOrEqual(44);
-      expect(target.height, target.name).toBeGreaterThanOrEqual(44);
-    }
+      ),
+    );
     const boxes = await articles(page).evaluateAll((elements) =>
       elements.map((item) => {
         const box = item.getBoundingClientRect();
@@ -145,10 +131,10 @@ for (const viewport of [
       }),
     );
     if (viewport.width === 1440) {
-      for (const [key, expected] of Object.entries({ x: 64, y: 372, width: 416 }))
+      for (const [key, expected] of Object.entries({ x: 48, y: 300, width: 440 }))
         expect(
           Math.abs(boxes[0]![key as keyof (typeof boxes)[number]] - expected),
-          `Figma first trip card ${key}`,
+          `Figma W02 featured trip 932:6959 ${key}`,
         ).toBeLessThanOrEqual(4);
     }
     if (desktop) {
@@ -158,16 +144,13 @@ for (const viewport of [
       expect(
         await page.locator('main').evaluate((element) => getComputedStyle(element).overflowY),
       ).toBe('auto');
-      const columns = viewport.width > 1000 ? 3 : 2;
+      // W02: featured trip + three card columns from 1101px, two columns below.
+      const columns = viewport.width > 1100 ? 4 : 2;
       for (let index = 1; index < columns; index++) {
         expect(boxes[index]!.y).toBeCloseTo(boxes[0]!.y, 0);
         expect(boxes[index]!.x).toBeGreaterThan(boxes[index - 1]!.x);
       }
       expect(boxes[columns]!.y).toBeGreaterThan(boxes[0]!.y);
-      if (viewport.height === 520)
-        expect(
-          Math.round((await page.locator('header[data-node-id="65:548"]').boundingBox())!.height),
-        ).toBe(174);
       await page.screenshot({ path: info.outputPath('trip-list.png') });
       await articles(page).last().scrollIntoViewIfNeeded();
       await expect(articles(page).last()).toBeInViewport();
@@ -177,10 +160,11 @@ for (const viewport of [
         0,
       );
       expect(await page.evaluate(() => scrollY)).toBe(0);
-      expect(Math.round((await header.boundingBox())!.y)).toBe(0);
+      // The V2 top nav floats 20px below the viewport edge (Figma 930:6745).
+      expect(Math.round((await header.boundingBox())!.y)).toBe(20);
     } else {
-      const logo = (await header.locator('img[alt="Wolfari"]').boundingBox())!;
-      expect(Math.round(logo.x)).toBe(16);
+      const logo = (await header.getByRole('img', { name: 'Wolfari' }).boundingBox())!;
+      expect(Math.round(logo.x)).toBe(viewport.width <= 360 ? 20 : 24);
       const menu = header.getByRole('button', { name: 'Mở điều hướng chính' });
       const account = header.getByRole('link', { name: /Hồ sơ cá nhân/ });
       expect((await account.boundingBox())!.x).toBeGreaterThan(logo.x + logo.width);
@@ -275,10 +259,11 @@ for (const width of [1440, 402]) {
       filters(page).getByRole('button', { name: 'Tất cả · 6', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     if (width > 768) {
-      await expect(page.getByRole('link', { name: 'Tạo chuyến đi', exact: true })).toHaveAttribute(
-        'href',
-        '/trips/new',
-      );
+      await expect(
+        page
+          .getByRole('region', { name: 'Danh sách chuyến đi' })
+          .getByRole('link', { name: 'Tạo chuyến đi', exact: true }),
+      ).toHaveAttribute('href', '/trips/new');
       // A26 (UI declutter): the three locked placeholder filters were removed, not just disabled.
       for (const label of ['Vai trò: Tất cả', 'Thời gian', 'Bộ lọc'])
         await expect(page.getByRole('button', { name: label, exact: true })).toHaveCount(0);
@@ -413,7 +398,7 @@ test('Trip List Mobile drawer keyboard backdrop and same-route navigation restor
   await expect.poll(async () => (await drawer.boundingBox())?.x).toBe(0);
   const box = (await drawer.boundingBox())!;
   expect(box.x).toBe(0);
-  expect(Math.round(box.width)).toBe(Math.round(Math.min(300, 402 * 0.86)));
+  expect(Math.round(box.width)).toBe(Math.round(Math.min(320, 402 * 0.86)));
   await expect(drawer.getByRole('button', { name: 'Đóng điều hướng chính' })).toBeFocused();
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');
   for (let index = 0; index < 8; index++) {
@@ -465,11 +450,7 @@ test('Trip List route aliases preserve layout and authenticated permission polic
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    expect(
-      Math.round(
-        (await page.locator('header[data-node-id="135:483"]:visible').boundingBox())!.height,
-      ),
-    ).toBe(76);
+    expect(Math.round((await page.getByRole('banner').boundingBox())!.height)).toBe(76);
     expect(
       await page.locator('main').evaluate((element) => getComputedStyle(element).overflowY),
     ).toBe('auto');

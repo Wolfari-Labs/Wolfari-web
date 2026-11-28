@@ -39,6 +39,7 @@ import { createNotificationRepository } from './infrastructure/repositories/noti
 import { createTravelRepository } from './infrastructure/repositories/travel.gateway-repository';
 import { createRuntimePriceWatchRepository } from './infrastructure/repositories/runtime-price-watch.gateway-repository';
 import { createPlacesRepository } from './infrastructure/repositories/places.gateway-repository';
+import { createWeatherRepository } from './infrastructure/repositories/weather.gateway-repository';
 
 const previewAllowed = import.meta.env.DEV || import.meta.env.MODE === 'preview';
 const fixtureSelected =
@@ -211,6 +212,7 @@ async function start() {
                     notifications: createNotificationRepository(gatewayHttpClient),
                     priceWatch: createRuntimePriceWatchRepository(gatewayHttpClient),
                     places: createPlacesRepository(gatewayHttpClient),
+                    weather: createWeatherRepository(gatewayHttpClient),
                   },
                 }
               : {})}

@@ -25,29 +25,68 @@ for (const size of [
     );
     if (size.width === 1440) {
       const hero = (await page.getByRole('region', { name: 'Thông tin chuyến đi' }).boundingBox())!;
-      for (const [key, expected] of Object.entries({ x: 238, y: 120, width: 1180, height: 150 }))
+      for (const [key, expected] of Object.entries({ x: 312, y: 112, width: 1104, height: 84 }))
         expect(
           Math.abs(hero[key as keyof typeof hero] - expected),
-          `Figma hero ${key}`,
+          `Figma W/Trip header 937:7647 ${key}`,
         ).toBeLessThanOrEqual(4);
+      const heading = region.locator('[data-region="member-roster-heading"]');
+      await expect(heading.locator(':scope > span')).toHaveText([
+        'Thành viên',
+        'Vai trò / Trách nhiệm',
+        'Thao tác',
+      ]);
+      const self = region
+        .getByRole('list', { name: 'Danh sách thành viên', exact: true })
+        .locator(':scope > li')
+        .filter({ hasText: 'User aaaaaaaa…aaaa' });
+      await expect(self.locator('[data-region="member-actions"]')).toHaveText('Bạn');
+      await expect(self.locator('[data-role="OWNER"]')).toContainText('Owner');
+      await expect(self.getByText('Được sửa Plan', { exact: true })).toBeVisible();
+      await expect(region.getByText('Fund Holder', { exact: true })).toHaveCount(0);
     }
-    const identity = region.locator('details').first().locator('summary');
-    await identity.click();
     await expect(
       region.getByText('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { exact: true }),
-    ).toBeVisible();
-    await identity.click();
-    await page.getByText('Rời chuyến đi', { exact: true }).scrollIntoViewIfNeeded();
+    ).toHaveCount(0);
+    await expect(region.getByText('Chi tiết hỗ trợ', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('Vai trò và trách nhiệm', { exact: true })).toHaveCount(0);
+    const roleHelp = page.getByRole('button', { name: 'Gợi ý vai trò thành viên' });
+    await roleHelp.click();
+    const roleDialog = page.getByRole('dialog', { name: 'Vai trò trong chuyến đi' });
+    await expect(roleDialog).toBeVisible();
+    for (const name of ['Chủ chuyến', 'Thành viên', 'Người giữ quỹ'])
+      await expect(roleDialog.getByText(name, { exact: true })).toBeVisible();
+    await page.screenshot({ path: info.outputPath('member-roles.png'), fullPage: true });
+    await page.keyboard.press('Escape');
+    await expect(roleDialog).toHaveCount(0);
+    await expect(roleHelp).toBeFocused();
+    await roleHelp.click();
+    await page.getByRole('button', { name: 'Đóng gợi ý vai trò' }).click();
+    await expect(roleDialog).toHaveCount(0);
+    await expect(page.getByText('Rời chuyến đi', { exact: true })).toHaveCount(0);
+    if (size.width > 768 && size.height <= 520) {
+      const list = region.locator('[data-region="member-roster-list"]');
+      await expect
+        .poll(() => list.evaluate((node) => node.clientHeight))
+        .toBeGreaterThanOrEqual(68);
+      await expect(list.locator(':scope > li').first()).toBeInViewport({ ratio: 1 });
+    }
+    const lastMember = region
+      .getByRole('list', { name: 'Danh sách thành viên', exact: true })
+      .locator(':scope > li')
+      .last();
+    await lastMember.scrollIntoViewIfNeeded();
+    await expect(lastMember).toBeInViewport();
     if (size.width > 768) {
       expect(await page.evaluate(() => scrollY)).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(
         size.height,
       );
-    } else expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+    }
     await page.locator('main').evaluate((e) => (e.scrollTop = 0));
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: info.outputPath('members.png'), fullPage: true });
-    await page.getByRole('button', { name: 'Lời mời · Xem trước' }).click();
+    await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
     await expect(page.getByText('linh@example.com', { exact: true })).toBeVisible();
     await page.getByLabel('Email người nhận').fill('preview@example.com');
     await page.getByRole('button', { name: 'Kiểm tra lời mời' }).click();
@@ -81,7 +120,7 @@ test('member and invitation states, terminal statuses, draft and permission', as
   }
   await page.getByLabel('Trạng thái thành viên').selectOption('success');
   await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình' })).toBeDisabled();
-  await page.getByRole('button', { name: 'Lời mời · Xem trước' }).click();
+  await page.getByRole('button', { name: 'Lời mời', exact: true }).click();
   await page.getByLabel('Email người nhận').fill('draft@example.com');
   for (const [state, text] of [
     ['expired', 'Đã hết hạn'],
@@ -91,7 +130,7 @@ test('member and invitation states, terminal statuses, draft and permission', as
     await page.getByLabel('Trạng thái lời mời').selectOption(state);
     await expect(page.getByText(text, { exact: true })).toBeVisible();
     await expect(page.getByText(/Phiên bản 2/)).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Gửi lại' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Gửi lại' })).toHaveCount(0);
   }
   for (const [state, text] of [
     ['error', 'Chưa thể tải nội dung'],
@@ -112,5 +151,5 @@ test('member and invitation states, terminal statuses, draft and permission', as
   await expect(page.getByText(/Membership revision 1/)).toBeVisible();
   await page.goto('/trips/33333333-3333-4333-8333-333333333333/members');
   await expect(page.getByText('User aaaaaaaa…aaaa', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Lời mời · Xem trước' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Lời mời', exact: true })).toBeDisabled();
 });

@@ -3,6 +3,54 @@ import { expect, login, test } from './gateway-fixture';
 const ownerTripId = '11111111-1111-4111-8111-111111111111';
 const invitationToken = `inv1_${'a'.repeat(43)}`;
 
+test('HTTP mock: a member with server invitation permission can invite without owner controls', async ({
+  page,
+  gateway,
+}) => {
+  const trip = gateway.trips.find((item) => item.id === ownerTripId)!;
+  trip.current_membership.role = 'MEMBER';
+  trip.permissions.can_update = false;
+  trip.permissions.can_invite = true;
+  trip.plan_edit_policy = 'ALL_MEMBERS';
+  Object.assign(gateway.invitations[0]!, {
+    invited_by_user_id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+  });
+  const ownInvitation = {
+    ...gateway.invitations[0]!,
+    id: '88888888-8888-4888-8888-888888888888',
+    email: 'own-invitation@example.com',
+    invited_by_user_id: trip.current_membership.user_id,
+  };
+  gateway.invitations.push(ownInvitation);
+  await login(page);
+  await page.goto(`/trips/${ownerTripId}/members`);
+  await expect(page.getByRole('button', { name: 'Quyền sửa lịch trình', exact: true })).toHaveCount(
+    0,
+  );
+  await expect(page.getByRole('button', { name: /^Chuyển Owner/ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Mời thành viên', exact: true }).click();
+  const otherInvitation = page.getByRole('listitem').filter({ hasText: 'guest@example.com' });
+  await expect(otherInvitation).toBeVisible();
+  await expect(otherInvitation.getByRole('button', { name: 'Gửi lại' })).toHaveCount(0);
+  await expect(otherInvitation.getByRole('button', { name: 'Thu hồi' })).toHaveCount(0);
+  const ownRow = page.getByRole('listitem').filter({ hasText: 'own-invitation@example.com' });
+  await ownRow.getByRole('button', { name: 'Gửi lại' }).click();
+  await expect(page.getByText(/Yêu cầu gửi lại đã được tiếp nhận/)).toBeVisible();
+  expect(
+    gateway.calls.filter((call) => call.method === 'POST' && call.path.endsWith('/resend')),
+  ).toMatchObject([
+    { path: `/api/v1/trips/${ownerTripId}/invitations/${ownInvitation.id}/resend` },
+  ]);
+  await page.getByLabel('Email người nhận').fill('member-invite@example.com');
+  await page.getByRole('button', { name: 'Gửi lời mời', exact: true }).click();
+  await expect(page.getByText(/Yêu cầu gửi lời mời đã được tiếp nhận/)).toBeVisible();
+  expect(
+    gateway.calls.find(
+      (call) => call.method === 'POST' && call.path === `/api/v1/trips/${ownerTripId}/invitations`,
+    )?.body,
+  ).toMatchObject({ email: 'member-invite@example.com' });
+});
+
 test('HTTP mock: Owner creates EMAIL/LINK and explicitly manages pending invitations', async ({
   page,
   gateway,

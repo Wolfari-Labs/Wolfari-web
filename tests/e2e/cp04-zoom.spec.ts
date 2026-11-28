@@ -100,9 +100,13 @@ test('CP04 native browser 200% zoom keeps Shell, recovery and Profile reachable'
     await saveBrowserSurface('native-zoom-recovery.png');
 
     await page.goto(`${baseURL}/profile`);
-    const name = page.getByLabel('Tên hiển thị');
+    const name = page.getByLabel('Tên hiển thị', { exact: true });
     await name.focus();
     await expect(name).toBeFocused();
+    await page
+      .getByRole('navigation', { name: 'Điều hướng tài khoản' })
+      .getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true })
+      .click();
     const changePassword = page.getByRole('form', { name: 'Đổi mật khẩu' });
     await changePassword.getByRole('button', { name: 'Đổi mật khẩu' }).scrollIntoViewIfNeeded();
     await expect(changePassword.getByRole('button', { name: 'Đổi mật khẩu' })).toBeInViewport();

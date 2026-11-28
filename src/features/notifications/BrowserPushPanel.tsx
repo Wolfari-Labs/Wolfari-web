@@ -4,8 +4,7 @@ import { Alert } from '../../shared/components/Alert';
 import { Button } from '../../shared/components/Button';
 import styles from './Notifications.module.css';
 const labels = {
-  'missing-config':
-    'Chưa cấu hình Firebase cho môi trường này. Chức năng đăng ký push chưa khả dụng.',
+  'missing-config': 'Thông báo trên trình duyệt chưa được thiết lập cho môi trường này.',
   unsupported: 'Trình duyệt chưa hỗ trợ push hoặc website chưa dùng HTTPS/localhost.',
   idle: 'Chưa đăng ký thông báo trên trình duyệt này.',
   denied:
@@ -28,30 +27,35 @@ export function BrowserPushPanel({ service, actor }: { service: BrowserPush; act
   }, [service, actor]);
   const unavailable = ['missing-config', 'unsupported', 'denied'].includes(state.state);
   return (
-    <fieldset className={styles.preferences}>
+    <fieldset className={styles.device}>
       <legend>Thông báo trên trình duyệt này</legend>
       <Alert tone={state.state === 'error' ? 'warning' : 'info'} live>
         {state.busy ? 'Đang cập nhật đăng ký…' : state.message || labels[state.state]}
       </Alert>
-      <p>
-        Đăng ký thiết bị khác với tùy chọn “Cho phép push”. Lưu thiết bị thành công không có nghĩa
-        backend đã gửi hoặc trình duyệt đã nhận thông báo.
+      <p className={styles.deviceNote}>
+        Đăng ký thiết bị là bước riêng với tùy chọn “Cho phép push” và không đảm bảo trình duyệt đã
+        nhận được thông báo.
       </p>
-      <div className={styles.filters}>
-        <Button disabled={state.busy || unavailable} onClick={() => void service.enable(actor)}>
+      <div className={styles.deviceActions}>
+        <Button
+          size="compact"
+          disabled={state.busy || unavailable}
+          onClick={() => void service.enable(actor)}
+        >
           {state.state === 'registered' || state.state === 'error'
             ? 'Cập nhật đăng ký trình duyệt'
             : 'Bật thông báo trình duyệt'}
         </Button>
         <Button
           variant="outline"
+          size="compact"
           disabled={state.busy || state.state === 'missing-config' || state.state === 'unsupported'}
           onClick={() => void service.disconnect()}
         >
           Tắt đăng ký trình duyệt
         </Button>
       </div>
-      <p>
+      <p className={styles.deviceNote}>
         Nếu dùng máy chung, hãy tắt đăng ký trước khi rời máy. Việc tắt không thay đổi quyền thông
         báo bạn đã cấp trong cài đặt trình duyệt.
       </p>

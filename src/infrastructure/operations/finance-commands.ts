@@ -9,6 +9,7 @@ export const financeCommandKinds = [
   'closure-confirm',
   'closure-cancel',
   'closure-remind',
+  'bank-transfer-resolve',
   'refund-create',
   'refund-assign-verifier',
   'refund-report-paid',
@@ -154,6 +155,21 @@ export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<st
         [...body.reason.trim()].length > 1024)
     )
       throw Error('Nhập lý do hủy (tối đa 1024 ký tự).');
+    return;
+  }
+  if (kind === 'bank-transfer-resolve') {
+    const allowed = ['resolution', 'note', 'expected_finance_version'];
+    if (Object.keys(body).some((key) => !allowed.includes(key)))
+      throw Error('Invalid bank transfer field');
+    d.enumeration(body.resolution, ['RETURNED_TO_SENDER', 'HANDLED_IN_APP', 'NOT_OURS']);
+    d.version(body.expected_finance_version);
+    if (
+      typeof body.note !== 'string' ||
+      !body.note.trim() ||
+      body.note.includes('\0') ||
+      [...body.note].length > 500
+    )
+      throw Error('Nhập ghi chú xử lý giao dịch (tối đa 500 ký tự).');
     return;
   }
   if (kind.startsWith('refund-')) {
@@ -302,6 +318,11 @@ export function financeCommandRoute(
   if (kind === 'closure-create') return { path: root + '/closures', method: 'POST' };
   if (kind.startsWith('closure-'))
     return { path: '/api/v1/closures/' + d.uuid(resourceId) + '/' + kind.slice(8), method: 'POST' };
+  if (kind === 'bank-transfer-resolve')
+    return {
+      path: root + '/bank-transfers/' + d.uuid(resourceId) + '/resolve',
+      method: 'POST',
+    };
   if (kind === 'refund-create') return { path: root + '/refunds', method: 'POST' };
   if (kind.startsWith('refund-'))
     return { path: '/api/v1/refunds/' + d.uuid(resourceId) + '/' + kind.slice(7), method: 'POST' };

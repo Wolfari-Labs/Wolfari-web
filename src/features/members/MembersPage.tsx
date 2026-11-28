@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { useParams, useOutletContext } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
@@ -22,13 +21,14 @@ import type { PlanEditPolicy, UpdatePlanPolicyResult } from '../trips/repositori
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Select } from '../../shared/components/Select';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
-import userIcon from '../../shared/assets/figma/2e748.svg';
+import { Icon } from '../../shared/components/Icon';
 import styles from './MembersPage.module.css';
 import { InvitationManagement } from './InvitationManagement';
 import { GatewayMembersPage } from './GatewayMembersPage';
+import { MemberRoleHelp } from './MemberRoleHelp';
+import { MemberRoster } from './MemberRoster';
 type Snapshot<T> = ReadResult<T> | { status: 'loading' };
 function ReadPanel<T>({
   result,
@@ -63,9 +63,6 @@ function date(value: string, timezone: string) {
     new Date(value),
   );
 }
-function shortId(value: string) {
-  return value.length > 16 ? `${value.slice(0, 8)}…${value.slice(-4)}` : value;
-}
 type PolicyFeedback =
   | { readonly status: 'saved' }
   | { readonly status: 'error' | 'conflict' | 'unknown'; readonly error: DomainError };
@@ -91,11 +88,18 @@ function PlanPolicyPanel({
 }) {
   return (
     <section className={styles.policyPanel} aria-labelledby="plan-policy-heading">
-      <h2 id="plan-policy-heading">Quyền sửa lịch trình</h2>
-      <p>
-        Quyền này độc lập với vai trò thành viên và trách nhiệm quản lý quỹ. Thay đổi có hiệu lực
-        sau khi xác nhận lại dữ liệu từ chuyến đi.
-      </p>
+      <div className={styles.cardHeader}>
+        <span className={styles.iconBadge} data-tone="blue" aria-hidden="true">
+          <Icon name="edit" size={22} />
+        </span>
+        <div>
+          <h2 id="plan-policy-heading">Quyền sửa lịch trình</h2>
+          <p>
+            Quyền này độc lập với vai trò thành viên và trách nhiệm quản lý quỹ. Thay đổi có hiệu
+            lực sau khi xác nhận lại dữ liệu từ chuyến đi.
+          </p>
+        </div>
+      </div>
       <form onSubmit={onSubmit}>
         {feedback?.status === 'saved' && (
           <Alert tone="success" live>
@@ -139,20 +143,19 @@ function PlanPolicyPanel({
           <Alert>
             {trip.archivedAt || trip.lifecycle === 'ARCHIVED'
               ? 'Chuyến đi đã lưu trữ; không thể thay đổi quyền.'
-              : 'Chỉ Owner đang hoạt động trên Gateway mới có thể thay đổi quyền.'}
+              : 'Chỉ chủ chuyến mới có thể thay đổi quyền.'}
           </Alert>
         )}
         {trip.planEditPolicy === 'SELECTED_MEMBERS' && (
           <Alert tone="warning">
-            Backend chưa cung cấp projection thành viên đã được chọn. Có thể chuyển sang một trong
-            hai chế độ trên, nhưng không thể xem hoặc chỉnh sửa danh sách đang lưu.
+            Chưa thể xem hoặc chỉnh sửa danh sách thành viên được chọn. Bạn vẫn có thể chuyển sang
+            một trong hai chế độ trên.
           </Alert>
-        )}
-        {!available && !trip.archivedAt && trip.lifecycle !== 'ARCHIVED' && (
-          <Alert>Thay đổi quyền chưa khả dụng trong dữ liệu xem trước.</Alert>
         )}
         <Button
           type="submit"
+          className={styles.policySubmit}
+          icon={<Icon name="check" size={16} />}
           loading={pending}
           disabled={
             !available ||
@@ -237,35 +240,36 @@ export function MembersView({
       <div className={styles.hero}>
         <TripHero trip={trip} compact variant="landscape" />
       </div>
-      <div className={styles.tabs} role="group" aria-label="Nội dung thành viên">
-        <button
-          type="button"
-          aria-pressed={tab === 'members'}
-          onClick={() => onTabChange('members')}
-        >
-          Thành viên
-        </button>
-        <button
-          type="button"
-          aria-pressed={tab === 'invitations'}
-          disabled={!owner}
-          title={!owner ? 'Chỉ Owner được đọc lời mời' : undefined}
-          onClick={() => onTabChange('invitations')}
-        >
-          {invitationManagement ? 'Lời mời' : 'Lời mời · Xem trước'}
-        </button>
-        <button
-          type="button"
-          aria-pressed={tab === 'policy'}
-          disabled={!policyAvailable}
-          title={
-            !policyAvailable ? 'Quyền sửa chỉ khả dụng cho Owner có quyền cập nhật' : undefined
-          }
-          onClick={() => onTabChange('policy')}
-        >
-          Quyền sửa lịch trình
-        </button>
-        <small>Vai trò và trách nhiệm được quản lý riêng.</small>
+      <div className={styles.top}>
+        <div className={styles.tabs} role="group" aria-label="Nội dung thành viên">
+          <button
+            type="button"
+            aria-pressed={tab === 'members'}
+            onClick={() => onTabChange('members')}
+          >
+            Thành viên
+          </button>
+          <button
+            type="button"
+            aria-pressed={tab === 'invitations'}
+            disabled={!owner}
+            title={!owner ? 'Chỉ chủ chuyến được xem lời mời' : undefined}
+            onClick={() => onTabChange('invitations')}
+          >
+            Lời mời
+          </button>
+          <button
+            type="button"
+            aria-pressed={tab === 'policy'}
+            disabled={!policyAvailable}
+            title={
+              !policyAvailable ? 'Chỉ chủ chuyến có quyền cập nhật mới thay đổi được' : undefined
+            }
+            onClick={() => onTabChange('policy')}
+          >
+            Quyền sửa lịch trình
+          </button>
+        </div>
       </div>
       {tab === 'policy' ? (
         <PlanPolicyPanel
@@ -281,10 +285,21 @@ export function MembersView({
       ) : tab === 'members' ? (
         <div className={styles.workspace}>
           <section className={styles.memberPanel} aria-label="Danh sách thành viên">
-            <h2>Thành viên chuyến đi</h2>
-            <p className={styles.help}>
-              Vai trò trong chuyến đi và trách nhiệm riêng được hiển thị tách biệt.
-            </p>
+            <div className={styles.panelHeading}>
+              <div className={styles.panelTitle}>
+                <h2>Thành viên chuyến đi</h2>
+                <MemberRoleHelp />
+              </div>
+              {owner && (
+                <Button
+                  className={styles.inviteButton}
+                  icon={<Icon name="userPlus" size={17} />}
+                  onClick={() => onTabChange('invitations')}
+                >
+                  Mời thành viên
+                </Button>
+              )}
+            </div>
             <label className={styles.includeLeft}>
               <input
                 type="checkbox"
@@ -301,62 +316,16 @@ export function MembersView({
                 return items.length || data.nextCursor ? (
                   <>
                     <p className={styles.count}>{items.length} thành viên đã tải</p>
-                    <div className={styles.rosterHead} aria-hidden="true">
-                      <span>Thành viên</span>
-                      <span>Vai trò / Trách nhiệm</span>
-                      <span>Thao tác</span>
-                    </div>
-                    <ul className={styles.members}>
-                      {items.map((member) => (
-                        <li key={member.id} data-departed={member.leftAt !== null || undefined}>
-                          <span className={styles.avatar}>
-                            {member.presentation.avatar ? (
-                              <img
-                                className={styles.avatarPhoto}
-                                src={member.presentation.avatar.src}
-                                alt={member.presentation.avatar.alt}
-                              />
-                            ) : (
-                              <img src={userIcon} alt="" />
-                            )}
-                          </span>
-                          <div className={styles.identity}>
-                            <details>
-                              <summary>
-                                <strong>
-                                  {member.presentation.displayName ??
-                                    `User ${shortId(member.userId)}`}
-                                </strong>
-                                {member.id === trip.currentMembership.id && (
-                                  <span className={styles.self}>Bạn</span>
-                                )}
-                              </summary>
-                              <dl>
-                                <dt>User ID</dt>
-                                <dd>{member.userId}</dd>
-                                <dt>Membership ID</dt>
-                                <dd>{member.id}</dd>
-                              </dl>
-                            </details>
-                            <small>User ID {shortId(member.userId)}</small>
-                            <small>Tham gia {date(member.joinedAt, trip.timezone)}</small>
-                            {member.leftAt && (
-                              <small>Đã rời {date(member.leftAt, trip.timezone)}</small>
-                            )}
-                          </div>
-                          <span
-                            className={`${styles.role} ${member.role === 'OWNER' ? styles.owner : ''}`}
-                          >
-                            {member.role === 'OWNER' ? 'Chủ chuyến' : 'Thành viên'}
-                          </span>
-                          {owner && member.role === 'MEMBER' && member.leftAt === null && (
-                            <Button variant="outline" disabled>
-                              Chuyển Owner
-                            </Button>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
+                    <MemberRoster
+                      members={items}
+                      currentUserId={trip.currentMembership.userId}
+                      timezone={trip.timezone}
+                      canEditPlan={(member) =>
+                        trip.archivedAt === null &&
+                        trip.lifecycle !== 'ARCHIVED' &&
+                        (member.role === 'OWNER' || trip.planEditPolicy === 'ALL_MEMBERS')
+                      }
+                    />
                     {nextMembersPageError && (
                       <Alert tone="warning" live>
                         Chưa tải được trang tiếp theo. Các thành viên đã tải vẫn được giữ.
@@ -381,53 +350,7 @@ export function MembersView({
                 );
               }}
             </ReadPanel>
-            <Alert tone="warning">
-              Rời hoặc xóa thành viên cần kiểm tra nghĩa vụ và trách nhiệm liên quan. Thao tác hiện
-              chưa khả dụng.
-            </Alert>
-            <div className={styles.lifecycle}>
-              <Button variant="outline" disabled>
-                Rời chuyến đi
-              </Button>
-              <Button variant="outline" disabled>
-                Xóa thành viên
-              </Button>
-            </div>
           </section>
-          <aside className={styles.responsibilities}>
-            <h2>Quyền & trách nhiệm</h2>
-            <section>
-              <h3>Chủ chuyến</h3>
-              <p>Quản lý thành viên, lời mời và quyền sửa lịch trình.</p>
-            </section>
-            <section>
-              <h3>Người giữ quỹ</h3>
-              <p>
-                Trách nhiệm quản lý quỹ tách biệt với vai trò trong chuyến đi. Thông tin người quản
-                lý quỹ chưa khả dụng.
-              </p>
-            </section>
-            <section>
-              <h3>Quyền sửa lịch trình</h3>
-              <p>
-                {trip.planEditPolicy === 'OWNER_ONLY'
-                  ? 'Chỉ chủ chuyến được sửa lịch trình.'
-                  : trip.planEditPolicy === 'SELECTED_MEMBERS'
-                    ? 'Chủ chuyến và thành viên được phân công có thể sửa lịch trình.'
-                    : 'Mọi thành viên được sửa lịch trình.'}
-              </p>
-              <p>Quyền sửa lịch trình được quản lý riêng với quyền quản lý quỹ và thành viên.</p>
-            </section>
-            <section>
-              <h3>Khi chuyển chủ chuyến</h3>
-              <p>
-                Thay đổi chủ chuyến vẫn giữ riêng trách nhiệm người giữ quỹ và quyền sửa lịch trình.
-              </p>
-            </section>
-            <Button variant="outline" disabled>
-              Quản lý người giữ quỹ
-            </Button>
-          </aside>
         </div>
       ) : !owner ? (
         <ContentState
@@ -441,37 +364,56 @@ export function MembersView({
             className={styles.invitationForm}
             noValidate
             onSubmit={submit}
-            aria-label="Xem trước lời mời"
+            aria-label="Mời thành viên"
           >
-            <h2>Mời thành viên</h2>
-            <p>Người nhận tham gia với vai trò Member sau khi chấp nhận lời mời hợp lệ.</p>
-            <Input
-              id="invitation-email"
-              label="Email người nhận"
-              type="email"
-              autoComplete="off"
-              value={draft}
-              error={emailError}
-              onChange={(e) => {
-                onDraftChange(e.target.value);
-                setEmailError(undefined);
-                setNotice(false);
-              }}
-            />
-            <Button type="submit">Kiểm tra lời mời</Button>
+            <div className={styles.cardHeader}>
+              <span className={styles.iconBadge} data-tone="blue" aria-hidden="true">
+                <Icon name="userPlus" size={22} />
+              </span>
+              <div>
+                <h2>Mời thành viên</h2>
+                <p>
+                  Người nhận tham gia chuyến đi sau khi chấp nhận. Quyền sửa lịch trình và trách
+                  nhiệm quỹ không tự đi kèm.
+                </p>
+              </div>
+            </div>
+            <div className={styles.inviteRow}>
+              <Input
+                id="invitation-email"
+                label="Email người nhận"
+                type="email"
+                autoComplete="off"
+                leadingIcon={
+                  <span className={styles.fieldChip}>
+                    <Icon name="mail" size={18} />
+                  </span>
+                }
+                value={draft}
+                error={emailError}
+                onChange={(e) => {
+                  onDraftChange(e.target.value);
+                  setEmailError(undefined);
+                  setNotice(false);
+                }}
+              />
+              <Button type="submit" icon={<Icon name="share" size={16} />}>
+                Kiểm tra lời mời
+              </Button>
+            </div>
             {notice && (
               <Alert live>
                 Email hợp lệ cho bản xem trước. Chưa gửi lời mời, tạo link hoặc thay đổi thành viên.
               </Alert>
             )}
-            <Alert>Chỉ xem trước · Gửi lời mời, gửi lại và thu hồi chưa khả dụng.</Alert>
-            <Alert tone="warning">
-              Quyền sửa Plan và trách nhiệm quản lý quỹ được phân công riêng, không tự cấp khi mời
-              thành viên.
-            </Alert>
           </form>
           <section className={styles.invitationList} aria-label="Lời mời hiện có">
-            <h2>Lời mời</h2>
+            <div className={styles.cardHeader}>
+              <span className={styles.iconBadge} data-tone="amber" aria-hidden="true">
+                <Icon name="clock" size={22} />
+              </span>
+              <h2>Lời mời</h2>
+            </div>
             <ReadPanel result={invitations} onRetry={onRetryInvitations}>
               {(data) =>
                 data.items.length ? (
@@ -481,30 +423,31 @@ export function MembersView({
                         .filter((i) => i.tripId === trip.id)
                         .map((invitation) => (
                           <li key={invitation.id}>
-                            <div className={styles.invitationHeading}>
-                              <strong>
-                                {invitation.invitationType === 'EMAIL'
-                                  ? (invitation.email ?? 'Chưa có email')
-                                  : 'Lời mời bằng link'}
-                              </strong>
-                              <span
-                                className={styles.invitationStatus}
-                                data-status={invitation.status}
-                              >
-                                {invitationLabels[invitation.status]}
-                              </span>
-                            </div>
-                            <p>Hết hạn {date(invitation.expiresAt, trip.timezone)}</p>
-                            {invitation.resolvedAt && (
-                              <p>Kết thúc {date(invitation.resolvedAt, trip.timezone)}</p>
-                            )}
-                            <div className={styles.lifecycle}>
-                              <Button variant="outline" disabled>
-                                Gửi lại
-                              </Button>
-                              <Button variant="plain" disabled>
-                                Thu hồi
-                              </Button>
+                            <span className={styles.invitationAvatar} aria-hidden="true">
+                              {invitation.invitationType === 'EMAIL' && invitation.email ? (
+                                invitation.email.charAt(0).toLocaleUpperCase('vi')
+                              ) : (
+                                <Icon name="share" size={16} />
+                              )}
+                            </span>
+                            <div className={styles.invitationBody}>
+                              <div className={styles.invitationHeading}>
+                                <strong>
+                                  {invitation.invitationType === 'EMAIL'
+                                    ? (invitation.email ?? 'Chưa có email')
+                                    : 'Lời mời bằng link'}
+                                </strong>
+                                <span
+                                  className={styles.invitationStatus}
+                                  data-status={invitation.status}
+                                >
+                                  {invitationLabels[invitation.status]}
+                                </span>
+                              </div>
+                              <p>Hết hạn {date(invitation.expiresAt, trip.timezone)}</p>
+                              {invitation.resolvedAt && (
+                                <p>Kết thúc {date(invitation.resolvedAt, trip.timezone)}</p>
+                              )}
                             </div>
                           </li>
                         ))}
@@ -518,14 +461,17 @@ export function MembersView({
                 )
               }
             </ReadPanel>
-            <Alert tone="warning">
-              Lời mời đã chấp nhận, từ chối, hết hạn hoặc thu hồi không thể dùng để tạo lại thành
-              viên.
-            </Alert>
+            <p className={styles.terminalNote}>
+              Lời mời đã chấp nhận, từ chối, hết hạn hoặc thu hồi không dùng lại được.
+            </p>
           </section>
         </div>
       )}
-      {invitationManagement && <div hidden={tab !== 'invitations'}>{invitationManagement}</div>}
+      {invitationManagement && (
+        <div className={styles.invitationManagement} hidden={tab !== 'invitations'}>
+          {invitationManagement}
+        </div>
+      )}
     </>
   );
 }
@@ -779,11 +725,6 @@ function PreviewMembersPage() {
   }
   return (
     <section className={styles.page} data-flow="members-preview" data-node-id="25:360">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Thành viên"
-      />
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}

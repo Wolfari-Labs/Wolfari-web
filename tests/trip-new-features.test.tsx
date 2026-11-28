@@ -106,13 +106,14 @@ describe('new trip workspace routes', () => {
     expect(window.sessionStorage.getItem('wolfari:create-trip:v2')).toBeNull();
   });
 
-  it('renders grouped Dress Code projection without write controls', async () => {
+  it('renders grouped Dress Code projection with outfit actions', async () => {
     mount('/trips/:tripId/dress-code', <DressCodePage />, { section: 'dress' });
     expect(await screen.findByText('Thoải mái và gọn nhẹ')).toBeInTheDocument();
     expect(screen.getByText(/Nguồn: Gợi ý đã lưu trước đây/)).toBeInTheDocument();
     expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(screen.getByRole('article', { name: 'Trang phục đi biển' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /thêm|sửa|xóa/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Tạo trang phục' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Thao tác Trang phục đi biển' })).toBeInTheDocument();
   });
 
   it('shows an empty Dress Code scope without leaking cards from other scopes', async () => {
@@ -155,8 +156,9 @@ describe('new trip workspace routes', () => {
   it('keeps the saved-location list usable while the map provider is unavailable', async () => {
     mount('/trips/:tripId/map', <TripMapPage />, { section: 'map' });
     expect(
-      await screen.findByText('Bản đồ nền chưa được cấu hình', { selector: 'strong' }),
+      await screen.findByRole('heading', { name: 'Tìm kiếm & chọn địa điểm' }),
     ).toBeInTheDocument();
+    expect(screen.queryByText('Bản đồ nền chưa được cấu hình')).not.toBeInTheDocument();
     const list = screen.getByRole('region', { name: /^Địa điểm/ });
     // Select the place, not the separate delete action with the same place name.
     await userEvent.click(

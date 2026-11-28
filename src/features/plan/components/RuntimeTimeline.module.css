@@ -1,38 +1,101 @@
 .workspace {
   min-width: 0;
   display: grid;
-  gap: 14px;
+  gap: 20px;
+  font-family: var(--v2-font);
 }
-.days {
+.dayBar {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+  margin-top: 20px;
+}
+.weatherDayBar {
+  position: relative;
+}
+.weatherDayBar > span {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+}
+.dayBar > :last-child {
+  flex: 0 1 496px;
+}
+.defaultColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 700fr) minmax(0, 384fr);
+  gap: 20px;
+  min-width: 0;
+}
+/* Web v2 W06 day cards (Figma 933:7436): 24px radius, gradient when selected. */
+.days {
+  flex: 1 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin-top: 16px;
+  margin: -8px 0 -14px -10px;
+  padding: 8px 0 14px 10px;
 }
 .days button {
-  flex-shrink: 0;
-  min-width: 128px;
-  height: 54px;
-  border-radius: var(--radius-8);
-  padding-block: 4px;
-  font-size: 14px;
+  min-width: 0;
+  min-height: 71px;
+  padding: 12px 10px;
+  border: 0;
+  border-radius: var(--v2-radius-tile);
+  font: 800 18px/normal var(--v2-font);
+  white-space: nowrap;
+}
+.days > button {
+  flex: 1 1 92px;
+}
+.days button[aria-pressed='false'] {
+  background: var(--v2-white);
+  color: var(--v2-ink);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
 }
 .days small {
-  display: block;
-  font-size: 12px;
-  line-height: 18px;
-  font-weight: 400;
-}
-.dayUtilities {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 8px;
-  margin-left: auto;
+  margin-top: 4px;
+  font: 700 13px/18px var(--v2-font);
+  opacity: 0.85;
+}
+.days > button > span {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.dayWeather {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.dayWeather img {
+  display: block;
+}
+.days .addDay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-basis: 124px;
+  border: 2px dashed #9db8f5;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 55%);
+  color: var(--v2-blue-text);
+  font: 800 15px/20px var(--v2-font);
+  opacity: 1;
 }
 .days [data-drop-target] {
-  outline: 2px solid var(--color-active);
-  outline-offset: -3px;
+  outline: 2px solid var(--v2-blue);
+  outline-offset: 2px;
 }
 .timeline {
   composes: panel from './TimelineSurface.module.css';
@@ -43,9 +106,14 @@
 }
 .timelineHeader > div:first-child {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
+}
+.timelineHeader h2 {
+  margin: 0;
+  color: var(--v2-ink);
+  font: 800 24px/normal var(--v2-font);
 }
 .progress {
   composes: progress from './TimelineSurface.module.css';
@@ -53,49 +121,7 @@
 .timelineActions {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-.timelineActions > button {
-  min-width: 148px;
-  min-height: 42px;
-}
-.timelineActions > button:last-of-type {
-  min-width: 198px;
-}
-.tools {
-  position: relative;
-  flex-shrink: 0;
-}
-.tools summary {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  list-style: none;
-  cursor: pointer;
-}
-.tools summary::-webkit-details-marker {
-  display: none;
-}
-.tools[open] > div {
-  position: absolute;
-  z-index: 5;
-  right: 0;
-  top: 44px;
-  width: min(320px, 70vw);
-  padding: 12px;
-  display: grid;
   gap: 10px;
-  background: white;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-8);
-  box-shadow: var(--shadow-overlay);
-  font-size: var(--font-size-small);
-}
-.tools p {
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--color-muted);
 }
 .list {
   composes: list from './TimelineSurface.module.css';
@@ -110,17 +136,21 @@
   touch-action: none;
   cursor: grab;
 }
+/* Web v2 W06.1 unscheduled panel (Figma 938:8364). */
 .surface {
   container: itinerary / inline-size;
   display: flex;
   flex-direction: column;
+  gap: 14px;
   min-width: 0;
-  height: 498px;
+  height: var(--plan-workspace-height, max(440px, calc(100dvh - 339px)));
+  padding: 20px;
   overflow: hidden;
-  background: white;
-  padding: 16px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-10);
+  border-radius: var(--v2-radius-tile);
+  background: linear-gradient(to bottom, var(--v2-white), #f4f1ff);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 .poolHeader {
   display: flex;
@@ -128,46 +158,104 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 14px;
 }
 .poolHeading {
+  display: flex;
   flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 .poolClose {
   flex: 0 0 auto;
 }
+.poolActions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .poolHeader h2 {
   margin: 0;
-  font-size: 21px;
-  line-height: 28px;
+  color: var(--v2-ink);
+  font: 800 18px/normal var(--v2-font);
 }
 .poolCount {
-  font-size: 12px;
-  color: var(--color-muted);
+  color: var(--v2-violet-text);
+  font: 700 13px/normal var(--v2-font);
+}
+.poolSearch {
+  display: flex;
+  align-items: center;
+  flex: none;
+  width: 100%;
+  height: 43px;
+  gap: 10px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  background: #f3f6ff;
+}
+.poolSearch > img {
+  display: block;
+  flex: none;
+}
+.poolSearch input {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+  font-size: 14px;
+  font-weight: 600;
+}
+.poolSearch input::placeholder {
+  color: var(--v2-muted);
+  opacity: 1;
+}
+.poolSearch:focus-within {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
 }
 .poolList {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
+  gap: 14px;
   min-height: 100px;
+  margin: -4px -6px;
+  padding: 4px 6px 10px;
   overflow-y: auto;
   overscroll-behavior: contain;
   list-style: none;
-  margin: 0;
-  padding: 4px 0;
   scrollbar-width: thin;
-  scrollbar-color: #52add4 #e4f5fc;
+}
+.poolList[data-empty='true'] {
+  min-height: 110px;
+  margin: 0;
+  padding: 0;
+}
+.poolList[data-empty='true'] > .dropEnd {
+  flex: 1 1 auto;
+}
+.compactPlanner .poolList[data-empty='true'] {
+  max-height: none;
 }
 .poolCard {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   min-width: 0;
-  min-height: 86px;
-  margin-bottom: 12px;
-  padding: 8px;
-  border: 1px solid #f2c75c;
-  border-radius: var(--radius-8);
+  min-height: 72px;
+  padding: 10px 8px;
+  border: 1.5px dashed #cbbcff;
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card);
 }
 .poolCard > button,
 .poolCard > div:last-child {
@@ -183,33 +271,41 @@
   overflow-wrap: anywhere;
 }
 .poolCopy strong {
-  font-size: 13.5px;
+  color: var(--v2-ink);
+  font: 800 16px/normal var(--v2-font);
 }
 .poolCopy small {
-  margin-top: 4px;
-  color: var(--color-muted);
-  font-size: 11px;
+  margin-top: 2px;
+  color: var(--v2-sub);
+  font: 700 12px/normal var(--v2-font);
 }
 .poolIcon {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
   display: grid;
+  flex-shrink: 0;
   place-items: center;
-  border-radius: 50%;
-  background: var(--color-selected);
-}
-.poolCover {
-  width: 80px;
+  width: 52px;
   height: 52px;
-  object-fit: cover;
-  border-radius: 6px;
+  border-radius: 16px;
+  background: var(--v2-butter);
+  color: #f5a623;
 }
-.poolHelp {
-  margin: 10px 0;
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--color-muted);
+.poolIcon img {
+  max-width: 34px;
+  max-height: 34px;
+}
+/* The photo is the thumb (shown before the copy); the type glyph only stands in without one. */
+.poolCover {
+  order: -1;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+.poolCard > :first-child {
+  order: -2;
+}
+.poolCard:has(> .poolCover) > .poolIcon {
+  display: none;
 }
 .poolCard[data-dragging] {
   opacity: 0.4;
@@ -220,12 +316,12 @@
 .poolCard[data-insert-after]::after {
   content: '';
   position: absolute;
-  left: 26px;
+  left: 48px;
   right: 0;
   height: 4px;
   border-radius: 2px;
-  background: var(--color-active);
-  box-shadow: 0 0 0 2px var(--color-white);
+  background: var(--v2-blue);
+  box-shadow: 0 0 0 2px var(--v2-white);
   pointer-events: none;
 }
 .row[data-insert-before]::before,
@@ -245,22 +341,24 @@
 .dropEnd {
   min-height: 30px;
   padding: 6px;
-  border: 1px dashed transparent;
-  border-radius: 6px;
-  font-size: 12px;
+  border: 2px dashed transparent;
+  border-radius: var(--v2-radius-tile);
+  color: var(--v2-sub);
+  font: 700 13px/18px var(--v2-font);
   text-align: center;
-  color: var(--color-muted);
 }
 .dropEnd[data-empty] {
-  min-height: 110px;
   display: grid;
   place-items: center;
-  border-color: var(--color-line);
+  min-height: 110px;
+  border-color: #a68bff;
+  background: #f4f1ff;
+  color: var(--v2-violet-text);
 }
 .dropEnd[data-drop-active] {
-  border-color: var(--color-active);
-  background: var(--color-selected);
-  box-shadow: inset 0 3px var(--color-active);
+  border-color: #a68bff;
+  background: #f4f1ff;
+  color: var(--v2-violet-text);
 }
 .allDays {
   flex: 1;
@@ -268,8 +366,9 @@
   overflow-y: auto;
 }
 .allDays h3 {
-  margin: 0 16px 16px;
-  font-size: 14px;
+  margin: 8px 0 12px;
+  color: var(--v2-ink);
+  font: 800 15px/normal var(--v2-font);
 }
 .allDays .list {
   overflow: visible;
@@ -308,17 +407,19 @@
 .overlay {
   display: flex;
   gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--color-active);
-  border-radius: var(--radius-8);
-  background: white;
-  box-shadow: var(--shadow-overlay);
   max-width: 450px;
+  padding: 14px 18px;
+  border: 1.5px solid var(--v2-blue);
+  border-radius: var(--v2-radius-tile);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-float);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
 }
 .empty {
   padding: 24px 12px;
+  color: var(--v2-sub);
   text-align: center;
-  color: var(--color-muted);
 }
 @container itinerary (max-width: 800px) {
   .timelineHeader > div:first-child {
@@ -335,10 +436,26 @@
     min-width: 0;
   }
 }
-@media (max-width: 768px) {
-  .days button {
-    min-width: 108px;
+@media (min-width: 1201px) and (max-height: 720px) {
+  .surface {
+    gap: 6px;
+    padding: 12px;
+    overflow-y: auto;
   }
+  .poolActions > button,
+  .surface .recoveryUtilities > button {
+    min-height: 32px;
+    padding-block: 4px;
+  }
+  .poolSearch {
+    height: 34px;
+  }
+  .surface .poolList,
+  .poolList > .dropEnd[data-empty] {
+    min-height: 54px;
+  }
+}
+@media (max-width: 768px) {
   .timelineHeader > div:first-child {
     flex-wrap: wrap;
   }
@@ -378,6 +495,15 @@
   }
 }
 @media (max-width: 1200px) {
+  .dayBar {
+    flex-wrap: wrap;
+  }
+  .dayBar > :last-child {
+    flex: 1 1 100%;
+  }
+  .defaultColumns {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .compactPlanner {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -401,18 +527,8 @@
   }
 }
 @media (max-width: 480px) {
-  .dayUtilities {
-    margin-left: 0;
-  }
   .poolIcon,
   .poolCover {
     display: none;
-  }
-}
-
-/* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
-@media (min-width: 769px) {
-  .surface {
-    border-radius: var(--radius-panel);
   }
 }

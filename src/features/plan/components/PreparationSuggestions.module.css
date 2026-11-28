@@ -1,0 +1,69 @@
+.content {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+}
+.controls,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+.controls > :first-child {
+  flex: 1 1 180px;
+}
+.items {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid transparent;
+  border-radius: var(--v2-radius-row);
+  background:
+    linear-gradient(var(--v2-row), var(--v2-row)) padding-box,
+    linear-gradient(125deg, var(--v2-grad-start), var(--v2-grad-end)) border-box;
+  overflow-wrap: anywhere;
+}
+.item > label {
+  color: var(--v2-ink);
+  font-weight: 800;
+}
+.item p,
+.note,
+.source {
+  margin: 8px 0 0;
+  color: var(--v2-nav-text);
+  font-size: 13px;
+  line-height: 20px;
+}
+.item small {
+  display: block;
+  margin-top: 8px;
+  color: var(--v2-nav-text);
+}
+.source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+.source a {
+  color: var(--v2-blue-text);
+}
+@media (max-width: 400px) {
+  .controls,
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .controls > :first-child {
+    flex-basis: auto;
+  }
+}

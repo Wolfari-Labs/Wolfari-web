@@ -251,6 +251,9 @@ describe('POI-OVERTURE W10 labels', () => {
     rerender(<PlaceSourceBadges dataset="golden" coordVerified={false} />);
     expect(screen.getByText('Wolfari')).not.toHaveAttribute('title');
     expect(screen.getByText('Chưa xác minh vị trí')).toBeInTheDocument();
+    rerender(<PlaceSourceBadges dataset="golden" coordVerified={false} showSource={false} />);
+    expect(screen.queryByText('Wolfari')).not.toBeInTheDocument();
+    expect(screen.getByText('Chưa xác minh vị trí')).toBeInTheDocument();
     rerender(<PlaceSourceBadges dataset="golden" coordVerified={true} />);
     expect(screen.queryByText('Chưa xác minh vị trí')).toBeNull();
     rerender(<PlaceSourceBadges dataset="geoapify" coordVerified={false} />);

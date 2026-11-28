@@ -20,6 +20,7 @@ async function install(page: Page, gateway: GatewayModel) {
     routeMissing: false,
   };
   const writes: { path: string; body: Record<string, unknown>; key: string | null }[] = [];
+  const recommendationRequests: string[] = [];
   let counter = 0;
   const provider = {
     status: 'SUCCESS',
@@ -70,6 +71,7 @@ async function install(page: Page, gateway: GatewayModel) {
         unchecked_routes: ['unknown-leg'],
       });
     if (path.endsWith('/recommendations')) {
+      recommendationRequests.push(path);
       const body = request.postDataJSON();
       return respond({
         id: id(99),
@@ -103,7 +105,7 @@ async function install(page: Page, gateway: GatewayModel) {
       });
     }
     const match =
-      /\/(locations|dress-codes|packing-items|recommendations)(?:\/([^/]+))?(?:\/(completion|apply))?$/.exec(
+      /\/(selected-locations|dress-codes|packing-items|recommendations)(?:\/([^/]+))?(?:\/(completion|apply))?$/.exec(
         path,
       );
     if (!match || request.method() === 'GET') return route.fallback();
@@ -122,7 +124,7 @@ async function install(page: Page, gateway: GatewayModel) {
         created_entity_ids: [],
       });
     const key =
-      match[1] === 'locations'
+      match[1] === 'selected-locations'
         ? 'selected_locations'
         : match[1] === 'dress-codes'
           ? 'dress_codes'
@@ -161,43 +163,44 @@ async function install(page: Page, gateway: GatewayModel) {
               completed_at: null,
               completed_by_user_id: null,
             }
-          : {}),
+          : { reference_image_available: false }),
       ...body,
     };
     rows[key].push(item);
     return respond({ ...item, plan_version: trip.plan_version });
   });
-  await page.route('**/api/v1/travel/**', (route) => {
-    const path = new URL(route.request().url()).pathname;
+  await page.route('**/places/search?*', (route) => {
+    if (new URL(route.request().url()).searchParams.has('bbox')) return route.fallback();
     return route.fulfill({
       json: {
-        data: {
-          meta: { ...provider, ...(controls.routeMissing ? { status: 'NO_RESULT' } : {}) },
-          data: controls.routeMissing
-            ? null
-            : path.endsWith('/places')
-              ? [
-                  {
-                    id: 'museum',
-                    name: 'Bảo tàng provider',
-                    address: 'Đà Nẵng',
-                    coordinates: { latitude: 16.05, longitude: 108.2 },
-                  },
-                ]
-              : {
-                  distance_m: 1200,
-                  duration_seconds: 600,
-                  geometry: [
-                    { latitude: 16, longitude: 108 },
-                    { latitude: 16.05, longitude: 108.2 },
-                  ],
-                },
-        },
-        meta: { correlation_id: 'travel-http-mock' },
+        data: [
+          {
+            id: 'museum',
+            name: 'Bảo tàng provider',
+            address: 'Đà Nẵng',
+            coordinates: { latitude: 16.05, longitude: 108.2 },
+            selection_token: 'signed-museum',
+            attribution: '© OpenStreetMap contributors',
+          },
+        ],
+        meta: { ...provider, provider: 'GEOAPIFY' },
       },
     });
   });
-  return { rows, controls, writes, trip };
+  await page.route('**/api/v1/travel/route', (route) => {
+    if (controls.routeMissing) return route.fulfill({ status: 503 });
+    return route.fulfill({
+      json: {
+        data: {
+          distance_m: 1200,
+          duration_seconds: 600,
+          geometry: route.request().postDataJSON().coordinates,
+        },
+        meta: { ...provider, provider: 'OSRM' },
+      },
+    });
+  });
+  return { rows, controls, writes, trip, recommendationRequests };
 }
 test('SRS12: location and Dress writes survive reload with shared revisions', async ({
   page,
@@ -206,26 +209,41 @@ test('SRS12: location and Dress writes survive reload with shared revisions', as
   const model = await install(page, gateway);
   await login(page);
   await page.goto(`${root}/map`);
-  await page.getByRole('button', { name: 'Thêm địa điểm', exact: true }).click();
+  await page.getByRole('button', { name: 'Đặt pin thủ công', exact: true }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel('Tên', { exact: true }).fill('Bảo tàng thủ công');
+  await dialog.getByLabel('Tên pin', { exact: true }).fill('Bảo tàng thủ công');
   await dialog.getByLabel('Vĩ độ').fill('16.05');
   await dialog.getByLabel('Kinh độ').fill('108.20');
-  await dialog.getByRole('button', { name: 'Lưu địa điểm' }).click();
+  await dialog.getByRole('button', { name: 'Lưu pin thủ công' }).click();
   await expect(dialog).toHaveCount(0);
   await page.reload();
   // The POI map lists saved places and pre-selects the first one after a reload.
   await expect(page.getByRole('article', { name: 'Đang chọn Bảo tàng thủ công' })).toBeVisible();
   await page.goto(`${root}/dress-code`);
-  await page.getByRole('button', { name: 'Thêm dress code', exact: true }).click();
+  await page.getByRole('button', { name: 'Tạo trang phục', exact: true }).click();
   await dialog.getByLabel('Ngày', { exact: true }).selectOption('2026-11-02');
   await dialog.getByLabel('Tiêu đề').fill('Áo chống nắng');
-  await dialog.getByRole('button', { name: 'Lưu dress code' }).click();
+  await dialog.getByRole('button', { name: 'Tạo trang phục', exact: true }).click();
   await expect(dialog).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Áo chống nắng' })).toBeVisible();
   expect(model.writes).toHaveLength(2);
+  expect(model.writes[0]!.body).toMatchObject({ latitude: '16.050000', longitude: '108.200000' });
   expect(model.writes[1]!.body.expected_plan_version).toBe(2);
   expect(model.rows.dress_codes[0]?.scope_type).toBe('DAY');
+  await page.getByRole('button', { name: 'Thao tác Áo chống nắng' }).click();
+  await page.getByRole('menuitem', { name: 'Chỉnh sửa' }).click();
+  await dialog.getByLabel('Tiêu đề').fill('Áo chống nắng mới');
+  await dialog.getByRole('button', { name: 'Lưu thay đổi' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Áo chống nắng mới' })).toBeVisible();
+  await page.getByRole('button', { name: 'Thao tác Áo chống nắng mới' }).click();
+  await page.getByRole('menuitem', { name: 'Xóa' }).click();
+  await page
+    .getByRole('alertdialog', { name: 'Xóa dress code?' })
+    .getByRole('button', { name: 'Xác nhận' })
+    .click();
+  await expect(page.getByRole('heading', { name: 'Áo chống nắng mới' })).toHaveCount(0);
+  expect(model.writes).toHaveLength(4);
 });
 test('SRS12: packing assignment uses item PATCH and editing preserves completion', async ({
   page,
@@ -263,7 +281,7 @@ test('SRS12: packing assignment uses item PATCH and editing preserves completion
   expect(model.writes[1]!.path).not.toContain('/assignment');
   expect(model.writes[2]!.path).toContain('/completion');
 });
-test('SRS12: non-editor can search and preview DSS, but cannot save or apply', async ({
+test('SRS12: non-editor can search while unsupported DSS stays unavailable', async ({
   page,
   gateway,
 }) => {
@@ -271,16 +289,17 @@ test('SRS12: non-editor can search and preview DSS, but cannot save or apply', a
   model.controls.editor = false;
   await login(page);
   await page.goto(`${root}/map`);
-  await page.getByLabel('Từ khóa địa điểm').fill('Bảo tàng');
-  await page.getByRole('button', { name: 'Tìm địa điểm', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Bảo tàng provider' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Lưu địa điểm' })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Yêu cầu gợi ý' }).click();
-  await expect(page.getByText('Lý do: Chuẩn bị khi cần')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
+  await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('Bảo tàng');
+  await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  await page.getByRole('button', { name: /Bảo tàng provider/ }).click();
+  await expect(page.getByRole('article', { name: 'Đang chọn Bảo tàng provider' })).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: 'Chọn Bảo tàng provider' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toHaveCount(0);
+  expect(model.recommendationRequests).toEqual([]);
   expect(model.writes).toEqual([]);
 });
-test('SRS12: DSS only applies selected IDs, with explicit duplicate decision', async ({
+test('SRS12: unsupported DSS cannot duplicate saved Packing even when capability is announced', async ({
   page,
   gateway,
 }) => {
@@ -302,18 +321,12 @@ test('SRS12: DSS only applies selected IDs, with explicit duplicate decision', a
   });
   await login(page);
   await page.goto(`${root}/packing`);
-  await page.getByRole('button', { name: 'Yêu cầu gợi ý' }).click();
-  await page.getByRole('checkbox', { name: 'Áo mưa', exact: true }).check();
-  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
-  await page
-    .getByRole('checkbox', { name: 'Tôi chọn tạo vật dụng riêng dù tương tự mục đã có' })
-    .check();
-  await page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' }).click();
-  await expect(page.getByText('Lý do: Chuẩn bị khi cần')).toHaveCount(0);
-  expect(model.writes).toHaveLength(1);
-  expect(model.writes[0]!.body.selected_item_ids).toEqual(['p1']);
-  expect(model.writes[0]!.body.apply_request_id).toBeTruthy();
-  expect(model.writes[0]!.key).toBeNull();
+  await expect(page.getByText('Áo mưa', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toHaveCount(0);
+  expect(model.recommendationRequests).toEqual([]);
+  expect(model.writes).toEqual([]);
+  expect(model.rows.packing_items).toHaveLength(1);
 });
 test('SRS12: unknown Map write blocks Dress after route navigation; original journal is retained', async ({
   page,
@@ -323,15 +336,44 @@ test('SRS12: unknown Map write blocks Dress after route navigation; original jou
   model.controls.unknown = true;
   await login(page);
   await page.goto(`${root}/map`);
-  await page.getByRole('button', { name: 'Thêm địa điểm', exact: true }).click();
+  await page.getByRole('button', { name: 'Đặt pin thủ công', exact: true }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel('Tên', { exact: true }).fill('Chưa rõ');
-  await dialog.getByRole('button', { name: 'Lưu địa điểm' }).click();
+  await dialog.getByLabel('Tên pin', { exact: true }).fill('Chưa rõ');
+  await dialog.getByRole('button', { name: 'Lưu pin thủ công' }).click();
   await expect(dialog.getByText(/Chưa rõ kết quả lưu/)).toBeVisible();
-  await dialog.getByRole('button', { name: 'Đóng', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Đóng thêm pin thủ công', exact: true }).click();
   await page.goto(`${root}/dress-code`);
-  await expect(page.getByRole('button', { name: 'Thêm dress code', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Tạo trang phục', exact: true })).toBeDisabled();
   expect(model.writes).toHaveLength(1);
+});
+test('SRS12: recovering a manual pin from its form closes the form without another create', async ({
+  page,
+  gateway,
+}) => {
+  const model = await install(page, gateway);
+  model.controls.unknown = true;
+  await login(page);
+  await page.goto(`${root}/map`);
+  const open = page.getByRole('button', { name: 'Đặt pin thủ công', exact: true });
+  await open.click();
+  const dialog = page.getByRole('dialog', { name: 'Thêm pin thủ công', exact: true });
+  const name = dialog.getByLabel('Tên pin', { exact: true });
+  await name.fill('   ');
+  await dialog.getByRole('button', { name: 'Lưu pin thủ công' }).click();
+  await expect(name).toBeFocused();
+  expect(model.writes).toHaveLength(0);
+  await name.fill('Bảo tàng');
+  await dialog.getByRole('button', { name: 'Lưu pin thủ công' }).click();
+  await expect(dialog.getByText(/Chưa rõ kết quả lưu/)).toBeVisible();
+  model.controls.unknown = false;
+  await dialog.getByRole('button', { name: 'Đối soát dữ liệu' }).click();
+  await dialog.getByRole('button', { name: 'Kiểm tra lại lệnh cũ' }).click();
+  await expect(dialog).toHaveCount(0);
+  expect(model.writes).toHaveLength(2);
+  expect(model.writes[1]).toEqual(model.writes[0]);
+  expect(model.rows.selected_locations).toHaveLength(1);
+  await open.click();
+  await expect(name).toHaveValue('');
 });
 test('SRS12: narrow editor remains keyboard-accessible and has no automated accessibility violations', async ({
   page,
@@ -341,7 +383,7 @@ test('SRS12: narrow editor remains keyboard-accessible and has no automated acce
   await login(page);
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto(`${root}/dress-code`);
-  await page.getByRole('button', { name: 'Thêm dress code', exact: true }).click();
+  await page.getByRole('button', { name: 'Tạo trang phục', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
@@ -349,7 +391,7 @@ test('SRS12: narrow editor remains keyboard-accessible and has no automated acce
   await page.screenshot({ path: testInfo.outputPath('dress-editor-402.png') });
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Thêm dress code', exact: true })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Tạo trang phục', exact: true })).toBeFocused();
 });
 
 function place(n: number) {
@@ -373,19 +415,63 @@ test('SRS12: route details and missing-route state never write the Plan', async 
   gateway,
 }, testInfo) => {
   const model = await install(page, gateway);
-  model.rows.selected_locations.push(place(20), place(21));
+  model.rows.selected_locations.push(place(20), {
+    ...place(21),
+    latitude: '16.05',
+    longitude: '108.2',
+  });
+  for (const [position, location] of model.rows.selected_locations.entries()) {
+    model.rows.activities.push({
+      id: id(80 + position),
+      trip_id: tripId,
+      title: `Điểm dừng ${position + 1}`,
+      activity_type: 'WALK',
+      description: null,
+      public_description: null,
+      selected_location_id: location.id,
+      starts_at: null,
+      ends_at: null,
+      scheduled_date: '2026-11-01',
+      position,
+      status: 'TODO',
+      source: 'MANUAL',
+      created_by_user_id: gateway.profile.id,
+      completed_by_user_id: null,
+      completed_at: null,
+    });
+  }
+  const tileZooms: number[] = [];
+  await page.route('https://maps.geoapify.com/**', (route) => {
+    const zoom = /^\/v1\/tile\/osm-carto\/(\d+)\//.exec(new URL(route.request().url()).pathname);
+    if (zoom) tileZooms.push(Number(zoom[1]));
+    return route.abort();
+  });
   await login(page);
+  const planRouteRequest = page.waitForRequest(
+    (request) => request.method() === 'POST' && request.url().endsWith('/api/v1/travel/route'),
+  );
+  await page.goto(`${root}/plan`);
+  const dayMap = page.getByRole('region', { name: 'Bản đồ lịch trình ngày 1' });
+  await expect(dayMap.getByText('1,2 km · 10 phút (ước lượng ô tô)')).toBeVisible();
+  expect((await planRouteRequest).postDataJSON().mode).toBe('DRIVING');
+  await expect(dayMap.getByRole('combobox', { name: 'Cách di chuyển' })).toHaveCount(0);
+  if (process.env.WOLFARI_LEAFLET_TEST === 'true') {
+    const map = dayMap.getByRole('region', { name: 'Bản đồ địa điểm' });
+    await expect(map).toBeVisible();
+    await expect.poll(() => tileZooms.length).toBeGreaterThan(0);
+    const zoomBefore = Math.max(...tileZooms);
+    await map.hover({ position: { x: 60, y: 60 } });
+    // A larger wheel step also clears the initial zoom that loads before fitBounds.
+    await page.mouse.wheel(0, -480);
+    await expect.poll(() => Math.max(...tileZooms)).toBeGreaterThan(zoomBefore);
+  }
   await page.goto(`${root}/map`);
-  await page.getByLabel('Điểm đi', { exact: true }).selectOption(id(20));
-  await page.getByLabel('Điểm đến', { exact: true }).selectOption(id(21));
-  await page.getByRole('button', { name: 'Xem tuyến đường', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Ngày', exact: true }).selectOption('2026-11-01');
   await expect(page.getByText(/1,2 km · 10 phút/)).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('map-route.png'), fullPage: true });
   model.controls.routeMissing = true;
-  await page.getByRole('button', { name: 'Xem tuyến đường', exact: true }).click();
-  await expect(
-    page.getByText('Chưa có tuyến đường khả dụng; chưa thể đánh giá lịch trình về mặt di chuyển.'),
-  ).toBeVisible();
+  await page.getByRole('combobox', { name: 'Cách di chuyển', exact: true }).selectOption('WALKING');
+  await expect(page.getByText('Đường chim bay — chưa kiểm tra di chuyển')).toBeVisible();
   expect(model.writes).toEqual([]);
 });
 test('SRS12: maximum saved locations and every linked Activity block unsafe deletion', async ({
@@ -414,14 +500,31 @@ test('SRS12: maximum saved locations and every linked Activity block unsafe dele
   });
   await login(page);
   await page.goto(`${root}/map`);
-  await expect(page.getByRole('button', { name: 'Thêm địa điểm', exact: true })).toBeDisabled();
-  // Edit/delete for a saved place sit on the selected-place card of the POI map.
+  await expect(page.getByRole('button', { name: 'Đặt pin thủ công', exact: true })).toBeDisabled();
   await page
     .locator('[data-region="place-list"]')
-    .getByRole('button', { name: /^\d+ Địa điểm 20 / })
+    .getByRole('button')
+    .filter({ has: page.getByText('Địa điểm 20', { exact: true }) })
     .click();
-  await page
+  const card = page
     .getByRole('article', { name: 'Đang chọn Địa điểm 20' })
+    .filter({ visible: true });
+  const toggle = card.getByRole('button', {
+    name: 'Bỏ khỏi danh sách địa điểm đã chọn',
+    exact: true,
+  });
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(toggle).toBeDisabled();
+  await expect(card.getByRole('button', { name: 'Xóa địa điểm', exact: true })).toHaveCount(0);
+  await toggle.hover();
+  await expect(page.getByRole('tooltip')).toHaveText(
+    'Gỡ địa điểm khỏi lịch trình trước khi bỏ chọn.',
+  );
+
+  // The compact detail view keeps the explanation for a place linked to an Activity.
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page
+    .getByRole('complementary', { name: 'Chi tiết địa điểm' })
     .getByRole('button', { name: 'Xóa địa điểm', exact: true })
     .click();
   await expect(
@@ -432,7 +535,7 @@ test('SRS12: maximum saved locations and every linked Activity block unsafe dele
   ).toBeVisible();
   expect(model.writes).toEqual([]);
 });
-test('SRS12: expired proposals are visible but cannot be selected or applied', async ({
+test('SRS12: unsupported Dress DSS is never requested even when an expired proposal is available', async ({
   page,
   gateway,
 }) => {
@@ -440,11 +543,10 @@ test('SRS12: expired proposals are visible but cannot be selected or applied', a
   model.controls.expired = true;
   await login(page);
   await page.goto(`${root}/dress-code`);
-  await page.getByRole('button', { name: 'Yêu cầu gợi ý' }).click();
-  await expect(
-    page.getByText('Gợi ý đã cũ hoặc hết hạn. Yêu cầu gợi ý mới trước khi áp dụng.'),
-  ).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toBeDisabled();
+  await expect(page.getByRole('heading', { name: 'Chưa có hướng dẫn trang phục' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Áp dụng các thay đổi đã chọn' })).toHaveCount(0);
+  expect(model.recommendationRequests).toEqual([]);
   expect(model.writes).toEqual([]);
 });
 test('SRS12: non-editor undo respects assignment and completer, archive disables writes', async ({

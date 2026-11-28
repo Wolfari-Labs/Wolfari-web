@@ -24,7 +24,11 @@ export async function checkTripWidths(
     await expect(hero).toBeVisible();
     if (collapsed) {
       await page.getByRole('button', { name: 'Thu gọn thanh điều hướng' }).click();
-      await expect(page.getByRole('complementary')).toHaveCSS('width', '72px');
+      await expect(
+        page.locator('aside').filter({
+          has: page.getByRole('navigation', { name: 'Điều hướng chuyến đi' }),
+        }),
+      ).toHaveCSS('width', '84px');
     }
     const box = (await hero.boundingBox())!;
     if (route === 'plan') plan = box;

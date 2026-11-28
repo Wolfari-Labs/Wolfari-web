@@ -104,6 +104,11 @@ function mapInvitation(raw: unknown): InvitationViewModel {
   return {
     id: uuid(item.id),
     tripId: uuid(item.trip_id),
+    ...(item.invited_by_user_id === undefined
+      ? {}
+      : {
+          invitedByUserId: item.invited_by_user_id === null ? null : uuid(item.invited_by_user_id),
+        }),
     invitationType,
     email: invitationEmail,
     status: invitationStatus,

@@ -20,8 +20,8 @@ export async function expectTimelineRails(rows: Locator, count: number) {
     }),
   );
   geometry.forEach((row, index) => {
-    expect(row.railWidth).toBe(2);
-    expect(row.railStyle).toBe('solid');
+    // Web v2 W06 (Figma 933:7307) numbers each stop without a connecting rail line.
+    expect(row.railWidth).toBe(0);
     expect(Math.abs(row.top - row.cardTop)).toBeLessThanOrEqual(1);
     const next = geometry[index + 1];
     if (next) {

@@ -5,14 +5,15 @@ import { MemoryRouter } from 'react-router';
 import { GatewayCreateTripPage } from '../src/features/trips/create/GatewayCreateTripPage';
 import { TripRepositoryProvider } from '../src/features/trips/repositories/repository-context';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
+import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
 import type { TripRepository } from '../src/features/trips/repositories/trip.repository';
 
 beforeEach(() => sessionStorage.clear());
-function setup(actor = 'actor-A') {
+function setup(actor = 'actor-A', overrides: Partial<TripRepository> = {}) {
   const createTrip = vi
     .fn<TripRepository['createTrip']>()
     .mockResolvedValue({ status: 'unknown', correlationId: null, retryable: true });
-  const repo = { ...createFixtureTripRepository(), createTrip };
+  const repo = { ...createFixtureTripRepository(), createTrip, ...overrides };
   const view = (id: string) => (
     <MemoryRouter>
       <TripRepositoryProvider repository={repo}>
@@ -32,10 +33,10 @@ describe('Gateway Create Trip', () => {
   it('focuses invalid fields before making a request and accepts a corrected timezone', async () => {
     const { user, createTrip } = setup();
     expect(screen.getByRole('form', { name: 'Thông tin cơ bản' })).toBeInTheDocument();
-    expect(screen.getByRole('complementary', { name: 'Bản đồ điểm đến' })).toHaveTextContent(
-      'Chưa hỗ trợ chọn điểm đến khi tạo chuyến đi',
-    );
-    expect(screen.queryByRole('textbox', { name: 'Điểm đến chính' })).not.toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: 'Bản đồ điểm đến' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Điểm đến chính' })).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Phong cách chuyến đi' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Mẫu chuyến đi' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
     expect(screen.getByLabelText('Tên chuyến đi')).toHaveFocus();
     expect(screen.getByText('Vui lòng nhập tên chuyến đi.')).toBeInTheDocument();
@@ -79,6 +80,20 @@ describe('Gateway Create Trip', () => {
     expect(screen.queryByText('Tên đã được sử dụng.')).not.toBeInTheDocument();
   });
 
+  it('validates and submits the supported trip budget as a decimal string', async () => {
+    const { user, createTrip } = setup();
+    await fill(user);
+    const budget = screen.getByLabelText('Ngân sách dự kiến');
+    fireEvent.change(budget, { target: { value: '0' } });
+    await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
+    expect(budget).toHaveFocus();
+    expect(createTrip).not.toHaveBeenCalled();
+    fireEvent.change(budget, { target: { value: '999999999999' } });
+    await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
+    await waitFor(() => expect(createTrip).toHaveBeenCalledOnce());
+    expect(createTrip.mock.calls[0]![0].intent.budgetAmount).toBe('999999999999');
+  });
+
   it('isolates drafts between actors in one tab and never imports ownerless legacy drafts', async () => {
     sessionStorage.setItem('wolfari:create-trip:v2', JSON.stringify({ name: 'Private legacy' }));
     const { user, rerender, view } = setup();
@@ -93,6 +108,8 @@ describe('Gateway Create Trip', () => {
   it('freezes and restores the exact uncertain intent across reload', async () => {
     const { user, createTrip, unmount } = setup();
     await fill(user);
+    await user.type(screen.getByRole('textbox', { name: 'Điểm đến chính' }), 'Hội An');
+    await user.click(screen.getByRole('button', { name: '3 thành viên' }));
     await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
     await waitFor(() => expect(createTrip).toHaveBeenCalledTimes(1));
     const intent = createTrip.mock.calls[0]![0].intent;
@@ -102,7 +119,14 @@ describe('Gateway Create Trip', () => {
       endAt: '2026-11-03T17:00:00.000Z',
     });
     expect(intent).not.toHaveProperty('destination');
+    expect(intent).not.toHaveProperty('expectedMembers');
     unmount();
+    const record = JSON.parse(sessionStorage.getItem('wolfari:create-trip:v3:actor-A')!) as {
+      draft: Record<string, string>;
+      intent: unknown;
+    };
+    delete record.draft.budgetAmount;
+    sessionStorage.setItem('wolfari:create-trip:v3:actor-A', JSON.stringify(record));
     const next = setup();
     await next.user.click(screen.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }));
     expect(next.createTrip.mock.calls[0]![0].intent).toEqual(intent);
@@ -126,6 +150,43 @@ describe('Gateway Create Trip', () => {
     expect(screen.getByLabelText('Múi giờ IANA')).toHaveValue('America/New_York');
     await next.user.click(screen.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }));
     expect(next.createTrip.mock.calls[0]![0].intent).toEqual(intent);
+  });
+  it('uploads the selected cover only after the trip ID is confirmed', async () => {
+    const detail = await createFixtureTripRepository().getTrip({
+      tripId: previewTripId,
+      scenario: 'success',
+      signal: new AbortController().signal,
+    });
+    if (detail.status !== 'ready') throw Error('Fixture unavailable');
+    const uploadCover = vi
+      .fn<NonNullable<TripRepository['uploadCover']>>()
+      .mockResolvedValue(detail.data);
+    const { createTrip, user } = setup('actor-A', { uploadCover });
+    await fill(user);
+    const file = new File(['image'], 'trip-cover.png', { type: 'image/png' });
+    await user.upload(screen.getByLabelText('Chọn ảnh bìa'), file);
+    expect(uploadCover).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', { name: 'Tạo chuyến đi' }));
+    expect(uploadCover).not.toHaveBeenCalled();
+    const sent = createTrip.mock.calls[0]![0].intent;
+    expect(sent).not.toHaveProperty('cover');
+
+    createTrip.mockResolvedValueOnce({
+      status: 'created',
+      tripId: previewTripId,
+      correlationId: null,
+    });
+    await user.click(screen.getByRole('button', { name: 'Thử lại đúng yêu cầu cũ' }));
+    expect(
+      await screen.findByRole('dialog', { name: 'Chuyến đi đã sẵn sàng' }),
+    ).toBeInTheDocument();
+    expect(createTrip.mock.calls[1]![0].intent).toEqual(sent);
+    expect(uploadCover).toHaveBeenCalledExactlyOnceWith({
+      tripId: previewTripId,
+      file,
+      signal: expect.any(AbortSignal),
+    });
   });
   it('closes a confirmed success with a blank form and no duplicate create request', async () => {
     const { user, createTrip } = setup();

@@ -5,6 +5,7 @@ import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 export const preparationCapabilities = [
   'locations_write',
   'dress_codes_write',
+  'dress_code_images_write',
   'packing_items_write',
   'packing_assignment',
   'packing_completion',
@@ -35,6 +36,7 @@ export interface DressWrite {
   label: string;
   description: string | null;
   publicDescription: string | null;
+  referenceImageId?: string | null;
 }
 export interface PackingWrite {
   name: string;
@@ -105,10 +107,11 @@ export function validLocationWrite(v: unknown): v is LocationWrite {
 export function validDressWrite(v: unknown): v is DressWrite {
   return (
     obj(v) &&
-    keys(v, ['scopeType', 'planDate', 'activityId', 'label', 'description', 'publicDescription']) &&
+    keys(v, ['scopeType', 'planDate', 'activityId', 'label', 'description', 'publicDescription', 'referenceImageId']) &&
     text(v.label, 100) &&
     nullable(v.description) &&
     nullable(v.publicDescription) &&
+    (v.referenceImageId === undefined || v.referenceImageId === null || id(v.referenceImageId)) &&
     ((v.scopeType === 'TRIP' && v.planDate === null && v.activityId === null) ||
       (v.scopeType === 'DAY' &&
         typeof v.planDate === 'string' &&

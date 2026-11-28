@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { paths } from '../../../app/route-paths';
 import { Avatar } from '../../../shared/components/Avatar';
 import { Icon } from '../../../shared/components/Icon';
+import chevron from '../../../shared/assets/figma/shell/a9913.svg';
 import styles from './AppShell.module.css';
 import ui from '../../../shared/components/Ui.module.css';
 
@@ -16,18 +17,24 @@ function initials(name: string) {
     .toLocaleUpperCase('vi');
 }
 
-export function AccountMenu({ name }: { name: string }) {
+export function AccountMenu({
+  name,
+  image,
+}: {
+  name: string;
+  image?: { src: string; alt: string } | null;
+}) {
   return (
     <DropdownMenu.Root>
       <div className={styles.profileGroup}>
         <Link to={paths.profile} className={styles.profile}>
-          <Avatar name={name} />
+          <Avatar name={name} image={image ?? null} />
           <span className={styles.accountName}>{name}</span>
           <span className={styles.profileCompactName}>{`${initials(name)} ${name}`}</span>
           <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>
         </Link>
         <DropdownMenu.Trigger className={styles.profileChevron} aria-label="Mở menu tài khoản">
-          <Icon name="chevron" size={16} />
+          <img src={chevron} alt="" aria-hidden="true" />
         </DropdownMenu.Trigger>
       </div>
       <DropdownMenu.Portal>

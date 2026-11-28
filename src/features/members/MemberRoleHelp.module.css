@@ -1,0 +1,79 @@
+.trigger,
+.close {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  cursor: pointer;
+}
+.trigger {
+  background: transparent;
+  color: var(--v2-warning-text);
+}
+.trigger:hover,
+.trigger[data-state='open'] {
+  background: var(--v2-butter);
+}
+.content {
+  z-index: 130;
+  width: min(320px, calc(100vw - 32px));
+  max-height: var(--radix-popover-content-available-height);
+  padding: 14px 16px 16px;
+  overflow-y: auto;
+  border: 1px solid var(--v2-track);
+  border-radius: var(--v2-radius-row);
+  background: var(--v2-white);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  color: var(--v2-ink);
+  font-family: var(--v2-font);
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.heading h3 {
+  margin: 0;
+  font: 800 14px/20px var(--v2-font);
+}
+.close {
+  width: 32px;
+  height: 32px;
+  background: var(--v2-row);
+  color: var(--v2-sub);
+}
+.close:hover {
+  background: var(--v2-track);
+}
+.roles {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  font: 600 13px/19px var(--v2-font);
+}
+.roles dt {
+  font-weight: 800;
+}
+.roles dd {
+  margin: 0;
+  color: var(--v2-nav-text);
+}
+.roles dd + dt {
+  margin-top: 9px;
+}
+.arrow {
+  fill: var(--v2-white);
+}
+@media (max-width: 768px) {
+  .trigger,
+  .close {
+    width: 44px;
+    height: 44px;
+  }
+}

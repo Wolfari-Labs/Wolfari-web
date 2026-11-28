@@ -36,3 +36,10 @@ export function activityTime(value: string | null, timezone: string) {
       }).format(new Date(value))
     : 'Chưa xếp giờ';
 }
+
+const weekdayFormat = new Intl.DateTimeFormat('vi-VN', { weekday: 'long', timeZone: 'UTC' });
+/** Web v2 day heading for a `YYYY-MM-DD` calendar day, e.g. "Thứ Ba, 22/09". */
+export function dayHeading(day: string) {
+  const weekday = weekdayFormat.format(new Date(`${day}T00:00:00Z`));
+  return `${weekday.charAt(0).toLocaleUpperCase('vi')}${weekday.slice(1)}, ${day.slice(8, 10)}/${day.slice(5, 7)}`;
+}

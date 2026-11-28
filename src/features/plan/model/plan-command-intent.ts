@@ -6,6 +6,7 @@ import { restorePlanArrangementCommand, type PlanArrangementIntent } from './pla
 export type PlanCommandIntent =
   | PlanArrangementIntent
   | { kind: 'preparation'; intent: PreparationIntent }
+  | { kind: 'recommendation-apply'; recommendationId: string; itemIds: readonly string[] }
   | { kind: 'create'; activity: ActivityCreateInput }
   | { kind: 'update'; activityId: string; fields: ActivityUpdateFields }
   | { kind: 'delete'; activityId: string }
@@ -88,6 +89,24 @@ export function restorePlanCommand(
       const intent = parsePreparationIntent(payload.intent);
       if (!intent) return null;
       return (context) => repository.mutatePreparation!({ ...context, tripId, intent });
+    }
+    case 'recommendation-apply': {
+      if (
+        !keys(payload, ['kind', 'recommendationId', 'itemIds']) ||
+        typeof payload.recommendationId !== 'string' ||
+        !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(payload.recommendationId) ||
+        !Array.isArray(payload.itemIds) ||
+        payload.itemIds.length < 1 ||
+        payload.itemIds.length > 100 ||
+        !payload.itemIds.every((id) => typeof id === 'string' && /^[0-9a-f]{24}$/.test(id)) ||
+        new Set(payload.itemIds).size !== payload.itemIds.length ||
+        !repository.recommendations
+      )
+        return null;
+      const recommendationId = payload.recommendationId,
+        itemIds = [...payload.itemIds];
+      return (context) =>
+        repository.recommendations!.apply({ ...context, tripId, recommendationId, itemIds });
     }
     case 'create': {
       if (!keys(payload, ['kind', 'activity']) || !repository.createActivity) return null;

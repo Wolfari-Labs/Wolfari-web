@@ -128,7 +128,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #0677b8;
+  color: var(--v2-sub);
   white-space: nowrap;
   font-size: var(--font-size-small);
   font-weight: 500;
@@ -317,4 +317,143 @@
   .content {
     padding-inline: 16px;
   }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Web v2 W02 · Chuyến đi của tôi (Figma 932:6959): greeting row, D/Chip filters (875:7196),
+ * sort pill, featured trip + W/Trip card grid and the dashed "Tạo chuyến đi mới" tile.
+ * ------------------------------------------------------------------------------------------- */
+.page {
+  max-width: none;
+  background: transparent;
+  font-family: var(--v2-font);
+}
+.pageArt {
+  display: none;
+}
+@media (min-width: 769px) {
+  .page {
+    padding: 0 0 0 var(--v2-shell-gutter);
+  }
+  .content {
+    padding: 0 0 32px;
+  }
+  .search {
+    width: 410px;
+  }
+  .search :global(input) {
+    min-height: 44px;
+    font-size: 15px;
+  }
+  .search > * > div {
+    min-height: 52px;
+    padding: 0 20px;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+  .toolbar {
+    margin: 30px 0 22px;
+  }
+  .statuses {
+    gap: 10px;
+  }
+  .statuses button,
+  .statuses button[aria-pressed='true'] {
+    min-height: 36px;
+    gap: 0;
+    padding: 9px 16px;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    color: var(--v2-sub);
+    font: 700 14px/18px var(--v2-font);
+    box-shadow: var(--v2-shadow-drop), var(--v2-inset);
+  }
+  .statuses button::before {
+    content: '';
+    position: absolute;
+    inset: -4px 0;
+  }
+  .statuses button[aria-pressed='true'] {
+    background: var(--v2-gradient);
+    color: var(--v2-ink);
+  }
+  .statuses button[aria-pressed='true']::after {
+    content: none;
+  }
+  .statuses .count,
+  .statuses button[aria-pressed='true'] .count {
+    min-width: 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+  }
+  .statuses .count::before {
+    content: ' · ';
+    white-space: pre;
+  }
+  .sort {
+    width: auto;
+  }
+  .sort select {
+    min-height: 44px;
+    padding: 9px 40px 9px 16px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background-color: var(--v2-white);
+    color: var(--v2-nav-text);
+    font: 700 14px/18px var(--v2-font);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+  .grid {
+    gap: 22px 24px;
+  }
+}
+@media (min-width: 1101px) {
+  .grid {
+    grid-template-columns: 440px repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+.createTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 281px;
+  padding: 0 24px;
+  border: 2px dashed var(--v2-dashed-line);
+  border-radius: var(--v2-radius-tile);
+  background: rgb(255 255 255 / 55%);
+  text-align: center;
+}
+.createTile strong {
+  color: var(--v2-ink);
+  font: 800 18px/normal var(--v2-font);
+}
+.createTile > span:last-child {
+  max-width: 220px;
+  color: var(--v2-sub);
+  font: 600 14px/normal var(--v2-font);
+}
+.createIcon {
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-gradient);
+  color: var(--v2-white);
+  box-shadow: var(--v2-shadow-float), var(--v2-inset);
+}
+.createTile:hover {
+  background: var(--v2-white);
 }

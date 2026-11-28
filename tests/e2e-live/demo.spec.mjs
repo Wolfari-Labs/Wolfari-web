@@ -2,9 +2,10 @@ import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
-import { api, login as apiLogin, mailLink } from '../../../Wolfari-backend/scripts/demo-scenarios.mjs';
+import { backendFile } from '../../scripts/demo-paths.mjs';
+const { api, login: apiLogin, mailLink } = await import(backendFile('scripts/demo-scenarios.mjs'));
 
-const seed = JSON.parse(await readFile(new URL('../../../Wolfari-backend/.local/demo/seed.json', import.meta.url), 'utf8'));
+const seed = JSON.parse(await readFile(backendFile('.local/demo/seed.json'), 'utf8'));
 async function login(page, account, returnTo = '/profile') {
   await page.goto('/login?returnTo=' + encodeURIComponent(returnTo));
   await page.getByLabel('Email', { exact: true }).fill(account.email);
@@ -20,10 +21,12 @@ async function createTrip(owner, name) {
 test('REAL: registration, Mailpit verification, recovery, profile, refresh and logout', async ({ page }) => {
   const account = { email: `live-${randomUUID()}@wolfari.test`, password: `Live-${randomUUID()}-9!` };
   await page.goto('/register');
-  await page.getByLabel('Họ và tên').fill('Live Acceptance');
+  // Web v2 registers in two steps: credentials first, then display name and terms.
   await page.getByLabel('Email', { exact: true }).fill(account.email);
   await page.getByLabel('Mật khẩu', { exact: true }).fill(account.password);
-  await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill(account.password);
+  await page.getByLabel('Xác nhận mật khẩu', { exact: true }).fill(account.password);
+  await page.getByRole('button', { name: 'Tạo tài khoản', exact: true }).click();
+  await page.getByLabel('Họ và tên').fill('Live Acceptance');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Tạo tài khoản', exact: true }).click();
   const verification = await mailLink(account.email, 'Xác minh');
@@ -32,15 +35,16 @@ test('REAL: registration, Mailpit verification, recovery, profile, refresh and l
   await page.getByRole('button', { name: 'Xác minh email', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
   await login(page, account);
-  await page.getByLabel('Tên hiển thị').fill('Live Updated Profile');
-  await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
+  await page.getByRole('button', { name: 'Chỉnh sửa tên hiển thị' }).click();
+  await page.getByLabel('Tên hiển thị', { exact: true }).fill('Live Updated Profile');
+  await page.getByRole('button', { name: 'Lưu tên hiển thị', exact: true }).click();
   await expect(page.getByText('Đã lưu thông tin cá nhân.')).toBeVisible();
-  const require = createRequire(new URL('../../../Wolfari-backend/apps/identity-service/package.json', import.meta.url));
+  const require = createRequire(backendFile('apps/identity-service/package.json'));
   const avatar = await require('sharp')({ create: { width: 16, height: 16, channels: 3, background: '#23614d' } }).png().toBuffer();
   await page.getByLabel('Chọn ảnh đại diện').setInputFiles({ name: 'live.png', mimeType: 'image/png', buffer: avatar });
   await expect(page.getByText('Đã cập nhật ảnh đại diện.')).toBeVisible();
   await page.reload();
-  await expect(page.getByLabel('Tên hiển thị')).toHaveValue('Live Updated Profile');
+  await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Live Updated Profile');
   await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto('/profile');
@@ -59,7 +63,7 @@ test('REAL: registration, Mailpit verification, recovery, profile, refresh and l
   await expect(page).toHaveURL(/\/login$/);
   await login(page, account);
   const otherSession = await apiLogin(account);
-  await page.getByText('Phiên đăng nhập', { exact: true }).click();
+  await page.getByRole('navigation', { name: 'Điều hướng tài khoản' }).getByRole('button', { name: 'Bảo mật và đăng nhập', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Thu hồi phiên' })).toHaveCount(2);
   const sessions = (await api('/api/v1/me/sessions', 'GET', undefined, otherSession)).data;
   expect(sessions.items[0].id).toBe(otherSession.sessionId);
@@ -138,7 +142,7 @@ test('REAL: Trip create/settings and Activity CRUD/order/completion persist on r
   const path = new URL(page.url()).pathname;
   await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
   await page.goto(path + '/settings');
-  await page.getByRole('button', { name: 'Chỉnh sửa thông tin' }).click();
+  await page.getByRole('button', { name: 'Cài đặt chuyến đi' }).click();
   await page.getByRole('textbox', { name: 'Mô tả công khai' }).fill('Live backend description');
   await page.getByRole('button', { name: 'Lưu thay đổi', exact: true }).click();
   await expect(page.getByText('Đã lưu thông tin chuyến đi.')).toBeVisible();

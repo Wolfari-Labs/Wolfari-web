@@ -263,7 +263,7 @@
   .desktopFilters button,
   .desktopFilters > span {
     font-size: 11px;
-    border-radius: 15px;
+    border-radius: 12px;
   }
 }
 
@@ -291,7 +291,7 @@
 .filterSelected {
   border-color: #b9e7ef !important;
   background: #e9f8fb !important;
-  color: var(--color-action-primary) !important;
+  color: var(--color-action-text) !important;
 }
 
 .filterSelected[aria-pressed='true'] {
@@ -485,7 +485,7 @@
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
   .statusChip {
     font-size: 10px;
-    border-radius: 15px;
+    border-radius: 12px;
   }
 }
 
@@ -543,7 +543,7 @@
   /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
   .routeSelector select,
   .mapType button {
-    border-radius: 17px;
+    border-radius: 12px;
   }
 }
 
@@ -610,13 +610,50 @@
 }
 
 .googleMapActive .markers,
-.googleMapActive .mapLabels,
-.googleMapActive .mapSuggestion {
+.googleMapActive .mapLabels {
   display: none;
 }
 
-.providerUnavailableLabel {
-  display: none;
+.manualPinCard {
+  position: absolute;
+  right: 12px;
+  bottom: 68px;
+  left: 12px;
+  z-index: 4;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 12px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--v2-radius-row);
+  background: var(--color-white);
+  color: var(--v2-ink);
+  box-shadow: var(--v2-shadow-card);
+}
+
+.manualPinCard p {
+  margin: 0 0 8px;
+  font-size: var(--font-size-label);
+}
+
+.manualPinActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* The fixture map is illustrative art, so it carries the one "Minh họa" label (CONTENT_RULES 3). */
+.mapArtLabel {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3;
+  padding: 5px 12px;
+  border-radius: var(--v2-radius-pill);
+  background: rgb(255 255 255 / 92%);
+  color: var(--v2-sub);
+  font: 700 12px/normal var(--v2-font);
+  box-shadow: var(--v2-shadow-drop);
+  pointer-events: none;
 }
 
 .desktopMapArtwork,
@@ -782,6 +819,48 @@
   margin-bottom: 8px;
   border-radius: var(--radius-10);
 }
+.routeModeSelector {
+  flex: none;
+  width: 126px;
+  margin-right: 54px;
+}
+.routeDetails {
+  flex: none;
+  padding: 0 12px 8px;
+  color: var(--v2-sub);
+  font: 600 12px/17px var(--v2-font);
+}
+.routeDetails > p {
+  margin: 0;
+}
+.placeRow:has([data-place-photo]) {
+  padding-bottom: 34px;
+}
+.placeRow [data-place-photo][data-compact] {
+  width: 56px;
+}
+.placeRow [data-place-photo][data-compact] [data-photo-credit] {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  left: 12px;
+  font-size: 10px;
+  line-height: 13px;
+}
+@media (min-width: 769px) {
+  .routeDetails {
+    position: absolute;
+    bottom: 14px;
+    right: 26px;
+    left: 26px;
+    z-index: 5;
+    padding: 0;
+    background: var(--v2-white);
+  }
+  .mapPanel:has(.routeDetails) .viewport {
+    height: calc(100% - 60px);
+  }
+}
 
 .desktopPlaceCard strong {
   font-size: var(--font-size-label);
@@ -816,26 +895,105 @@
   display: none;
 }
 
-.mapSuggestion {
-  position: absolute;
-  right: 20px;
-  bottom: 66px;
-  z-index: 3;
-  width: 268px;
-  min-height: 48px;
-  margin: 0;
-  padding: 12px;
-  border-radius: var(--radius-10);
-  background: var(--color-status-warning-surface);
-  color: var(--color-ink);
-  font-size: var(--font-size-small);
-  line-height: 17px;
+.runtimePlaceCard strong {
+  overflow-wrap: anywhere;
 }
-@media (max-width: 768px) {
-  /* mobile freeze: values before the font-size/radius normalisation (plan 2.1) */
-  .mapSuggestion {
-    font-size: 11px;
-  }
+
+.runtimePlaceCard .mapCardDescription {
+  margin: 0;
+  color: var(--v2-sub);
+  font: 600 13px/18px var(--v2-font);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.mapCardPhoto {
+  position: relative;
+  flex: none;
+  min-width: 0;
+}
+
+.mapCardPhoto [data-place-photo] > img,
+.mapCardPhoto [data-place-photo] > [role='img'] {
+  height: 124px;
+  border-radius: var(--v2-radius-thumb);
+}
+
+.mapCardPhoto [data-photo-credit] {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  left: 6px;
+  width: fit-content;
+  max-width: calc(100% - 12px);
+  padding: 2px 6px;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-white);
+  color: var(--v2-sub);
+  font: 600 11px/15px var(--v2-font);
+}
+
+.mapCardActions {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mapCardAction {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--v2-ink);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.mapCardAction::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--v2-white);
+  box-shadow: 0 2px 8px rgb(23 39 39 / 18%);
+}
+
+.mapCardAction > svg {
+  position: relative;
+}
+
+.mapCardClose {
+  top: 6px;
+  right: 6px;
+}
+
+.mapCardSave {
+  right: 6px;
+  bottom: 6px;
+}
+
+.mapCardSave[aria-pressed='true'] {
+  color: #e34f71;
+}
+
+.mapCardSave[aria-pressed='true'] > svg {
+  fill: currentColor;
+}
+
+.mapCardSave[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.mapCardAction:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
 }
 
 .unavailableViewport {
@@ -1001,7 +1159,7 @@
 
   .mobileFilters .filterSelected {
     background: #e9f8fb !important;
-    color: var(--color-action-primary) !important;
+    color: var(--color-action-text) !important;
   }
 
   .mobileFilters .filterScheduled {
@@ -1108,8 +1266,7 @@
   .marker5,
   .marker6,
   .legend,
-  .desktopPlaceCard,
-  .mapSuggestion {
+  .desktopPlaceCard {
     display: none;
   }
 
@@ -1126,6 +1283,25 @@
     padding: 16px;
     border-radius: 20px;
     background: var(--color-white);
+  }
+
+  .mobilePlaceCard.runtimePlaceCard {
+    gap: 6px;
+    min-height: 0;
+    max-height: calc(100% - 36px);
+    padding: 10px;
+    overflow: auto;
+  }
+
+  .runtimePlaceCard .mapCardPhoto [data-place-photo] > img,
+  .runtimePlaceCard .mapCardPhoto [data-place-photo] > [role='img'] {
+    height: 96px;
+  }
+
+  .runtimePlaceCard .mobilePlaceSummary strong {
+    font-size: 16px;
+    line-height: 21px;
+    white-space: normal;
   }
 
   .mobilePlaceSummary {
@@ -1218,10 +1394,6 @@
 
   .empty {
     order: 4;
-  }
-
-  .mapContent > :global(.note) {
-    margin-top: 20px;
   }
 
   .page[data-detail-open='true'] .mapContent,
@@ -1650,13 +1822,13 @@
 .filterSelect[data-filter='ALL'] select {
   border-color: var(--map-teal);
   background-color: #e9f8fb;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .filterSelect[data-filter='SELECTED'] select {
   border-color: #b9e7ef;
   background-color: #e9f8fb;
-  color: var(--color-action-primary);
+  color: var(--color-action-text);
 }
 
 .filterSelect[data-filter='SCHEDULED'] select {
@@ -1770,14 +1942,6 @@
   color: #463a8c;
   cursor: help;
 }
-.groupFilters {
-  margin-top: -2px;
-}
-.groupFilters button[aria-pressed='true'] {
-  border-color: var(--map-teal);
-  background: var(--color-action-primary);
-  color: var(--color-white);
-}
 .detailProvenance {
   display: grid;
   gap: 6px;
@@ -1810,11 +1974,6 @@
   .placeMeta .unverifiedBadge {
     font-size: 12px;
   }
-  .groupFilters {
-    display: flex;
-    order: 2;
-    margin-top: 0;
-  }
 }
 /* POI-OVERTURE W13: data credit under the place list. */
 .dataCredit {
@@ -1830,46 +1989,6 @@
     font-size: 11px;
   }
 }
-/* POI-OVERTURE OVW-3: one-line source in the selected-place card (FR-TI01). */
-.cardProvenance {
-  flex-wrap: nowrap;
-  align-items: center;
-  min-width: 0;
-  max-width: 100%;
-  margin-top: 3px;
-  white-space: nowrap;
-}
-/* Category shrinks with an ellipsis first and is hidden (JS) when too narrow. */
-.cardCategory {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.cardCategory[hidden] {
-  display: none;
-}
-/* Province and source + date never truncate. */
-.cardFixed {
-  flex: none;
-}
-.cardSource {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 3px;
-}
-.cardProvenance {
-  gap: 3px;
-}
-.cardProvenance .sourceBadge {
-  padding: 0 4px;
-}
-.cardProvenance .sourceBadge:focus-visible {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: 1px;
-}
-
 /* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
 @media (min-width: 769px) {
   .workspace {
@@ -1889,23 +2008,826 @@
   }
 }
 
-/* POI-IMAGES: licensed photo keeps the template box; its credit sits right below it. */
-.placePhoto {
-  object-fit: cover;
-  background: var(--color-line);
+/*
+ * Wolfari Web V2 — Figma W07 "Bản đồ & địa điểm" (938:9333) and W07.1 "sau khi chọn" (938:9626).
+ * Presentation only: map card on the left (700 at 1440), search panel on the right (384), map
+ * controls/legend/place card float over the map. Mobile (<=768px) keeps its existing layout.
+ */
+.placeMetaLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
-.photoCredit {
+.placeMetaLine small {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+@media (min-width: 769px) {
+  .page {
+    --map-v2-dot-scheduled: #3cc9b0;
+    --map-v2-dot-unscheduled: #8f7bff;
+    --map-v2-active-line: #a68bff;
+    --map-v2-active-surface: #f4f1ff;
+    --map-v2-unselected-line: #e3e9f7;
+    --map-v2-search: #f3f6ff;
+    --map-v2-pin-active: linear-gradient(to bottom, #ffd66b, #f5a623);
+    --map-v2-chip-shadow: 0 6px 9px rgb(92 122 199 / 12%);
+    background: transparent;
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+  }
+
+  .workspace {
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .placePanel,
+  .mapPanel {
+    height: 720px;
+    border: 0;
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  /* Search panel (938:9536) */
+  .placePanel {
+    gap: 14px;
+    padding: 20px 18px 18px;
+    border-radius: var(--v2-radius-tile);
+  }
+
+  .panelHeader {
+    display: block;
+    min-height: 0;
+  }
+
+  .panelIcon,
+  .headingCloud,
+  .searchFilterIcon {
+    display: none;
+  }
+
+  .panelHeader h2 {
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 27px;
+  }
+
+  .panelHeader p {
+    margin-top: 4px;
+    color: var(--v2-sub);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .localNotice,
+  .searchState {
+    padding: 8px 14px;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-butter);
+    color: var(--v2-warning-text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 17px;
+  }
+
+  .searchState {
+    background: var(--v2-sky);
+    color: #2d5fb8;
+  }
+
+  .searchRow {
+    margin-top: 0;
+  }
+
+  .searchBox {
+    height: 43px;
+    gap: 10px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--map-v2-search);
+  }
+
+  .searchBox > img,
+  .searchBox button img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .searchBox input {
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .searchBox input::placeholder {
+    color: var(--v2-muted);
+  }
+
+  /* Filter chips (D/Chip): gradient when active, white clay chip otherwise. */
+  /* Four chips do not fit 348px in Be Vietnam Pro: wrap inside the panel instead of clipping. */
+  .desktopFilters {
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .desktopFilters button,
+  .desktopFilters > span,
+  .desktopFilters .filterAll,
+  .desktopFilters .filterSelected,
+  .desktopFilters .filterScheduled,
+  .desktopFilters .filterUnscheduled {
+    min-height: 31px;
+    padding: 7px 12px;
+    border: 0 !important;
+    white-space: nowrap;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white) !important;
+    color: var(--v2-sub) !important;
+    font-family: var(--v2-font);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    box-shadow: var(--map-v2-chip-shadow), var(--v2-inset);
+  }
+
+  .desktopFilters button[aria-pressed='true'] {
+    background: var(--v2-gradient) !important;
+    color: var(--v2-ink) !important;
+    box-shadow: var(--v2-shadow-active), var(--v2-inset-badge);
+  }
+
+  /* Place rows (938:9555 …, active = W07.1 938:9743) */
+  .placeList {
+    gap: 8px;
+    margin: 0;
+  }
+
+  .placeRowShell {
+    border-radius: 20px;
+  }
+
+  .placeRow {
+    min-height: 64px;
+    gap: 12px;
+    padding: 6px 10px 6px 6px;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    background: var(--v2-row);
+    color: var(--v2-ink);
+  }
+
+  .placeRow:has(.statusUnselected) {
+    border-color: var(--map-v2-unselected-line);
+    background: var(--v2-white);
+  }
+
+  .placeRow.placeRowActive {
+    border-color: var(--map-v2-active-line);
+    background: var(--map-v2-active-surface);
+    box-shadow: none;
+  }
+
+  .placeRow:has(.checkboxTarget) .placeMainButton {
+    padding-right: 40px;
+  }
+
+  .placeMainButton {
+    gap: 12px;
+  }
+
+  .pinBadge,
+  .unselectedDot {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+
+  .pinBadge {
+    border: 0;
+    font-family: var(--v2-font);
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: var(--v2-inset-badge);
+  }
+
+  .pinScheduled {
+    background: var(--v2-gradient-diagonal);
+    color: var(--v2-white);
+  }
+
+  .pinUnscheduled {
+    background: var(--v2-gradient-violet);
+    color: var(--v2-white);
+  }
+
+  .unselectedDot {
+    border: 2px dashed var(--v2-dashed-line);
+    background: var(--v2-dashed-surface);
+  }
+
+  .placeCopy {
+    gap: 3px;
+  }
+
+  .placeCopy strong {
+    color: var(--v2-ink);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 20px;
+  }
+
+  .placeCopy small {
+    color: var(--v2-muted);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+  }
+
+  .statusChip {
+    min-height: 23px;
+    padding: 4px 10px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 15px;
+  }
+
+  .statusScheduled {
+    background: var(--v2-mint);
+    color: var(--v2-success-text);
+  }
+
+  .statusUnscheduled {
+    background: var(--v2-lilac);
+    color: var(--v2-violet-text);
+  }
+
+  .statusUnselected {
+    background: #eef1f7;
+    color: var(--v2-sub);
+  }
+
+  /* Preview state icons: 28px gradient check / soft "+" circle (938:9563, 938:9618). */
+  .placeState::before,
+  .addPlaceButton::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 28px;
+    height: 28px;
+    margin: auto;
+    border-radius: 50%;
+    background: var(--v2-gradient);
+  }
+
+  .addPlaceButton::before {
+    background: var(--v2-track);
+  }
+
+  .placeState .placeStateCircle,
+  .addPlaceButton .placeStateCircle {
+    opacity: 0;
+  }
+
+  .placeStateGlyph {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Runtime rows keep the native checkbox, drawn as the same 28px control. */
+  .checkboxTarget {
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+  }
+
+  .placeCheckbox {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    appearance: none;
+    background: url('../../shared/assets/figma/trip-map-add.svg') center / 16px no-repeat
+      var(--v2-track);
+    cursor: inherit;
+  }
+
+  .placeCheckbox:checked {
+    background:
+      url('../../shared/assets/figma/trip-map-check.svg') center / 16px no-repeat,
+      var(--v2-gradient);
+  }
+
+  .placeCheckbox:disabled:not(:checked) {
+    opacity: 0.55;
+  }
+
+  .placeCheckbox:focus-visible {
+    outline: var(--focus-width) solid var(--focus-color);
+    outline-offset: 2px;
+  }
+
+  .listLegend {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 2px 12px;
+    min-height: 44px;
+    margin: auto 0 0;
+    padding: 6px 12px;
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-row);
+    color: var(--v2-sub);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .legendIcon img:first-child {
+    opacity: 0;
+  }
+
+  .legendIcon::before {
+    content: '';
+    grid-area: 1 / 1;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--v2-gradient);
+  }
+
+  .listLegend > span:last-child .legendIcon::before {
+    background: var(--v2-track);
+  }
+
+  .legendIcon img + img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .empty {
+    order: 1;
+    flex: 1 1 auto;
+    align-content: center;
+    border: 2px dashed var(--v2-dashed-line);
+    border-radius: var(--v2-radius-row);
+    background: var(--v2-dashed-surface);
+    color: var(--v2-sub);
+  }
+
+  .dataCredit {
+    color: var(--v2-muted);
+  }
+
+  /* Map card (938:9474): white frame, 10px inset, controls float over the map. */
+  .mapPanel {
+    position: relative;
+    padding: 10px;
+    border-radius: var(--v2-radius-panel);
+  }
+
+  .viewport {
+    height: 100%;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-track);
+  }
+
+  .mapToolbar {
+    position: absolute;
+    top: 26px;
+    right: 26px;
+    left: 26px;
+    z-index: 6;
+    flex-direction: row;
+    align-items: flex-start;
+    min-height: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .mapToolbar > * {
+    pointer-events: auto;
+  }
+
+  .mapType {
+    gap: 4px;
+    margin-right: 54px;
+    padding: 4px;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .mapType button,
+  .mapType button[aria-pressed='true'] {
+    min-width: 0;
+    height: 34px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: transparent;
+    color: var(--v2-sub);
+    font-family: var(--v2-font);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .mapType button[aria-pressed='true'] {
+    background: var(--v2-gradient);
+    color: var(--v2-white);
+  }
+
+  .routeSelector select {
+    height: 42px;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 40px 0 16px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    color: var(--v2-ink);
+    font-family: var(--v2-font);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  }
+
+  .routeSelector svg {
+    color: var(--v2-sub);
+  }
+
+  .legend {
+    top: auto;
+    bottom: 16px;
+    left: 16px;
+    gap: 14px;
+    min-height: 32px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: var(--v2-radius-pill);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-card), var(--v2-inset);
+    color: var(--v2-nav-text);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .legend span {
+    gap: 6px;
+  }
+
+  .legend i {
+    width: 10px;
+    height: 10px;
+    border: 0;
+  }
+
+  .scheduledDot {
+    background: var(--map-v2-dot-scheduled);
+  }
+
+  .unscheduledDot {
+    background: var(--map-v2-dot-unscheduled);
+  }
+
+  /* Illustrative preview pins (D/Map pin): 32px gradient, selected = 42px amber. */
+  .marker {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--v2-white);
+    color: var(--v2-white);
+    font-family: var(--v2-font);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 12px 14px rgb(92 122 199 / 18%);
+  }
+
+  .markerScheduled {
+    border-color: var(--v2-white);
+    background: var(--v2-gradient-diagonal);
+  }
+
+  .markerUnscheduled {
+    border-color: var(--v2-white);
+    background: var(--v2-gradient-violet);
+    color: var(--v2-white);
+  }
+
+  .marker[aria-pressed='true'] {
+    width: 42px;
+    height: 42px;
+    background: var(--map-v2-pin-active);
+    color: var(--v2-white);
+    font-size: 15px;
+    box-shadow: 0 12px 14px rgb(92 122 199 / 18%);
+  }
+
+  .marker1 {
+    left: 69.12%;
+    top: 14.14%;
+  }
+
+  .marker2 {
+    left: 52.94%;
+    top: 40.57%;
+  }
+
+  .marker3 {
+    left: 41.18%;
+    top: 66.29%;
+  }
+
+  .marker4 {
+    left: 79.41%;
+    top: 60.57%;
+  }
+
+  .marker5 {
+    left: 26.47%;
+    top: 30.57%;
+  }
+
+  .marker6 {
+    left: 82.35%;
+    top: 40.57%;
+  }
+
+  /* Selected place card (938:9513): bottom-left, photo + copy side by side. */
+  .desktopPlaceCard {
+    top: 76px;
+    right: auto;
+    bottom: auto;
+    left: 16px;
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    align-content: start;
+    gap: 4px 14px;
+    width: min(300px, calc(100% - 32px));
+    min-height: 0;
+    padding: 10px 16px 10px 10px;
+    border: 0;
+    border-radius: var(--v2-radius-tile);
+    background: var(--v2-white);
+    box-shadow: var(--v2-shadow-float), var(--v2-inset);
+  }
+
+  .desktopPlaceCard > img {
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    align-self: center;
+    width: 82px;
+    margin: 0;
+    border-radius: var(--v2-radius-thumb);
+    object-fit: cover;
+    height: 82px;
+  }
+
+  .desktopPlaceCard > :not(img) {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  .desktopPlaceCard.runtimePlaceCard {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    /* Leave room for the 76px top clamp and the map legend. */
+    max-height: max(64px, calc(100% - 130px));
+    overflow: auto;
+    padding: 10px;
+  }
+
+  .desktopPlaceCard.runtimePlaceCard > * {
+    grid-column: 1;
+  }
+
+  .desktopPlaceCard strong {
+    color: var(--v2-ink);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 25px;
+  }
+
+  .desktopPlaceCard > span,
+  .desktopPlaceCard p {
+    color: var(--v2-sub);
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .desktopPlaceCard > span {
+    font-weight: 700;
+  }
+
+  .desktopPlaceCard p {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  /* Tile-failure notice (GeoapifyMap inline style) sits under the floating pills instead. */
+  .googleMapCanvas p[role='status'] {
+    top: 152px !important;
+    bottom: auto !important;
+    border-radius: var(--v2-radius-row);
+    padding: 8px 12px;
+  }
+
+  /* Leaflet zoom control moves to the right edge, under the "Hiển thị lịch trình" pill. */
+  .viewport :global(.leaflet-top.leaflet-left) {
+    top: 58px;
+    right: 6px;
+    left: auto;
+  }
+
+  .viewport :global(.leaflet-bar) {
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--v2-radius-row);
+    box-shadow: var(--v2-shadow-card);
+  }
+
+  .providerState {
+    border-radius: var(--v2-radius-tile);
+    box-shadow: var(--v2-shadow-card);
+  }
+}
+
+/* Two columns from 1101px: map left, search panel right (Figma 700 + 20 + 384). */
+@media (min-width: 1001px) {
+  .workspace {
+    grid-template-columns: minmax(0, 700fr) minmax(320px, 384fr);
+    grid-template-areas: 'map panel';
+  }
+
+  .placePanel {
+    grid-area: panel;
+  }
+
+  .mapPanel {
+    grid-area: map;
+  }
+}
+
+@media (min-width: 1001px) and (max-height: 960px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .mapContent {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: 12px;
+  }
+  .placePanel,
+  .mapPanel {
+    height: 100%;
+    min-height: 0;
+  }
+  .page[data-flow='gateway-map-read'] {
+    overflow-y: auto;
+  }
+  .page[data-flow='gateway-map-read'] .mapContent {
+    flex: 0 0 100%;
+  }
+}
+@media (min-width: 1001px) {
+  .page > :global(.preview) {
+    position: fixed;
+    z-index: 5;
+    right: 24px;
+    bottom: 2px;
+    max-width: min(560px, calc(100vw - 48px));
+    max-height: 40dvh;
+    margin: 0;
+    padding: 2px 10px;
+    overflow: auto;
+    border-radius: var(--v2-radius-thumb);
+    background: rgb(255 255 255 / 85%);
+  }
+}
+
+.expandableMapPanel {
+  position: relative;
+}
+
+.mapExpandButton {
+  position: absolute;
+  z-index: 8;
+  top: 26px;
+  right: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--v2-radius-pill);
+  background: var(--v2-white);
+  color: var(--v2-ink);
+  font: 800 13px/18px var(--v2-font);
+  box-shadow: var(--v2-shadow-card), var(--v2-inset);
+  cursor: pointer;
+}
+
+.mapExpandButton:focus-visible {
+  outline: 3px solid var(--v2-blue);
+  outline-offset: 2px;
+}
+
+/* The expanded map stays below drawers and dialogs opened from it. */
+.mapOverlayBackdrop {
+  position: fixed;
+  z-index: 98;
+  inset: 0;
+  background: rgb(20 30 55 / 62%);
+}
+
+.mapPanelExpanded {
+  position: fixed;
+  z-index: 99;
+  inset: 12px 16.6667vw;
   display: block;
-  margin: -4px 0 6px;
-  color: var(--color-muted);
-  font-size: var(--font-size-caption);
-  line-height: 16px;
-  overflow-wrap: anywhere;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding: 10px;
+  overflow: hidden;
+  border-radius: var(--v2-radius-panel);
+  background: var(--v2-white);
 }
 
-.photoCredit a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.mapPanelExpanded .viewport {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.mapPanelExpanded .mapExpandButton {
+  top: 26px;
+  right: 26px;
+}
+
+@media (max-width: 768px) {
+  .expandableMapPanel:not(.mapPanelExpanded) {
+    display: contents;
+  }
+
+  .expandableMapPanel:not(.mapPanelExpanded) .mapExpandButton {
+    position: static;
+    order: 3;
+    align-self: flex-end;
+    margin: 8px 8px -48px 0;
+  }
+
+  .mapPanelExpanded {
+    inset: 8px;
+    padding: 8px;
+  }
+
+  .mapPanelExpanded .mapToolbar {
+    position: absolute;
+    top: 18px;
+    right: auto;
+    left: 18px;
+    z-index: 8;
+    display: flex;
+    pointer-events: auto;
+  }
+
+  .mapPanelExpanded .viewport {
+    height: 100%;
+  }
+
+  .mapPanelExpanded .mobileMapArtwork {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mapPanelExpanded .mapExpandButton {
+    top: 18px;
+    right: 18px;
+  }
 }
