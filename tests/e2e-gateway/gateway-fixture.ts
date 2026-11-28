@@ -306,6 +306,21 @@ export const test = base.extend<{ gateway: GatewayModel }>({
           return json(route, { message_code: 'REQUEST_ACCEPTED' });
         }
       }
+      // What the configured fare source supports; these scenarios use MOCK_FLIGHT, which accepts all.
+      if (path === '/api/v1/price-watch-capabilities' && method === 'GET') {
+        if (!model.authenticated) return error(route, 401);
+        return json(route, {
+          provider: 'MOCK_FLIGHT',
+          available: true,
+          journey_types: ['ONE_WAY', 'ROUND_TRIP'],
+          cabin_classes: ['ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'],
+          max_adults: 9,
+          max_children: 9,
+          max_infants: 9,
+          max_passengers: 9,
+          currencies: ['VND'],
+        });
+      }
       // Pending EMAIL invitations for the signed-in user (invitations v2); none in these scenarios.
       if (path === '/api/v1/me/invitations' && method === 'GET') {
         if (!model.authenticated) return error(route, 401);
