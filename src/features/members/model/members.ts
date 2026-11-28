@@ -50,6 +50,12 @@ export interface InvitationViewModel {
   readonly version: number;
   readonly expiresAt: string;
   readonly resolvedAt: string | null;
+  /** People who can join with this invitation (EMAIL is always 1); null on older servers. */
+  readonly maxUses?: number | null;
+  /** People who already joined with it; null on older servers. */
+  readonly useCount?: number | null;
+  /** Last 4 characters of a LINK join code; null for EMAIL or older invitations. */
+  readonly codeHint?: string | null;
 }
 export interface InvitationPageViewModel {
   readonly items: readonly InvitationViewModel[];
@@ -81,25 +87,52 @@ export interface InvitationRepository {
     readonly intent: InvitationVersionIntent;
     readonly signal: AbortSignal;
   }): Promise<InvitationCommandResult<InvitationViewModel>>;
-  previewInvitation?(request: {
-    readonly token: string;
+  previewInvitation?(
+    request: InvitationTarget & { readonly signal: AbortSignal },
+  ): Promise<InvitationCommandResult<InvitationPreview>>;
+  acceptInvitation?(
+    request: InvitationTarget & { readonly idempotencyKey: string; readonly signal: AbortSignal },
+  ): Promise<InvitationCommandResult<InvitationAcceptResult>>;
+  declineInvitation?(
+    request: InvitationTarget & { readonly idempotencyKey: string; readonly signal: AbortSignal },
+  ): Promise<InvitationCommandResult<InvitationPreview>>;
+  /** Pending EMAIL invitations for the signed-in user's verified email (at most 20). */
+  listMyInvitations?(request: {
     readonly signal: AbortSignal;
-  }): Promise<InvitationCommandResult<InvitationPreview>>;
-  acceptInvitation?(request: {
-    readonly token: string;
-    readonly idempotencyKey: string;
-    readonly signal: AbortSignal;
-  }): Promise<InvitationCommandResult<InvitationAcceptResult>>;
-  declineInvitation?(request: {
-    readonly token: string;
-    readonly idempotencyKey: string;
-    readonly signal: AbortSignal;
-  }): Promise<InvitationCommandResult<InvitationPreview>>;
+  }): Promise<ReadResult<readonly InvitationPreview[]>>;
 }
+/**
+ * Which invitation a recipient answers: the secret from a link (`inv1_…` token or a normalized
+ * 8-character join code), or the ID of an EMAIL invitation listed by `GET /me/invitations`.
+ */
+export type InvitationTarget =
+  | { readonly token: string; readonly invitationId?: never }
+  | { readonly invitationId: string; readonly token?: never };
+export const invitationTokenPattern = /^inv1_[A-Za-z0-9_-]{43}$/;
+/** Crockford base32 without I, L, O, U, as the Backend mints it. */
+const joinCodePattern = /^[0-9A-HJKMNP-TV-Z]{8}$/;
+/**
+ * Normalizes a typed join code like the Backend: case-insensitive, spaces/dashes removed, O→0,
+ * I/L→1. Returns the 8 characters, or undefined when it cannot be a join code.
+ */
+export function normalizeJoinCode(value: string): string | undefined {
+  if (value.length > 32) return undefined;
+  const code = value
+    .toUpperCase()
+    .replace(/[\s-]/g, () => '')
+    .replace(/O/g, () => '0')
+    .replace(/[IL]/g, () => '1');
+  return joinCodePattern.test(code) ? code : undefined;
+}
+export const formatJoinCode = (code: string) => `${code.slice(0, 4)}-${code.slice(4)}`;
+export const isJoinCode = (value: string) => joinCodePattern.test(value);
 
 export interface InvitationCreateResult {
   readonly invitation: InvitationViewModel;
   readonly oneTimeLink: string | null;
+  /** LINK only, first response only: short code `XXXX-XXXX` and its share page. */
+  readonly joinCode?: string | null;
+  readonly shareLink?: string | null;
 }
 export interface InvitationPreview {
   readonly id: string;
@@ -107,6 +140,10 @@ export interface InvitationPreview {
   readonly inviterDisplayName: string;
   readonly status: InvitationViewModel['status'];
   readonly expiresAt: string;
+  /** Absent on older servers. */
+  readonly invitationType?: 'EMAIL' | 'LINK' | null;
+  readonly tripStartAt?: string | null;
+  readonly tripEndAt?: string | null;
 }
 export interface InvitationAcceptResult {
   readonly membership: MembershipViewModel;
@@ -130,7 +167,11 @@ interface InvitationCreateMetadata {
 export type InvitationCreateIntent = InvitationCreateMetadata &
   (
     | { readonly invitationType: 'EMAIL'; readonly email: string }
-    | { readonly invitationType: 'LINK' }
+    | {
+        readonly invitationType: 'LINK';
+        /** 1 = single-use link (default); more than 1 = group link (at most 50). */
+        readonly maxUses?: number;
+      }
   );
 export interface InvitationVersionIntent {
   readonly idempotencyKey: string;

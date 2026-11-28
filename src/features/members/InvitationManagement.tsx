@@ -4,6 +4,16 @@ import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { useMembersRepositories } from './repositories/members-context';
 import { useOptionalSessionManager } from '../../app/session-context';
 import { invitationEmailError, type InvitationViewModel } from './model/members';
+
+/** A group code lets up to this many people join with one LINK invitation. */
+const GROUP_LINK_USES = 20;
+/** What a LINK create revealed once: the v2 join code/share page, or the older one-time link. */
+interface RevealedLink {
+  readonly oneTimeLink: string | null;
+  readonly joinCode: string | null;
+  readonly shareLink: string | null;
+  readonly maxUses: number;
+}
 import type { DomainError } from '../../shared/types/result';
 import { Button } from '../../shared/components/Button';
 import { Input } from '../../shared/components/Input';
@@ -48,12 +58,17 @@ export function InvitationManagement({
       ? attempt.intent.email
       : '',
   );
+  const [linkUses, setLinkUses] = useState(() =>
+    attempt?.action === 'create' && attempt.intent.invitationType === 'LINK'
+      ? (attempt.intent.maxUses ?? 1)
+      : 1,
+  );
   const [validation, setValidation] = useState<string>();
   const [filter, setFilter] = useState<InvitationViewModel['status'] | ''>('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<DomainError | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const [link, setLink] = useState<string | null>(null);
+  const [link, setLink] = useState<RevealedLink | null>(null);
   const [confirm, setConfirm] = useState<InvitationViewModel | null>(null);
   const activeController = useRef<AbortController | null>(null);
   const activeTab = useRef(active);
@@ -231,13 +246,22 @@ export function InvitationManagement({
       if ('oneTimeLink' in result.data) {
         const isLinkCreate = next.action === 'create' && next.intent.invitationType === 'LINK';
         const canRevealLink = isLinkCreate && activeTab.current;
-        setLink(canRevealLink ? result.data.oneTimeLink : null);
+        const revealed: RevealedLink = {
+          oneTimeLink: result.data.oneTimeLink,
+          joinCode: result.data.joinCode ?? null,
+          shareLink: result.data.shareLink ?? null,
+          maxUses: result.data.invitation.maxUses ?? 1,
+        };
+        const secret = !!(revealed.oneTimeLink || revealed.joinCode || revealed.shareLink);
+        setLink(canRevealLink && secret ? revealed : null);
         setNotice(
           isLinkCreate
-            ? result.data.oneTimeLink && !activeTab.current
+            ? secret && !activeTab.current
               ? 'Liên kết một lần đã được tạo khi tab không hoạt động nên đã bị bỏ và không thể hiển thị lại.'
-              : result.data.oneTimeLink
-                ? 'Liên kết chỉ hiển thị lần này. Hãy sao chép trước khi đóng.'
+              : secret
+                ? revealed.joinCode
+                  ? 'Mã mời và liên kết chỉ hiển thị lần này. Hãy sao chép trước khi đóng.'
+                  : 'Liên kết chỉ hiển thị lần này. Hãy sao chép trước khi đóng.'
                 : 'Lời mời đã được tạo, nhưng liên kết không được trả lại khi thử lại. Không thể khôi phục liên kết; hãy thu hồi lời mời này trước khi tạo mới.'
             : 'Yêu cầu gửi lời mời đã được tiếp nhận. Chưa xác nhận thư đã được giao.',
         );
@@ -280,7 +304,11 @@ export function InvitationManagement({
       intent:
         kind === 'EMAIL'
           ? { ...common, invitationType: 'EMAIL', email: email.trim().toLowerCase() }
-          : { ...common, invitationType: 'LINK' },
+          : {
+              ...common,
+              invitationType: 'LINK',
+              ...(linkUses > 1 ? { maxUses: linkUses } : {}),
+            },
     });
   }
   function version(action: 'revoke' | 'resend', item: InvitationViewModel) {
@@ -299,6 +327,17 @@ export function InvitationManagement({
     });
   }
   const locked = pending || Boolean(attempt) || Boolean(link) || !allowed || query.isError;
+  function copy(value: string, done: string, what: string) {
+    const manual = `Không thể sao chép tự động. Hãy chọn và sao chép ${what} hiển thị.`;
+    if (!navigator.clipboard?.writeText) {
+      setNotice(manual);
+      return;
+    }
+    void navigator.clipboard.writeText(value).then(
+      () => setNotice(done),
+      () => setNotice(manual),
+    );
+  }
   return (
     <div className={styles.workspace}>
       <form
@@ -335,6 +374,19 @@ export function InvitationManagement({
           <option value="EMAIL">Qua email</option>
           <option value="LINK">Bằng liên kết</option>
         </Select>
+        {kind === 'LINK' && (
+          <Select
+            label="Số người dùng được"
+            value={String(linkUses)}
+            disabled={locked}
+            onChange={(event) => setLinkUses(event.target.value === '1' ? 1 : GROUP_LINK_USES)}
+          >
+            <option value="1">Một người (dùng một lần)</option>
+            <option value={String(GROUP_LINK_USES)}>
+              Cả nhóm (tối đa {GROUP_LINK_USES} người)
+            </option>
+          </Select>
+        )}
         {kind === 'EMAIL' && (
           <Input
             id="invitation-email"
@@ -380,27 +432,50 @@ export function InvitationManagement({
           </Button>
         )}
         {notice && <Alert live>{notice}</Alert>}
-        {active && link && allowed && (
-          <section className={styles.secret} aria-label="Liên kết một lần">
-            <p>{link}</p>
+        {active && link && allowed && (link.joinCode || link.shareLink) && (
+          <section className={styles.secret} aria-label="Mã mời và liên kết chia sẻ">
+            <p>
+              {link.maxUses > 1
+                ? `Mã nhóm: tối đa ${link.maxUses} người tham gia.`
+                : 'Mã dùng một lần: một người tham gia.'}
+            </p>
+            {link.joinCode && (
+              <p>
+                Mã mời: <strong>{link.joinCode}</strong>
+              </p>
+            )}
+            {link.shareLink && <p>{link.shareLink}</p>}
             <div className={styles.actions}>
+              {link.joinCode && (
+                <Button onClick={() => copy(link.joinCode!, 'Đã sao chép mã mời.', 'mã mời')}>
+                  Sao chép mã mời
+                </Button>
+              )}
+              {link.shareLink && (
+                <Button
+                  variant={link.joinCode ? 'outline' : 'primary'}
+                  onClick={() => copy(link.shareLink!, 'Đã sao chép liên kết.', 'liên kết')}
+                >
+                  Sao chép liên kết
+                </Button>
+              )}
               <Button
+                variant="outline"
                 onClick={() => {
-                  if (!navigator.clipboard?.writeText) {
-                    setNotice(
-                      'Không thể sao chép tự động. Hãy chọn và sao chép liên kết hiển thị.',
-                    );
-                    return;
-                  }
-                  void navigator.clipboard.writeText(link).then(
-                    () => setNotice('Đã sao chép liên kết.'),
-                    () =>
-                      setNotice(
-                        'Không thể sao chép tự động. Hãy chọn và sao chép liên kết hiển thị.',
-                      ),
-                  );
+                  setLink(null);
+                  setNotice('Mã mời và liên kết đã đóng và không thể hiển thị lại.');
                 }}
               >
+                Đóng mã mời
+              </Button>
+            </div>
+          </section>
+        )}
+        {active && link && allowed && !link.joinCode && !link.shareLink && link.oneTimeLink && (
+          <section className={styles.secret} aria-label="Liên kết một lần">
+            <p>{link.oneTimeLink}</p>
+            <div className={styles.actions}>
+              <Button onClick={() => copy(link.oneTimeLink!, 'Đã sao chép liên kết.', 'liên kết')}>
                 Sao chép liên kết
               </Button>
               <Button
@@ -475,6 +550,13 @@ export function InvitationManagement({
               <span className={styles.itemStatus} data-status={item.status}>
                 {labels[item.status]}
               </span>
+              {item.invitationType === 'LINK' && item.maxUses != null && (
+                <span className={styles.itemMeta}>
+                  {item.maxUses > 1 ? `Mã nhóm · tối đa ${item.maxUses} người` : 'Dùng một lần'}
+                  {item.useCount != null ? ` · đã dùng ${item.useCount}/${item.maxUses}` : ''}
+                  {item.codeHint ? ` · mã …${item.codeHint}` : ''}
+                </span>
+              )}
               <span className={styles.itemMeta}>
                 Hết hạn{' '}
                 {new Date(item.expiresAt).toLocaleString('vi-VN', { timeZone: trip.timezone })}
