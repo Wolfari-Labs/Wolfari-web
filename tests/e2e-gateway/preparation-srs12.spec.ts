@@ -291,6 +291,7 @@ test('SRS12: non-editor can search while unsupported DSS stays unavailable', asy
   await page.goto(`${root}/map`);
   await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('Bảo tàng');
   await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  await page.getByRole('button', { name: /Bảo tàng provider/ }).click();
   await expect(page.getByRole('article', { name: 'Đang chọn Bảo tàng provider' })).toBeVisible();
   await expect(page.getByRole('checkbox', { name: 'Chọn Bảo tàng provider' })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Yêu cầu gợi ý' })).toHaveCount(0);
@@ -439,7 +440,31 @@ test('SRS12: route details and missing-route state never write the Plan', async 
       completed_at: null,
     });
   }
+  const tileZooms: number[] = [];
+  await page.route('https://maps.geoapify.com/**', (route) => {
+    const zoom = /^\/v1\/tile\/osm-carto\/(\d+)\//.exec(new URL(route.request().url()).pathname);
+    if (zoom) tileZooms.push(Number(zoom[1]));
+    return route.abort();
+  });
   await login(page);
+  const planRouteRequest = page.waitForRequest(
+    (request) => request.method() === 'POST' && request.url().endsWith('/api/v1/travel/route'),
+  );
+  await page.goto(`${root}/plan`);
+  const dayMap = page.getByRole('region', { name: 'Bản đồ lịch trình ngày 1' });
+  await expect(dayMap.getByText('1,2 km · 10 phút (ước lượng ô tô)')).toBeVisible();
+  expect((await planRouteRequest).postDataJSON().mode).toBe('DRIVING');
+  await expect(dayMap.getByRole('combobox', { name: 'Cách di chuyển' })).toHaveCount(0);
+  if (process.env.WOLFARI_LEAFLET_TEST === 'true') {
+    const map = dayMap.getByRole('region', { name: 'Bản đồ địa điểm' });
+    await expect(map).toBeVisible();
+    await expect.poll(() => tileZooms.length).toBeGreaterThan(0);
+    const zoomBefore = Math.max(...tileZooms);
+    await map.hover({ position: { x: 60, y: 60 } });
+    // A larger wheel step also clears the initial zoom that loads before fitBounds.
+    await page.mouse.wheel(0, -480);
+    await expect.poll(() => Math.max(...tileZooms)).toBeGreaterThan(zoomBefore);
+  }
   await page.goto(`${root}/map`);
   await page.getByRole('combobox', { name: 'Ngày', exact: true }).selectOption('2026-11-01');
   await expect(page.getByText(/1,2 km · 10 phút/)).toBeVisible();
@@ -476,13 +501,26 @@ test('SRS12: maximum saved locations and every linked Activity block unsafe dele
   await login(page);
   await page.goto(`${root}/map`);
   await expect(page.getByRole('button', { name: 'Đặt pin thủ công', exact: true })).toBeDisabled();
-  // Edit/delete for a saved place sit on the selected-place card of the POI map.
   await page
     .locator('[data-region="place-list"]')
     .getByRole('button', { name: /^\d+ Địa điểm 20 / })
     .click();
-  await page
+  const card = page
     .getByRole('article', { name: 'Đang chọn Địa điểm 20' })
+    .filter({ visible: true });
+  const toggle = card.getByRole('button', { name: 'Địa điểm đã chọn', exact: true });
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(toggle).toBeDisabled();
+  await expect(card.getByRole('button', { name: 'Xóa địa điểm', exact: true })).toHaveCount(0);
+  await toggle.hover();
+  await expect(page.getByRole('tooltip')).toHaveText(
+    'Gỡ địa điểm khỏi lịch trình trước khi bỏ chọn.',
+  );
+
+  // The compact detail view keeps the explanation for a place linked to an Activity.
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page
+    .getByRole('complementary', { name: 'Chi tiết địa điểm' })
     .getByRole('button', { name: 'Xóa địa điểm', exact: true })
     .click();
   await expect(

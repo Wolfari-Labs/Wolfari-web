@@ -40,7 +40,7 @@ test('HTTP mock: login, cursor list, detail, create and conflict-safe settings u
 
   await page.goto('/trips/new');
   await page.getByLabel('Tên chuyến đi').fill('Huế Gateway mới');
-  await expect(page.getByLabel('Điểm đến chính')).toHaveCount(0);
+  await page.getByLabel('Điểm đến chính').fill('Huế');
   await page.getByLabel('Ngày đi').fill('2026-12-10');
   await page.getByLabel('Ngày về').fill('2026-12-12');
   await page.getByRole('button', { name: 'Tạo chuyến đi', exact: true }).click();

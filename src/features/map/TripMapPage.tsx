@@ -4,7 +4,6 @@ import { Trash2 } from 'lucide-react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RouteContext } from '../../app/route-context';
 import { paths } from '../../app/route-paths';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Select } from '../../shared/components/Select';
 import headingPinIcon from '../../shared/assets/figma/trip-map-heading-pin.svg';
 import headingCloudArtwork from '../../shared/assets/figma/trip-map-heading-cloud.svg';
@@ -414,11 +413,6 @@ function PreviewMapPage() {
         {data && (
           <>
             <div className={styles.mapContent}>
-              <PageBreadcrumb
-                className={styles.breadcrumb}
-                items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-                current="Bản đồ địa điểm"
-              />
               <div className={styles.hero}>
                 <TripHero trip={data.trip} compact variant="landscape" />
               </div>

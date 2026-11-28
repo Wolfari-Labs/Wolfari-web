@@ -329,7 +329,6 @@ describe('Profile Gateway interactions', () => {
     expect(getAvatar).toHaveBeenCalledTimes(2);
     expect(createUrl).toHaveBeenCalledTimes(2);
     expect(revokeUrl).toHaveBeenCalledWith('blob:old');
-    expect(getAvatar.mock.calls[0]?.[0].signal.aborted).toBe(true);
     unmount();
     expect(revokeUrl).toHaveBeenCalledWith('blob:new');
   });

@@ -9,7 +9,9 @@ export interface MapPoint {
   name: string;
   latitude: number;
   longitude: number;
-  number: number;
+  /** Selected trip places are numbered; search results without `selected` stay unnumbered. */
+  number?: number;
+  selected?: boolean;
   scheduled?: boolean;
   /** POI-OVERTURE W12: `true` lets the point join a grid cluster (curated/saved stay single). */
   clusterable?: boolean;
@@ -44,10 +46,12 @@ export function GeoapifyMap({
   onSelect,
   onCenter,
   onPin,
+  draftPin,
   focus,
   route,
   embedded = false,
   autoFit = true,
+  scrollWheelZoom = false,
   onViewport,
   initialView,
   onSelectedScreenPosition,
@@ -57,11 +61,13 @@ export function GeoapifyMap({
   onSelect?: (id: string) => void;
   onCenter?: (point: MapCenter) => void;
   onPin?: ((point: MapCenter) => void) | undefined;
+  draftPin?: MapCenter | null;
   focus?: MapCenter | undefined;
   route?: MapRoute | null | undefined;
   embedded?: boolean;
   /** `false` (bbox explore) never refits to the point set; the user owns the frame. */
   autoFit?: boolean;
+  scrollWheelZoom?: boolean;
   /** Fired on load and after every move/zoom with the visible bounds. */
   onViewport?: (change: MapViewportChange) => void;
   /** First centre (W14: the Trip's first place); later changes are ignored. */
@@ -79,7 +85,7 @@ export function GeoapifyMap({
   const stablePoints = useMemo(() => JSON.parse(pointsKey) as readonly MapPoint[], [pointsKey]);
   const routeKey = JSON.stringify(route ?? null);
   const stableRoute = useMemo(() => JSON.parse(routeKey) as MapRoute | null, [routeKey]);
-  const start = useRef(initialView);
+  const start = useRef({ view: initialView, scrollWheelZoom });
   const handlers = useRef({ onSelect, onCenter, onPin, onViewport });
   handlers.current = { onSelect, onCenter, onPin, onViewport };
   const pointsRef = useRef(stablePoints);
@@ -89,6 +95,8 @@ export function GeoapifyMap({
   const [ready, setReady] = useState(false),
     [failed, setFailed] = useState(false),
     [zoom, setZoom] = useState(12);
+  const draftLatitude = draftPin?.latitude;
+  const draftLongitude = draftPin?.longitude;
   const key = (import.meta.env.VITE_GEOAPIFY_BROWSER_KEY as string | undefined)?.trim();
   useEffect(() => {
     if (!key || !node.current) return;
@@ -98,9 +106,10 @@ export function GeoapifyMap({
       .then((l) => {
         if (disposed || !node.current) return;
         library.current = l;
+        const { view, scrollWheelZoom } = start.current;
         const m = l
-          .map(node.current, { scrollWheelZoom: false })
-          .setView([start.current?.latitude ?? 16.0544, start.current?.longitude ?? 108.2022], 12);
+          .map(node.current, { scrollWheelZoom })
+          .setView([view?.latitude ?? 16.0544, view?.longitude ?? 108.2022], 12);
         map.current = m;
         l.tileLayer(
           `https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}.png?apiKey=${encodeURIComponent(key)}`,
@@ -132,9 +141,10 @@ export function GeoapifyMap({
           emitViewport();
         });
         m.on('zoomend', () => setZoom(m.getZoom()));
-        m.on('click', (event: L.LeafletMouseEvent) =>
-          handlers.current.onPin?.({ latitude: event.latlng.lat, longitude: event.latlng.lng }),
-        );
+        m.on('click', (event: L.LeafletMouseEvent) => {
+          const { lat, lng } = m.wrapLatLng(event.latlng);
+          handlers.current.onPin?.({ latitude: lat, longitude: lng });
+        });
         if (typeof ResizeObserver !== 'undefined') {
           observer = new ResizeObserver(() => m.invalidateSize());
           observer.observe(node.current);
@@ -166,20 +176,18 @@ export function GeoapifyMap({
     const items = clusterPoints(stablePoints, zoom);
     for (const item of items) {
       if (item.kind === 'cluster') {
-        const label = document.createElement('span');
-        label.textContent = String(item.count);
-        const size = item.count < 10 ? 36 : item.count < 100 ? 42 : 48;
-        const title = `${item.count} địa điểm — phóng to`;
+        const title = 'Cụm địa điểm — phóng to';
         l.marker([item.latitude, item.longitude], {
           icon: l.divIcon({
-            html: label,
+            html: '',
             className: styles.cluster,
-            iconSize: [size, size],
-            iconAnchor: [size / 2, size / 2],
+            iconSize: [36, 36],
+            iconAnchor: [18, 18],
           }),
           title,
           alt: title,
           keyboard: true,
+          bubblingMouseEvents: false,
           zIndexOffset: -100,
         })
           .on('click keydown', (event: L.LeafletEvent) => {
@@ -195,15 +203,19 @@ export function GeoapifyMap({
         continue;
       }
       const p = item.point;
-      const label = document.createElement('span');
-      label.textContent = String(p.number);
       const icon = l.divIcon({
-        html: label,
+        html: p.selected ? String(p.number ?? '') : '',
         className: `${styles.pin} ${p.scheduled ? styles.scheduled : ''} ${p.id === selectedId ? styles.selected : ''}`,
         iconSize: [32, 32],
         iconAnchor: [16, 16],
       });
-      l.marker([p.latitude, p.longitude], { icon, title: p.name, alt: p.name, keyboard: true })
+      l.marker([p.latitude, p.longitude], {
+        icon,
+        title: p.name,
+        alt: p.name,
+        keyboard: true,
+        bubblingMouseEvents: false,
+      })
         .on('click keydown', (event: L.LeafletEvent) => {
           if (activates(event)) handlers.current.onSelect?.(p.id);
         })
@@ -234,6 +246,33 @@ export function GeoapifyMap({
     } else if (selected && selectionChanged) m.panTo([selected.latitude, selected.longitude]);
     syncOvertureCredit(m);
   }, [stablePoints, pointsKey, selectedId, ready, zoom, autoFit]);
+  useEffect(() => {
+    const m = map.current,
+      l = library.current;
+    if (!ready || !m || !l || draftLatitude === undefined || draftLongitude === undefined) return;
+    // Use the visible copy of the coordinate when Leaflet has wrapped the globe.
+    const longitude = draftLongitude + 360 * Math.round((m.getCenter().lng - draftLongitude) / 360);
+    const marker = l
+      .marker([draftLatitude, longitude], {
+        icon: l.divIcon({
+          className: styles.draftPin,
+          html: '',
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+        }),
+        title: 'Pin chưa lưu',
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: 1000,
+      })
+      .addTo(m);
+    const element = marker.getElement();
+    element?.setAttribute('role', 'img');
+    element?.setAttribute('aria-label', 'Pin chưa lưu');
+    return () => {
+      marker.remove();
+    };
+  }, [ready, draftLatitude, draftLongitude]);
   useEffect(() => {
     const m = map.current,
       l = library.current;
@@ -299,6 +338,7 @@ export function GeoapifyMap({
         ref={node}
         className={styles.map}
         style={embedded ? { height: '100%' } : undefined}
+        role="region"
         aria-label="Bản đồ địa điểm"
       />
       {failed && (

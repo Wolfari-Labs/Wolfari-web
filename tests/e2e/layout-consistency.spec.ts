@@ -1,8 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /**
- * Insurance against layout drift: every trip-workspace route shares the Web v2 content frame,
- * the W/Trip header card (Figma 937:7647) and its embedded breadcrumb. Tolerance is 1px.
+ * Insurance against layout drift: every trip-workspace route shares the Web v2 content frame and
+ * W/Trip header card (Figma 937:7647), without a breadcrumb row. Tolerance is 1px.
  */
 const tripId = '11111111-1111-4111-8111-111111111111';
 // The overview keeps develop's Figma layout (full-width hero, no breadcrumb), verified by
@@ -23,7 +23,6 @@ const viewports = [
 ] as const;
 
 const hero = (page: Page) => page.locator('section[aria-label="Thông tin chuyến đi"]');
-const breadcrumb = (page: Page) => page.getByRole('navigation', { name: 'Đường dẫn' });
 
 function near(actual: number, expected: number, label: string) {
   expect(Math.abs(actual - expected), label).toBeLessThanOrEqual(1);
@@ -52,15 +51,8 @@ for (const viewport of viewports) {
       near(box.width, expected.width, `${label} hero width`);
       near(box.height, 84, `${label} hero height`);
 
-      // The page breadcrumb (with the h1) sits inside the trip header's text column.
-      const crumb = (await breadcrumb(page).boundingBox())!;
-      near(crumb.y, expected.y + 8, `${label} breadcrumb y`);
-      near(crumb.x, expected.x + 88, `${label} breadcrumb x`);
-
-      const headings = page.getByRole('heading', { level: 1 });
-      await expect(headings, `${label} exactly one visible h1`).toHaveCount(1);
-      await expect(headings).toBeVisible();
-      await expect(headings).toHaveAttribute('aria-current', 'page');
+      await expect(page.getByRole('navigation', { name: 'Đường dẫn' }), `${label} breadcrumb`)
+        .toHaveCount(0);
     }
   });
 }

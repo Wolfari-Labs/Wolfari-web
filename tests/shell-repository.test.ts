@@ -94,6 +94,7 @@ describe('Shell repository boundary', () => {
               id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
               version: 7,
               system_role: 'USER',
+              avatar: '/api/v1/me/avatar',
             },
             correlationId: 'profile-read',
           };
@@ -118,6 +119,7 @@ describe('Shell repository boundary', () => {
           fullName: 'Gateway user',
           version: 7,
           systemRole: 'USER',
+          hasAvatar: true,
         },
         trip: {
           id: previewTripId,

@@ -52,7 +52,8 @@ for (const size of [
       if (name === 'plan') {
         await page.getByRole('button', { name: 'Tất cả', exact: true }).click();
       }
-      await expect(page.locator('main h1').first()).toBeVisible();
+      const mobileCreate = name === 'create' && size.width <= 768;
+      if (!mobileCreate) await expect(page.locator('main h1').first()).toBeVisible();
       await expect(page.locator('[data-preview]')).toHaveCount(0);
       if (name === 'profile')
         await expect(page.getByLabel('Tên hiển thị', { exact: true })).toHaveValue('Trang Gateway');
@@ -77,7 +78,10 @@ for (const size of [
       else if (name === 'create') {
         await expect(page.getByLabel('Tên chuyến đi', { exact: true })).toBeVisible();
         await expect(
-          page.getByRole('heading', { name: 'Tạo chuyến đi mới', exact: true }),
+          page.getByRole('heading', {
+            name: mobileCreate ? 'Hành trình bắt đầu từ một ý tưởng' : 'Tạo chuyến đi mới',
+            exact: true,
+          }),
         ).toBeVisible();
       } else await expect(page.getByRole('region', { name: 'Thông tin chuyến đi' })).toBeVisible();
       await page.evaluate(() => document.fonts.ready);

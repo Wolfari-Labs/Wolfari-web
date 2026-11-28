@@ -8,7 +8,7 @@ export function Avatar({
   name: string;
   image?: { src: string; alt: string } | null;
 }) {
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const initials = name
     .trim()
     .split(/\s+/)
@@ -18,14 +18,14 @@ export function Avatar({
     .toLocaleUpperCase('vi');
   return (
     <span className={styles.avatar} aria-hidden="true">
-      {image && !failed ? (
+      {image && image.src !== failedSrc ? (
         <img
           src={image.src}
           alt=""
           width="44"
           height="44"
           loading="lazy"
-          onError={() => setFailed(true)}
+          onError={() => setFailedSrc(image.src)}
         />
       ) : (
         initials || '?'

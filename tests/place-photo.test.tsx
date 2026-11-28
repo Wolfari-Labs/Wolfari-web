@@ -2,8 +2,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { PlacePhoto } from '../src/features/map/PlacePhoto';
 
-describe('licensed place photo', () => {
-  it('shows the actual photo with credit and uses a neutral fallback after a download failure', () => {
+describe('place photo', () => {
+  it('shows a local illustrative photo when a place has no photo', () => {
+    render(<PlacePhoto image={null} name="Hội An" />);
+    const fallback = screen.getByRole('img', { name: 'Ảnh minh họa cho Hội An' });
+
+    expect(fallback).toHaveAttribute('src', expect.stringContaining('16cac'));
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  });
+
+  it('shows the licensed photo and uses the local illustration if downloading it fails', () => {
     const image = {
       url: '/api/v1/travel/poi-images/test/1280.webp',
       thumbnailUrl: '/api/v1/travel/poi-images/test/640.webp',
@@ -19,8 +27,9 @@ describe('licensed place photo', () => {
       'href',
       image.sourceUrl,
     );
+
     fireEvent.error(photo);
-    expect(screen.getByRole('img', { name: 'Hội An chưa có ảnh' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Ảnh minh họa cho Hội An' })).toBeInTheDocument();
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 });

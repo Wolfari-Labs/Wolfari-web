@@ -1565,13 +1565,6 @@ export function GatewayFundPage({ runtime }: { runtime: FundRuntime }) {
       className={`${styles.page} ${tripWorkspaceStyles.fullWidth} ${fundStyles.gatewayPage}`}
       data-flow="fund-server"
     >
-      <nav className={fundStyles.breadcrumb} aria-label="Đường dẫn">
-        <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
-        <span aria-hidden="true">›</span>
-        <span>{trip?.name ?? 'Chuyến đi'}</span>
-        <span aria-hidden="true">›</span>
-        <h1>Quỹ nhóm</h1>
-      </nav>
       {trip && trip.permissions.canRead && !trip.currentMembership.leftAt ? (
         <>
           <TripHero trip={trip} compact variant="landscape" />

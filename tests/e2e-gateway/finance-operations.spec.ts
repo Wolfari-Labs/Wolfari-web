@@ -103,11 +103,8 @@ test('HTTP mock: Finance 202 survives reload, NEEDS_REVIEW blocks replacement; p
   await expect(page.getByRole('table', { name: 'Các giao dịch quỹ nhóm' })).toBeVisible();
   const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
   expect(scan.violations).toEqual([]);
-  // The page h1 is the current breadcrumb item inside W/Trip header 937:7647 (12px).
-  await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toHaveCSS(
-    'font-size',
-    '12px',
-  );
+  await expect(page.locator('[data-region="trip-hero"]')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Thao tác chi tiết Finance' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Tải thêm giao dịch' }).click();
   await expect(page.getByRole('region', { name: 'Lịch sử quỹ' }).getByRole('row')).toHaveCount(3);

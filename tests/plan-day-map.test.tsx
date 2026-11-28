@@ -163,12 +163,7 @@ describe('Plan day-map projection', () => {
         'https://www.openstreetmap.org/copyright',
       );
       expect(screen.getByText(/Dữ liệu tuyến cũ/)).toBeInTheDocument();
-      const user = userEvent.setup();
-      await user.selectOptions(screen.getByRole('combobox', { name: 'Cách di chuyển' }), 'WALKING');
-      expect(
-        await screen.findByText('12,3 km · 25 phút (đi bộ ước tính)', {}, { timeout: 2000 }),
-      ).toBeInTheDocument();
-      expect(route.mock.calls[1]![2]).toBe('WALKING');
+      expect(screen.queryByRole('combobox', { name: 'Cách di chuyển' })).not.toBeInTheDocument();
     });
 
     it('falls back to a labelled straight line when routing is unavailable', async () => {

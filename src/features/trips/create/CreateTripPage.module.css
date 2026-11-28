@@ -109,100 +109,24 @@
 .formCard {
   padding: 28px 32px 24px;
 }
-.gatewayForm {
-  min-width: 0;
-}
-.gatewayCapability {
-  padding: 20px 18px 24px;
-}
-.gatewayCapabilityHeading h2 {
-  margin: 0;
-  color: #075495;
-  font-size: var(--font-size-title);
-  line-height: 1.33;
-}
-.gatewayCapabilityHeading p {
-  margin: 4px 0 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 1.5;
-}
-.gatewayMapIllustration {
-  position: relative;
-  overflow: hidden;
-  margin-top: 18px;
-  border-radius: var(--radius-10);
-  background: #eaf9fc;
-  aspect-ratio: 3 / 2;
-}
-.gatewayMapIllustration img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.gatewayMapIllustration span {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  left: 12px;
-  border-radius: var(--radius-nav);
-  padding: 7px 9px;
-  background: rgb(255 255 255 / 94%);
-  color: var(--color-action-text);
-  font-size: var(--font-size-caption);
-  font-weight: 600;
-  text-align: center;
-}
-.gatewayCapabilityBody {
-  margin-top: 20px;
-  border-top: 1px solid var(--color-line);
-  padding-top: 18px;
-}
-.gatewayCapabilityBody h3 {
-  margin: 0;
-  color: #075495;
-  font-size: var(--font-size-body);
-  line-height: 1.4;
-}
-.gatewayCapabilityBody p {
-  margin: 8px 0 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 1.55;
-}
-.gatewayIntro {
-  margin-bottom: 22px;
-}
-.gatewayIntro h2 {
-  margin: 0;
-  color: #075495;
-  font-size: var(--font-size-title);
-  line-height: 1.33;
-}
-.gatewayIntro p {
-  margin: 2px 0 0;
-  color: var(--color-muted);
-  font-size: var(--font-size-small);
-  line-height: 20px;
-}
-.gatewayForm > fieldset {
+
+.formStep {
   display: grid;
-  gap: 20px;
+  gap: 22px;
+}
+
+.gatewayFields {
+  display: grid;
+  gap: inherit;
   min-width: 0;
   margin: 0;
   padding: 0;
   border: 0;
 }
-.gatewayForm > p {
-  color: var(--color-muted);
-  font-size: var(--font-size-label);
-  margin-block: 20px;
-}
 
-.formStep {
-  display: grid;
-  gap: 22px;
+.gatewayDestinationHint {
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
 }
 
 .stepTwo {
@@ -634,37 +558,6 @@
   background: linear-gradient(150deg, #eaf9fc, #f8fdff);
 }
 
-.mapArea > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.mapArea::before,
-.mapArea::after {
-  position: absolute;
-  z-index: 1;
-  content: '';
-  width: 14px;
-  height: 14px;
-  border: 4px solid #fff;
-  border-radius: 50%;
-  background: #079fc5;
-  box-shadow: 0 4px 8px rgb(7 84 149 / 20%);
-}
-
-.mapArea::before {
-  top: 48px;
-  left: 34%;
-}
-
-.mapArea::after {
-  top: 92px;
-  right: 25%;
-}
-
 .mapArea > span {
   position: absolute;
   bottom: 14px;
@@ -931,23 +824,6 @@
     display: none;
   }
 
-  /* Gateway is a single form, unlike the two-step preview with its own title. */
-  .gatewayPage .pageHeader {
-    display: block;
-    margin-block: 16px 24px;
-  }
-
-  .gatewayPage .trail a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: 14px;
-  }
-  .gatewayPage .destinationPanel {
-    display: block;
-    margin-top: 24px;
-  }
-
   .stepper {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -1199,18 +1075,12 @@
 
 /* Desktop-only Web v2 parts are hidden until the desktop block below enables them. */
 .mapCard > h2,
-.mascotCard,
-.mapPin,
-.mapArt {
+.mascotCard {
   display: none;
 }
 
 @media (max-width: 768px) {
-  .formHeader:not(.gatewayIntro) {
-    display: none;
-  }
-
-  .gatewayIntro .iconBadge {
+  .formHeader {
     display: none;
   }
 }
@@ -1258,7 +1128,6 @@
   }
 
   .formCard,
-  .gatewayCapability,
   .mapCard,
   .suggestions {
     border: 0;
@@ -1286,6 +1155,18 @@
     display: contents;
   }
 
+  .stepTwo > .gatewayFields {
+    display: contents;
+  }
+
+  .stepTwo > .gatewayFields > * {
+    grid-column: 1 / -1;
+  }
+
+  .stepTwo > .gatewayFields > .budgetField {
+    grid-column: 2;
+  }
+
   .stepOne > *,
   .stepTwo > * {
     grid-column: 1 / -1;
@@ -1304,15 +1185,13 @@
     grid-column: 2;
   }
 
-  .formHeader h2,
-  .gatewayIntro h2 {
+  .formHeader h2 {
     margin: 0;
     color: var(--v2-ink);
     font: 800 22px/normal var(--v2-font);
   }
 
-  .formHeader p,
-  .gatewayIntro p {
+  .formHeader p {
     margin: 2px 0 0;
     color: var(--v2-sub);
     font: 600 14px/normal var(--v2-font);
@@ -1605,6 +1484,7 @@
 
   .mapArea {
     display: block;
+    height: 320px;
     min-height: 250px;
     padding: 0;
     overflow: hidden;
@@ -1612,13 +1492,11 @@
     background: var(--v2-track);
   }
 
-  .mapArea::before,
-  .mapArea::after {
-    content: none;
-  }
-
-  .mapArea .mapArt {
-    display: block;
+  .mapArea > div:first-child {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
   }
 
   .mapArea .mapHint {
@@ -1631,24 +1509,6 @@
     background: rgb(255 255 255 / 90%);
     color: var(--v2-nav-text);
     font: 700 12px/normal var(--v2-font);
-  }
-
-  .mapPin {
-    position: absolute;
-    z-index: 2;
-    top: 90px;
-    left: 61%;
-    display: grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border: 3px solid var(--v2-white);
-    border-radius: 50%;
-    background: var(--v2-gradient-amber);
-    color: var(--v2-white);
-    font-size: 16px;
-    font-style: normal;
-    box-shadow: var(--v2-shadow-nav);
   }
 
   .selectedDestination {
@@ -1764,45 +1624,6 @@
     color: var(--v2-sub);
     font: 600 14px/20px var(--v2-font);
   }
-
-  /* Gateway aside keeps its capability note inside one v2 card. */
-  .gatewayCapability {
-    display: block;
-    padding: 20px 22px 24px;
-  }
-
-  .gatewayCapabilityHeading h2,
-  .gatewayCapabilityBody h3 {
-    color: var(--v2-ink);
-    font-family: var(--v2-font);
-    font-weight: 800;
-  }
-
-  .gatewayCapabilityHeading h2 {
-    font-size: 20px;
-  }
-
-  .gatewayMapIllustration {
-    border-radius: var(--v2-radius-tile);
-    background: var(--v2-track);
-  }
-
-  .gatewayForm {
-    display: block;
-  }
-
-  .gatewayForm > fieldset {
-    gap: 18px;
-  }
-
-  .gatewayForm > p {
-    color: var(--v2-sub);
-    font: 600 14px/1.5 var(--v2-font);
-  }
-}
-
-.gatewayForm > .gatewayIntro {
-  margin-bottom: 15px;
 }
 
 @media (min-width: 769px) and (max-width: 1180px) {

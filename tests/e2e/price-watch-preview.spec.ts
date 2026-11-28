@@ -19,7 +19,8 @@ for (const size of [
       if (new URL(request.url()).pathname.startsWith('/api/')) api.push(request.url());
     });
     await page.goto(route);
-    await expect(page.getByRole('heading', { name: 'Theo dõi giá vé' }).first()).toBeVisible();
+    await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+    await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
     await expect(page.getByText('2.350.000đ', { exact: true }).first()).toBeVisible();
     await expect(page.getByText(/Giá mô phỏng, không phải giá thị trường/)).toBeVisible();
     // The source is stated once in plain words; provider codes are not shown.

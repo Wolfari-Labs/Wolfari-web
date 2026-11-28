@@ -30,7 +30,7 @@ describe('POI-OVERTURE W12 grid clustering', () => {
   ];
   const far = point('far', 16.03, 108.25);
 
-  it('merges close points into one numbered cluster at city zoom', () => {
+  it('merges close points into one cluster at city zoom', () => {
     const items = clusterPoints([...near, far], 12);
     expect(items).toHaveLength(2);
     const cluster = items.find((item) => item.kind === 'cluster');

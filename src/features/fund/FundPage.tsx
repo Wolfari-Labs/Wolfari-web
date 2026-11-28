@@ -17,7 +17,6 @@ import {
 } from './model/fund';
 import { Button } from '../../shared/components/Button';
 import { Icon } from '../../shared/components/Icon';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
@@ -374,20 +373,6 @@ function FixtureFundPage() {
             : null;
   return (
     <section className={styles.page} data-flow="fund-preview" data-node-id="768:7778">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Quỹ nhóm"
-        mobile={
-          <div className={styles.breadcrumb}>
-            <Link to={paths.trip(tripId)}>Chuyến đi của tôi</Link>
-            <span aria-hidden="true">›</span>
-            <span>{trip?.name ?? 'Chuyến đi'}</span>
-            <span aria-hidden="true">›</span>
-            <h1>Quỹ nhóm</h1>
-          </div>
-        }
-      />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       {error ? (
         <ErrorState

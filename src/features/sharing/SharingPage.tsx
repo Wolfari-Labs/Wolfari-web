@@ -8,7 +8,6 @@ import { Input } from '../../shared/components/Input';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
 import { BrandWordmark } from '../../shared/components/BrandWordmark';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { TripHero } from '../trips/components/TripHero';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { tripDateLabel } from '../trips/model/trip-list-query';
@@ -372,13 +371,6 @@ export function SharingPageView({
 }) {
   return (
     <section className={styles.page} data-node-id="943:15187">
-      <PageBreadcrumb
-        items={[
-          { label: 'Chuyến đi của tôi', to: paths.trips },
-          { label: trip.name, to: paths.trip(trip.id) },
-        ]}
-        current="Xuất & chia sẻ"
-      />
       <TripHero trip={trip} compact />
       <SharingWorkspaceView
         model={model}

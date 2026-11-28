@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon } from '../../shared/components/Icon';
+import fallbackPhoto from '../../shared/assets/figma/16cac.png';
 import type { PlaceImage } from './places';
 import styles from './PlacePhoto.module.css';
 
@@ -18,27 +18,23 @@ export function PlacePhoto({
   const available = image && failedUrl !== image.url;
   return (
     <span className={styles.photo} data-place-photo data-compact={compact || undefined}>
-      {available ? (
-        <>
-          <img
-            src={compact ? image.smallUrl : image.thumbnailUrl}
-            alt={`Ảnh ${name}`}
-            loading="lazy"
-            onError={() => setFailedUrl(image.url)}
-          />
-          <span className={styles.credit} data-photo-credit>
-            {linked ? (
-              <a href={image.sourceUrl} target="_blank" rel="noreferrer">
-                {image.attribution}
-              </a>
-            ) : (
-              image.attribution
-            )}
-          </span>
-        </>
-      ) : (
-        <span className={styles.placeholder} role="img" aria-label={`${name} chưa có ảnh`}>
-          <Icon name="map" size={compact ? 20 : 32} />
+      <img
+        src={available ? (compact ? image.smallUrl : image.thumbnailUrl) : fallbackPhoto}
+        alt={available ? `Ảnh ${name}` : `Ảnh minh họa cho ${name}`}
+        loading="lazy"
+        onError={() => {
+          if (available) setFailedUrl(image.url);
+        }}
+      />
+      {available && (
+        <span className={styles.credit} data-photo-credit>
+          {linked ? (
+            <a href={image.sourceUrl} target="_blank" rel="noreferrer">
+              {image.attribution}
+            </a>
+          ) : (
+            image.attribution
+          )}
         </span>
       )}
     </span>

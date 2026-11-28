@@ -15,12 +15,20 @@ for (const viewport of [
 
     const name = page.getByRole('textbox', { name: 'Tên chuyến đi' });
     const create = page.getByRole('button', { name: 'Tạo chuyến đi', exact: true });
+    const showBasicFields = async () => {
+      if (viewport.width === 402) {
+        await page.getByRole('button', { name: /Thông tin cơ bản/ }).click();
+      }
+    };
     const fillAndCreate = async (tripName: string) => {
       await name.fill(tripName);
       await page.getByLabel('Ngày đi').fill('10/12/2026');
       await page.getByLabel('Ngày về').fill('12/12/2026');
       await expect(page.getByLabel('Ngày đi')).toHaveValue('10/12/2026');
       await expect(page.getByLabel('Ngày về')).toHaveValue('12/12/2026');
+      if (viewport.width === 402) {
+        await page.getByRole('button', { name: /^Tiếp tục/ }).click();
+      }
       await create.click();
       const dialog = page.getByRole('dialog', { name: 'Chuyến đi đã sẵn sàng' });
       await expect(dialog).toBeVisible();
@@ -49,6 +57,7 @@ for (const viewport of [
     await dialog.getByRole('button', { name: 'Đóng thông báo' }).click();
     await expect(dialog).not.toBeVisible();
     await expect(create).toBeFocused();
+    await showBasicFields();
     await expect(name).toHaveValue('');
     await expect(page.getByLabel('Ngày đi')).toHaveValue('');
     await expect(page.getByLabel('Ngày về')).toHaveValue('');
@@ -59,6 +68,7 @@ for (const viewport of [
     await page.keyboard.press('Escape');
     await expect(nextDialog).not.toBeVisible();
     await expect(create).toBeFocused();
+    await showBasicFields();
     await expect(name).toHaveValue('');
     expect(createCalls()).toHaveLength(2);
   });

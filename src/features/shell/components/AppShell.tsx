@@ -21,6 +21,7 @@ import { useAnimate } from 'motion/react-mini';
 import { NavigationButton } from '../../../shared/components/NavigationButton';
 import { desktopMediaQuery } from '../../../shared/styles/breakpoints';
 import { AdminNavigation, AdminSidebar, AdminTopbar } from './AdminChrome';
+import { useAvatarImage } from '../../auth/use-avatar-image';
 
 const Notifications = lazy(() =>
   import('../../notifications/Notifications').then((module) => ({ default: module.Notifications })),
@@ -121,6 +122,13 @@ export function AppShell({
   }, [currentPath, animateContent, contentScope]);
   const focusContentAfterClose = useRef(false);
   const viewer = snapshot?.viewer;
+  const { src: viewerAvatarSrc } = useAvatarImage({
+    userId: viewer?.id,
+    version: viewer?.version,
+    enabled: viewer?.hasAvatar === true,
+  });
+  const viewerAvatarImage =
+    viewerAvatarSrc && viewer ? { src: viewerAvatarSrc, alt: viewer.fullName } : null;
   // Public flows should never render a disabled placeholder while the session
   // check is still settling. Treat the shell as guest until a real viewer is
   // available; private routes are guarded by App before their content mounts.
@@ -348,7 +356,7 @@ export function AppShell({
             <Suspense
               fallback={
                 <Link to={paths.profile} className={styles.profile}>
-                  <Avatar name={viewer.fullName} />
+                  <Avatar name={viewer.fullName} image={viewerAvatarImage} />
                   <span className={styles.accountName}>{viewer.fullName}</span>
                   <span className={styles.profileCompactName}>
                     {`${accountInitials(viewer.fullName)} ${viewer.fullName}`}
@@ -357,7 +365,7 @@ export function AppShell({
                 </Link>
               }
             >
-              <AccountMenu name={viewer.fullName} />
+              <AccountMenu name={viewer.fullName} image={viewerAvatarImage} />
             </Suspense>
           </>
         ) : guest ? (
@@ -460,7 +468,7 @@ export function AppShell({
               to={paths.profile}
               aria-label={profileLabel(viewer.fullName)}
             >
-              <Avatar name={viewer.fullName} />
+              <Avatar name={viewer.fullName} image={viewerAvatarImage} />
             </Link>
           </div>
         ) : guest ? null : (

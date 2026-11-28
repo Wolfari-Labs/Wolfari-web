@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { Link, useParams, useSearchParams } from 'react-router';
-import { paths } from '../../../app/route-paths';
+import { useParams, useSearchParams } from 'react-router';
 import { Alert } from '../../../shared/components/Alert';
 import { Button } from '../../../shared/components/Button';
 import { ContentState } from '../../../shared/components/ContentState';
 import { Icon } from '../../../shared/components/Icon';
-import { PageBreadcrumb } from '../../../shared/components/PageBreadcrumb';
 import { Input } from '../../../shared/components/Input';
 import { Textarea } from '../../../shared/components/Textarea';
 import { VietnameseDateInput } from '../../../shared/components/VietnameseDateInput';
@@ -930,20 +928,6 @@ export function TripSettingsPage() {
 
   return (
     <section className={styles.page} data-flow="trip-settings" data-node-id="25:676">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Cài đặt"
-        mobile={
-          <div className={styles.breadcrumb}>
-            <Link to={paths.trips}>Chuyến đi của tôi</Link>
-            <span aria-hidden="true">›</span>
-            {trip && <Link to={paths.trip(trip.id)}>{trip.name}</Link>}
-            <span aria-hidden="true">›</span>
-            <h1>Cài đặt</h1>
-          </div>
-        }
-      />
       {query.isPending ? (
         <ContentState state="loading" headingLevel={2} />
       ) : error && !trip ? (

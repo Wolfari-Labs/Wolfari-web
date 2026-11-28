@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import { Select } from '../../shared/components/Select';
 import { Button } from '../../shared/components/Button';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Icon } from '../../shared/components/Icon';
 import { Drawer } from '../../shared/components/Drawer';
 import { ActionMenu, ConfirmDialog } from '../../shared/components/Ui';
@@ -258,11 +256,6 @@ function PreviewDressCodePage() {
           Menu
         </button>
       </div>
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Dress code"
-      />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         <div className={styles.contentGrid}>

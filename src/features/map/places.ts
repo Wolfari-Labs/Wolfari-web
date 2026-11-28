@@ -43,6 +43,7 @@ export interface DiscoveredPlace {
   id: string;
   name: string;
   address: string;
+  description?: string | null;
   latitude: number;
   longitude: number;
   token: string;
@@ -500,23 +501,6 @@ export interface PlacesFound {
 /** Explore (bbox) outcome; transport errors still throw. */
 export type PlacesExplore =
   ({ kind: 'found' } & PlacesFound) | { kind: 'too-large' } | { kind: 'unsupported' };
-
-/** FR-TI01 update date for a record: fetch time first, then the dataset release. */
-export function provenanceDate(provenance: Pick<PlaceProvenance, 'fetchedAt' | 'dataRelease'>) {
-  return provenance.fetchedAt ?? provenance.dataRelease;
-}
-/** Tooltip of the selected-place source badge: review note, record attribution. */
-export function provenanceTooltip(provenance: PlaceProvenance) {
-  return [
-    provenance.dataset === 'overture' && `${OVERTURE_NOTE}.`,
-    provenance.dataset === 'golden' &&
-      provenance.coordVerified === false &&
-      'Chưa xác minh vị trí.',
-    provenance.attribution,
-  ]
-    .filter((part): part is string => !!part)
-    .join(' ');
-}
 
 const EARTH_KM = 6371;
 export function distanceKm(

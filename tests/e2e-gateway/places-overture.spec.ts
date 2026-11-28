@@ -123,8 +123,9 @@ test('HTTP mock (a): without a keyword the map loads by bbox, clusters and selec
   expect(first.has('category')).toBe(false);
   expect(first.get('bbox')).toMatch(/^[\d.]+,[\d.]+,[\d.]+,[\d.]+$/);
 
-  const clusters = page.locator('.leaflet-marker-icon[title$="địa điểm — phóng to"]');
+  const clusters = page.locator('.leaflet-marker-icon[title="Cụm địa điểm — phóng to"]');
   await expect(clusters.first()).toBeVisible();
+  await expect(clusters.first()).toHaveText('');
   await expect(
     page.getByText('Đang hiển thị 150 điểm nổi bật, phóng to để xem thêm'),
   ).toBeVisible();
@@ -170,7 +171,9 @@ test('HTTP mock (a): without a keyword the map loads by bbox, clusters and selec
   expect(width(bboxOf(urls.at(-1)!)!)).toBeLessThan(wide);
 
   // Curated pins are never clustered and open the selected-place card (keyboard too).
-  await page.locator('.leaflet-marker-icon[title="Chợ Hàn"]').focus();
+  const unselectedPin = page.locator('.leaflet-marker-icon[title="Chợ Hàn"]');
+  await expect(unselectedPin).toHaveText('');
+  await unselectedPin.focus();
   await page.keyboard.press('Enter');
   await expect(
     page.getByRole('article', { name: 'Đang chọn Chợ Hàn' }).filter({ visible: true }),
@@ -191,7 +194,7 @@ test('HTTP mock (a2): a cluster opens with the keyboard (Enter) like a click', a
   });
   await login(page);
   await page.goto(`/trips/${tripId}/map`);
-  const cluster = page.locator('.leaflet-marker-icon[title$="địa điểm — phóng to"]').first();
+  const cluster = page.locator('.leaflet-marker-icon[title="Cụm địa điểm — phóng to"]').first();
   await expect(cluster).toBeVisible();
   await page.waitForTimeout(500);
   const loaded = urls.length;
@@ -373,24 +376,17 @@ test('HTTP mock (d): an Overture POI shows its provenance and is added to Day 2'
   );
   await expect(row).not.toContainText('Chưa xác minh vị trí');
 
-  // Desktop: the existing selected-place card carries the source badge.
+  // The map card omits data provenance, which remains in the compact detail panel.
+  await row.getByRole('button').first().click();
   const card = page
     .getByRole('article', { name: `Đang chọn ${place.name}` })
     .filter({ visible: true });
-  // FR-TI01: exactly one extra line "<loại> · <tỉnh> · Nguồn: Overture (dd/MM/yyyy)".
-  const line = card.locator('[data-region="place-provenance"]');
-  await expect(line).toHaveText('Tiện ích cho khách · Đà Nẵng · Nguồn: Overture (18/11/2026)');
-  const lineBox = (await line.boundingBox())!;
-  expect(lineBox.height).toBeLessThan(24);
-  // Attribution lives in the badge tooltip, opened from the keyboard too.
-  await line.getByText('Overture', { exact: true }).focus();
-  await expect(page.getByRole('tooltip')).toContainText(OVERTURE);
+  await expect(card).toBeVisible();
+  await expect(card).not.toContainText('Nguồn:');
   await card.screenshot({ path: info.outputPath('overture-selected-card.png') });
-  await page.keyboard.press('Escape');
 
-  // The detail panel is the compact-layout view in the approved template (<= 768 px).
+  // The same selection opens the detail panel in the compact layout (<= 768 px).
   await page.setViewportSize({ width: 390, height: 900 });
-  await row.getByRole('button').first().click();
   const detail = page.getByRole('complementary', { name: 'Chi tiết địa điểm' });
   const provenance = detail.getByRole('definition');
   await expect(detail.getByLabel('Nguồn dữ liệu địa điểm')).toBeVisible();
@@ -494,10 +490,9 @@ test('HTTP mock (f): bbox explore never auto-picks a result; a click or pin does
   test.skip(!mapRun, 'Needs a build with a fake browser key (WOLFARI_LEAFLET_TEST=true).');
   await prepareMap(page);
   await mockPlan(page, gateway);
-  const urls: string[] = [];
   await page.route('**/places/search?*', (route) => {
-    urls.push(route.request().url());
-    return ok(route, frameResults(bboxOf(route.request().url())!));
+    const bbox = bboxOf(route.request().url());
+    return ok(route, bbox ? frameResults(bbox) : []);
   });
   await login(page);
   await page.goto(`/trips/${tripId}/map`);
@@ -524,7 +519,7 @@ for (const [keyword, name, id] of [
   ['cho han', 'Chợ Hàn', 'dn-cho-han'],
   ['ba na', 'Bà Nà Hills', 'dn-ba-na'],
 ] as const)
-  test(`HTTP mock (g) DoD step 2: "${keyword}" keeps the golden place first, labelled Wolfari and auto-picked`, async ({
+  test(`HTTP mock (g) DoD step 2: "${keyword}" lists the golden place first without selecting it`, async ({
     page,
     gateway,
   }) => {
@@ -574,11 +569,18 @@ for (const [keyword, name, id] of [
     await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
     const rows = page.locator('[data-region="place-list"] li');
     await expect(rows.first()).toContainText(name);
-    await expect(rows.first().getByText('Wolfari', { exact: true })).toBeVisible();
-    // Keyword mode keeps auto-picking the first result (DoD steps 2–3).
-    await expect(
-      page.getByRole('article', { name: `Đang chọn ${name}` }).filter({ visible: true }),
-    ).toBeVisible();
+    await expect(rows.first().getByText('Wolfari', { exact: true })).toHaveCount(0);
+    await expect(rows.nth(1).getByText('Overture', { exact: true })).toBeVisible();
+    await expect(rows.nth(2).getByText('Geoapify', { exact: true })).toBeVisible();
+    const selected = page
+      .getByRole('article', { name: `Đang chọn ${name}` })
+      .filter({ visible: true });
+    await expect(selected).toHaveCount(0);
+    const firstResult = rows.first().getByRole('button').first();
+    await expect(firstResult).toHaveAttribute('aria-pressed', 'false');
+    await firstResult.click();
+    await expect(selected).toBeVisible();
+    await expect(selected).not.toContainText('Nguồn:');
     expect(keywords[0]!.get('q')).toBe(keyword);
     expect(keywords[0]!.get('geocode')).toBe('false');
     // W14: the same-name place in another province shows its province beside the address.
@@ -626,7 +628,7 @@ test("HTTP mock (h) W14: search starts from the Trip's first saved place", async
   expect(Number(keywords[0]!.get('longitude'))).toBeCloseTo(107.5788, 1);
 });
 
-test('HTTP mock (i): a long category shortens or hides; province and source + date never truncate', async ({
+test('HTTP mock (i): long provenance stays available in details instead of on the card', async ({
   page,
   gateway,
 }, info) => {
@@ -653,46 +655,33 @@ test('HTTP mock (i): a long category shortens or hides; province and source + da
   await page.goto(`/trips/${tripId}/map`);
   await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('spa');
   await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
+  await page.getByRole('button', { name: /Spa Sài Gòn/ }).click();
   const card = page
     .getByRole('article', { name: 'Đang chọn Spa Sài Gòn' })
     .filter({ visible: true });
-  const line = card.locator('[data-region="place-provenance"]');
-  await expect(line).toBeVisible();
-  const truncated = (part: string) =>
-    line.locator(`[data-part="${part}"]`).evaluate((el) => el.scrollWidth > el.clientWidth + 1);
-  // Province and source + date are complete and inside the line.
-  await expect(line.locator('[data-part="province"]')).toHaveText('TP. Hồ Chí Minh ·');
-  await expect(line.locator('[data-part="source"]')).toHaveText('Nguồn: Overture (18/11/2026)');
-  expect(await truncated('province')).toBe(false);
-  expect(await truncated('source')).toBe(false);
-  const lineBox = (await line.boundingBox())!;
-  const sourceBox = (await line.locator('[data-part="source"]').boundingBox())!;
-  expect(sourceBox.x + sourceBox.width).toBeLessThanOrEqual(lineBox.x + lineBox.width + 1);
-  expect(lineBox.height).toBeLessThan(24);
-  // The long category gives way: shortened with an ellipsis or hidden entirely.
-  const category = line.locator('[data-part="category"]');
-  const hidden = !(await category.isVisible());
-  expect(hidden || (await truncated('category'))).toBe(true);
-  // Full text stays reachable in the badge tooltip (keyboard focus).
-  await line.getByText('Overture', { exact: true }).focus();
-  await expect(page.getByRole('tooltip')).toContainText(`${longLabel} · TP. Hồ Chí Minh`);
-  await card.screenshot({ path: info.outputPath('overture-card-long-category.png') });
-  await page.keyboard.press('Escape');
+  await expect(card).toBeVisible();
+  await expect(card).not.toContainText('Nguồn:');
+  await expect(card).not.toContainText(longLabel);
+  await page.setViewportSize({ width: 390, height: 900 });
+  const detail = page.getByRole('complementary', { name: 'Chi tiết địa điểm' });
+  const provenance = detail.getByRole('definition');
+  await expect(provenance.nth(0)).toHaveText(longLabel);
+  await expect(provenance.nth(1)).toHaveText('TP. Hồ Chí Minh');
+  await expect(provenance.nth(2)).toContainText('Overture');
+  await expect(provenance.nth(2)).toContainText('Cập nhật 18/11/2026');
+  await expect(provenance.nth(3)).toHaveText(OVERTURE);
+  await detail.screenshot({ path: info.outputPath('overture-detail-long-category.png') });
+  await detail.getByRole('button', { name: 'Quay lại bản đồ' }).click();
 
-  // A short category fits whole beside its province.
   await page
     .locator('[data-region="place-list"] li')
     .filter({ hasText: 'Chợ Hàn' })
     .getByRole('button')
     .first()
     .click();
-  const goldenLine = page
-    .getByRole('article', { name: 'Đang chọn Chợ Hàn' })
-    .filter({ visible: true })
-    .locator('[data-region="place-provenance"]');
-  await expect(goldenLine.locator('[data-part="category"]')).toBeVisible();
-  await expect(goldenLine.locator('[data-part="category"]')).toHaveText('Chợ ·');
-  await expect(goldenLine.locator('[data-part="source"]')).toHaveText('Nguồn: Wolfari');
+  await expect(detail.getByRole('heading', { name: 'Chợ Hàn', level: 2 })).toBeVisible();
+  await expect(provenance.nth(0)).toHaveText('Chợ');
+  await expect(provenance.getByText('Wolfari', { exact: true })).toBeVisible();
 });
 
 test('HTTP mock (e2): a backend that ignores bbox and lacks the new fields still works', async ({
@@ -767,16 +756,14 @@ test('HTTP mock (e2): a backend that ignores bbox and lacks the new fields still
   await page.getByRole('searchbox', { name: 'Tìm địa điểm' }).fill('cho han');
   await page.getByRole('button', { name: 'Tìm kiếm', exact: true }).click();
   await expect(rows.first()).toContainText('Chợ · Hải Châu, Đà Nẵng');
-  await expect(rows.first().getByText('Wolfari', { exact: true })).toBeVisible();
+  await expect(rows.first().getByText('Wolfari', { exact: true })).toHaveCount(0);
   await expect(rows.first()).toContainText('Chưa xác minh vị trí');
   // No province anywhere: the field is optional and simply not shown.
   await expect(page.locator('[data-province="other"]')).toHaveCount(0);
-  const line = page
-    .getByRole('article', { name: 'Đang chọn Chợ Hàn' })
-    .filter({ visible: true })
-    .locator('[data-region="place-provenance"]');
-  await expect(line.locator('[data-part="province"]')).toHaveCount(0);
-  await expect(line.locator('[data-part="source"]')).toHaveText('Nguồn: Wolfari');
+  await rows.first().getByRole('button').first().click();
+  const card = page.getByRole('article', { name: 'Đang chọn Chợ Hàn' }).filter({ visible: true });
+  await expect(card).toBeVisible();
+  await expect(card).not.toContainText('Nguồn:');
   await expect(page.getByText('Dữ liệu địa điểm: Wolfari', { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });

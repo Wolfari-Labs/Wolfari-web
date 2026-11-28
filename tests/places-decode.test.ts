@@ -31,6 +31,7 @@ describe('MAP-POI place decoding', () => {
       ...geoapify,
       id: 'dn-cho-han',
       name: 'Chợ Hàn',
+      description: '  Khu chợ truyền thống gần sông Hàn.  ',
       categories: ['market'],
       attribution: '© OpenStreetMap contributors',
       provider: 'WOLFARI',
@@ -45,6 +46,7 @@ describe('MAP-POI place decoding', () => {
     expect(place).toMatchObject({
       id: 'dn-cho-han',
       provider: 'WOLFARI',
+      description: 'Khu chợ truyền thống gần sông Hàn.',
       categories: ['market'],
       category: 'market',
       categoryLabel: 'Chợ',
@@ -60,6 +62,7 @@ describe('MAP-POI place decoding', () => {
   it('keeps working with the previous Geoapify-only response', () => {
     expect(decodePlace(geoapify)).toMatchObject({
       provider: 'GEOAPIFY',
+      description: null,
       categories: [],
       category: null,
       categoryLabel: null,
@@ -78,6 +81,7 @@ describe('MAP-POI place decoding', () => {
       coord_verified: 'yes',
       typical_duration_min: -5,
       category_label: 42,
+      description: 42,
       categories: ['a', 3],
     });
     expect(place).toMatchObject({
@@ -86,8 +90,10 @@ describe('MAP-POI place decoding', () => {
       coordVerified: null,
       typicalDurationMin: null,
       categoryLabel: null,
+      description: null,
       categories: ['a'],
     });
+    expect(decodePlace({ ...geoapify, description: '   ' }).description).toBeNull();
     expect(() =>
       decodePlace({ ...geoapify, coordinates: { latitude: 99, longitude: 1 } }),
     ).toThrow();

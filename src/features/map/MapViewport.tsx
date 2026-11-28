@@ -1,5 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { Heart } from 'lucide-react';
 import { Button } from '../../shared/components/Button';
+import { Icon } from '../../shared/components/Icon';
+import { Tip } from '../../shared/components/Ui';
 import desktopMapArtwork from '../../shared/assets/v2/map-art.svg';
 import desktopPlaceArtwork from '../../shared/assets/figma/a33fd.svg';
 import mobileMapArtwork from '../../shared/assets/figma/316c4.svg';
@@ -10,6 +13,10 @@ import { loadGoogleMapsSdk } from './google-places';
 import type { PlaceImage } from './places';
 import { PlacePhoto } from './PlacePhoto';
 import styles from './TripMapPage.module.css';
+
+const savePlaceLabel = 'Thêm vào danh sách địa điểm đã chọn';
+const removePlaceLabel = 'Bỏ khỏi danh sách địa điểm đã chọn';
+const closePlaceCardLabel = 'Đóng thẻ địa điểm';
 
 type GoogleMapsRuntime = {
   Map: new (
@@ -44,9 +51,12 @@ export function MapViewport({
   onSelect,
   onOpenDetail,
   runtimeMap,
-  selectedActions,
-  selectedMeta,
+  pinNotice,
   selectedImage,
+  selectedDescription,
+  selectionControl,
+  placeCardOpen = true,
+  onDismissPlaceCard,
   autoSelectFirst = true,
 }: {
   items: readonly MapLocationPresentation[];
@@ -58,11 +68,12 @@ export function MapViewport({
   onSelect: (locationId: string) => void;
   onOpenDetail: () => void;
   runtimeMap?: ReactNode;
-  /** Runtime commands for the selected place, inside the existing selected-place card. */
-  selectedActions?: ReactNode;
-  /** Runtime source line for the selected place (POI-OVERTURE W10, FR-TI01). */
-  selectedMeta?: ReactNode;
+  pinNotice?: ReactNode;
   selectedImage?: PlaceImage | null;
+  selectedDescription?: string | null;
+  selectionControl?: { onToggle: () => void; blockedReason: string | null } | undefined;
+  placeCardOpen?: boolean;
+  onDismissPlaceCard?: () => void;
   /** `false`: no card until the user picks a place (POI-OVERTURE bbox explore). */
   autoSelectFirst?: boolean;
 }) {
@@ -79,7 +90,65 @@ export function MapViewport({
     items.find((item) => item.location.id === selectedLocationId) ??
     (autoSelectFirst ? items[0] : null) ??
     null;
+  const showPlaceCard = placeCardOpen && !pinNotice;
   const primaryActivity = selected?.activities[0];
+  const description =
+    selectedDescription?.trim() ||
+    selected?.activities.find((activity) => activity.description?.trim())?.description?.trim();
+  const cardDescription =
+    description ??
+    (!selected || runtimeMap
+      ? null
+      : selected.scheduled
+        ? 'Địa điểm đã được thêm vào lịch trình của chuyến đi.'
+        : selected.selected
+          ? 'Địa điểm đã lưu và chưa được xếp vào lịch trình.'
+          : 'Chọn địa điểm để lưu vào chuyến đi.');
+  const cardPhoto = runtimeMap && selected && (
+    <div className={styles.mapCardPhoto} data-map-card-photo>
+      <PlacePhoto image={selectedImage} name={selected.location.name} linked />
+      {(selectionControl || onDismissPlaceCard) && (
+        <div className={styles.mapCardActions}>
+          {selectionControl && (
+            <Tip
+              label={
+                selectionControl.blockedReason ??
+                (selected.selected ? removePlaceLabel : savePlaceLabel)
+              }
+            >
+              <button
+                type="button"
+                className={`${styles.mapCardAction} ${styles.mapCardSave}`}
+                aria-label={selected.selected ? removePlaceLabel : savePlaceLabel}
+                aria-pressed={selected.selected}
+                aria-disabled={Boolean(selectionControl.blockedReason) || undefined}
+                onClick={() => {
+                  if (!selectionControl.blockedReason) selectionControl.onToggle();
+                }}
+              >
+                <Heart size={18} aria-hidden="true" />
+              </button>
+            </Tip>
+          )}
+          {onDismissPlaceCard && (
+            <Tip label={closePlaceCardLabel}>
+              <button
+                type="button"
+                className={`${styles.mapCardAction} ${styles.mapCardClose}`}
+                aria-label={closePlaceCardLabel}
+                onClick={() => {
+                  onDismissPlaceCard();
+                  viewportRef.current?.focus({ preventScroll: true });
+                }}
+              >
+                <Icon name="close" size={18} />
+              </button>
+            </Tip>
+          )}
+        </div>
+      )}
+    </div>
+  );
   const googleConfigured =
     !runtimeMap &&
     Boolean((import.meta.env.VITE_GOOGLE_MAPS_BROWSER_KEY as string | undefined)?.trim());
@@ -127,7 +196,7 @@ export function MapViewport({
     observer.observe(viewport);
     observer.observe(card);
     return () => observer.disconnect();
-  }, [selected?.location.id, selectedScreenPosition, runtimeMap]);
+  }, [selected?.location.id, selectedScreenPosition, runtimeMap, showPlaceCard]);
 
   useEffect(() => {
     let disposed = false;
@@ -175,11 +244,13 @@ export function MapViewport({
         map,
         position: { lat: coordinate.latitude, lng: coordinate.longitude },
         title: item.location.name,
-        label: {
-          text: String(item.markerNumber),
-          color: item.scheduled ? '#fff' : '#6c4a00',
-          fontWeight: '700',
-        },
+        label: item.selected
+          ? {
+              text: String(item.markerNumber),
+              color: item.scheduled ? '#fff' : '#6c4a00',
+              fontWeight: '700',
+            }
+          : undefined,
         icon: {
           path: googleMaps.SymbolPath.CIRCLE,
           scale: item.location.id === selected?.location.id ? 15 : 11,
@@ -222,6 +293,7 @@ export function MapViewport({
   return (
     <section
       ref={viewportRef}
+      tabIndex={onDismissPlaceCard ? -1 : undefined}
       className={`${styles.viewport} ${googleMapReady ? styles.googleMapActive : ''}`}
       aria-label={runtimeMap ? 'Bản đồ hành trình' : 'Bản đồ hành trình minh họa'}
     >
@@ -272,11 +344,13 @@ export function MapViewport({
             className={`${styles.marker} ${
               item.scheduled ? styles.markerScheduled : styles.markerUnscheduled
             } ${styles[`marker${Math.min(item.markerNumber, 6)}`]}`}
-            aria-label={`${item.markerNumber}. ${item.location.name}`}
+            aria-label={
+              item.selected ? `${item.markerNumber}. ${item.location.name}` : item.location.name
+            }
             aria-pressed={item.location.id === selected?.location.id}
             onClick={() => onSelect(item.location.id)}
           >
-            {item.markerNumber}
+            {item.selected ? item.markerNumber : null}
           </button>
         ))}
       </div>
@@ -292,51 +366,43 @@ export function MapViewport({
         </span>
       </div>
 
-      {selected && (
+      {pinNotice}
+      {showPlaceCard && selected && (
         <>
           <article
             ref={cardRef}
-            className={styles.desktopPlaceCard}
+            className={`${styles.desktopPlaceCard} ${runtimeMap ? styles.runtimePlaceCard : ''}`}
             style={cardPosition ? { left: cardPosition.left, top: cardPosition.top } : undefined}
             aria-label={`Đang chọn ${selected.location.name}`}
           >
             {runtimeMap ? (
-              <PlacePhoto image={selectedImage} name={selected.location.name} linked />
+              cardPhoto
             ) : (
               <img src={locationPhoto(selected)} width="230" height="90" alt="" />
             )}
             <strong>{selected.location.name}</strong>
             <span>⌖ {selected.location.address?.trim() || 'Chưa có địa chỉ'}</span>
-            {selectedMeta}
-            <p>
-              {(runtimeMap && !validCoordinates(selected.location)
-                ? 'Chưa có tọa độ hợp lệ'
-                : primaryActivity?.description) ??
-                (selected.scheduled
-                  ? 'Địa điểm đã được thêm vào lịch trình của chuyến đi.'
-                  : selected.selected
-                    ? 'Địa điểm đã lưu và chưa được xếp vào lịch trình.'
-                    : 'Chọn địa điểm để lưu vào chuyến đi.')}
-            </p>
-            {selectedActions}
+            {runtimeMap && !validCoordinates(selected.location) && <p>Chưa có tọa độ hợp lệ</p>}
+            {cardDescription && <p className={styles.mapCardDescription}>{cardDescription}</p>}
           </article>
 
           <article
-            className={styles.mobilePlaceCard}
+            className={`${styles.mobilePlaceCard} ${runtimeMap ? styles.runtimePlaceCard : ''}`}
             aria-label={`Đang chọn ${selected.location.name}`}
           >
+            {cardPhoto}
             <div className={styles.mobilePlaceSummary}>
-              {runtimeMap ? (
-                <PlacePhoto image={selectedImage} name={selected.location.name} compact linked />
-              ) : (
+              {!runtimeMap && (
                 <img src={locationPhoto(selected, true)} width="60" height="60" alt="" />
               )}
               <div>
                 <strong>{selected.location.name}</strong>
                 <span>{activityScheduleLabel(primaryActivity, timezone)}</span>
-                {selectedMeta}
               </div>
             </div>
+            {runtimeMap && description && (
+              <p className={styles.mapCardDescription}>{description}</p>
+            )}
             <Button className={styles.mobileDetailButton} onClick={onOpenDetail}>
               Xem địa điểm
             </Button>

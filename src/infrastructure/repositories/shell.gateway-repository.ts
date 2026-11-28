@@ -33,7 +33,13 @@ function mapViewer(raw: unknown): ShellSnapshot['viewer'] {
     throw new Error('Invalid Gateway profile projection');
   }
   if (typeof profile?.id !== 'string' || !profile.id) throw new Error('Missing actor ID');
-  return { id: profile.id, fullName, version, systemRole };
+  return {
+    id: profile.id,
+    fullName,
+    version,
+    systemRole,
+    hasAvatar: typeof profile.avatar === 'string' && profile.avatar.trim().length > 0,
+  };
 }
 
 function mapTrip(raw: unknown): NonNullable<ShellSnapshot['trip']> {

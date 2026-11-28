@@ -17,12 +17,18 @@ function initials(name: string) {
     .toLocaleUpperCase('vi');
 }
 
-export function AccountMenu({ name }: { name: string }) {
+export function AccountMenu({
+  name,
+  image,
+}: {
+  name: string;
+  image?: { src: string; alt: string } | null;
+}) {
   return (
     <DropdownMenu.Root>
       <div className={styles.profileGroup}>
         <Link to={paths.profile} className={styles.profile}>
-          <Avatar name={name} />
+          <Avatar name={name} image={image ?? null} />
           <span className={styles.accountName}>{name}</span>
           <span className={styles.profileCompactName}>{`${initials(name)} ${name}`}</span>
           <span className={styles.profilePurpose}>Hồ sơ cá nhân</span>

@@ -10,10 +10,6 @@ import { VietnameseDateInput } from '../../../shared/components/VietnameseDateIn
 import { browserStorage, type StorageStatus } from '../../../shared/lib/browser-storage';
 import { Textarea } from '../../../shared/components/Textarea';
 import banner from '../../../shared/assets/figma/32882.svg';
-import destinationPhoto from '../../../shared/assets/figma/06bd1.png';
-import destinationThumb1 from '../../../shared/assets/figma/ead32.svg';
-import destinationThumb2 from '../../../shared/assets/figma/5b6b8.svg';
-import destinationThumb3 from '../../../shared/assets/figma/274c0.svg';
 import styleExplore from '../../../shared/assets/figma/70141.svg';
 import styleRelax from '../../../shared/assets/figma/d97e6.svg';
 import styleFood from '../../../shared/assets/figma/e1a1d.svg';
@@ -21,14 +17,6 @@ import styleCulture from '../../../shared/assets/figma/70fc5.svg';
 import cover1 from '../../../shared/assets/figma/57139.svg';
 import cover2 from '../../../shared/assets/figma/b13e3.svg';
 import cover3 from '../../../shared/assets/figma/0ca42.svg';
-import mapArt from '../../../shared/assets/v2/create-map-art.svg';
-import mascotReadingMap from '../../../shared/assets/v2/mascot-reading-map.png';
-import thumbDaNang from '../../../shared/assets/v2/destination-danang.jpg';
-import thumbPhuQuoc from '../../../shared/assets/v2/destination-phuquoc.jpg';
-import thumbSaPa from '../../../shared/assets/v2/destination-sapa.jpg';
-import thumbHaNoi from '../../../shared/assets/v2/destination-hanoi.jpg';
-import thumbNinhBinh from '../../../shared/assets/v2/destination-ninhbinh.jpg';
-import thumbHue from '../../../shared/assets/v2/destination-hue.jpg';
 import { Icon } from '../../../shared/components/Icon';
 import { useTripRepository } from '../repositories/repository-context';
 import type { CreateTripResult } from '../repositories/trip.repository';
@@ -48,55 +36,9 @@ import {
 } from './create-trip';
 import { CreateTripSuccess } from './CreateTripSuccess';
 import styles from './CreateTripPage.module.css';
+import { TripDestinationMobilePreview, TripDestinationPreview } from './TripDestinationPreview';
 
 const storage = () => browserStorage('sessionStorage');
-
-// `image` feeds the mobile step-1 preview; `thumb` and `tags` are the Web v2 desktop
-// suggestion cards (Figma W03 938:9069 "Gợi ý điểm đến phổ biến").
-const destinations = [
-  {
-    name: 'Đà Nẵng',
-    caption: 'Thành phố biển',
-    tags: 'Biển · Văn hóa',
-    image: destinationPhoto,
-    thumb: thumbDaNang,
-  },
-  {
-    name: 'Phú Quốc',
-    caption: 'Đảo ngọc',
-    tags: 'Biển đảo · Nghỉ dưỡng',
-    image: destinationThumb1,
-    thumb: thumbPhuQuoc,
-  },
-  {
-    name: 'Sa Pa',
-    caption: 'Phố núi trong mây',
-    tags: 'Thiên nhiên · Khám phá',
-    image: destinationThumb2,
-    thumb: thumbSaPa,
-  },
-  {
-    name: 'Hà Nội',
-    caption: 'Thủ đô ngàn năm',
-    tags: 'Văn hóa · Ẩm thực',
-    image: destinationThumb3,
-    thumb: thumbHaNoi,
-  },
-  {
-    name: 'Ninh Bình',
-    caption: 'Non nước hữu tình',
-    tags: 'Thiên nhiên · Check-in',
-    image: destinationThumb1,
-    thumb: thumbNinhBinh,
-  },
-  {
-    name: 'Huế',
-    caption: 'Cố đô thơ mộng',
-    tags: 'Di sản · Ẩm thực',
-    image: destinationThumb2,
-    thumb: thumbHue,
-  },
-] as const;
 
 const styleOptions: ReadonlyArray<{ value: TripStyle; label: string; icon: string }> = [
   { value: 'explore', label: 'Khám phá', icon: styleExplore },
@@ -163,9 +105,6 @@ function PreviewCreateTripPage() {
     [customCover],
   );
 
-  const selectedDestination = destinations.find((item) => item.name === draft.destination);
-  const selectedPhoto = selectedDestination?.image ?? destinationPhoto;
-  const selectedThumb = selectedDestination?.thumb ?? thumbDaNang;
   const perPerson = useMemo(() => {
     const value = Number(draft.budget.replace(/[^\d]/g, ''));
     if (!Number.isFinite(value) || value <= 0) return '';
@@ -453,18 +392,7 @@ function PreviewCreateTripPage() {
                 </div>
               </fieldset>
 
-              <div className={styles.mobileDestinationPreview}>
-                <img
-                  src={selectedPhoto}
-                  alt={
-                    draft.destination ? `Điểm đến ${draft.destination}` : 'Gợi ý điểm đến Đà Nẵng'
-                  }
-                />
-                <div>
-                  <strong>{draft.destination || 'Đà Nẵng'}</strong>
-                  <span>{selectedDestination?.caption ?? 'Thành phố đáng sống'}</span>
-                </div>
-              </div>
+              <TripDestinationMobilePreview destination={draft.destination} />
 
               <div className={styles.mobileActions}>
                 <Button type="button" onClick={continueToDetails}>
@@ -610,57 +538,7 @@ function PreviewCreateTripPage() {
             </div>
           </section>
 
-          <aside className={styles.destinationPanel} aria-label="Gợi ý điểm đến">
-            <div className={styles.mapCard}>
-              <h2>Bản đồ điểm đến</h2>
-              <div className={styles.mapArea}>
-                <img className={styles.mapArt} src={mapArt} alt="" aria-hidden="true" />
-                <span className={styles.mapHint}>Chọn một nơi để bắt đầu hành trình</span>
-                <i className={styles.mapPin} aria-hidden="true">
-                  ★
-                </i>
-                <div className={styles.selectedDestination}>
-                  <img src={selectedThumb} alt="" />
-                  <div>
-                    <small>Điểm đến đã chọn</small>
-                    <strong>{draft.destination || 'Chưa chọn điểm đến'}</strong>
-                    <span>
-                      {selectedDestination?.caption ?? 'Chọn từ danh sách gợi ý bên dưới'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.suggestions}>
-              <h2>Gợi ý điểm đến phổ biến</h2>
-              <div>
-                {destinations.map((destination) => (
-                  <button
-                    key={destination.name}
-                    type="button"
-                    aria-pressed={draft.destination === destination.name}
-                    onClick={() => selectDestination(destination.name)}
-                  >
-                    <img src={destination.thumb} alt="" />
-                    <span>
-                      <strong>{destination.name}</strong>
-                      <small>{destination.tags}</small>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className={styles.mascotCard}>
-              <img src={mascotReadingMap} alt="" />
-              <div>
-                <strong>Biến ý tưởng thành hành trình đáng nhớ!</strong>
-                <p>
-                  Sau khi tạo, cả nhóm có thể cùng lên lịch trình, chọn dress code và chuẩn bị hành
-                  lý.
-                </p>
-              </div>
-            </div>
-          </aside>
+          <TripDestinationPreview destination={draft.destination} onSelect={selectDestination} />
         </div>
       </form>
 

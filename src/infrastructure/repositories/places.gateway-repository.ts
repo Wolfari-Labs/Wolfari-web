@@ -43,6 +43,7 @@ export function decodePlace(value: unknown): DiscoveredPlace {
     id: d.string(p.id),
     name: d.string(p.name),
     address: typeof p.address === 'string' ? p.address : '',
+    description: optionalText(p.description, 2000),
     latitude: c.latitude,
     longitude: c.longitude,
     token: d.string(p.selection_token),

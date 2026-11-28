@@ -23,8 +23,6 @@ import { useSortable } from '@dnd-kit/react/sortable';
 import type { RouteContext } from '../../app/route-context';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
-import { paths } from '../../app/route-paths';
 import { useTripPlanSnapshot } from './hooks/use-trip-plan-snapshot';
 import { usePlanDraft } from './hooks/use-plan-draft';
 import { usePreviewDnd, type PreviewDndControls } from './hooks/use-preview-dnd';
@@ -1112,16 +1110,9 @@ export function PlanPage() {
 }
 function PlanHeader({ trip }: { trip: TripDetailViewModel }) {
   return (
-    <>
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(trip.id) }]}
-        current="Lịch trình"
-      />
-      <div className={styles.hero}>
-        <TripHero trip={trip} compact variant="landscape" />
-      </div>
-    </>
+    <div className={styles.hero}>
+      <TripHero trip={trip} compact variant="landscape" />
+    </div>
   );
 }
 function GatewayPlanPage() {

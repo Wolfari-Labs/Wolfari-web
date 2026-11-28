@@ -2,7 +2,6 @@ import { useMemo, useRef, useState, type RefObject } from 'react';
 import { useOutletContext, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import { TripHero } from '../trips/components/TripHero';
 import { usePriceWatchRepository } from './repositories/price-watch-context';
@@ -25,7 +24,6 @@ import { PriceHistoryChart } from './PriceHistoryChart';
 import { Select } from '../../shared/components/Select';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import type { DomainError } from '../../shared/types/result';
 import mascot from '../../shared/assets/v2/mascot-reading-map.png';
 import styles from './PriceWatchPage.module.css';
@@ -637,11 +635,6 @@ function PreviewPriceWatchPage() {
               : null;
   return (
     <section className={styles.page} data-flow="price-watch-preview" data-node-id="768:7992">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Theo dõi giá vé"
-      />
       {trip && <TripHero trip={trip} compact variant="landscape" />}
       {error ? (
         <ErrorState

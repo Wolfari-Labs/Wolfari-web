@@ -30,6 +30,9 @@
   /* Room for the page breadcrumb, which WorkspacePage lays over this column. */
   padding-top: 18px;
 }
+.hero[data-variant='landscape'] .text {
+  padding-top: 0;
+}
 .titleRow {
   display: flex;
   align-items: center;

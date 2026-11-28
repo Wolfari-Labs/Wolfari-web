@@ -40,9 +40,8 @@ async function expectRouteContent(page: Page, route: string) {
     await expect(page.getByRole('heading', { level: 1, name: 'Hồ sơ cá nhân' })).toBeVisible();
   else if (route.endsWith('/plan')) {
     await expect(page.locator('[data-flow="plan-preview"]')).toBeVisible();
-    await expect(
-      page.locator('main').getByRole('heading', { name: 'Lịch trình', exact: true }),
-    ).toBeVisible();
+    await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+    await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
     await expect(page.getByRole('list', { name: 'Các hoạt động trong ngày' })).toBeVisible();
   } else if (route.endsWith('/members'))
     await expect(page.locator('[data-flow="members-preview"]')).toBeVisible();
@@ -197,7 +196,8 @@ for (const size of sizes)
       );
       await nav.getByRole('link', { name: 'Thành viên', exact: true }).click();
       await expect(page).toHaveURL(tripPath + '/members');
-      await expect(page.getByRole('heading', { name: 'Thành viên', exact: true })).toBeVisible();
+      await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+      await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       expect(await page.locator('main').evaluate((element) => element.scrollTop)).toBe(0);
       await page.goBack();
       await expect(page).toHaveURL(tripPath);

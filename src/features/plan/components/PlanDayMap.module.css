@@ -12,7 +12,8 @@
   min-width: 0;
   min-height: 0;
   padding: 16px 12px 12px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   border-radius: var(--v2-radius-tile);
   background: var(--v2-white);
   box-shadow: var(--v2-shadow-card), var(--v2-inset);
@@ -114,16 +115,4 @@
 }
 .routeSummary[data-estimated] {
   color: var(--v2-warning-text);
-}
-.routeMode {
-  margin-inline: 10px;
-}
-.routeMode > label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.routeMode select {
-  min-height: 34px;
 }

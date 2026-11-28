@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router';
-import { paths } from '../../app/route-paths';
+import { useParams } from 'react-router';
 import { Button } from '../../shared/components/Button';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { useDesktopLayout } from '../../shared/lib/use-desktop-layout';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
@@ -48,18 +46,6 @@ export function GatewayDressCodePage() {
 
   return (
     <section className={styles.page} data-flow="gateway-dress-read">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Dress code"
-        mobile={
-          <nav className={styles.breadcrumb} aria-label="Đường dẫn">
-            <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-            <span aria-hidden="true">›</span>
-            <span>Dress code</span>
-          </nav>
-        }
-      />
       {data && <TripHero trip={data.trip} variant="landscape" />}
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         {data && (

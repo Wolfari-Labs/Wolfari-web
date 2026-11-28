@@ -4,12 +4,8 @@ const trip = '/trips/11111111-1111-4111-8111-111111111111';
 test('Closing map or activity panel expands the itinerary', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(trip + '/plan');
-  const breadcrumb = page.getByRole('navigation', { name: 'Đường dẫn' });
-  await expect(breadcrumb.getByRole('link', { name: 'Tổng quan chuyến đi' })).toHaveAttribute(
-    'href',
-    trip,
-  );
-  await expect(breadcrumb.getByRole('heading', { name: 'Lịch trình' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
+  await expect(page.locator('[data-region="trip-hero"]')).toBeVisible();
   const map = page.locator('[data-plan-day-map]');
   const timeline = page
     .getByRole('list', { name: 'Các hoạt động trong ngày' })

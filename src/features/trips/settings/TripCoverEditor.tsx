@@ -9,6 +9,25 @@ import { useTripCoverImage } from '../hooks/use-trip-cover-image';
 import { useWriteScope } from '../../../shared/lib/use-write-scope';
 import styles from './TripCoverEditor.module.css';
 
+function uploadErrorMessage(error: unknown) {
+  switch (error instanceof Error && 'code' in error ? error.code : null) {
+    case 'VALIDATION_FAILED':
+      return 'Máy chủ không đọc được ảnh. Hãy chọn ảnh JPEG hoặc PNG tĩnh, tối đa 5 MB và 30 megapixel.';
+    case 'UNAUTHENTICATED':
+      return 'Phiên đăng nhập đã hết hạn. Đăng nhập lại để đổi ảnh bìa.';
+    case 'PERMISSION_DENIED':
+      return 'Bạn không có quyền đổi ảnh bìa của chuyến đi này.';
+    case 'RESOURCE_NOT_FOUND':
+      return 'Chuyến đi không còn khả dụng.';
+    case 'STATE_CONFLICT':
+      return 'Trạng thái chuyến đi đã thay đổi. Tải lại chuyến đi trước khi đổi ảnh bìa.';
+    case 'SERVICE_UNAVAILABLE':
+      return 'Dịch vụ ảnh bìa tạm thời chưa khả dụng. Tải lại chuyến đi để kiểm tra ảnh trước khi thử lại.';
+    default:
+      return 'Chưa xác nhận được ảnh bìa đã lưu. Tải lại chuyến đi để kiểm tra trước khi thử lại.';
+  }
+}
+
 export function TripCoverEditor({
   trip,
   disabled = false,
@@ -22,7 +41,9 @@ export function TripCoverEditor({
   const queryClient = useQueryClient();
   const cover = useTripCoverImage(trip.id, trip.presentation.coverAvailable);
   const coverSrc = cover.src ?? trip.presentation.cover?.src;
-  const [error, setError] = useState('');
+  const [feedback, setFeedback] = useState<{ tone: 'success' | 'error'; message: string } | null>(
+    null,
+  );
   const [busy, setBusy] = useState(false);
   const identity = `${trip.currentMembership.userId}:${trip.id}`;
   const writeScope = useWriteScope(identity);
@@ -37,7 +58,7 @@ export function TripCoverEditor({
   useLayoutEffect(() => {
     inFlight.current = null;
     setBusy(false);
-    setError('');
+    setFeedback(null);
   }, [identity]);
 
   useEffect(() => {
@@ -48,18 +69,25 @@ export function TripCoverEditor({
   async function upload(file?: File) {
     if (!file || inFlight.current || busy || disabled || !canEdit) return;
     if (!['image/jpeg', 'image/png'].includes(file.type) || file.size > 5 * 1024 * 1024) {
-      setError('Chọn ảnh JPEG hoặc PNG có dung lượng tối đa 5 MB.');
+      setFeedback({ tone: 'error', message: 'Chọn ảnh JPEG hoặc PNG có dung lượng tối đa 5 MB.' });
+      return;
+    }
+    if (!file.size) {
+      setFeedback({ tone: 'error', message: 'Tệp ảnh trống. Hãy chọn ảnh khác.' });
       return;
     }
     if (!repository.uploadCover) {
-      setError('Tải ảnh bìa chưa khả dụng trong chế độ dữ liệu hiện tại.');
+      setFeedback({
+        tone: 'error',
+        message: 'Tải ảnh bìa chưa khả dụng trong chế độ dữ liệu hiện tại.',
+      });
       return;
     }
     const signal = writeScope();
     if (signal.aborted) return;
     inFlight.current = signal;
     setBusy(true);
-    setError('');
+    setFeedback(null);
     try {
       await repository.uploadCover({ tripId: trip.id, file, signal });
       if (signal.aborted) return;
@@ -69,8 +97,9 @@ export function TripCoverEditor({
         queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
         queryClient.invalidateQueries({ queryKey: ['shell', trip.id] }),
       ]);
-    } catch {
-      if (!signal.aborted) setError('Chưa tải được ảnh bìa. Kiểm tra kết nối rồi thử lại.');
+      if (!signal.aborted) setFeedback({ tone: 'success', message: 'Đã lưu ảnh bìa.' });
+    } catch (error) {
+      if (!signal.aborted) setFeedback({ tone: 'error', message: uploadErrorMessage(error) });
     } finally {
       if (inFlight.current === signal) inFlight.current = null;
       if (!signal.aborted) setBusy(false);
@@ -83,7 +112,7 @@ export function TripCoverEditor({
     if (signal.aborted) return;
     inFlight.current = signal;
     setBusy(true);
-    setError('');
+    setFeedback(null);
     try {
       await repository.removeCover({ tripId: trip.id, signal });
       if (signal.aborted) return;
@@ -95,7 +124,10 @@ export function TripCoverEditor({
       ]);
     } catch {
       if (!signal.aborted)
-        setError('Chưa xóa được ảnh bìa. Trạng thái hiện tại chưa thay đổi trên giao diện.');
+        setFeedback({
+          tone: 'error',
+          message: 'Chưa xác nhận được ảnh bìa đã xóa. Tải lại chuyến đi để kiểm tra.',
+        });
     } finally {
       if (inFlight.current === signal) inFlight.current = null;
       if (!signal.aborted) setBusy(false);
@@ -157,7 +189,7 @@ export function TripCoverEditor({
             )}
           </div>
           <p className={styles.note}>
-            Ảnh JPEG hoặc PNG, tối đa 5 MB. Ảnh được cập nhật ngay khi chọn.
+            Ảnh JPEG hoặc PNG tĩnh, tối đa 5 MB và 30 megapixel. Ảnh được lưu ngay khi chọn.
           </p>
           {!repository.uploadCover && (
             <p className={styles.note}>Tải ảnh bìa chưa khả dụng trong chế độ dữ liệu hiện tại.</p>
@@ -169,7 +201,7 @@ export function TripCoverEditor({
           Đang cập nhật ảnh bìa…
         </p>
       )}
-      {error && <Alert tone="error">{error}</Alert>}
+      {feedback && <Alert tone={feedback.tone}>{feedback.message}</Alert>}
     </section>
   );
 }

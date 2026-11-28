@@ -10,6 +10,7 @@ import {
 import type { DomainError } from '../../shared/types/result';
 import { useOptionalSessionManager } from '../../app/session-context';
 import { useIdentityTask } from './use-identity-task';
+import { useAvatarImage } from './use-avatar-image';
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Alert } from '../../shared/components/Alert';
@@ -73,8 +74,6 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
   );
   const [editingName, setEditingName] = useState(false);
   const [logoutFeedback, setLogoutFeedback] = useState<ReactNode>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [avatarError, setAvatarError] = useState(false);
   const [password, setPassword] = useState({ current: '', next: '', confirmation: '' });
   const [passwordError, setPasswordError] = useState<ReactNode>(null);
   const [passwordUncertain, setPasswordUncertain] = useState(false);
@@ -130,36 +129,12 @@ export function ProfilePage({ previewEnabled }: { previewEnabled: boolean }) {
     ).values(),
   );
 
-  // The endpoint stays constant after upload; version is the avatar cache boundary.
   const avatarPresent = !!profile?.avatar;
-  useEffect(() => {
-    const controller = new AbortController();
-    let objectUrl: string | null = null;
-    setAvatarUrl(null);
-    setAvatarError(false);
-    if (avatarPresent && repository.getAvatar && typeof URL.createObjectURL === 'function') {
-      void (async () => {
-        try {
-          const avatar = await repository.getAvatar!({ signal: controller.signal });
-          controller.signal.throwIfAborted();
-          if (avatar.status !== 'ready') {
-            setAvatarError(true);
-            return;
-          }
-          objectUrl = URL.createObjectURL(
-            new Blob([avatar.bytes], { type: avatar.contentType ?? 'image/png' }),
-          );
-          setAvatarUrl(objectUrl);
-        } catch {
-          if (!controller.signal.aborted) setAvatarError(true);
-        }
-      })();
-    }
-    return () => {
-      controller.abort();
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [avatarPresent, profile?.id, profile?.version, repository]);
+  const { src: avatarUrl, error: avatarError } = useAvatarImage({
+    userId: profile?.id,
+    version: profile?.version,
+    enabled: avatarPresent,
+  });
 
   const error = query.isError ? unavailable : result?.status === 'error' ? result.error : null;
   const applyProfile = async (updated: SelfProfileViewModel) => {

@@ -57,7 +57,8 @@ async function register(page, label, email = `d1-${randomUUID()}@wolfari.test`) 
 }
 async function fund(page, tripId) {
   await page.goto(`/trips/${tripId}/fund`);
-  await expect(page.getByRole('heading', { name: 'Quỹ nhóm', exact: true })).toBeVisible();
+  await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+  await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
 }
 async function manualCreate(page) {
   const manual = page.getByRole('button', { name: 'Tạo hoạt động thủ công', exact: true });
@@ -363,9 +364,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       );
       for (const page of [holder, member]) {
         await page.goto(`/trips/${tripId}/plan`);
-        await expect(
-          page.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-        ).toBeVisible();
+        await expect(page.locator('[data-region="trip-hero"]')).toHaveCount(1);
+        await expect(page.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
         await page.screenshot({
           path: test
             .info()
@@ -810,9 +810,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       ).toHaveCount(0);
       await accept(editor, await linkInvite(owner, tripId), tripId);
       await editor.goto(`/trips/${tripId}/plan`);
-      await expect(
-        editor.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-      ).toBeVisible();
+      await expect(editor.locator('[data-region="trip-hero"]')).toHaveCount(1);
+      await expect(editor.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       await expect(editor.getByRole('button', { name: 'Thêm hoạt động' })).toHaveCount(0);
     });
     await test.step('restart without reset preserves IDs/Plan/ledger; Finance loss does not empty Fund', async () => {
@@ -839,9 +838,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
         await expect(owner.getByRole('heading', { name: 'Chuyến đi chưa bật quỹ' })).toHaveCount(0);
         await expect(owner.getByRole('region', { name: 'Trạng thái quỹ' })).toHaveCount(0);
         await editor.reload();
-        await expect(
-          editor.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-        ).toBeVisible();
+        await expect(editor.locator('[data-region="trip-hero"]')).toHaveCount(1);
+        await expect(editor.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       } finally {
         await control('start', 'finance-service');
       }
@@ -929,9 +927,8 @@ test('REAL demo1: five accounts, shared Plan, manual 500000 ledger, recovery, de
       }
       await owner.setViewportSize({ width: 1440, height: 1000 });
       await owner.locator(`a[href="/trips/${tripId}/plan"]:visible`).first().click();
-      await expect(
-        owner.getByRole('heading', { name: 'Lịch trình', exact: true, level: 1 }),
-      ).toBeVisible();
+      await expect(owner.locator('[data-region="trip-hero"]')).toHaveCount(1);
+      await expect(owner.getByRole('navigation', { name: 'Đường dẫn' })).toHaveCount(0);
       await owner.evaluate(() => {
         document.documentElement.style.zoom = '2';
       });

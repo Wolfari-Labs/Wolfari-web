@@ -35,9 +35,13 @@ test('login, profile save, private avatar replacement and paginated session revo
   await avatar.setInputFiles({ name: 'avatar.png', mimeType: 'image/png', buffer: avatarPng });
   await expect(page.getByText('Đã cập nhật ảnh đại diện.')).toBeVisible();
   await expect(page.locator('img[alt="Updated Gateway Name"]')).toHaveAttribute('src', /^blob:/);
+  const headerAvatar = page.locator('header[data-node-id]:visible a[href="/profile"] img');
+  await expect(headerAvatar).toHaveAttribute('src', /^blob:/);
+  const oldHeaderSrc = await headerAvatar.getAttribute('src');
   const oldSrc = await page.locator('img[alt="Updated Gateway Name"]').getAttribute('src');
   await avatar.setInputFiles({ name: 'avatar-2.png', mimeType: 'image/png', buffer: avatarPng });
   await expect(page.locator('img[alt="Updated Gateway Name"]')).not.toHaveAttribute('src', oldSrc!);
+  await expect(headerAvatar).not.toHaveAttribute('src', oldHeaderSrc!);
   expect(gateway.avatarReads).toBe(2);
   const avatarPatch = gateway.calls.filter((call) => call.method === 'PATCH').at(-1)?.body;
   expect(avatarPatch).toEqual({

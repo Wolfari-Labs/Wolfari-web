@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { paths } from '../../app/route-paths';
 import { useRuntimeServices } from '../../app/gateway-context';
@@ -7,7 +7,6 @@ import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { Input } from '../../shared/components/Input';
 import { Select } from '../../shared/components/Select';
 import { Drawer } from '../../shared/components/Drawer';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { ActionMenu } from '../../shared/components/Ui';
 import searchIcon from '../../shared/assets/figma/ce7fc.svg';
 import pinIcon from '../../shared/assets/figma/8efc8.svg';
@@ -52,7 +51,6 @@ import {
   placeDataset,
   placeActivityType,
   placeSearchParams,
-  placeSourceLabel,
   placeImage,
   resultProvenance,
   savedPlaceActivityType,
@@ -64,20 +62,14 @@ import {
   type RouteMode,
   type PlaceImage,
 } from './places';
-import { PlaceProvenanceLine, PlaceSourceBadges } from './PlaceSourceBadges';
+import { PlaceSourceBadges } from './PlaceSourceBadges';
 import type { MapLocationPresentation } from './trip-map';
 import styles from './TripMapPage.module.css';
 
 const zoomInNotice = 'Phóng to để xem địa điểm';
+const MIN_LIVE_SEARCH_LENGTH = 2;
+const LIVE_SEARCH_DELAY_MS = 350;
 
-function sourceSummary(found: PlacesFound) {
-  const provider =
-    found.source.provider === 'WOLFARI+GEOAPIFY'
-      ? 'Wolfari + Geoapify'
-      : placeSourceLabel(found.source.provider);
-  const attribution = [...new Set(found.items.map((p) => p.attribution).filter(Boolean))];
-  return `${found.source.stale ? 'Cache cũ · ' : ''}${provider} · ${found.source.fetchedAt ? new Date(found.source.fetchedAt).toLocaleString('vi-VN') : ''}${attribution.length ? ` · ${attribution.join(' · ')}` : ''}`;
-}
 /** Explore (bbox) state shown under the group chips. */
 type ExploreStatus = 'idle' | 'zoom' | 'ready' | 'truncated' | 'error' | 'unsupported';
 
@@ -118,10 +110,12 @@ function MapWorkspace({
   const signal = useWriteScope(`${tripId}:${actor}`);
   const [query, setQuery] = useState('');
   const [detailOpen, setDetailOpen] = useState(false);
+  const [placeCardOpen, setPlaceCardOpen] = useState(true);
   const [selectedMapPosition, setSelectedMapPosition] = useState<{ x: number; y: number } | null>(
     null,
   );
   const [manualOpen, setManualOpen] = useState(false);
+  const [draftPin, setDraftPin] = useState<MapCenter | null>(null);
   // W14: start from the Trip's first saved place (in itinerary order); Đà Nẵng otherwise.
   const [center, setCenter] = useState<MapCenter>(() => {
     const plan = data?.plan;
@@ -149,8 +143,7 @@ function MapWorkspace({
   const [filter, setFilter] = useState<LocationScheduleFilter>('ALL'),
     [busy, setBusy] = useState(false),
     [searching, setSearching] = useState(false);
-  const [notice, setNotice] = useState(''),
-    [source, setSource] = useState('');
+  const [notice, setNotice] = useState('');
   const [manual, setManual] = useState({
     name: '',
     address: '',
@@ -177,7 +170,7 @@ function MapWorkspace({
   const [storageBlocked, setStorageBlocked] = useState(journal.blocked);
   // POI-OVERTURE W12: explore the visible frame when there is no keyword.
   const [viewport, setViewport] = useState<MapViewportChange | null>(null);
-  /** Where `results` came from: `query` refits the map once, `bbox` keeps the frame. */
+  /** Tracks whether results came from frame exploration or the search form. */
   const [resultMode, setResultMode] = useState<'none' | 'query' | 'bbox'>('none');
   const [exploreStatus, setExploreStatus] = useState<ExploreStatus>('idle');
   const [dataRelease, setDataRelease] = useState<string | null>(null);
@@ -200,7 +193,6 @@ function MapWorkspace({
       setResults(found.items);
       setResultMode('bbox');
       setDataRelease(found.source.dataRelease ?? null);
-      setSource(sourceSummary(found));
       setExploreStatus(found.source.bboxTruncated ? 'truncated' : 'ready');
     };
     const clear = (status: ExploreStatus) => {
@@ -248,8 +240,16 @@ function MapWorkspace({
     return () => window.clearTimeout(timer);
   }, [repo, viewport, exploring, tripId]);
   useEffect(() => () => exploreController.current?.abort(), []);
-  const writing = useRef(false),
-    searchSequence = useRef(0);
+  const writing = useRef(false);
+  const searchTimer = useRef<number | undefined>(undefined);
+  const searchController = useRef<AbortController | null>(null);
+  const cancelKeywordSearch = useCallback(() => {
+    window.clearTimeout(searchTimer.current);
+    searchTimer.current = undefined;
+    searchController.current?.abort();
+    searchController.current = null;
+  }, []);
+  useEffect(() => cancelKeywordSearch, [cancelKeywordSearch]);
   const currentPlan = data?.plan;
   const all = useMemo(() => {
     if (!currentPlan) return [];
@@ -319,7 +319,7 @@ function MapWorkspace({
       markerNumber: all.length + index + 1,
     })),
   ];
-  const visibleItems = allItems.filter((item) => {
+  const filteredItems = allItems.filter((item) => {
     if (filter === 'SELECTED' && !item.selected) return false;
     if (filter === 'SCHEDULED' && !item.scheduled) return false;
     if (filter === 'UNSCHEDULED' && (!item.selected || item.scheduled)) return false;
@@ -336,23 +336,33 @@ function MapWorkspace({
       )
     )
       return false;
-    return (
+    return true;
+  });
+  const normalizedQuery = normalizedPlaceText(query);
+  const visibleItems = filteredItems.filter(
+    (item) =>
       !item.selected ||
       normalizedPlaceText(`${item.location.name} ${item.location.address ?? ''}`).includes(
-        normalizedPlaceText(query),
-      )
-    );
-  });
-  // Bbox explore never picks a result for the user; keyword search keeps auto-picking the
-  // first result (DoD steps 2-3).
-  const autoPickOff = exploring && resultMode === 'bbox';
-  const effectiveSelectedId = visibleItems.some((item) => item.location.id === selected)
+        normalizedQuery,
+      ) ||
+      Boolean(resultOf(item)),
+  );
+  // Keyword results stay in the list until the user picks one. Keep existing trip pins in view.
+  const mapItems = exploring
+    ? visibleItems
+    : filteredItems.filter((item) => item.selected || item.location.id === selected);
+  const autoPickOff = !exploring || resultMode === 'bbox';
+  const effectiveSelectedId = mapItems.some((item) => item.location.id === selected)
     ? selected
     : autoPickOff
       ? null
-      : (visibleItems[0]?.location.id ?? null);
-  const selectedItem =
-    visibleItems.find((item) => item.location.id === effectiveSelectedId) ?? null;
+      : (mapItems[0]?.location.id ?? null);
+  const selectedItem = mapItems.find((item) => item.location.id === effectiveSelectedId) ?? null;
+  const savedDescription = selectedItem?.location.metadata.description;
+  const selectedDescription = selectedItem
+    ? (resultOf(selectedItem)?.description ??
+      (typeof savedDescription === 'string' ? savedDescription.trim() : null))
+    : null;
   const imageLocation = selectedItem?.location;
   const imageKnown = !!selectedItem && !!imageOf(selectedItem);
   const imageChecked = !!imageLocation && Object.hasOwn(savedImages, imageLocation.id);
@@ -406,7 +416,7 @@ function MapWorkspace({
   const selectedCount = all.length;
   const scheduledCount = all.filter((item) => item.scheduled).length;
   const unscheduledCount = selectedCount - scheduledCount;
-  const points = visibleItems.flatMap((item) => {
+  const points = mapItems.flatMap((item) => {
     const c = validCoordinates(item.location);
     const result = resultFor(item);
     return c
@@ -415,7 +425,8 @@ function MapWorkspace({
             ...c,
             id: item.location.id,
             name: item.location.name,
-            number: item.markerNumber,
+            ...(item.selected ? { number: item.markerNumber } : {}),
+            selected: item.selected,
             scheduled: item.scheduled,
             // Curated Wolfari pins, saved places and the place the user picked stay single (W12).
             clusterable:
@@ -440,8 +451,14 @@ function MapWorkspace({
         ? { coordinates: dayRoute.data.geometry, estimated: false }
         : { coordinates: routeStops, estimated: true };
   const dataCredit = placeDataCredit(results, dataRelease);
+  const discardDraftPin = () => {
+    setDraftPin(null);
+    setManual((fields) => ({ ...fields, name: '', address: '' }));
+  };
   const chooseLocation = (id: string, open = false) => {
+    if (draftPin) discardDraftPin();
     setSelected(id);
+    setPlaceCardOpen(true);
     if (open) setDetailOpen(true);
   };
   const canEdit =
@@ -453,47 +470,84 @@ function MapWorkspace({
     !snapshot.refreshing &&
     !snapshot.refreshFailed;
   const canAddLocation = canEdit && selectedCount < 50;
+  const previewPin = (point: MapCenter) => {
+    setDraftPin(point);
+    setManual((fields) => ({
+      ...fields,
+      latitude: point.latitude.toFixed(6),
+      longitude: point.longitude.toFixed(6),
+    }));
+  };
   const closeSavedPin = () => {
     setManualOpen(false);
-    setManual((fields) => ({ ...fields, name: '', address: '' }));
+    discardDraftPin();
+    setNotice('Đã lưu pin thủ công.');
   };
   const days = planDays(data.trip.startAt, data.trip.endAt, data.trip.timezone);
-  const search = async () => {
-    if (!repo) return;
+  const search = async (term: string) => {
+    window.clearTimeout(searchTimer.current);
+    searchTimer.current = undefined;
+    if (!repo || searchController.current) return;
     exploreController.current?.abort();
-    const current = signal(),
-      seq = ++searchSequence.current;
+    const controller = new AbortController();
+    searchController.current = controller;
+    const current = AbortSignal.any([signal(), controller.signal]);
     setSearching(true);
     setNotice('');
     try {
       const params = (geocode: boolean) =>
-        placeSearchParams({ mode: 'query', query, center, group: null, geocode });
+        placeSearchParams({ mode: 'query', query: term, center, group: null, geocode });
       // Place mode serves the Wolfari catalogue first (geocode mode bypasses it); fall back to
       // Geoapify geocoding only when nothing matched, so address lookups keep working.
       let found = await repo.search(tripId, params(false), current);
-      if (query.trim() && !found.items.length && !current.aborted)
+      if (term.length >= MIN_LIVE_SEARCH_LENGTH && !found.items.length && !current.aborted)
         found = await repo.search(tripId, params(true), current);
-      if (current.aborted || seq !== searchSequence.current) return;
+      if (current.aborted) return;
       const province = centerProvinceCode(found.items, center);
       if (province) setCenterProvince(province);
       setResults(found.items);
       setResultMode('query');
       setDataRelease(found.source.dataRelease ?? null);
-      setSelected(found.items[0] ? `result:${found.items[0].id}` : null);
-      setSource(sourceSummary(found));
       setNotice(
         found.source.status === 'ERROR'
           ? 'Nguồn địa điểm chưa khả dụng. Kiểm tra cấu hình/quota hoặc thử lại.'
           : found.items.length
-            ? 'Đã tải kết quả tìm kiếm.'
+            ? ''
             : 'Không có địa điểm phù hợp. Thử từ khóa khác hoặc đặt pin bằng biểu tượng ghim.',
       );
-      if (found.items[0])
-        setFocus({ latitude: found.items[0].latitude, longitude: found.items[0].longitude });
+      if (!term) {
+        const first = found.items[0];
+        setSelected(first ? `result:${first.id}` : null);
+        if (first) setFocus({ latitude: first.latitude, longitude: first.longitude });
+      }
     } catch {
       if (!current.aborted) setNotice('Không tải được địa điểm. Danh sách đã lưu vẫn được giữ.');
     } finally {
-      if (!current.aborted && seq === searchSequence.current) setSearching(false);
+      if (searchController.current === controller) {
+        searchController.current = null;
+        if (!current.aborted) setSearching(false);
+      }
+    }
+  };
+  const changeQuery = (value: string) => {
+    setQuery(value);
+    const term = value.trim();
+    if (term === query.trim()) return;
+    cancelKeywordSearch();
+    exploreController.current?.abort();
+    setResults([]);
+    setSelected(null);
+    setDetailOpen(false);
+    setNotice('');
+    setFocus(undefined);
+    setDataRelease(null);
+    setResultMode(viewport ? 'bbox' : 'none');
+    setExploreStatus('idle');
+    const shouldSearch = Boolean(repo) && term.length >= MIN_LIVE_SEARCH_LENGTH;
+    setSearching(shouldSearch);
+    if (shouldSearch) {
+      if (draftPin) discardDraftPin();
+      searchTimer.current = window.setTimeout(() => void search(term), LIVE_SEARCH_DELAY_MS);
     }
   };
   /** Returns the confirmed receipt, or null when nothing was confirmed. */
@@ -524,7 +578,20 @@ function MapWorkspace({
         setStorageBlocked(true);
         return null;
       }
-      if (typeof result.location_id === 'string') setSelected(result.location_id);
+      if (intent.method === 'DELETE') {
+        const removed = all.find(
+          (item) =>
+            intent.path === `/api/v1/trips/${tripId}/selected-locations/${item.location.id}`,
+        );
+        if (removed) {
+          const candidate = resultOf(removed);
+          setSelected((id) =>
+            id === removed.location.id ? (candidate ? `result:${candidate.id}` : null) : id,
+          );
+        }
+      } else if (typeof result.location_id === 'string') {
+        setSelected(result.location_id);
+      }
       setNotice(
         success ??
           (intent.path.includes('/activities')
@@ -678,11 +745,6 @@ function MapWorkspace({
         {data && (
           <>
             <div className={styles.mapContent}>
-              <PageBreadcrumb
-                className={styles.breadcrumb}
-                items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-                current="Bản đồ địa điểm"
-              />
               <div className={styles.hero}>
                 <TripHero trip={data.trip} compact variant="landscape" />
               </div>
@@ -695,10 +757,9 @@ function MapWorkspace({
                   <header className={styles.panelHeader}>
                     <h2>Tìm kiếm &amp; chọn địa điểm</h2>
                   </header>
-                  {(localMessage || source || added || pending) && (
+                  {(localMessage || added || pending) && (
                     <div className={styles.localNotice} role="status">
                       {localMessage}
-                      {source && <span> {source}</span>}
                       {added && !busy && (
                         <Link to={`${paths.plan(tripId)}?day=${added.day}`}>
                           Xem lịch trình {added.label}
@@ -727,14 +788,15 @@ function MapWorkspace({
                     className={styles.searchBox}
                     onSubmit={(event) => {
                       event.preventDefault();
-                      void search();
+                      if (draftPin) discardDraftPin();
+                      void search(query.trim());
                     }}
                   >
                     <span className={styles.visuallyHidden}>Tìm địa điểm</span>
                     <button
                       type="submit"
                       aria-label="Tìm kiếm"
-                      disabled={!repo || searching}
+                      disabled={!repo}
                       style={{ border: 0, background: 'none', padding: 0, display: 'flex' }}
                     >
                       <img src={searchIcon} width="18" height="18" alt="" />
@@ -744,7 +806,7 @@ function MapWorkspace({
                       aria-label="Tìm địa điểm"
                       maxLength={200}
                       value={query}
-                      onChange={(event) => setQuery(event.target.value)}
+                      onChange={(event) => changeQuery(event.target.value)}
                       placeholder="Tìm địa điểm, quán ăn…"
                     />
                     <button
@@ -879,13 +941,11 @@ function MapWorkspace({
                                 ) : (
                                   <span className={styles.unselectedDot} aria-hidden="true" />
                                 )}
-                                {imageOf(item) && (
-                                  <PlacePhoto
-                                    image={imageOf(item)}
-                                    name={item.location.name}
-                                    compact
-                                  />
-                                )}
+                                <PlacePhoto
+                                  image={imageOf(item)}
+                                  name={item.location.name}
+                                  compact
+                                />
                                 <span className={styles.placeCopy}>
                                   <strong>{item.location.name}</strong>
                                   <span className={styles.placeMetaLine}>
@@ -912,6 +972,7 @@ function MapWorkspace({
                                   <PlaceSourceBadges
                                     dataset={provenance.dataset}
                                     coordVerified={provenance.coordVerified}
+                                    showSource={provenance.dataset !== 'golden'}
                                   />
                                 </span>
                                 <img
@@ -998,7 +1059,7 @@ function MapWorkspace({
                     </div>
                   )}
                   <MapViewport
-                    items={visibleItems}
+                    items={mapItems}
                     selectedLocationId={effectiveSelectedId}
                     selectedScreenPosition={selectedMapPosition}
                     timezone={data.trip.timezone}
@@ -1006,6 +1067,7 @@ function MapWorkspace({
                     runtimeMap={
                       <GeoapifyMap
                         embedded
+                        scrollWheelZoom
                         points={points}
                         selectedId={effectiveSelectedId}
                         onSelectedScreenPosition={setSelectedMapPosition}
@@ -1013,43 +1075,52 @@ function MapWorkspace({
                         onCenter={setCenter}
                         onViewport={setViewport}
                         initialView={initialView}
-                        autoFit={resultMode === 'none' || resultMode === 'query'}
+                        autoFit={exploring && resultMode !== 'bbox'}
                         focus={focus}
                         route={mapRoute}
-                        onPin={
-                          canAddLocation
-                            ? (p) => {
-                                setManual({
-                                  ...manual,
-                                  latitude: String(p.latitude),
-                                  longitude: String(p.longitude),
-                                });
-                                setManualOpen(true);
-                              }
-                            : undefined
-                        }
+                        draftPin={draftPin}
+                        onPin={repo && canAddLocation ? previewPin : undefined}
                       />
                     }
-                    selectedActions={
-                      <>
-                        {addToDayMenu(selectedItem)}
-                        {savedLocation && (
-                          <PreparationActions
-                            module="location"
-                            item={savedLocation}
-                            trip={data.trip}
-                            plan={data.plan}
-                            refresh={snapshot.retry}
-                          />
-                        )}
-                      </>
-                    }
-                    selectedMeta={
-                      selectedItem && (
-                        <PlaceProvenanceLine provenance={provenanceOf(selectedItem)} />
+                    pinNotice={
+                      draftPin && (
+                        <div className={styles.manualPinCard}>
+                          <p role="status">Chưa có địa điểm được đánh dấu tại vị trí này.</p>
+                          <div className={styles.manualPinActions}>
+                            <Button
+                              size="compact"
+                              disabled={!repo || !canAddLocation}
+                              onClick={() => setManualOpen(true)}
+                            >
+                              Lưu pin thủ công
+                            </Button>
+                            <Button size="compact" variant="plain" onClick={discardDraftPin}>
+                              Bỏ pin
+                            </Button>
+                          </div>
+                        </div>
                       )
                     }
                     selectedImage={selectedItem ? imageOf(selectedItem) : null}
+                    selectedDescription={selectedDescription}
+                    placeCardOpen={placeCardOpen}
+                    onDismissPlaceCard={() => setPlaceCardOpen(false)}
+                    selectionControl={
+                      selectedItem &&
+                      data.plan.permissions.canEdit &&
+                      (selectedItem.selected || resultFor(selectedItem))
+                        ? {
+                            onToggle: () => togglePlace(selectedItem),
+                            blockedReason: selectedItem.activities.length
+                              ? 'Gỡ địa điểm khỏi lịch trình trước khi bỏ chọn.'
+                              : !canEdit || !repo
+                                ? 'Chưa thể thay đổi địa điểm lúc này.'
+                                : !selectedItem.selected && !canAddLocation
+                                  ? 'Chuyến đi đã đạt giới hạn 50 địa điểm.'
+                                  : null,
+                          }
+                        : undefined
+                    }
                     autoSelectFirst={!autoPickOff}
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
@@ -1125,7 +1196,11 @@ function MapWorkspace({
           }}
         >
           <h3>Thêm pin thủ công</h3>
-          <p>Bấm vào bản đồ hoặc nhập tọa độ. Đây không phải địa điểm được provider xác minh.</p>
+          <p>
+            {draftPin
+              ? 'Đặt tên cho pin để lưu vị trí đã chọn vào chuyến đi.'
+              : 'Nhập tên và tọa độ để lưu một vị trí vào chuyến đi.'}
+          </p>
           {notice && <p role="status">{notice}</p>}
           <PreparationStatus
             trip={data.trip}

@@ -6,9 +6,8 @@ import { validCoordinates } from '../../map/trip-map';
 import { GeoapifyMap, type MapCenter, type MapRoute } from '../../map/GeoapifyMap';
 import type { PlaceRoute, RouteMode } from '../../map/places';
 import { usePlaceRoute } from '../../map/use-place-route';
-import { RouteAttribution, routeModeLabels } from '../../map/RouteAttribution';
+import { RouteAttribution } from '../../map/RouteAttribution';
 import { Button } from '../../../shared/components/Button';
-import { Select } from '../../../shared/components/Select';
 import { Icon } from '../../../shared/components/Icon';
 import styles from './PlanDayMap.module.css';
 export function dayMapLocations(
@@ -50,8 +49,8 @@ export function routeSummary(route: PlaceRoute, mode: RouteMode = 'DRIVING') {
  * Ordered stops of one day → OSRM route when available, otherwise a dashed straight line.
  * Only the stop sequence triggers a request, so marker selection never refetches.
  */
-function useDayRoute(stops: readonly MapCenter[], mode: RouteMode) {
-  const { data: current, loading } = usePlaceRoute(stops, mode);
+function useDayRoute(stops: readonly MapCenter[]) {
+  const { data: current, loading } = usePlaceRoute(stops, 'DRIVING');
   if (stops.length < 2) return { route: null, data: null, summary: null, estimated: false };
   const route: MapRoute = current
     ? { coordinates: current.geometry, estimated: false }
@@ -61,7 +60,7 @@ function useDayRoute(stops: readonly MapCenter[], mode: RouteMode) {
     data: current,
     estimated: !current,
     summary: current
-      ? routeSummary(current, mode)
+      ? routeSummary(current)
       : loading
         ? 'Đang tính đường đi… (tạm nối thẳng)'
         : 'Đường chim bay — chưa kiểm tra di chuyển',
@@ -83,7 +82,6 @@ export function PlanDayMap({
   compact?: boolean;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const [mode, setMode] = useState<RouteMode>('DRIVING');
   const locations = useMemo(
     () => dayMapLocations(plan, day, trip.timezone),
     [plan, day, trip.timezone],
@@ -104,7 +102,7 @@ export function PlanDayMap({
         : points.map((p) => ({ latitude: p.latitude, longitude: p.longitude })),
     [points, day],
   );
-  const dayRoute = useDayRoute(stops, mode);
+  const dayRoute = useDayRoute(stops);
   const number = planDays(trip.startAt, trip.endAt, trip.timezone).indexOf(day) + 1;
   const title =
     day === 'ALL'
@@ -132,24 +130,10 @@ export function PlanDayMap({
             <Icon name="close" size={18} />
           </Button>
         </header>
-        {stops.length >= 2 && (
-          <div className={styles.routeMode}>
-            <Select
-              label="Cách di chuyển"
-              value={mode}
-              onChange={(event) => setMode(event.target.value as RouteMode)}
-            >
-              {Object.entries(routeModeLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-          </div>
-        )}
         <div className={styles.map}>
           <GeoapifyMap
             embedded
+            scrollWheelZoom
             points={points}
             selectedId={selected}
             onSelect={setSelected}

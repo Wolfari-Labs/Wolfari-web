@@ -242,7 +242,12 @@ test('HTTP mock: create sends the supported trip budget with inclusive dates', a
   await page.getByLabel('Ngày về', { exact: true }).fill('03/11/2026');
   await page.getByLabel('Múi giờ', { exact: true }).selectOption('__custom__');
   await page.getByLabel('Múi giờ IANA', { exact: true }).fill('America/New_York');
-  await page.getByLabel('Ngân sách chuyến đi', { exact: true }).fill('999999999999');
+  const budget = page.getByLabel('Ngân sách dự kiến', { exact: true });
+  const budgetBox = await budget.boundingBox();
+  const membersBox = await page.getByRole('group', { name: 'Số thành viên dự kiến' }).boundingBox();
+  expect(budgetBox!.x).toBeGreaterThan(membersBox!.x + membersBox!.width);
+  expect(budgetBox!.y).toBeLessThan(membersBox!.y + membersBox!.height);
+  await budget.fill('999999999999');
   await page.getByRole('button', { name: 'Tạo chuyến đi', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Chuyến đi đã sẵn sàng' })).toBeVisible();
   expect(createdBody).not.toBeNull();

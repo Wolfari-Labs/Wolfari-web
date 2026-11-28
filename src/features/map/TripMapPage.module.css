@@ -614,6 +614,33 @@
   display: none;
 }
 
+.manualPinCard {
+  position: absolute;
+  right: 12px;
+  bottom: 68px;
+  left: 12px;
+  z-index: 4;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 12px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--v2-radius-row);
+  background: var(--color-white);
+  color: var(--v2-ink);
+  box-shadow: var(--v2-shadow-card);
+}
+
+.manualPinCard p {
+  margin: 0 0 8px;
+  font-size: var(--font-size-label);
+}
+
+.manualPinActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 /* The fixture map is illustrative art, so it carries the one "Minh họa" label (CONTENT_RULES 3). */
 .mapArtLabel {
   position: absolute;
@@ -792,25 +819,6 @@
   margin-bottom: 8px;
   border-radius: var(--radius-10);
 }
-.desktopPlaceCard > [data-place-photo] {
-  flex: none;
-  margin-bottom: 8px;
-}
-.desktopPlaceCard > [data-place-photo] img,
-.desktopPlaceCard > [data-place-photo] > span:not([data-photo-credit]) {
-  height: 90px;
-}
-.desktopPlaceCard:has([data-place-photo]) {
-  padding-bottom: 44px;
-}
-.desktopPlaceCard > [data-place-photo] [data-photo-credit] {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  font-size: 11px;
-  line-height: 15px;
-}
 .routeModeSelector {
   flex: none;
   width: 126px;
@@ -885,6 +893,107 @@
 
 .mobilePlaceCard {
   display: none;
+}
+
+.runtimePlaceCard strong {
+  overflow-wrap: anywhere;
+}
+
+.runtimePlaceCard .mapCardDescription {
+  margin: 0;
+  color: var(--v2-sub);
+  font: 600 13px/18px var(--v2-font);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.mapCardPhoto {
+  position: relative;
+  flex: none;
+  min-width: 0;
+}
+
+.mapCardPhoto [data-place-photo] > img,
+.mapCardPhoto [data-place-photo] > [role='img'] {
+  height: 124px;
+  border-radius: var(--v2-radius-thumb);
+}
+
+.mapCardPhoto [data-photo-credit] {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  left: 6px;
+  width: fit-content;
+  max-width: calc(100% - 12px);
+  padding: 2px 6px;
+  border-radius: var(--v2-radius-thumb);
+  background: var(--v2-white);
+  color: var(--v2-sub);
+  font: 600 11px/15px var(--v2-font);
+}
+
+.mapCardActions {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mapCardAction {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--v2-ink);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.mapCardAction::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--v2-white);
+  box-shadow: 0 2px 8px rgb(23 39 39 / 18%);
+}
+
+.mapCardAction > svg {
+  position: relative;
+}
+
+.mapCardClose {
+  top: 6px;
+  right: 6px;
+}
+
+.mapCardSave {
+  right: 6px;
+  bottom: 6px;
+}
+
+.mapCardSave[aria-pressed='true'] {
+  color: #e34f71;
+}
+
+.mapCardSave[aria-pressed='true'] > svg {
+  fill: currentColor;
+}
+
+.mapCardSave[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.mapCardAction:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
 }
 
 .unavailableViewport {
@@ -1174,6 +1283,25 @@
     padding: 16px;
     border-radius: 20px;
     background: var(--color-white);
+  }
+
+  .mobilePlaceCard.runtimePlaceCard {
+    gap: 6px;
+    min-height: 0;
+    max-height: calc(100% - 36px);
+    padding: 10px;
+    overflow: auto;
+  }
+
+  .runtimePlaceCard .mapCardPhoto [data-place-photo] > img,
+  .runtimePlaceCard .mapCardPhoto [data-place-photo] > [role='img'] {
+    height: 96px;
+  }
+
+  .runtimePlaceCard .mobilePlaceSummary strong {
+    font-size: 16px;
+    line-height: 21px;
+    white-space: normal;
   }
 
   .mobilePlaceSummary {
@@ -1861,46 +1989,6 @@
     font-size: 11px;
   }
 }
-/* POI-OVERTURE OVW-3: one-line source in the selected-place card (FR-TI01). */
-.cardProvenance {
-  flex-wrap: nowrap;
-  align-items: center;
-  min-width: 0;
-  max-width: 100%;
-  margin-top: 3px;
-  white-space: nowrap;
-}
-/* Category shrinks with an ellipsis first and is hidden (JS) when too narrow. */
-.cardCategory {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.cardCategory[hidden] {
-  display: none;
-}
-/* Province and source + date never truncate. */
-.cardFixed {
-  flex: none;
-}
-.cardSource {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 3px;
-}
-.cardProvenance {
-  gap: 3px;
-}
-.cardProvenance .sourceBadge {
-  padding: 0 4px;
-}
-.cardProvenance .sourceBadge:focus-visible {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: 1px;
-}
-
 /* UI declutter plan C5 (D4-D6): shared card radius, grid gap and side column on desktop only. */
 @media (min-width: 769px) {
   .workspace {
@@ -2495,8 +2583,7 @@
     box-shadow: var(--v2-shadow-float), var(--v2-inset);
   }
 
-  .desktopPlaceCard > img,
-  .desktopPlaceCard > [data-place-photo] {
+  .desktopPlaceCard > img {
     grid-column: 1;
     grid-row: 1 / span 5;
     align-self: center;
@@ -2504,20 +2591,25 @@
     margin: 0;
     border-radius: var(--v2-radius-thumb);
     object-fit: cover;
-  }
-  .desktopPlaceCard > img,
-  .desktopPlaceCard > [data-place-photo] img,
-  .desktopPlaceCard > [data-place-photo] > span:not([data-photo-credit]) {
     height: 82px;
   }
 
-  .desktopPlaceCard > :not(img, [data-place-photo]) {
+  .desktopPlaceCard > :not(img) {
     grid-column: 2;
     min-width: 0;
   }
 
-  .desktopPlaceCard > .cardProvenance {
-    grid-column: 1 / -1;
+  .desktopPlaceCard.runtimePlaceCard {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    /* Leave room for the 76px top clamp and the map legend. */
+    max-height: max(64px, calc(100% - 130px));
+    overflow: auto;
+    padding: 10px;
+  }
+
+  .desktopPlaceCard.runtimePlaceCard > * {
+    grid-column: 1;
   }
 
   .desktopPlaceCard strong {
@@ -2663,16 +2755,17 @@
   outline-offset: 2px;
 }
 
+/* The expanded map stays below drawers and dialogs opened from it. */
 .mapOverlayBackdrop {
   position: fixed;
-  z-index: 999;
+  z-index: 98;
   inset: 0;
   background: rgb(20 30 55 / 62%);
 }
 
 .mapPanelExpanded {
   position: fixed;
-  z-index: 1000;
+  z-index: 99;
   inset: 12px 16.6667vw;
   display: block;
   width: auto;

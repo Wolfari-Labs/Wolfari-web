@@ -19,7 +19,6 @@ import { MemberRoleHelp } from './MemberRoleHelp';
 import { MemberRoster } from './MemberRoster';
 import { useFundRepositoryOptional } from '../fund/repositories/fund-context';
 import { TripHero } from '../trips/components/TripHero';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { ActionMenu } from '../../shared/components/Ui';
 import { Icon } from '../../shared/components/Icon';
 import { Button } from '../../shared/components/Button';
@@ -711,21 +710,6 @@ export function GatewayMembersPage({ commands }: { commands: CommandCoordinator 
   });
   return (
     <section className={styles.page} data-flow="gateway-members">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Thành viên"
-        mobile={
-          <>
-            <nav className={styles.breadcrumb} aria-label="Đường dẫn">
-              <Link to={paths.trip(tripId)}>Tổng quan chuyến đi</Link>
-              <span aria-hidden="true">›</span>
-              <span>Thành viên</span>
-            </nav>
-            <h1 className={styles.visuallyHidden}>Thành viên</h1>
-          </>
-        }
-      />
       {actor.data?.status === 'ready' ? (
         <Workspace
           key={actor.data.data.id + ':' + tripId}

@@ -34,6 +34,7 @@ for (const viewport of viewports) {
     await expect(
       hero.getByRole('heading', { name: 'Đà Nẵng – Hội An', exact: true }),
     ).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Đường dẫn', exact: true })).toHaveCount(0);
     await expect(
       hero.getByRole('link', { name: 'Xem thành viên chuyến đi', exact: true }),
     ).toHaveAttribute('href', `${trip}/members`);
@@ -64,25 +65,8 @@ for (const viewport of viewports) {
     expect(overflow.document).toBeLessThanOrEqual(overflow.viewport);
     expect(overflow.body).toBeLessThanOrEqual(overflow.viewport);
     if (viewport.width > 768) {
-      const breadcrumb = page.getByRole('navigation', { name: 'Đường dẫn', exact: true });
-      await expect(breadcrumb.getByRole('heading', { name: 'Cài đặt', exact: true })).toBeVisible();
-      await expect(
-        breadcrumb.getByRole('link', { name: 'Tổng quan chuyến đi', exact: true }),
-      ).toHaveAttribute('href', trip);
       const heroBounds = (await hero.boundingBox())!;
-      const titleBounds = (await hero
-        .getByRole('heading', { name: 'Đà Nẵng – Hội An', exact: true })
-        .boundingBox())!;
-      const breadcrumbBounds = (await breadcrumb.boundingBox())!;
-      const breadcrumbTitleBounds = (await breadcrumb
-        .getByRole('heading', { name: 'Cài đặt', exact: true })
-        .boundingBox())!;
       expect(heroBounds.height).toBeCloseTo(84, 0);
-      expect(Math.abs(breadcrumbBounds.x - titleBounds.x)).toBeLessThanOrEqual(2);
-      expect(breadcrumbTitleBounds.y).toBeGreaterThanOrEqual(heroBounds.y);
-      expect(breadcrumbTitleBounds.y + breadcrumbTitleBounds.height).toBeLessThanOrEqual(
-        titleBounds.y + 1,
-      );
       expect(overflow.documentHeight).toBeLessThanOrEqual(overflow.viewportHeight);
       expect(overflow.bodyHeight).toBeLessThanOrEqual(overflow.viewportHeight);
       const intersectingTiles = await page.locator('button[data-section]').evaluateAll((tiles) =>

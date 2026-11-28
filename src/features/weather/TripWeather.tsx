@@ -106,21 +106,6 @@ function WeatherAttribution({
           <span key={credit.text}>{credit.text}</span>
         ),
       )}
-      {source.fetchedAt && (
-        <time
-          dateTime={source.fetchedAt}
-          title={new Date(source.fetchedAt).toLocaleString('vi-VN')}
-        >
-          Cập nhật{' '}
-          {new Intl.DateTimeFormat('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'Asia/Ho_Chi_Minh',
-          }).format(new Date(source.fetchedAt))}
-        </time>
-      )}
     </span>
   );
 }

@@ -17,8 +17,7 @@ const labels = {
 };
 
 /**
- * Web v2 `W/Trip header` (Figma 937:7647): the trip card at the top of every trip page. The page
- * breadcrumb (with the page `h1`) is laid over the card's text column by WorkspacePage styles.
+ * Web v2 `W/Trip header` (Figma 937:7647): the trip card at the top of every trip page.
  * Unavailable presence is never replaced with the sample people's identities from Figma.
  */
 export function TripHero({

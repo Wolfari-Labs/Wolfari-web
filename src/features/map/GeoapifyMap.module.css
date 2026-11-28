@@ -52,6 +52,21 @@
   outline: 3px solid var(--focus-color, #006b92);
   outline-offset: 3px;
 }
+.draftPin {
+  display: grid;
+  place-items: center;
+  border: 3px dashed var(--v2-blue-text, #2f63c4);
+  border-radius: 50%;
+  background: var(--v2-white, #fff);
+  box-shadow: 0 4px 12px rgb(40 68 113 / 30%);
+}
+.draftPin::after {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--v2-blue-text, #2f63c4);
+  content: '';
+}
 @media (max-width: 600px) {
   .map {
     height: 300px;
@@ -63,7 +78,7 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* POI-OVERTURE W12: numbered grid cluster. */
+/* Unnumbered marker for a group of unselected places. */
 .cluster {
   display: grid;
   place-items: center;
@@ -71,7 +86,4 @@
   border-radius: 50%;
   background: var(--v2-gradient-blue, #3c7be8);
   box-shadow: 0 0 0 4px rgb(60 123 232 / 0.22);
-  color: white;
-  font-weight: 700;
-  font-size: var(--font-size-small);
 }

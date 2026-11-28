@@ -12,6 +12,7 @@ import { createFixtureShellRepository } from '../src/infrastructure/fixtures/she
 import { createFixturePlanRepository } from '../src/infrastructure/fixtures/plan.fixture-repository';
 import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip.fixture-repository';
 import { fixtureTripCatalog, previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
+import { ApiError } from '../src/infrastructure/http/api-error';
 
 beforeEach(() => sessionStorage.clear());
 afterEach(() => {
@@ -293,7 +294,7 @@ describe('Trip Settings', () => {
     expect(screen.getByText('Chưa đặt ngân sách', { exact: true })).toBeInTheDocument();
   });
 
-  it('offers the supported cover editor only inside the information settings', async () => {
+  it('saves a cover without metadata edits and reports file and server errors in settings', async () => {
     const user = userEvent.setup();
     const fixture = createFixtureTripRepository();
     const detail = await fixture.getTrip({
@@ -303,15 +304,35 @@ describe('Trip Settings', () => {
     });
     if (detail.status !== 'ready') throw Error('Fixture unavailable');
     const uploadCover = vi.fn().mockResolvedValue(detail.data);
-    mount(previewTripId, `/trips/${previewTripId}/settings`, { ...fixture, uploadCover });
+    const { updateTrip } = mount(previewTripId, `/trips/${previewTripId}/settings`, {
+      ...fixture,
+      uploadCover,
+    });
     expect(await screen.findByRole('heading', { name: 'Cài đặt chuyến đi' })).toBeInTheDocument();
     expect(screen.queryByLabelText('Chọn ảnh bìa')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Chỉnh sửa thông tin' }));
     const dialog = screen.getByRole('dialog', { name: 'Chỉnh sửa thông tin' });
     const file = new File(['image'], 'cover.png', { type: 'image/png' });
-    await user.upload(within(dialog).getByLabelText('Chọn ảnh bìa'), file);
-    await waitFor(() => expect(uploadCover).toHaveBeenCalledOnce());
+    const choose = within(dialog).getByLabelText('Chọn ảnh bìa');
+    await user.upload(choose, file);
+    expect(await within(dialog).findByText('Đã lưu ảnh bìa.')).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: 'Lưu thay đổi' })).toBeDisabled();
+    expect(updateTrip).not.toHaveBeenCalled();
     expect(uploadCover.mock.calls[0]![0]).toMatchObject({ tripId: previewTripId, file });
+
+    await user.upload(choose, new File([], 'empty.png', { type: 'image/png' }));
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent('Tệp ảnh trống.');
+    expect(within(dialog).queryByText('Đã lưu ảnh bìa.')).not.toBeInTheDocument();
+    expect(uploadCover).toHaveBeenCalledOnce();
+
+    uploadCover.mockRejectedValueOnce(
+      new ApiError('Rejected', 'http', 400, 'VALIDATION_FAILED', null, false),
+    );
+    await user.upload(choose, file);
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+      'Máy chủ không đọc được ảnh.',
+    );
+    expect(uploadCover).toHaveBeenCalledTimes(2);
   });
 
   it('validates the 1–200 character name and Cancel restores view focus', async () => {

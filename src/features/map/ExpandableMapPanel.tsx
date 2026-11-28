@@ -14,6 +14,7 @@ export function ExpandableMapPanel({ children }: { children: ReactNode }) {
     toggleRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || panelRef.current?.closest('[aria-hidden="true"]')) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         setExpanded(false);

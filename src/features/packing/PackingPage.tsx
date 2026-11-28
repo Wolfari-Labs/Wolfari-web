@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useOutletContext, useParams } from 'react-router';
+import { useOutletContext, useParams } from 'react-router';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import { Button } from '../../shared/components/Button';
 import { Select } from '../../shared/components/Select';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Icon } from '../../shared/components/Icon';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
@@ -185,24 +183,6 @@ export function PackingPage() {
               : 'gateway-readonly'
         }
       >
-        <PageBreadcrumb
-          className={styles.breadcrumb}
-          items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-          current="Hành lý"
-          mobile={
-            <div className={styles.breadcrumb}>
-              <Link to={paths.trips}>Chuyến đi của tôi</Link>
-              <span aria-hidden="true">›</span>
-              {data && (
-                <>
-                  <Link to={paths.trip(tripId)}>{data.trip.name}</Link>
-                  <span aria-hidden="true">›</span>
-                </>
-              )}
-              <h1>Hành lý</h1>
-            </div>
-          }
-        />
         {data && <TripHero trip={data.trip} variant="landscape" />}
         <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
           {data && !previewEnabled && (

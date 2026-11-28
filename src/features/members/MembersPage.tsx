@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { useParams, useOutletContext } from 'react-router';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { RouteContext } from '../../app/route-context';
-import { paths } from '../../app/route-paths';
 import { useTripRepository } from '../trips/repositories/repository-context';
 import type { TripDetailViewModel } from '../trips/model/trip-detail';
 import { TripHero } from '../trips/components/TripHero';
@@ -22,7 +21,6 @@ import type { PlanEditPolicy, UpdatePlanPolicyResult } from '../trips/repositori
 import { Input } from '../../shared/components/Input';
 import { Button } from '../../shared/components/Button';
 import { Select } from '../../shared/components/Select';
-import { PageBreadcrumb } from '../../shared/components/PageBreadcrumb';
 import { Alert } from '../../shared/components/Alert';
 import { ContentState } from '../../shared/components/ContentState';
 import { Icon } from '../../shared/components/Icon';
@@ -727,11 +725,6 @@ function PreviewMembersPage() {
   }
   return (
     <section className={styles.page} data-flow="members-preview" data-node-id="25:360">
-      <PageBreadcrumb
-        className={styles.breadcrumb}
-        items={[{ label: 'Tổng quan chuyến đi', to: paths.trip(tripId) }]}
-        current="Thành viên"
-      />
       {error ? (
         <ContentState
           state={error.code === 'SERVICE_UNAVAILABLE' && !error.retryable ? 'unavailable' : 'error'}

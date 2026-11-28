@@ -53,6 +53,7 @@ export function createFixtureShellRepository({ store = createFixtureTripStore() 
                   fullName: 'Trang Nguyễn',
                   version: 1,
                   systemRole: scenario === 'admin' ? 'ADMIN' : 'USER',
+                  hasAvatar: false,
                 },
           trip:
             trip && scenario !== 'guest'
