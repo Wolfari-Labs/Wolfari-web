@@ -91,6 +91,11 @@ export interface TransferInstruction {
   qr_svg: string;
   environment: 'LIVE';
   warning: string;
+  /**
+   * Online checkouts that pay into exactly this destination (API090 provider values). Older
+   * servers omit the field; the decoder then reports none, so no checkout is offered.
+   */
+  online_payment_providers: readonly 'PAYOS'[];
 }
 /** Fund state frozen when the nominee accepts; both Holders confirm against this exact snapshot. */
 export interface HandoverSnapshot {
@@ -246,7 +251,13 @@ export interface FinanceHistory {
   id: string;
   fund_id: string;
   actor_user_id: string | null;
-  system_actor: 'MOMO_IPN' | 'MOMO_RECONCILIATION' | 'BANK_WEBHOOK:SEPAY' | null;
+  system_actor:
+    | 'MOMO_IPN'
+    | 'MOMO_RECONCILIATION'
+    | 'BANK_WEBHOOK:SEPAY'
+    | 'PAYOS_WEBHOOK'
+    | 'PAYOS_RECONCILIATION'
+    | null;
   action: string;
   entity_type: string;
   entity_id: string | null;

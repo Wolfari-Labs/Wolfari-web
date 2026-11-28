@@ -1,4 +1,5 @@
 import * as d from '../http/decode';
+import { payosReturnPage } from '../../shared/lib/payos-return';
 
 export const financeCommandKinds = [
   'payment-create',
@@ -54,7 +55,7 @@ export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<st
   if (kind.startsWith('payment-')) {
     const allowed =
       kind === 'payment-create'
-        ? ['provider', ...versions]
+        ? ['provider', 'return_url', ...versions]
         : kind === 'payment-reconcile'
           ? ['reason']
           : [
@@ -67,8 +68,16 @@ export function validateFinanceCommand(kind: FinanceCommandKind, body: Record<st
     if (Object.keys(body).some((key) => !allowed.includes(key)))
       throw Error('Invalid payment field');
     if (kind === 'payment-create') {
-      d.enumeration(body.provider, ['MOMO_SANDBOX']);
+      const provider = d.enumeration(body.provider, ['MOMO_SANDBOX', 'PAYOS']);
       for (const key of versions) d.version(body[key]);
+      // payOS only: the Gateway return page for a page of this Web origin (never another site).
+      if (
+        body.return_url !== undefined &&
+        (provider !== 'PAYOS' ||
+          typeof location === 'undefined' ||
+          !payosReturnPage(body.return_url, location.origin))
+      )
+        throw Error('Invalid payment return URL');
     } else {
       if (
         typeof body.reason !== 'string' ||

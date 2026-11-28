@@ -18,6 +18,13 @@ import { FinanceAction } from './components/FinanceAction';
 import { RefundPanel } from './components/RefundPanel';
 import { BankPicker } from './components/BankPicker';
 import { PaymentPanel } from './components/PaymentPanel';
+import {
+  PaymentAttemptStatus,
+  PayosReturnNotice,
+  fundReturnUrl,
+  useContributionPayment,
+  usePayosReturn,
+} from './components/PayosCheckout';
 import { ClosurePanel } from './components/ClosurePanel';
 import { BankTransferPanel } from './components/BankTransferPanel';
 import { FinanceHistoryPanel } from './components/FinanceHistoryPanel';
@@ -524,6 +531,8 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
     queryFn: ({ signal }) => runtime.instruction(instructionId!, signal),
     gcTime: 0,
   });
+  const payment = useContributionPayment(runtime, actor, trip.id, session, instructionId);
+  const payosReturn = usePayosReturn(runtime, actor, trip.id, refresh);
   const [copied, setCopied] = useState('');
   const copyText = (value: string, done: string) => {
     if (!navigator.clipboard?.writeText) {
@@ -720,6 +729,19 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       )}
     </aside>
   );
+  // payOS is offered on the transfer instruction of the viewer's own PENDING contribution only
+  // when Finance says payOS pays into exactly this destination.
+  const instructionOwed = data(contributions.data?.pages).find((c) => c.id === instructionId);
+  const ownInstruction = instructionOwed?.member_user_id === actor;
+  const payosReturnUrl = fundReturnUrl(trip.id);
+  const offerPayos =
+    !!runtime.paymentAttempt &&
+    !!fund &&
+    ownInstruction &&
+    instructionOwed?.status === 'PENDING' &&
+    !!instruction.data?.online_payment_providers.includes('PAYOS') &&
+    !!payosReturnUrl &&
+    !payment.open;
   const renderInstruction = () => (
     <section aria-label="Mã QR chuyển khoản">
       <h3 tabIndex={-1} ref={instructionHeadingRef}>
@@ -735,7 +757,20 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       >
         Đóng hướng dẫn
       </Button>
-      {instruction.isError ? (
+      {ownInstruction && payment.recoveryNeeded && (
+        <Button disabled={op.busy} onClick={payment.retry}>
+          Khôi phục mã thanh toán từ yêu cầu cũ
+        </Button>
+      )}
+      {ownInstruction && payment.attemptId && (
+        <PaymentAttemptStatus attempt={payment.attempt} onCheck={payment.check} />
+      )}
+      {instruction.isError && ownInstruction && payment.open ? (
+        <Alert tone="info">
+          Mã QR chuyển khoản tạm ẩn vì khoản đóng đang có thanh toán trực tuyến. Theo dõi trạng thái
+          ở trên.
+        </Alert>
+      ) : instruction.isError ? (
         <QueryError error={instruction.error} retry={() => void instruction.refetch()} />
       ) : instruction.data ? (
         (() => {
@@ -798,10 +833,39 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
               </div>
               {copied && <p role="status">{copied}</p>}
               <Alert tone="info">{info.warning}</Alert>
+              {offerPayos && payment.storageError && (
+                <Alert tone="error">
+                  Không lưu được mã thanh toán trong trình duyệt nên tạm khóa thanh toán payOS. Hãy
+                  chuyển khoản bằng mã QR.
+                </Alert>
+              )}
               {owed?.status === 'PENDING' && owed.member_user_id === actor && (
                 <div className={styles.actions}>
+                  {offerPayos && fund && payosReturnUrl && (
+                    <FinanceAction
+                      label="Thanh toán qua payOS"
+                      payment="PAYOS"
+                      variant="primary"
+                      session={session}
+                      disabled={blocked || payment.storageError}
+                      definition={{
+                        kind: 'payment-create',
+                        actorId: actor,
+                        tripId: trip.id,
+                        fundId: fund.id,
+                        resourceId: owed.id,
+                        body: {
+                          provider: 'PAYOS',
+                          return_url: payosReturnUrl,
+                          expected_version: owed.version,
+                          expected_finance_version: fund.finance_version,
+                        },
+                      }}
+                    />
+                  )}
                   <Button
-                    disabled={blocked}
+                    variant={offerPayos ? 'outline' : 'primary'}
+                    disabled={blocked || payment.open}
                     onClick={() => {
                       setInstructionId(null);
                       setCopied('');
@@ -860,6 +924,24 @@ function FundWorkspace({ trip, runtime }: { trip: TripDetailViewModel; runtime: 
       <div hidden={financeOverlayOpen}>
         <OperationStatus session={session} onReenter={reenterCommand} />
       </div>
+      <PayosReturnNotice
+        state={payosReturn}
+        className={styles.panel}
+        actionsClassName={styles.actions}
+        reading={
+          !fundQuery.isFetched ||
+          fundQuery.isFetching ||
+          (!!fund && (!contributions.isFetched || contributions.isFetching))
+        }
+        onShowContributions={
+          fund
+            ? () => {
+                setFinanceSection('contributions');
+                setFinanceOverlayOpen(true);
+              }
+            : undefined
+        }
+      />
       {!fundShown && <div className={styles.actions}>{reloadButton}</div>}
       {membersQuery.isError && (
         <QueryError error={membersQuery.error} retry={() => void membersQuery.refetch()} />

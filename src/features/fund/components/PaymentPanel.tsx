@@ -1,7 +1,14 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { FundRuntime, RuntimeFund } from '../model/runtime-fund';
-import type { PaymentAttempt } from '../model/payment';
+import {
+  isTerminalPayment as terminal,
+  paymentErrorText,
+  paymentLinkLabel,
+  paymentLinkOpen,
+  paymentStatusLabel,
+  type PaymentAttempt,
+} from '../model/payment';
 import type { TripDetailViewModel } from '../../trips/model/trip-detail';
 import { FinanceAction } from './FinanceAction';
 import { Button } from '../../../shared/components/Button';
@@ -13,14 +20,6 @@ import { toDomainError } from '../../../shared/lib/runtime-validation';
 import styles from './FinanceRecords.module.css';
 
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-const terminal = (row: PaymentAttempt) => ['SUCCEEDED', 'FAILED', 'EXPIRED'].includes(row.status);
-const statusText: Record<PaymentAttempt['status'], string> = {
-  CREATED: 'Đã tạo',
-  PENDING: 'Đang chờ kết quả',
-  SUCCEEDED: 'Thanh toán thành công',
-  FAILED: 'Thanh toán thất bại',
-  EXPIRED: 'Đã hết hạn',
-};
 export function PaymentPanel({
   runtime,
   fund,
@@ -246,7 +245,10 @@ export function PaymentPanel({
           {attempt.isError && showError(attempt.error, () => void attempt.refetch())}
           {attempt.data && (
             <article className={styles.record}>
-              <strong>{statusText[attempt.data.status]}</strong>
+              <strong>{paymentStatusLabel(attempt.data)}</strong>
+              {attempt.data.provider === 'PAYOS' && (
+                <p>payOS · tiền thật, vào thẳng tài khoản của người giữ quỹ.</p>
+              )}
               <p>
                 {attempt.data.amount} VND · Cập nhật{' '}
                 {new Date(attempt.data.updated_at).toLocaleString('vi-VN')}
@@ -256,14 +258,12 @@ export function PaymentPanel({
                   Cần người giữ quỹ đối soát. Không tạo thanh toán thay thế.
                 </Alert>
               )}
-              {attempt.data.error_code && <p>Mã lỗi: {attempt.data.error_code}</p>}
-              {attempt.data.payment_url &&
-                !terminal(attempt.data) &&
-                (!attempt.data.expires_at || Date.parse(attempt.data.expires_at) > Date.now()) && (
-                  <a href={attempt.data.payment_url} target="_blank" rel="noopener noreferrer">
-                    Mở MoMo Sandbox để thanh toán
-                  </a>
-                )}
+              {attempt.data.error_code && <p>{paymentErrorText(attempt.data.error_code)}</p>}
+              {paymentLinkOpen(attempt.data) && (
+                <a href={attempt.data.payment_url!} target="_blank" rel="noopener noreferrer">
+                  {paymentLinkLabel(attempt.data.provider)}
+                </a>
+              )}
               {attempt.data.expires_at && (
                 <p>Hạn thanh toán: {new Date(attempt.data.expires_at).toLocaleString('vi-VN')}</p>
               )}
@@ -283,7 +283,7 @@ export function PaymentPanel({
               {holder && (
                 <FinanceAction
                   label="Yêu cầu đối soát"
-                  payment
+                  payment={attempt.data.provider === 'PAYOS' ? 'PAYOS' : true}
                   session={session}
                   disabled={blocked || attempt.isFetching || attempt.isError}
                   fields={[

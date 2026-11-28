@@ -189,7 +189,18 @@ export function decodeInstruction(value: unknown, contributionId: string): Trans
     qr_payload,
     qr_svg,
     warning: d.string(r.warning),
+    online_payment_providers: decodeOnlineProviders(r.online_payment_providers),
   };
+}
+/**
+ * Checkouts that pay into this exact destination. Absent (older server) means none. The list
+ * must be unique strings; a provider this Web build does not know is never offered.
+ */
+function decodeOnlineProviders(value: unknown): 'PAYOS'[] {
+  if (value === undefined) return [];
+  const names = d.list(value, d.string);
+  if (new Set(names).size !== names.length) throw Error('Invalid online payment providers');
+  return names.filter((name): name is 'PAYOS' => name === 'PAYOS');
 }
 export function decodeBank(value: unknown): Bank {
   const r = d.object(value),
@@ -216,6 +227,13 @@ export function decodeFinanceReceipt(value: unknown, intent: Intent) {
       intent.kind === 'payment-create' ? row.contribution_id : row.id,
       d.uuid(intent.resourceId),
     );
+    // A real-money payOS request must never be satisfied by a Sandbox attempt, or vice versa.
+    if (
+      intent.kind === 'payment-create' &&
+      intent.body?.provider !== undefined &&
+      row.provider !== intent.body.provider
+    )
+      throw Error('Payment provider mismatch');
     return row;
   }
   if (intent.kind === 'payment-resolve') {
