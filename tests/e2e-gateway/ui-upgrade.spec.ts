@@ -139,7 +139,7 @@ test('Price Watch create retries the same idempotency key after unknown result, 
     const body = route.request().postDataJSON();
     keys.push(route.request().headers()['idempotency-key']!);
     expect(body.passengers).toEqual({ adults: 1, children: 0, infants: 0 });
-    expect(body.provider).toBeUndefined();
+    expect(body.provider).toBe('MOCK_FLIGHT');
     saved = {
       id: '99999999-2222-4222-8222-222222222222',
       trip_id: tripId,
