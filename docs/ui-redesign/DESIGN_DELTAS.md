@@ -1,5 +1,20 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## PAYOS-WEB — 26/11/2026 — DELTA_PENDING
+
+User-requested Web support for payOS real-money contributions (Backend main, finance-payments
+1.1.0 / finance-contributions 1.4.0). Behaviour follows the merged contract; each visual or
+interaction item below is pending review and approves nothing else. MoMo Sandbox flows, labels and
+the "MoMo & đối soát" section are unchanged. Evidence: unit/component tests with HTTP mocks only;
+no live payOS, Gateway or bank run.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| PAYOS-01 | Hướng dẫn "Mã QR chuyển khoản" thêm nút chính "Thanh toán qua payOS" trước "Tôi đã chuyển — Báo đã chuyển" (nút báo chuyển đổi sang kiểu outline chỉ khi có payOS). Chỉ hiện khi khoản đóng PENDING là của người xem và `online_payment_providers` có `PAYOS`. Bấm mở drawer xác nhận dùng chung (`FinanceAction`) với câu "payOS — chuyển tiền thật, vào thẳng tài khoản của người giữ quỹ…" thay cho câu "MoMo Sandbox — không chuyển tiền thật". | Một hành động chính mỗi nhóm; tiền thật cần một bước xác nhận. |
+| PAYOS-02 | Sau khi tạo, phía trên vùng QR có thẻ trạng thái (thẻ `FinanceRecords.record` sẵn có): trạng thái payOS ("Đang chờ thanh toán trên payOS", "Quỹ đã nhận tiền", …), số tiền, liên kết "Mở trang thanh toán payOS" (tab mới, `rel="noopener noreferrer"`), hạn link, ghi chú tài khoản ảo payOS (LOCC…), nút "Kiểm tra trạng thái". Web đọc lại `GET /payment-attempts/{id}` mỗi 3 giây khi tab đang hiện, tối đa 15 phút. Khi Finance khóa mã QR vì đang có thanh toán (409), vùng QR hiện "Mã QR chuyển khoản tạm ẩn…" thay cho thẻ lỗi; "Báo đã chuyển" bị khóa trong lúc đó. | Trạng thái trung thực, không suy từ trang payOS. |
+| PAYOS-03 | Trang Quỹ mở với `?provider=PAYOS` hiện một hộp (panel sẵn có) "Đang kiểm tra kết quả thanh toán…"; sau khi đọc lại quỹ đổi thành câu trung tính + thẻ trạng thái của lượt đã lưu trong tab (nếu có) + "Xem khoản đóng" / "Đóng thông báo". Query bị xóa khỏi địa chỉ (replace). | Query từ trang return không phải bằng chứng. |
+| PAYOS-04 | Thẻ thanh toán trong "MoMo & đối soát" hiện nhãn payOS, dòng "payOS · tiền thật…", liên kết "Mở trang thanh toán payOS" và câu xác nhận payOS trong drawer đối soát khi lượt là `PAYOS`; lượt MoMo giữ nguyên chữ. Lịch sử thao tác: `CREATE_PAYMENT_ATTEMPT` đổi "Tạo lượt thanh toán MoMo" → "Tạo lượt thanh toán trực tuyến"; thêm "payOS báo tiền về" / "Đối soát payOS tự động". Thông báo xung đột `PAYMENT_PROVIDER_ACCOUNT_MISMATCH` có câu riêng. | Nhãn đúng nhà cung cấp. |
+
 ## Finance demo completion — 16/11/2026
 
 User-requested Web/Backend parity for the Finance demo; no new checkpoint, no Figma writes.

@@ -50,7 +50,7 @@ const actions: Record<string, string> = {
   CONFIRM_CLOSURE: 'Xác nhận bản tổng kết',
   CANCEL_CLOSURE: 'Hủy đợt chốt',
   REMIND_CLOSURE: 'Nhắc xác nhận chốt quỹ',
-  CREATE_PAYMENT_ATTEMPT: 'Tạo lượt thanh toán MoMo',
+  CREATE_PAYMENT_ATTEMPT: 'Tạo lượt thanh toán trực tuyến',
   RECONCILE_PAYMENT_ATTEMPT: 'Đối soát thanh toán',
   RESOLVE_PAYMENT_EXCEPTION: 'Xử lý ngoại lệ thanh toán',
   CONFIRM_PROVIDER_PAYMENT: 'Ghi nhận thanh toán từ cổng',
@@ -62,6 +62,8 @@ const systemActors: Record<string, string> = {
   MOMO_IPN: 'Thông báo từ MoMo',
   MOMO_RECONCILIATION: 'Đối soát MoMo tự động',
   'BANK_WEBHOOK:SEPAY': 'Ngân hàng (SePay) báo tiền về',
+  PAYOS_WEBHOOK: 'payOS báo tiền về',
+  PAYOS_RECONCILIATION: 'Đối soát payOS tự động',
 };
 export function FinanceHistoryPanel({
   runtime,
