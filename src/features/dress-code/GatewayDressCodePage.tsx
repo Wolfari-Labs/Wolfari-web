@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { Button } from '../../shared/components/Button';
-import { useDesktopLayout } from '../../shared/lib/use-desktop-layout';
 import { CapabilityNote } from '../../shared/components/CapabilityNote';
 import { TripPlanBoundary } from '../plan/components/TripPlanBoundary';
 import { useTripPlanSnapshot } from '../plan/hooks/use-trip-plan-snapshot';
@@ -32,7 +31,6 @@ function scopeLabel(item: DressCodeViewModel) {
 
 export function GatewayDressCodePage() {
   const { tripId = '' } = useParams();
-  const desktop = useDesktopLayout();
   const snapshot = useTripPlanSnapshot(tripId, 'success');
   const data = snapshot.state.status === 'ready' ? snapshot.state : null;
   const [filter, setFilter] = useState<DressFilter>('ALL');
@@ -50,7 +48,6 @@ export function GatewayDressCodePage() {
       <TripPlanBoundary state={snapshot.state} onRetry={snapshot.retry}>
         {data && (
           <>
-            {!desktop && <h1 className={styles.visuallyHidden}>Dress code</h1>}
             <PreparationStatus trip={data.trip} plan={data.plan} refresh={snapshot.retry} />
             {snapshot.refreshFailed && (
               <CapabilityNote tone="warning">

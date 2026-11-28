@@ -52,7 +52,7 @@ export function TripHero({
       />
       <div className={styles.text}>
         <div className={styles.titleRow}>
-          <h2>{trip.name}</h2>
+          <h1>{trip.name}</h1>
           <span className={styles.status} data-lifecycle={trip.lifecycle}>
             <i aria-hidden="true" />
             {labels[trip.lifecycle]}

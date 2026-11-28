@@ -20,15 +20,6 @@
   color: var(--color-action-text);
 }
 
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-}
-
 .toolbar {
   display: flex;
   flex-wrap: wrap;
