@@ -592,7 +592,7 @@ function MyInvitations() {
                   {attempt?.action === 'decline' ? 'Thử lại từ chối' : 'Từ chối'}
                 </Button>
                 <Button
-                  icon={<img src={send} alt="" width={18} height={18} />}
+                  icon={<Check size={18} aria-hidden="true" />}
                   loading={busy === item.id && attempt?.action === 'accept'}
                   disabled={
                     busy !== null ||
