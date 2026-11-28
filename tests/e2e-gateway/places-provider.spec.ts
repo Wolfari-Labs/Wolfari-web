@@ -120,7 +120,13 @@ for (const width of [1440, 390])
     await page.keyboard.press('Enter');
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
-    await expect.poll(() => model.writes.length).toBe(1);
+    const activitiesPath = `/api/v1/trips/${tripId}/activities`;
+    await expect
+      .poll(() => model.writes.map(({ method, path }) => [method, path]))
+      .toEqual([
+        ['POST', activitiesPath],
+        ['PUT', `${activitiesPath}/order`],
+      ]);
     expect(model.writes[0]!.body.scheduled_date).toBe(trip.start_at.slice(0, 10));
     expect(model.writes[0]!.body.selected_location_id).toBe('77777777-1111-4111-8111-111111111111');
     await page.goto(`/trips/${tripId}/map`);
