@@ -238,14 +238,13 @@ for (const width of [1440, 390])
     await expect(
       page.getByRole('button', { name: 'Kéo hoạt động Hoi An POI', exact: true }),
     ).toBeEnabled();
-    // Arrangement is create + full-order PUT. Wait for the refreshed, enabled
-    // activity before inspecting writes or navigating away; a transient count of
-    // one races the second request and can abort the unfinished arrangement.
-    expect(model.writes).toHaveLength(2);
-    expect(model.writes.map(({ method, path }) => ({ method, path }))).toEqual([
-      { method: 'POST', path: `/api/v1/trips/${tripId}/activities` },
-      { method: 'PUT', path: `/api/v1/trips/${tripId}/activities/order` },
-    ]);
+    const activitiesPath = `/api/v1/trips/${tripId}/activities`;
+    await expect
+      .poll(() => model.writes.map(({ method, path }) => [method, path]))
+      .toEqual([
+        ['POST', activitiesPath],
+        ['PUT', `${activitiesPath}/order`],
+      ]);
     expect(model.writes[0]!.body.scheduled_date).toBe(trip.start_at.slice(0, 10));
     expect(model.writes[0]!.body.selected_location_id).toBe('77777777-1111-4111-8111-111111111111');
     expect(model.writes[0]!.body.expected_plan_version).toBe(versionBeforeAttach);
