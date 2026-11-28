@@ -21,7 +21,14 @@ export function PlacePhoto({
       <img
         src={available ? (compact ? image.smallUrl : image.thumbnailUrl) : fallbackPhoto}
         alt={available ? `Ảnh ${name}` : `Ảnh minh họa cho ${name}`}
+        srcSet={
+          available
+            ? `${image.smallUrl} 320w, ${image.thumbnailUrl} 640w, ${image.url} 1280w`
+            : undefined
+        }
+        sizes={available ? (compact ? '78px' : 'auto, (max-width: 768px) 100vw, 354px') : undefined}
         loading="lazy"
+        decoding="async"
         onError={() => {
           if (available) setFailedUrl(image.url);
         }}
@@ -29,7 +36,7 @@ export function PlacePhoto({
       {available && (
         <span className={styles.credit} data-photo-credit>
           {linked ? (
-            <a href={image.sourceUrl} target="_blank" rel="noreferrer">
+            <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer">
               {image.attribution}
             </a>
           ) : (

@@ -16,6 +16,74 @@ export function isFlightProvider(value: unknown): value is FlightProvider {
   return flightProviders.some((provider) => provider === value);
 }
 
+export const journeyTypes = ['ONE_WAY', 'ROUND_TRIP'] as const;
+export const cabinClasses = ['ECONOMY', 'PREMIUM_ECONOMY', 'BUSINESS', 'FIRST'] as const;
+/**
+ * `GET /price-watch-capabilities`: the source new watches use and what it can compare (FR-AU03).
+ * `available: false` means creating a watch now fails (provider not configured).
+ */
+export interface PriceWatchCapabilities {
+  provider: FlightProvider;
+  available: boolean;
+  journeyTypes: readonly (typeof journeyTypes)[number][];
+  cabinClasses: readonly (typeof cabinClasses)[number][];
+  maxAdults: number;
+  maxChildren: number;
+  maxInfants: number;
+  maxPassengers: number;
+  currencies: readonly 'VND'[];
+}
+export const providerLabels: Record<FlightProvider, string> = {
+  MOCK_FLIGHT: 'Giá mô phỏng (MOCK_FLIGHT)',
+  TRAVELPAYOUTS_CACHE: 'Travelpayouts (giá cache)',
+  SEARCHAPI_GOOGLE_FLIGHTS: 'Google Flights (SearchApi)',
+};
+const cabinNames: Record<(typeof cabinClasses)[number], string> = {
+  ECONOMY: 'hạng phổ thông',
+  PREMIUM_ECONOMY: 'hạng phổ thông đặc biệt',
+  BUSINESS: 'hạng thương gia',
+  FIRST: 'hạng nhất',
+};
+/** One line describing what the configured source compares, e.g. for the form header. */
+export function capabilitiesLine(c: PriceWatchCapabilities): string {
+  const journeys =
+    c.journeyTypes.length === 1
+      ? c.journeyTypes[0] === 'ONE_WAY'
+        ? 'vé một chiều'
+        : 'vé khứ hồi'
+      : 'vé một chiều hoặc khứ hồi';
+  const cabins =
+    c.cabinClasses.length === 1
+      ? cabinNames[c.cabinClasses[0]!]
+      : c.cabinClasses.length === cabinClasses.length
+        ? 'mọi hạng ghế'
+        : c.cabinClasses.map((cabin) => cabinNames[cabin]).join(', ');
+  const people =
+    c.maxPassengers <= 1 || (c.maxChildren === 0 && c.maxInfants === 0 && c.maxAdults === 1)
+      ? '1 người lớn'
+      : `tối đa ${c.maxPassengers} hành khách`;
+  return `${providerLabels[c.provider]} so sánh ${journeys}, ${cabins}, ${people}.`;
+}
+/** Field errors for a query the source cannot compare; empty when it is supported. */
+export function capabilityErrors(
+  f: Pick<WatchFields, 'journey_type' | 'cabin_class' | 'passengers' | 'currency'>,
+  c: PriceWatchCapabilities,
+): Record<string, string> {
+  const errors: Record<string, string> = {};
+  const p = f.passengers;
+  if (!c.journeyTypes.includes(f.journey_type))
+    errors.journey_type = 'Nguồn giá hiện tại không hỗ trợ hành trình này.';
+  if (f.cabin_class !== null && !c.cabinClasses.includes(f.cabin_class))
+    errors.cabin_class = 'Nguồn giá hiện tại không hỗ trợ hạng ghế này.';
+  if (p.adults > c.maxAdults) errors.adults = `Nguồn giá hỗ trợ tối đa ${c.maxAdults} người lớn.`;
+  if (p.children > c.maxChildren)
+    errors.children = `Nguồn giá hỗ trợ tối đa ${c.maxChildren} trẻ em.`;
+  if (p.infants > c.maxInfants) errors.infants = `Nguồn giá hỗ trợ tối đa ${c.maxInfants} em bé.`;
+  if (!errors.adults && p.adults + p.children + p.infants > c.maxPassengers)
+    errors.adults = `Nguồn giá hỗ trợ tối đa ${c.maxPassengers} hành khách.`;
+  if (!c.currencies.includes(f.currency)) errors.threshold_price = 'Nguồn giá không hỗ trợ VND.';
+  return errors;
+}
 export interface WatchFields {
   provider?: FlightProvider;
   origin: string;

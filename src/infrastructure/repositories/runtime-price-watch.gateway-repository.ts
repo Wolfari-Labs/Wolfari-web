@@ -1,8 +1,12 @@
 import type { GatewayHttpClient } from '../http/http-client';
 import * as d from '../http/decode';
+import { ApiError } from '../http/api-error';
 import { cursorPage } from '../http/cursor-page';
 import {
   flightProviders,
+  cabinClasses,
+  journeyTypes,
+  type PriceWatchCapabilities,
   runtimeStatuses,
   validateWatchFields,
   type RuntimeWatch,
@@ -51,6 +55,41 @@ export function decodeWatch(value: unknown, tripId: string): RuntimeWatch {
   validateWatchFields(result.fields);
   return result;
 }
+/** Strict `Capabilities`: known enums only, unique lists, counts 0–9, a usable source when available. */
+export function decodeCapabilities(value: unknown): PriceWatchCapabilities {
+  const r = d.object(value);
+  const list = <const T extends readonly string[]>(raw: unknown, choices: T): T[number][] => {
+    const items = d.list(raw, (item) => d.enumeration(item, choices));
+    if (new Set(items).size !== items.length) throw Error('Duplicate capability');
+    return items;
+  };
+  const count = (raw: unknown) => {
+    if (typeof raw !== 'number' || !Number.isInteger(raw) || raw < 0 || raw > 9)
+      throw Error('Invalid capability count');
+    return raw;
+  };
+  const result: PriceWatchCapabilities = {
+    provider: d.enumeration(r.provider, flightProviders),
+    available: d.boolean(r.available),
+    journeyTypes: list(r.journey_types, journeyTypes),
+    cabinClasses: list(r.cabin_classes, cabinClasses),
+    maxAdults: count(r.max_adults),
+    maxChildren: count(r.max_children),
+    maxInfants: count(r.max_infants),
+    maxPassengers: count(r.max_passengers),
+    currencies: list(r.currencies, ['VND'] as const),
+  };
+  if (
+    result.available &&
+    (!result.journeyTypes.length ||
+      !result.cabinClasses.length ||
+      result.maxAdults < 1 ||
+      result.maxPassengers < 1 ||
+      !result.currencies.includes('VND'))
+  )
+    throw Error('Unusable capabilities');
+  return result;
+}
 export function decodeObservation(value: unknown): RuntimeObservation {
   const r = d.object(value);
   const metadata =
@@ -78,6 +117,22 @@ export function createRuntimePriceWatchRepository(client: GatewayHttpClient) {
     return q;
   };
   return {
+    /**
+     * What the configured fare source supports, or null when the Gateway predates
+     * `GET /price-watch-capabilities` (404): the form then keeps its earlier behaviour.
+     */
+    async capabilities(signal?: AbortSignal): Promise<PriceWatchCapabilities | null> {
+      try {
+        const response = await client.read(
+          '/api/v1/price-watch-capabilities',
+          signal ? { signal } : {},
+        );
+        return decodeCapabilities(response.data);
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) return null;
+        throw error;
+      }
+    },
     async list(tripId: string, cursor: string | null, signal?: AbortSignal) {
       return cursorPage(
         await client.read(

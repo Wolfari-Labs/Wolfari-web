@@ -45,6 +45,10 @@ const reasonMessages: Record<string, string> = {
   HANDOVER_IN_PROGRESS:
     'Đang bàn giao người giữ quỹ; hoàn tất hoặc hủy bàn giao trước khi thực hiện thao tác này.',
   INVALID_TRANSITION: 'Trạng thái bản ghi đã thay đổi nên thao tác này không còn hợp lệ.',
+  PROVIDER_QUERY_UNSUPPORTED:
+    'Nguồn giá hiện tại không so sánh được lựa chọn này (hành trình, hạng ghế hoặc số hành khách). Tải lại trang để xem các lựa chọn được hỗ trợ.',
+  PRICE_PROVIDER_NOT_CONFIGURED:
+    'Nguồn giá chưa sẵn sàng nên tạm thời chưa tạo được theo dõi mới. Thử lại sau.',
   PAYMENT_PROVIDER_ACCOUNT_MISMATCH:
     'payOS không còn trả tiền vào tài khoản nhận của khoản đóng này. Hãy chuyển khoản bằng mã QR rồi báo đã chuyển.',
   MEMBER_ACTIVE_WATCH_LIMIT:

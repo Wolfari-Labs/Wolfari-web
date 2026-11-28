@@ -360,6 +360,18 @@ function WatchWorkspace({
   trip: import('../trips/model/trip-detail').TripDetailViewModel;
   repository: import('../../shared/types/runtime-services').RuntimeServices['priceWatch'];
 }) {
+  const capabilities = useQuery({
+    queryKey: ['price-watch-capabilities', trip.currentMembership.userId],
+    queryFn: ({ signal }) =>
+      typeof repository.capabilities === 'function'
+        ? repository.capabilities(signal)
+        : Promise.resolve(null),
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+  const sourceCapabilities = capabilities.data ?? null;
+  const sourceUnavailable = sourceCapabilities?.available === false;
+  const createLocked = capabilities.isError || sourceUnavailable;
   const query = useInfiniteQuery({
     queryKey: ['price-watches', trip.currentMembership.userId, trip.id],
     initialPageParam: null as string | null,
@@ -561,7 +573,10 @@ function WatchWorkspace({
       )}
     </>
   );
-  const provider = chartWatch?.fields.provider ?? import.meta.env.VITE_PRICE_WATCH_PROVIDER;
+  const provider =
+    sourceCapabilities?.provider ??
+    chartWatch?.fields.provider ??
+    import.meta.env.VITE_PRICE_WATCH_PROVIDER;
   const providerNote = isFlightProvider(provider)
     ? `Nguồn: ${flightProviderLabels[provider]}${provider === 'MOCK_FLIGHT' ? '' : ' · giá tham khảo'}`
     : 'Nguồn giá theo cấu hình hệ thống';
@@ -597,13 +612,27 @@ function WatchWorkspace({
               <Button
                 icon={<Icon name="plus" size={17} />}
                 size="compact"
-                disabled={!writable || busy || blocked}
+                disabled={!writable || busy || blocked || createLocked}
                 onClick={() => openForm(null)}
               >
                 Tạo theo dõi
               </Button>
             </div>
           </header>
+          {sourceUnavailable && (
+            <Alert tone="warning">
+              Nguồn giá chưa sẵn sàng nên tạm thời chưa tạo được theo dõi mới. Các theo dõi hiện có
+              vẫn xem được.
+            </Alert>
+          )}
+          {capabilities.isError && (
+            <Alert tone="warning">
+              Chưa đọc được nguồn giá đang dùng nên tạm khóa tạo theo dõi mới.{' '}
+              <Button variant="plain" onClick={() => void capabilities.refetch()}>
+                Thử lại
+              </Button>
+            </Alert>
+          )}
           <div className={priceStyles.toolbar}>
             <p className={priceStyles.sourceNote}>
               <Icon name="info" size={16} />
@@ -818,15 +847,17 @@ function WatchWorkspace({
           headingRef={formHeadingRef}
           returnFocusRef={formTriggerRef}
         >
-          {editing && (
+          {editing && capabilities.isPending && <ContentState state="loading" />}
+          {editing && !capabilities.isPending && (
             <>
               {recovery}
               <PriceWatchForm
-                key={editing.item?.id ?? 'new'}
+                key={editing.item?.id ?? sourceCapabilities?.provider ?? 'new'}
                 initial={editing.item}
                 timezone={trip.timezone}
+                capabilities={sourceCapabilities}
                 busy={busy}
-                disabled={busy || blocked || !writable}
+                disabled={busy || blocked || !writable || (!editing.item && createLocked)}
                 onSave={(fields) => {
                   const latest = editing.item ? items.find((i) => i.id === editing.item!.id) : null;
                   if (editing.item && latest?.version !== editing.item.version) {

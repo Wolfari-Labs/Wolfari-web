@@ -1,5 +1,19 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## PRICE-WATCH-CAPABILITIES — 26/11/2026 — DELTA_PENDING
+
+User-requested Web support for `GET /price-watch-capabilities` (Backend branch
+`feature/price-watch-capabilities`, contract 1.2.0, **not merged**; SRS FR-AU03). Reuses the
+existing form, `Select`/`Input`/`Alert`/`Badge`; no new CSS. When the endpoint answers 404 (older
+Gateway) or in Preview, the form keeps its build-time `VITE_PRICE_WATCH_PROVIDER` behaviour. Each
+item is pending review and approves nothing else. Evidence: unit/component tests with HTTP mocks
+only; no live provider.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| PWCAP-01 | Form "Tạo/Sửa theo dõi giá": dòng mô tả nguồn đổi sang một câu sinh từ capabilities (ví dụ "Google Flights (SearchApi) so sánh vé một chiều, hạng phổ thông, 1 người lớn." + câu về giờ UTC/giá tham khảo). Lựa chọn chỉ có một giá trị (Hành trình, Hạng ghế, Người lớn, Trẻ em, Em bé) bị **ẩn** thay vì hiện ở trạng thái khóa như bản TRAVELPAYOUTS cũ; Hạng ghế chỉ liệt kê hạng được hỗ trợ; ô hành khách có `max` theo giới hạn nguồn; lỗi riêng khi vượt giới hạn, không gửi request. | FR-AU03: không đưa lựa chọn nguồn không hỗ trợ. |
+| PWCAP-02 | Trang Theo dõi giá: huy hiệu nguồn lấy từ capabilities ("Google Flights (SearchApi) · Giá tham khảo", "… · Chưa sẵn sàng"); khi `available=false` nút "Tạo theo dõi" bị khóa kèm Alert "Nguồn giá chưa sẵn sàng…"; khi không đọc được capabilities (lỗi khác 404) nút tạo bị khóa kèm Alert + "Thử lại". Form hiện trạng thái tải trong lúc đọc capabilities. Thông báo lỗi có câu riêng cho `PROVIDER_QUERY_UNSUPPORTED` và `PRICE_PROVIDER_NOT_CONFIGURED`. | Trung thực về nguồn đang dùng; Backend vẫn là authority. |
+
 ## INVITATIONS-V2 — 26/11/2026 — DELTA_PENDING
 
 User-requested Web support for invitations v2 (Backend branch `feature/trip-invitations-v2`,
@@ -14,6 +28,17 @@ HTTP mocks only; no live Backend.
 | INV2-02 | Người đã đăng nhập thấy thêm mục "Lời mời đang chờ bạn" (từ `GET /me/invitations`): tên chuyến, người mời, thời gian chuyến đi, hạn, nút "Từ chối" (outline) / "Tham gia" (chính); kết quả chưa rõ giữ nguyên Idempotency-Key với "Thử lại …". | Người đăng ký sau thấy lời mời ngay khi xác minh email. |
 | INV2-03 | Thẻ lời mời thêm dòng "Thời gian chuyến đi" và "Mã mời XXXX-XXXX" (khi mở bằng mã), nút "Dùng lời mời khác"; thẻ khách thêm câu lời mời được giữ ~30 phút trong tab. Lỗi 404 có câu riêng: "Không tìm thấy lời mời cho tài khoản này — đăng nhập đúng email…" (mã: "Không tìm thấy lời mời với mã này…"); quá nhiều lần sai mã có câu riêng. | Giữ token/mã qua đăng nhập → đăng ký → xác minh → đăng nhập (sessionStorage, hạn ngắn, xóa sau khi dùng) thay cho quy tắc cũ "không lưu trữ". |
 | INV2-04 | Quản lý lời mời (Owner): với "Bằng liên kết" thêm Select "Số người dùng được" (Một người / Cả nhóm tối đa 20 người). Sau khi tạo, khối bí mật hiện "Mã mời: XXXX-XXXX", liên kết chia sẻ `/invitations#code=…`, nút "Sao chép mã mời" / "Sao chép liên kết" / "Đóng mã mời"; Backend cũ (không trả mã) giữ khối liên kết một lần như trước. Dòng lời mời LINK thêm "Mã nhóm · tối đa N người · đã dùng x/N · mã …XXXX". | `max_uses`, `join_code`, `share_link`, `use_count`, `code_hint` của contract 1.1.0. |
+
+## POI-HERO-IMAGES — 26/11/2026 — DELTA_PENDING
+
+User-requested: show the licensed POI photo the Backend already serves (`hero_image`, places
+contract 1.2.0) instead of the static Figma artwork. Each item is pending review and approves
+nothing else. Evidence: unit/component tests only (jsdom); no browser screenshot or live Backend.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| POIIMG-01 | Thẻ "Đang chọn" (desktop, Gateway): ảnh 230×90 dùng ảnh thật của địa điểm (`object-fit: cover`, `loading="lazy"`, alt = tên địa điểm) thay cho artwork, kèm một dòng chữ nhỏ 12px màu muted ngay dưới ảnh là dòng ghi nguồn (ví dụ "Ảnh: An · CC BY-SA 4.0 · Wikimedia Commons"), liên kết tới trang nguồn (tab mới, `rel="noopener noreferrer"`). Không có ảnh hoặc ảnh lỗi tải: giữ nguyên artwork và nhãn "Ảnh minh họa". Thẻ mobile (≤ 768 px, đang đóng băng) giữ artwork. | Giấy phép CC BY/BY-SA bắt buộc ghi nguồn cạnh ảnh. |
+| POIIMG-02 | Panel "Chi tiết địa điểm" (bố cục hẹp, Gateway): ảnh bìa 354×228 dùng ảnh thật (cùng quy tắc), dòng ghi nguồn ngay dưới ảnh. | Cùng lý do; không thêm control hay panel mới. Ảnh chỉ có khi địa điểm nằm trong kết quả tìm kiếm hiện tại (Plan không lưu ảnh). |
 
 ## PAYOS-WEB — 26/11/2026 — DELTA_PENDING
 
