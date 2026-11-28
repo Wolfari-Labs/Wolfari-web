@@ -119,7 +119,13 @@ test('HTTP mock: licensed place photos and walking/cycling day routes keep credi
   const card = page.getByRole('article', { name: 'Đang chọn Hội An' }).filter({ visible: true });
   const photo = card.getByRole('img', { name: 'Ảnh Hội An', exact: true });
   await expect(photo).toBeVisible();
-  await expect(photo).toHaveJSProperty('naturalWidth', 1);
+  await expect(async () => {
+    const source = await photo.evaluate(async (img: HTMLImageElement) => {
+      await img.decode();
+      return new URL(img.currentSrc).pathname;
+    });
+    expect([image.small_url, image.thumbnail_url, image.url]).toContain(source);
+  }).toPass({ timeout: 5_000 });
   await expect(card.getByRole('link', { name: image.attribution })).toBeVisible();
   await expect(card).not.toContainText('Nguồn:');
   await page.getByRole('combobox', { name: 'Ngày', exact: true }).selectOption('2026-11-01');
