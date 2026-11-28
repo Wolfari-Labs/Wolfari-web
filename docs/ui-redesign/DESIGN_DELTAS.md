@@ -15,6 +15,32 @@ HTTP mocks only; no live Backend.
 | INV2-03 | Thẻ lời mời thêm dòng "Thời gian chuyến đi" và "Mã mời XXXX-XXXX" (khi mở bằng mã), nút "Dùng lời mời khác"; thẻ khách thêm câu lời mời được giữ ~30 phút trong tab. Lỗi 404 có câu riêng: "Không tìm thấy lời mời cho tài khoản này — đăng nhập đúng email…" (mã: "Không tìm thấy lời mời với mã này…"); quá nhiều lần sai mã có câu riêng. | Giữ token/mã qua đăng nhập → đăng ký → xác minh → đăng nhập (sessionStorage, hạn ngắn, xóa sau khi dùng) thay cho quy tắc cũ "không lưu trữ". |
 | INV2-04 | Quản lý lời mời (Owner): với "Bằng liên kết" thêm Select "Số người dùng được" (Một người / Cả nhóm tối đa 20 người). Sau khi tạo, khối bí mật hiện "Mã mời: XXXX-XXXX", liên kết chia sẻ `/invitations#code=…`, nút "Sao chép mã mời" / "Sao chép liên kết" / "Đóng mã mời"; Backend cũ (không trả mã) giữ khối liên kết một lần như trước. Dòng lời mời LINK thêm "Mã nhóm · tối đa N người · đã dùng x/N · mã …XXXX". | `max_uses`, `join_code`, `share_link`, `use_count`, `code_hint` của contract 1.1.0. |
 
+## POI-HERO-IMAGES — 26/11/2026 — DELTA_PENDING
+
+User-requested: show the licensed POI photo the Backend already serves (`hero_image`, places
+contract 1.2.0) instead of the static Figma artwork. Each item is pending review and approves
+nothing else. Evidence: unit/component tests only (jsdom); no browser screenshot or live Backend.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| POIIMG-01 | Thẻ "Đang chọn" (desktop, Gateway): ảnh 230×90 dùng ảnh thật của địa điểm (`object-fit: cover`, `loading="lazy"`, alt = tên địa điểm) thay cho artwork, kèm một dòng chữ nhỏ 12px màu muted ngay dưới ảnh là dòng ghi nguồn (ví dụ "Ảnh: An · CC BY-SA 4.0 · Wikimedia Commons"), liên kết tới trang nguồn (tab mới, `rel="noopener noreferrer"`). Không có ảnh hoặc ảnh lỗi tải: giữ nguyên artwork và nhãn "Ảnh minh họa". Thẻ mobile (≤ 768 px, đang đóng băng) giữ artwork. | Giấy phép CC BY/BY-SA bắt buộc ghi nguồn cạnh ảnh. |
+| POIIMG-02 | Panel "Chi tiết địa điểm" (bố cục hẹp, Gateway): ảnh bìa 354×228 dùng ảnh thật (cùng quy tắc), dòng ghi nguồn ngay dưới ảnh. | Cùng lý do; không thêm control hay panel mới. Ảnh chỉ có khi địa điểm nằm trong kết quả tìm kiếm hiện tại (Plan không lưu ảnh). |
+
+## PAYOS-WEB — 26/11/2026 — DELTA_PENDING
+
+User-requested Web support for payOS real-money contributions (Backend main, finance-payments
+1.1.0 / finance-contributions 1.4.0). Behaviour follows the merged contract; each visual or
+interaction item below is pending review and approves nothing else. MoMo Sandbox flows, labels and
+the "MoMo & đối soát" section are unchanged. Evidence: unit/component tests with HTTP mocks only;
+no live payOS, Gateway or bank run.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| PAYOS-01 | Hướng dẫn "Mã QR chuyển khoản" thêm nút chính "Thanh toán qua payOS" trước "Tôi đã chuyển — Báo đã chuyển" (nút báo chuyển đổi sang kiểu outline chỉ khi có payOS). Chỉ hiện khi khoản đóng PENDING là của người xem và `online_payment_providers` có `PAYOS`. Bấm mở drawer xác nhận dùng chung (`FinanceAction`) với câu "payOS — chuyển tiền thật, vào thẳng tài khoản của người giữ quỹ…" thay cho câu "MoMo Sandbox — không chuyển tiền thật". | Một hành động chính mỗi nhóm; tiền thật cần một bước xác nhận. |
+| PAYOS-02 | Sau khi tạo, phía trên vùng QR có thẻ trạng thái (thẻ `FinanceRecords.record` sẵn có): trạng thái payOS ("Đang chờ thanh toán trên payOS", "Quỹ đã nhận tiền", …), số tiền, liên kết "Mở trang thanh toán payOS" (tab mới, `rel="noopener noreferrer"`), hạn link, ghi chú tài khoản ảo payOS (LOCC…), nút "Kiểm tra trạng thái". Web đọc lại `GET /payment-attempts/{id}` mỗi 3 giây khi tab đang hiện, tối đa 15 phút. Khi Finance khóa mã QR vì đang có thanh toán (409), vùng QR hiện "Mã QR chuyển khoản tạm ẩn…" thay cho thẻ lỗi; "Báo đã chuyển" bị khóa trong lúc đó. | Trạng thái trung thực, không suy từ trang payOS. |
+| PAYOS-03 | Trang Quỹ mở với `?provider=PAYOS` hiện một hộp (panel sẵn có) "Đang kiểm tra kết quả thanh toán…"; sau khi đọc lại quỹ đổi thành câu trung tính + thẻ trạng thái của lượt đã lưu trong tab (nếu có) + "Xem khoản đóng" / "Đóng thông báo". Query bị xóa khỏi địa chỉ (replace). | Query từ trang return không phải bằng chứng. |
+| PAYOS-04 | Thẻ thanh toán trong "MoMo & đối soát" hiện nhãn payOS, dòng "payOS · tiền thật…", liên kết "Mở trang thanh toán payOS" và câu xác nhận payOS trong drawer đối soát khi lượt là `PAYOS`; lượt MoMo giữ nguyên chữ. Lịch sử thao tác: `CREATE_PAYMENT_ATTEMPT` đổi "Tạo lượt thanh toán MoMo" → "Tạo lượt thanh toán trực tuyến"; thêm "payOS báo tiền về" / "Đối soát payOS tự động". Thông báo xung đột `PAYMENT_PROVIDER_ACCOUNT_MISMATCH` có câu riêng. | Nhãn đúng nhà cung cấp. |
+
 ## Finance demo completion — 16/11/2026
 
 User-requested Web/Backend parity for the Finance demo; no new checkpoint, no Figma writes.

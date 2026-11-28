@@ -7,7 +7,8 @@ import heartIcon from '../../shared/assets/figma/a50ed.svg';
 import clockIcon from '../../shared/assets/figma/1666f.svg';
 import type { MapLocationPresentation } from './trip-map';
 import { activityDurationLabel, activityScheduleLabel, validCoordinates } from './trip-map';
-import { OVERTURE_NOTE, type PlaceProvenance } from './places';
+import { OVERTURE_NOTE, type PlaceImage, type PlaceProvenance } from './places';
+import { PlacePhoto } from './PlacePhoto';
 import { PlaceSourceBadges } from './PlaceSourceBadges';
 import styles from './TripMapPage.module.css';
 
@@ -27,6 +28,7 @@ export function PlaceDetail({
   selectionDisabled = false,
   actions,
   provenance,
+  photo,
 }: {
   item: MapLocationPresentation | null;
   tripId: string;
@@ -40,6 +42,8 @@ export function PlaceDetail({
   actions?: ReactNode;
   /** Runtime-only source/category record (POI-OVERTURE W10, FR-TI01). */
   provenance?: PlaceProvenance | null;
+  /** Runtime-only licensed photo (POI-IMAGES); the template artwork stays when absent. */
+  photo?: PlaceImage | null;
 }) {
   const [favorite, setFavorite] = useState(false);
   if (!item) return null;
@@ -55,13 +59,23 @@ export function PlaceDetail({
         <strong>Chi tiết địa điểm</strong>
         <span aria-hidden="true" />
       </div>
-      <img
+      <PlacePhoto
+        photo={runtime ? photo : null}
+        alt={item.location.name}
         className={styles.detailCover}
-        src={runtime ? placeholderArtwork : detailPhoto(item)}
-        width="354"
-        height="228"
-        alt={runtime ? 'Ảnh minh họa giao diện; không phải ảnh địa điểm' : ''}
-        title={runtime ? 'Ảnh minh họa' : undefined}
+        width={354}
+        height={228}
+        sizes="354px"
+        fallback={
+          <img
+            className={styles.detailCover}
+            src={runtime ? placeholderArtwork : detailPhoto(item)}
+            width="354"
+            height="228"
+            alt={runtime ? 'Ảnh minh họa giao diện; không phải ảnh địa điểm' : ''}
+            title={runtime ? 'Ảnh minh họa' : undefined}
+          />
+        }
       />
       <div className={styles.detailTitle}>
         <h2>{item.location.name}</h2>

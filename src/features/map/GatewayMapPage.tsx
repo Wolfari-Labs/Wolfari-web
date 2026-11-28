@@ -1000,6 +1000,9 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                       )
                     }
                     autoSelectFirst={!autoPickOff}
+                    selectedPhoto={
+                      selectedItem ? (resultOf(selectedItem)?.heroImage ?? null) : null
+                    }
                     onSelect={(locationId) => chooseLocation(locationId)}
                     onOpenDetail={() => setDetailOpen(true)}
                   />
@@ -1048,6 +1051,7 @@ function MapWorkspace({ snapshot }: { snapshot: ReturnType<typeof useTripPlanSna
                 </>
               }
               provenance={selectedItem ? provenanceOf(selectedItem) : null}
+              photo={selectedItem ? (resultOf(selectedItem)?.heroImage ?? null) : null}
             />
           </>
         )}

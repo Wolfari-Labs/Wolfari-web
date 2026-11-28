@@ -45,6 +45,8 @@ const reasonMessages: Record<string, string> = {
   HANDOVER_IN_PROGRESS:
     'Đang bàn giao người giữ quỹ; hoàn tất hoặc hủy bàn giao trước khi thực hiện thao tác này.',
   INVALID_TRANSITION: 'Trạng thái bản ghi đã thay đổi nên thao tác này không còn hợp lệ.',
+  PAYMENT_PROVIDER_ACCOUNT_MISMATCH:
+    'payOS không còn trả tiền vào tài khoản nhận của khoản đóng này. Hãy chuyển khoản bằng mã QR rồi báo đã chuyển.',
   MEMBER_ACTIVE_WATCH_LIMIT:
     'Bạn đã có tối đa 20 theo dõi giá đang chạy trong chuyến này. Tạm dừng hoặc dừng bớt một theo dõi.',
   TRIP_ACTIVE_WATCH_LIMIT:
