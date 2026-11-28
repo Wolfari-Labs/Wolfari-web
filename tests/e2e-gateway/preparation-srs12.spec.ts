@@ -503,12 +503,16 @@ test('SRS12: maximum saved locations and every linked Activity block unsafe dele
   await expect(page.getByRole('button', { name: 'Đặt pin thủ công', exact: true })).toBeDisabled();
   await page
     .locator('[data-region="place-list"]')
-    .getByRole('button', { name: /^\d+ Địa điểm 20 / })
+    .getByRole('button')
+    .filter({ has: page.getByText('Địa điểm 20', { exact: true }) })
     .click();
   const card = page
     .getByRole('article', { name: 'Đang chọn Địa điểm 20' })
     .filter({ visible: true });
-  const toggle = card.getByRole('button', { name: 'Địa điểm đã chọn', exact: true });
+  const toggle = card.getByRole('button', {
+    name: 'Bỏ khỏi danh sách địa điểm đã chọn',
+    exact: true,
+  });
   await expect(toggle).toHaveAttribute('aria-pressed', 'true');
   await expect(toggle).toBeDisabled();
   await expect(card.getByRole('button', { name: 'Xóa địa điểm', exact: true })).toHaveCount(0);
