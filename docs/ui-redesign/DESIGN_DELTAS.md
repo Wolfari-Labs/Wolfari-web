@@ -1,5 +1,16 @@
 # CP-02 — Những khác biệt phải review riêng
 
+## POI-HERO-IMAGES — 26/11/2026 — DELTA_PENDING
+
+User-requested: show the licensed POI photo the Backend already serves (`hero_image`, places
+contract 1.2.0) instead of the static Figma artwork. Each item is pending review and approves
+nothing else. Evidence: unit/component tests only (jsdom); no browser screenshot or live Backend.
+
+| Mã | Khác biệt so với template | Lý do / phạm vi |
+| --- | --- | --- |
+| POIIMG-01 | Thẻ "Đang chọn" (desktop, Gateway): ảnh 230×90 dùng ảnh thật của địa điểm (`object-fit: cover`, `loading="lazy"`, alt = tên địa điểm) thay cho artwork, kèm một dòng chữ nhỏ 12px màu muted ngay dưới ảnh là dòng ghi nguồn (ví dụ "Ảnh: An · CC BY-SA 4.0 · Wikimedia Commons"), liên kết tới trang nguồn (tab mới, `rel="noopener noreferrer"`). Không có ảnh hoặc ảnh lỗi tải: giữ nguyên artwork và nhãn "Ảnh minh họa". Thẻ mobile (≤ 768 px, đang đóng băng) giữ artwork. | Giấy phép CC BY/BY-SA bắt buộc ghi nguồn cạnh ảnh. |
+| POIIMG-02 | Panel "Chi tiết địa điểm" (bố cục hẹp, Gateway): ảnh bìa 354×228 dùng ảnh thật (cùng quy tắc), dòng ghi nguồn ngay dưới ảnh. | Cùng lý do; không thêm control hay panel mới. Ảnh chỉ có khi địa điểm nằm trong kết quả tìm kiếm hiện tại (Plan không lưu ảnh). |
+
 ## PAYOS-WEB — 26/11/2026 — DELTA_PENDING
 
 User-requested Web support for payOS real-money contributions (Backend main, finance-payments
