@@ -9,6 +9,7 @@ import { MembersRepositoryProvider } from '../src/features/members/repositories/
 import { InvitationPage } from '../src/features/members/InvitationPage';
 import { InvitationManagement } from '../src/features/members/InvitationManagement';
 import {
+  PENDING_INVITATION_TTL_MS,
   captureInvitationToken,
   invitationResponseAttempt,
   invitationToken,
@@ -22,6 +23,7 @@ import { createFixtureTripRepository } from '../src/infrastructure/fixtures/trip
 import { previewTripId } from '../src/infrastructure/fixtures/trip-catalog';
 
 const token = `inv1_${'a'.repeat(43)}`;
+const pendingKey = 'wolfari.invitation.pending.v1';
 const preview = {
   id: 'invite',
   tripName: 'Đà Nẵng',
@@ -169,6 +171,7 @@ function PermissionManagement({ trip }: { trip: Awaited<ReturnType<typeof ownerT
 }
 afterEach(() => {
   invitationToken.clear();
+  sessionStorage.clear();
   invitationResponseAttempt.clear();
   invitationManagementAttempt.clear();
   window.history.replaceState(null, '', '/');
@@ -176,7 +179,7 @@ afterEach(() => {
 });
 
 describe('invitation token and response flow', () => {
-  it('scrubs fragment before render, preserves history state, survives StrictMode and never enters Query cache/storage', async () => {
+  it('scrubs fragment before render, preserves history state, survives StrictMode and keeps the secret out of Query cache/localStorage', async () => {
     const storage = vi.spyOn(Storage.prototype, 'setItem');
     capture();
     expect(window.location.hash).toBe('');
@@ -185,7 +188,13 @@ describe('invitation token and response flow', () => {
     await screen.findByRole('button', { name: 'Chấp nhận' });
     expect(invitationToken.read()).toBe(token);
     expect(JSON.stringify(client.getQueryCache().getAll())).not.toContain(token);
-    expect(storage).not.toHaveBeenCalled();
+    // Only the short-lived pending entry in this tab's sessionStorage, never localStorage.
+    expect(storage.mock.calls.map(([key]) => key)).toEqual([pendingKey]);
+    expect(storage.mock.contexts.every((target) => target === sessionStorage)).toBe(true);
+    expect(localStorage.length).toBe(0);
+    const saved = JSON.parse(sessionStorage.getItem(pendingKey)!) as Record<string, unknown>;
+    expect(saved.secret).toBe(token);
+    expect(Number(saved.expires_at) - Date.now()).toBeLessThanOrEqual(PENDING_INVITATION_TTL_MS);
   });
   it('Guest performs no preview, login/register links contain only safe returnTo', async () => {
     capture();
@@ -205,12 +214,14 @@ describe('invitation token and response flow', () => {
     act(() => manager.set('authenticated'));
     await screen.findByRole('button', { name: 'Chấp nhận' });
   });
-  it('missing/reloaded/malformed token tells the user to open the original link', () => {
+  it('missing/malformed token offers the link or a join code instead', () => {
     capture('invalid');
     const repo = repository();
     mount(repo);
-    expect(screen.getByText(/Hãy mở lại liên kết gốc/)).toBeVisible();
+    expect(screen.getByText(/Mở liên kết trong email hoặc nhập mã mời/)).toBeVisible();
+    expect(screen.getByLabelText(/Mã mời/)).toBeVisible();
     expect(repo.previewInvitation).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(pendingKey)).toBeNull();
   });
   it('rejects fragment metadata in addition to the single token', () => {
     window.history.replaceState(null, '', `/invitations#token=${token}&next=%2Ftrips`);
@@ -390,20 +401,20 @@ describe('invitation token and response flow', () => {
     expect(screen.getByLabelText('route')).toHaveTextContent('/invitations');
     expect(await screen.findByRole('button', { name: 'Chấp nhận' })).toBeEnabled();
   });
-  it.each(['RESOURCE_NOT_FOUND', 'STATE_CONFLICT'] as const)(
-    'does not infer a specific reason from %s',
-    async (code) => {
-      capture();
-      const repo = repository();
-      vi.mocked(repo.previewInvitation!).mockResolvedValue({
-        status: 'error',
-        error: { code, correlationId: null, retryable: false },
-      });
-      mount(repo);
-      await screen.findByText(/Lời mời không khả dụng hoặc trạng thái đã thay đổi/);
-      expect(screen.queryByRole('button', { name: 'Chấp nhận' })).not.toBeInTheDocument();
-    },
-  );
+  it.each([
+    ['RESOURCE_NOT_FOUND', /Không tìm thấy lời mời cho tài khoản này/],
+    ['STATE_CONFLICT', /Lời mời không khả dụng hoặc trạng thái đã thay đổi/],
+  ] as const)('explains %s without exposing more than the account hint', async (code, message) => {
+    capture();
+    const repo = repository();
+    vi.mocked(repo.previewInvitation!).mockResolvedValue({
+      status: 'error',
+      error: { code, correlationId: null, retryable: false },
+    });
+    mount(repo);
+    await screen.findByText(message);
+    expect(screen.queryByRole('button', { name: 'Chấp nhận' })).not.toBeInTheDocument();
+  });
   it('returns to the guest login flow when authenticated preview receives 401', async () => {
     capture();
     const repo = repository();
